@@ -23,6 +23,7 @@ resources.frontController.params.displayExceptions = 0
 
 ; Layout
 resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/"
+resources.view[] =
 
 ; Cache
 resources.cachemanager.database.frontend.name = Core
