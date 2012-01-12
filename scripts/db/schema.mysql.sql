@@ -16,8 +16,8 @@ CREATE  TABLE IF NOT EXISTS `user` (
   `firstname` VARCHAR(50) NOT NULL ,
   `lastname` VARCHAR(50) NOT NULL ,
   `aded_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-  `status` ENUM('active','inactive') NOT NULL DEFAULT active ,
-  `group` ENUM('admin','user') NOT NULL DEFAULT user ,
+  `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' ,
+  `group` ENUM('admin','user') NOT NULL DEFAULT 'user' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) )
 ENGINE = InnoDB;
@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS `version` ;
 
 CREATE  TABLE IF NOT EXISTS `version` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT CE ,
+  `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT 'CE' ,
   `version` VARCHAR(10) NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
@@ -43,10 +43,11 @@ DROP TABLE IF EXISTS `queue` ;
 
 CREATE  TABLE IF NOT EXISTS `queue` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT CE ,
+  `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT 'CE' ,
   `status` ENUM('ready','inprogress','closed') NOT NULL ,
   `version_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
+  `domain` VARCHAR(10) NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `queue_to_version` (`version_id` ASC) ,
   INDEX `queue_to_user1` (`user_id` ASC) ,
