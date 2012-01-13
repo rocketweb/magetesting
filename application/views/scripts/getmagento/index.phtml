@@ -1,0 +1,44 @@
+<form action="" method="post">
+    <fieldset>
+        <legend>Setup your environment</legend>
+        
+            <label for="edition">Choose Edition: </label>
+            <select id="edition" name="edition">
+                <option value="0">choose...</option>
+                <?php foreach($this->editions as $ed): ?>
+                <option value="<?php echo $ed['key'] ?>"><?php echo $ed['name']?></option>
+                <?php endforeach; ?>
+            </select>
+
+            <br /><br />
+            <label for="version">Then, version: </label>
+            <select id="version" name="version"><option>Choose Edition First</option></select>
+    </fieldset>
+    
+    <input class="btn primary large" type="submit" name="queueAdd" value="Install!" />
+</form>
+
+<script type="text/javascript">
+    $("#edition").change(function(){
+        
+        $.ajax({
+            type: "POST",
+            url: "getmagento/getVersions",
+            data: "edition="+ $("#edition").val(),
+             dataType: "json",
+            success: function(json){
+                var opts = '';// '<select name="version" id="version">';
+            console.log(json);
+            
+            $.each(json,function(index, item){
+                opts =  opts +'<option value="'+ item.id +'">' + item.version + '</option>';
+            });
+            
+            //opts = opts+'</select>';
+            $("#version").html(opts);
+            }
+
+        });
+        
+    });
+    </script>

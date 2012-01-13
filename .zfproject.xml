@@ -19,7 +19,22 @@
           <layoutScriptFile layoutName="layout"/>
         </layoutScriptsDirectory>
       </layoutsDirectory>
-      <modelsDirectory/>
+      <modelsDirectory>
+        <dbTableDirectory>
+          <dbTableFile dbTableName="Version"/>
+          <dbTableFile dbTableName="Edition"/>
+          <dbTableFile dbTableName="User"/>
+          <dbTableFile dbTableName="Log"/>
+          <dbTableFile dbTableName="Session"/>
+          <dbTableFile dbTableName="Queue"/>
+        </dbTableDirectory>
+        <modelFile modelName="Edition"/>
+        <modelFile modelName="Version"/>
+        <modelFile modelName="Log"/>
+        <modelFile modelName="Queue"/>
+        <modelFile modelName="Session"/>
+        <modelFile modelName="User"/>
+      </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <viewsDirectory>
         <viewScriptsDirectory>
