@@ -1,6 +1,6 @@
 <?php
 
-class GetmagentoController extends Zend_Controller_Action
+class GetMagentoController extends Zend_Controller_Action
 {
 
     public function init()
