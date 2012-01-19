@@ -16,6 +16,7 @@
       body {
         padding-top: 60px;
       }
+      
     </style>
 
     <link rel="shortcut icon" href="images/favicon.ico">
@@ -31,8 +32,9 @@
       <div class="fill">
         <div class="container">
           <a class="brand" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">Magento Integration</a>
-          <ul class="nav">
+          <ul class="nav" style="float: none;">
             <li class="active"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">Home</a></li>
+            <li class="active" style="float: right;"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'logout'), 'default', true); ?>">Logout</a></li>
           </ul>
         </div>
       </div>

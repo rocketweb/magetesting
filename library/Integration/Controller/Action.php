@@ -1,0 +1,102 @@
+<?php
+
+class Integration_Controller_Action extends Zend_Controller_Action
+{
+    /**
+     * @var Zend_Db_Adapter_Abstract
+     */
+    protected $db;
+    protected $acl;
+    protected $auth;
+    
+    
+    public function init()
+    {
+        $this->_helper->redirector->setUseAbsoluteUri(true);
+        $this->db = Zend_Db_Table::getDefaultAdapter();
+        $this->acl = new Integration_Acl();
+        $this->auth = Zend_Auth::getInstance();
+        
+    }
+
+    /**
+     * Getting mesages from session namespace and ACL handling.
+     */
+    public function preDispatch()
+    {
+        $user = new Application_Model_User();
+        $users = $user->fetchAll();
+        
+        // ACL
+        $acl = new Integration_Acl();
+        $auth = Zend_Auth::getInstance();
+        $request = $this->getRequest();
+				
+        // Getting mesages from session namespace.
+        $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages() + $this->_helper->FlashMessenger->getMessages();
+        $this->_helper->FlashMessenger->clearMessages();
+        $this->_helper->FlashMessenger->clearCurrentMessages();
+
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+        $module = $request->getModuleName();
+				
+        $type = (is_null($auth->getIdentity())) 
+            ? 'guest' : $auth->getIdentity()->group;
+
+        // for navigation purposes
+        $this->view->navigation()->setAcl($acl);
+        $this->view->navigation()->setRole($type);
+        
+        if ($controller == 'error' && $action == 'stop') {
+            return $request;
+        }
+
+        $resource = $module . '_' . $controller;
+				
+        if (!$acl->has($resource)) {
+            throw new Zend_Controller_Action_Exception("Resource '" . $resource . "' doesn't exist.", 404);
+        }
+				
+        if ($auth->hasIdentity()) {
+            $user = new Application_Model_User();
+            $user->find($auth->getIdentity()->id);
+            $this->view->loggedUser = $user;
+        }
+
+        if ($acl->isAllowed($type, $resource, $action)) {
+            return $request;
+        }
+
+        /**
+         * Default redirect
+         */ 
+        $goTo = 'error/stop';
+
+        /**
+         * redirect not logged user to login form
+         */
+        if ('guest' == $type) {
+            $goTo = 'user/login';
+        }
+
+        /**
+         * redirect
+         */
+         
+        $redirectHelper = Zend_Controller_Action_HelperBroker::getStaticHelper('Redirector');
+        return $redirectHelper->gotoUrl($goTo);
+    }
+
+    public function getLog()
+    {
+        $bootstrap = $this->getInvokeArg('bootstrap');
+        if (!$bootstrap->hasResource('Log')) {
+            return false;
+        }
+        $log = $bootstrap->getResource('Log');
+        return $log;
+    }
+
+}
+

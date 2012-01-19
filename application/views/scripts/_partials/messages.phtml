@@ -1,0 +1,12 @@
+  <? if (is_array($this->messages) && count($this->messages)): ?>
+    <div class="row">
+      <div class="span16 columns">
+        <? foreach ($this->messages as $msg): ?>
+          <div class="alert-message success" data-alert="alert">
+            <a class="close" href="#">&times;</a>
+            <p><?= $this->escape($this->translate($msg)); ?></p>
+          </div>
+        <? endforeach; ?>
+      </div>
+    </div>
+  <? endif; ?>

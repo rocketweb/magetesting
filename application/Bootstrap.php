@@ -5,24 +5,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     /**
      * Init logger
      * 
-     */
-	protected function _initSession() {
-		
-		$user_session = new Zend_Session_Namespace( 'user_data' );
-		
-		if( ! isset( $user_session->logged ) ) {
-			$router = Zend_Controller_Front::getInstance()->getRouter();
-			$router->addRoute( 'user_login', new Zend_Controller_Router_Route(
-				'*', array( 'controller' => 'user', 'action' => 'login' )
-			) );
-		}
-	}
+	     */
 	
     protected function _initLog()
     {
         // init logger
         $log = new Zend_Log();
-
+				
         // init db writer
         $db = $this->getPluginResource('db')->getDbAdapter();
 

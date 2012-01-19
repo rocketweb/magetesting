@@ -15,9 +15,9 @@ CREATE  TABLE IF NOT EXISTS `user` (
   `email` VARCHAR(50) NOT NULL ,
   `firstname` VARCHAR(50) NOT NULL ,
   `lastname` VARCHAR(50) NOT NULL ,
-  `aded_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `added_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' ,
-  `group` ENUM('admin','user') NOT NULL DEFAULT 'user' ,
+  `group` ENUM('admin','standard-user','','commercial-user') NOT NULL DEFAULT 'standard-user' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) )
 ENGINE = InnoDB;
