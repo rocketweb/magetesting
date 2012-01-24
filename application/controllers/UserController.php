@@ -20,16 +20,6 @@ class UserController extends Integration_Controller_Action
         $request = $this->getRequest();
         $form    = new Application_Form_UserLogin();
 
-        // if user is logged, redirect him to dashboard
-        if (Zend_Auth::getInstance()->hasIdentity()) {
-        	echo 'die';die;
-            return $this->_helper->redirector->gotoRoute(array(
-               'module'     => 'default',
-               'controller' => 'user',
-               'action'     => 'index',
-            ), 'default', true);
-        }
-
         if ($this->getRequest()->isPost()) {
             $formData = $request->getPost();
 

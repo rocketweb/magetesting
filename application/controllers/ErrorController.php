@@ -43,14 +43,9 @@ class ErrorController extends Zend_Controller_Action
         $this->view->request   = $errors->request;
     }
 
-    public function getLog()
+    public function stopAction()
     {
-        $bootstrap = $this->getInvokeArg('bootstrap');
-        if (!$bootstrap->hasResource('Log')) {
-            return false;
-        }
-        $log = $bootstrap->getResource('Log');
-        return $log;
+        // action body
     }
 
 
