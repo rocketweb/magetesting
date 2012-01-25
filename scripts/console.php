@@ -90,6 +90,7 @@ if (isset($opts->magentoinstall)) {
         exit;
     }
     
+    $select = new Zend_Db_Select($db);
     $sql = $select
             ->from('queue')
             ->joinLeft('version', 'queue.version_id = version.id',array('version'))
