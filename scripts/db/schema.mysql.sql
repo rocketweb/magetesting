@@ -44,7 +44,7 @@ DROP TABLE IF EXISTS `queue` ;
 CREATE  TABLE IF NOT EXISTS `queue` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT 'CE' ,
-  `status` ENUM('ready','installing','closed','pending') NOT NULL ,
+  `status` ENUM('ready','installing','closed','pending') NOT NULL DEFAULT 'pending' ,
   `version_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
   `domain` VARCHAR(10) NOT NULL ,
