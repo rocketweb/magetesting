@@ -21,6 +21,16 @@ class Application_Model_Queue
                 ->select()->from('queue')->join('version', 'queue.version_id = version.id',array('version'));
         return $sql->query()->fetchAll();
     }
+    
+    public static function getAllForUser($userId){
+        $sql = Zend_Db_Table::getDefaultAdapter()
+                ->select()
+                ->from('queue')
+                ->join('version', 'queue.version_id = version.id',array('version'))
+                ->where('user_id = ?',$userId);
+        
+        return $sql->query()->fetchAll();
+    }
 
 }
 

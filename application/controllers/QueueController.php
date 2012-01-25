@@ -1,6 +1,6 @@
 <?php
 
-class GetMagentoController extends Zend_Controller_Action
+class QueueController extends Zend_Controller_Action
 {
 
     public function init()
@@ -10,6 +10,10 @@ class GetMagentoController extends Zend_Controller_Action
 
     public function indexAction()
     {      
+    }
+    
+    public function addAction()
+    { 
         $request = Zend_Controller_Front::getInstance()->getRequest();
         if ($request->isPost()){
             
