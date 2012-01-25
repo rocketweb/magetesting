@@ -11,7 +11,7 @@ class Application_Model_Queue
                     "status" => $data['status'],
                     "version_id" => $data['version_id'],
                     "user_id" => $data['user_id'],
-                    "domain" => $data['domain'],
+                    "domain" => 'm'.$data['domain'],
                         )
         );
     }

@@ -14,9 +14,13 @@ class QueueController extends Zend_Controller_Action
     
     public function addAction()
     { 
+        $form = new Application_Form_QueueAdd();
+        $form->populate($this->getRequest()->getParams());
+        
         $request = Zend_Controller_Front::getInstance()->getRequest();
         if ($request->isPost()){
             
+            if ($form->isValid($this->getRequest()->getParams())){
             //needs validation!
             $data = array(
                 'version_id' => $request->getParam('version'),
@@ -27,15 +31,22 @@ class QueueController extends Zend_Controller_Action
                                 str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5)
                         )
                         , 0, 5),
-                'status' => 'inprogress');
+                'status' => 'pending');
 
             //insert into queue
             Application_Model_Queue::add($data);
-            
+            $this->_helper->FlashMessenger('New installation added to queue');
             $this->_helper->redirector('index', 'index');
+            }else {
+                $this->_helper->FlashMessenger('Form needs verification');
+            }
+            
+            
+            
         }
         //assign to templates
         $this->view->editions = Application_Model_Edition::getAll();
+        $this->view->form = $form;
     }
     
     public function getversionsAction(){

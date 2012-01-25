@@ -14,6 +14,18 @@ class Application_Model_Version {
                 ->where('edition = ?',$keyname);
         return $sql->query()->fetchAll();
     }
+    
+    //TODO: prepare mapper for this
+    public static function getKeys(){
+         $sql = Zend_Db_Table::getDefaultAdapter()->select()
+                ->from('version');
+        $res = $sql->query()->fetchAll(); 
+        
+        foreach ($res as $r){
+            $temp[] = $r['id'];
+        }
+        return $temp;
+    }
 
 }
 

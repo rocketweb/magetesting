@@ -18,13 +18,26 @@
         <tr>
           <td><?php echo $item['edition']?></td>
           <td><?php echo $item['version']?></td>
-          <?php if($item['status']=='ready'): ?>
-          <td><span class="label success"><?php echo ucfirst($item['status']) ?></span></td>
-          <?php elseif($item['status']=='inprogress'): ?>
+          <?php switch($item['status']){ 
+              case 'ready':?>
+          <td><span class="label success"><?php echo ucfirst($item['status']) ?></span>
+          <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn success">Visit</a>
+          </td>
+          <?php break;
+            case 'pending':  ?>
           <td><span class="label warning">In Queue</span> <span class="label">15 minutes left</span></td>
-          <?php elseif($item['status']=='closed'): ?>
+          <?php break;
+            case 'closed': ?>
           <td><span class="label success">Ready</span></td>
-          <?php endif; ?>
+          <?php break;
+            case 'installing': ?>
+          <td><span class="label success">Installing..</span></td>
+          <?php break;
+            default: ?>
+          <td><span class="label warning"></span></td>
+          
+          <?php } ?>
+          
           <td><a href="#" class="btn danger">Close</a></td>
         </tr>
         <?php endforeach; ?>

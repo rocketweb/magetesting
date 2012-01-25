@@ -131,9 +131,13 @@ if (isset($opts->magentoinstall)) {
     $adminuser = 'admin';
     $adminpass = substr(
             str_shuffle(
-                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5)
+                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 5)
             )
-            , 0, 8);
+            , 0, 5).substr(
+            str_shuffle(
+                    str_repeat('0123456789', 5)
+            )
+            , 0, 4);
     $adminfname = 'Admin';
     $adminlname = 'McAdmin';
 
@@ -166,14 +170,15 @@ if (isset($opts->magentoinstall)) {
     echo "Setting permissions...\n";
     exec('chmod o+w var var/.htaccess app/etc');
     exec('chmod -R o+w media');
+    exec('chmod 777 mage');
 
     echo "Initializing PEAR registry...\n";
     exec('./mage mage-setup .',$output);
-    //var_dump($output);
+    var_dump($output);
 
     echo "Downloading packages...\n";
-    exec('./mage install magento-core/Mage_All_Latest',$output);
-    //var_dump($output);
+    exec('./mage install http://connect20.magentocommerce.com/community Mage_All_Latest',$output);
+    var_dump($output);
 
     echo "Cleaning up files...\n";
     exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*');
@@ -201,7 +206,7 @@ if (isset($opts->magentoinstall)) {
             ' --admin_email "' . $adminemail . '"' .
             ' --admin_username "' . $adminuser . '"' .
             ' --admin_password "' . $adminpass . '"',$output);
-    //var_dump($output);
+    var_dump($output);
 
     echo "Finished installing Magento\n";
     
