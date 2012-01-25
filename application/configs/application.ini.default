@@ -53,10 +53,6 @@ resources.session.saveHandler.options.modifiedColumn = "modified"
 resources.session.saveHandler.options.dataColumn     = "data"
 resources.session.saveHandler.options.lifetimeColumn = "lifetime"
 
-;Magento Stuff
-magento.adminEmail = 'jan@rocketweb.com'
-magento.storeUrl = 'http://magentotest.dev'
-
 [staging : production]
 
 [testing : production]

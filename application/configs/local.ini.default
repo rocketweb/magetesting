@@ -1,0 +1,10 @@
+[production]
+;Magento nstallation Stuff
+magento.adminEmail = "jan@rocketweb.com"
+magento.storeUrl = "http://magentointegration.dev"
+
+[staging : production]
+
+[testing : production]
+
+[development : production]
