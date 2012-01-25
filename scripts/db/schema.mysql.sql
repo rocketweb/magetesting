@@ -44,7 +44,7 @@ DROP TABLE IF EXISTS `queue` ;
 CREATE  TABLE IF NOT EXISTS `queue` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT 'CE' ,
-  `status` ENUM('ready','inprogress','closed') NOT NULL ,
+  `status` ENUM('ready','installing','closed','pending') NOT NULL ,
   `version_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
   `domain` VARCHAR(10) NOT NULL ,
@@ -94,12 +94,16 @@ CREATE  TABLE IF NOT EXISTS `session` (
 ENGINE = InnoDB;
 
 
-CREATE TABLE `edition` (
-  `id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `key` VARCHAR(3)  NOT NULL,
-  `name` VARCHAR(255)  NOT NULL,
-  PRIMARY KEY (`id`)
-)
+-- -----------------------------------------------------
+-- Table `edition`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `edition` ;
+
+CREATE  TABLE IF NOT EXISTS `edition` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `key` VARCHAR(5) NULL ,
+  `name` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
 

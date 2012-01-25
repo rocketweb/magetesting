@@ -16,7 +16,11 @@ UNLOCK TABLES;
 
 /*!40000 ALTER TABLE `version` DISABLE KEYS */;
 LOCK TABLES `version` WRITE;
-INSERT INTO `magentointegration`.`version` VALUES  (1,'CE','1.6.0.0'),
- (2,'CE','1.6.1.0');
+INSERT INTO `magentointegration`.`version` VALUES  
+(1,'CE','1.5.0.1'),
+(2,'CE','1.5.1.0'),
+(3,'CE','1.6.0.0'),
+(5,'CE','1.6.2.0'),
+(4,'CE','1.6.1.0');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `version` ENABLE KEYS */;

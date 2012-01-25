@@ -2,7 +2,7 @@
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application/'));
 define('APPLICATION_ENV', 'development');
-
+define('INSTANCE_PATH',APPLICATION_PATH . '/../instance/');
 /**
  * Setup for includes
  */
@@ -73,18 +73,41 @@ if (isset($opts->magentoinstall)) {
     $db = $bootstrap->getResource('db');
 
     $select = new Zend_Db_Select($db);
+    
+    //check if any script is currently being installed
     $sql = $select
             ->from('queue')
-            ->joinLeft('version', 'queue.version_id = version.id')
-            ->joinLeft('user', 'queue.user_id = user.id')
-            ->where('queue.status =?', 'inprogress')
+            ->joinLeft('version', 'queue.version_id = version.id',array('version'))
+            ->joinLeft('user', 'queue.user_id = user.id',array('email'))
+            ->where('queue.status =?', 'installing');
+
+    $query = $sql->query();
+    $queueElement = $query->fetch();
+    
+    if ($queueElement){
+        //something is currently installed, abort
+        echo 'Another installation in progress, aborting';
+        exit;
+    }
+    
+    $sql = $select
+            ->from('queue')
+            ->joinLeft('version', 'queue.version_id = version.id',array('version'))
+            ->joinLeft('user', 'queue.user_id = user.id',array('email'))
+            ->where('queue.status =?', 'pending')
             ->where('user.status =?', 'active')
     ;
 
     $query = $sql->query();
     $queueElement = $query->fetch();
 
-
+    
+    if (!$queueElement){
+        echo 'Nothing in queue';
+        exit;
+    }
+    
+    $db->update('queue',array('status'=>'installing'),'id='.$queueElement['id']);
 
     $options['nestSeparator'] = ':';
     $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini',
@@ -104,9 +127,6 @@ if (isset($opts->magentoinstall)) {
     $dbuser = $configArr['resources.db.params.username']; //fetch from zend config
     $dbpass = $configArr['resources.db.params.password']; //fetch from zend config
 
-    $adminemail = $configLocalArr['magento.adminEmail']; //fetch from zend config
-    $storeurl = $configLocalArr['magento.storeUrl']; //fetch from zend config
-
     $adminuser = 'admin';
     $adminpass = substr(
             str_shuffle(
@@ -118,26 +138,41 @@ if (isset($opts->magentoinstall)) {
 
     $magentoVersion = $queueElement['version'];
     $domain = $queueElement['domain'];
+    $dbprefix = $domain.'_';
+    
+    $adminemail = $configLocalArr['magento.adminEmail']; //fetch from zend config
+    $storeurl = $configLocalArr['magento.storeUrl'].'/instance/'.$domain; //fetch from zend config
 
+    $startCwd =  getcwd();
+    chdir(INSTANCE_PATH);
+    
     echo "Now installing Magento without sample data...\n";
     echo "Downloading packages...\n";
-    exec('wget http://www.magentocommerce.com/downloads/assets/' . $magentoVersion . '/magento-' . $magentoVersion . '.tar.gz');
+    exec('mkdir '.$domain);
+    
+        
+    chdir($domain);
+    exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/');  
 
     echo "Extracting data...\n";
-    exec('tar -zxvf magento-' . $magentoVersion . '.tar.gz');
+    exec('tar -zxvf magento-' . $magentoVersion . '.tar.gz',$output);
+    //var_dump($output);
 
     echo "Moving files...\n";
-    exec('mv magento/* magento/.htaccess .');
+    exec('mv magento/* magento/.htaccess .',$output);
+    //var_dump($output);
 
     echo "Setting permissions...\n";
     exec('chmod o+w var var/.htaccess app/etc');
     exec('chmod -R o+w media');
 
     echo "Initializing PEAR registry...\n";
-    exec('./pear mage-setup .');
+    exec('./mage mage-setup .',$output);
+    //var_dump($output);
 
     echo "Downloading packages...\n";
-    exec('./pear install magento-core/Mage_All_Latest');
+    exec('./mage install magento-core/Mage_All_Latest',$output);
+    //var_dump($output);
 
     echo "Cleaning up files...\n";
     exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*');
@@ -154,7 +189,7 @@ if (isset($opts->magentoinstall)) {
             ' --db_name "' . $dbname . '"' .
             ' --db_user "' . $dbuser . '"' .
             ' --db_pass "' . $dbpass . '"' .
-            ' --db_prefix "' . $domain . '"' .
+            ' --db_prefix "' . $dbprefix . '"' .
             ' --url "' . $storeurl . '"' .
             ' --use_rewrites "yes"' .
             ' --use_secure "no"' .
@@ -164,11 +199,17 @@ if (isset($opts->magentoinstall)) {
             ' --admin_lastname "' . $adminlname . '"' .
             ' --admin_email "' . $adminemail . '"' .
             ' --admin_username "' . $adminuser . '"' .
-            ' --admin_password "' . $adminpass . '"');
+            ' --admin_password "' . $adminpass . '"',$output);
+    //var_dump($output);
 
     echo "Finished installing Magento\n";
     
     //TODO: add mail info about ready installation
     
+    
+    //$update = new Zend_Db_Update($db);
+    $db->update('queue',array('status'=>'ready'),'id='.$queueElement['id']);
+    
+    chdir($startCwd);
     exit;
 }
