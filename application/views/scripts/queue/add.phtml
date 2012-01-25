@@ -23,7 +23,7 @@
         
         $.ajax({
             type: "POST",
-            url: "getmagento/getVersions",
+            url: "<?php echo $this->baseUrl('queue/getVersions');?>",
             data: "edition="+ $("#edition").val(),
              dataType: "json",
             success: function(json){
