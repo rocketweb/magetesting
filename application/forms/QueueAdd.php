@@ -6,29 +6,32 @@ class Application_Form_QueueAdd extends Integration_Form{
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
-        $this->setAttrib('class', 'form-stacked');   
-              
+    		$this->setAttrib('class', 'form-stacked');   
+            //TODO: move model usage to controller
+        
+        		$editionModel = new Application_Model_Edition();
+        		
             $this->addElement('select', 'edition', array(
                 'label'      => 'Edition',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                    new Zend_Validate_InArray(array_keys(Application_Model_Edition::getKeys()))
+                    new Zend_Validate_InArray(array_keys($editionModel->getKeys()))
                 )
             ));
             
             $emptyVersion = array('' => 'Choose...');
-            $versions = array_merge($emptyVersion,Application_Model_Edition::getOptions());
+            $versions = array_merge($emptyVersion,$editionModel->getOptions());
             
             $this->edition->addMultiOptions($versions);
         
-            
+            $versionModel = new Application_Model_Version();
             $this->addElement('select', 'version', array(
                 'label'      => 'Version',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                    new Zend_Validate_InArray(array_keys(Application_Model_Version::getKeys()))
+                    new Zend_Validate_InArray($versionModel->getKeys())
                 )
             ));
             //$this->version->addMultiOptions();

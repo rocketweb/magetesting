@@ -11,7 +11,8 @@ class IndexController extends Integration_Controller_Action
     public function indexAction()
     {
         // action body
-        $this->view->queue = Application_Model_Queue::getAll();
+        $queueModel = new Application_Model_Queue();
+        $this->view->queue = $queueModel->getAll();
     }
 
 

@@ -22,19 +22,19 @@ class QueueController extends Zend_Controller_Action
             
             if ($form->isValid($this->getRequest()->getParams())){
             //needs validation!
-            $data = array(
-                'version_id' => $request->getParam('version'),
-                'edition' => $request->getParam('edition'),
-                'user_id' => 1,
-                'domain' => substr(
-                        str_shuffle(
-                                str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5)
-                        )
-                        , 0, 5),
-                'status' => 'pending');
-
-            //insert into queue
-            Application_Model_Queue::add($data);
+            $queueModel = new Application_Model_Queue();
+            $queueModel->setVersionId( $form->version->getValue() )
+            		->setEdition( $form->edition->getValue() )
+            		->setUserId( 1 )
+            		->setDomain(
+            			substr(
+                  	str_shuffle(
+                  		str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5)
+                  )
+                	, 0, 5)
+            		)
+            		->setStatus( 'pending' );
+            $queueModel->save();
             $this->_helper->FlashMessenger('New installation added to queue');
             $this->_helper->redirector('index', 'index');
             }else {
@@ -45,7 +45,8 @@ class QueueController extends Zend_Controller_Action
             
         }
         //assign to templates
-        $this->view->editions = Application_Model_Edition::getAll();
+        $editionModel = new Application_Model_Edition();
+        $this->view->editions = $editionModel->getAll();
         $this->view->form = $form;
     }
     
@@ -56,7 +57,8 @@ class QueueController extends Zend_Controller_Action
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $edition = $request->getParam('edition','CE');
         if ($request->isPost()){
-            $versions = Application_Model_Version::getAllForEdition($edition);
+            $versionModel = new Application_Model_Version();
+            $versions = $versionModel->getAllForEdition($edition);
             if(empty($versions)){
                 $versions = array(
                     array(
