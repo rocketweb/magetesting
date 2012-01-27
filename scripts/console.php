@@ -177,7 +177,7 @@ if (isset($opts->magentoinstall)) {
     //var_dump($output);
 
     echo "Downloading packages...\n";
-    exec('./mage install http://connect20.magentocommerce.com/community Mage_All_Latest',$output);
+    //exec('./mage install http://connect20.magentocommerce.com/community Mage_All_Latest',$output);
     //var_dump($output);
 
     echo "Cleaning up files...\n";
