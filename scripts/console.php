@@ -174,11 +174,11 @@ if (isset($opts->magentoinstall)) {
 
     echo "Initializing PEAR registry...\n";
     exec('./mage mage-setup .',$output);
-    var_dump($output);
+    //var_dump($output);
 
     echo "Downloading packages...\n";
     exec('./mage install http://connect20.magentocommerce.com/community Mage_All_Latest',$output);
-    var_dump($output);
+    //var_dump($output);
 
     echo "Cleaning up files...\n";
     exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*');
@@ -206,7 +206,7 @@ if (isset($opts->magentoinstall)) {
             ' --admin_email "' . $adminemail . '"' .
             ' --admin_username "' . $adminuser . '"' .
             ' --admin_password "' . $adminpass . '"',$output);
-    var_dump($output);
+    //var_dump($output);
 
     echo "Finished installing Magento\n";
     
