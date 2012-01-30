@@ -11,16 +11,16 @@ class Integration_Acl extends Zend_Acl
          * Set up roles
          */
         $this->addRole(new Zend_Acl_Role('guest'))
-             ->addRole(new Zend_Acl_Role('standard-user'))
-             ->addRole(new Zend_Acl_Role('commercial-user'))
-             ->addRole(new Zend_Acl_Role('admin'));
+        ->addRole(new Zend_Acl_Role('standard-user'))
+        ->addRole(new Zend_Acl_Role('commercial-user'))
+        ->addRole(new Zend_Acl_Role('admin'));
 
         /**
          * Set up resources
          */
         $this->add(new Zend_Acl_Resource('default_error'));
         $this->add(new Zend_Acl_Resource('default_index'));
-				$this->add(new Zend_Acl_Resource('default_user'));
+        $this->add(new Zend_Acl_Resource('default_user'));
         /**
          * Deny for all (we use white list)
          */
@@ -31,29 +31,29 @@ class Integration_Acl extends Zend_Acl
          */
         $this->allow('guest', 'default_error', array('error'));
         $this->allow('guest', 'default_user', array(
-            'login', 'password-recovery', 'register'
+                'login', 'password-recovery', 'register'
         ));
-        
+
         /**
          * Set up privileges for admin
          */
         $this->allow('admin', 'default_error', array('error'));
         $this->allow('admin', 'default_index', array('index'));
-        
+
         $this->allow('admin', 'default_user', array(
-            'index', 'logout'
+                'index', 'logout'
         ));
-        
+
         /**
          * Set up privileges for admin
          */
         $this->allow('standard-user', 'default_error', array('error'));
         $this->allow('standard-user', 'default_index', array('index'));
-        
+
         $this->allow('standard-user', 'default_user', array(
-            'index', 'logout'
+                'index', 'logout'
         ));
-        
+
     }
 
     /**
@@ -69,8 +69,8 @@ class Integration_Acl extends Zend_Acl
         if (is_null($role)) {
             $role = 'guest';
         }
-        
-				
+
+
         return parent::isAllowed($role, $resource, $privilege);
     }
 }

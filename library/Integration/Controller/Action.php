@@ -8,15 +8,15 @@ class Integration_Controller_Action extends Zend_Controller_Action
     protected $db;
     protected $acl;
     protected $auth;
-    
-    
+
+
     public function init()
     {
         $this->_helper->redirector->setUseAbsoluteUri(true);
         $this->db = Zend_Db_Table::getDefaultAdapter();
         $this->acl = new Integration_Acl();
         $this->auth = Zend_Auth::getInstance();
-        
+
     }
 
     /**
@@ -26,12 +26,12 @@ class Integration_Controller_Action extends Zend_Controller_Action
     {
         $user = new Application_Model_User();
         $users = $user->fetchAll();
-        
+
         // ACL
         $acl = new Integration_Acl();
         $auth = Zend_Auth::getInstance();
         $request = $this->getRequest();
-				
+
         // Getting mesages from session namespace.
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages() + $this->_helper->FlashMessenger->getMessages();
         $this->_helper->FlashMessenger->clearMessages();
@@ -40,24 +40,24 @@ class Integration_Controller_Action extends Zend_Controller_Action
         $controller = $request->getControllerName();
         $action = $request->getActionName();
         $module = $request->getModuleName();
-				
-        $type = (is_null($auth->getIdentity())) 
-            ? 'guest' : $auth->getIdentity()->group;
+
+        $type = (is_null($auth->getIdentity()))
+        ? 'guest' : $auth->getIdentity()->group;
 
         // for navigation purposes
         $this->view->navigation()->setAcl($acl);
         $this->view->navigation()->setRole($type);
-        
+
         if ($controller == 'error' && $action == 'stop') {
             return $request;
         }
 
         $resource = $module . '_' . $controller;
-				
+
         if (!$acl->has($resource)) {
             throw new Zend_Controller_Action_Exception("Resource '" . $resource . "' doesn't exist.", 404);
         }
-				
+
         if ($auth->hasIdentity()) {
             $user = new Application_Model_User();
             $user->find($auth->getIdentity()->id);
@@ -70,7 +70,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
 
         /**
          * Default redirect
-         */ 
+         */
         $goTo = 'error/stop';
 
         /**

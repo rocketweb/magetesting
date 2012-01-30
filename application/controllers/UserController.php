@@ -5,15 +5,15 @@ class UserController extends Integration_Controller_Action
 
     public function init()
     {
-       $this->_modelUser = new Application_Model_User();
+        $this->_modelUser = new Application_Model_User();
     }
 
     public function indexAction()
     {
         // action body
     }
-	
-	public function loginAction()
+
+    public function loginAction()
     {
         $this->_helper->layout->disableLayout();
 
@@ -33,9 +33,9 @@ class UserController extends Integration_Controller_Action
                 $dbAdapter = Zend_Db_Table::getDefaultAdapter();
                 $adapter = new Zend_Auth_Adapter_DbTable($dbAdapter);
                 $adapter->setTableName('user')
-                        ->setIdentityColumn('login')
-                        ->setCredentialColumn('password')
-                        ->setCredentialTreatment('SHA1(?)');
+                ->setIdentityColumn('login')
+                ->setCredentialColumn('password')
+                ->setCredentialTreatment('SHA1(?)');
                 $adapter->setIdentity($login)->setCredential($pass);
 
                 $result = $adapter->authenticate();
@@ -46,32 +46,32 @@ class UserController extends Integration_Controller_Action
                     if ($userData->status == 'inactive') {
                         $this->_helper->FlashMessenger('Your account is inactive');
                         return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'login',
-                                ), 'default', true);
+                                'module' => 'default',
+                                'controller' => 'user',
+                                'action' => 'login',
+                        ), 'default', true);
                     } else {
 
 
                         $auth->getStorage()->write(
-                            $adapter->getResultRowObject(null, 'password')
+                                $adapter->getResultRowObject(null, 'password')
                         );
 
                         $this->_helper->FlashMessenger('You have been logged in successfully');
 
                         return $this->_helper->redirector->gotoRoute(array(
-                                    'module' => 'default',
-                                    'controller' => 'index',
-                                    'action' => 'index',
-                                ), 'default', true);
+                                'module' => 'default',
+                                'controller' => 'index',
+                                'action' => 'index',
+                        ), 'default', true);
                     }
                 } else {
                     $this->_helper->FlashMessenger('You have entered wrong credentials. Please try again.');
-										
+
                     return $this->_helper->redirector->gotoRoute(array(
-                        'module'     => 'default',
-                        'controller' => 'user',
-                        'action'     => 'login',
+                            'module'     => 'default',
+                            'controller' => 'user',
+                            'action'     => 'login',
                     ), 'default', true);
                 }
             } else {
@@ -89,11 +89,11 @@ class UserController extends Integration_Controller_Action
 
         Zend_Auth::getInstance()->clearIdentity();
         Zend_Session::destroy(true, false);
-				
+
         return $this->_helper->redirector->gotoRoute(array(
-            'module'     => 'default',
-            'controller' => 'user',
-            'action'     => 'login',
+                'module'     => 'default',
+                'controller' => 'user',
+                'action'     => 'login',
         ), 'default', true);
     }
 

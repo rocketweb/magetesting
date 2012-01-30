@@ -4,7 +4,7 @@ class Application_Model_UserMapper {
 
     protected $_dbTable;
 
-    public function setDbTable($dbTable) 
+    public function setDbTable($dbTable)
     {
         if (is_string($dbTable)) {
             $dbTable = new $dbTable();
@@ -16,7 +16,7 @@ class Application_Model_UserMapper {
         return $this;
     }
 
-    public function getDbTable() 
+    public function getDbTable()
     {
         if (null === $this->_dbTable) {
             $this->setDbTable('Application_Model_DbTable_User');
@@ -24,21 +24,21 @@ class Application_Model_UserMapper {
         return $this->_dbTable;
     }
 
-    public function save(Application_Model_User $user) 
+    public function save(Application_Model_User $user)
     {
         $data = array(
-            'id' => $user->getId(),
-            'firstname'   => $user->getFirstname(),
-            'lastname' => $user->getLastname(),
-            'email' => $user->getEmail(),
-            'login' => $user->getLogin(),
-            'group' => $user->getGroup(),
-            'status' => $user->getStatus()
+            'id'         => $user->getId(),
+            'firstname'  => $user->getFirstname(),
+            'lastname'   => $user->getLastname(),
+            'email'      => $user->getEmail(),
+            'login'      => $user->getLogin(),
+            'group'      => $user->getGroup(),
+            'status'     => $user->getStatus()
         );
-        
+
         if($user->getPassword() !== null && $user->getPassword() !== '')
             $data['password'] = sha1($user->getPassword());
-        
+
         if (null === ($id = $user->getId())) {
             unset($data['id']);
             $data['added_date'] = $user->getAddedDate();
@@ -59,13 +59,13 @@ class Application_Model_UserMapper {
         }
         $row = $result->current();
         $user->setId($row->id)
-                  ->setFirstname($row->firstname)
-                  ->setLastname($row->lastname)
-                  ->setEmail($row->email)
-                  ->setLogin($row->login)
-                  ->setGroup($row->group)
-                  ->setAddedDate($row->added_date)
-	                ->setStatus($row->status);
+            ->setFirstname($row->firstname)
+            ->setLastname($row->lastname)
+            ->setEmail($row->email)
+            ->setLogin($row->login)
+            ->setGroup($row->group)
+            ->setAddedDate($row->added_date)
+            ->setStatus($row->status);
         return $user;
     }
 
@@ -76,23 +76,23 @@ class Application_Model_UserMapper {
         } else{
             $resultSet = $this->getDbTable()->fetchAll();
         }
-        
+
         $entries   = array();
         foreach ($resultSet as $row) {
             $entry = new Application_Model_User();
             $entry->setId($row->id)
-                ->setFirstname($row->firstname)
-                ->setLastname($row->lastname)
-                ->setEmail($row->email)
-                ->setLogin($row->login)
-                ->setGroup($row->group)
-                ->setAddedDate($row->added_date)
-                ->setStatus($row->status);
+                    ->setFirstname($row->firstname)
+                    ->setLastname($row->lastname)
+                    ->setEmail($row->email)
+                    ->setLogin($row->login)
+                    ->setGroup($row->group)
+                    ->setAddedDate($row->added_date)
+                    ->setStatus($row->status);
             $entries[] = $entry;
         }
         return $entries;
     }
-    
+
     public function fetchUsersAssignedToItem($itemId)
     {
         $resultSet = $this->getDbTable()->fetchUsersAssignedToItem($itemId);
@@ -102,5 +102,5 @@ class Application_Model_UserMapper {
         }
         return $entries;
     }
-    
+
 }

@@ -11,7 +11,7 @@ class Application_Model_User {
     protected $_email;
 
     protected $_login;
-    
+
     protected $_password;
 
     protected $_group;
@@ -24,14 +24,14 @@ class Application_Model_User {
 
     protected $_mapper;
 
-    public function __construct(array $options = null) 
+    public function __construct(array $options = null)
     {
         if (is_array($options)) {
             $this->setOptions($options);
         }
     }
 
-    public function setOptions(array $options) 
+    public function setOptions(array $options)
     {
         $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
         $methods = get_class_methods($this);
@@ -44,104 +44,104 @@ class Application_Model_User {
         return $this;
     }
 
-    public function setId($id) 
+    public function setId($id)
     {
         $this->_id = (int)$id;
         return $this;
     }
 
-    public function getId() 
+    public function getId()
     {
         return $this->_id;
     }
-    
-    public function setFirstname($firstname) 
+
+    public function setFirstname($firstname)
     {
         $this->_firstname = $firstname;
         return $this;
     }
 
-    public function getFirstname() 
+    public function getFirstname()
     {
         return $this->_firstname;
     }
 
-    public function setLastname($lastname) 
+    public function setLastname($lastname)
     {
         $this->_lastname = $lastname;
         return $this;
     }
 
-    public function getLastname() 
+    public function getLastname()
     {
         return $this->_lastname;
     }
 
-    public function setEmail($email) 
+    public function setEmail($email)
     {
         $this->_email = $email;
         return $this;
     }
 
-    public function getEmail() 
+    public function getEmail()
     {
         return $this->_email;
     }
 
-    public function setLogin($login) 
+    public function setLogin($login)
     {
         $this->_login = $login;
         return $this;
     }
 
-    public function getLogin() 
+    public function getLogin()
     {
         return $this->_login;
     }
 
-    public function setPassword($password) 
+    public function setPassword($password)
     {
         $this->_password = $password;
         return $this;
     }
 
-    public function getPassword() 
+    public function getPassword()
     {
         return $this->_password;
     }
 
-    public function setGroup($group) 
+    public function setGroup($group)
     {
         $this->_group = $group;
         return $this;
     }
 
-    public function getGroup() 
+    public function getGroup()
     {
         return $this->_group;
     }
 
-    public function setAddedDate($addedDate) 
+    public function setAddedDate($addedDate)
     {
         $this->_addedDate = $addedDate;
         return $this;
     }
 
-    public function getAddedDate() 
+    public function getAddedDate()
     {
         return $this->_addedDate;
     }
 
-    public function setStatus($status) 
+    public function setStatus($status)
     {
         $this->_status = $status;
         return $this;
     }
 
-    public function getStatus() 
+    public function getStatus()
     {
         return $this->_status;
-	  }
+    }
 
     public function setMapper($mapper)
     {
@@ -181,14 +181,14 @@ class Application_Model_User {
     public function __toArray()
     {
         return array(
-        'id' => $this->getId(),
-        'firstname' => $this->getFirstname(),
-        'lastname' => $this->getLastname(),
-        'email' => $this->getEmail(),
-        'login' => $this->getLogin(),
-        'group' => $this->getGroup(),
-        'addedDate' => $this->getAddedDate(),
-        'status' => $this->getStatus()
+            'id'         => $this->getId(),
+            'firstname'  => $this->getFirstname(),
+            'lastname'   => $this->getLastname(),
+            'email'      => $this->getEmail(),
+            'login'      => $this->getLogin(),
+            'group'      => $this->getGroup(),
+            'addedDate'  => $this->getAddedDate(),
+            'status'     => $this->getStatus()
         );
     }
 }

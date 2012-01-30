@@ -2,7 +2,7 @@
 
 /**
  * It extends HtmlTag decorator to add error flag for the field container.
- * 
+ *
  * @author     Rocket Web
  */
 class Zend_Form_Decorator_Overall extends Zend_Form_Decorator_HtmlTag

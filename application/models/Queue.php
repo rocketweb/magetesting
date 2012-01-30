@@ -2,161 +2,161 @@
 
 class Application_Model_Queue {
 
-		protected $_id;
+    protected $_id;
 
-		protected $_edition;
+    protected $_edition;
 
-		protected $_status;
-		
-		protected $_version_id;
-		
-		protected $_user_id;
-		
-		protected $_domain;
-		
-		protected $_mapper;
-		
-		public function __construct(array $options = null) 
-		{
-				if (is_array($options)) {
-						$this->setOptions($options);
-				}
-		}
+    protected $_status;
 
-		public function setOptions(array $options) 
-		{
-				$filter = new Zend_Filter_Word_UnderscoreToCamelCase();
-				$methods = get_class_methods($this);
-				foreach ($options as $key => $value) {
-						$method = 'set' . $filter->filter($key);
-						if (in_array($method, $methods)) {
-								$this->$method($value);
-						}
-				}
-				return $this;
-		}
+    protected $_version_id;
 
-		public function setId($id) 
-		{
-				$this->_id = (int)$id;
-				return $this;
-		}
+    protected $_user_id;
 
-		public function getId() 
-		{
-				return $this->_id;
-		}
-		
-		public function setEdition($edition) 
-		{
-				$this->_edition = $edition;
-				return $this;
-		}
+    protected $_domain;
 
-		public function getEdition() 
-		{
-				return $this->_edition;
-		}
-		
-		public function setStatus($status) 
-		{
-				$this->_status = $status;
-				return $this;
-		}
+    protected $_mapper;
 
-		public function getStatus()
-		{
-				return $this->_status;
-		}
-		
-		public function setVersionId($version_id) 
-		{
-				$this->_version_id = $version_id;
-				return $this;
-		}
+    public function __construct(array $options = null)
+    {
+        if (is_array($options)) {
+            $this->setOptions($options);
+        }
+    }
 
-		public function getVersionId() 
-		{
-				return $this->_version_id;
-		}
+    public function setOptions(array $options)
+    {
+        $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
+        $methods = get_class_methods($this);
+        foreach ($options as $key => $value) {
+            $method = 'set' . $filter->filter($key);
+            if (in_array($method, $methods)) {
+                $this->$method($value);
+            }
+        }
+        return $this;
+    }
 
-		public function setUserId($user_id) 
-		{
-				$this->_user_id = $user_id;
-				return $this;
-		}
+    public function setId($id)
+    {
+        $this->_id = (int)$id;
+        return $this;
+    }
 
-		public function getUserId() 
-		{
-				return $this->_user_id;
-		}
-		
-		public function setDomain($domain) 
-		{
-				$this->_domain = $domain;
-				return $this;
-		}
+    public function getId()
+    {
+        return $this->_id;
+    }
 
-		public function getDomain()
-		{
-				return $this->_domain;
-		}
-		
-		public function setMapper($mapper)
-		{
-				$this->_mapper = $mapper;
-				return $this;
-		}
+    public function setEdition($edition)
+    {
+        $this->_edition = $edition;
+        return $this;
+    }
 
-		public function getMapper()
-		{
-				if (null === $this->_mapper) {
-						$this->setMapper(new Application_Model_QueueMapper());
-				}
-				return $this->_mapper;
-		}
+    public function getEdition()
+    {
+        return $this->_edition;
+    }
 
-		public function save()
-		{
-				$this->getMapper()->save($this);
-		}
+    public function setStatus($status)
+    {
+        $this->_status = $status;
+        return $this;
+    }
 
-		public function delete($id)
-		{
-				$this->getMapper()->delete($id);
-		}
+    public function getStatus()
+    {
+        return $this->_status;
+    }
 
-		public function find($id)
-		{
-				$this->getMapper()->find($id, $this);
-				return $this;
-		}
+    public function setVersionId($version_id)
+    {
+        $this->_version_id = $version_id;
+        return $this;
+    }
 
-		public function fetchAll()
-		{
-				return $this->getMapper()->fetchAll();
-		}
+    public function getVersionId()
+    {
+        return $this->_version_id;
+    }
 
-		public function __toArray()
-		{
-				return array(
-					'id' => $this->getId(),
-					'edition' => $this->getEdition(),
-					'status' => $this->getStatus(),
-					'version_id' => $this->getVersionId(),
-					'user_id' => $this->getUserId(),
-					'domain' => $this->getDomain()
-				);
-		}
-		
-		public function getAll()
-		{
-				return $this->getMapper()->getAll();
-		}
-		
-		public function getAllForUser( $user_id )
-		{
-				return $this->getMapper()->getAllForUser( $user_id );
-		}
-		
+    public function setUserId($user_id)
+    {
+        $this->_user_id = $user_id;
+        return $this;
+    }
+
+    public function getUserId()
+    {
+        return $this->_user_id;
+    }
+
+    public function setDomain($domain)
+    {
+        $this->_domain = $domain;
+        return $this;
+    }
+
+    public function getDomain()
+    {
+        return $this->_domain;
+    }
+
+    public function setMapper($mapper)
+    {
+        $this->_mapper = $mapper;
+        return $this;
+    }
+
+    public function getMapper()
+    {
+        if (null === $this->_mapper) {
+            $this->setMapper(new Application_Model_QueueMapper());
+        }
+        return $this->_mapper;
+    }
+
+    public function save()
+    {
+        $this->getMapper()->save($this);
+    }
+
+    public function delete($id)
+    {
+        $this->getMapper()->delete($id);
+    }
+
+    public function find($id)
+    {
+        $this->getMapper()->find($id, $this);
+        return $this;
+    }
+
+    public function fetchAll()
+    {
+        return $this->getMapper()->fetchAll();
+    }
+
+    public function __toArray()
+    {
+        return array(
+                'id' => $this->getId(),
+                'edition' => $this->getEdition(),
+                'status' => $this->getStatus(),
+                'version_id' => $this->getVersionId(),
+                'user_id' => $this->getUserId(),
+                'domain' => $this->getDomain()
+        );
+    }
+
+    public function getAll()
+    {
+        return $this->getMapper()->getAll();
+    }
+
+    public function getAllForUser( $user_id )
+    {
+        return $this->getMapper()->getAllForUser( $user_id );
+    }
+
 }

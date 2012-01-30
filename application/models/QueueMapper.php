@@ -4,7 +4,7 @@ class Application_Model_QueueMapper {
 
     protected $_dbTable;
 
-    public function setDbTable($dbTable) 
+    public function setDbTable($dbTable)
     {
         if (is_string($dbTable)) {
             $dbTable = new $dbTable();
@@ -16,7 +16,7 @@ class Application_Model_QueueMapper {
         return $this;
     }
 
-    public function getDbTable() 
+    public function getDbTable()
     {
         if (null === $this->_dbTable) {
             $this->setDbTable('Application_Model_DbTable_Queue');
@@ -24,24 +24,24 @@ class Application_Model_QueueMapper {
         return $this->_dbTable;
     }
 
-    public function save(Application_Model_Queue $queue) 
+    public function save(Application_Model_Queue $queue)
     {
         $data = array(
-            'id' => $queue->getId(),
-            'edition'   => $queue->getEdition(),
-            'status'   => $queue->getStatus(),
-            'version_id' => $queue->getVersionId(),
-            'user_id' => $queue->getUserId(),
-            'domain'   => $queue->getDomain(),
+                'id' => $queue->getId(),
+                'edition'    => $queue->getEdition(),
+                'status'     => $queue->getStatus(),
+                'version_id' => $queue->getVersionId(),
+                'user_id'    => $queue->getUserId(),
+                'domain'     => $queue->getDomain(),
         );
-        
+
         if (null === ($id = $queue->getId())) {
             unset($data['id']);
             $this->getDbTable()->insert($data);
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
-        
+
     }
 
     public function find($id, Application_Model_Queue $queue)
@@ -52,44 +52,44 @@ class Application_Model_QueueMapper {
         }
         $row = $result->current();
         $queue->setId($row->id)
-                  ->setEdition($row->edition)
-	                ->setStatus($row->status)
-                  ->setVersionId($row->version_id)
-                  ->setUserId($row->user_id)
-	                ->setDomain($row->domain);
+                ->setEdition($row->edition)
+                ->setStatus($row->status)
+                ->setVersionId($row->version_id)
+                ->setUserId($row->user_id)
+                ->setDomain($row->domain);
         return $queue;
     }
-		
+
     public function delete($id)
     {
         $this->getDbTable()->delete($id);
     }
-    
+
     public function fetchAll()
     {
-    		$resultSet = $this->getDbTable()->fetchAll();
+        $resultSet = $this->getDbTable()->fetchAll();
         $entries   = array();
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Queue();
             $entry->setId($row->id)
-          	      ->setEdition($row->edition)
-	                ->setStatus($row->status)
-                  ->setVersionId($row->version_id)
-                  ->setUserId($row->user_id)
-	                ->setDomain($row->domain);
+                    ->setEdition($row->edition)
+                    ->setStatus($row->status)
+                    ->setVersionId($row->version_id)
+                    ->setUserId($row->user_id)
+                    ->setDomain($row->domain);
             $entries[] = $entry;
         }
         return $entries;
     }
-    
+
     public function getAll()
     {
-    		return $this->getDbTable()->getAllJoinedWithVersions();
+        return $this->getDbTable()->getAllJoinedWithVersions();
     }
-    
+
     public function getAllForUser( $user_id )
-		{
-				return $this->getDbTable()->findAllByUser( $user_id );
-		}
-    
+    {
+        return $this->getDbTable()->findAllByUser( $user_id );
+    }
+
 }

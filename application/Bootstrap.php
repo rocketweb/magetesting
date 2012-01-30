@@ -4,25 +4,25 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     /**
      * Init logger
-     * 
-	     */
-	
+     *
+     */
+
     protected function _initLog()
     {
         // init logger
         $log = new Zend_Log();
-				
+
         // init db writer
         $db = $this->getPluginResource('db')->getDbAdapter();
 
         Zend_Db_Table_Abstract::setDefaultAdapter($db);
 
         $columnMapping = array(
-            'lvl'  => 'priority', 
-            'type' => 'priorityName',
-            'msg'  => 'message',
-            'time' => 'timestamp',
-            'info' => 'info', 
+                'lvl'  => 'priority',
+                'type' => 'priorityName',
+                'msg'  => 'message',
+                'time' => 'timestamp',
+                'info' => 'info',
         );
 
         $writerDb = new Zend_Log_Writer_Db($db, 'log', $columnMapping);
@@ -32,8 +32,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Init cache, set instance for use in other components. 
-     * 
+     * Init cache, set instance for use in other components.
+     *
      */
     protected function _initCache()
     {
@@ -54,19 +54,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->doctype('HTML5');
     }
-    
+
     protected function _initConfig()
-    {     
+    {
         $config = new Zend_Config_Ini(
-            APPLICATION_PATH . '/configs/local.ini',
-            APPLICATION_ENV
+                APPLICATION_PATH . '/configs/local.ini',
+                APPLICATION_ENV
         );
 
         return $config;
     }
-    
-    
-    protected function _initViewHelpers() 
+
+
+    protected function _initViewHelpers()
     {
         //required for jquery integration
         $view = new Zend_View();

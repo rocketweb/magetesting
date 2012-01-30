@@ -13,32 +13,32 @@ class Application_Form_UserLogin extends Integration_Form
 
         // Add a login element
         $this->addElement('text', 'login', array(
-            'label'      => 'Username:',
-            'required'   => true,
-            'filters'    => array('StripTags', 'StringTrim'),
-            'validators' => array(
-                array('validator' => 'StringLength', 'options' => array(3, 255))
-            )
+                'label'      => 'Username:',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(3, 255))
+                )
         ));
 
         // Add a password element
         $this->addElement('password', 'password', array(
-            'label'      => 'Password:',
-            'required'   => true,
-            'filters'    => array('StripTags', 'StringTrim'),
-            'validators' => array(
-                array('validator' => 'StringLength', 'options' => array(3, 45))
-            )
+                'label'      => 'Password:',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(3, 45))
+                )
         ));
 
         // Add the submit button
         $this->addElement('submit', 'submit', array(
-            'ignore'   => true,
-            'label'    => 'Log in',
+                'ignore'   => true,
+                'label'    => 'Log in',
         ));
 
         $this->addDisplayGroup(array( 'login', 'password', 'submit'),
-            'accountLogin', array('legend' => 'Your Login Details')
+                'accountLogin', array('legend' => 'Your Login Details')
         );
 
         $this->_setDecorators();

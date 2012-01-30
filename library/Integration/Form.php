@@ -14,22 +14,22 @@ class Integration_Form extends Zend_Form
         $this->addElementPrefixPath('Tourdesign_Filter', 'Tourdesign/Filter', 'filter');
 
         $this->setElementDecorators(array(
-            array('ViewHelper'),
-            array('Errors'),
-            array('Description', array('tag' => 'span', 'class' => 'help-block', 'escape' => true)),
-            array('HtmlTag', array('tag' => 'div', 'class' => 'input')),
-            array('Label', array('escape' => false)),
-            array('Overall', array('tag' => 'div', 'class' => 'clearfix')),
+                array('ViewHelper'),
+                array('Errors'),
+                array('Description', array('tag' => 'span', 'class' => 'help-block', 'escape' => true)),
+                array('HtmlTag', array('tag' => 'div', 'class' => 'input')),
+                array('Label', array('escape' => false)),
+                array('Overall', array('tag' => 'div', 'class' => 'clearfix')),
         ), array('csrf', 'id'), false);
 
         $this->setDecorators(array(
-            array('FormElements'),
-            array('Form', array('class' => 'zend_form')),
+                array('FormElements'),
+                array('Form', array('class' => 'zend_form')),
         ));
 
         $this->setDisplayGroupDecorators(array(
-            array('FormElements'),
-            array('Fieldset'),
+                array('FormElements'),
+                array('Fieldset'),
         ));
 
         $submitButtons = array('next', 'save', 'submit');
