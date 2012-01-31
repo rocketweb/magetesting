@@ -143,50 +143,88 @@ if (isset($opts->magentoinstall)) {
 
     $magentoVersion = $queueElement['version'];
     $domain = $queueElement['domain'];
+    $startCwd =  getcwd();
+    $log_file_path = $startCwd.'/'.$domain.'_install_log.txt';
+    
+    
+    file_put_contents($log_file_path, "\ndomain: ".$domain , FILE_APPEND);
+    unset($output);
     $dbprefix = $domain.'_';
     
     $adminemail = $configLocalArr['magento.adminEmail']; //fetch from zend config
     $storeurl = $configLocalArr['magento.storeUrl'].'/instance/'.$domain; //fetch from zend config
-
-    $startCwd =  getcwd();
+    file_put_contents($log_file_path, "\nstore url: ".$storeurl , FILE_APPEND);
+    
     chdir(INSTANCE_PATH);
+    unset($output);
     
     echo "Now installing Magento without sample data...\n";
-    echo "Downloading packages...\n";
-    exec('mkdir '.$domain);
-    
+    echo "Preparing directory...\n";
+    exec('mkdir '.$domain,$output);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
         
     chdir($domain);
-    exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/');  
-
+    echo "Copying package to target directory...\n";
+    exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/',$output);  
+    file_put_contents($log_file_path,"\ncp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain."/\n", FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
     echo "Extracting data...\n";
     exec('tar -zxvf magento-' . $magentoVersion . '.tar.gz',$output);
-    //var_dump($output);
-
+    file_put_contents($log_file_path, "\ntar -zxvf magento-" . $magentoVersion . ".tar.gz\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
     echo "Moving files...\n";
-    exec('mv magento/* magento/.htaccess .',$output);
-    //var_dump($output);
-
-    echo "Setting permissions...\n";
-    exec('chmod o+w var var/.htaccess app/etc');
-    exec('chmod -R o+w media');
-    exec('chmod 777 mage');
-
-    echo "Initializing PEAR registry...\n";
-    exec('./mage mage-setup .',$output);
-    //var_dump($output);
-
-    echo "Downloading packages...\n";
-    //exec('./mage install http://connect20.magentocommerce.com/community Mage_All_Latest',$output);
-    //var_dump($output);
-
+    exec('mv magento/* .',$output);
+    file_put_contents($log_file_path, "\nmv magento/* .\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    
+    exec('mv magento/.htaccess .',$output);
+    file_put_contents($log_file_path, "\nmv magento/.htaccess .\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    
+    echo "Setting permissions...\n";    
+    exec('chmod 777 var/.htaccess app/etc',$output);
+    file_put_contents($log_file_path, "\nchmod 777 var var/.htaccess app/etc\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    
+    exec('chmod 777 var -R',$output);
+    file_put_contents($log_file_path, "\nchmod 777 var var/.htaccess app/etc\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    
+    exec('chmod 777 media -R',$output);
+    file_put_contents($log_file_path, "\nchmod -R 777 media\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    exec('chmod 777 mage',$output);
+    file_put_contents($log_file_path, "\nchmod 777 mage\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    
     echo "Cleaning up files...\n";
-    exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*');
-    exec('rm -rf magento/ magento-' . $magentoVersion . '.tar.gz');
-    exec('rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt');
-
+    exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*',$output);
+    file_put_contents($log_file_path, "\nrm -rf downloader/pearlib/cache/* downloader/pearlib/download/*\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    
+    exec('rm -rf magento/ magento-' . $magentoVersion . '.tar.gz',$output);
+    file_put_contents($log_file_path, "\nrm -rf magento/ magento-" . $magentoVersion . ".tar.gz\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    
+    exec('rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt',$output);
+    file_put_contents($log_file_path, "\nrm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
+    
+   
     echo "Installing Magento...\n";
-    exec('php -f install.php --' .
+    exec('cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
             ' --license_agreement_accepted "yes"' .
             ' --locale "en_US"' .
             ' --timezone "America/Los_Angeles"' .
@@ -205,11 +243,35 @@ if (isset($opts->magentoinstall)) {
             ' --admin_lastname "' . $adminlname . '"' .
             ' --admin_email "' . $adminemail . '"' .
             ' --admin_username "' . $adminuser . '"' .
-            ' --admin_password "' . $adminpass . '"',$output);
-    //var_dump($output);
+            ' --admin_password "' . $adminpass . '"' .
+            ' --skip_url_validation "yes"',$output);
+    file_put_contents($log_file_path, "\n".'cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
+            ' --license_agreement_accepted "yes"' .
+            ' --locale "en_US"' .
+            ' --timezone "America/Los_Angeles"' .
+            ' --default_currency "USD"' .
+            ' --db_host "' . $dbhost . '"' .
+            ' --db_name "' . $dbname . '"' .
+            ' --db_user "' . $dbuser . '"' .
+            ' --db_pass "' . $dbpass . '"' .
+            ' --db_prefix "' . $dbprefix . '"' .
+            ' --url "' . $storeurl . '"' .
+            ' --use_rewrites "yes"' .
+            ' --use_secure "no"' .
+            ' --secure_base_url ""' .
+            ' --use_secure_admin "no"' .
+            ' --admin_firstname "' . $adminfname . '"' .
+            ' --admin_lastname "' . $adminlname . '"' .
+            ' --admin_email "' . $adminemail . '"' .
+            ' --admin_username "' . $adminuser . '"' .
+            ' --admin_password "' . $adminpass . '"' .
+            ' --skip_url_validation "yes"'."\n" , FILE_APPEND);
+    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    unset($output);
 
     echo "Finished installing Magento\n";
-    
+    file_put_contents($log_file_path, "\nfinished installation " , FILE_APPEND);
+    unset($output);
     //TODO: add mail info about ready installation
     
     

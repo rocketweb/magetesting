@@ -11,3 +11,5 @@ RewriteRule       ^images.*$      - [L]
 RewriteRule       ^img.*$         - [L]
 RewriteRule       ^js.*$          - [L]
 RewriteRule !\.(js|ico|gif|jpg|png|css|pdf|doc|xls|csv|txt)$ index.php
+php_flag apc.cache_by_default Off
+
