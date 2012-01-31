@@ -38,15 +38,17 @@ class Application_Form_QueueAdd extends Integration_Form{
 
          
         // Add the submit button
-        $this->addElement('submit', 'submit', array(
+        $this->addElement('submit', 'queueAdd', array(
                 'ignore'   => true,
-                'label'    => 'Save changes',
+                'label'    => 'Install',
         ));
 
         $this->_setDecorators();
 
-        $this->submit->removeDecorator('HtmlTag');
-        $this->submit->removeDecorator('overall');
+        $this->queueAdd->removeDecorator('HtmlTag');
+        $this->queueAdd->removeDecorator('overall');
+        $this->queueAdd->setAttrib('class','btn primary large');
+        $this->queueAdd->removeDecorator('Label');
 
         $this->edition->removeDecorator('HtmlTag');
         $this->edition->removeDecorator('overall');
