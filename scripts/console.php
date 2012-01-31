@@ -149,7 +149,7 @@ if (isset($opts->magentoinstall)) {
     
     file_put_contents($log_file_path, "\ndomain: ".$domain , FILE_APPEND);
     unset($output);
-    $dbprefix = $domain.'_';
+    $dbprefix = $domain.'__';
     
     $adminemail = $configLocalArr['magento.adminEmail']; //fetch from zend config
     $storeurl = $configLocalArr['magento.storeUrl'].'/instance/'.$domain; //fetch from zend config
@@ -163,6 +163,12 @@ if (isset($opts->magentoinstall)) {
     exec('mkdir '.$domain,$output);
     file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
     unset($output);
+    
+    if (!file_exists(INSTANCE_PATH.'/'.$domain) || !is_dir(INSTANCE_PATH.'/'.$domain)){
+        echo 'Directory does not exist, aborting';
+        file_put_contents($log_file_path, "\nDirectory does not exist, aborting\n" , FILE_APPEND);
+        exit;
+    }
         
     chdir($domain);
     echo "Copying package to target directory...\n";
