@@ -25,14 +25,10 @@
             <td><?php echo $item['version']?></td>
             <?php switch($item['status']): 
             case 'ready':?>
-                <td><span class="label success"><?php echo ucfirst($item['status']) ?>
-                </span> <a
-                    href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>"
-                    class="btn success">Visit</a>
-                </td>
+                <td><span class="label success"><?php echo ucfirst($item['status']) ?></span> </td>
             <?php break; case 'pending':  ?>
                 <td><span class="label warning">In Queue</span> <span
-                    class="label">15 minutes left</span></td>
+                    class="label">5 minutes left</span></td>
             <?php break; case 'closed': ?>
                 <td><span class="label success">Ready</span></td>
             <?php break; case 'installing': ?>
@@ -41,7 +37,10 @@
                 <td><span class="label warning"></span></td>
             <?php endswitch; ?>
 
-            <td><a href="#" class="btn danger">Close</a></td>
+            <td>
+              <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn success">Visit</a>
+              <a href="#" class="btn danger">Close</a>
+            </td>
         </tr>
         <?php endforeach; ?>
     </tbody>
