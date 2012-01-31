@@ -31,7 +31,7 @@ DROP TABLE IF EXISTS `version` ;
 CREATE  TABLE IF NOT EXISTS `version` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT 'CE' ,
-  `version` VARCHAR(10) NOT NULL ,
+  `version` VARCHAR(15) NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
