@@ -36,7 +36,11 @@ class QueueController extends Zend_Controller_Action
                 ->setStatus( 'pending' );
                 $queueModel->save();
                 $this->_helper->FlashMessenger('New installation added to queue');
-                $this->_helper->redirector('index', 'index');
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
             }else {
                 $this->_helper->FlashMessenger('Form needs verification');
             }
