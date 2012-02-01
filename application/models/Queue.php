@@ -173,4 +173,9 @@ class Application_Model_Queue {
         return $this->getMapper()->getAllForUser( $user_id );
     }
 
+    public function countUserInstances( $user_id )
+    {
+        return $this->getMapper()->countUserInstances( $user_id );
+    }
+
 }

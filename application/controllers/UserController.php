@@ -16,7 +16,9 @@ class UserController extends Integration_Controller_Action
     public function dashboardAction()
     {
         $queueModel = new Application_Model_Queue();
-        $this->view->queue = $queueModel->getAll();
+        $this->view->queue = $queueModel->getAllForUser(
+            $this->auth->getIdentity()->id
+        );
         $this->_determineTopMenu();
     }
 

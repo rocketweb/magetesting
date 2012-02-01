@@ -95,4 +95,13 @@ class Application_Model_QueueMapper {
         return $this->getDbTable()->findAllByUser( $user_id );
     }
 
+    public function countUserInstances( $user_id )
+    {
+        $data = $this->getDbTable()
+                     ->countUserInstances( $user_id )
+                     ->current();
+
+        return (int)$data->instances;
+    }
+
 }

@@ -3,6 +3,8 @@
 magento.adminEmail = "jan@rocketweb.com"
 magento.storeUrl = "http://magentointegration.dev"
 
+magento.standardUser.instances = 3
+
 [staging : production]
 
 [testing : production]

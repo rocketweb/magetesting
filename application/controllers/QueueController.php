@@ -23,20 +23,36 @@ class QueueController extends Integration_Controller_Action
             if ($form->isValid($this->getRequest()->getParams())){
                 //needs validation!
                 $queueModel = new Application_Model_Queue();
-                $queueModel->setVersionId( $form->version->getValue() )
-                ->setEdition($form->edition->getValue())
-                ->setUserId($this->auth->getIdentity()->id)
-                ->setInstanceName($form->instance_name->getValue())
-                ->setDomain(
-                        substr(
-                                str_shuffle(
-                                        str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5)
-                                )
-                                , 0, 5)
-                )
-                ->setStatus( 'pending' );
-                $queueModel->save();
-                $this->_helper->FlashMessenger('New installation added to queue');
+                $userId = $this->auth->getIdentity()->id;
+                $userGroup = $this->auth->getIdentity()->group;
+                $maxInstances = (int)$this->getInvokeArg('bootstrap')
+                                     ->getResource('config')
+                                     ->magento
+                                     ->standardUser
+                                     ->instances;
+
+                if(
+                    $userGroup != 'standard-user'
+                    OR ($queueModel->countUserInstances($userId) <= $maxInstances)
+                ) {
+                    $queueModel->setVersionId( $form->version->getValue() )
+                    ->setEdition($form->edition->getValue())
+                    ->setUserId($userId)
+                    ->setInstanceName($form->instance_name->getValue())
+                    ->setDomain(
+                            substr(
+                                    str_shuffle(
+                                            str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5)
+                                    )
+                                    , 0, 5)
+                    )
+                    ->setStatus( 'pending' );
+                    $queueModel->save();
+                    $this->_helper->FlashMessenger('New installation added to queue');
+                } else {
+                    $this->_helper->FlashMessenger('You cannot have more instances.');
+                }
+                
                 return $this->_helper->redirector->gotoRoute(array(
                         'module'     => 'default',
                         'controller' => 'user',
