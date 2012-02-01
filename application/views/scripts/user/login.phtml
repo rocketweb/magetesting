@@ -1,66 +1,25 @@
-<?php echo $this->doctype(); ?>
-<html lang="en">
-<head>
-<?php 
-$this->headMeta()->setCharset('utf-8');
-$this->headTitle('Magento Integration');
-
-$this->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js');
-$this->headScript()->appendFile($this->baseUrl('public/js/bootstrap-alerts.js'));
-$this->headScript()->appendFile($this->baseUrl('public/js/bootstrap-twipsy.js'));
-$this->headScript()->appendFile($this->baseUrl('public/js/bootstrap-tabs.js'));
-$this->headScript()->appendFile($this->baseUrl('public/js/custom.js'));
-
-$this->headScript()->appendFile('http://html5shim.googlecode.com/svn/trunk/html5.js', 'text/javascript', array('conditional' => 'lt IE 9'));
-
-$this->headLink()->appendStylesheet('http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css');
-$this->headLink()->appendStylesheet('http://fonts.googleapis.com/css?family=Rokkitt');
-$this->headLink()->appendStylesheet($this->baseUrl('public/css/custom.css'));
-?>
-
-<?php /*<!-- Le fav and touch icons -->
-<link rel="shortcut icon" href="images/favicon.ico">
-<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">*/?>
-
-<?= $this->headTitle() . "\n"; ?>
-<?= $this->headMeta() . "\n"; ?>
-<?= $this->headLink() . "\n"; ?>
-<?= $this->headScript() . "\n"; ?>
-<?= $this->headStyle(); ?>
-</head>
-
-<body>
-
-    <div class="container">
-
-        <?php echo $this->render('_partials/messages.phtml'); ?>
-
-        <div id="modal-from-dom" class="modal">
-            <form action="<?php echo $this->form->getAction() ?>"
-                enctype="<?php echo $this->form->getEnctype() ?>"
-                method="<?php echo $this->form->getMethod() ?>"
-                id="<?php echo $this->form->getId() ?>"
-                class="<?php echo $this->form->getAttrib('class') ?>">
-                <div class="modal-header">
-                    <h3>Login</h3>
-                </div>
-                <div class="modal-body">
-                    <fieldset>
-                        <?php echo $this->form->login; ?>
-                        <?php echo $this->form->password; ?>
-                    </fieldset>
-                </div>
-                <div class="modal-footer">
-                    <small><a href="#" class="secondary">Forgot
-                            password?</a> </small>
-                    <?php echo $this->form->submit; ?>
-                </div>
-            </form>
-        </div>
-
+<div class="row">
+    <div class="span4">&nbsp;</div>
+    <div class="span8">
+        <form action="<?php echo $this->form->getAction() ?>"
+            enctype="<?php echo $this->form->getEnctype() ?>"
+            method="<?php echo $this->form->getMethod() ?>"
+            id="<?php echo $this->form->getId() ?>"
+            class="<?php echo $this->form->getAttrib('class') ?>">
+            <div class="modal-header">
+                <h3>Login</h3>
+            </div>
+            <div class="modal-body">
+                <fieldset>
+                    <?php echo $this->form->login; ?>
+                    <?php echo $this->form->password; ?>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <small><a href="#" class="secondary">Forgot
+                        password?</a> </small>
+                <?php echo $this->form->submit; ?>
+            </div>
+        </form>
     </div>
-
-</body>
-</html>
+</div>

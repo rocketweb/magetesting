@@ -14,13 +14,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" ></script>
     
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-      }
-      
-    </style>
-
+    <?php echo $this->headLink()->appendStylesheet($this->baseUrl('public/css/style.css')); ?>
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
@@ -33,8 +27,9 @@
         <div class="fill">
             <div class="container">
                 <a class="brand"
-                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">Magento
-                    Integration</a>
+                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">
+                    Magento Integration</a>
+                <!--<?php echo $this->navigation()->menu()->setULClass('nav')->renderMenu(null, array('minDepth' => 1, 'maxDepth' => 1)); ?>-->
                 <ul class="nav" style="float: none;">
                     <li class="active"><a
                         href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">Home</a>

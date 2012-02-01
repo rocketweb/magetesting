@@ -1,0 +1,6 @@
+<?php foreach( $this->container as $name => $page ): ?>
+    <?php foreach( $page->pages as $subpage ): ?>
+        <?php var_dump( $subpage->isActive() );var_dump($this->menu()->htmlify( $subpage )); ?>
+    <?php endforeach; ?>
+<?php endforeach; ?>
+<?php //->setPartial(array('_partials/extendedTopMenu.phtml','default'))?>

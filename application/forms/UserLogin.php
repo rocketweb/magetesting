@@ -43,9 +43,6 @@ class Application_Form_UserLogin extends Integration_Form
 
         $this->_setDecorators();
 
-        $this->login->setAttrib('class', 'xlarge');
-        $this->password->setAttrib('class', 'xlarge');
-
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('overall');
     }

@@ -79,6 +79,8 @@ class Integration_Controller_Action extends Zend_Controller_Action
         $this->auth = $auth;
         $this->db = Zend_Db_Table::getDefaultAdapter();
 
+        $this->_determineTopMenu();
+
         if ($acl->isAllowed($type, $resource, $action)) {
             return $request;
         }

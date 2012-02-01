@@ -91,13 +91,6 @@ class Application_Form_UserRegister extends Integration_Form
 
         $this->_setDecorators();
 
-        $this->firstname->setAttrib('class', 'large');
-        $this->lastname->setAttrib('class', 'large');
-        $this->email->setAttrib('class', 'large');
-        $this->login->setAttrib('class', 'large');
-        $this->password->setAttrib('class', 'large');
-        $this->password_repeat->setAttrib('class', 'large');
-
         $this->reset->removeDecorator('HtmlTag');
         $this->reset->removeDecorator('overall');
         $this->reset->removeDecorator('label');

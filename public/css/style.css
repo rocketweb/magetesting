@@ -1,0 +1,11 @@
+body {
+    padding-top: 60px;
+}
+
+.right {
+    float: right;
+}
+
+.topbar div > ul, .nav {
+    float: none;
+}

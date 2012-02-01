@@ -19,13 +19,10 @@ class UserController extends Integration_Controller_Action
         $this->view->queue = $queueModel->getAllForUser(
             $this->auth->getIdentity()->id
         );
-        $this->_determineTopMenu();
     }
 
     public function loginAction()
     {
-        $this->_helper->layout->disableLayout();
-
         $request = $this->getRequest();
         $form    = new Application_Form_UserLogin();
 
@@ -68,9 +65,9 @@ class UserController extends Integration_Controller_Action
                         $this->_helper->FlashMessenger('You have been logged in successfully');
 
                         return $this->_helper->redirector->gotoRoute(array(
-                                'module' => 'default',
-                                'controller' => 'index',
-                                'action' => 'index',
+                                'module'     => 'default',
+                                'controller' => 'user',
+                                'action'     => 'dashboard',
                         ), 'default', true);
                     }
                 } else {
@@ -92,8 +89,6 @@ class UserController extends Integration_Controller_Action
 
     public function registerAction()
     {
-        $this->_helper->layout->disableLayout();
-        
         $user = new Application_Model_User();
 
         $form = new Application_Form_UserRegister();
