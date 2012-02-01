@@ -30,10 +30,11 @@ class QueueController extends Integration_Controller_Action
                                      ->magento
                                      ->standardUser
                                      ->instances;
+                $userInstances = $queueModel->countUserInstances($userId);
 
                 if(
                     $userGroup != 'standard-user'
-                    OR ($queueModel->countUserInstances($userId) <= $maxInstances)
+                    OR ($userInstances < $maxInstances)
                 ) {
                     $queueModel->setVersionId( $form->version->getValue() )
                     ->setEdition($form->edition->getValue())
@@ -52,7 +53,7 @@ class QueueController extends Integration_Controller_Action
                 } else {
                     $this->_helper->FlashMessenger('You cannot have more instances.');
                 }
-                
+
                 return $this->_helper->redirector->gotoRoute(array(
                         'module'     => 'default',
                         'controller' => 'user',
