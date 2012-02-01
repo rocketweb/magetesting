@@ -14,6 +14,8 @@ class Application_Model_Queue {
 
     protected $_domain;
 
+    protected $_instance_name;
+
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -102,6 +104,17 @@ class Application_Model_Queue {
         return $this->_domain;
     }
 
+    public function setInstanceName($name)
+    {
+        $this->_instance_name = $name;
+        return $this;
+    }
+
+    public function getInstanceName()
+    {
+        return $this->_instance_name;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -145,7 +158,8 @@ class Application_Model_Queue {
                 'status' => $this->getStatus(),
                 'version_id' => $this->getVersionId(),
                 'user_id' => $this->getUserId(),
-                'domain' => $this->getDomain()
+                'domain' => $this->getDomain(),
+                'instance_name' => $this->getInstanceName()
         );
     }
 

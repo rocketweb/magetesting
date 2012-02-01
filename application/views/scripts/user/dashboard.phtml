@@ -15,6 +15,7 @@
             <th>Edition</th>
             <th>Version</th>
             <th>Status</th>
+            <th>Name</th>
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -36,7 +37,7 @@
             <?php break; default: ?>
                 <td><span class="label warning"></span></td>
             <?php endswitch; ?>
-
+            <td><?php echo $item['instance_name']?></td>
             <td>
               <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn success">Visit</a>
               <a href="#" class="btn danger">Close</a>

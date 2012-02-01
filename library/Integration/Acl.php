@@ -21,6 +21,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_error'));
         $this->add(new Zend_Acl_Resource('default_index'));
         $this->add(new Zend_Acl_Resource('default_user'));
+        $this->add(new Zend_Acl_Resource('default_queue'));
         /**
          * Deny for all (we use white list)
          */
@@ -40,6 +41,7 @@ class Integration_Acl extends Zend_Acl
          */
         $this->allow('admin', 'default_error', array('error'));
         $this->allow('admin', 'default_index', array('index'));
+        $this->allow('admin', 'default_queue');
 
         $this->allow('admin', 'default_user', array(
                 'index', 'logout', 'dashboard'
@@ -50,6 +52,7 @@ class Integration_Acl extends Zend_Acl
          */
         $this->allow('standard-user', 'default_error', array('error'));
         $this->allow('standard-user', 'default_index', array('index'));
+        $this->allow('standard-user', 'default_queue');
 
         $this->allow('standard-user', 'default_user', array(
                 'index', 'logout', 'dashboard'

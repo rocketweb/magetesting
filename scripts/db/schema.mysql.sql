@@ -48,6 +48,7 @@ CREATE  TABLE IF NOT EXISTS `queue` (
   `version_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
   `domain` VARCHAR(10) NOT NULL ,
+  `instance_name` VARCHAR(100) NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `queue_to_version` (`version_id` ASC) ,
   INDEX `queue_to_user1` (`user_id` ASC) ,

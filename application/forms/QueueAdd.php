@@ -20,6 +20,12 @@ class Application_Form_QueueAdd extends Integration_Form{
                 )
         ));
 
+        $this->addElement('text', 'instance_name', array(
+                'label'      => 'Name or note',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+        ));
+
         $emptyVersion = array('' => 'Choose...');
         $versions = array_merge($emptyVersion,$editionModel->getOptions());
 

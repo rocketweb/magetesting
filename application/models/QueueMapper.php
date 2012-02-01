@@ -28,11 +28,12 @@ class Application_Model_QueueMapper {
     {
         $data = array(
                 'id' => $queue->getId(),
-                'edition'    => $queue->getEdition(),
-                'status'     => $queue->getStatus(),
-                'version_id' => $queue->getVersionId(),
-                'user_id'    => $queue->getUserId(),
-                'domain'     => $queue->getDomain(),
+                'edition'        => $queue->getEdition(),
+                'status'         => $queue->getStatus(),
+                'version_id'     => $queue->getVersionId(),
+                'user_id'        => $queue->getUserId(),
+                'domain'         => $queue->getDomain(),
+                'instance_name'  => $queue->getInstanceName()
         );
 
         if (null === ($id = $queue->getId())) {
@@ -56,7 +57,8 @@ class Application_Model_QueueMapper {
                 ->setStatus($row->status)
                 ->setVersionId($row->version_id)
                 ->setUserId($row->user_id)
-                ->setDomain($row->domain);
+                ->setDomain($row->domain)
+                ->setInstanceName($row->instance_name);
         return $queue;
     }
 
@@ -76,7 +78,8 @@ class Application_Model_QueueMapper {
                     ->setStatus($row->status)
                     ->setVersionId($row->version_id)
                     ->setUserId($row->user_id)
-                    ->setDomain($row->domain);
+                    ->setDomain($row->domain)
+                    ->setInstanceName($row->instance_name);
             $entries[] = $entry;
         }
         return $entries;

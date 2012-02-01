@@ -1,6 +1,6 @@
 <?php
 
-class QueueController extends Zend_Controller_Action
+class QueueController extends Integration_Controller_Action
 {
 
     public function init()
@@ -24,8 +24,9 @@ class QueueController extends Zend_Controller_Action
                 //needs validation!
                 $queueModel = new Application_Model_Queue();
                 $queueModel->setVersionId( $form->version->getValue() )
-                ->setEdition( $form->edition->getValue() )
-                ->setUserId( 1 )
+                ->setEdition($form->edition->getValue())
+                ->setUserId($this->auth->getIdentity()->id)
+                ->setInstanceName($form->instance_name->getValue())
                 ->setDomain(
                         substr(
                                 str_shuffle(
