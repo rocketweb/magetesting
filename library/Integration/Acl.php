@@ -30,6 +30,7 @@ class Integration_Acl extends Zend_Acl
          * Set up privileges for guest
          */
         $this->allow('guest', 'default_error', array('error'));
+        $this->allow('guest', 'default_index', array('index'));
         $this->allow('guest', 'default_user', array(
                 'login', 'password-recovery', 'register'
         ));
@@ -41,7 +42,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('admin', 'default_index', array('index'));
 
         $this->allow('admin', 'default_user', array(
-                'index', 'logout'
+                'index', 'logout', 'dashboard'
         ));
 
         /**
@@ -51,7 +52,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('standard-user', 'default_index', array('index'));
 
         $this->allow('standard-user', 'default_user', array(
-                'index', 'logout'
+                'index', 'logout', 'dashboard'
         ));
 
     }

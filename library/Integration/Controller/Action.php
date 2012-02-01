@@ -13,15 +13,26 @@ class Integration_Controller_Action extends Zend_Controller_Action
     public function init()
     {
         $this->_helper->redirector->setUseAbsoluteUri(true);
-        $this->db = Zend_Db_Table::getDefaultAdapter();
-        $this->acl = new Integration_Acl();
-        $this->auth = Zend_Auth::getInstance();
+    }
 
+    protected function _determineTopMenu()
+    {
+        
+        $module = $this->getRequest()->getModuleName();
+        $type = $this->auth->getIdentity();
+        $type = $type ? $type->group : 'guest';
+        $this->_helper->layout()->showDashboard =
+        $this->acl->isAllowed(
+                $type,
+                $module . '_' . 'user',
+                'dashboard'
+        );
     }
 
     /**
      * Getting mesages from session namespace and ACL handling.
      */
+
     public function preDispatch()
     {
         $user = new Application_Model_User();
@@ -42,7 +53,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
         $module = $request->getModuleName();
 
         $type = (is_null($auth->getIdentity()))
-        ? 'guest' : $auth->getIdentity()->group;
+            ? 'guest' : $auth->getIdentity()->group;
 
         // for navigation purposes
         $this->view->navigation()->setAcl($acl);
@@ -64,6 +75,10 @@ class Integration_Controller_Action extends Zend_Controller_Action
             $this->view->loggedUser = $user;
         }
 
+        $this->acl = $acl;
+        $this->auth = $auth;
+        $this->db = Zend_Db_Table::getDefaultAdapter();
+
         if ($acl->isAllowed($type, $resource, $action)) {
             return $request;
         }
@@ -83,7 +98,6 @@ class Integration_Controller_Action extends Zend_Controller_Action
         /**
          * redirect
          */
-         
         $redirectHelper = Zend_Controller_Action_HelperBroker::getStaticHelper('Redirector');
         return $redirectHelper->gotoUrl($goTo);
     }

@@ -13,6 +13,13 @@ class UserController extends Integration_Controller_Action
         // action body
     }
 
+    public function dashboardAction()
+    {
+        $queueModel = new Application_Model_Queue();
+        $this->view->queue = $queueModel->getAll();
+        $this->_determineTopMenu();
+    }
+
     public function loginAction()
     {
         $this->_helper->layout->disableLayout();
@@ -52,7 +59,6 @@ class UserController extends Integration_Controller_Action
                         ), 'default', true);
                     } else {
 
-
                         $auth->getStorage()->write(
                                 $adapter->getResultRowObject(null, 'password')
                         );
@@ -82,6 +88,37 @@ class UserController extends Integration_Controller_Action
         $this->view->form = $form;
     }
 
+    public function registerAction()
+    {
+        $this->_helper->layout->disableLayout();
+        
+        $user = new Application_Model_User();
+
+        $form = new Application_Form_UserRegister();
+        $form->populate($user->__toArray());
+
+        $form->getElement('login')->addValidator('Db_NoRecordExists',false,
+                array('table' => 'user', 'field' => 'login'));
+
+        if ($this->_request->isPost()) {
+            $formData = $this->_request->getPost();
+
+            if($form->isValid($formData)) {
+                $user->setOptions($form->getValues());
+                $user->setGroup('standard-user');
+                $user->save();
+
+                $this->_helper->FlashMessenger('You have been registered successfully');
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'login',
+                ), 'default', true);
+            }
+        }
+        $this->view->form = $form;
+    }
+
     public function logoutAction()
     {
         $this->_helper->viewRenderer->setNoRender();
@@ -89,13 +126,13 @@ class UserController extends Integration_Controller_Action
 
         Zend_Auth::getInstance()->clearIdentity();
         Zend_Session::destroy(true, false);
-
+        
+        $this->_helper->FlashMessenger('You have been logout successfully');
         return $this->_helper->redirector->gotoRoute(array(
                 'module'     => 'default',
-                'controller' => 'user',
-                'action'     => 'login',
+                'controller' => 'index',
+                'action'     => 'index',
         ), 'default', true);
     }
 
 }
-

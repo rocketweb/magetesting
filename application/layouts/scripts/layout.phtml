@@ -39,9 +39,21 @@
                     <li class="active"><a
                         href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">Home</a>
                     </li>
-                    <li class="active" style="float: right;"><a
-                        href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'logout'), 'default', true); ?>">Logout</a>
-                    </li>
+                    <?php if($this->layout()->showDashboard): ?>
+                        <li class="active" style="margin-left:3px;"><a
+                            href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'dashboard'), 'default', true); ?>">Dashboard</a>
+                        </li>
+                        <li class="active" style="float: right;"><a
+                            href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'logout'), 'default', true); ?>">Logout</a>
+                        </li>
+                    <?php else: ?>
+                        <li class="active" style="float: right; margin-left: 3px;"><a
+                            href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'login'), 'default', true); ?>">Login</a>
+                        </li>
+                        <li class="active" style="float: right;"><a
+                            href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'register'), 'default', true); ?>">Create Account</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

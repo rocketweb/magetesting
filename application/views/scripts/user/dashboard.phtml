@@ -1,0 +1,47 @@
+
+<?php echo $this->render('_partials/messages.phtml'); ?>
+
+<h1>Your Sandbox</h1>
+
+<p>
+    <a
+        href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>"
+        class="btn primary large">New Build</a>
+</p>
+
+<table class="bordered-table">
+    <thead>
+        <tr>
+            <th>Edition</th>
+            <th>Version</th>
+            <th>Status</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->queue as $item): ?>
+        <tr>
+            <td><?php echo $item['edition']?></td>
+            <td><?php echo $item['version']?></td>
+            <?php switch($item['status']): 
+            case 'ready':?>
+                <td><span class="label success"><?php echo ucfirst($item['status']) ?></span> </td>
+            <?php break; case 'pending':  ?>
+                <td><span class="label warning">In Queue</span> <span
+                    class="label">5 minutes left</span></td>
+            <?php break; case 'closed': ?>
+                <td><span class="label success">Ready</span></td>
+            <?php break; case 'installing': ?>
+                <td><span class="label success">Installing..</span></td>
+            <?php break; default: ?>
+                <td><span class="label warning"></span></td>
+            <?php endswitch; ?>
+
+            <td>
+              <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn success">Visit</a>
+              <a href="#" class="btn danger">Close</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
