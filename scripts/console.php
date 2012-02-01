@@ -94,7 +94,7 @@ if (isset($opts->magentoinstall)) {
     $sql = $select
             ->from('queue')
             ->joinLeft('version', 'queue.version_id = version.id',array('version'))
-            ->joinLeft('user', 'queue.user_id = user.id',array('email'))
+            ->joinLeft('user', 'queue.user_id = user.id',array('email','login','firstname','lastname'))
             ->where('queue.status =?', 'pending')
             ->where('user.status =?', 'active')
     ;
@@ -124,22 +124,25 @@ if (isset($opts->magentoinstall)) {
 
     
     $dbhost = $configArr['resources.db.params.host']; //fetch from zend config
-    $dbname = $configArr['resources.db.params.dbname']; //fetch from zend config
+    $dbname = $queueElement['login'].'__'.$queueElement['domain'];
+    
+    //
+    try{
+        $db->getConnection()->exec("CREATE DATABASE ".$dbname);   
+    } catch(PDOException $e){
+        var_dump($e);
+        echo 'Could not create database for instance, aborting';
+        $db->update('queue',array('status'=>'pending'),'id='.$queueElement['id']);
+        exit;
+    }
+    
     $dbuser = $configArr['resources.db.params.username']; //fetch from zend config
     $dbpass = $configArr['resources.db.params.password']; //fetch from zend config
-
-    $adminuser = 'admin';
-    $adminpass = substr(
-            str_shuffle(
-                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 5)
-            )
-            , 0, 5).substr(
-            str_shuffle(
-                    str_repeat('0123456789', 5)
-            )
-            , 0, 4);
-    $adminfname = 'Admin';
-    $adminlname = 'McAdmin';
+    
+    $adminuser = $queueElement['login'];
+    $adminpass = $queueElement['domain'];
+    $adminfname = $queueElement['firstname'];
+    $adminlname = $queueElement['lastname'];
 
     $magentoVersion = $queueElement['version'];
     $domain = $queueElement['domain'];

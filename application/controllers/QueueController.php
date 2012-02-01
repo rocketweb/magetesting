@@ -42,10 +42,14 @@ class QueueController extends Integration_Controller_Action
                     ->setInstanceName($form->instance_name->getValue())
                     ->setDomain(
                             substr(
-                                    str_shuffle(
-                                            str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5)
-                                    )
-                                    , 0, 5)
+                                str_shuffle(
+                                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 5)
+                                )
+                                , 0, 5).substr(
+                                str_shuffle(
+                                    str_repeat('0123456789', 5)
+                                )
+                                , 0, 4)
                     )
                     ->setStatus( 'pending' );
                     $queueModel->save();
@@ -59,12 +63,9 @@ class QueueController extends Integration_Controller_Action
                         'controller' => 'user',
                         'action'     => 'dashboard',
                 ), 'default', true);
-            }else {
+            } else {
                 $this->_helper->FlashMessenger('Form needs verification');
             }
-
-
-
         }
         //assign to templates
         $editionModel = new Application_Model_Edition();
