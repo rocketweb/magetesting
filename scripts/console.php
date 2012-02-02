@@ -42,7 +42,8 @@ try {
                     array(
                         'help' => 'Displays help.',
                         'hello' => 'try it !',
-                        'magentoinstall' => 'installs magento',
+                        'magentoinstall' => 'handles magento from install queue',
+                        'magentoremove' => 'handles magento from remove queue',
                     )
     );
 
@@ -130,7 +131,6 @@ if (isset($opts->magentoinstall)) {
     try{
         $db->getConnection()->exec("CREATE DATABASE ".$dbname);   
     } catch(PDOException $e){
-        var_dump($e);
         echo 'Could not create database for instance, aborting';
         $db->update('queue',array('status'=>'pending'),'id='.$queueElement['id']);
         exit;
@@ -289,4 +289,68 @@ if (isset($opts->magentoinstall)) {
     
     chdir($startCwd);
     exit;
+}
+
+if (isset($opts->magentoremove)) {
+    
+    $bootstrap = $application->getBootstrap()->bootstrap();
+    $db = $bootstrap->getResource('db');
+      
+    $select = new Zend_Db_Select($db);
+    $sql = $select
+            ->from('queue')
+            ->joinLeft('user', 'queue.user_id = user.id',array('email','login'))
+            ->where('queue.status =?', 'closed');
+
+    $query = $sql->query();
+    $queueElement = $query->fetch();
+
+    
+    if (!$queueElement){
+        echo 'Nothing in queue';
+        exit;
+    }
+    
+ 
+    //drop database
+    $dbname = $queueElement['login'].'__'.$queueElement['domain'];
+  
+    try{
+        $db->getConnection()->exec("DROP DATABASE ".$dbname);   
+    } catch(PDOException $e){
+        echo 'Could not remove database for instance';
+        exit;
+    }
+    
+    //remove install log if exist
+    if (file_exists($queueElement['domain'].'_install_log.txt')){
+    unlink($queueElement['domain'].'_install_log.txt');
+    }
+         
+    //remove folder recursively
+    $startCwd =  getcwd();
+    chdir(INSTANCE_PATH);
+    rrmdir($queueElement['domain']);
+    chdir($startCwd);
+    
+    $db->delete('queue','id='.$queueElement['id']); 
+    
+}
+
+function rrmdir($dir) {
+   if (is_dir($dir)) {
+     $objects = scandir($dir);
+     //var_dump($objects);
+     foreach ($objects as $object) {
+       if ($object != "." && $object != "..") {
+            if (filetype($dir."/".$object) == "dir") {
+                rrmdir($dir."/".$object);
+            } else {
+                unlink($dir."/".$object);
+            }
+       }
+     }
+     reset($objects);
+     rmdir($dir);
+   }
 }
