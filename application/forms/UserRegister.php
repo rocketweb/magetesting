@@ -51,6 +51,8 @@ class Application_Form_UserRegister extends Integration_Form
                 )
         ));
 
+        $regex = new Zend_Validate_Regex("/^[a-z' -]+$/i");
+        $regex->setMessage('Allowed chars: a-z, space, dash, apostrophe', 'regexNotMatch');
         // Add a firstname element
         $this->addElement('text', 'lastname', array(
                 'label'      => 'Last name',
@@ -58,7 +60,7 @@ class Application_Form_UserRegister extends Integration_Form
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
-                        new Zend_Validate_Alpha()
+                        $regex
                 )
         ));
 
