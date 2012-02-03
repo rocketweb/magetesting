@@ -17,9 +17,9 @@ class Integration_Form extends Zend_Form
                 array('ViewHelper'),
                 array('Errors'),
                 array('Description', array('tag' => 'span', 'class' => 'help-block', 'escape' => true)),
-                array('HtmlTag', array('tag' => 'div', 'class' => 'input')),
+                array('HtmlTag', array('tag' => 'div', 'class' => 'controls')),
                 array('Label', array('escape' => false)),
-                array('Overall', array('tag' => 'div', 'class' => 'clearfix')),
+                array('Overall', array('tag' => 'div', 'class' => 'control-group')),
         ), array('csrf', 'id'), false);
 
         $this->setDecorators(array(
@@ -37,7 +37,7 @@ class Integration_Form extends Zend_Form
         foreach ($submitButtons as $submit) {
             if ($this->{$submit} instanceof Zend_Form_Element) {
                 $this->{$submit}->getDecorator('overall')->setOption('class', 'actions');
-                $this->{$submit}->setAttrib('class', 'btn primary');
+                $this->{$submit}->setAttrib('class', 'btn btn-primary');
                 $this->{$submit}->removeDecorator('Label');
             }
         }

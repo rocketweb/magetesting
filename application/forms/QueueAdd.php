@@ -53,29 +53,23 @@ class Application_Form_QueueAdd extends Integration_Form{
 
         $this->queueAdd->removeDecorator('HtmlTag');
         $this->queueAdd->removeDecorator('overall');
-        $this->queueAdd->setAttrib('class','btn primary');
+        $this->queueAdd->setAttrib('class','btn btn-primary');
         $this->queueAdd->removeDecorator('Label');
 
         $this->edition->removeDecorator('HtmlTag');
         $this->edition->removeDecorator('overall');
         $this->edition->removeDecorator('Label');
 
-        $this->edition->addDecorator(array('AddLi' => 'HtmlTag'), array('tag' => 'li'));
-        $this->edition->addDecorator(array('AddUl' => 'HtmlTag'), array('tag' => 'ul', 'class' => 'inputs-list'));
-        $this->edition->addDecorator(array('AddDiv' => 'HtmlTag'), array('tag' => 'div', 'class' => 'input'));
         $this->edition->addDecorator('Label', array('escape' => false));
-        $this->edition->addDecorator('Overall', array('tag' => 'div', 'class' => 'clearfix'));
+        $this->edition->addDecorator('Overall', array('tag' => 'div', 'class' => 'control-group gray-menu'));
 
 
         $this->version->removeDecorator('HtmlTag');
         $this->version->removeDecorator('overall');
         $this->version->removeDecorator('Label');
 
-        $this->version->addDecorator(array('AddLi' => 'HtmlTag'), array('tag' => 'li'));
-        $this->version->addDecorator(array('AddUl' => 'HtmlTag'), array('tag' => 'ul', 'class' => 'inputs-list'));
-        $this->version->addDecorator(array('AddDiv' => 'HtmlTag'), array('tag' => 'div', 'class' => 'input'));
         $this->version->addDecorator('Label', array('escape' => false));
-        $this->version->addDecorator('Overall', array('tag' => 'div', 'class' => 'clearfix'));
+        $this->version->addDecorator('Overall', array('tag' => 'div', 'class' => 'control-group gray-menu'));
     }
 
 }

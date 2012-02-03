@@ -25,8 +25,7 @@ class Application_Form_QueueClose extends Integration_Form
 
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('overall');
-        $this->submit->setAttrib('class','btn primary');
-        $this->submit->removeDecorator('Label');
+        $this->submit->setAttrib('class','btn btn-primary');
 
     }
 

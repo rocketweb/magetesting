@@ -12,7 +12,7 @@ class Application_Form_UserRegister extends Integration_Form
         // Add a login element
         $this->addElement('text', 'login', array(
                 'label'      => 'Login',
-                'required'   => false,
+                'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 255)),
@@ -96,7 +96,7 @@ class Application_Form_UserRegister extends Integration_Form
         $this->reset->removeDecorator('HtmlTag');
         $this->reset->removeDecorator('overall');
         $this->reset->removeDecorator('label');
-        
+
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('overall');
 

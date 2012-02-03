@@ -1,5 +1,5 @@
 <?php foreach( $this->container as $name => $page ): ?>
-<ul class="nav">
+<ul class="nav span9">
     <?php foreach( $page->pages as $subpage ): ?>
         <?php if($this->menu()->accept($subpage)):
         $class = array();

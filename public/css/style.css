@@ -12,7 +12,25 @@ body {
 
 .yes-no form {
     float: left;
+    margin-right: 20px;
+    margin-top: 20px;
 }
 .yes-no .clear{
     clear: both;
+}
+.gray-menu select{
+    background-color: #DDDDDD;
+}
+.split-columns {
+    border-right: 1px solid #E4E4E4; 
+}
+.form-horizontal .control-group .split-columns {
+    padding-right: 20px;
+}
+.form-horizontal .control-group {
+    margin-bottom: 9px;
+}
+.modal-body .table td {
+    border-top: 0px;
+    padding-left: 37px;
 }

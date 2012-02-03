@@ -7,6 +7,7 @@ class Application_Form_UserLogin extends Integration_Form
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
+        $this->setAttrib('class', 'form-horizontal');
 
         // Add id field
         $this->addElement('hidden', 'id');
