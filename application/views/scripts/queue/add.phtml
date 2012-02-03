@@ -1,31 +1,19 @@
-<form action="" method="post">
-    <fieldset>
-        <legend>Setup your environment</legend>
-
-        <?php echo $this->form->edition ?>
-        <?php echo $this->form->version ?>
-        <?php echo $this->form->instance_name ?>
-
-    </fieldset>
-    <div class="actions">
-        <?php echo $this->form->queueAdd; ?>
-    </div>
-</form>
-
-<script type="text/javascript">
+<?php 
+$this->headScript()->offsetSetScript(100,'
+$(document).ready(function(){
     $("#edition").change(function(){
         
         $.ajax({
             type: "POST",
-            url: "<?php echo $this->baseUrl('queue/getVersions');?>",
+            url: "'.$this->baseUrl("queue/getVersions").'",
             data: "edition="+ $("#edition").val(),
             dataType: "json",
             success: function(json){
-                var opts = '';
+                var opts = "";
                 console.log(json);
 
                 $.each(json,function(index, item){
-                    opts =  opts +'<option value="'+ item.id +'">' + item.version + '</option>';
+                    opts =  opts + "<option value=\""+ item.id +"\">" + item.version + "</option>";
                 });
 
                 $("#version").html(opts);
@@ -34,4 +22,30 @@
         });
         
     });
-</script>
+});');    
+?>
+
+<div class="row">
+    <div class="span4">&nbsp;</div>
+    <div class="span8">
+        <form action="<?php echo $this->form->getAction() ?>"
+            enctype="<?php echo $this->form->getEnctype() ?>"
+            method="<?php echo $this->form->getMethod() ?>"
+            id="<?php echo $this->form->getId() ?>"
+            class="<?php echo $this->form->getAttrib('class') ?>">
+            <div class="modal-header">
+                <h3>Setup your environment</h3>
+            </div>
+            <div class="modal-body">
+                <fieldset>
+                    <?php echo $this->form->edition ?>
+                    <?php echo $this->form->version ?>
+                    <?php echo $this->form->instance_name ?>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <?php echo $this->form->queueAdd; ?>
+            </div>
+        </form>
+    </div>
+</div>

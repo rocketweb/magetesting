@@ -53,7 +53,7 @@ class Application_Form_QueueAdd extends Integration_Form{
 
         $this->queueAdd->removeDecorator('HtmlTag');
         $this->queueAdd->removeDecorator('overall');
-        $this->queueAdd->setAttrib('class','btn primary large');
+        $this->queueAdd->setAttrib('class','btn primary');
         $this->queueAdd->removeDecorator('Label');
 
         $this->edition->removeDecorator('HtmlTag');

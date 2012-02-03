@@ -11,14 +11,24 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" ></script>
+<?php 
+$this->headScript()->offsetSetFile(1,'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'); 
+$this->headLink()->appendStylesheet('http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css');
+$this->headLink()->appendStylesheet($this->baseUrl('public/css/style.css'));
+?>
     
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-    <?php echo $this->headLink()->appendStylesheet($this->baseUrl('public/css/style.css')); ?>
+    <?php  ?>
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    
+    <?php echo $this->headTitle() . "\n"; ?>
+    <?php echo $this->headMeta() . "\n"; ?>
+    <?php echo $this->headLink() . "\n"; ?>
+    <?php echo $this->headScript() . "\n"; ?>
+    <?php echo $this->headStyle(); ?>
+    
   </head>
 
 <body>
