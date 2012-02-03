@@ -52,6 +52,18 @@ try {
     exit($e->getMessage() . "\n\n" . $e->getUsageMessage());
 }
 
+ //initialize database
+$bootstrap = $application->getBootstrap()->bootstrap();
+$db = $bootstrap->getResource('db');
+
+//initialize logger
+if (!$bootstrap->hasResource('Log')) {
+    echo 'No logger instance found,aborting';
+    exit;
+} 
+        
+        $log = $bootstrap->getResource('Log');
+
 if (isset($opts->help)) {
     echo $opts->getUsageMessage();
     exit;
@@ -69,10 +81,8 @@ if (isset($opts->hello)) {
  */
 if (isset($opts->magentoinstall)) {
 
-
-    $bootstrap = $application->getBootstrap()->bootstrap();
-    $db = $bootstrap->getResource('db');
-
+   
+       
     $select = new Zend_Db_Select($db);
     
     //check if any script is currently being installed
@@ -87,7 +97,9 @@ if (isset($opts->magentoinstall)) {
     
     if ($queueElement){
         //something is currently installed, abort
-        echo 'Another installation in progress, aborting';
+        $message = 'Another installation in progress, aborting';
+        echo $message;
+        $log->log($message, LOG_INFO);
         exit;
     }
     
@@ -105,7 +117,9 @@ if (isset($opts->magentoinstall)) {
 
     
     if (!$queueElement){
-        echo 'Nothing in queue';
+        $message = 'Nothing in pending queue';
+        echo $message;
+        $log->log($message, LOG_INFO);
         exit;
     }
     
@@ -131,7 +145,10 @@ if (isset($opts->magentoinstall)) {
     try{
         $db->getConnection()->exec("CREATE DATABASE ".$dbname);   
     } catch(PDOException $e){
-        echo 'Could not create database for instance, aborting';
+        $message = 'Could not create database for instance, aborting';
+        echo $message;
+        $log->log($message, LOG_ERR);
+        
         $db->update('queue',array('status'=>'pending'),'id='.$queueElement['id']);
         exit;
     }
@@ -147,88 +164,94 @@ if (isset($opts->magentoinstall)) {
     $magentoVersion = $queueElement['version'];
     $domain = $queueElement['domain'];
     $startCwd =  getcwd();
-    $log_file_path = $startCwd.'/'.$domain.'_install_log.txt';
     
+    $message = 'domain: '.$domain;
+    $log->log($message, LOG_DEBUG);
     
-    file_put_contents($log_file_path, "\ndomain: ".$domain , FILE_APPEND);
-    unset($output);
     $dbprefix = $domain.'__';
     
     $adminemail = $configLocalArr['magento.adminEmail']; //fetch from zend config
     $storeurl = $configLocalArr['magento.storeUrl'].'/instance/'.$domain; //fetch from zend config
-    file_put_contents($log_file_path, "\nstore url: ".$storeurl , FILE_APPEND);
+    $message = 'store url: '.$storeurl;
+    $log->log($message, LOG_DEBUG);
     
     chdir(INSTANCE_PATH);
-    unset($output);
+    
     
     echo "Now installing Magento without sample data...\n";
     echo "Preparing directory...\n";
     exec('mkdir '.$domain,$output);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log($message, LOG_DEBUG);
     unset($output);
     
     if (!file_exists(INSTANCE_PATH.'/'.$domain) || !is_dir(INSTANCE_PATH.'/'.$domain)){
-        echo 'Directory does not exist, aborting';
-        file_put_contents($log_file_path, "\nDirectory does not exist, aborting\n" , FILE_APPEND);
+        $message = 'Directory does not exist, aborting';
+        echo $message;
+        $log->log($message, LOG_DEBUG);
         exit;
     }
         
     chdir($domain);
+    
     echo "Copying package to target directory...\n";
     exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/',$output);  
-    file_put_contents($log_file_path,"\ncp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain."/\n", FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\ncp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain."/\n".$message, LOG_DEBUG);
     unset($output);
+    
     echo "Extracting data...\n";
-    exec('tar -zxvf magento-' . $magentoVersion . '.tar.gz',$output);
-    file_put_contents($log_file_path, "\ntar -zxvf magento-" . $magentoVersion . ".tar.gz\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    exec('tar -zxvf magento-' . $magentoVersion . '.tar.gz',$output);  
+    $message = var_export($output,true);
+    $log->log("\ntar -zxvf magento-" . $magentoVersion . ".tar.gz\n".$message, LOG_DEBUG);
     unset($output);
+    
     echo "Moving files...\n";
     exec('mv magento/* .',$output);
-    file_put_contents($log_file_path, "\nmv magento/* .\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nmv magento/* .\n".$message, LOG_DEBUG);
     unset($output);
     
     exec('mv magento/.htaccess .',$output);
-    file_put_contents($log_file_path, "\nmv magento/.htaccess .\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nmv magento/.htaccess .\n".$message, LOG_DEBUG);
     unset($output);
     
     echo "Setting permissions...\n";    
     exec('chmod 777 var/.htaccess app/etc',$output);
-    file_put_contents($log_file_path, "\nchmod 777 var var/.htaccess app/etc\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nchmod 777 var var/.htaccess app/etc\n".$message, LOG_DEBUG);
     unset($output);
     
     exec('chmod 777 var -R',$output);
-    file_put_contents($log_file_path, "\nchmod 777 var var/.htaccess app/etc\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nchmod 777 var var/.htaccess app/etc\n".$message, LOG_DEBUG);
     unset($output);
     
     exec('chmod 777 media -R',$output);
-    file_put_contents($log_file_path, "\nchmod -R 777 media\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nchmod -R 777 media\n".$message, LOG_DEBUG);
     unset($output);
+    
     exec('chmod 777 mage',$output);
-    file_put_contents($log_file_path, "\nchmod 777 mage\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nchmod 777 mage\n".$message, LOG_DEBUG);
     unset($output);
     
     echo "Cleaning up files...\n";
     exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*',$output);
-    file_put_contents($log_file_path, "\nrm -rf downloader/pearlib/cache/* downloader/pearlib/download/*\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nrm -rf downloader/pearlib/cache/* downloader/pearlib/download/*\n".$message, LOG_DEBUG);
     unset($output);
     
     exec('rm -rf magento/ magento-' . $magentoVersion . '.tar.gz',$output);
-    file_put_contents($log_file_path, "\nrm -rf magento/ magento-" . $magentoVersion . ".tar.gz\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nrm -rf magento/ magento-" . $magentoVersion . ".tar.gz\n".$message, LOG_DEBUG);
     unset($output);
     
     exec('rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt',$output);
-    file_put_contents($log_file_path, "\nrm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+    $message = var_export($output,true);
+    $log->log("\nrm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt\n".$message, LOG_DEBUG);
     unset($output);
     
    
@@ -254,7 +277,8 @@ if (isset($opts->magentoinstall)) {
             ' --admin_username "' . $adminuser . '"' .
             ' --admin_password "' . $adminpass . '"' .
             ' --skip_url_validation "yes"',$output);
-    file_put_contents($log_file_path, "\n".'cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
+    $message = var_export($output,true);
+    $log->log("\n".'cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
             ' --license_agreement_accepted "yes"' .
             ' --locale "en_US"' .
             ' --timezone "America/Los_Angeles"' .
@@ -274,13 +298,12 @@ if (isset($opts->magentoinstall)) {
             ' --admin_email "' . $adminemail . '"' .
             ' --admin_username "' . $adminuser . '"' .
             ' --admin_password "' . $adminpass . '"' .
-            ' --skip_url_validation "yes"'."\n" , FILE_APPEND);
-    file_put_contents($log_file_path, var_export($output,true) , FILE_APPEND);
+            ' --skip_url_validation "yes"'."\n".$message, LOG_DEBUG);
     unset($output);
 
     echo "Finished installing Magento\n";
-    file_put_contents($log_file_path, "\nfinished installation " , FILE_APPEND);
-    unset($output);
+
+
     //TODO: add mail info about ready installation
     
     
@@ -292,10 +315,7 @@ if (isset($opts->magentoinstall)) {
 }
 
 if (isset($opts->magentoremove)) {
-    
-    $bootstrap = $application->getBootstrap()->bootstrap();
-    $db = $bootstrap->getResource('db');
-      
+        
     $select = new Zend_Db_Select($db);
     $sql = $select
             ->from('queue')
@@ -307,7 +327,9 @@ if (isset($opts->magentoremove)) {
 
     
     if (!$queueElement){
-        echo 'Nothing in queue';
+        $message = 'Nothing in closed queue';
+        echo $message;
+        $log->log($message, LOG_INFO);
         exit;
     }
     
@@ -318,13 +340,10 @@ if (isset($opts->magentoremove)) {
     try{
         $db->getConnection()->exec("DROP DATABASE ".$dbname);   
     } catch(PDOException $e){
-        echo 'Could not remove database for instance';
+        $message = 'Could not remove database for instance';
+        echo $message;
+        $log->log($message, LOG_ERROR);
         exit;
-    }
-    
-    //remove install log if exist
-    if (file_exists($queueElement['domain'].'_install_log.txt')){
-    unlink($queueElement['domain'].'_install_log.txt');
     }
          
     //remove folder recursively
