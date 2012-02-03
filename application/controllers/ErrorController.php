@@ -1,6 +1,6 @@
 <?php
 
-class ErrorController extends Zend_Controller_Action
+class ErrorController extends Integration_Controller_Action
 {
 
     public function errorAction()
@@ -30,11 +30,10 @@ class ErrorController extends Zend_Controller_Action
         }
 
         // Log exception, if logger available
-        // FIXME:had to comment this out, there were problems with non-existing getlog method
-        //        if ($log = $this->getLog()) {
-        //            $log->log($this->view->message, $priority, $errors->exception);
-        //            $log->log('Request Parameters', $priority, $errors->request->getParams());
-        //        }
+        if ($log = $this->getLog()) {
+            $log->log($this->view->message, $priority, $errors->exception);
+            $log->log('Request Parameters', $priority, $errors->request->getParams());
+        }
 
         // conditionally display exceptions
         if ($this->getInvokeArg('displayExceptions') == true) {
