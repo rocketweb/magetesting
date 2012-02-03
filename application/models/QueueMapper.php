@@ -90,6 +90,16 @@ class Application_Model_QueueMapper {
         return $this->getDbTable()->getAllJoinedWithVersions();
     }
 
+    public function changeStatusToClose($queue)
+    {
+        if($queue->getUserId() AND $queue->getDomain()) {
+            $this->getDbTable()->changeStatusToClose(
+                    $queue->getUserId(),
+                    $queue->getDomain()
+            );
+        }
+    }
+
     public function getAllForUser( $user_id )
     {
         return $this->getDbTable()->findAllByUser( $user_id );

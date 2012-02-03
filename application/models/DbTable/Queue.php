@@ -33,4 +33,15 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
+    public function changeStatusToClose($userId, $domain)
+    {
+        $data = array('status' => 'closed');
+        $where = array(
+            'user_id = ?' => $userId,
+            'domain = ?' => $domain
+        );
+
+        $this->update($data, $where);
+    }
+
 }

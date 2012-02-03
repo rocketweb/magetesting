@@ -1,6 +1,3 @@
-
-<?php echo $this->render('_partials/messages.phtml'); ?>
-
 <h1>Your Sandbox</h1>
 
 <p>
@@ -12,16 +9,17 @@
 <table class="bordered-table">
     <thead>
         <tr>
+            <th>Name</th>
             <th>Edition</th>
             <th>Version</th>
             <th>Status</th>
-            <th>Name</th>
             <th>&nbsp;</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach($this->queue as $item): ?>
         <tr>
+            <td><?php echo $item['instance_name']?></td>
             <td><?php echo $item['edition']?></td>
             <td><?php echo $item['version']?></td>
             <?php switch($item['status']): 
@@ -31,16 +29,19 @@
                 <td><span class="label warning">In Queue</span> <span
                     class="label">5 minutes left</span></td>
             <?php break; case 'closed': ?>
-                <td><span class="label success">Ready</span></td>
+                <td><span class="label important">Closed</span></td>
             <?php break; case 'installing': ?>
                 <td><span class="label success">Installing..</span></td>
             <?php break; default: ?>
                 <td><span class="label warning"></span></td>
             <?php endswitch; ?>
-            <td><?php echo $item['instance_name']?></td>
             <td>
-              <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn success">Visit</a>
-              <a href="#" class="btn danger">Close</a>
+            <?php if($item['status'] == 'closed'): ?>
+                <a href="#" class="btn success disabled">Visit</a>
+            <?php else: ?>
+                <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn success">Visit</a>
+            <?php endif;?>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain']), 'default', true); ?>" class="btn danger">Close</a>
             </td>
         </tr>
         <?php endforeach; ?>

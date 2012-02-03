@@ -9,3 +9,10 @@ body {
 .topbar div > ul, .nav {
     float: none;
 }
+
+.yes-no form {
+    float: left;
+}
+.yes-no .clear{
+    clear: both;
+}

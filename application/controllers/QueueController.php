@@ -73,6 +73,35 @@ class QueueController extends Integration_Controller_Action
         $this->view->form = $form;
     }
 
+    public function closeAction()
+    {
+        $form = new Application_Form_QueueClose();
+        $this->view->form = $form;
+
+        $domain = $this->getRequest()->getParam('domain');
+
+        if($this->getRequest()->isPost()) {
+
+            $close = (int)$this->getRequest()->getParam('close');
+
+            if($close AND $domain) {
+                $queue = new Application_Model_Queue();
+                $queue->setUserId($this->auth->getIdentity()->id)
+                      ->setDomain($domain);
+                $queue->changeStatusToClose();
+
+                $this->_helper->FlashMessenger('Store added to close queue.');
+            }
+
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module'     => 'default',
+                    'controller' => 'user',
+                    'action'     => 'dashboard',
+            ), 'default', true);
+        }
+
+    }
+
     public function getversionsAction(){
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

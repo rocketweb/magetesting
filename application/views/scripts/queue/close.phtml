@@ -1,0 +1,18 @@
+<fieldset><legend>Do you really want to close the store ?</legend></fieldset>
+<div class="row">
+    <div class="span4">&nbsp;</div>
+    <div class="yes-no">
+        <form method="post">
+                <?php echo $this->form->close ?>
+                <?php echo $this->form->submit ?>
+        </form>
+        <form method="post">
+                <?php
+                    $this->form->changeToNoForm();
+                    echo $this->form->close;
+                ?>
+                <?php echo $this->form->submit; ?>
+        </form>
+        <div class="clear"></div>
+    </div>
+</div>
