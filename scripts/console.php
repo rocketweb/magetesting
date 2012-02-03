@@ -61,8 +61,11 @@ if (!$bootstrap->hasResource('Log')) {
     echo 'No logger instance found,aborting';
     exit;
 } 
-        
-        $log = $bootstrap->getResource('Log');
+$log = $bootstrap->getResource('Log');
+
+if (!file_exists(APPLICATION_PATH . '/../data/logs') || !is_dir(APPLICATION_PATH . '/../data/logs')){
+    mkdir(APPLICATION_PATH . '/../data/logs');
+}
 
 if (isset($opts->help)) {
     echo $opts->getUsageMessage();
@@ -124,6 +127,9 @@ if (isset($opts->magentoinstall)) {
     }
     
     $db->update('queue',array('status'=>'installing'),'id='.$queueElement['id']);
+
+    $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'__'.$queueElement['domain'].'.txt');
+    $log = new Zend_Log($writer);
 
     $options['nestSeparator'] = ':';
     $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini',
@@ -336,6 +342,9 @@ if (isset($opts->magentoremove)) {
  
     //drop database
     $dbname = $queueElement['login'].'__'.$queueElement['domain'];
+    
+    $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'__'.$queueElement['domain'].'.txt');
+    $log = new Zend_Log($writer);
   
     try{
         $db->getConnection()->exec("DROP DATABASE ".$dbname);   
