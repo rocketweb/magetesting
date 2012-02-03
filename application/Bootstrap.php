@@ -55,6 +55,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->doctype('HTML5');
     }
 
+    protected function _initNavigation()
+    {
+        $this->bootstrap('layout');
+        $layout = $this->getResource('layout');
+        $view = $layout->getView();
+        $config = new Zend_Config_Xml(APPLICATION_PATH.'/configs/navigation.xml');
+    
+        $navigation = new Zend_Navigation($config);
+        $view->navigation($navigation);
+    }
+
     protected function _initConfig()
     {
         $config = new Zend_Config_Ini(

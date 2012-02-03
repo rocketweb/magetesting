@@ -3,7 +3,7 @@ body {
 }
 
 .right {
-    float: right;
+    float: right !important;
 }
 
 .topbar div > ul, .nav {

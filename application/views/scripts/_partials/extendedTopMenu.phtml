@@ -1,6 +1,16 @@
 <?php foreach( $this->container as $name => $page ): ?>
+<ul class="nav">
     <?php foreach( $page->pages as $subpage ): ?>
-        <?php var_dump( $subpage->isActive() );var_dump($this->menu()->htmlify( $subpage )); ?>
+        <?php if($this->menu()->accept($subpage)):
+        $class = array();
+        if($subpage->isActive()) { $class[] = 'active'; }
+        if($subpage->get('float')) { $class[] = 'right'; }
+        $class = implode(' ',$class);
+        ?>
+            <li class="<?php echo $class; ?>">
+                <?php echo $this->menu()->htmlify($subpage); ?>
+            </li>
+        <?php endif; ?>
     <?php endforeach; ?>
+</ul>
 <?php endforeach; ?>
-<?php //->setPartial(array('_partials/extendedTopMenu.phtml','default'))?>
