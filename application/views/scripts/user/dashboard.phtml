@@ -37,13 +37,15 @@
             <?php endswitch; ?>
             <td>
             <?php if($item['status'] == 'closed'): ?>
-                <a href="#" class="btn btn-success disabled">Visit</a>
+                <a class="btn btn-success disabled">Visit</a>
+                <a class="btn btn-danger disabled">Close</a>
             <?php else: ?>
                 <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success">Visit</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger">Close</a>
             <?php endif;?>
-                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain']), 'default', true); ?>" class="btn btn-danger">Close</a>
             </td>
         </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+<?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>

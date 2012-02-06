@@ -14,7 +14,7 @@ class QueueController extends Integration_Controller_Action
         $page = (int) $this->_getParam('page', 0);
         $paginator = $queueModel->getWholeQueue();
         $paginator->setCurrentPageNumber($page);
-        $paginator->setItemCountPerPage(15);
+        $paginator->setItemCountPerPage(10);
         $this->view->queue = $paginator;
     }
 

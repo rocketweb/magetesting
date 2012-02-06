@@ -111,9 +111,13 @@ class Application_Model_QueueMapper {
         }
     }
 
-    public function getAllForUser( $user_id )
+    public function getAllForUser($user_id)
     {
-        return $this->getDbTable()->findAllByUser( $user_id );
+        $select = $this->getDbTable()
+                       ->findAllByUser($user_id);
+        $adapter = new Zend_Paginator_Adapter_DbSelect($select);
+        
+        return new Zend_Paginator($adapter);
     }
 
     public function countUserInstances( $user_id )

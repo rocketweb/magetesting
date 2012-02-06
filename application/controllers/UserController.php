@@ -16,9 +16,15 @@ class UserController extends Integration_Controller_Action
     public function dashboardAction()
     {
         $queueModel = new Application_Model_Queue();
-        $this->view->queue = $queueModel->getAllForUser(
+        
+        $queueModel = new Application_Model_Queue();
+        $page = (int) $this->_getParam('page', 0);
+        $paginator = $queueModel->getAllForUser(
             $this->auth->getIdentity()->id
         );
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(10);
+        $this->view->queue = $paginator;
     }
 
     public function loginAction()

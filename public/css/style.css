@@ -18,13 +18,6 @@ body {
     clear: both;
 }
 
-.sample-data .controls label, .sample-data .controls input {
-    display: inline !important;
-}
-.sample-data .controls label {
-    margin-right: 20px;
-}
-
 .gray-menu select {
     background-color: #DDDDDD;
 }
