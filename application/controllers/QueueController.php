@@ -75,7 +75,7 @@ class QueueController extends Integration_Controller_Action
                     } catch(PDOException $e){
                         $message = 'Could not create database for instance, aborting';
                         echo $message;
-                        $log->log($message, LOG_ERR);
+                        $this->log($message, LOG_ERR);
                         throw $e;
                     }                  
                     
