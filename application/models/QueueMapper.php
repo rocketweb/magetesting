@@ -90,13 +90,21 @@ class Application_Model_QueueMapper {
         return $this->getDbTable()->getAllJoinedWithVersions();
     }
 
-    public function changeStatusToClose($queue)
+    public function changeStatusToClose($queue, $byAdmin)
     {
         if($queue->getUserId() AND $queue->getDomain()) {
-            $this->getDbTable()->changeStatusToClose(
-                    $queue->getUserId(),
-                    $queue->getDomain()
-            );
+            if($byAdmin) {
+                
+                $this->getDbTable()->update(
+                        array('status' => 'closed'),
+                        array('domain = ?' => $queue->getDomain())
+                );
+            } else {
+                $this->getDbTable()->changeStatusToClose(
+                        $queue->getUserId(),
+                        $queue->getDomain()
+                );
+            }
         }
     }
 
@@ -112,6 +120,15 @@ class Application_Model_QueueMapper {
                      ->current();
 
         return (int)$data->instances;
+    }
+    
+    public function getWholeQueue()
+    {
+        $select = $this->getDbTable()
+                     ->getWholeQueueWithUsersName();
+        $adapter = new Zend_Paginator_Adapter_DbSelect($select);
+        
+        return new Zend_Paginator($adapter);
     }
 
 }

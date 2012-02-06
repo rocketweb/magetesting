@@ -178,9 +178,14 @@ class Application_Model_Queue {
         return $this->getMapper()->countUserInstances( $user_id );
     }
 
-    public function changeStatusToClose()
+    public function changeStatusToClose($byAdmin = false)
     {
-        $this->getMapper()->changeStatusToClose($this);
+        $this->getMapper()->changeStatusToClose($this, $byAdmin);
         return $this;
+    }
+    
+    public function getWholeQueue()
+    {
+        return $this->getMapper()->getWholeQueue();
     }
 }

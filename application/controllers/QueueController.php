@@ -10,6 +10,12 @@ class QueueController extends Integration_Controller_Action
 
     public function indexAction()
     {
+        $queueModel = new Application_Model_Queue();
+        $page = (int) $this->_getParam('page', 0);
+        $paginator = $queueModel->getWholeQueue();
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(15);
+        $this->view->queue = $paginator;
     }
 
     public function addAction()
@@ -88,15 +94,25 @@ class QueueController extends Integration_Controller_Action
                 $queue = new Application_Model_Queue();
                 $queue->setUserId($this->auth->getIdentity()->id)
                       ->setDomain($domain);
-                $queue->changeStatusToClose();
+                $byAdmin = $this->auth->GetIdentity()
+                                ->group == 'admin'
+                                ? true : false;
+
+                $queue->changeStatusToClose($byAdmin);
 
                 $this->_helper->FlashMessenger('Store added to close queue.');
             }
 
+            $controller = 'user';
+            $action     = 'dashboard';
+            if($this->_getParam('redirect', 0) === 'admin') {
+                $controller = 'queue';
+                $action     = 'index';
+            }
             return $this->_helper->redirector->gotoRoute(array(
                     'module'     => 'default',
-                    'controller' => 'user',
-                    'action'     => 'dashboard',
+                    'controller' => $controller,
+                    'action'     => $action,
             ), 'default', true);
         }
 

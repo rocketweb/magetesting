@@ -43,5 +43,14 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
 
         $this->update($data, $where);
     }
+    
+    public function getWholeQueueWithUsersName()
+    {
+        return $this->select()
+                       ->setIntegrityCheck(false)
+                       ->from($this->_name)
+                       ->join('user', 'user.id = queue.user_id', 'login')
+                       ->join('version', 'queue.version_id = version.id', 'version');
+    }
 
 }
