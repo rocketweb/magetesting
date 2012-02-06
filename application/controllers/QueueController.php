@@ -61,6 +61,24 @@ class QueueController extends Integration_Controller_Action
                     ->setStatus( 'pending' );
                     $queueModel->save();
                     $this->_helper->FlashMessenger('New installation added to queue');
+                    
+                    //magentointegration user creates database
+                    try{
+                        $db = Zend_Db_Table::getDefaultAdapter();
+                        $DbManager = new Application_Model_DbTable_Privilege($db,$this->getInvokeArg('bootstrap')
+                                     ->getResource('config'));
+                        $DbManager->createDatabase($this->auth->getIdentity()->login.'_'.$queueModel->getDomain());
+                        
+                        if (!$DbManager->checkIfUserExists($this->auth->getIdentity()->login)){
+                            $DbManager->createUser($this->auth->getIdentity()->login);
+                        }                       
+                    } catch(PDOException $e){
+                        $message = 'Could not create database for instance, aborting';
+                        echo $message;
+                        $log->log($message, LOG_ERR);
+                        throw $e;
+                    }                  
+                    
                 } else {
                     $this->_helper->FlashMessenger('You cannot have more instances.');
                 }

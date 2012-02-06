@@ -191,4 +191,6 @@ class Application_Model_User {
             'status'     => $this->getStatus()
         );
     }
+    
+    
 }

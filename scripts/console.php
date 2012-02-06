@@ -31,29 +31,24 @@ $autoloader->registerNamespace('Db_');
  * Include my complete Bootstrap
  * @todo change when time is left
  */
+
+
+//initialize config
+$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV,
+            array('allowModifications'=>true));
+$localConfig = new Zend_Config_Ini(APPLICATION_PATH . '/configs/local.ini', APPLICATION_ENV);
+$config->merge($localConfig);
+$config->setReadOnly();
+
 // Create application, bootstrap, and run
 $application = new Zend_Application(
                 APPLICATION_ENV,
-                APPLICATION_PATH . '/configs/application.ini'
-);
+                $config
+        );
+$bootstrap = $application->getBootstrap()->bootstrap();
 
-try {
-    $opts = new Zend_Console_Getopt(
-                    array(
-                        'help' => 'Displays help.',
-                        'hello' => 'try it !',
-                        'magentoinstall' => 'handles magento from install queue',
-                        'magentoremove' => 'handles magento from remove queue',
-                    )
-    );
-
-    $opts->parse();
-} catch (Zend_Console_Getopt_Exception $e) {
-    exit($e->getMessage() . "\n\n" . $e->getUsageMessage());
-}
 
  //initialize database
-$bootstrap = $application->getBootstrap()->bootstrap();
 $db = $bootstrap->getResource('db');
 
 //initialize logger
@@ -63,8 +58,24 @@ if (!$bootstrap->hasResource('Log')) {
 } 
 $log = $bootstrap->getResource('Log');
 
+//check wheter the log directory is available
 if (!file_exists(APPLICATION_PATH . '/../data/logs') || !is_dir(APPLICATION_PATH . '/../data/logs')){
     mkdir(APPLICATION_PATH . '/../data/logs');
+}
+
+try {
+    $opts = new Zend_Console_Getopt(
+        array(
+            'help' => 'Displays help.',
+            'hello' => 'try it !',
+            'magentoinstall' => 'handles magento from install queue',
+            'magentoremove' => 'handles magento from remove queue',
+        )
+    );
+
+    $opts->parse();
+} catch (Zend_Console_Getopt_Exception $e) {
+    exit($e->getMessage() . "\n\n" . $e->getUsageMessage());
 }
 
 if (isset($opts->help)) {
@@ -83,9 +94,7 @@ if (isset($opts->hello)) {
  * Action : magentoinstall
  */
 if (isset($opts->magentoinstall)) {
-
-   
-       
+              
     $select = new Zend_Db_Select($db);
     
     //check if any script is currently being installed
@@ -122,45 +131,19 @@ if (isset($opts->magentoinstall)) {
     if (!$queueElement){
         $message = 'Nothing in pending queue';
         echo $message;
-        $log->log($message, LOG_INFO);
+        $log->log($message, LOG_INFO, ' ');
         exit;
     }
     
     $db->update('queue',array('status'=>'installing'),'id='.$queueElement['id']);
 
-    $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'__'.$queueElement['domain'].'.txt');
+    $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'_'.$queueElement['domain'].'.log');
     $log = new Zend_Log($writer);
-
-    $options['nestSeparator'] = ':';
-    $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini',
-                    'production',
-                    $options);
-
-    $configLocal = new Zend_Config_Ini(APPLICATION_PATH . '/configs/local.ini',
-                    'production',
-                    $options);
-
-    $configLocalArr = $configLocal->toArray();
-    $configArr = $config->toArray();
-
-    
-    $dbhost = $configArr['resources.db.params.host']; //fetch from zend config
-    $dbname = $queueElement['login'].'__'.$queueElement['domain'];
-    
-    //
-    try{
-        $db->getConnection()->exec("CREATE DATABASE ".$dbname);   
-    } catch(PDOException $e){
-        $message = 'Could not create database for instance, aborting';
-        echo $message;
-        $log->log($message, LOG_ERR);
-        
-        $db->update('queue',array('status'=>'pending'),'id='.$queueElement['id']);
-        exit;
-    }
-    
-    $dbuser = $configArr['resources.db.params.username']; //fetch from zend config
-    $dbpass = $configArr['resources.db.params.password']; //fetch from zend config
+ 
+    $dbhost = $config->resources->db->params->host; //fetch from zend config
+    $dbname = $queueElement['login'].'_'.$queueElement['domain'];
+    $dbuser = $queueElement['login']; //fetch from zend config
+    $dbpass = substr(sha1($config->magento->usersalt.$config->magento->userprefix.$queueElement['login']),0,10); //fetch from zend config
     
     $adminuser = $queueElement['login'];
     $adminpass = $queueElement['domain'];
@@ -174,15 +157,14 @@ if (isset($opts->magentoinstall)) {
     $message = 'domain: '.$domain;
     $log->log($message, LOG_DEBUG);
     
-    $dbprefix = $domain.'__';
+    $dbprefix = $domain.'_';
     
-    $adminemail = $configLocalArr['magento.adminEmail']; //fetch from zend config
-    $storeurl = $configLocalArr['magento.storeUrl'].'/instance/'.$domain; //fetch from zend config
+    $adminemail = $config->magento->adminEmail; //fetch from zend config
+    $storeurl = $config->magento->storeUrl.'/instance/'.$domain; //fetch from zend config
     $message = 'store url: '.$storeurl;
     $log->log($message, LOG_DEBUG);
     
     chdir(INSTANCE_PATH);
-    
     
     echo "Now installing Magento without sample data...\n";
     echo "Preparing directory...\n";
@@ -268,8 +250,8 @@ if (isset($opts->magentoinstall)) {
             ' --timezone "America/Los_Angeles"' .
             ' --default_currency "USD"' .
             ' --db_host "' . $dbhost . '"' .
-            ' --db_name "' . $dbname . '"' .
-            ' --db_user "' . $dbuser . '"' .
+            ' --db_name "' . $config->magento->instanceprefix.$dbname . '"' .
+            ' --db_user "' . $config->magento->userprefix.$dbuser . '"' .
             ' --db_pass "' . $dbpass . '"' .
             ' --db_prefix "' . $dbprefix . '"' .
             ' --url "' . $storeurl . '"' .
@@ -290,8 +272,8 @@ if (isset($opts->magentoinstall)) {
             ' --timezone "America/Los_Angeles"' .
             ' --default_currency "USD"' .
             ' --db_host "' . $dbhost . '"' .
-            ' --db_name "' . $dbname . '"' .
-            ' --db_user "' . $dbuser . '"' .
+            ' --db_name "' . $config->magento->instanceprefix.$dbname . '"' .
+            ' --db_user "' . $config->magento->userprefix.$dbuser . '"' .
             ' --db_pass "' . $dbpass . '"' .
             ' --db_prefix "' . $dbprefix . '"' .
             ' --url "' . $storeurl . '"' .
@@ -313,7 +295,7 @@ if (isset($opts->magentoinstall)) {
     //TODO: add mail info about ready installation
     
     
-    //$update = new Zend_Db_Update($db);
+    
     $db->update('queue',array('status'=>'ready'),'id='.$queueElement['id']);
     
     chdir($startCwd);
@@ -321,7 +303,8 @@ if (isset($opts->magentoinstall)) {
 }
 
 if (isset($opts->magentoremove)) {
-        
+          
+    
     $select = new Zend_Db_Select($db);
     $sql = $select
             ->from('queue')
@@ -335,34 +318,46 @@ if (isset($opts->magentoremove)) {
     if (!$queueElement){
         $message = 'Nothing in closed queue';
         echo $message;
-        $log->log($message, LOG_INFO);
+        
+        
+        $log->log($message, LOG_INFO,' ');
         exit;
     }
     
  
     //drop database
-    $dbname = $queueElement['login'].'__'.$queueElement['domain'];
+    $dbname = $queueElement['login'].'_'.$queueElement['domain'];
     
-    $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'__'.$queueElement['domain'].'.txt');
+    $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'_'.$queueElement['domain'].'.log');
     $log = new Zend_Log($writer);
-  
-    try{
-        $db->getConnection()->exec("DROP DATABASE ".$dbname);   
-    } catch(PDOException $e){
-        $message = 'Could not remove database for instance';
+      
+    $DbManager = new Application_Model_DbTable_Privilege($db,$config);
+    
+    if ($DbManager->checkIfDatabaseExists($dbname)){
+        try{
+            $DbManager->dropDatabase($dbname);
+        } catch(PDOException $e){
+            $message = 'Could not remove database for instance';
+            echo $message;
+            $log->log($message, LOG_ERR);
+            exit;
+        }
+    } else {
+        $message = 'database does not exist, ignoring...';
         echo $message;
-        $log->log($message, LOG_ERROR);
-        exit;
+        $log->log($message, LOG_ERR);
     }
-         
+    
     //remove folder recursively
     $startCwd =  getcwd();
     chdir(INSTANCE_PATH);
     rrmdir($queueElement['domain']);
     chdir($startCwd);
     
-    $db->delete('queue','id='.$queueElement['id']); 
+    $db->getConnection()->exec("use ".$config->resources->db->params->dbname);
     
+    $db->delete('queue','id='.$queueElement['id']); 
+    unlink(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'_'.$queueElement['domain'].'.log');
 }
 
 function rrmdir($dir) {

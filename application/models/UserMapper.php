@@ -92,15 +92,4 @@ class Application_Model_UserMapper {
         }
         return $entries;
     }
-
-    public function fetchUsersAssignedToItem($itemId)
-    {
-        $resultSet = $this->getDbTable()->fetchUsersAssignedToItem($itemId);
-        $entries = array();
-        foreach($resultSet as $row) {
-            $entries[] = $row['user_id'];
-        }
-        return $entries;
-    }
-
 }
