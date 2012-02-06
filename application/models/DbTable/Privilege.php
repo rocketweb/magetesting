@@ -1,15 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of DbManager
- *
- * @author jan
- */
 class Application_Model_DbTable_Privilege {
     
     private $adapter  ='';
@@ -50,12 +40,6 @@ class Application_Model_DbTable_Privilege {
         return true;
     }
     
-    
-    /**
-     * this should be run upon registration for users in mysql and magentointegrations have the same passwords
-     * @param type $login
-     * @param type $password 
-     */
     public function createUser($login)
     {
         
@@ -72,40 +56,25 @@ class Application_Model_DbTable_Privilege {
         
     }
     
-       
     /**
-     * @todo: needs implementation
-     * 
-     * this should be run upon registration for users in mysql and magentointegrations have the same passwords
-     * @param type $login
-     * @param type $password 
-     */
-    public function changePassword(){}
-    
-    /**
-     * @todo: needs implementation
+     * @todo: needs implementation upon user removal in admin panel/user module
      * implement this when have user management implemented, so you can delete mi_login when you remove account
      */
-    public function dropUser($login){
-        //'mi_'.$login
+    public function dropUser($login)
+    {
+        //step1: drop all user's databases 
+        
+        //step2: remove mysql user
     }
     
-    /**
-     * @todo: needs implementation
-     */
     public function createDatabase($dbname)
     {
         $this->adapter->getConnection()->exec("CREATE DATABASE ".$this->config->magento->instanceprefix.$dbname);  
     }
     
-    /**
-     * @todo: needs implementation
-     */
     public function dropDatabase($dbname)
     {
         $this->adapter->getConnection()->exec("DROP DATABASE ".$this->config->magento->instanceprefix.$dbname);   
     }
     
 }
-
-?>
