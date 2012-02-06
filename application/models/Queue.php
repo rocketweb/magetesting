@@ -10,6 +10,8 @@ class Application_Model_Queue {
 
     protected $_version_id;
 
+    protected $_sample_data;
+
     protected $_user_id;
 
     protected $_domain;
@@ -93,6 +95,17 @@ class Application_Model_Queue {
         return $this->_user_id;
     }
 
+    public function setSampleData($sample_data)
+    {
+        $this->_sample_data = $sample_data;
+        return $this;
+    }
+    
+    public function getSampleData()
+    {
+        return $this->_sample_data;
+    }
+
     public function setDomain($domain)
     {
         $this->_domain = $domain;
@@ -153,13 +166,14 @@ class Application_Model_Queue {
     public function __toArray()
     {
         return array(
-                'id' => $this->getId(),
-                'edition' => $this->getEdition(),
-                'status' => $this->getStatus(),
-                'version_id' => $this->getVersionId(),
-                'user_id' => $this->getUserId(),
-                'domain' => $this->getDomain(),
-                'instance_name' => $this->getInstanceName()
+                'id'             => $this->getId(),
+                'edition'        => $this->getEdition(),
+                'status'         => $this->getStatus(),
+                'version_id'     => $this->getVersionId(),
+                'user_id'        => $this->getUserId(),
+                'domain'         => $this->getDomain(),
+                'instance_name'  => $this->getInstanceName(),
+                'sample_data'    => $this->getSampleData()
         );
     }
 

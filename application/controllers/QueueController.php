@@ -45,6 +45,7 @@ class QueueController extends Integration_Controller_Action
                     $queueModel->setVersionId( $form->version->getValue() )
                     ->setEdition($form->edition->getValue())
                     ->setUserId($userId)
+                    ->setSampleData($form->sample_data->getValue())
                     ->setInstanceName($form->instance_name->getValue())
                     ->setDomain(
                             substr(

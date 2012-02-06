@@ -20,6 +20,18 @@ class Application_Form_QueueAdd extends Integration_Form{
                 )
         ));
 
+        $this->addElement('radio', 'sample_data', array(
+                'label'      => 'Install sample data',
+                'required'   => true
+        ));
+        $this->sample_data->addMultiOptions(array(
+                1 => 'Yes',
+                0 => 'No',
+        ));
+        
+        $this->sample_data->setValue(0)
+        ->setSeparator(' ');
+
         $this->addElement('text', 'instance_name', array(
                 'label'      => 'Name or note',
                 'required'   => false,
@@ -63,6 +75,7 @@ class Application_Form_QueueAdd extends Integration_Form{
         $this->edition->addDecorator('Label', array('escape' => false));
         $this->edition->addDecorator('Overall', array('tag' => 'div', 'class' => 'control-group gray-menu'));
 
+        $this->sample_data->addDecorator('Overall', array('tag' => 'div', 'class' => 'control-group sample-data'));
 
         $this->version->removeDecorator('HtmlTag');
         $this->version->removeDecorator('overall');

@@ -42,7 +42,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('admin', 'default_error', array('error'));
         $this->allow('admin', 'default_index', array('index'));
         $this->allow('admin', 'default_queue', array(
-                'add', 'close', 'index'
+                'add', 'close', 'index', 'getVersions'
         ));
 
         $this->allow('admin', 'default_user', array(
@@ -55,7 +55,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('standard-user', 'default_error', array('error'));
         $this->allow('standard-user', 'default_index', array('index'));
         $this->allow('standard-user', 'default_queue', array(
-                'add', 'close'
+                'add', 'close', 'getVersions'
         ));
 
         $this->allow('standard-user', 'default_user', array(

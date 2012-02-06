@@ -5,7 +5,6 @@ body {
 .right {
     float: right !important;
 }
-
 .topbar div > ul, .nav {
     float: none;
 }
@@ -18,9 +17,18 @@ body {
 .yes-no .clear{
     clear: both;
 }
-.gray-menu select{
+
+.sample-data .controls label, .sample-data .controls input {
+    display: inline !important;
+}
+.sample-data .controls label {
+    margin-right: 20px;
+}
+
+.gray-menu select {
     background-color: #DDDDDD;
 }
+
 .split-columns {
     border-right: 1px solid #E4E4E4; 
 }
@@ -30,6 +38,7 @@ body {
 .form-horizontal .control-group {
     margin-bottom: 9px;
 }
+
 .modal-body .table td {
     border-top: 0px;
     padding-left: 37px;
