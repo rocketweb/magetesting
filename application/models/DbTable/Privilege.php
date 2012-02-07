@@ -40,38 +40,60 @@ class Application_Model_DbTable_Privilege {
         return true;
     }
     
+    
+    /**
+     * required:
+     * GRANT CREATE, RELOAD, CREATE USER ON *.* TO 'mageintegration'@'localhost' WITH GRANT OPTION
+     * GRANT DROP ON `INST_%`.* TO 'mageintegration'@'localhost'
+	 * too much ? - GRANT ALL PRIVILEGES ON `mageintegration`.* TO 'mageintegration'@'localhost'
+	 * GRANT ALL PRIVILEGES ON `INST_%`.* TO 'mageintegration'@'localhost'
+	 * GRANT SELECT ON `mysql`.`user` TO 'mageintegration'@'localhost'
+	 * 
+     * this should be run upon registration for users in mysql and magentointegrations have the same passwords
+     * @param type $login
+     * @param type $password 
+     */
     public function createUser($login)
     {
         
         //add user 
         $this->adapter->getConnection()->exec("create user '".$this->config->magento->userprefix.$login."'@'localhost' identified by '". substr(sha1($this->config->magento->usersalt.$this->config->magento->userprefix.$login),0,10)."'");
-       
-        $this->adapter->getConnection()->exec("FLUSH TABLES");
-        $this->adapter->getConnection()->exec("FLUSH PRIVILEGES");
-        //grant privilleges to his tables
-        $this->adapter->getConnection()->exec("GRANT ALL ON `".$this->config->magento->instanceprefix.$login."_%`.* TO '".$this->config->magento->userprefix.$login."'@'localhost' identified by '". substr(sha1($this->config->magento->usersalt.$this->config->magento->userprefix.$login),0,10)."'");
-
-        $this->adapter->getConnection()->exec("FLUSH PRIVILEGES");
-        $this->adapter->getConnection()->exec("FLUSH TABLES");
         
+        $this->adapter->getConnection()->exec("GRANT ALL ON `".$this->config->magento->instanceprefix.$login."_%`.* TO '".$this->config->magento->userprefix.$login."'@'localhost'");
+
+        $this->adapter->getConnection()->exec("FLUSH TABLES,PRIVILEGES");
+        
+    }
+    
+       
+    /**
+     * @todo: needs implementation
+     * 
+     * this should be run upon registration for users in mysql and magentointegrations have the same passwords
+     * @param type $login
+     * @param type $password 
+     */
+    public function changePassword(){}
+    
+    /**
+     * @todo: needs implementation
+     * implement this when have user management implemented, so you can delete mi_login when you remove account
+     */
+    public function dropUser($login){
+        //'mi_'.$login
     }
     
     /**
-     * @todo: needs implementation upon user removal in admin panel/user module
-     * implement this when have user management implemented, so you can delete mi_login when you remove account
+     * @todo: needs implementation
      */
-    public function dropUser($login)
-    {
-        //step1: drop all user's databases 
-        
-        //step2: remove mysql user
-    }
-    
     public function createDatabase($dbname)
     {
         $this->adapter->getConnection()->exec("CREATE DATABASE ".$this->config->magento->instanceprefix.$dbname);  
     }
     
+    /**
+     * @todo: needs implementation
+     */
     public function dropDatabase($dbname)
     {
         $this->adapter->getConnection()->exec("DROP DATABASE ".$this->config->magento->instanceprefix.$dbname);   
