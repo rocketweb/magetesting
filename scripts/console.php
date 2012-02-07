@@ -220,12 +220,7 @@ if (isset($opts->magentoinstall)) {
     $message = var_export($output,true);
     $log->log("\nchmod -R 777 media\n".$message, LOG_DEBUG);
     unset($output);
-    
-    exec('chmod 777 mage',$output);
-    $message = var_export($output,true);
-    $log->log("\nchmod 777 mage\n".$message, LOG_DEBUG);
-    unset($output);
-    
+      
     echo "Cleaning up files...\n";
     exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*',$output);
     $message = var_export($output,true);
