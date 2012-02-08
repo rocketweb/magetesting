@@ -32,6 +32,7 @@ CREATE  TABLE IF NOT EXISTS `version` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT 'CE' ,
   `version` VARCHAR(15) NOT NULL ,
+  `sample_data_version` VARCHAR(10) NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
@@ -49,7 +50,7 @@ CREATE  TABLE IF NOT EXISTS `queue` (
   `user_id` INT(11) NOT NULL ,
   `domain` VARCHAR(10) NOT NULL ,
   `instance_name` VARCHAR(100) NULL ,
-  `sample_data` INT(1) UNSIGNED NOT NULL DEFAULT 0,
+  `sample_data` INT(1) UNSIGNED NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   INDEX `queue_to_version` (`version_id` ASC) ,
   INDEX `queue_to_user1` (`user_id` ASC) ,

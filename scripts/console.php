@@ -118,7 +118,7 @@ if (isset($opts->magentoinstall)) {
     $select = new Zend_Db_Select($db);
     $sql = $select
             ->from('queue')
-            ->joinLeft('version', 'queue.version_id = version.id',array('version'))
+            ->joinLeft('version', 'queue.version_id = version.id',array('version','sample_data_version'))
             ->joinLeft('user', 'queue.user_id = user.id',array('email','login','firstname','lastname'))
             ->where('queue.status =?', 'pending')
             ->where('user.status =?', 'active')
@@ -151,6 +151,9 @@ if (isset($opts->magentoinstall)) {
     $adminlname = $queueElement['lastname'];
 
     $magentoVersion = $queueElement['version'];
+    $sampleDataVersion = $queueElement['sample_data_version'];
+    $installSampleData = $queueElement['sample_data'];
+    
     $domain = $queueElement['domain'];
     $startCwd =  getcwd();
     
@@ -187,6 +190,13 @@ if (isset($opts->magentoinstall)) {
     $message = var_export($output,true);
     $log->log("\ncp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain."/\n".$message, LOG_DEBUG);
     unset($output);
+    if ($installSampleData){
+        echo "Copying sample data package to target directory...\n";
+        exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-sample-data-'. $sampleDataVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/',$output);  
+        $message = var_export($output,true);
+        $log->log("\ncp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-sample-data-'. $sampleDataVersion .'.tar.gz '.INSTANCE_PATH.$domain."/\n".$message, LOG_DEBUG);
+        unset($output);
+    }
     
     echo "Extracting data...\n";
     exec('tar -zxvf magento-' . $magentoVersion . '.tar.gz',$output);  
@@ -194,16 +204,32 @@ if (isset($opts->magentoinstall)) {
     $log->log("\ntar -zxvf magento-" . $magentoVersion . ".tar.gz\n".$message, LOG_DEBUG);
     unset($output);
     
+    if ($installSampleData){
+        echo "Extracting sample data...\n";
+        exec('tar -zxvf magento-sample-data-' . $sampleDataVersion . '.tar.gz',$output);  
+        $message = var_export($output,true);
+        $log->log("\ntar -zxvf magento-sample-data-" . $sampleDataVersion . ".tar.gz\n".$message, LOG_DEBUG);
+        unset($output);
+        
+        echo "Moving sample data files...\n";
+        exec('mv magento-sample-data-'.$sampleDataVersion.'/* .',$output);
+        $message = var_export($output,true);
+        $log->log("\nmv mv magento-sample-data-".$sampleDataVersion."/* .\n".$message, LOG_DEBUG);
+        unset($output);
+    }
+    
     echo "Moving files...\n";
-    exec('mv magento/* .',$output);
+    exec('cp -R magento/* .',$output);
     $message = var_export($output,true);
-    $log->log("\nmv magento/* .\n".$message, LOG_DEBUG);
+    $log->log("\ncp -R magento/* .\n".$message, LOG_DEBUG);
+    unset($output);
+       
+    exec('cp magento/.htaccess .',$output);
+    $message = var_export($output,true);
+    $log->log("\ncp magento/.htaccess .\n".$message, LOG_DEBUG);
     unset($output);
     
-    exec('mv magento/.htaccess .',$output);
-    $message = var_export($output,true);
-    $log->log("\nmv magento/.htaccess .\n".$message, LOG_DEBUG);
-    unset($output);
+    rrmdir('magento');
     
     echo "Setting permissions...\n";    
     exec('chmod 777 var/.htaccess app/etc',$output);
@@ -221,6 +247,11 @@ if (isset($opts->magentoinstall)) {
     $log->log("\nchmod -R 777 media\n".$message, LOG_DEBUG);
     unset($output);
       
+    if ($installSampleData){
+        echo 'Inserting sample data';
+        exec('mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < magento_sample_data_for_'.$sampleDataVersion.'.sql');
+    }
+    
     echo "Cleaning up files...\n";
     exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*',$output);
     $message = var_export($output,true);
@@ -237,7 +268,13 @@ if (isset($opts->magentoinstall)) {
     $log->log("\nrm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt\n".$message, LOG_DEBUG);
     unset($output);
     
-   
+    if ($installSampleData){
+         exec('rm -rf magento-sample-data-'.$sampleDataVersion.'/ magento-sample-data-' . $sampleDataVersion . '.tar.gz magento_sample_data_for_'.$sampleDataVersion.'.sql',$output);
+        $message = var_export($output,true);
+        $log->log("\nrm -rf magento-sample-data-" . $sampleDataVersion . "/ magento-sample-data-".$sampleDataVersion.".tar.gz magento_sample_data_for_".$sampleDataVersion.".sql\n".$message, LOG_DEBUG);
+        unset($output);      
+    }
+       
     echo "Installing Magento...\n";
     exec('cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
             ' --license_agreement_accepted "yes"' .
@@ -248,7 +285,7 @@ if (isset($opts->magentoinstall)) {
             ' --db_name "' . $config->magento->instanceprefix.$dbname . '"' .
             ' --db_user "' . $config->magento->userprefix.$dbuser . '"' .
             ' --db_pass "' . $dbpass . '"' .
-            ' --db_prefix "' . $dbprefix . '"' .
+            //' --db_prefix "' . $dbprefix . '"' .
             ' --url "' . $storeurl . '"' .
             ' --use_rewrites "yes"' .
             ' --use_secure "no"' .
@@ -270,7 +307,7 @@ if (isset($opts->magentoinstall)) {
             ' --db_name "' . $config->magento->instanceprefix.$dbname . '"' .
             ' --db_user "' . $config->magento->userprefix.$dbuser . '"' .
             ' --db_pass "' . $dbpass . '"' .
-            ' --db_prefix "' . $dbprefix . '"' .
+            //' --db_prefix "' . $dbprefix . '"' .
             ' --url "' . $storeurl . '"' .
             ' --use_rewrites "yes"' .
             ' --use_secure "no"' .

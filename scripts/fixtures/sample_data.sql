@@ -17,10 +17,12 @@ UNLOCK TABLES;
 /*!40000 ALTER TABLE `version` DISABLE KEYS */;
 LOCK TABLES `version` WRITE;
 INSERT INTO `version` VALUES  
-(1,'CE','1.5.0.1'),
-(2,'CE','1.5.1.0'),
-(3,'CE','1.6.0.0'),
-(5,'CE','1.6.2.0'),
-(4,'CE','1.6.1.0');
+(1,'CE','1.4.2.0','1.2.0'),
+(2,'CE','1.5.0.1','1.2.0'),
+(3,'CE','1.5.1.0','1.2.0'),
+(4,'CE','1.6.0.0','1.2.0'),
+(5,'CE','1.6.1.0','1.6.1.0'),
+(6,'CE','1.6.2.0','1.6.1.0'),
+(7,'CE','1.7.0.0-alpha1','1.6.1.0');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `version` ENABLE KEYS */;
