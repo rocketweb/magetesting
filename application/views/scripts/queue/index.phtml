@@ -7,6 +7,7 @@
             <th>Name</th>
             <th>Edition</th>
             <th>Version</th>
+            <th>Sample Data</th>
             <th>Status</th>
             <th>&nbsp;</th>
         </tr>
@@ -18,6 +19,13 @@
             <td><?php echo $item['instance_name']?></td>
             <td><?php echo $item['edition']?></td>
             <td><?php echo $item['version']?></td>
+            <td>
+            <?php if($item['sample_data']): ?>
+                Yes
+            <?php else: ?>
+                No
+            <?php endif; ?>
+            </td>
             <?php switch($item['status']): 
             case 'ready':?>
                 <td><span class="label label-success"><?php echo ucfirst($item['status']) ?></span> </td>
