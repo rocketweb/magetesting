@@ -169,7 +169,12 @@ if (isset($opts->magentoinstall)) {
     
     chdir(INSTANCE_PATH);
     
-    echo "Now installing Magento without sample data...\n";
+    if ($installSampleData){
+        echo "Now installing Magento with sample data...\n";    
+    } else {
+        echo "Now installing Magento without sample data...\n";    
+    }
+    
     echo "Preparing directory...\n";
     exec('mkdir '.$domain,$output);
     $message = var_export($output,true);
@@ -248,7 +253,7 @@ if (isset($opts->magentoinstall)) {
     unset($output);
       
     if ($installSampleData){
-        echo 'Inserting sample data';
+        echo "Inserting sample data\n";
         exec('mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < magento_sample_data_for_'.$sampleDataVersion.'.sql');
     }
     
