@@ -195,6 +195,10 @@ if (isset($opts->magentoinstall)) {
     $message = var_export($output,true);
     $log->log("\ncp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain."/\n".$message, LOG_DEBUG);
     unset($output);
+    
+    exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/keyset0.sql '.INSTANCE_PATH.$domain.'/');  
+    exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/keyset1.sql '.INSTANCE_PATH.$domain.'/');  
+    
     if ($installSampleData){
         echo "Copying sample data package to target directory...\n";
         exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-sample-data-'. $sampleDataVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/',$output);  
@@ -281,6 +285,7 @@ if (isset($opts->magentoinstall)) {
     }
        
     echo "Installing Magento...\n";
+    exec('mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < keyset0.sql');
     exec('cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
             ' --license_agreement_accepted "yes"' .
             ' --locale "en_US"' .
@@ -303,6 +308,8 @@ if (isset($opts->magentoinstall)) {
             ' --admin_password "' . $adminpass . '"' .
             ' --skip_url_validation "yes"',$output);
     $message = var_export($output,true);
+    exec('mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < keyset1.sql');
+    
     $log->log("\n".'cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
             ' --license_agreement_accepted "yes"' .
             ' --locale "en_US"' .
