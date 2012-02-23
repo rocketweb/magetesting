@@ -42,8 +42,8 @@ class Application_Model_UserMapper {
         if (null === ($id = $user->getId())) {
             unset($data['id']);
             $data['added_date'] = $user->getAddedDate();
-            $data['status'] = 'active';
-            $data['status'] = 'standard-user';
+            $data['status'] = 'inactive';
+            $data['group'] = 'standard-user';
             $this->getDbTable()->insert($data);
         } else {
             unset($data['added_date']);

@@ -39,7 +39,7 @@
                 <privilege>index</privilege>
             </wholeQueue>
             <userLogin>
-                <label>Login</label>
+                <label>Log in</label>
                 <module>default</module>
                 <controller>user</controller>
                 <action>login</action>

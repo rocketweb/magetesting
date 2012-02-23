@@ -11,7 +11,7 @@ class Application_Form_UserRegister extends Integration_Form
 
         // Add a login element
         $this->addElement('text', 'login', array(
-                'label'      => 'Login',
+                'label'      => 'Username',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
