@@ -4,6 +4,9 @@ magento.adminEmail = "jan@rocketweb.com"
 magento.storeUrl = "http://magentointegration.dev"
 
 magento.standardUser.instances = 3
+
+magento.instanceTimeExecution = 5
+
 magento.instanceprefix = 'INST_'
 magento.userprefix = 'mi_'
 magento.usersalt = 'a63hd93u' ;used for mysql user password creation
