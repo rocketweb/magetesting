@@ -90,8 +90,12 @@ class Application_Model_EditionMapper {
     public function getOptions() {
 
         $temp = array();
+        $authGroup = Zend_Auth::getInstance()->getIdentity()->group;
+
         foreach ($this->fetchAll() as $r) {
-            $temp[$r->getKey()] = $r->getName();
+            if($r->getKey() == 'CE' OR $authGroup == 'admin') {
+                $temp[$r->getKey()] = $r->getName();
+            }
         }
         return $temp;
 

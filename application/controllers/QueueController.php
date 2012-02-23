@@ -35,11 +35,25 @@ class QueueController extends Integration_Controller_Action
         $request = Zend_Controller_Front::getInstance()->getRequest();
         if ($request->isPost()){
 
+            $userGroup = $this->auth->getIdentity()->group;
+
+            if($this->auth->getIdentity()->group != 'admin') {
+                
+                $versionModel = new Application_Model_Version();
+                $version = $versionModel->find((int)$request->getParam('version', 0));
+                
+                if($version->getEdition() != 'CE') {
+                    $this->_helper->FlashMessenger('Hacking forbidden.');
+                    return $this->_helper->redirector->gotoRoute(
+                            array(), 'default', false
+                    );
+                }
+            }
+            
             if ($form->isValid($this->getRequest()->getParams())){
                 //needs validation!
                 $queueModel = new Application_Model_Queue();
                 $userId = $this->auth->getIdentity()->id;
-                $userGroup = $this->auth->getIdentity()->group;
                 $maxInstances = (int)$this->getInvokeArg('bootstrap')
                                      ->getResource('config')
                                      ->magento
