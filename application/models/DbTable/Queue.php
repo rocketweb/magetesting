@@ -67,10 +67,11 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                                 ->instanceTimeExecution;
         
         $id_col = $this->_name.'.id';
-        $timeExecutionSubSql =
+        $timeExecutionSubSql = new Zend_Db_Expr(
                 $timeExecution.' * ( '.$id_col.' - ( SELECT '.$id_col.' FROM '.$this->_name.'
-                WHERE status =  \'pending\' ORDER BY '.$id_col.' ASC LIMIT 1 ) +1 ) AS queue_time';
-        
+                WHERE status =  \'pending\' ORDER BY '.$id_col.' ASC LIMIT 1 ) +1 ) AS queue_time'
+        );
+
         return $this->select()
                     ->setIntegrityCheck(false)
                     ->from($this->_name)
