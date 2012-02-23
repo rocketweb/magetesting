@@ -11,10 +11,12 @@ class QueueController extends Integration_Controller_Action
     public function indexAction()
     {
         $queueModel = new Application_Model_Queue();
+
         $page = (int) $this->_getParam('page', 0);
         $paginator = $queueModel->getWholeQueue();
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
+
         $this->view->queue = $paginator;
     }
 

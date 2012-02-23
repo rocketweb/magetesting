@@ -16,11 +16,25 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
 
     public function findAllByUser($user_id)
     {
+        $timeExecution = (int)Zend_Controller_Front::getInstance()
+                                    ->getParam('bootstrap')
+                                    ->getResource('config')
+                                    ->magento
+                                    ->instanceTimeExecution;
+
+        $id_col = $this->_name.'.id';
+        $timeExecutionSubSql = new Zend_Db_Expr(
+                $timeExecution.' * ( '.$id_col.' - ( SELECT '.$id_col.' FROM '.$this->_name.'
+                WHERE status =  \'pending\' ORDER BY '.$id_col.' ASC LIMIT 1) +1 ) AS queue_time'
+        );
+
         $select = $this->select()
                         ->from($this->_name)
                         ->setIntegrityCheck(false)
+                        ->columns($timeExecutionSubSql)
                         ->join('version', 'queue.version_id = version.id',array('version'))
                         ->where( 'user_id = ?', $user_id );
+
         return $select;
     }
 
@@ -46,11 +60,22 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
     
     public function getWholeQueueWithUsersName()
     {
+        $timeExecution = (int)Zend_Controller_Front::getInstance()
+                                ->getParam('bootstrap')
+                                ->getResource('config')
+                                ->magento
+                                ->instanceTimeExecution;
+        
+        $id_col = $this->_name.'.id';
+        $timeExecutionSubSql =
+                $timeExecution.' * ( '.$id_col.' - ( SELECT '.$id_col.' FROM '.$this->_name.'
+                WHERE status =  \'pending\' ORDER BY '.$id_col.' ASC LIMIT 1 ) +1 ) AS queue_time';
+        
         return $this->select()
-                       ->setIntegrityCheck(false)
-                       ->from($this->_name)
-                       ->join('user', 'user.id = queue.user_id', 'login')
-                       ->join('version', 'queue.version_id = version.id', 'version');
+                    ->setIntegrityCheck(false)
+                    ->from($this->_name)
+                    ->columns($timeExecutionSubSql)
+                    ->join('user', 'user.id = queue.user_id', 'login')
+                    ->join('version', 'queue.version_id = version.id', 'version');
     }
-
 }
