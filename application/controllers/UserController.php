@@ -17,6 +17,12 @@ class UserController extends Integration_Controller_Action
     {
         $queueModel = new Application_Model_Queue();
 
+        $timeExecution = $this->getInvokeArg('bootstrap')
+                              ->getResource('config')
+                              ->magento
+                              ->instanceTimeExecution;
+        $queueCounter = $queueModel->getPendingItems($timeExecution);
+
         $page = (int) $this->_getParam('page', 0);
         $paginator = $queueModel->getAllForUser(
             $this->auth->getIdentity()->id
@@ -25,6 +31,7 @@ class UserController extends Integration_Controller_Action
         $paginator->setItemCountPerPage(10);
 
         $this->view->queue = $paginator;
+        $this->view->queueCounter = $queueCounter;
     }
 
     public function loginAction()

@@ -138,4 +138,12 @@ class Application_Model_QueueMapper {
         return new Zend_Paginator($adapter);
     }
 
+    public function getPendingItems($timeExecution)
+    {
+        $keys = array();
+        foreach($this->getDbTable()->getPendingItems() as $key => $row) {
+            $keys[$row->id] = ++$key*$timeExecution;
+        }
+        return $keys;
+    }
 }

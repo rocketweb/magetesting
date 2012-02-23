@@ -202,4 +202,9 @@ class Application_Model_Queue {
     {
         return $this->getMapper()->getWholeQueue();
     }
+
+    public function getPendingItems($timeExecution)
+    {
+        return $this->getMapper()->getPendingItems($timeExecution);
+    }
 }

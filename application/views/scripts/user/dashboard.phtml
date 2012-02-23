@@ -37,7 +37,7 @@
                 <td>
                     <span class="label label-warning">In Queue</span>
                     <span class="label">
-                        <?php echo $item['queue_time']; ?>
+                        <?php echo $this->queueCounter[$item['id']]; ?>
                         minutes left
                     </span>
                 </td>
