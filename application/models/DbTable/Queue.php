@@ -17,10 +17,11 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
     public function findAllByUser($user_id)
     {
         $select = $this->select()
-                        ->from($this->_name)
-                        ->setIntegrityCheck(false)
-                        ->join('version', 'queue.version_id = version.id',array('version'))
-                        ->where( 'user_id = ?', $user_id );
+                       ->from($this->_name)
+                       ->setIntegrityCheck(false)
+                       ->join('version', 'queue.version_id = version.id',array('version'))
+                       ->where( 'user_id = ?', $user_id )
+                       ->order(array('status asc', 'queue.id asc'));
         return $select;
     }
 
@@ -47,10 +48,11 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
     public function getWholeQueueWithUsersName()
     {
         return $this->select()
-                       ->setIntegrityCheck(false)
-                       ->from($this->_name)
-                       ->join('user', 'user.id = queue.user_id', 'login')
-                       ->join('version', 'queue.version_id = version.id', 'version');
+                    ->setIntegrityCheck(false)
+                    ->from($this->_name)
+                    ->join('user', 'user.id = queue.user_id', 'login')
+                    ->join('version', 'queue.version_id = version.id', 'version')
+                    ->order(array('status asc', 'queue.id asc'));
     }
 
     public function getPendingItems()
