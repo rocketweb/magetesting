@@ -169,7 +169,7 @@ if (isset($opts->magentoinstall)) {
     
     chdir(INSTANCE_PATH);
     
-    if ($installSampleData){
+    if ($installSampleData && $queueElement['edition']!='EE'){
         echo "Now installing Magento with sample data...\n";    
     } else {
         echo "Now installing Magento without sample data...\n";    
@@ -199,7 +199,7 @@ if (isset($opts->magentoinstall)) {
     exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/keyset0.sql '.INSTANCE_PATH.$domain.'/');  
     exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/keyset1.sql '.INSTANCE_PATH.$domain.'/');  
     
-    if ($installSampleData){
+    if ($installSampleData && $queueElement['edition']!='EE'){
         echo "Copying sample data package to target directory...\n";
         exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-sample-data-'. $sampleDataVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/',$output);  
         $message = var_export($output,true);
@@ -213,7 +213,7 @@ if (isset($opts->magentoinstall)) {
     $log->log("\ntar -zxvf magento-" . $magentoVersion . ".tar.gz\n".$message, LOG_DEBUG);
     unset($output);
     
-    if ($installSampleData){
+    if ($installSampleData && $queueElement['edition']!='EE'){
         echo "Extracting sample data...\n";
         exec('tar -zxvf magento-sample-data-' . $sampleDataVersion . '.tar.gz',$output);  
         $message = var_export($output,true);
@@ -256,7 +256,7 @@ if (isset($opts->magentoinstall)) {
     $log->log("\nchmod -R 777 media\n".$message, LOG_DEBUG);
     unset($output);
       
-    if ($installSampleData){
+    if ($installSampleData && $queueElement['edition']!='EE'){
         echo "Inserting sample data\n";
         exec('mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < magento_sample_data_for_'.$sampleDataVersion.'.sql');
     }
@@ -277,7 +277,7 @@ if (isset($opts->magentoinstall)) {
     $log->log("\nrm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt\n".$message, LOG_DEBUG);
     unset($output);
     
-    if ($installSampleData){
+    if ($installSampleData && $queueElement['edition']!='EE'){
          exec('rm -rf magento-sample-data-'.$sampleDataVersion.'/ magento-sample-data-' . $sampleDataVersion . '.tar.gz magento_sample_data_for_'.$sampleDataVersion.'.sql',$output);
         $message = var_export($output,true);
         $log->log("\nrm -rf magento-sample-data-" . $sampleDataVersion . "/ magento-sample-data-".$sampleDataVersion.".tar.gz magento_sample_data_for_".$sampleDataVersion.".sql\n".$message, LOG_DEBUG);
@@ -407,7 +407,6 @@ if (isset($opts->magentoremove)) {
 function rrmdir($dir) {
    if (is_dir($dir)) {
      $objects = scandir($dir);
-     //var_dump($objects);
      foreach ($objects as $object) {
        if ($object != "." && $object != "..") {
             if (filetype($dir."/".$object) == "dir") {
