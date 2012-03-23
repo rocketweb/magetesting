@@ -38,6 +38,16 @@
                 <resource>default_queue</resource>
                 <privilege>index</privilege>
             </wholeQueue>
+            <userList>
+                <label>UserList</label>
+                <module>default</module>
+                <controller>user</controller>
+                <action>list</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_user</resource>
+                <privilege>list</privilege>
+            </userList>
             <userLogin>
                 <label>Log in</label>
                 <module>default</module>

@@ -144,5 +144,68 @@ class UserController extends Integration_Controller_Action
                 'action'     => 'index',
         ), 'default', true);
     }
+    
+    public function listAction() {
+        $user = new Application_Model_User();
+
+        $page = (int) $this->_getParam('page', 0);
+        $paginator = $user->fetchList();
+
+
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(10);
+
+        $this->view->users = $paginator;
+    }
+    
+    public function editAction(){
+        
+        $id = (int) $this->_getParam('id', 0);
+        
+        if ($id == $this->auth->getIdentity()->id){
+            //its ok to edit
+        } else {
+            if($this->auth->getIdentity()->group != 'admin'){
+                //you have no right to be here,redirect
+            }
+        }
+        
+        $user = new Application_Model_User();
+        $user = $user->find($id);
+
+        $form = new Application_Form_UserEdit();
+        $form->populate($user->__toArray());
+
+        if ($this->_request->isPost()) {
+            $formData = $this->_request->getPost();
+
+            if($form->isValid($formData)) {
+                $user->setOptions($form->getValues());
+                $user->save();
+
+                $this->_helper->FlashMessenger('User data has been changed successfully');
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'list',
+                ), 'default', true);
+            }
+        }
+        $this->view->form = $form;
+        
+    }
+    
+    public function removeAction(){
+        if ($id == $this->auth->getIdentity()->id){
+            
+            //should we allow people to remove their accounts?
+        } else {
+            if($this->auth->getIdentity()->group != 'admin'){
+                //you have no right to be here,redirect
+            }
+        }
+        
+        // here account removal or deactivating is made        ?
+    }
 
 }

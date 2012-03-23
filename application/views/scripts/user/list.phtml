@@ -1,0 +1,38 @@
+<h1>User list</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Status</th>
+            <th>Instances</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->users as $user): ?>
+        <tr>
+            <td><?php echo $user['login']; ?></td>
+            <td><?php echo $user['status']; ?></td>
+            
+            <td><?php echo $user['instances'] ?></td>
+            <td>
+                <a href="<?php echo $this->url(array('module' => 'default', 
+                    'controller' => 'user',
+                    'action' => 'edit',
+                    'id' => $user['id'])); ?>" class="btn btn-success">Edit</a>
+            <?php if($user['status']=='inactive' || $user['group']=='admin'): ?>
+                <a class="btn btn-danger disabled">Remove</a>
+            <?php else: ?>
+                <a href="<?php echo $this->url(array('module' => 'default', 
+                    'controller' => 'user',
+                    'action' => 'remove',
+                    'id' => $user['id'])); ?>" class="btn btn-danger">Remove</a>
+            <?php endif;?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<?php echo $this->paginationControl($this->users, 'Sliding', '_partials/paginationControl.phtml'); ?>

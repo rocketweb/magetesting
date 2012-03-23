@@ -92,4 +92,26 @@ class Application_Model_UserMapper {
         }
         return $entries;
     }
+    
+    public function fetchList(){
+        
+        
+        $select = $this->getDbTable()
+                ->select()
+                ->setIntegrityCheck(false)
+                ->from(array('u'=>'user'),array(                             
+                    'login' => 'login',
+                    'status' => 'status',
+                    'id' => 'id',
+                    'group' => 'group',
+                    )
+                )
+                ->joinLeft('queue','queue.user_id = u.id',array('instances'=>'COUNT(queue.id)'))
+                ->group('u.id')
+                ->query();
+                
+        $adapter = new Zend_Paginator_Adapter_Array($select->fetchAll());
+        
+        return new Zend_Paginator($adapter);
+    }
 }

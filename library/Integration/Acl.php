@@ -46,7 +46,7 @@ class Integration_Acl extends Zend_Acl
         ));
 
         $this->allow('admin', 'default_user', array(
-                'index', 'logout', 'dashboard'
+                'index', 'logout', 'dashboard','list','edit','remove'
         ));
 
         /**

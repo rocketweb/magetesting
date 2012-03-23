@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application/'));
 define('APPLICATION_ENV', 'development');
@@ -395,6 +395,8 @@ if (isset($opts->magentoremove)) {
     //remove folder recursively
     $startCwd =  getcwd();
     chdir(INSTANCE_PATH);
+    
+    /* todo: replace rrmdir with exec() and system commad  */
     rrmdir($queueElement['domain']);
     chdir($startCwd);
     

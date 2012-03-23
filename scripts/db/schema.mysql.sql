@@ -18,6 +18,7 @@ CREATE  TABLE IF NOT EXISTS `user` (
   `added_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' ,
   `group` ENUM('admin','standard-user','commercial-user') NOT NULL DEFAULT 'standard-user' ,
+  `has_system_account` TINYINT(1) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) )
 ENGINE = InnoDB;
@@ -45,7 +46,7 @@ DROP TABLE IF EXISTS `queue` ;
 CREATE  TABLE IF NOT EXISTS `queue` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `edition` ENUM('CE','PE','EE') NOT NULL DEFAULT 'CE' ,
-  `status` ENUM('pending','installing','ready','closed') NOT NULL DEFAULT 'pending' ,
+  `status` ENUM('ready','installing','closed','pending') NOT NULL DEFAULT 'pending' ,
   `version_id` INT(11) NOT NULL ,
   `user_id` INT(11) NOT NULL ,
   `domain` VARCHAR(10) NOT NULL ,

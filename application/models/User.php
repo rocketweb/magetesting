@@ -177,6 +177,11 @@ class Application_Model_User {
     {
         return $this->getMapper()->fetchAll($activeOnly);
     }
+    
+    public function fetchList()
+    {
+        return $this->getMapper()->fetchList();
+    }
 
     public function __toArray()
     {
