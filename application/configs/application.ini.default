@@ -25,6 +25,9 @@ resources.frontController.params.displayExceptions = 0
 resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/"
 resources.view[] =
 
+;Helpers
+resources.view.helperPath.Integration_View_Helper_Navigation = "Integration/View/Helper/Navigation"
+
 ; Cache
 resources.cachemanager.database.frontend.name = Core
 resources.cachemanager.database.frontend.options.lifetime = 7200

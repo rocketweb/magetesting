@@ -21,9 +21,9 @@
             <td><?php echo $item['version']?></td>
             <td>
             <?php if($item['sample_data']): ?>
-                Yes
+                <span class="label label-success">Yes</span>
             <?php else: ?>
-                No
+                <span class="label label-important">No</span>
             <?php endif; ?>
             </td>
             <?php switch($item['status']): 
@@ -46,11 +46,11 @@
             <?php endswitch; ?>
             <td>
             <?php if(in_array($item['status'], array('closed','pending'))): ?>
-                <a class="btn btn-success disabled">Visit</a>
-                <a class="btn btn-danger disabled">Close</a>
+                <a class="btn btn-success disabled">V<i class="icon-white icon-eye-close"></i>&nbsp;isit</a>
+                <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
             <?php else: ?>
-                <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success">Visit</a>
-                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger">Close</a>
+                <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success"><i class="icon-white icon-eye-open"></i>&nbsp;Visit</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
             <?php endif;?>
             </td>
         </tr>

@@ -23,14 +23,14 @@
                 <a href="<?php echo $this->url(array('module' => 'default', 
                     'controller' => 'user',
                     'action' => 'edit',
-                    'id' => $user['id'])); ?>" class="btn btn-success">Edit</a>
+                    'id' => $user['id'])); ?>" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>
             <?php if($user['status']=='inactive' || $user['group']=='admin'): ?>
-                <a class="btn btn-danger disabled">Remove</a>
+                <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
             <?php else: ?>
                 <a href="<?php echo $this->url(array('module' => 'default', 
                     'controller' => 'user',
                     'action' => 'remove',
-                    'id' => $user['id'])); ?>" class="btn btn-danger">Remove</a>
+                    'id' => $user['id'])); ?>" class="btn btn-danger"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
             <?php endif;?>
             </td>
         </tr>

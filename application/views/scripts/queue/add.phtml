@@ -44,7 +44,9 @@ $(document).ready(function(){
                 </fieldset>
             </div>
             <div class="modal-footer">
-                <?php echo $this->form->queueAdd; ?>
+                <button type="submit" name="<?php echo $this->form->queueAdd->getName(); ?>" id="<?php echo $this->form->queueAdd->getId() ?>" class="btn btn-primary">
+                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->queueAdd->getLabel() ?>
+                </button>
             </div>
         </form>
     </div>

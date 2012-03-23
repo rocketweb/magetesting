@@ -28,8 +28,12 @@
             <div class="modal-footer">
                 <small><a href="#" class="secondary">Forgot
                         password?</a> </small>
-                <?php echo $this->form->submit; ?>
-                <?php echo $this->form->reset; ?>
+                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary">
+                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
+                </button>
+                <button type="reset" name="<?php echo $this->form->reset->getName(); ?>" id="<?php echo $this->form->reset->getId() ?>" class="btn">
+                    <i class="icon-repeat"></i>&nbsp;<?php echo $this->form->reset->getLabel(); ?>
+                </button>
             </div>
         </form>
     </div>

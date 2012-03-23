@@ -17,6 +17,7 @@
                 <reset_params>true</reset_params>
                 <resource>default_index</resource>
                 <privilege>index</privilege>
+                <icon>icon-white icon-home</icon>
             </home>
             <dashboard>
                 <label>Dashboard</label>
@@ -27,6 +28,7 @@
                 <reset_params>true</reset_params>
                 <resource>default_user</resource>
                 <privilege>dashboard</privilege>
+                <icon>icon-white icon-list-alt</icon>
             </dashboard>
             <wholeQueue>
                 <label>Queue</label>
@@ -37,6 +39,7 @@
                 <reset_params>true</reset_params>
                 <resource>default_queue</resource>
                 <privilege>index</privilege>
+                <icon>icon-white icon-time</icon>
             </wholeQueue>
             <userList>
                 <label>Users</label>
@@ -47,6 +50,7 @@
                 <reset_params>true</reset_params>
                 <resource>default_user</resource>
                 <privilege>list</privilege>
+                <icon>icon-white icon-user</icon>
             </userList>
             <userLogin>
                 <label>Log in</label>
@@ -58,6 +62,7 @@
                 <resource>default_user</resource>
                 <privilege>login</privilege>
                 <float>right</float>
+                <icon>icon-white icon-arrow-down</icon>
             </userLogin>
             <userRegister>
                 <label>Create Account</label>
@@ -69,6 +74,7 @@
                 <resource>default_user</resource>
                 <privilege>register</privilege>
                 <float>right</float>
+                <icon>glyphicons_044_keys_white_half.png</icon>
             </userRegister>
             <userLogout>
                 <label>Logout</label>
@@ -80,6 +86,7 @@
                 <resource>default_user</resource>
                 <privilege>logout</privilege>
                 <float>righ</float>
+                <icon>icon-white icon-off</icon>
             </userLogout>
         </pages>
     </nav>

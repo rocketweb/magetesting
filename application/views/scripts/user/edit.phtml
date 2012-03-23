@@ -28,8 +28,9 @@
                         'controller'=>'user',
                         'action'=>'list',
                         ),'default',true); ?>" class="secondary">View list</a> </small>
-                <?php echo $this->form->submit; ?>
-                
+                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary">
+                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
+                </button>
             </div>
         </form>
     </div>
