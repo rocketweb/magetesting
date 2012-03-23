@@ -39,7 +39,7 @@
                 <privilege>index</privilege>
             </wholeQueue>
             <userList>
-                <label>UserList</label>
+                <label>Users</label>
                 <module>default</module>
                 <controller>user</controller>
                 <action>list</action>

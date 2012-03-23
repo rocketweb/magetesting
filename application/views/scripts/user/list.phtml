@@ -1,10 +1,12 @@
-<h1>User list</h1>
+<h1>Users</h1>
 
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>User</th>
             <th>Status</th>
+            <th>Name</th>
+            <th>Surname</th>
             <th>Instances</th>
             <th>&nbsp;</th>
         </tr>
@@ -14,7 +16,8 @@
         <tr>
             <td><?php echo $user['login']; ?></td>
             <td><?php echo $user['status']; ?></td>
-            
+            <td><?php echo $user['firstname']; ?></td>
+            <td><?php echo $user['lastname']; ?></td>
             <td><?php echo $user['instances'] ?></td>
             <td>
                 <a href="<?php echo $this->url(array('module' => 'default', 

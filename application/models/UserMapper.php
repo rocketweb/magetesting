@@ -104,6 +104,8 @@ class Application_Model_UserMapper {
                     'status' => 'status',
                     'id' => 'id',
                     'group' => 'group',
+                    'firstname' => 'firstname',
+                    'lastname' => 'lastname',
                     )
                 )
                 ->joinLeft('queue','queue.user_id = u.id',array('instances'=>'COUNT(queue.id)'))
