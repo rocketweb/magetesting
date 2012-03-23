@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="span8 offset2">
+        <form action="<?php echo $this->form->getAction() ?>"
+            enctype="<?php echo $this->form->getEnctype() ?>"
+            method="<?php echo $this->form->getMethod() ?>"
+            id="<?php echo $this->form->getId() ?>"
+            class="<?php echo $this->form->getAttrib('class') ?>">
+            <div class="modal-header">
+                <h3>Setup your environment</h3>
+            </div>
+            <div class="modal-body">
+                <fieldset>
+                    <?php echo $this->form->edition ?>
+                    <?php echo $this->form->version ?>
+                    <?php echo $this->form->sample_data ?>
+                    <?php echo $this->form->instance_name ?>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <?php echo $this->form->queueAdd; ?>
+            </div>
+        </form>
+    </div>
+</div>
