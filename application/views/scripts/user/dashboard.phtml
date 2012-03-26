@@ -10,10 +10,10 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Status</th>
             <th>Edition</th>
             <th>Version</th>
             <th>Sample Data</th>
-            <th>Status</th>
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -21,15 +21,6 @@
         <?php foreach($this->queue as $item): ?>
         <tr>
             <td><?php echo $item['instance_name']?></td>
-            <td><?php echo $item['edition']?></td>
-            <td><?php echo $item['version']?></td>
-            <td>
-            <?php if($item['sample_data']): ?>
-                <span class="label label-success">Yes</span>
-            <?php else: ?>
-                <span class="label label-important">No</span>
-            <?php endif; ?>
-            </td>
             <?php switch($item['status']): 
             case 'ready':?>
                 <td><span class="label label-success"><?php echo ucfirst($item['status']) ?></span> </td>
@@ -57,6 +48,15 @@
             <?php break; default: ?>
                 <td><span class="label label-warning"></span></td>
             <?php endswitch; ?>
+            <td><?php echo $item['edition']?></td>
+            <td><?php echo $item['version']?></td>
+            <td>
+            <?php if($item['sample_data']): ?>
+                <span class="label label-success">Yes</span>
+            <?php else: ?>
+                <span class="label label-important">No</span>
+            <?php endif; ?>
+            </td>
             <td>
             <?php if(in_array($item['status'], array('closed','pending'))): ?>
                 <a class="btn btn-success disabled"><i class="icon-eye-close icon-white"></i>&nbsp;Visit</a>
