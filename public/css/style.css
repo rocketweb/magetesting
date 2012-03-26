@@ -9,6 +9,11 @@ body {
     float: none;
 }
 
+.navbar-fixed-top .nav li a i { opacity:0.4; filter:alpha(opacity=40); }
+.navbar-fixed-top .nav li.active a i,
+.navbar-fixed-top .nav li a:hover i { opacity:1.0; filter:alpha(opacity=100);  }
+.navbar-fixed-top .nav li a i { margin-right: 5px; }
+
 .yes-no form {
     float: left;
     margin-right: 20px;
