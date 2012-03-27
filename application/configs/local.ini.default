@@ -11,6 +11,11 @@ magento.instanceprefix = 'INST_'
 magento.userprefix = 'mi_'
 magento.usersalt = 'a63hd93u' ;used for mysql user password creation
 
+user.activationEmail.subject = 'Activation'
+user.activationEmail.message = 'Bla bla if you want activate your account click <a href="{activation_url}" target="_blank">here</a>'
+user.activationEmail.from.email = "support@magentointegration.com"
+user.activationEmail.from.desc = "MagentoIntegration Team"
+
 [staging : production]
 
 [testing : production]

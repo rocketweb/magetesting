@@ -116,7 +116,10 @@ class UserController extends Integration_Controller_Action
             if($form->isValid($formData)) {
                 $user->setOptions($form->getValues());
                 $user->setGroup('standard-user');
-                $user->save();
+                $user = $user->save();
+
+                // send activation email to the specified user
+                $this->_sendActivationEmail($user);
 
                 $this->_helper->FlashMessenger('You have been registered successfully');
                 return $this->_helper->redirector->gotoRoute(array(
@@ -127,6 +130,80 @@ class UserController extends Integration_Controller_Action
             }
         }
         $this->view->form = $form;
+    }
+
+    /**
+     * Sends activation mail to the user specified in param.
+     * @method _sendActivationEmail
+     * @param Application_Model_User $user
+     */
+    protected function _sendActivationEmail($user)
+    {
+        $mailData = $this->getInvokeArg('bootstrap')
+                              ->getResource('config')
+                              ->user
+                              ->activationEmail;
+        $mail = new Zend_Mail();
+
+        $mail->setFrom($mailData->from->mail, $mailData->from->desc);
+        $activationUrl = $this->view->url(
+            array(
+                'controller' => 'user',
+                'action'     => 'activate',
+                'id'         => $user->getId(),
+                'hash'       => sha1($user->getLogin().$user->getEmail().$user->getAddedDate())
+            )
+        );
+        $mailMessage = str_replace(
+                '{activation_url}', 
+                $this->view->serverUrl().$activationUrl, 
+                $mailData->message
+        );
+        $mail->setBodyHtml($mailMessage, 'UTF-8');
+        $mail->setSubject($mailData->subject);
+        $mail->addTo($user->getEmail(), $user->getFirstname().' '.$user->getLastname() );
+        $mail->send();
+    }
+
+    /**
+     * Activates user account
+     * @method activateAction
+     */
+    public function activateAction()
+    {
+        $request = $this->getRequest();
+        $flashMessage = 'Activation link is incorrect.';
+        $redirect = array(
+                'controller' => 'user',
+                'action'     => 'register'
+        );
+        if($request->isGet()) {
+            $id = $request->getParam('id');
+            $hash = $request->getParam('hash');
+            if($id AND $hash) {
+                $user = new Application_Model_User();
+                switch($user->activateUser($id, $hash)) {
+                    case 0:
+                        $flashMessage = 'Activation complited. You can now log in into your account.';
+                        $redirect['action'] = 'login';
+                        break;
+                    case 1:
+                        // already set in initial variables
+                        break;
+                    case 2:
+                        $flashMessage = 'Your account has been previously activated.';
+                        $redirect['action'] = 'login';
+                        break;
+                }
+            }
+        }
+
+        $this->_helper->FlashMessenger($flashMessage);
+        return $this->_helper->redirector->goToRoute(
+                $redirect,
+                'default',
+                true
+        );
     }
 
     public function logoutAction()
@@ -157,8 +234,9 @@ class UserController extends Integration_Controller_Action
 
         $this->view->users = $paginator;
     }
-    
-    public function editAction(){
+
+    public function editAction()
+    {
         
         $id = (int) $this->_getParam('id', 0);
         

@@ -33,7 +33,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('guest', 'default_error', array('error'));
         $this->allow('guest', 'default_index', array('index'));
         $this->allow('guest', 'default_user', array(
-                'login', 'password-recovery', 'register'
+                'login', 'password-recovery', 'register', 'activate'
         ));
 
         /**

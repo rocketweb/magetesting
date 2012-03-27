@@ -41,14 +41,17 @@ class Application_Model_UserMapper {
 
         if (null === ($id = $user->getId())) {
             unset($data['id']);
-            $data['added_date'] = $user->getAddedDate();
+            $data['added_date'] = date('Y-m-d H:i:s');
+            $user->setAddedDate($data['added_date']);
             $data['status'] = 'inactive';
             $data['group'] = 'standard-user';
-            $this->getDbTable()->insert($data);
+            $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
+        
+        return $user;
     }
 
     public function find($id, Application_Model_User $user)
@@ -59,13 +62,13 @@ class Application_Model_UserMapper {
         }
         $row = $result->current();
         $user->setId($row->id)
-            ->setFirstname($row->firstname)
-            ->setLastname($row->lastname)
-            ->setEmail($row->email)
-            ->setLogin($row->login)
-            ->setGroup($row->group)
-            ->setAddedDate($row->added_date)
-            ->setStatus($row->status);
+             ->setFirstname($row->firstname)
+             ->setLastname($row->lastname)
+             ->setEmail($row->email)
+             ->setLogin($row->login)
+             ->setGroup($row->group)
+             ->setAddedDate($row->added_date)
+             ->setStatus($row->status);
         return $user;
     }
 
@@ -81,13 +84,13 @@ class Application_Model_UserMapper {
         foreach ($resultSet as $row) {
             $entry = new Application_Model_User();
             $entry->setId($row->id)
-                    ->setFirstname($row->firstname)
-                    ->setLastname($row->lastname)
-                    ->setEmail($row->email)
-                    ->setLogin($row->login)
-                    ->setGroup($row->group)
-                    ->setAddedDate($row->added_date)
-                    ->setStatus($row->status);
+                  ->setFirstname($row->firstname)
+                  ->setLastname($row->lastname)
+                  ->setEmail($row->email)
+                  ->setLogin($row->login)
+                  ->setGroup($row->group)
+                  ->setAddedDate($row->added_date)
+                  ->setStatus($row->status);
             $entries[] = $entry;
         }
         return $entries;
@@ -115,5 +118,36 @@ class Application_Model_UserMapper {
         $adapter = new Zend_Paginator_Adapter_Array($select->fetchAll());
         
         return new Zend_Paginator($adapter);
+    }
+
+    /**
+     * Gets user by specified id and checks if<br />
+     * given hash is equal to hash created from found user data
+     * @method activateUser
+     * @param int $id
+     * @param sha1-string $hash
+     * @return number
+     */
+    public function activateUser($id, $hash)
+    {
+        if((int)$id > 0) {
+            $user = $this->find($id, new Application_Model_User());
+            if($user AND $user->getId()) {
+                if('active' == $user->getStatus()) {
+                    // user already activated
+                    return 2;
+                }
+                $user_hash = sha1($user->getLogin().$user->getEmail().$user->getAddedDate());
+                if($user_hash == $hash) {
+                    // activate user
+                    $user->setStatus('active');
+                    $user->save();
+                    return 0;
+                }
+            }
+            // wrong data user does not exist
+        }
+        // wrong data
+        return 1;
     }
 }

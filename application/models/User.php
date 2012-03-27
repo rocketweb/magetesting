@@ -159,7 +159,7 @@ class Application_Model_User {
 
     public function save()
     {
-        $this->getMapper()->save($this);
+        return $this->getMapper()->save($this);
     }
 
     public function delete($id)
@@ -181,6 +181,20 @@ class Application_Model_User {
     public function fetchList()
     {
         return $this->getMapper()->fetchList();
+    }
+
+    /**
+     * @method activateUser
+     * @param int $id - User ID
+     * @param sha1 $hash - sha1(login,email,added_date)
+     * @return int [0-2]:<br />
+     * 0 - successfully activated<br />
+     * 1 - wrong data<br />
+     * 2 - previously activated
+     */
+    public function activateUser($id, $hash)
+    {
+        return $this->getMapper()->activateUser($id, $hash);
     }
 
     public function __toArray()
