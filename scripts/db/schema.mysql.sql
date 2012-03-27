@@ -110,7 +110,48 @@ CREATE  TABLE IF NOT EXISTS `edition` (
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `plan`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `plan` ;
 
+CREATE  TABLE IF NOT EXISTS `plan` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NULL ,
+  `instances` INT(3) UNSIGNED NOT NULL DEFAULT 0 ,
+  `price` DECIMAL(5,2) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `payment`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `payment` ;
+
+CREATE  TABLE IF NOT EXISTS `payment` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `price` DECIMAL(5,2) UNSIGNED NOT NULL ,
+  `first_name` VARCHAR(50) NOT NULL ,
+  `last_name` VARCHAR(50) NOT NULL ,
+  `street` VARCHAR(70) NOT NULL ,
+  `postal_code` VARCHAR(10) NOT NULL ,
+  `state` VARCHAR(50) NOT NULL ,
+  `city` VARCHAR(50) NOT NULL ,
+  `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `plan_id` INT(11) UNSIGNED NOT NULL ,
+  `user_id` INT(11) NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `plan_has_payments` (`plan_id` ASC) ,
+  INDEX `user_has_payments` (`user_id` ASC) ,
+  CONSTRAINT `plan_has_payments`
+    FOREIGN KEY (`plan_id` )
+    REFERENCES `plan` (`id` )
+    ON DELETE CASCADE ,
+  CONSTRAINT `user_has_payments`
+    FOREIGN KEY (`user_id` )
+    REFERENCES `user` (`id` )
+    ON DELETE CASCADE )
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
