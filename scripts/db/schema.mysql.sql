@@ -19,6 +19,7 @@ CREATE  TABLE IF NOT EXISTS `user` (
   `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' ,
   `group` ENUM('admin','standard-user','commercial-user') NOT NULL DEFAULT 'standard-user' ,
   `has_system_account` TINYINT(1) NOT NULL DEFAULT 0 ,
+  `system_account_name` VARCHAR(55) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) )
 ENGINE = InnoDB;
@@ -110,18 +111,20 @@ CREATE  TABLE IF NOT EXISTS `edition` (
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
+
 -- -----------------------------------------------------
 -- Table `plan`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `plan` ;
 
 CREATE  TABLE IF NOT EXISTS `plan` (
-  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `name` VARCHAR(45) NULL ,
+  `id` INT(11) UNSIGNED NOT NULL ,
+  `name` VARCHAR(45) NOT NULL ,
   `instances` INT(3) UNSIGNED NOT NULL DEFAULT 0 ,
-  `price` DECIMAL(5,2) UNSIGNED NOT NULL DEFAULT 0,
+  `price` DECIMAL(5,2) UNSIGNED NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `payment`
@@ -129,29 +132,34 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `payment` ;
 
 CREATE  TABLE IF NOT EXISTS `payment` (
-  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `id` INT(11) UNSIGNED NOT NULL ,
   `price` DECIMAL(5,2) UNSIGNED NOT NULL ,
-  `first_name` VARCHAR(50) NOT NULL ,
-  `last_name` VARCHAR(50) NOT NULL ,
-  `street` VARCHAR(70) NOT NULL ,
+  `first_name` VARCHAR(45) NOT NULL ,
+  `last_name` VARCHAR(45) NOT NULL ,
+  `street` VARCHAR(45) NOT NULL ,
   `postal_code` VARCHAR(10) NOT NULL ,
-  `state` VARCHAR(50) NOT NULL ,
-  `city` VARCHAR(50) NOT NULL ,
-  `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `state` VARCHAR(45) NOT NULL ,
+  `city` VARCHAR(45) NOT NULL ,
+  `date` TIMESTAMP NOT NULL ,
   `plan_id` INT(11) UNSIGNED NOT NULL ,
   `user_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `plan_has_payments` (`plan_id` ASC) ,
   INDEX `user_has_payments` (`user_id` ASC) ,
-  CONSTRAINT `plan_has_payments`
-    FOREIGN KEY (`plan_id` )
-    REFERENCES `plan` (`id` )
-    ON DELETE CASCADE ,
+  INDEX `plan_has_payments` (`user_id` ASC) ,
+  INDEX `plan_has_payments` (`plan_id` ASC) ,
   CONSTRAINT `user_has_payments`
     FOREIGN KEY (`user_id` )
     REFERENCES `user` (`id` )
-    ON DELETE CASCADE )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `plan_has_payments`
+    FOREIGN KEY (`plan_id` )
+    REFERENCES `plan` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

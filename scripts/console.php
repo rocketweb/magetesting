@@ -47,8 +47,7 @@ $application = new Zend_Application(
         );
 $bootstrap = $application->getBootstrap()->bootstrap();
 
-
- //initialize database
+//initialize database
 $db = $bootstrap->getResource('db');
 
 //initialize logger
@@ -93,8 +92,9 @@ if (isset($opts->hello)) {
 /**
  * Action : magentoinstall
  */
+
 if (isset($opts->magentoinstall)) {
-              
+    $output='';
     $select = new Zend_Db_Select($db);
     
     //check if any script is currently being installed
@@ -119,7 +119,7 @@ if (isset($opts->magentoinstall)) {
     $sql = $select
             ->from('queue')
             ->joinLeft('version', 'queue.version_id = version.id',array('version','sample_data_version'))
-            ->joinLeft('user', 'queue.user_id = user.id',array('email','login','firstname','lastname'))
+            ->joinLeft('user', 'queue.user_id = user.id',array('email','login','firstname','lastname','has_system_account'))
             ->where('queue.status =?', 'pending')
             ->where('user.status =?', 'active')
     ;
@@ -145,6 +145,39 @@ if (isset($opts->magentoinstall)) {
     $dbuser = $queueElement['login']; //fetch from zend config
     $dbpass = substr(sha1($config->magento->usersalt.$config->magento->userprefix.$queueElement['login']),0,10); //fetch from zend config
     
+    $instanceFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$dbuser.'/public_html';
+    if ($queueElement['has_system_account'] == 0){
+        $db->update('user',array('system_account_name'=>$config->magento->userprefix.$dbuser),'id='.$queueElement['user_id']);
+        exec('sudo ./create_user.sh '.$config->magento->userprefix.$dbuser.' '.$dbpass.' '.$config->magento->usersalt.' '.$config->magento->systemHomeFolder,$output);
+        $message = var_export($output,true);
+        $log->log($message, LOG_DEBUG);
+        unset($output);
+        
+        /*send email with account details start*/
+        $html = new Zend_View();
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        // assign valeues
+        $html->assign('ftphost', $config->magento->ftphost);
+        $html->assign('ftpuser', $config->magento->userprefix.$dbuser);
+        $html->assign('ftppass', $dbpass);
+        
+        $html->assign('dbphost', $config->magento->dbhost);
+        $html->assign('dbpuser', $config->magento->userprefix.$dbuser);
+        $html->assign('dbppass', $dbpass);
+        // render view
+        $bodyText = $html->render('system-account-created.phtml');
+
+        // create mail object
+        $mail = new Zend_Mail('utf-8');
+        // configure base stuff
+        $mail->addTo($queueElement['email']);
+        $mail->setSubject($config->cron->queueItemReady->subject);
+        $mail->setFrom($config->cron->queueItemReady->from->email,$config->cron->queueItemReady->from->desc);
+        $mail->setBodyHtml($bodyText);
+        $mail->send();
+        /*send email with account details stop*/
+        
+    }
     $adminuser = $queueElement['login'];
     $adminpass = $queueElement['domain'];
     $adminfname = $queueElement['firstname'];
@@ -156,7 +189,7 @@ if (isset($opts->magentoinstall)) {
     
     $domain = $queueElement['domain'];
     $startCwd =  getcwd();
-    
+   
     $message = 'domain: '.$domain;
     $log->log($message, LOG_DEBUG);
     
@@ -167,7 +200,7 @@ if (isset($opts->magentoinstall)) {
     $message = 'store url: '.$storeurl;
     $log->log($message, LOG_DEBUG);
     
-    chdir(INSTANCE_PATH);
+    chdir($instanceFolder);  
     
     if ($installSampleData){
         echo "Now installing Magento with sample data...\n";    
@@ -176,117 +209,118 @@ if (isset($opts->magentoinstall)) {
     }
     
     echo "Preparing directory...\n";
-    exec('mkdir '.$domain,$output);
+    exec('sudo mkdir '.$instanceFolder.'/'.$domain,$output);
     $message = var_export($output,true);
     $log->log($message, LOG_DEBUG);
     unset($output);
-    
-    if (!file_exists(INSTANCE_PATH.'/'.$domain) || !is_dir(INSTANCE_PATH.'/'.$domain)){
+       
+    if (!file_exists($instanceFolder.'/'.$domain) || !is_dir($instanceFolder.'/'.$domain)){
         $message = 'Directory does not exist, aborting';
         echo $message;
         $log->log($message, LOG_DEBUG);
-        exit;
+        
     }
+    chmod($domain,0775);
         
     chdir($domain);
     
     echo "Copying package to target directory...\n";
-    exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/',$output);  
+    exec('sudo cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.$instanceFolder.'/'.$domain.'/',$output);  
     $message = var_export($output,true);
-    $log->log("\ncp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.INSTANCE_PATH.$domain."/\n".$message, LOG_DEBUG);
+    $log->log("\nsudo cp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-'. $magentoVersion .'.tar.gz '.$instanceFolder.'/'.$domain."/\n".$message, LOG_DEBUG);
     unset($output);
     
-    exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/keyset0.sql '.INSTANCE_PATH.$domain.'/');  
-    exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/keyset1.sql '.INSTANCE_PATH.$domain.'/');  
+    exec('sudo cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/keyset0.sql '.$instanceFolder.'/'.$domain.'/');  
+    exec('sudo cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/keyset1.sql '.$instanceFolder.'/'.$domain.'/');  
     
     if ($installSampleData){
         echo "Copying sample data package to target directory...\n";
-        exec('cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-sample-data-'. $sampleDataVersion .'.tar.gz '.INSTANCE_PATH.$domain.'/',$output);  
+        exec('sudo cp '.APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-sample-data-'. $sampleDataVersion .'.tar.gz '.$instanceFolder.'/'.$domain.'/',$output);  
         $message = var_export($output,true);
-        $log->log("\ncp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-sample-data-'. $sampleDataVersion .'.tar.gz '.INSTANCE_PATH.$domain."/\n".$message, LOG_DEBUG);
+        $log->log("\nsudo cp ".APPLICATION_PATH.'/../data/pkg/'.$queueElement['edition'].'/magento-sample-data-'. $sampleDataVersion .'.tar.gz '.$instanceFolder.'/'.$domain."/\n".$message, LOG_DEBUG);
         unset($output);
     }
     
     echo "Extracting data...\n";
-    exec('tar -zxvf magento-' . $magentoVersion . '.tar.gz',$output);  
+    exec('sudo tar -zxvf magento-' . $magentoVersion . '.tar.gz',$output);  
     $message = var_export($output,true);
-    $log->log("\ntar -zxvf magento-" . $magentoVersion . ".tar.gz\n".$message, LOG_DEBUG);
+    $log->log("\nsudo tar -zxvf magento-" . $magentoVersion . ".tar.gz\n".$message, LOG_DEBUG);
     unset($output);
     
     if ($installSampleData){
         echo "Extracting sample data...\n";
-        exec('tar -zxvf magento-sample-data-' . $sampleDataVersion . '.tar.gz',$output);  
+        exec('sudo tar -zxvf magento-sample-data-' . $sampleDataVersion . '.tar.gz',$output);  
         $message = var_export($output,true);
-        $log->log("\ntar -zxvf magento-sample-data-" . $sampleDataVersion . ".tar.gz\n".$message, LOG_DEBUG);
+        $log->log("\nsudo tar -zxvf magento-sample-data-" . $sampleDataVersion . ".tar.gz\n".$message, LOG_DEBUG);
         unset($output);
         
         echo "Moving sample data files...\n";
-        exec('mv magento-sample-data-'.$sampleDataVersion.'/* .',$output);
+        exec('sudo mv magento-sample-data-'.$sampleDataVersion.'/* .',$output);
         $message = var_export($output,true);
-        $log->log("\nmv mv magento-sample-data-".$sampleDataVersion."/* .\n".$message, LOG_DEBUG);
+        $log->log("\nsudo mv mv magento-sample-data-".$sampleDataVersion."/* .\n".$message, LOG_DEBUG);
         unset($output);
     }
     
     echo "Moving files...\n";
-    exec('cp -R magento/* .',$output);
+    exec('sudo cp -R magento/* .',$output);
     $message = var_export($output,true);
-    $log->log("\ncp -R magento/* .\n".$message, LOG_DEBUG);
+    $log->log("\nsudo cp -R magento/* .\n".$message, LOG_DEBUG);
     unset($output);
        
-    exec('cp magento/.htaccess .',$output);
+    exec('sudo cp magento/.htaccess .',$output);
     $message = var_export($output,true);
-    $log->log("\ncp magento/.htaccess .\n".$message, LOG_DEBUG);
+    $log->log("\nsudo cp magento/.htaccess .\n".$message, LOG_DEBUG);
     unset($output);
     
     rrmdir('magento');
     
     echo "Setting permissions...\n";    
-    exec('chmod 777 var/.htaccess app/etc',$output);
+    exec('sudo chmod 777 var/.htaccess app/etc',$output);
     $message = var_export($output,true);
-    $log->log("\nchmod 777 var var/.htaccess app/etc\n".$message, LOG_DEBUG);
+    $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n".$message, LOG_DEBUG);
     unset($output);
     
-    exec('chmod 777 var -R',$output);
+    exec('sudo chmod 777 var -R',$output);
     $message = var_export($output,true);
-    $log->log("\nchmod 777 var var/.htaccess app/etc\n".$message, LOG_DEBUG);
+    $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n".$message, LOG_DEBUG);
     unset($output);
     
-    exec('chmod 777 media -R',$output);
+    exec('sudo chmod 777 media -R',$output);
     $message = var_export($output,true);
-    $log->log("\nchmod -R 777 media\n".$message, LOG_DEBUG);
+    $log->log("\nsudo chmod -R 777 media\n".$message, LOG_DEBUG);
     unset($output);
       
     if ($installSampleData){
         echo "Inserting sample data\n";
-        exec('mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < magento_sample_data_for_'.$sampleDataVersion.'.sql');
+        exec('sudo mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < magento_sample_data_for_'.$sampleDataVersion.'.sql');
     }
     
     echo "Cleaning up files...\n";
-    exec('rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*',$output);
+    exec('sudo rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*',$output);
     $message = var_export($output,true);
-    $log->log("\nrm -rf downloader/pearlib/cache/* downloader/pearlib/download/*\n".$message, LOG_DEBUG);
+    $log->log("\nsudo rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*\n".$message, LOG_DEBUG);
     unset($output);
     
-    exec('rm -rf magento/ magento-' . $magentoVersion . '.tar.gz',$output);
+    exec('sudo rm -rf magento/ magento-' . $magentoVersion . '.tar.gz',$output);
     $message = var_export($output,true);
-    $log->log("\nrm -rf magento/ magento-" . $magentoVersion . ".tar.gz\n".$message, LOG_DEBUG);
+    $log->log("\nsudo rm -rf magento/ magento-" . $magentoVersion . ".tar.gz\n".$message, LOG_DEBUG);
     unset($output);
     
-    exec('rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt',$output);
+    exec('sudo rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt',$output);
     $message = var_export($output,true);
-    $log->log("\nrm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt\n".$message, LOG_DEBUG);
+    $log->log("\nsudo rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt\n".$message, LOG_DEBUG);
     unset($output);
     
     if ($installSampleData){
-         exec('rm -rf magento-sample-data-'.$sampleDataVersion.'/ magento-sample-data-' . $sampleDataVersion . '.tar.gz magento_sample_data_for_'.$sampleDataVersion.'.sql',$output);
+         exec('sudo rm -rf magento-sample-data-'.$sampleDataVersion.'/ magento-sample-data-' . $sampleDataVersion . '.tar.gz magento_sample_data_for_'.$sampleDataVersion.'.sql',$output);
         $message = var_export($output,true);
-        $log->log("\nrm -rf magento-sample-data-" . $sampleDataVersion . "/ magento-sample-data-".$sampleDataVersion.".tar.gz magento_sample_data_for_".$sampleDataVersion.".sql\n".$message, LOG_DEBUG);
+        $log->log("\nsudo rm -rf magento-sample-data-" . $sampleDataVersion . "/ magento-sample-data-".$sampleDataVersion.".tar.gz magento_sample_data_for_".$sampleDataVersion.".sql\n".$message, LOG_DEBUG);
         unset($output);      
     }
        
     echo "Installing Magento...\n";
-    exec('mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < keyset0.sql');
-    exec('cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
+    exec('sudo mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < keyset0.sql');
+    exec('cd '.$instanceFolder.'/'.$domain.';sudo  /usr/bin/php -f install.php --' .
             ' --license_agreement_accepted "yes"' .
             ' --locale "en_US"' .
             ' --timezone "America/Los_Angeles"' .
@@ -308,9 +342,9 @@ if (isset($opts->magentoinstall)) {
             ' --admin_password "' . $adminpass . '"' .
             ' --skip_url_validation "yes"',$output);
     $message = var_export($output,true);
-    exec('mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < keyset1.sql');
+    exec('sudo mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < keyset1.sql');
     
-    $log->log("\n".'cd '.INSTANCE_PATH.'/'.$domain.'; /usr/bin/php -f install.php --' .
+    $log->log("\n".'cd '.$instanceFolder.'/'.$domain.';sudo /usr/bin/php -f install.php --' .
             ' --license_agreement_accepted "yes"' .
             ' --locale "en_US"' .
             ' --timezone "America/Los_Angeles"' .
@@ -338,11 +372,30 @@ if (isset($opts->magentoinstall)) {
 
     //TODO: add mail info about ready installation
     
-    
+    exec('sudo ln -s '.$instanceFolder.'/'.$domain.' '.INSTANCE_PATH.$domain);
     
     $db->update('queue',array('status'=>'ready'),'id='.$queueElement['id']);
-    
+          
     chdir($startCwd);
+    
+    /*send email to instance owner start*/
+    $html = new Zend_View();
+    $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+    // assign valeues
+    $html->assign('domain', $domain);
+    // render view
+    $bodyText = $html->render('queue-item-ready.phtml');
+
+    // create mail object
+    $mail = new Zend_Mail('utf-8');
+    // configure base stuff
+    $mail->addTo($queueElement['email']);
+    $mail->setSubject($config->cron->queueItemReady->subject);
+    $mail->setFrom($config->cron->queueItemReady->from->email,$config->cron->queueItemReady->from->desc);
+    $mail->setBodyHtml($bodyText);
+    $mail->send();
+    /*send email to instance owner stop*/
+    
     exit;
 }
 

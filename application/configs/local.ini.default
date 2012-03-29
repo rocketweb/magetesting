@@ -3,6 +3,10 @@
 magento.adminEmail = "jan@rocketweb.com"
 magento.storeUrl = "http://magentointegration.dev"
 
+;this addresses go to account email notifications
+magento.ftphost = "ftp://magentointegration.com"
+magento.dbhost = "db.magentointegration.com"
+
 magento.standardUser.instances = 3
 
 magento.instanceTimeExecution = 5
@@ -10,11 +14,20 @@ magento.instanceTimeExecution = 5
 magento.instanceprefix = 'INST_'
 magento.userprefix = 'mi_'
 magento.usersalt = 'a63hd93u' ;used for mysql user password creation
+magento.systemHomeFolder = '/home' ;where should instance user folders land in
 
 user.activationEmail.subject = 'Activation'
 user.activationEmail.message = 'Bla bla if you want activate your account click <a href="{activation_url}" target="_blank">here</a>'
 user.activationEmail.from.email = "support@magentointegration.com"
 user.activationEmail.from.desc = "MagentoIntegration Team"
+
+cron.queueItemReady.subject = 'Your Instance is Ready!'
+cron.queueItemReady.from.email = "support@magentointegration.com"
+cron.queueItemReady.from.desc = "Magento Integration Team"
+
+cron.systemAccountCreated.subject = 'Magento Integration Account!'
+cron.systemAccountCreated.from.email = "support@magentointegration.com"
+cron.systemAccountCreated.from.desc = "Magento Integration Team"
 
 [staging : production]
 
