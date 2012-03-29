@@ -161,9 +161,12 @@ if (isset($opts->magentoinstall)) {
         $html->assign('ftpuser', $config->magento->userprefix.$dbuser);
         $html->assign('ftppass', $dbpass);
         
-        $html->assign('dbphost', $config->magento->dbhost);
-        $html->assign('dbpuser', $config->magento->userprefix.$dbuser);
-        $html->assign('dbppass', $dbpass);
+        $html->assign('dbhost', $config->magento->dbhost);
+        $html->assign('dbuser', $config->magento->userprefix.$dbuser);
+        $html->assign('dbpass', $dbpass);
+        
+        $html->assign('storeUrl', $config->magento->storeUrl);
+        
         // render view
         $bodyText = $html->render('system-account-created.phtml');
 
@@ -171,8 +174,8 @@ if (isset($opts->magentoinstall)) {
         $mail = new Zend_Mail('utf-8');
         // configure base stuff
         $mail->addTo($queueElement['email']);
-        $mail->setSubject($config->cron->queueItemReady->subject);
-        $mail->setFrom($config->cron->queueItemReady->from->email,$config->cron->queueItemReady->from->desc);
+        $mail->setSubject($config->cron->systemAccountCreated->subject);
+        $mail->setFrom($config->cron->systemAccountCreated->from->email,$config->cron->systemAccountCreated->from->desc);
         $mail->setBodyHtml($bodyText);
         $mail->send();
         /*send email with account details stop*/
@@ -383,6 +386,7 @@ if (isset($opts->magentoinstall)) {
     $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
     // assign valeues
     $html->assign('domain', $domain);
+    $html->assign('storeUrl', $config->magento->storeUrl);
     // render view
     $bodyText = $html->render('queue-item-ready.phtml');
 
