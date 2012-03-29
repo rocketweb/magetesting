@@ -22,10 +22,20 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_index'));
         $this->add(new Zend_Acl_Resource('default_user'));
         $this->add(new Zend_Acl_Resource('default_queue'));
+        $this->add(new Zend_Acl_Resource('default_my-account'));
         /**
          * Deny for all (we use white list)
          */
         $this->deny();
+
+        /**
+         * Set up privileges for admin
+         */
+        $this->allow('admin');
+        $this->deny('admin', 'default_user', array(
+                'login', 'register'
+        ));
+        $this->deny('admin', 'default_my-account');
 
         /**
          * Set up privileges for guest
@@ -37,30 +47,17 @@ class Integration_Acl extends Zend_Acl
         ));
 
         /**
-         * Set up privileges for admin
-         */
-        $this->allow('admin', 'default_error', array('error'));
-        $this->allow('admin', 'default_index', array('index'));
-        $this->allow('admin', 'default_queue', array(
-                'add', 'close', 'index', 'getVersions'
-        ));
-
-        $this->allow('admin', 'default_user', array(
-                'index', 'logout', 'dashboard','list','edit','remove'
-        ));
-
-        /**
-         * Set up privileges for admin
+         * Set up privileges for standard-user
          */
         $this->allow('standard-user', 'default_error', array('error'));
         $this->allow('standard-user', 'default_index', array('index'));
         $this->allow('standard-user', 'default_queue', array(
                 'add', 'close', 'getVersions'
         ));
-
         $this->allow('standard-user', 'default_user', array(
                 'index', 'logout', 'dashboard'
         ));
+        $this->allow('standard-user', 'default_my-account');
 
     }
 

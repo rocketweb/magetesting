@@ -1,0 +1,58 @@
+<div class="container">
+    <h2>Your account details</h2>
+    <div class="row">
+        <div class="span3">
+            <?php echo $this->user->firstname.' '.$this->user->lastname; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span member-since">
+            Member since <?php echo date('F j,Y', strtotime($this->user->added_date)); ?>
+        </div>
+        <div class="span2">
+            <a href="#" class="btn-danger">Edit account</a>
+        </div>
+    </div>
+    <hr />
+    <h3>Current plan: Plan</h3>
+    <div class="row">
+        <div class="span4">
+            Your next charge is $50 on June 5, 2012
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="span2">
+            <a href="#" class="btn-danger">Plans comparision</a>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="span3">
+            <h3>Credit card</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span4">
+            Your credit card on file is xxxx-xxxx-xxxx-4837
+        </div>
+    </div>
+    <div class="row">
+        <div class="span4">
+            Note: You have 1 other account on this card
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="span4">
+            <a href="#">Change your credit card and billing information</a>
+        </div>
+    </div>
+    <hr />
+    <h3>Invoices</h3>
+    <div class="row">
+        <div class="span4">
+            <a href="#">03213218421</a> - 04/23/2012 - $23
+        </div>
+    </div>
+</div>

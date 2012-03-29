@@ -88,6 +88,18 @@
                 <float>righ</float>
                 <icon>icon-white icon-off</icon>
             </userLogout>
+            <userAccount>
+                <label>My Account</label>
+                <module>default</module>
+                <controller>my-account</controller>
+                <action>index</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_my-account</resource>
+                <privilege>index</privilege>
+                <float>righ</float>
+                <icon>icon-white icon-user</icon>
+            </userAccount>
         </pages>
     </nav>
 </configdata>
