@@ -1,30 +1,25 @@
 #!/bin/bash
 # Shell script to create:
 # - system user
-# - ftp account
-# - ssh access
+# - ftp account(not yet implemented)
+# - ssh access(should work as long as ssh uses PAM)
 # All arguments need to be passed. And they are:
 # - user login
 # - user password
 # - user salt (to generate passwords with)
-# - system home directory (usually /home)w
-
+# - system home directory (usually /home)
 
 #Config section
 MyUSER="mysql-username"     # USERNAME
 MyPASS="mysql-pasword"       # PASSWORD
 MyHOST="mysql-host"          # Hostname
-MYSQL="$(which mysql)"
-
+MyDBNAME="mysql-db" #Database Name for magentointegration app
 
 #And the script itself, nothing to change here
 args=("$@")
-#echo arguments to the shell
-
 if [ $# -eq 4 ]; then
-    pass=$(perl -e 'print crypt(${args[1]}, ${args[2]})' ${args[1]})    
       sudo groupadd -f ${args[0]}
-      sudo useradd -p $pass -m ${args[0]} -g ${args[0]}
+      sudo useradd -p `mkpasswd ${args[1]}` -m ${args[0]} -g ${args[0]}
       sudo usermod -G ${args[0]} www-data
       sudo mkdir ${args[3]}/${args[0]}
       sudo mkdir ${args[3]}/${args[0]}/public_html
@@ -34,7 +29,7 @@ if [ $# -eq 4 ]; then
       
     sqlQuery="UPDATE user SET has_system_account = 1 WHERE system_account_name = '"${args[0]}"';"
 
-    mysql --user=$MyUSER -h $MyHOST --password=$MyPASS magentointegration -e "$sqlQuery"
+    mysql --user=$MyUSER -h $MyHOST --password=$MyPASS $MyDBNAME -e "$sqlQuery"
     
 else
     echo 'wrong number of arguments'
