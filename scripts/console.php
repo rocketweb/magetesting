@@ -1,5 +1,11 @@
  <?php
-
+/**
+ * Have a look at the comment inside 
+ * if ($queueElement['has_system_account'] == 0){
+ * or be prepared for this script to not work! 
+ */
+ 
+ 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application/'));
 define('APPLICATION_ENV', 'development');
 define('INSTANCE_PATH',APPLICATION_PATH . '/../instance/');
@@ -148,6 +154,13 @@ if (isset($opts->magentoinstall)) {
     $instanceFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$dbuser.'/public_html';
     if ($queueElement['has_system_account'] == 0){
         $db->update('user',array('system_account_name'=>$config->magento->userprefix.$dbuser),'id='.$queueElement['user_id']);
+        
+        /** WARNING! 
+         * in order for this to work, when you run this (console.php) file, 
+         * you need to cd to this (scripts) folder first, like this:
+         // * * * * * cd /var/www/magentointegration/scripts/; php console.php --magentoinstall
+         *
+         */
         exec('sudo ./create_user.sh '.$config->magento->userprefix.$dbuser.' '.$dbpass.' '.$config->magento->usersalt.' '.$config->magento->systemHomeFolder,$output);
         $message = var_export($output,true);
         $log->log($message, LOG_DEBUG);
