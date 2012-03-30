@@ -73,4 +73,43 @@ class MyAccountController extends Integration_Controller_Action
 
         }
     }
+
+    /**
+     * Shows invoice by given id
+     * Invoice id has to belong to logged user
+     * @method invoiceAction
+     * @param int $id - $_GET
+     */
+    public function invoiceAction()
+    {
+        $id = (int)$this->_getParam('id', 0);
+
+        $redirect = array(
+            'controller' => 'my-account',
+            'action'     => 'index',
+        );
+        $flashMessage = 'Wrong invoice id.';
+        if(0 >= $id) {
+            $this->_helper->flashMessenger($flashMessage);
+            return $this->_helper->redirector->goToRoute(
+                    $redirect,
+                    'default',
+                    true
+            );
+        }
+
+        $payment = new Application_Model_Payment();
+        $payment->find($id);
+
+        if($payment->getUserId() != $this->auth->getIdentity()->id) {
+            $this->_helper->flashMessenger($flashMessage);
+            return $this->_helper->redirector->goToRoute(
+                        $redirect,
+                        'default',
+                        true
+                    );
+        }
+
+        $this->view->payment = $payment;
+    }
 }

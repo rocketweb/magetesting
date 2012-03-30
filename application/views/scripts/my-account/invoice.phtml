@@ -1,0 +1,28 @@
+<?php $payment = $this->payment; ?>
+<div class="row">
+    <div class="row">
+        <div class="span2 well">
+            <p>
+                <?php echo $payment->getFirstName(); ?>
+                <?php echo $payment->getLastName(); ?>
+            </p>
+            <p><?php echo $payment->getStreet(); ?></p>
+            <p><?php echo $payment->getCity().', '.$payment->getPostalCode(); ?></p>
+            <p><?php echo $payment->getCountry().', '.$payment->getState(); ?></p>
+        </div>
+        <div class="span2 well pull-right">
+            <?php echo date('m/d/Y', strtotime($payment->getDate()))?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset3 span5 well well-margined">
+            <h2>Plan: <?php echo $payment->getPlan()->getName(); ?></h2>
+            <h3>
+                Price: $<?php echo $payment->getPrice(); ?>
+            </h3>
+            <h3>
+                Paid on: <?php echo date('F j,Y')?>
+            </h3>
+        </div>
+    </div>
+</div>

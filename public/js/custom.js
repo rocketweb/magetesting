@@ -4,7 +4,4 @@ $(document).ready(function () {
         placement: 'bottom'
     });
 
-    // close message after 2 seconds using 400ms slide up effect
-    $('.alert[data-dismiss]').delay(2000).fadeOut();
-
 });

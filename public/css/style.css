@@ -51,3 +51,7 @@ body {
 .table tr:hover {
      background-color: #F9F9F9;
 }
+
+.well-margined {
+    margin-left: 295px;
+}

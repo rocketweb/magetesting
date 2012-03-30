@@ -49,7 +49,7 @@ class Application_Model_PaymentMapper {
         $row = $result->current();
         $payment->setId($row->id)
                 ->setPrice($row->price)
-                ->setFirstnName($row->first_name)
+                ->setFirstName($row->first_name)
                 ->setLastName($row->last_name)
                 ->setStreet($row->street)
                 ->setPostalCode($row->postal_code)
@@ -71,7 +71,7 @@ class Application_Model_PaymentMapper {
             $entry = new Application_Model_Payment();
             $entry->setId($row->id)
                   ->setPrice($row->price)
-                  ->setFirstnName($row->first_name)
+                  ->setFirstName($row->first_name)
                   ->setLastName($row->last_name)
                   ->setStreet($row->street)
                   ->setPostalCode($row->postal_code)

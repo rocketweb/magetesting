@@ -241,5 +241,10 @@ class Application_Model_Payment {
     {
         return $this->getMapper()->fetchPaymentsByUser($id);
     }
-    
+
+    public function getPlan()
+    {
+        $plan = new Application_Model_Plan();
+        return $plan->find($this->getPlanId());
+    }
 }

@@ -48,11 +48,11 @@ class Application_Model_PlanMapper {
             return;
         }
         $row = $result->current();
-        $entry->setId($row->id)
+        $plan->setId($row->id)
               ->setName($row->name)
-              ->setInstanecs($row->instances)
+              ->setInstances($row->instances)
               ->setPrice($row->price);
-        return $edition;
+        return $plan;
     }
 
     public function delete($id)
@@ -68,7 +68,7 @@ class Application_Model_PlanMapper {
             $entry = new Application_Model_Plan();
             $entry->setId($row->id)
                   ->setName($row->name)
-                  ->setInstanecs($row->instances)
+                  ->setInstances($row->instances)
                   ->setPrice($row->price);
             $entries[] = $entry;
         }
