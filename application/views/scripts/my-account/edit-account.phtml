@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="span8 offset2">
+        <form
+            enctype="<?php echo $this->form->getEnctype() ?>"
+            method="<?php echo $this->form->getMethod() ?>"
+            class="<?php echo $this->form->getAttrib('class') ?>">
+            <div class="modal-header">
+                <h3>Create Account</h3>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td class="split-columns">
+                            <?php echo $this->form->firstname; ?>
+                            <?php echo $this->form->lastname; ?>
+                            <?php echo $this->form->street; ?>
+                        </td>
+                        <td>
+                            <?php echo $this->form->postal_code; ?>
+                            <?php echo $this->form->city; ?>
+                            <?php echo $this->form->state; ?>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary">
+                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
+                </button>
+                <button type="reset" name="<?php echo $this->form->reset->getName(); ?>" id="<?php echo $this->form->reset->getId() ?>" class="btn">
+                    <i class="icon-repeat"></i>&nbsp;<?php echo $this->form->reset->getLabel(); ?>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

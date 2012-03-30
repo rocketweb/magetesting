@@ -14,6 +14,14 @@ class Application_Model_User {
 
     protected $_password;
 
+    protected $_street;
+
+    protected $_postal_code;
+
+    protected $_city;
+
+    protected $_state;
+
     protected $_group;
 
     protected $_addedDate;
@@ -110,6 +118,50 @@ class Application_Model_User {
         return $this->_password;
     }
 
+    public function setStreet($street)
+    {
+        $this->_street = $street;
+        return $this;
+    }
+
+    public function getStreet()
+    {
+        return $this->_street;
+    }
+
+    public function setPostalCode($postalCode)
+    {
+        $this->_postal_code = $postalCode;
+        return $this;
+    }
+
+    public function getPostalCode()
+    {
+        return $this->_postal_code;
+    }
+
+    public function setCity($city)
+    {
+        $this->_city = $city;
+        return $this;
+    }
+
+    public function getCity()
+    {
+        return $this->_city;
+    }
+
+    public function setState($state)
+    {
+        $this->_state = $state;
+        return $this;
+    }
+
+    public function getState()
+    {
+        return $this->_state;
+    }
+
     public function setGroup($group)
     {
         $this->_group = $group;
@@ -200,14 +252,18 @@ class Application_Model_User {
     public function __toArray()
     {
         return array(
-            'id'         => $this->getId(),
-            'firstname'  => $this->getFirstname(),
-            'lastname'   => $this->getLastname(),
-            'email'      => $this->getEmail(),
-            'login'      => $this->getLogin(),
-            'group'      => $this->getGroup(),
-            'addedDate'  => $this->getAddedDate(),
-            'status'     => $this->getStatus()
+            'id'          => $this->getId(),
+            'firstname'   => $this->getFirstname(),
+            'lastname'    => $this->getLastname(),
+            'email'       => $this->getEmail(),
+            'login'       => $this->getLogin(),
+            'street'      => $this->getStreet(),
+            'postal_code' => $this->getPostalCode(),
+            'city'        => $this->getCity(),
+            'state'       => $this->getState(),
+            'group'       => $this->getGroup(),
+            'added_date'   => $this->getAddedDate(),
+            'status'      => $this->getStatus()
         );
     }
     

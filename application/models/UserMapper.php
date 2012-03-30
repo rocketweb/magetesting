@@ -26,18 +26,7 @@ class Application_Model_UserMapper {
 
     public function save(Application_Model_User $user)
     {
-        $data = array(
-            'id'         => $user->getId(),
-            'firstname'  => $user->getFirstname(),
-            'lastname'   => $user->getLastname(),
-            'email'      => $user->getEmail(),
-            'login'      => $user->getLogin(),
-            'group'      => $user->getGroup(),
-            'status'     => $user->getStatus()
-        );
-
-        if($user->getPassword() !== null && $user->getPassword() !== '')
-            $data['password'] = sha1($user->getPassword());
+        $data = $user->__toArray();
 
         if (null === ($id = $user->getId())) {
             unset($data['id']);
@@ -45,6 +34,7 @@ class Application_Model_UserMapper {
             $user->setAddedDate($data['added_date']);
             $data['status'] = 'inactive';
             $data['group'] = 'standard-user';
+            $data['password'] = sha1($user->getPassword());
             $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
@@ -66,6 +56,10 @@ class Application_Model_UserMapper {
              ->setLastname($row->lastname)
              ->setEmail($row->email)
              ->setLogin($row->login)
+             ->setStreet($row->street)
+             ->setPostalCode($row->postal_code)
+             ->setCity($row->city)
+             ->setState($row->state)
              ->setGroup($row->group)
              ->setAddedDate($row->added_date)
              ->setStatus($row->status);
@@ -88,6 +82,10 @@ class Application_Model_UserMapper {
                   ->setLastname($row->lastname)
                   ->setEmail($row->email)
                   ->setLogin($row->login)
+                  ->setStreet($row->street)
+                  ->setPostalCode($row->postal_code)
+                  ->setCity($row->city)
+                  ->setState($row->state)
                   ->setGroup($row->group)
                   ->setAddedDate($row->added_date)
                   ->setStatus($row->status);

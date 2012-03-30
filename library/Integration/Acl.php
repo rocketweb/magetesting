@@ -55,7 +55,7 @@ class Integration_Acl extends Zend_Acl
                 'add', 'close', 'getVersions'
         ));
         $this->allow('standard-user', 'default_user', array(
-                'index', 'logout', 'dashboard'
+                'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('standard-user', 'default_my-account');
 

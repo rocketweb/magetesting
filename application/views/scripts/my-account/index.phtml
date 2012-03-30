@@ -10,7 +10,7 @@
             Member since <?php echo date('F j,Y', strtotime($this->user->added_date)); ?>
         </div>
         <div class="span2">
-            <a href="#" class="btn-danger">Edit account</a>
+            <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'id' => $this->user->id)); ?>" class="btn-danger">Edit account</a>
         </div>
     </div>
     <hr />
