@@ -236,7 +236,11 @@ if (isset($opts->magentoinstall)) {
         $log->log($message, LOG_DEBUG);
         
     }
-    chmod($domain,0775);
+    
+    exec('sudo chmod +x '.$instanceFolder.'/'.$domain,$output);
+    $message = var_export($output,true);
+    $log->log('chmodding domain: '.$message, LOG_DEBUG);
+    unset($output);
         
     chdir($domain);
     
@@ -388,7 +392,7 @@ if (isset($opts->magentoinstall)) {
 
     //TODO: add mail info about ready installation
     
-    exec('sudo ln -s '.$instanceFolder.'/'.$domain.' '.INSTANCE_PATH.$domain);
+    exec('ln -s '.$instanceFolder.'/'.$domain.' '.INSTANCE_PATH.$domain);
     
     $db->update('queue',array('status'=>'ready'),'id='.$queueElement['id']);
           

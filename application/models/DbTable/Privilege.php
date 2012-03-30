@@ -51,7 +51,6 @@ class Application_Model_DbTable_Privilege {
 	 * 
      * this should be run upon registration for users in mysql and magentointegrations have the same passwords
      * @param type $login
-     * @param type $password 
      */
     public function createUser($login)
     {
@@ -61,7 +60,7 @@ class Application_Model_DbTable_Privilege {
         
         $this->adapter->getConnection()->exec("GRANT ALL ON `".$this->config->magento->instanceprefix.$login."_%`.* TO '".$this->config->magento->userprefix.$login."'@'localhost'");
 
-        $this->adapter->getConnection()->exec("FLUSH TABLES,PRIVILEGES");
+        //$this->adapter->getConnection()->exec("FLUSH TABLES,PRIVILEGES");
         
     }
     
