@@ -112,4 +112,8 @@ class MyAccountController extends Integration_Controller_Action
 
         $this->view->payment = $payment;
     }
+    
+    public function compareAction(){
+        
+    }
 }
