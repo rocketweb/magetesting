@@ -14,6 +14,9 @@ class MyAccountController extends Integration_Controller_Action
     public function indexAction()
     {
         $this->view->user = $this->auth->getIdentity();
+
+        $payments = new Application_Model_Payment();
+        $this->view->payments = $payments->fetchUserPayments($this->view->user->id);
     }
 
     /**

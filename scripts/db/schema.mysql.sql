@@ -149,7 +149,6 @@ CREATE  TABLE IF NOT EXISTS `payment` (
   `user_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `user_has_payments` (`user_id` ASC) ,
-  INDEX `plan_has_payments` (`user_id` ASC) ,
   INDEX `plan_has_payments` (`plan_id` ASC) ,
   CONSTRAINT `user_has_payments`
     FOREIGN KEY (`user_id` )

@@ -83,4 +83,31 @@ class Application_Model_PaymentMapper {
         }
         return $entries;
     }
+
+    public function fetchPaymentsByUser($id)
+    {
+        if(0 >= (int)$id) {
+            throw new Exception('Wrong payment id number('.$id.')');
+        }
+
+        $resultSet = $this->getDbTable()->fetchPaymentsByUser($id);
+
+        $entries   = array();
+        foreach ($resultSet as $row) {
+            $entry = new Application_Model_Payment();
+            $entry->setId($row->id)
+                  ->setPrice($row->price)
+                  ->setFirstName($row->first_name)
+                  ->setLastName($row->last_name)
+                  ->setStreet($row->street)
+                  ->setPostalCode($row->postal_code)
+                  ->setState($row->state)
+                  ->setCity($row->city)
+                  ->setDate($row->date)
+                  ->setPlanId($row->plan_id)
+                  ->setUserId($row->user_id);
+            $entries[] = $entry;
+        }
+        return $entries;
+    }
 }

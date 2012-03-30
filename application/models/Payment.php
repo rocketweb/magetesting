@@ -180,7 +180,7 @@ class Application_Model_Payment {
     public function getMapper()
     {
         if (null === $this->_mapper) {
-            $this->setMapper(new Application_Model_UserMapper());
+            $this->setMapper(new Application_Model_PaymentMapper());
         }
         return $this->_mapper;
     }
@@ -222,6 +222,10 @@ class Application_Model_Payment {
             'user_id'     => $this->getUserId()
         );
     }
-    
+
+    public function fetchUserPayments($id)
+    {
+        return $this->getMapper()->fetchPaymentsByUser($id);
+    }
     
 }

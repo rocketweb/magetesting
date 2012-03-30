@@ -6,11 +6,11 @@
         </div>
     </div>
     <div class="row">
-        <div class="span member-since">
+        <div class="span">
             Member since <?php echo date('F j,Y', strtotime($this->user->added_date)); ?>
         </div>
         <div class="span2">
-            <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'id' => $this->user->id)); ?>" class="btn-danger">Edit account</a>
+            <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'id' => $this->user->id)); ?>">Edit account</a>
         </div>
     </div>
     <hr />
@@ -23,7 +23,7 @@
     <br />
     <div class="row">
         <div class="span2">
-            <a href="#" class="btn-danger">Plans comparision</a>
+            <a href="#">Plans comparision</a>
         </div>
     </div>
     <hr />
@@ -50,9 +50,19 @@
     </div>
     <hr />
     <h3>Invoices</h3>
-    <div class="row">
-        <div class="span4">
-            <a href="#">03213218421</a> - 04/23/2012 - $23
+    <?php if($this->payments): ?>
+        <?php foreach($this->payments as $payment): ?>
+        <div class="row">
+            <div class="span4">
+                <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId())); ?>">
+                    <?php echo date('Ymds', strtotime($payment->getDate())).$payment->getUserId().$payment->getPlanId(); ?>
+                </a>
+                 - <?php echo date('m/d/Y', strtotime($payment->getDate())); ?>
+                 - $<?php echo $payment->getPrice(); ?>
+            </div>
         </div>
-    </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="row"><div class="span4">You don't have any invoices</div></div>
+    <?php endif; ?>
 </div>

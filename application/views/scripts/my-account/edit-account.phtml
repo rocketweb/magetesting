@@ -5,7 +5,7 @@
             method="<?php echo $this->form->getMethod() ?>"
             class="<?php echo $this->form->getAttrib('class') ?>">
             <div class="modal-header">
-                <h3>Create Account</h3>
+                <h3>Edit Account</h3>
             </div>
             <div class="modal-body">
                 <table class="table">
@@ -26,6 +26,7 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <a href="<?php echo $this->url(array('controller' => 'my-account'), 'default', true); ?>" class="btn pull-left">Back</a>
                 <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary">
                     <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
                 </button>
