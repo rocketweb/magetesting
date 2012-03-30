@@ -18,9 +18,11 @@ class Application_Model_Payment {
 
     protected $_postal_code;
 
+    protected $_city;
+
     protected $_state;
 
-    protected $_city;
+    protected $_country;
 
     protected $_date;
 
@@ -116,6 +118,17 @@ class Application_Model_Payment {
         return $this->_postal_code;
     }
 
+    public function setCity($city)
+    {
+        $this->_city = $city;
+        return $this;
+    }
+    
+    public function getCity()
+    {
+        return $this->_city;
+    }
+
     public function setState($state)
     {
         $this->_state = $state;
@@ -127,15 +140,15 @@ class Application_Model_Payment {
         return $this->_state;
     }
 
-    public function setCity($city)
+    public function setCountry($country)
     {
-        $this->_city = $city;
+        $this->_country = $country;
         return $this;
     }
 
-    public function getCity()
+    public function getCountry()
     {
-        return $this->_city;
+        return $this->_country;
     }
 
     public function setDate($Date)
@@ -215,8 +228,9 @@ class Application_Model_Payment {
             'last_name'   => $this->getLastName(),
             'street'      => $this->getStreet(),
             'postal_code' => $this->getPostalCode(),
-            'state'       => $this->getState(),
             'city'        => $this->getCity(),
+            'state'       => $this->getState(),
+            'country'     => $this->getCountry(),
             'date'        => $this->getDate(),
             'plan_id'     => $this->getPlanId(),
             'user_id'     => $this->getUserId()

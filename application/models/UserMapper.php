@@ -60,6 +60,7 @@ class Application_Model_UserMapper {
              ->setPostalCode($row->postal_code)
              ->setCity($row->city)
              ->setState($row->state)
+             ->setCountry($row->country)
              ->setGroup($row->group)
              ->setAddedDate($row->added_date)
              ->setStatus($row->status);
@@ -86,6 +87,7 @@ class Application_Model_UserMapper {
                   ->setPostalCode($row->postal_code)
                   ->setCity($row->city)
                   ->setState($row->state)
+                  ->setCountry($row->country)
                   ->setGroup($row->group)
                   ->setAddedDate($row->added_date)
                   ->setStatus($row->status);

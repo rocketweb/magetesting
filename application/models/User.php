@@ -22,6 +22,8 @@ class Application_Model_User {
 
     protected $_state;
 
+    protected $_country;
+
     protected $_group;
 
     protected $_addedDate;
@@ -162,6 +164,18 @@ class Application_Model_User {
         return $this->_state;
     }
 
+    public function setCountry($country)
+    {
+        $this->_country = $country;
+        return $this;
+    }
+
+    public function getCountry()
+    {
+        return $this->_country;
+    }
+    
+
     public function setGroup($group)
     {
         $this->_group = $group;
@@ -261,8 +275,9 @@ class Application_Model_User {
             'postal_code' => $this->getPostalCode(),
             'city'        => $this->getCity(),
             'state'       => $this->getState(),
+            'country'     => $this->getCountry(),
             'group'       => $this->getGroup(),
-            'added_date'   => $this->getAddedDate(),
+            'added_date'  => $this->getAddedDate(),
             'status'      => $this->getStatus()
         );
     }

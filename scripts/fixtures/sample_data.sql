@@ -36,6 +36,6 @@ INSERT INTO `plan` VALUES
 (2, 'Better Standard', 56, 55.10 );
 
 INSERT INTO `payment` VALUES
-(1, 23.50, 'John', 'Owner', 'LongStreet', '50123', 'California', 'Los Angeles', '2012-03-04 12:13:15', 1, 3),
-(2, 55.00, 'Michael', 'Newbie', 'NearLongStreet', '50132', 'California', 'Los Angeles', '2012-03-13 22:23:24', 2, 2)
+(1, 23.50, 'John', 'Owner', 'LongStreet', '50123', 'Los Angeles', 'California', 'USA', '2012-03-04 12:13:15', 1, 3),
+(2, 55.00, 'Michael', 'Newbie', 'NearLongStreet', '50132', 'Los Angeles', 'California', 'USA', '2012-03-13 22:23:24', 2, 3)
 

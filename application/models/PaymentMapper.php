@@ -53,8 +53,9 @@ class Application_Model_PaymentMapper {
                 ->setLastName($row->last_name)
                 ->setStreet($row->street)
                 ->setPostalCode($row->postal_code)
-                ->setState($row->state)
                 ->setCity($row->city)
+                ->setState($row->state)
+                ->setCountry($row->country)
                 ->setDate($row->date)
                 ->setPlanId($row->plan_id)
                 ->setUserId($row->user_id);
@@ -74,8 +75,9 @@ class Application_Model_PaymentMapper {
                   ->setLastName($row->last_name)
                   ->setStreet($row->street)
                   ->setPostalCode($row->postal_code)
-                  ->setState($row->state)
                   ->setCity($row->city)
+                  ->setState($row->state)
+                  ->setCountry($row->country)
                   ->setDate($row->date)
                   ->setPlanId($row->plan_id)
                   ->setUserId($row->user_id);
@@ -101,8 +103,9 @@ class Application_Model_PaymentMapper {
                   ->setLastName($row->last_name)
                   ->setStreet($row->street)
                   ->setPostalCode($row->postal_code)
-                  ->setState($row->state)
                   ->setCity($row->city)
+                  ->setState($row->state)
+                  ->setCountry($row->country)
                   ->setDate($row->date)
                   ->setPlanId($row->plan_id)
                   ->setUserId($row->user_id);

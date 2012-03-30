@@ -80,6 +80,16 @@ class Application_Form_EditAccount extends Integration_Form
                 ),
         ));
 
+        // Add a city element
+        $this->addElement('text', 'country', array(
+                'label'      => 'Country',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(3, 50)),
+                ),
+        ));
+
         // Add the submit button
         $this->addElement('submit', 'submit', array(
                 'ignore'   => true,
