@@ -182,5 +182,43 @@ class QueueController extends Integration_Controller_Action
         }
     }
 
+    public function editAction(){
+        $id = (int) $this->_getParam('id', 0);
+        
+        $queueItem = new Application_Model_Queue();
+        $instance = $queueItem->find($id);
+        
+        if ($instance->getUserId() == $this->auth->getIdentity()->id){
+            //its ok to edit
+        } else {
+            if($this->auth->getIdentity()->group != 'admin'){
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
+            }
+        }
+        
+        $form = new Application_Form_QueueEdit();
+        $form->populate($instance->__toArray());
+
+        if ($this->_request->isPost()) {
+            $formData = $this->_request->getPost();
+
+            if($form->isValid($formData)) {
+                $instance->setOptions($form->getValues());
+                $instance->save();
+
+                $this->_helper->FlashMessenger('Store data has been changed successfully');
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
+            }
+        }
+        $this->view->form = $form;
+    }
 
 }

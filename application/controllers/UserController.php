@@ -245,6 +245,11 @@ class UserController extends Integration_Controller_Action
         } else {
             if($this->auth->getIdentity()->group != 'admin'){
                 //you have no right to be here,redirect
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
             }
         }
         
