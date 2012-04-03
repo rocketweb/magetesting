@@ -31,11 +31,11 @@ class Integration_Mail_UserRegisterActivation
                 'hash'       => sha1($this->user->getLogin().$this->user->getEmail().$this->user->getAddedDate())
             )
         );
-        $this->view->activationLink = $activationUrl;
+        $this->view->activationLink = $this->view->serverUrl().$activationUrl;
 
         //body setup here
         $msg = $this->view->render('_emails/user-register-activation.phtml');
-
+echo $msg;die;
         $this->mail->setBodyHtml($msg);
         $this->mail->setBodyText(strip_tags($msg));
 
