@@ -35,7 +35,7 @@ class Integration_Mail_UserRegisterActivation
 
         //body setup here
         $msg = $this->view->render('_emails/user-register-activation.phtml');
-echo $msg;die;
+
         $this->mail->setBodyHtml($msg);
         $this->mail->setBodyText(strip_tags($msg));
 
