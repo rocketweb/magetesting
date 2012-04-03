@@ -84,7 +84,7 @@ class UserController extends Integration_Controller_Action
                         ), 'default', true);
                     }
                 } else {
-                    $this->_helper->FlashMessenger('You have entered wrong credentials. Please try again.');
+                    $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'You have entered wrong credentials. Please try again.'));
 
                     return $this->_helper->redirector->gotoRoute(array(
                             'module'     => 'default',
@@ -119,7 +119,12 @@ class UserController extends Integration_Controller_Action
                 $user = $user->save();
 
                 // send activation email to the specified user
-                $this->_sendActivationEmail($user);
+                $mailData = $this->getInvokeArg('bootstrap')
+                                 ->getResource('config')
+                                 ->user
+                                 ->activationEmail;
+                $mail = new Integration_Mail_UserRegisterActivation($mailData, $user);
+                $mail->send();
 
                 $this->_helper->FlashMessenger('You have been registered successfully');
                 return $this->_helper->redirector->gotoRoute(array(
@@ -130,39 +135,6 @@ class UserController extends Integration_Controller_Action
             }
         }
         $this->view->form = $form;
-    }
-
-    /**
-     * Sends activation mail to the user specified in param.
-     * @method _sendActivationEmail
-     * @param Application_Model_User $user
-     */
-    protected function _sendActivationEmail($user)
-    {
-        $mailData = $this->getInvokeArg('bootstrap')
-                              ->getResource('config')
-                              ->user
-                              ->activationEmail;
-        $mail = new Zend_Mail();
-
-        $mail->setFrom($mailData->from->mail, $mailData->from->desc);
-        $activationUrl = $this->view->url(
-            array(
-                'controller' => 'user',
-                'action'     => 'activate',
-                'id'         => $user->getId(),
-                'hash'       => sha1($user->getLogin().$user->getEmail().$user->getAddedDate())
-            )
-        );
-        $mailMessage = str_replace(
-                '{activation_url}', 
-                $this->view->serverUrl().$activationUrl, 
-                $mailData->message
-        );
-        $mail->setBodyHtml($mailMessage, 'UTF-8');
-        $mail->setSubject($mailData->subject);
-        $mail->addTo($user->getEmail(), $user->getFirstname().' '.$user->getLastname() );
-        $mail->send();
     }
 
     /**

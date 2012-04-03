@@ -1,8 +1,22 @@
 <? if (is_array($this->messages) && count($this->messages)): ?>
-    <? foreach ($this->messages as $msg): ?>
-        <div class="alert alert-success" data-dismiss="alert">
+    <?
+        foreach ($this->messages as $msg):
+        if(is_string($msg)) {
+            $msg = array('message' => $msg);
+        }
+        $class = 'alert-success';
+        switch( isset($msg['type']) ? $msg['type'] : 'success') {
+            case 'error':
+                $class = 'alert-error';
+            break;
+            case 'notice':
+                $class = '';
+            break;
+        }
+    ?>
+        <div class="alert <?php echo $class; ?>" data-dismiss="alert">
             <a class="close" href="#">&times;</a>
-            <strong><?= $this->escape($this->translate($msg)); ?></strong>
+            <strong><?= $this->escape($this->translate($msg['message'])); ?></strong>
         </div>
     <? endforeach; ?>
 <? endif; ?>

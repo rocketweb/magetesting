@@ -33,7 +33,10 @@ class MyAccountController extends Integration_Controller_Action
             'controller' => 'index',
             'action'     => 'index'
         );
-        $flashMessage = 'Hack attempt deteckted.';
+        $flashMessage = array(
+            'type'    => 'notice',
+            'message' => 'Hack attempt deteckted.'
+        );
 
         if ($id == $this->auth->getIdentity()->id){
 
@@ -57,7 +60,8 @@ class MyAccountController extends Integration_Controller_Action
                         $auth->$key = $val;
                     }
                     
-                    $flashMessage = 'You succeffully edited your data.';
+                    $flashMessage['message'] = 'You succeffully edited your data.';
+                    $flashMessage['type'] = 'success';
                     $this->_helper->FlashMessenger($flashMessage);
 
                     $redirect['controller'] = 'my-account';

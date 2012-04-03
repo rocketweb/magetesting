@@ -17,7 +17,6 @@ magento.usersalt = 'a63hd93u' ;used for mysql user password creation
 magento.systemHomeFolder = '/home' ;where should instance user folders land in
 
 user.activationEmail.subject = 'Activation'
-user.activationEmail.message = 'Bla bla if you want activate your account click <a href="{activation_url}" target="_blank">here</a>'
 user.activationEmail.from.email = "support@magentointegration.com"
 user.activationEmail.from.desc = "MagentoIntegration Team"
 

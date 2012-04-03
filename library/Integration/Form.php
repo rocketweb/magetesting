@@ -18,7 +18,7 @@ class Integration_Form extends Zend_Form
                 array('Errors'),
                 array('Description', array('tag' => 'span', 'class' => 'help-block', 'escape' => true)),
                 array('HtmlTag', array('tag' => 'div', 'class' => 'controls')),
-                array('Label', array('escape' => false)),
+                array('Label', array('escape' => false, 'class' => 'control-label')),
                 array('Overall', array('tag' => 'div', 'class' => 'control-group')),
         ), array('csrf', 'id'), false);
 
