@@ -22,12 +22,12 @@ CREATE  TABLE IF NOT EXISTS `user` (
   `country` VARCHAR(50) NULL ,
   `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' ,
   `added_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-  `group` ENUM('admin','free-user', 'awaiting-user','commercial-user') NOT NULL DEFAULT 'awaiting-user' ,
+  `group` ENUM('admin','free-user','awaiting-user','commercial-user') NOT NULL DEFAULT 'free-user' ,
   `has_system_account` TINYINT(1) NOT NULL DEFAULT 0 ,
   `system_account_name` VARCHAR(55) NULL ,
   `plan_id` INT NULL DEFAULT 0 ,
-  `subscr_id` VARCHAR(19) NULL DEFAULT NULL,
-  `plan_active_to` DATETIME NULL,
+  `subscr_id` VARCHAR(19) NULL ,
+  `plan_active_to` DATETIME NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) )
 ENGINE = InnoDB;
@@ -148,11 +148,11 @@ CREATE  TABLE IF NOT EXISTS `payment` (
   `postal_code` VARCHAR(10) NOT NULL ,
   `city` VARCHAR(50) NOT NULL ,
   `state` VARCHAR(50) NOT NULL ,
-  `country` VARCHAR(50) NULL ,
+  `country` VARCHAR(50) NOT NULL ,
   `date` TIMESTAMP NOT NULL ,
   `plan_id` INT(11) UNSIGNED NOT NULL ,
   `user_id` INT(11) NOT NULL ,
-  `subscr_id` VARCHAR(19) NOT NULL,
+  `subscr_id` VARCHAR(19) NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `user_has_payments` (`user_id` ASC) ,
   INDEX `plan_has_payments` (`user_id` ASC) ,
@@ -171,11 +171,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `coupons`
+-- Table `coupon`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `coupons` ;
+DROP TABLE IF EXISTS `coupon` ;
 
-CREATE  TABLE IF NOT EXISTS `coupons` (
+CREATE  TABLE IF NOT EXISTS `coupon` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `code` VARCHAR(45) NULL ,
   `used_date` DATETIME NULL ,
