@@ -20,11 +20,12 @@ CREATE  TABLE IF NOT EXISTS `user` (
   `city` VARCHAR(50) NULL ,
   `state` VARCHAR(50) NULL ,
   `country` VARCHAR(50) NULL ,
-  `added_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' ,
+  `added_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `group` ENUM('admin','standard-user','commercial-user') NOT NULL DEFAULT 'standard-user' ,
   `has_system_account` TINYINT(1) NOT NULL DEFAULT 0 ,
   `system_account_name` VARCHAR(55) NULL ,
+  `plan_id` INT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) )
 ENGINE = InnoDB;
@@ -145,12 +146,13 @@ CREATE  TABLE IF NOT EXISTS `payment` (
   `postal_code` VARCHAR(10) NOT NULL ,
   `city` VARCHAR(50) NOT NULL ,
   `state` VARCHAR(50) NOT NULL ,
-  `country` VARCHAR(50) NOT NULL ,
+  `country` VARCHAR(50) NULL ,
   `date` TIMESTAMP NOT NULL ,
   `plan_id` INT(11) UNSIGNED NOT NULL ,
   `user_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `user_has_payments` (`user_id` ASC) ,
+  INDEX `plan_has_payments` (`user_id` ASC) ,
   INDEX `plan_has_payments` (`plan_id` ASC) ,
   CONSTRAINT `user_has_payments`
     FOREIGN KEY (`user_id` )
@@ -162,6 +164,23 @@ CREATE  TABLE IF NOT EXISTS `payment` (
     REFERENCES `plan` (`id` )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coupons`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `coupons` ;
+
+CREATE  TABLE IF NOT EXISTS `coupons` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `code` VARCHAR(45) NULL ,
+  `used_date` DATETIME NULL ,
+  `user_id` INT NULL ,
+  `plan_id` INT NULL ,
+  `duration` VARCHAR(20) NULL ,
+  `active_to` DATETIME NULL ,
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
 
