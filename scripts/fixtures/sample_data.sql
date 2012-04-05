@@ -11,7 +11,7 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES  
 (1,'admin','d033e22ae348aeb5660fc2140aec35850c4da997','jan@rocketweb.com','John','Admin', 'street', 'postal code', 'city', 'state','country','2012-01-01 00:00:00','active','admin',0,'',0),
  (2,'commercial-user','616821f7a69735aacee22f88f870d00062c0f2d2','jan@rocketweb.com','John','Commercial', 'street', 'postal code', 'city', 'state','country','2012-01-01 00:00:00','active','commercial-user',0,'',0),
- (3,'standard-user','d285033046d5df2851143596830bca4811bf3af8','jan@rocketweb.com','John','Standard', 'street', 'postal code', 'city', 'state','country','2012-01-01 00:00:00','active','standard-user',0,'',0);
+ (3,'standard-user','d285033046d5df2851143596830bca4811bf3af8','jan@rocketweb.com','John','Standard', 'street', 'postal code', 'city', 'state','country','2012-01-01 00:00:00','active','free-user',0,'',0);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
@@ -37,6 +37,6 @@ INSERT INTO `plan` VALUES
 (2, 'Better Standard', 56, 55.10 );
 
 INSERT INTO `payment` VALUES
-(1, 23.50, 'John', 'Owner', 'LongStreet', '50123', 'Los Angeles', 'California', 'USA', '2012-03-04 12:13:15', 1, 3),
-(2, 55.00, 'Michael', 'Newbie', 'NearLongStreet', '50132', 'Los Angeles', 'California', 'USA', '2012-03-13 22:23:24', 2, 3)
+(1, 23.50, 'John', 'Owner', 'LongStreet', '50123', 'Los Angeles', 'California', 'USA', '2012-03-04 12:13:15', 1, 3, 'adqdqwdqdwq'),
+(2, 55.00, 'Michael', 'Newbie', 'NearLongStreet', '50132', 'Los Angeles', 'California', 'USA', '2012-03-13 22:23:24', 2, 3, 'sadasdwqdwq')
 
