@@ -123,7 +123,6 @@ class Application_Model_CouponMapper {
 
     public function apply($coupon_id, $user_id)
     {
-        
         $modelUser = new Application_Model_User();
         $user = $modelUser->find($user_id);
         $coupon = $this->find($coupon_id, new Application_Model_Coupon());
@@ -144,19 +143,31 @@ class Application_Model_CouponMapper {
                         $coupon->setUsedDate(date("Y-m-d",time()));
                         $coupon->save();
                         
-                        return 0; //everything ok
+                        return true; 
                         
                     } else {
-                        return 4; //coupon expired
+                        $this->setError('Coupon Expired');
+                        return false;
                     }                   
                 } else {
-                    return 3; //already paid, do not use coupon to not override current plan
+                    $this->setError('Your account is already non-free, you cannot apply coupons');
+                    return false;
                 }
             } else {
-                return 2; //coupon already taken
+                $this->setError('Coupon has been already used');
+                return false;
             }
         } else {
-            return 1; //no such coupon
+            $this->setError('No coupon found');
+            return false;
         }
+    }
+    
+    private function setError($error){
+        $this->_error = $error;
+    }
+    
+    public function getError($error){
+        return $this->_error;
     }
 }

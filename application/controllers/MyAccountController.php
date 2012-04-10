@@ -133,12 +133,9 @@ class MyAccountController extends Integration_Controller_Action
                 $coupon = $modelCoupon->findByCode($couponForm->code->getValue());
                 if ($coupon) {
                     
-                    $modelCoupon->apply($coupon->getId(), $this->auth->getIdentity()->id);
-
-                    $modelUser = new Application_Model_User();
-                    $user = $modelUser->find($this->auth->getIdentity()->id);
-                    $user->setPlanId($coupon->getPlanId());
-
+                    $applyResult = $modelCoupon->apply($coupon->getId(), $this->auth->getIdentity()->id);
+                    
+                    if ($applyResult === true) {
                     $flashMessage = 'Congratulations, you have successfully changed your plan!';
                     $this->_helper->flashMessenger($flashMessage);
                     return $this->_helper->redirector->gotoRoute(array(
@@ -146,9 +143,18 @@ class MyAccountController extends Integration_Controller_Action
                                 'controller' => 'my-account',
                                 'action' => 'coupon',
                                     ), 'default', true);
+                    } else {
+                        $flashMessage = $modelCoupon->getError();
+                        $this->_helper->flashMessenger(array('type'=>'error','message' => $flashMessage));
+                        return $this->_helper->redirector->gotoRoute(array(
+                                'module' => 'default',
+                                'controller' => 'my-account',
+                                'action' => 'coupon',
+                                    ), 'default', true);
+                    }
                 } else {
                     $flashMessage = 'No such coupon';
-                    $this->_helper->flashMessenger($flashMessage);
+                    $this->_helper->flashMessenger(array('type'=>'error','message' => $flashMessage));
                     return $this->_helper->redirector->gotoRoute(array(
                                 'module' => 'default',
                                 'controller' => 'my-account',

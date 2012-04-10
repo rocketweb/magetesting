@@ -17,7 +17,9 @@ class Application_Model_Coupon {
     protected $_active_to;
 
     protected $_mapper;
-
+    
+    protected $_error;
+    
     public function __construct(array $options = null)
     {
         if (is_array($options)) {
@@ -128,7 +130,11 @@ class Application_Model_Coupon {
         $this->_mapper = $mapper;
         return $this;
     }
-
+    
+    public function getError(){
+        return $this->getMapper()->getError();
+    }
+    
     public function save()
     {
         return $this->getMapper()->save($this);
