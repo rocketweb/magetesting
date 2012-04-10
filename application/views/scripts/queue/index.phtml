@@ -45,7 +45,7 @@
                 <td><span class="label label-warning"></span></td>
             <?php endswitch; ?>
             <td>
-            <?php if(in_array($item['status'], array('closed','pending'))): ?>
+            <?php if(in_array($item['status'], array('closed','pending','installing'))): ?>
                 <a class="btn btn-success disabled">V<i class="icon-white icon-eye-close"></i>&nbsp;isit</a>
                 <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
             <?php else: ?>

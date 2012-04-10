@@ -58,7 +58,7 @@
             <?php endif; ?>
             </td>
             <td>
-            <?php if(in_array($item['status'], array('closed','pending'))): ?>
+            <?php if(in_array($item['status'], array('closed','pending','installing'))): ?>
                 <a class="btn btn-success disabled"><i class="icon-eye-close icon-white"></i>&nbsp;Visit</a>
                 <a class="btn btn-danger disabled"><i class="icon-trash icon-white"></i>&nbsp;Close</a>
             <?php else: ?>
