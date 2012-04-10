@@ -29,9 +29,17 @@ class Application_Model_User {
     protected $_addedDate;
 
     protected $_status;
-
-    protected $_departmentId;
-
+     
+    protected $_has_system_account;
+     
+    protected $_system_account_name;
+     
+    protected $_plan_id;
+     
+    protected $_subscr_id;
+    
+    protected $_plan_active_to;
+    
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -175,7 +183,11 @@ class Application_Model_User {
         return $this->_country;
     }
     
-
+    /**
+     * Sets user group. This field is enum type
+     * @param string $group
+     * @return \Application_Model_User 
+     */
     public function setGroup($group)
     {
         $this->_group = $group;
@@ -208,7 +220,82 @@ class Application_Model_User {
     {
         return $this->_status;
     }
-
+    
+    public function getHasSystemAccount()
+    {
+        return $this->_has_system_account;
+    }
+    
+    /**
+     *
+     * @param bool $hasSystemAccount
+     * @return \Application_Model_User 
+     */
+    public function setHasSystemAccount($hasSystemAccount){
+        $this->_has_system_account = $hasSystemAccount;
+        return $this;
+    }
+    
+    public function getSystemAccountName()
+    {
+        return $this->_system_account_name;
+    }
+    
+    /**
+     *
+     * @param string $systemAccountName
+     * @return \Application_Model_User 
+     */
+    public function setSystemAccountName($systemAccountName){
+        $this->_system_account_name = $systemAccountName;
+        return $this;
+    }
+         
+    public function getPlanId()
+    {
+        return $this->_plan_id;
+    }
+    
+    /**
+     *
+     * @param int $planId
+     * @return \Application_Model_User 
+     */
+    public function setPlanId($planId){
+        $this->_plan_id = $planId;
+        return $this;
+    }
+    
+    public function getSubscrId()
+    {
+        return $this->_subscr_id;
+    }
+    
+    /**
+     *
+     * @param int $subscrId
+     * @return \Application_Model_User 
+     */
+    public function setSubscrId($subscrId){
+        $this->_subscr_id = $subscrId;
+        return $this;
+    }
+    
+    public function getPlanActiveTo()
+    {
+        return $this->_plan_active_to;
+    }
+    
+    /**
+     *
+     * @param datetime $planActiveTo
+     * @return \Application_Model_User 
+     */
+    public function setPlanActiveTo($planActiveTo){
+        $this->_plan_active_to = $planActiveTo;
+        return $this;
+    }
+            
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;

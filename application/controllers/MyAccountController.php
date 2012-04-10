@@ -120,4 +120,43 @@ class MyAccountController extends Integration_Controller_Action
     public function compareAction(){
         
     }
+    
+    public function couponAction() {
+        $request = $this->getRequest();
+        $couponForm = new Application_Form_CouponRegister();
+        if ($request->isPost()) {
+            $formData = $request->getPost();
+
+            if ($couponForm->isValid($request->getPost())) {
+
+                $modelCoupon = new Application_Model_Coupon();
+                $coupon = $modelCoupon->findByCode($couponForm->code->getValue());
+                if ($coupon) {
+                    
+                    $modelCoupon->apply($coupon->getId(), $this->auth->getIdentity()->id);
+
+                    $modelUser = new Application_Model_User();
+                    $user = $modelUser->find($this->auth->getIdentity()->id);
+                    $user->setPlanId($coupon->getPlanId());
+
+                    $flashMessage = 'Congratulations, you have successfully changed your plan!';
+                    $this->_helper->flashMessenger($flashMessage);
+                    return $this->_helper->redirector->gotoRoute(array(
+                                'module' => 'default',
+                                'controller' => 'my-account',
+                                'action' => 'coupon',
+                                    ), 'default', true);
+                } else {
+                    $flashMessage = 'No such coupon';
+                    $this->_helper->flashMessenger($flashMessage);
+                    return $this->_helper->redirector->gotoRoute(array(
+                                'module' => 'default',
+                                'controller' => 'my-account',
+                                'action' => 'coupon',
+                                    ), 'default', true);
+                }
+            }
+        }
+        $this->view->couponform = $couponForm;
+    }
 }

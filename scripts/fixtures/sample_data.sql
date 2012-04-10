@@ -38,5 +38,16 @@ INSERT INTO `plan` VALUES
 
 INSERT INTO `payment` VALUES
 (1, 23.50, 'John', 'Owner', 'LongStreet', '50123', 'Los Angeles', 'California', 'USA', '2012-03-04 12:13:15', 1, 3, 'adqdqwdqdwq'),
-(2, 55.00, 'Michael', 'Newbie', 'NearLongStreet', '50132', 'Los Angeles', 'California', 'USA', '2012-03-13 22:23:24', 2, 3, 'sadasdwqdwq')
+(2, 55.00, 'Michael', 'Newbie', 'NearLongStreet', '50132', 'Los Angeles', 'California', 'USA', '2012-03-13 22:23:24', 2, 3, 'sadasdwqdwq');
 
+
+INSERT INTO `coupon` VALUES
+(1,'coupon1',NULL,NULL,2,'+365 days','2013-01-01'),
+(2,'coupon2',NULL,NULL,2,'+365 days','2013-01-01'),
+(3,'coupon3',NULL,NULL,2,'+365 days','2013-01-01'),
+(4,'coupon4',NULL,NULL,2,'+365 days','2013-01-01'),
+(5,'coupon5',NULL,NULL,2,'+365 days','2013-01-01'),
+(6,'coupon6',NULL,NULL,2,'+365 days','2013-01-01'),
+(7,'coupon7',NULL,NULL,2,'+365 days','2013-01-01'),
+(8,'coupon8',NULL,NULL,2,'+365 days','2013-01-01'),
+(9,'coupon9',NULL,NULL,2,'+365 days','2013-01-01');

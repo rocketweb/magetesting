@@ -1,0 +1,19 @@
+<h3>Coupon code</h3>
+    <div class="row">
+        <div class="span4">
+            <form
+                enctype="<?php echo $this->couponform->getEnctype() ?>"
+                method="<?php echo $this->couponform->getMethod() ?>"
+                class="<?php echo $this->couponform->getAttrib('class') ?>">
+                
+                <div class="modal-body">
+                    <?php echo $this->couponform->code; ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="<?php echo $this->couponform->submit->getName(); ?>" id="<?php echo $this->couponform->submit->getId() ?>" class="btn btn-primary">
+                        <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->couponform->submit->getLabel(); ?>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
