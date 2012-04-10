@@ -58,6 +58,19 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('free-user', 'default_my-account');
+        
+        /**
+         * Set up privileges for commercial-user
+         */
+        $this->allow('commercial-user', 'default_error', array('error'));
+        $this->allow('commercial-user', 'default_index', array('index'));
+        $this->allow('commercial-user', 'default_queue', array(
+                'add', 'close', 'getVersions', 'edit'
+        ));
+        $this->allow('commercial-user', 'default_user', array(
+                'index', 'logout', 'dashboard', 'edit'
+        ));
+        $this->allow('commercial-user', 'default_my-account');
 
     }
 
