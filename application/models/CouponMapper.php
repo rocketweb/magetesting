@@ -133,8 +133,7 @@ class Application_Model_CouponMapper {
                     if(strtotime($coupon->getActiveTo()) > time()){
                         
                         //update user with new data
-                        $user->setPlanActiveTo(strtotime("now " . $coupon->getDuration() . ""));
-                        
+                        $user->setPlanActiveTo(date("Y-m-d H:i:s",strtotime("now " . $coupon->getDuration() . "")));
                         $user->setPlanId($coupon->getPlanId());
                         $user->save();
                        
