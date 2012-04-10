@@ -47,17 +47,17 @@ class Integration_Acl extends Zend_Acl
         ));
 
         /**
-         * Set up privileges for standard-user
+         * Set up privileges for free-user
          */
-        $this->allow('standard-user', 'default_error', array('error'));
-        $this->allow('standard-user', 'default_index', array('index'));
-        $this->allow('standard-user', 'default_queue', array(
+        $this->allow('free-user', 'default_error', array('error'));
+        $this->allow('free-user', 'default_index', array('index'));
+        $this->allow('free-user', 'default_queue', array(
                 'add', 'close', 'getVersions', 'edit'
         ));
-        $this->allow('standard-user', 'default_user', array(
+        $this->allow('free-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
         ));
-        $this->allow('standard-user', 'default_my-account');
+        $this->allow('free-user', 'default_my-account');
 
     }
 
