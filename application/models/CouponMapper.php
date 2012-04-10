@@ -134,13 +134,14 @@ class Application_Model_CouponMapper {
                     if(strtotime($coupon->getActiveTo()) > time()){
                         
                         //update user with new data
-                        $user->setPlanActiveTo(strtotime("" . $coupon->getDuration() . ""));
+                        $user->setPlanActiveTo(strtotime("now " . $coupon->getDuration() . ""));
+                        
                         $user->setPlanId($coupon->getPlanId());
                         $user->save();
                        
                         //update coupon info
                         $coupon->setUserId($user->getId());
-                        $coupon->setUsedDate("Y-m-d",time());
+                        $coupon->setUsedDate(date("Y-m-d",time()));
                         $coupon->save();
                         
                         return 0; //everything ok
