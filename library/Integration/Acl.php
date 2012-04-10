@@ -11,7 +11,7 @@ class Integration_Acl extends Zend_Acl
          * Set up roles
          */
         $this->addRole(new Zend_Acl_Role('guest'))
-        ->addRole(new Zend_Acl_Role('standard-user'))
+        ->addRole(new Zend_Acl_Role('free-user'))
         ->addRole(new Zend_Acl_Role('commercial-user'))
         ->addRole(new Zend_Acl_Role('admin'));
 
