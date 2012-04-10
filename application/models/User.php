@@ -365,7 +365,12 @@ class Application_Model_User {
             'country'     => $this->getCountry(),
             'group'       => $this->getGroup(),
             'added_date'  => $this->getAddedDate(),
-            'status'      => $this->getStatus()
+            'status'      => $this->getStatus(),
+            'subscr_id'   => $this->getSubscrId(),
+            'plan_id'     => $this->getPlanId(),
+            'plan_active_to' => $this->getPlanActiveTo(),
+            'has_system_account' =>$this->getHasSystemAccount(),
+            'system_account_name' => $this->getSystemAccountName()
         );
     }
     

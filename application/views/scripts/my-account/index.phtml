@@ -26,9 +26,10 @@
             <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare')); ?>">Plans comparison</a>
         </div>
     </div>
+    <?php if ($this->user->group=='free-user'): ?>
     <br />
     Have a coupon code? <a class="btn btn-info" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'coupon')); ?>">Reedeem your bonus!</a>
-    
+    <?php endif; ?>
     <hr />
     <?php /*
     <div class="row">

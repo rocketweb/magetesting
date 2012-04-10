@@ -63,7 +63,13 @@ class Application_Model_UserMapper {
              ->setCountry($row->country)
              ->setGroup($row->group)
              ->setAddedDate($row->added_date)
-             ->setStatus($row->status);
+             ->setStatus($row->status)
+             ->setSubscrId($row->subscr_id)
+             ->setPlanId($row->plan_id)
+             ->setPlanActiveTo($row->plan_active_to)
+             ->setHasSystemAccount($row->has_system_account)
+             ->setSystemAccountName($row->system_account_name)
+             ;
         return $user;
     }
 
@@ -90,14 +96,19 @@ class Application_Model_UserMapper {
                   ->setCountry($row->country)
                   ->setGroup($row->group)
                   ->setAddedDate($row->added_date)
-                  ->setStatus($row->status);
+                  ->setStatus($row->status)
+                  ->setSubscrId($row->subscr_id)
+                  ->setPlanId($row->plan_id)
+                  ->setPlanActiveTo($row->plan_active_to)
+                  ->setHasSystemAccount($row->has_system_account)
+                  ->setSystemAccountName($row->system_account_name)
+                    ;
             $entries[] = $entry;
         }
         return $entries;
     }
     
     public function fetchList(){
-        
         
         $select = $this->getDbTable()
                 ->select()
