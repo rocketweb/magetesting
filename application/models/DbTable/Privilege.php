@@ -33,7 +33,7 @@ class Application_Model_DbTable_Privilege {
     public function checkIfDatabaseExists($dbname)
     {
         try {
-            $this->adapter->getConnection()->exec("use ".$this->config->magento->instanceprefix.$dbname);
+            $this->adapter->getConnection()->exec("use `".$this->config->magento->instanceprefix.$dbname."`");
         } catch (PDOException $e){
             return false;
         }
@@ -87,7 +87,7 @@ class Application_Model_DbTable_Privilege {
      */
     public function createDatabase($dbname)
     {
-        $this->adapter->getConnection()->exec("CREATE DATABASE ".$this->config->magento->instanceprefix.$dbname);  
+        $this->adapter->getConnection()->exec("CREATE DATABASE `".$this->config->magento->instanceprefix.$dbname."`");  
     }
     
     /**
@@ -95,7 +95,7 @@ class Application_Model_DbTable_Privilege {
      */
     public function dropDatabase($dbname)
     {
-        $this->adapter->getConnection()->exec("DROP DATABASE ".$this->config->magento->instanceprefix.$dbname);   
+        $this->adapter->getConnection()->exec("DROP DATABASE `".$this->config->magento->instanceprefix.$dbname."`");   
     }
     
 }
