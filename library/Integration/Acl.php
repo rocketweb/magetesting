@@ -77,6 +77,19 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('commercial-user', 'default_my-account');
 
+        /**
+         * Set up privileges for awaiting-user
+         */
+        $this->allow('awaiting-user', 'default_error', array('error'));
+        $this->allow('awaiting-user', 'default_index', array('index'));
+        $this->allow('awaiting-user', 'default_queue', array(
+                'add', 'close', 'getVersions', 'edit'
+        ));
+        $this->allow('awaiting-user', 'default_user', array(
+                'index', 'logout', 'dashboard', 'edit'
+        ));
+        $this->allow('awaiting-user', 'default_my-account');
+        
     }
 
     /**
