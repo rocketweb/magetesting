@@ -94,12 +94,11 @@ class PayPalController extends Integration_Controller_Action
                                     'first_name' => $_POST['first_name'],
                                     'last_name' => $_POST['last_name'],
                                     'price' => $_POST['payment_gross'],
-                                    'date' => strtotime($_POST['payment_date']),
+                                    'date' => date('Y-m-d H:i:s', strtotime($_POST['payment_date'])),
                                     'plan_id' => $plan_id,
                                     'user_id' => $user_id,
                                     'subscr_id' => $_POST['subscr_id']
                             );
-                            $log->log('PayPal - Notify - use case-wtf?????', Zend_Log::DEBUG, json_encode($payment_data) );
                             $payment->setOptions($payment_data);
                             $payment->save();
                         }
@@ -109,12 +108,8 @@ class PayPalController extends Integration_Controller_Action
                 case 'subscr_signup':
                     if(isset($_POST['mc_amount3'])) {
                         if($plan->getPrice() == $_POST['mc_amount3']) {
-                            // correct activeTo date in case of payment already exists
-                            $subscrDate = strtotime($_POST['subscr_date']);
-                            if($user->getSubscrId() != $_POST['subscr_id']) {
-                                $subscrDate = strtotime('+1 month', $subscrDate);
-                            }
-                            // if everything is fine, set planActiveTo on subscription sign up date 
+                            $subscrDate = strtotime('+1 month', $_POST['subscr_date']);
+ 
                             $date = date('Y-m-d H:i:s', $subscrDate);
                             $user->setPlanActiveTo($date);
                         }
@@ -127,6 +122,9 @@ class PayPalController extends Integration_Controller_Action
 
             // set subscription id for future usage
             $user->setSubscrId($_POST['subscr_id']);
+
+            // set plan id for user
+            $user->setPlanId($plan_id);
 
             // check if user has still active account
             if((int)strtotime($user->getPlanActiveTo()) - time() >= 0) {
