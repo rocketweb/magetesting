@@ -108,7 +108,7 @@ class PayPalController extends Integration_Controller_Action
                 case 'subscr_signup':
                     if(isset($_POST['mc_amount3'])) {
                         if($plan->getPrice() == $_POST['mc_amount3']) {
-                            $subscrDate = strtotime('+1 month', $_POST['subscr_date']);
+                            $subscrDate = strtotime('+1 month', strtotime($_POST['subscr_date']));
  
                             $date = date('Y-m-d H:i:s', $subscrDate);
                             $user->setPlanActiveTo($date);
