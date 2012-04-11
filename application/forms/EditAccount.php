@@ -66,7 +66,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 50)),
+                        array('validator' => 'StringLength', 'options' => array(2, 50)),
                 ),
         ));
         
@@ -86,7 +86,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 50)),
+                        array('validator' => 'StringLength', 'options' => array(2, 50)),
                 ),
         ));
 

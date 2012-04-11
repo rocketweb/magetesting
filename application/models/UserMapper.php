@@ -68,8 +68,8 @@ class Application_Model_UserMapper {
              ->setPlanId($row->plan_id)
              ->setPlanActiveTo($row->plan_active_to)
              ->setHasSystemAccount($row->has_system_account)
-             ->setSystemAccountName($row->system_account_name)
-             ;
+             ->setSystemAccountName($row->system_account_name);
+
         return $user;
     }
 
@@ -101,8 +101,8 @@ class Application_Model_UserMapper {
                   ->setPlanId($row->plan_id)
                   ->setPlanActiveTo($row->plan_active_to)
                   ->setHasSystemAccount($row->has_system_account)
-                  ->setSystemAccountName($row->system_account_name)
-                    ;
+                  ->setSystemAccountName($row->system_account_name);
+
             $entries[] = $entry;
         }
         return $entries;

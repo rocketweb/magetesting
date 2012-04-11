@@ -58,7 +58,8 @@ class Application_Model_PaymentMapper {
                 ->setCountry($row->country)
                 ->setDate($row->date)
                 ->setPlanId($row->plan_id)
-                ->setUserId($row->user_id);
+                ->setUserId($row->user_id)
+                ->setSubscrId($row->subscr_id);
         return $payment;
     }
 
@@ -80,7 +81,8 @@ class Application_Model_PaymentMapper {
                   ->setCountry($row->country)
                   ->setDate($row->date)
                   ->setPlanId($row->plan_id)
-                  ->setUserId($row->user_id);
+                  ->setUserId($row->user_id)
+                  ->setSubscrId($row->subscr_id);
             $entries[] = $entry;
         }
         return $entries;
@@ -108,7 +110,8 @@ class Application_Model_PaymentMapper {
                   ->setCountry($row->country)
                   ->setDate($row->date)
                   ->setPlanId($row->plan_id)
-                  ->setUserId($row->user_id);
+                  ->setUserId($row->user_id)
+                  ->setSubscrId($row->subscr_id);
             $entries[] = $entry;
         }
         return $entries;

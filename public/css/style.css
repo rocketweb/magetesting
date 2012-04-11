@@ -55,3 +55,7 @@ body {
 .well-margined {
     margin-left: 295px;
 }
+
+.paypal.form-inline {
+    display: inline;
+}

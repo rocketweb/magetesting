@@ -18,6 +18,7 @@ class Integration_Acl extends Zend_Acl
         /**
          * Set up resources
          */
+        $this->add(new Zend_Acl_Resource('default_pay-pal'));
         $this->add(new Zend_Acl_Resource('default_error'));
         $this->add(new Zend_Acl_Resource('default_index'));
         $this->add(new Zend_Acl_Resource('default_user'));
@@ -46,6 +47,8 @@ class Integration_Acl extends Zend_Acl
                 'login', 'password-recovery', 'register', 'activate'
         ));
 
+        $this->allow('guest', 'default_pay-pal');
+
         /**
          * Set up privileges for free-user
          */
@@ -58,7 +61,9 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('free-user', 'default_my-account');
-        
+
+        $this->allow('free-user', 'default_pay-pal', array('cancel', 'success'));
+
         /**
          * Set up privileges for commercial-user
          */

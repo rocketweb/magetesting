@@ -26,7 +26,7 @@ class MyAccountController extends Integration_Controller_Action
      */
     public function editAccountAction()
     {
-        $id = (int) $this->_getParam('id', 0);
+        $id = (int)$this->auth->getIdentity()->id;
 
         $redirect = array(
             'module'     => 'default',
@@ -35,16 +35,18 @@ class MyAccountController extends Integration_Controller_Action
         );
         $flashMessage = array(
             'type'    => 'notice',
-            'message' => 'Hack attempt deteckted.'
+            'message' => 'Hack attempt detected.'
         );
 
-        if ($id == $this->auth->getIdentity()->id){
+        if($id > 0){
 
             $user = new Application_Model_User();
             $user = $user->find($id);
 
             $form = new Application_Form_EditAccount();
             $form->populate($user->__toArray());
+
+            $informPayPal = (int)$this->getRequest()->getParam('inform', 0);
 
             if ($this->_request->isPost()) {
                 $formData = $this->_request->getPost();
@@ -60,14 +62,22 @@ class MyAccountController extends Integration_Controller_Action
                         $auth->$key = $val;
                     }
                     
-                    $flashMessage['message'] = 'You succeffully edited your data.';
+                    $flashMessage['message'] = 'You succeffully edited your details.';
                     $flashMessage['type'] = 'success';
                     $this->_helper->FlashMessenger($flashMessage);
 
                     $redirect['controller'] = 'my-account';
+                    if($informPayPal) {
+                        $redirect['action'] = 'compare';
+                    }
                     return $this->_helper->redirector->gotoRoute($redirect, 'default', true);
                 }
             }
+
+            if($informPayPal) {
+                $this->view->messages[] = array('type' => 'notice', 'message' => 'You have to fill your details before any subscription.');                
+            }
+
             $this->view->form = $form;
 
         } else {
@@ -117,8 +127,18 @@ class MyAccountController extends Integration_Controller_Action
         $this->view->payment = $payment;
     }
     
-    public function compareAction(){
-        
+    public function compareAction()
+    {
+        $user = new Application_Model_User();
+        $user->find($this->auth->getIdentity()->id);
+
+        $this->view->renderPayPal = false;
+        if($user->getId()) {
+            if($user->getCity() AND $user->getStreet()) {
+                $this->view->renderPayPal = true;
+                $this->view->user = $user;
+            }
+        }
     }
     
     public function couponAction() {

@@ -30,6 +30,8 @@ class Application_Model_Payment {
 
     protected $_user_id;
 
+    protected $_subscr_id;
+
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -184,6 +186,17 @@ class Application_Model_Payment {
         return $this->_user_id;
     }
 
+    public function setSubscrId($subscr_id)
+    {
+        $this->_subscr_id = $subscr_id;
+        return $this;
+    }
+
+    public function getSubscrId()
+    {
+        return $this->_subscr_id;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -233,7 +246,8 @@ class Application_Model_Payment {
             'country'     => $this->getCountry(),
             'date'        => $this->getDate(),
             'plan_id'     => $this->getPlanId(),
-            'user_id'     => $this->getUserId()
+            'user_id'     => $this->getUserId(),
+            'subscr_id'   => $this->getSubscrId()
         );
     }
 

@@ -33,8 +33,8 @@ UNLOCK TABLES;
 
 
 INSERT INTO `plan` VALUES
-(1, 'Standard', 23, 23.50 ),
-(2, 'Better Standard', 56, 55.10 );
+(1, 'Standard', 23, 5.00 ),
+(2, 'Better Standard', 56, 10.00 );
 
 INSERT INTO `payment` VALUES
 (1, 23.50, 'John', 'Owner', 'LongStreet', '50123', 'Los Angeles', 'California', 'USA', '2012-03-04 12:13:15', 1, 3, 'adqdqwdqdwq'),

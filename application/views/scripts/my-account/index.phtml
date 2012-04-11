@@ -10,7 +10,7 @@
             Member since <?php echo date('F j,Y', strtotime($this->user->added_date)); ?>
         </div>
         <div class="span2">
-            <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'id' => $this->user->id)); ?>">Edit account</a>
+            <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account'), 'default', true); ?>">Edit account</a>
         </div>
     </div>
     <hr />
@@ -23,7 +23,7 @@
     <br />
     <div class="row">
         <div class="span2">
-            <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare')); ?>">Plans comparison</a>
+            <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">Plans comparison</a>
         </div>
     </div>
     <?php if ($this->user->group=='free-user'): ?>
@@ -60,7 +60,7 @@
         <?php foreach($this->payments as $payment): ?>
         <div class="row">
             <div class="span4">
-                <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId())); ?>">
+                <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId()), 'default', true); ?>">
                     <?php echo date('Ymds', strtotime($payment->getDate())).$payment->getUserId().$payment->getPlanId(); ?>
                 </a>
                  - <?php echo date('m/d/Y', strtotime($payment->getDate())); ?>
