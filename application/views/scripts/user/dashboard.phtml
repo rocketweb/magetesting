@@ -26,7 +26,8 @@
                 <td><span class="label label-success"><?php echo ucfirst($item['status']) ?></span> </td>
             <?php break; case 'pending':  ?>
                 <td>
-<!--                    <div class="progress progress-info progress-striped active">
+                    <!--
+                    <div class="progress progress-info progress-striped active">
                         <div class="bar" style="width: 100%;">
                             <span class="label label-warning">In Queue</span>
                             <span class="label">
@@ -35,7 +36,7 @@
                             </span>
                         </div>
                     </div>-->
-<div class="progress progress-striped active" style="margin-bottom:0px;margin-top:5px;">
+                    <div class="progress progress-striped active" style="margin-bottom:0px;margin-top:5px;">
                         <div class="bar" style="width: 100%;">
                             In Queue - <?php echo $this->queueCounter[$item['id']]; ?> minutes left
                         </div>
