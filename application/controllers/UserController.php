@@ -114,6 +114,17 @@ class UserController extends Integration_Controller_Action
                               ->getResource('config')
                               ->register
                               ->useCoupons;
+                              
+	
+	  $form->addElement('text', 'coupon', array(
+                'label'      => 'Coupon code',
+                'required'   => ($useCoupons) ? true : false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(3, 45)),
+                ),
+	  ));
+	
         
         if ($this->_request->isPost()) {
             $formData = $this->_request->getPost();          
@@ -122,22 +133,19 @@ class UserController extends Integration_Controller_Action
                 $user->setOptions($form->getValues());
                 $user = $user->save();
                 
-                if ($useCoupons == 1) {
-                    $modelCoupon = new Application_Model_Coupon();
-                    $coupon = $modelCoupon->findByCode($formData['coupon']);
-                    if ($coupon) {
-                                              
-                        $result  = $modelCoupon->apply($coupon->getId(), $user->getId());
-                        if($result){
-			  //cupon->apply changed user so we need to fetch it again
-			  $modelUser = new Application_Model_User();
-			  $user = $modelUser->find($user->getId()); 
-			  $user->setGroup('commercial-user');
-			  $user = $user->save();
-                        } 
+                $modelCoupon = new Application_Model_Coupon();
+                $coupon = $modelCoupon->findByCode($formData['coupon']);
+                if ($coupon) {
+                    $result = $modelCoupon->apply($coupon->getId(), $user->getId());
+                    if ($result) {
+                        //cupon->apply changed user so we need to fetch it again
+                        $modelUser = new Application_Model_User();
+                        $user = $modelUser->find($user->getId());
+                        $user->setGroup('commercial-user');
+                        $user = $user->save();
                     }
                 }
-
+                
                 // send activation email to the specified user
                 $mailData = $this->getInvokeArg('bootstrap')
                                  ->getResource('config')

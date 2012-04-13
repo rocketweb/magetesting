@@ -24,12 +24,9 @@
                     </tr>
                     </tbody>
                 </table>
-                <?php if ($this->useCoupons == 1): ?>
                 <div id="coupon-holder">
-                    <label for="coupon">Coupon code (optional)</label>
-                    <input name="coupon" id="coupon" />
+                     <?php echo $this->form->coupon; ?>
                 </div>
-                <?php endif; ?>
             </div>
             <div class="modal-footer">
                 <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary">
