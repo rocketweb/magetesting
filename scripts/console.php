@@ -194,8 +194,18 @@ if (isset($opts->magentoinstall)) {
         /*send email with account details stop*/
         
     }
-    $adminuser = $queueElement['login'];
-    $adminpass = $queueElement['domain'];
+    $adminuser = $queueElement['login'];   
+    $adminpass = substr(
+            substr(
+                    str_shuffle(
+                            str_repeat('0123456789', 5)
+                    )
+                    , 0, 4) .
+            str_shuffle(
+                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 5)
+            )
+            , 0, 5);
+    
     $adminfname = $queueElement['firstname'];
     $adminlname = $queueElement['lastname'];
 
@@ -404,6 +414,8 @@ if (isset($opts->magentoinstall)) {
     // assign valeues
     $html->assign('domain', $domain);
     $html->assign('storeUrl', $config->magento->storeUrl);
+    $html->assign('admin_login', $adminuser);
+    $html->assign('admin_password', $adminpass);
     // render view
     $bodyText = $html->render('queue-item-ready.phtml');
 
