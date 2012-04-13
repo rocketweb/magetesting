@@ -34,10 +34,9 @@
                 <label class="btn btn-success">0$</label>
             </td>
             <td>
-                <label class="btn">5$</label>
                 <?php if(!$this->renderPayPal): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
-                        <img src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribe_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <a class="btn" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                        Subscribe for only 5$
                     </a>
                 <?php else: ?>
                     <form class="paypal form-inline" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
@@ -46,7 +45,6 @@
                         <input type="hidden" name="address_override" value="1">
                         <input type="hidden" name="no_shipping" value="2">
                         <input type="hidden" name="custom" value="<?php echo $user->getId(); ?>:1">
-                        <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribe_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
                         <input type="hidden" name="address1" value="<?php echo $user->getStreet(); ?>">
                         <input type="hidden" name="city" value="<?php echo $user->getCity(); ?>">
                         <input type="hidden" name="country" value="<?php echo $user->getCountry(); ?>">
@@ -55,15 +53,14 @@
                         <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
                         <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
                         <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
-                        <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                        <input class="btn" type="submit" name="submit" alt="PayPal - The safer, easier way to pay online!" value="Subscribe for only 5$">
                     </form>
                 <?php endif; ?>
             </td>
             <td>
-                <label class="btn btn-info">10$</label>
                 <?php if(!$this->renderPayPal): ?>
-                    <a href="">
-                        <img src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribe_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <a class="btn btn-info" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                        Subscribe for only 10$
                     </a>
                 <?php else: ?>
                     <form class="paypal form-inline" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
@@ -79,8 +76,7 @@
                         <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
                         <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
                         <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
-                        <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_subscribe_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                        <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                        <input class="btn-info" type="submit" name="submit" alt="PayPal - The safer, easier way to pay online!" value="Subscribe for only 10$">
                     </form>
                 <?php endif; ?>
             </td>
