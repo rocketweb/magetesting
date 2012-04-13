@@ -196,15 +196,14 @@ if (isset($opts->magentoinstall)) {
     }
     $adminuser = $queueElement['login'];   
     $adminpass = substr(
-            substr(
                     str_shuffle(
                             str_repeat('0123456789', 5)
                     )
-                    , 0, 4) .
-            str_shuffle(
-                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 5)
-            )
-            , 0, 5);
+                    , 0, 5) . substr(
+                    str_shuffle(
+                            str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 7)
+                    )
+                    , 0, 7);
     
     $adminfname = $queueElement['firstname'];
     $adminlname = $queueElement['lastname'];
