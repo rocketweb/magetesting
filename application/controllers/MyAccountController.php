@@ -13,10 +13,15 @@ class MyAccountController extends Integration_Controller_Action
      */
     public function indexAction()
     {
-        $this->view->user = $this->auth->getIdentity();
-
+        $modelPlan = new Application_Model_Plan();
         $payments = new Application_Model_Payment();
-        $this->view->payments = $payments->fetchUserPayments($this->view->user->id);
+
+        $modelUser = new Application_Model_User();             
+        $user = $modelUser->find($this->auth->getIdentity()->id);
+               
+        $this->view->plan = $modelPlan->find($user->getPlanId());
+        $this->view->payments = $payments->fetchUserPayments($user->getId());
+        $this->view->user = $user;
     }
 
     /**
@@ -161,7 +166,7 @@ class MyAccountController extends Integration_Controller_Action
                     return $this->_helper->redirector->gotoRoute(array(
                                 'module' => 'default',
                                 'controller' => 'my-account',
-                                'action' => 'coupon',
+                                'action' => 'index',
                                     ), 'default', true);
                     } else {
                         $flashMessage = $modelCoupon->getError();

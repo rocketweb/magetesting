@@ -2,22 +2,29 @@
     <h2>Your account details</h2>
     <div class="row">
         <div class="span3">
-            <?php echo $this->user->firstname.' '.$this->user->lastname; ?>
+            <?php echo $this->escape($this->user->getFirstname()).' '.$this->escape($this->user->getLastname()); ?>
         </div>
     </div>
     <div class="row">
         <div class="span">
-            Member since <?php echo date('F j,Y', strtotime($this->user->added_date)); ?>
+            Member since <?php echo date('F j,Y', strtotime($this->user->getAddedDate())); ?>
         </div>
         <div class="span2">
             <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account'), 'default', true); ?>">Edit account</a>
         </div>
     </div>
     <hr />
-    <h3>Current plan: Plan</h3>
+    <h3>Current plan: <?php if($this->plan->getId()==0): ?>
+        Free
+        <?php else: 
+        echo $this->escape($this->plan->getName());  
+        endif;
+        ?></h3>
     <div class="row">
         <div class="span4">
-            Your next charge is $50 on June 5, 2012
+        <?php if($this->plan->getId()!=0): ?>
+            Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
+            <?php endif; ?>
         </div>
     </div>
     <br />
@@ -26,7 +33,7 @@
             <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">Plans comparison</a>
         </div>
     </div>
-    <?php if ($this->user->group=='free-user'): ?>
+    <?php if ($this->user->getGroup()=='free-user'): ?>
     <br />
     Have a coupon code? <a class="btn btn-info" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'coupon')); ?>">Redeem your bonus!</a>
     <?php endif; ?>
