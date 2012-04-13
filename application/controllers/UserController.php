@@ -109,14 +109,34 @@ class UserController extends Integration_Controller_Action
 
         $form->getElement('login')->addValidator('Db_NoRecordExists',false,
                 array('table' => 'user', 'field' => 'login'));
-
+        
+        $useCoupons = $this->getInvokeArg('bootstrap')
+                              ->getResource('config')
+                              ->register
+                              ->useCoupons;
+        
         if ($this->_request->isPost()) {
-            $formData = $this->_request->getPost();
+            $formData = $this->_request->getPost();          
 
             if($form->isValid($formData)) {
                 $user->setOptions($form->getValues());
-                $user->setGroup('standard-user');
                 $user = $user->save();
+                
+                if ($useCoupons == 1) {
+                    $modelCoupon = new Application_Model_Coupon();
+                    $coupon = $modelCoupon->findByCode($formData['coupon']);
+                    if ($coupon) {
+                                              
+                        $result  = $modelCoupon->apply($coupon->getId(), $user->getId());
+                        if($result){
+			  //cupon->apply changed user so we need to fetch it again
+			  $modelUser = new Application_Model_User();
+			  $user = $modelUser->find($user->getId()); 
+			  $user->setGroup('commercial-user');
+			  $user = $user->save();
+                        } 
+                    }
+                }
 
                 // send activation email to the specified user
                 $mailData = $this->getInvokeArg('bootstrap')
@@ -134,6 +154,8 @@ class UserController extends Integration_Controller_Action
                 ), 'default', true);
             }
         }
+        
+        $this->view->useCoupons = $useCoupons;
         $this->view->form = $form;
     }
 

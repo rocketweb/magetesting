@@ -30,10 +30,12 @@ class Application_Model_UserMapper {
 
         if (null === ($id = $user->getId())) {
             unset($data['id']);
+            unset($data['has_system_account']);
+            unset($data['status']);
+            unset($data['plan_id']);
+            unset($data['group']);
             $data['added_date'] = date('Y-m-d H:i:s');
-            $user->setAddedDate($data['added_date']);
-            $data['status'] = 'inactive';
-            $data['group'] = 'standard-user';
+            $user->setAddedDate($data['added_date']);           
             $data['password'] = sha1($user->getPassword());
             $user->setId($this->getDbTable()->insert($data));
         } else {

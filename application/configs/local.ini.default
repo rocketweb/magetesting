@@ -28,6 +28,8 @@ cron.systemAccountCreated.subject = 'Magento Integration Account!'
 cron.systemAccountCreated.from.email = "support@magentointegration.com"
 cron.systemAccountCreated.from.desc = "Magento Integration Team"
 
+register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
+
 [staging : production]
 
 [testing : production]

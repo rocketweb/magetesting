@@ -4,6 +4,7 @@ class Application_Model_CouponMapper {
 
     protected $_dbTable;
 
+    protected $_error = '';
     public function setDbTable($dbTable)
     {
         if (is_string($dbTable)) {
@@ -166,7 +167,7 @@ class Application_Model_CouponMapper {
         $this->_error = $error;
     }
     
-    public function getError($error){
+    public function getError(){
         return $this->_error;
     }
 }

@@ -20,7 +20,7 @@ CREATE  TABLE IF NOT EXISTS `user` (
   `city` VARCHAR(50) NULL ,
   `state` VARCHAR(50) NULL ,
   `country` VARCHAR(50) NULL ,
-  `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' ,
+  `status` ENUM('active','inactive') NOT NULL DEFAULT 'inactive' ,
   `added_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `group` ENUM('admin','free-user','awaiting-user','commercial-user') NOT NULL DEFAULT 'free-user' ,
   `has_system_account` TINYINT(1) NOT NULL DEFAULT 0 ,
