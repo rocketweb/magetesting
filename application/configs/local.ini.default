@@ -1,11 +1,11 @@
 [production]
 ;Magento nstallation Stuff
 magento.adminEmail = "jan@rocketweb.com"
-magento.storeUrl = "http://magentointegration.dev"
+magento.storeUrl = "http://magetesting.dev"
 
 ;this addresses go to account email notifications
-magento.ftphost = "ftp://magentointegration.com"
-magento.dbhost = "db.magentointegration.com"
+magento.ftphost = "ftp://magetesting.com"
+magento.dbhost = "db.magetesting.com"
 
 magento.standardUser.instances = 3
 
@@ -17,16 +17,16 @@ magento.usersalt = 'a63hd93u' ;used for mysql user password creation
 magento.systemHomeFolder = '/home' ;where should instance user folders land in
 
 user.activationEmail.subject = 'Activation'
-user.activationEmail.from.email = "support@magentointegration.com"
-user.activationEmail.from.desc = "MagentoIntegration Team"
+user.activationEmail.from.email = "support@magetesting.com"
+user.activationEmail.from.desc = "Magento Testing Team"
 
 cron.queueItemReady.subject = 'Your Instance is Ready!'
-cron.queueItemReady.from.email = "support@magentointegration.com"
-cron.queueItemReady.from.desc = "Magento Integration Team"
+cron.queueItemReady.from.email = "support@magetesting.com"
+cron.queueItemReady.from.desc = "Mage Testing Team"
 
-cron.systemAccountCreated.subject = 'Magento Integration Account!'
-cron.systemAccountCreated.from.email = "support@magentointegration.com"
-cron.systemAccountCreated.from.desc = "Magento Integration Team"
+cron.systemAccountCreated.subject = 'Mage Testing Account!'
+cron.systemAccountCreated.from.email = "support@magetesting.com"
+cron.systemAccountCreated.from.desc = "Mage Testing Team"
 
 register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
 

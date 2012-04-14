@@ -13,7 +13,7 @@
 MyUSER="mysql-username"     # USERNAME
 MyPASS="mysql-pasword"       # PASSWORD
 MyHOST="mysql-host"          # Hostname
-MyDBNAME="mysql-db" #Database Name for magentointegration app
+MyDBNAME="mysql-db" #Database Name for magetesting app
 
 #And the script itself, nothing to change here
 args=("$@")

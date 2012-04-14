@@ -49,7 +49,7 @@ class Application_Model_DbTable_Privilege {
 	 * GRANT ALL PRIVILEGES ON `INST_%`.* TO 'mageintegration'@'localhost'
 	 * GRANT SELECT ON `mysql`.`user` TO 'mageintegration'@'localhost'
 	 * 
-     * this should be run upon registration for users in mysql and magentointegrations have the same passwords
+     * this should be run upon registration for users in mysql and magetesting have the same passwords
      * @param type $login
      */
     public function createUser($login)
@@ -68,7 +68,7 @@ class Application_Model_DbTable_Privilege {
     /**
      * @todo: needs implementation
      * 
-     * this should be run upon registration for users in mysql and magentointegrations have the same passwords
+     * this should be run upon registration for users in mysql and magetesting have the same passwords
      * @param type $login
      * @param type $password 
      */

@@ -85,7 +85,7 @@ class QueueController extends Integration_Controller_Action
                     $queueModel->save();
                     $this->_helper->FlashMessenger('New installation added to queue');
                     
-                    //magentointegration user creates database
+                    //magetesting user creates database
                     try{
                         $db = Zend_Db_Table::getDefaultAdapter();
                         $DbManager = new Application_Model_DbTable_Privilege($db,$this->getInvokeArg('bootstrap')
