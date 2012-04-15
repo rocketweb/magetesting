@@ -3,10 +3,10 @@
 <table class="table table-striped" >
     <thead>
         <tr>
-            <th>X</th>
-            <th>Free User</th>
-            <th>Standard User</th>
-            <th>Commercial User</th>
+            <th class="span4"></th>
+            <th class="span3">Free User</th>
+            <th class="span3">Standard User</th>
+            <th class="span3">Business User</th>
         </tr>
     </thead>
     <tbody>
@@ -31,12 +31,12 @@
         <tr>
             <td><strong>Price</strong></td>
             <td>
-                <label class="btn btn-success">0$</label>
+                <label class="btn">Free!</label>
             </td>
             <td>
                 <?php if(!$this->renderPayPal): ?>
-                    <a class="btn" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
-                        Subscribe for only 5$
+                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                        Subscribe for $5
                     </a>
                 <?php else: ?>
                     <form class="paypal form-inline" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
@@ -53,14 +53,14 @@
                         <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
                         <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
                         <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
-                        <input class="btn" type="submit" name="submit" alt="PayPal - The safer, easier way to pay online!" value="Subscribe for only 5$">
+                        <input class="btn btn-success" type="submit" name="submit" value="Subscribe for $5">
                     </form>
                 <?php endif; ?>
             </td>
             <td>
                 <?php if(!$this->renderPayPal): ?>
-                    <a class="btn btn-info" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
-                        Subscribe for only 10$
+                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                        Subscribe for $10
                     </a>
                 <?php else: ?>
                     <form class="paypal form-inline" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
@@ -76,7 +76,7 @@
                         <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
                         <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
                         <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
-                        <input class="btn-info" type="submit" name="submit" alt="PayPal - The safer, easier way to pay online!" value="Subscribe for only 10$">
+                        <input class="btn btn-success" type="submit" name="submit" value="Subscribe for $10">
                     </form>
                 <?php endif; ?>
             </td>
