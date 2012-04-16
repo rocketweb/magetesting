@@ -186,7 +186,7 @@ class UserController extends Integration_Controller_Action
                 $user = new Application_Model_User();
                 switch($user->activateUser($id, $hash)) {
                     case 0:
-                        $flashMessage = 'Activation complited. You can now log in into your account.';
+                        $flashMessage = 'Activation completed. You can now log in into your account.';
                         $redirect['action'] = 'login';
                         break;
                     case 1:
