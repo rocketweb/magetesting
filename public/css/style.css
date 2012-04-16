@@ -46,12 +46,19 @@ body {
     padding-left: 37px;
 }
 
+.total-align {
+    padding-left: 30px;
+}
+.span2.date-invoice {
+    width: 160px;
+}
+.span2.date-invoice div.span1 {
+    width: 65px;
+    text-align: right;
+    margin-right: 10px;
+}
 .table tr:hover {
      background-color: #F9F9F9;
-}
-
-.well-margined {
-    margin-left: 295px;
 }
 
 .paypal.form-inline {

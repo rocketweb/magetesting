@@ -2,28 +2,72 @@
 <?php $payment = $this->payment; ?>
 <div class="row">
     <div class="row">
-        <div class="span2 well">
-            <p>
-                <?php echo $payment->getFirstName(); ?>
-                <?php echo $payment->getLastName(); ?>
-            </p>
-            <p><?php echo $payment->getStreet(); ?></p>
-            <p><?php echo $payment->getCity().', '.$payment->getPostalCode(); ?></p>
-            <p><?php echo $payment->getCountry().', '.$payment->getState(); ?></p>
+        <div class="offset1 span2 well company-details">
+            <h3>Rocket Web Inc.</h3>
+            <p>475 River Bend Rd</p>
+            <p>Ste 200C</p>
+            <p>Naperville, IL 60540</p> 
+            <p>USA</p>
         </div>
-        <div class="span2 well pull-right">
-            <?php echo date('m/d/Y', strtotime($payment->getDate()))?>
+        <div class="offset5 span2 date-invoice well">
+            <div class="row">
+                <div class="span1"><strong>DATE</strong>:</div><?php echo date('F d, Y', strtotime($payment->getDate()))?>
+            </div>
+            <div class="row">
+                <div class="span1"><strong>INVOICE</strong> #</div><?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getPlanId().$payment->getId(); ?>
+            </div>
         </div>
     </div>
     <div class="row">
-        <div class="offset3 span5 well well-margined">
-            <h2>Plan: <?php echo $payment->getPlan()->getName(); ?></h2>
-            <h3>
-                Price: $<?php echo $payment->getPrice(); ?>
-            </h3>
-            <h3>
-                Paid on: <?php echo date('F j,Y')?>
-            </h3>
+        <div class="offset2 span4 well">
+            <div class="span1">
+                Bill to:
+            </div>
+            <div class="span2">
+                <p>
+                    <?php echo $payment->getFirstName(); ?>
+                    <?php echo $payment->getLastName(); ?>
+                </p>
+                <p><?php echo $payment->getStreet(); ?></p>
+                <p><?php echo $payment->getCity().', '.$payment->getPostalCode(); ?></p>
+                <p><?php echo $payment->getCountry().', '.$payment->getState(); ?></p>
+            </div>
+        </div>
+        <div class="span4 well">
+            <div class="span1">
+                Ship to:
+            </div>
+            <div class="span2">
+                <p><?php echo $payment->getStreet(); ?></p>
+                <p><?php echo $payment->getCity().', '.$payment->getPostalCode(); ?></p>
+                <p><?php echo $payment->getCountry().', '.$payment->getState(); ?></p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset2 span9">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Subscribed plan</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?php echo $payment->getPlan()->getName(); ?></td>
+                        <td>$<?php echo $payment->getPrice(); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span1 offset9">
+            TOTAL:
+        </div>
+        <div class="span1 total-align">
+            $<?php echo $payment->getPrice(); ?>
         </div>
     </div>
 </div>
