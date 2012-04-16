@@ -130,11 +130,22 @@ class UserController extends Integration_Controller_Action
             $formData = $this->_request->getPost();          
 
             if($form->isValid($formData)) {
-                $user->setOptions($form->getValues());
-                $user = $user->save();
                 
                 $modelCoupon = new Application_Model_Coupon();
                 $coupon = $modelCoupon->findByCode($formData['coupon']);
+                
+                if (!$coupon || $modelCoupon->isUnused() === false ){
+                    $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Coupon has been already used!'));
+                    return $this->_helper->redirector->gotoRoute(array(
+                            'module'     => 'default',
+                            'controller' => 'user',
+                            'action'     => 'register',
+                    ), 'default', true);
+                }
+                
+                $user->setOptions($form->getValues());
+                $user = $user->save();
+                
                 if ($coupon) {
                     $result = $modelCoupon->apply($coupon->getId(), $user->getId());
                     if ($result) {

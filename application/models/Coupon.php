@@ -171,6 +171,17 @@ class Application_Model_Coupon {
     {
         return $this->getMapper()->apply($coupon_id, $user_id);
     }
+    
+    public function isUnused()
+    {
+        if ($this->getUserId()){
+            return false;
+        }
+        
+        if ($this->getUsedDate()){
+            return false;
+        }
+    }
 
     public function __toArray()
     {
