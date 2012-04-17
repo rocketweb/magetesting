@@ -14,9 +14,18 @@ class Application_Form_QueueEdit extends Integration_Form{
                 'filters'    => array('StripTags', 'StringTrim'),
         ));
 
-        
+        $this->addElement('text', 'backend_login', array(
+                'label'    => 'Backend login',
+                'ignore'   => true,
+                'disabled' => true
+        ));
 
-         
+        $this->addElement('text', 'backend_password', array(
+                'label'    => 'Backend password',
+                'ignore'   => true,
+                'disabled' => true
+        ));
+
         // Add the submit button
         $this->addElement('submit', 'queueSave', array(
                 'ignore'   => true,
