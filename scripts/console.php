@@ -511,7 +511,7 @@ if(isset($opts->downgrade_expired_users)) {
             if(!isset($downgrade_by_id[$instance['id']])) {
                 $downgrade_by_id[$instance['id']] = null;
             }
-            if(file_exists(INSTANCE_PATH.$instance['domain'])) {
+            if(is_link(INSTANCE_PATH.$instance['domain'])) {
                 exec('sudo rm '.INSTANCE_PATH.$instance['domain']);
             }
         }
@@ -546,7 +546,7 @@ if(isset($opts->restore_downgraded_users)) {
             if(!isset($restore_by_id[$instance['id']])) {
                 $restore_by_id[$instance['id']] = null;
             }
-            if((int)linkinfo(INSTANCE_PATH.$instance['domain']) < 1) {
+            if(is_link(INSTANCE_PATH.$instance['domain'])) {
                 $instanceFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$instance['login'].'/public_html';
                 exec('ln -s '.$instanceFolder.'/'.$instance['domain'].' '.INSTANCE_PATH.$instance['domain']);
             }
