@@ -35,8 +35,6 @@ class Integration_Controller_Action extends Zend_Controller_Action
 
     public function preDispatch()
     {
-        $user = new Application_Model_User();
-        $users = $user->fetchAll();
 
         // ACL
         $acl = new Integration_Acl();

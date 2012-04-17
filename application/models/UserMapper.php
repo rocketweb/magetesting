@@ -34,6 +34,7 @@ class Application_Model_UserMapper {
             unset($data['status']);
             unset($data['plan_id']);
             unset($data['group']);
+            unset($data['downgraded']);
             $data['added_date'] = date('Y-m-d H:i:s');
             $user->setAddedDate($data['added_date']);           
             $data['password'] = sha1($user->getPassword());
@@ -70,7 +71,8 @@ class Application_Model_UserMapper {
              ->setPlanId($row->plan_id)
              ->setPlanActiveTo($row->plan_active_to)
              ->setHasSystemAccount($row->has_system_account)
-             ->setSystemAccountName($row->system_account_name);
+             ->setSystemAccountName($row->system_account_name)
+             ->setDowngraded($row->downgraded);
 
         return $user;
     }
@@ -103,7 +105,8 @@ class Application_Model_UserMapper {
                   ->setPlanId($row->plan_id)
                   ->setPlanActiveTo($row->plan_active_to)
                   ->setHasSystemAccount($row->has_system_account)
-                  ->setSystemAccountName($row->system_account_name);
+                  ->setSystemAccountName($row->system_account_name)
+                  ->setDowngraded($row->downgraded);
 
             $entries[] = $entry;
         }

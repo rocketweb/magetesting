@@ -39,7 +39,9 @@ class Application_Model_User {
     protected $_subscr_id;
     
     protected $_plan_active_to;
-    
+
+    protected $_downgraded;
+
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -295,7 +297,25 @@ class Application_Model_User {
         $this->_plan_active_to = $planActiveTo;
         return $this;
     }
-            
+
+    public function setDowngraded($downgraded)
+    {
+        $this->_downgraded = (int)$downgraded;
+        return $this;
+    }
+
+    /**
+     * is user downgraded
+     * 0 - is not downgraded
+     * 1 - downgraded with deleted symlinks
+     * 2 - downgraded in fronted but symlinks exists
+     * @return int 0|1|2
+     */
+    public function getDowngraded()
+    {
+        return $this->_downgraded;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -370,7 +390,8 @@ class Application_Model_User {
             'plan_id'     => $this->getPlanId(),
             'plan_active_to' => $this->getPlanActiveTo(),
             'has_system_account' =>$this->getHasSystemAccount(),
-            'system_account_name' => $this->getSystemAccountName()
+            'system_account_name' => $this->getSystemAccountName(),
+            'downgraded' => $this->getDowngraded()
         );
     }
     

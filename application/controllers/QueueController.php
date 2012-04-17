@@ -62,7 +62,7 @@ class QueueController extends Integration_Controller_Action
                 $userInstances = $queueModel->countUserInstances($userId);
 
                 if(
-                    $userGroup != 'standard-user'
+                    $userGroup != 'free-user'
                     OR ($userInstances < $maxInstances)
                 ) {
                     $queueModel->setVersionId( $form->version->getValue() )
@@ -105,7 +105,7 @@ class QueueController extends Integration_Controller_Action
                     }                  
                     
                 } else {
-                    $this->_helper->FlashMessenger('You cannot have more instances.');
+                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more instances.'));
                 }
 
                 return $this->_helper->redirector->gotoRoute(array(

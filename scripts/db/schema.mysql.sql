@@ -28,6 +28,7 @@ CREATE  TABLE IF NOT EXISTS `user` (
   `plan_id` INT NULL DEFAULT 0 ,
   `subscr_id` VARCHAR(19) NULL ,
   `plan_active_to` DATETIME NULL ,
+  `downgraded` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) )
 ENGINE = InnoDB;
@@ -150,7 +151,7 @@ CREATE  TABLE IF NOT EXISTS `payment` (
   `state` VARCHAR(50) NOT NULL ,
   `country` VARCHAR(50) NOT NULL ,
   `date` TIMESTAMP NOT NULL ,
-  `plan_id` INT(11) UNSIGNED NOT NULL ,
+  `plan_id` INT(2) UNSIGNED NOT NULL ,
   `user_id` INT(11) NOT NULL ,
   `subscr_id` VARCHAR(19) NOT NULL ,
   PRIMARY KEY (`id`) ,

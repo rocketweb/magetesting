@@ -73,6 +73,8 @@ try {
         array(
             'help' => 'Displays help.',
             'hello' => 'try it !',
+            'downgrade_expired_users' => 'disables users with expired active to date',
+            'restore_downgraded_users' => 'restores downgraded users if we noticed their payments',
             'magentoinstall' => 'handles magento from install queue',
             'magentoremove' => 'handles magento from remove queue',
         )
@@ -214,7 +216,7 @@ if (isset($opts->magentoinstall)) {
     
     $domain = $queueElement['domain'];
     $startCwd =  getcwd();
-   
+
     $message = 'domain: '.$domain;
     $log->log($message, LOG_DEBUG);
     
@@ -489,6 +491,78 @@ if (isset($opts->magentoremove)) {
     
     $db->delete('queue','id='.$queueElement['id']); 
     unlink(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'_'.$queueElement['domain'].'.log');
+}
+
+if(isset($opts->downgrade_expired_users)) {
+
+    $select = new Zend_Db_Select($db);
+    $sql = $select
+        ->from('user')
+        ->joinLeft('queue','user.id = queue.user_id', 'domain')
+        ->where('queue.status = ?', 'ready')
+        ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, CURRENT_TIMESTAMP) > ?', 3*60*60*24)
+        ->where('(user.group IN (?)', array('awaiting-user', 'commercial-user'))
+        ->orwhere('user.downgraded = ?)', 2);
+
+    $result = $db->fetchAll($sql);
+    if($result) {
+        $downgrade_by_id = array();
+        foreach($result as $instance) {
+            if(!isset($downgrade_by_id[$instance['id']])) {
+                $downgrade_by_id[$instance['id']] = null;
+            }
+            if(file_exists(INSTANCE_PATH.$instance['domain'])) {
+                exec('sudo rm '.INSTANCE_PATH.$instance['domain']);
+            }
+        }
+        if($downgrade_by_id) {
+            $set = array(
+                'group' => 'free-user',
+                'downgraded' => 1
+            );
+            $where = array('id IN (?)' => array_keys($downgrade_by_id));
+            echo 'Update: '.$db->update('user', $set, $where).PHP_EOL;
+        }
+        echo 'Downgraded '.count($downgrade_by_id).' users'.PHP_EOL;
+    } else {
+        echo 'Nothing to downgrade'.PHP_EOL;
+    }
+
+}
+
+if(isset($opts->restore_downgraded_users)) {
+    $select = new Zend_Db_Select($db);
+    $sql = $select
+        ->from('user')
+        ->joinLeft('queue','user.id = queue.user_id', 'domain')
+        ->where('queue.status = ?', 'ready')
+        ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, CURRENT_TIMESTAMP) < ?', 0)
+        ->where('user.downgraded = ?', 1);
+
+    $result = $db->fetchAll($sql);
+    if($result) {
+        $restore_by_id = array();
+        foreach($result as $instance) {
+            if(!isset($restore_by_id[$instance['id']])) {
+                $restore_by_id[$instance['id']] = null;
+            }
+            if((int)linkinfo(INSTANCE_PATH.$instance['domain']) < 1) {
+                $instanceFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$instance['login'].'/public_html';
+                exec('ln -s '.$instanceFolder.'/'.$instance['domain'].' '.INSTANCE_PATH.$instance['domain']);
+            }
+        }
+        if($restore_by_id) {
+            $set = array(
+                    'group' => 'commercial-user',
+                    'downgraded' => 0
+            );
+            $where = array('id IN (?)' => array_keys($restore_by_id));
+            echo 'Update: '.$db->update('user', $set, $where).PHP_EOL;
+            echo 'Restored '.count($restore_by_id).' users'.PHP_EOL;
+        }
+    } else {
+        echo 'Nothing to restore from downgrade'.PHP_EOL;
+    }
 }
 
 function rrmdir($dir) {
