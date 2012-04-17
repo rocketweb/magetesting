@@ -536,7 +536,7 @@ if(isset($opts->restore_downgraded_users)) {
         ->from('user')
         ->joinLeft('queue','user.id = queue.user_id', 'domain')
         ->where('queue.status = ?', 'ready')
-        ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, CURRENT_TIMESTAMP) < ?', 0)
+        ->where('TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP, user.plan_active_to) > ?', 0)
         ->where('user.downgraded = ?', 1);
 
     $result = $db->fetchAll($sql);
@@ -546,7 +546,7 @@ if(isset($opts->restore_downgraded_users)) {
             if(!isset($restore_by_id[$instance['id']])) {
                 $restore_by_id[$instance['id']] = null;
             }
-            if(is_link(INSTANCE_PATH.$instance['domain'])) {
+            if(!is_link(INSTANCE_PATH.$instance['domain'])) {
                 $instanceFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$instance['login'].'/public_html';
                 exec('ln -s '.$instanceFolder.'/'.$instance['domain'].' '.INSTANCE_PATH.$instance['domain']);
             }
