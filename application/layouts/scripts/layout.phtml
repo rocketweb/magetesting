@@ -41,7 +41,8 @@
             <div class="container">
                 <a class="brand"
                     href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">
-                    Mage Testing</a>
+                    <img src="<?php echo $this->baseUrl(); ?>/public/img/mage-testing.png" alt="Mage Testing">
+                </a>
                 <?php echo $this->navigation()->menu()->setPartial(array('_partials/extendedTopMenu.phtml','default')); ?>
             </div>
         </div>
@@ -55,7 +56,18 @@
 
         <hr />
         <footer>
-            <p>&copy; Rocket Web 2011</p>
+            <div class="row">
+                <div class="span6">
+                   <p>Copyright ©2011-2012 Rocket Web Inc. All rights reserved.</p>
+                </div>
+                <div class="span6">
+                    <p class="right">
+                      <a href="#">Terms</a> |
+                      <a href="#">Guided Tour</a> |
+                      <a href="#">Contact</a>
+                    </p>
+                </div>
+            </div>
         </footer>
 
     </div>

@@ -1,5 +1,5 @@
 body {
-    padding-top: 60px;
+    padding-top: 90px;
 }
 
 .right {
@@ -69,3 +69,23 @@ body {
     width:100%;
     text-align:center;
 }
+
+.align-right {
+    text-align: right;
+}
+.align-left {
+    text-align: left;
+}
+
+.span2.pull-right.align-right {
+    padding-right: 10px;
+}
+.number-money { background: url(../img/32x32/money_bag.png) no-repeat 0 5px; margin-bottom: 20px; }
+.number-date { background: url(../img/32x32/calendar_view_day.png ) no-repeat 0 5px; margin-bottom: 20px; }
+.number-instances { background: url(../img/32x32/application_cascade.png ) no-repeat 0 5px;  margin-bottom: 20px; }
+.number-people { background: url(../img/32x32/user_astronaut.png ) no-repeat 0 5px; margin-bottom: 20px; }
+
+.number-money h2, .number-money p { padding-left: 45px; }
+.number-date h2, .number-date p { padding-left: 45px; }
+.number-instances h2, .number-instances p { padding-left: 45px; }
+.number-people h2, .number-people p { padding-left: 45px; }
