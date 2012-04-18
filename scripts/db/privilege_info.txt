@@ -1,0 +1,9 @@
+-- WARNING!!!!!!!
+-- mysql user for this application REQUIRE following privileges
+-- appuser = same as resources.db.params.username
+-- apphost = same as resources.db.params.host
+--
+-- GRANT CREATE USER ON *.* TO 'appuser'@'apphost';
+-- GRANT ALL PRIVILEGES ON `INST\_%`.* TO 'appuser'@'apphost' WITH GRANT OPTION;
+-- GRANT SELECT, INSERT,DELETE ON mysql.user TO 'appuser'@'apphost';
+-- FLUSH PRIVLEGES;
