@@ -20,23 +20,6 @@
     exit($e->getMessage() . "\n\n" . $e->getUsageMessage());
  */
 
-function rrmdir($dir) {
-    if (is_dir($dir)) {
-        $objects = scandir($dir);
-        foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-                if (filetype($dir."/".$object) == "dir") {
-                    rrmdir($dir."/".$object);
-                } else {
-                    unlink($dir."/".$object);
-                }
-            }
-        }
-        reset($objects);
-        rmdir($dir);
-    }
-}
-
 include 'init.console.php';
 
 $select = new Zend_Db_Select($db);
@@ -86,8 +69,8 @@ if ($DbManager->checkIfDatabaseExists($dbname)){
 $startCwd =  getcwd();
 chdir(INSTANCE_PATH);
 
-/* todo: replace rrmdir with exec() and system commad  */
-rrmdir($queueElement['domain']);
+$instanceFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$queueElement['login'].'/public_html/'.$queueElement['domain'];
+exec('rm -R '.$instanceFolder);
 chdir($startCwd);
 
 $db->getConnection()->exec("use ".$config->resources->db->params->dbname);

@@ -222,7 +222,7 @@ $message = var_export($output,true);
 $log->log("\nsudo cp magento/.htaccess .\n".$message, LOG_DEBUG);
 unset($output);
 
-rrmdir('magento');
+exec('rm -R '.$instanceFolder.'/'.$domain.'/magento');
 
 echo "Setting permissions...\n";
 exec('sudo chmod 777 var/.htaccess app/etc',$output);
