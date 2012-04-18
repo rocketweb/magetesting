@@ -28,13 +28,14 @@ class Application_Model_QueueMapper {
     {
         $data = array(
                 'id' => $queue->getId(),
-                'edition'        => $queue->getEdition(),
-                'status'         => $queue->getStatus(),
-                'version_id'     => $queue->getVersionId(),
-                'user_id'        => $queue->getUserId(),
-                'domain'         => $queue->getDomain(),
-                'instance_name'  => $queue->getInstanceName(),
-                'sample_data'    => $queue->getSampleData()
+                'edition'          => $queue->getEdition(),
+                'status'           => $queue->getStatus(),
+                'version_id'       => $queue->getVersionId(),
+                'user_id'          => $queue->getUserId(),
+                'domain'           => $queue->getDomain(),
+                'instance_name'    => $queue->getInstanceName(),
+                'sample_data'      => $queue->getSampleData(),
+                'backend_password' => ''
         );
 
         if (null === ($id = $queue->getId())) {
@@ -60,7 +61,8 @@ class Application_Model_QueueMapper {
                 ->setUserId($row->user_id)
                 ->setDomain($row->domain)
                 ->setInstanceName($row->instance_name)
-                ->setSampleData($row->sample_data);
+                ->setSampleData($row->sample_data)
+                ->setBackendPassword($row->backend_password);
         return $queue;
     }
 
@@ -82,7 +84,8 @@ class Application_Model_QueueMapper {
                     ->setUserId($row->user_id)
                     ->setDomain($row->domain)
                     ->setInstanceName($row->instance_name)
-                    ->setSampleData($row->sample_data);
+                    ->setSampleData($row->sample_data)
+                    ->setBackendPassword($row->backend_password);
             $entries[] = $entry;
         }
         return $entries;

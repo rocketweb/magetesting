@@ -61,6 +61,7 @@ CREATE  TABLE IF NOT EXISTS `queue` (
   `user_id` INT(11) NOT NULL ,
   `domain` VARCHAR(10) NOT NULL ,
   `instance_name` VARCHAR(100) NULL ,
+  `backend_password` VARCHAR(12) NOT NULL,
   `sample_data` INT(1) UNSIGNED NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   INDEX `queue_to_version` (`version_id` ASC) ,

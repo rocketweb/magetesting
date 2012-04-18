@@ -13,7 +13,6 @@ class MyAccountController extends Integration_Controller_Action
      */
     public function indexAction()
     {
-        var_dump(substr(sha1('a63hd93umi_standard-user'),0,10));
         $modelPlan = new Application_Model_Plan();
         $payments = new Application_Model_Payment();
 

@@ -374,7 +374,11 @@ if (isset($opts->magentoinstall)) {
             ' --skip_url_validation "yes"',$output);
     $message = var_export($output,true);
     exec('sudo mysql -u'.$config->magento->userprefix.$dbuser.' -p'.$dbpass.' '.$config->magento->instanceprefix.$dbname.' < keyset1.sql');
-    
+    // update backend admin password
+    $set = array('backend_password' => $adminpass);
+    $where = array('domain = ?' => $domain);
+    $log->log(PHP_EOL.'Updating queue backend password: '.$db->update('queue', $set, $where), Zend_Log::DEBUG);
+    // end
     $log->log("\n".'cd '.$instanceFolder.'/'.$domain.';sudo /usr/bin/php -f install.php --' .
             ' --license_agreement_accepted "yes"' .
             ' --locale "en_US"' .

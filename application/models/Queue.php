@@ -18,6 +18,8 @@ class Application_Model_Queue {
 
     protected $_instance_name;
 
+    protected $_backend_password;
+
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -128,6 +130,17 @@ class Application_Model_Queue {
         return $this->_instance_name;
     }
 
+    public function setBackendPassword($password)
+    {
+        $this->_backend_password = $password;
+        return $this;
+    }
+
+    public function getBackendPassword()
+    {
+        return $this->_backend_password;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -166,14 +179,15 @@ class Application_Model_Queue {
     public function __toArray()
     {
         return array(
-                'id'             => $this->getId(),
-                'edition'        => $this->getEdition(),
-                'status'         => $this->getStatus(),
-                'version_id'     => $this->getVersionId(),
-                'user_id'        => $this->getUserId(),
-                'domain'         => $this->getDomain(),
-                'instance_name'  => $this->getInstanceName(),
-                'sample_data'    => $this->getSampleData()
+                'id'               => $this->getId(),
+                'edition'          => $this->getEdition(),
+                'status'           => $this->getStatus(),
+                'version_id'       => $this->getVersionId(),
+                'user_id'          => $this->getUserId(),
+                'domain'           => $this->getDomain(),
+                'instance_name'    => $this->getInstanceName(),
+                'backend_password' => $this->getBackendPassword(),
+                'sample_data'      => $this->getSampleData()
         );
     }
 

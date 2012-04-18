@@ -203,7 +203,7 @@ class QueueController extends Integration_Controller_Action
         $form = new Application_Form_QueueEdit();
         $populate = array(
             'instance_name'    => $instance->getInstanceName(),
-            'backend_password' => $instance->getDomain(),
+            'backend_password' => $instance->getBackendPassword(),
             'backend_login'    => $this->auth->getIdentity()->login
         );
         $form->populate($populate);
