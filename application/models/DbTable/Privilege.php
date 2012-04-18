@@ -46,7 +46,7 @@ class Application_Model_DbTable_Privilege {
      * GRANT CREATE, RELOAD, CREATE USER ON *.* TO 'magetesting'@'localhost' WITH GRANT OPTION
      * GRANT DROP ON `INST_%`.* TO 'magetesting'@'localhost'
 	 * too much ? - GRANT ALL PRIVILEGES ON `magetesting`.* TO 'magetesting'@'localhost'
-	 * GRANT ALL PRIVILEGES ON `INST\_%`.* TO 'magetesting'@'localhost'
+	 * GRANT ALL PRIVILEGES ON `INST_%`.* TO 'magetesting'@'localhost'
 	 * GRANT SELECT ON `mysql`.`user` TO 'magetesting'@'localhost'
      * 
 	 * 
@@ -59,7 +59,7 @@ class Application_Model_DbTable_Privilege {
         //add user 
         $this->adapter->getConnection()->exec("create user '".$this->config->magento->userprefix.$login."'@'localhost' identified by '". substr(sha1($this->config->magento->usersalt.$this->config->magento->userprefix.$login),0,10)."'");
         
-        $this->adapter->getConnection()->exec("GRANT ALL ON `".$this->config->magento->instanceprefix.$login."\_%`.* TO '".$this->config->magento->userprefix.$login."'@'localhost'");
+        $this->adapter->getConnection()->exec("GRANT ALL ON `".$this->config->magento->instanceprefix.$login."_%`.* TO '".$this->config->magento->userprefix.$login."'@'localhost'");
 
         $this->adapter->getConnection()->exec("FLUSH TABLES");
         $this->adapter->getConnection()->exec("FLUSH PRIVILEGES");                
