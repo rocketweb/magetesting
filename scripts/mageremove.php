@@ -20,6 +20,10 @@
     exit($e->getMessage() . "\n\n" . $e->getUsageMessage());
  */
 
+$fp = fopen("remove_lock.txt", "c");
+
+if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
+    
 include 'init.console.php';
 
 $select = new Zend_Db_Select($db);
@@ -36,8 +40,8 @@ if (!$queueElement){
     $message = 'Nothing in closed queue';
     echo $message;
 
-
     $log->log($message, LOG_INFO,' ');
+    flock($fp, LOCK_UN); // release the lock
     exit;
 }
 
@@ -57,6 +61,7 @@ if ($DbManager->checkIfDatabaseExists($dbname)){
         $message = 'Could not remove database for instance';
         echo $message;
         $log->log($message, LOG_ERR);
+        flock($fp, LOCK_UN); // release the lock
         exit;
     }
 } else {
@@ -77,3 +82,10 @@ $db->getConnection()->exec("use ".$config->resources->db->params->dbname);
 
 $db->delete('queue','id='.$queueElement['id']);
 unlink(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'_'.$queueElement['domain'].'.log');
+flock($fp, LOCK_UN); // release the lock
+    exit;
+} else {
+    echo "Couldn't get the lock!";
+}
+
+fclose($fp);
