@@ -85,7 +85,7 @@ unlink(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'_'.$queueElem
 flock($fp, LOCK_UN); // release the lock
     exit;
 } else {
-    echo "Couldn't get the lock!";
+    //echo "Couldn't get the lock!";
 }
 
 fclose($fp);

@@ -361,7 +361,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
     flock($fp, LOCK_UN); // release the lock
     exit;
 } else {
-    echo "Couldn't get the lock!";
+    //echo "Couldn't get the lock!";
 }
 
 fclose($fp);
