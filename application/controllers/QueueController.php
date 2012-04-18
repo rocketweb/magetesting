@@ -54,17 +54,28 @@ class QueueController extends Integration_Controller_Action
                 //needs validation!
                 $queueModel = new Application_Model_Queue();
                 $userId = $this->auth->getIdentity()->id;
-                $maxInstances = (int)$this->getInvokeArg('bootstrap')
+                
+                $userInstances = $queueModel->countUserInstances($userId);
+
+                if ($userGroup == 'free-user'){
+                    $maxInstances = (int)$this->getInvokeArg('bootstrap')
                                      ->getResource('config')
                                      ->magento
                                      ->standardUser
                                      ->instances;
-                $userInstances = $queueModel->countUserInstances($userId);
-
-                if(
-                    $userGroup != 'free-user'
-                    OR ($userInstances < $maxInstances)
-                ) {
+                } else {
+                    $modelUser = new Application_Model_User();
+                    $user = $modelUser->find($this->auth->getIdentity()->id);
+                    
+                    $modelPlan = new Application_Model_Plan();
+                    $plan = $modelPlan->find($user->getPlanId());
+                    
+                    $maxInstances = $plan->getInstances();
+                }
+                
+                
+                if($userInstances < $maxInstances){
+                    
                     $queueModel->setVersionId( $form->version->getValue() )
                     ->setEdition($form->edition->getValue())
                     ->setUserId($userId)
