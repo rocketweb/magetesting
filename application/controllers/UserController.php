@@ -62,7 +62,7 @@ class UserController extends Integration_Controller_Action
                     $mail = new Integration_Mail_UserResetPassword($mailData, $user);
                     $mail->send();
                     $message['type']    = 'success';
-                    $message['message'] = 'We sent you new password.'.$newPassword.'-email:'.$user->getEmail(); 
+                    $message['message'] = 'We sent you new password.'; 
                 } else {
                     $message['type']    = 'notice';
                     $message['message'] = 'Wrong credentials.';
