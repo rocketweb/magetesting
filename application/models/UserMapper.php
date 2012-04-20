@@ -24,7 +24,7 @@ class Application_Model_UserMapper {
         return $this->_dbTable;
     }
 
-    public function save(Application_Model_User $user)
+    public function save(Application_Model_User $user, $savePassword = false)
     {
         $data = $user->__toArray();
 
@@ -41,13 +41,16 @@ class Application_Model_UserMapper {
             $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
+            if($savePassword) {
+                $data['password'] = $user->getPassword();
+            }
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
         
         return $user;
     }
 
-    public function find($id, Application_Model_User $user)
+    public function find($id, Application_Model_User $user, $returnPassword = false)
     {
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
@@ -73,6 +76,10 @@ class Application_Model_UserMapper {
              ->setHasSystemAccount($row->has_system_account)
              ->setSystemAccountName($row->system_account_name)
              ->setDowngraded($row->downgraded);
+
+        if($returnPassword) {
+            $user->setPassword($row->password);
+        }
 
         return $user;
     }
@@ -165,5 +172,18 @@ class Application_Model_UserMapper {
         }
         // wrong data
         return 1;
+    }
+
+    public function resetPassword($login, $email, $userObject)
+    {
+        $row = $this->getDbTable()->findByLoginAndEmail($login,$email);
+        $newPassword = '';
+        if($row) {
+            $userObject->setOptions($row->toArray());
+            $newPassword = sha1(time().$userObject->getLogin().$userObject->getId());
+            $userObject->setPassword($newPassword);
+            $userObject->save(true);
+        }
+        return $newPassword;
     }
 }

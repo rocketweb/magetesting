@@ -20,6 +20,10 @@ user.activationEmail.subject = 'Activation'
 user.activationEmail.from.email = "support@magetesting.com"
 user.activationEmail.from.desc = "Magento Testing Team"
 
+user.resetPassword.subject = 'Reset Password'
+user.resetPassword.from.email = "support@magetesting.com"
+user.resetPassword.from.desc = "Magento Testing Team"
+
 cron.queueItemReady.subject = 'Your Instance is Ready!'
 cron.queueItemReady.from.email = "support@magetesting.com"
 cron.queueItemReady.from.desc = "Mage Testing Team"

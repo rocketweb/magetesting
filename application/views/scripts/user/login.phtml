@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="secondary pull-left">Forgot password?</a>
+                <a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'reset-password'), 'default', true); ?>" class="secondary pull-left">Forgot password?</a>
                 <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary">
                     <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
                 </button>

@@ -80,6 +80,11 @@ body {
 .span2.pull-right.align-right {
     padding-right: 10px;
 }
+
+.margin-reset-form {
+    margin-left: 40px;
+}
+
 .number-money { background: url(../img/32x32/money_bag.png) no-repeat 0 5px; margin-bottom: 20px; }
 .number-date { background: url(../img/32x32/calendar_view_day.png ) no-repeat 0 5px; margin-bottom: 20px; }
 .number-instances { background: url(../img/32x32/application_cascade.png ) no-repeat 0 5px;  margin-bottom: 20px; }

@@ -36,6 +36,100 @@ class UserController extends Integration_Controller_Action
         $this->view->response = $this->getResponse();
     }
 
+    public function resetPasswordAction()
+    {
+        $form = new Application_Form_UserResetPassword();
+
+        if($this->getRequest()->isPost()) {
+            if ($form->isValid($this->getRequest()->getPost())) {
+                $redirect = array(
+                    'controller' => 'user',
+                    'action'     => 'login'
+                );
+    
+                $user = new Application_Model_User();
+                $newPassword = $user->resetPassword(
+                    $form->login->getValue(),
+                    $form->email->getValue()
+                );
+
+                if($newPassword) {
+                    // send activation email to the specified user
+                    $mailData = $this->getInvokeArg('bootstrap')
+                                     ->getResource('config')
+                                     ->user
+                                     ->resetPassword;
+                    $mail = new Integration_Mail_UserResetPassword($mailData, $user);
+                    $mail->send();
+                    $message['type']    = 'success';
+                    $message['message'] = 'We sent you new password.'.$newPassword.'-email:'.$user->getEmail(); 
+                } else {
+                    $message['type']    = 'notice';
+                    $message['message'] = 'Wrong credentials.';
+                }
+    
+                $this->_helper->flashMessenger($message);
+                $redirect['action'] = 'reset-password';
+                return $this->_helper->redirector->goToRoute(
+                        $redirect,
+                        'default',
+                        true
+                );
+            }
+        }
+
+        $this->view->form = $form;
+    }
+
+    public function setNewPasswordAction()
+    {
+        $redirect = array(
+            'controller' => 'user',
+            'action'     => 'login'
+        );
+
+        $key = $this->getRequest()->getParam('key', false);
+        $id  = $this->getRequest()->getParam('id', 0);
+        if(!$key OR !$id) {
+            return $this->_helper->redirector->goToRoute(
+                    $redirect,
+                    'default',
+                    true
+            );
+        }
+
+        $user = new Application_Model_User();
+        $user->find($id, true);
+        if(!$user->getId() OR $user->getPassword() != $key) {
+            return $this->_helper->redirector->goToRoute(
+                    $redirect,
+                    'default',
+                    true
+            );
+        }
+
+        $form = new Application_Form_UserSetNewPassword();
+
+        if($this->getRequest()->isPost()) {
+            if ($form->isValid($this->getRequest()->getPost())) {
+                $user->setPassword(sha1($form->password->getValue()));
+                $user->save(true);
+                $this->_helper->flashMessenger(array(
+                        'type'    => 'success',
+                        'message' => 'You can now login with your new password.'
+                ));
+
+                return $this->_helper->redirector->goToRoute(
+                        $redirect,
+                        'default',
+                        true
+                );
+            }
+        }
+
+        $this->view->form = $form;
+    }
+
     public function loginAction()
     {
         $request = $this->getRequest();

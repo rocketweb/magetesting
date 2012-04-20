@@ -330,9 +330,9 @@ class Application_Model_User {
         return $this->_mapper;
     }
 
-    public function save()
+    public function save($withPassword = false)
     {
-        return $this->getMapper()->save($this);
+        return $this->getMapper()->save($this, $withPassword);
     }
 
     public function delete($id)
@@ -340,9 +340,9 @@ class Application_Model_User {
         $this->getMapper()->delete($id);
     }
 
-    public function find($id)
+    public function find($id, $returnPassword = false)
     {
-        $this->getMapper()->find($id, $this);
+        $this->getMapper()->find($id, $this, $returnPassword);
         return $this;
     }
 
@@ -370,6 +370,10 @@ class Application_Model_User {
         return $this->getMapper()->activateUser($id, $hash);
     }
 
+    public function resetPassword($login, $email)
+    {
+        return $this->getMapper()->resetPassword($login, $email, $this);
+    }
     public function __toArray()
     {
         return array(
