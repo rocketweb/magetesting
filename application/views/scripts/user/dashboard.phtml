@@ -18,6 +18,7 @@
         </tr>
     </thead>
     <tbody>
+        <?php $refreshed = 0; ?>
         <?php foreach($this->queue as $item): ?>
         <tr>
             <td><?php echo $item['instance_name']?></td>
@@ -25,6 +26,7 @@
             case 'ready':?>
                 <td><span class="label label-success"><?php echo ucfirst($item['status']) ?></span> </td>
             <?php break; case 'pending':  ?>
+            <?php if( ! $refreshed++ ) { $this->response->setHeader('Refresh', $this->timeExecution*60); } ?>
                 <td>
                     <!--
                     <div class="progress progress-info progress-striped active">

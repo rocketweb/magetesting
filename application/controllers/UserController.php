@@ -32,6 +32,8 @@ class UserController extends Integration_Controller_Action
 
         $this->view->queue = $paginator;
         $this->view->queueCounter = $queueCounter;
+        $this->view->timeExecution = $timeExecution;
+        $this->view->response = $this->getResponse();
     }
 
     public function loginAction()
