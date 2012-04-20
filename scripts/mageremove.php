@@ -76,6 +76,7 @@ chdir(INSTANCE_PATH);
 
 $instanceFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$queueElement['login'].'/public_html/'.$queueElement['domain'];
 exec('rm -R '.$instanceFolder);
+unlink($queueElement['domain']);
 chdir($startCwd);
 
 $db->getConnection()->exec("use ".$config->resources->db->params->dbname);

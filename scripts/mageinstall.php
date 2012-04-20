@@ -51,7 +51,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
     $sql = $select
             ->from('queue')
             ->joinLeft('version', 'queue.version_id = version.id', array('version', 'sample_data_version'))
-            ->joinLeft('user', 'queue.user_id = user.id', array('email', 'login', 'firstname', 'lastname', 'has_system_account'))
+            ->joinLeft('user', 'queue.user_id = user.id', array('email', 'login', 'group', 'firstname', 'lastname', 'has_system_account'))
             ->where('queue.status =?', 'pending')
             ->where('user.status =?', 'active');
 
@@ -240,6 +240,12 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n" . $message, LOG_DEBUG);
         unset($output);
 
+        
+        exec('sudo chmod 777 downloader', $output);
+        $message = var_export($output, true);
+        $log->log("\nsudo sudo chmod 777 downloader\n" . $message, LOG_DEBUG);
+        unset($output);
+
         exec('sudo chmod 777 media -R', $output);
         $message = var_export($output, true);
         $log->log("\nsudo chmod -R 777 media\n" . $message, LOG_DEBUG);
@@ -296,13 +302,60 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
                 ' --admin_username "' . $adminuser . '"' .
                 ' --admin_password "' . $adminpass . '"' .
                 ' --skip_url_validation "yes"', $output);
-        $message = var_export($output, true);
         exec('sudo mysql -u' . $config->magento->userprefix . $dbuser . ' -p' . $dbpass . ' ' . $config->magento->instanceprefix . $dbname . ' < keyset1.sql');
-// update backend admin password
+        // update backend admin password
         $set = array('backend_password' => $adminpass);
         $where = array('domain = ?' => $domain);
         $log->log(PHP_EOL . 'Updating queue backend password: ' . $db->update('queue', $set, $where), Zend_Log::DEBUG);
-// end
+        // end
+        // create magento connect ftp config and remove settings for free user
+        $header = '::ConnectConfig::v::1.0::';
+        $ftp_user_host = str_replace(
+            'ftp://',
+            'ftp://'.$config->magento->userprefix.$dbuser.':'.$dbpass.'@',
+            $config->magento->ftphost
+        );
+        $connect_cfg = array(
+                'php_ini' => '',
+                'protocol' => 'http',
+                'preferred_state' => 'stable',
+                'use_custom_permissions_mode' => '0',
+                'global_dir_mode' => 511,
+                'global_file_mode' => 438,
+                'root_channel_uri' => 'connect20.magentocommerce.com/community',
+                'root_channel' => 'community',
+                'sync_pear' => false,
+                'downloader_path' => 'downloader',
+                'magento_root' => $instanceFolder.'/'.$domain,
+                'remote_config' => $ftp_user_host.'/public_html/'.$domain
+        );
+        $free_user = $queueElement['group'] == 'free-user' ? true : false;
+        if($free_user AND !stristr($magentoVersion, '1.4')) {
+            // index.php file
+            $index_file = file_get_contents($instanceFolder.'/'.$domain.'/downloader/index.php');
+            $new_index_file = str_replace(
+                '<?php',
+                '<?php'.PHP_EOL.'
+if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
+    header(\'Location: http://\'.$_SERVER[\'SERVER_NAME\'].$_SERVER[\'PHP_SELF\']);
+    exit;
+}',
+                $index_file
+            );
+            file_put_contents(
+                $instanceFolder.'/'.$domain.'/downloader/index.php',
+                $new_index_file
+            );
+            // header.phtml navigation file
+            $nav_file = file_get_contents($instanceFolder.'/'.$domain.'/downloader/template/header.phtml');
+            file_put_contents(
+                $instanceFolder.'/'.$domain.'/downloader/template/header.phtml',
+                    preg_replace('/<li.*setting.*li>/i', '', $nav_file)
+            );
+        }
+        file_put_contents($instanceFolder.'/'.$domain.'/downloader/connect.cfg', $header.serialize($connect_cfg));
+        // end
+        $message = var_export($output, true);
         $log->log("\n" . 'cd ' . $instanceFolder . '/' . $domain . ';sudo /usr/bin/php -f install.php --' .
                 ' --license_agreement_accepted "yes"' .
                 ' --locale "en_US"' .
@@ -326,6 +379,12 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
                 ' --skip_url_validation "yes"' . "\n" . $message, LOG_DEBUG);
         unset($output);
 
+        exec('sudo chown -R '.$config->magento->userprefix.$dbuser.':'.$config->magento->userprefix.$dbuser.' '.$instanceFolder.'/'.$domain, $output);
+        $message = var_export($output, true);
+        $log->log("\nsudo chown -R ".$config->magento->userprefix.$dbuser.':'.$config->magento->userprefix.$dbuser.' '.$instanceFolder.'/'.$domain."\n" . $message, LOG_DEBUG);
+        unset($output);
+        
+        
         echo "Finished installing Magento\n";
 
 
