@@ -79,6 +79,12 @@ class Integration_Controller_Action extends Zend_Controller_Action
 
         $this->_determineTopMenu();
 
+        // set google analytics id
+        $googleId = $this->getInvokeArg('bootstrap')
+                         ->getResource('config')
+                         ->google->analyticsId;
+        $this->view->googleAnalyticsId = $googleId;
+
         if ($acl->isAllowed($type, $resource, $action)) {
             return $request;
         }
