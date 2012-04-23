@@ -233,15 +233,15 @@ class UserController extends Integration_Controller_Action
                               ->register
                               ->useCoupons;
                               
-	
-	  $form->addElement('text', 'coupon', array(
-                'label'      => 'Coupon code',
-                'required'   => ($useCoupons) ? true : false,
-                'filters'    => array('StripTags', 'StringTrim'),
-                'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 45)),
-                ),
-	  ));
+
+	    $form->addElement('text', 'coupon', array(
+            'label'      => 'Coupon code',
+            'required'   => ($useCoupons) ? true : false,
+            'filters'    => array('StripTags', 'StringTrim'),
+            'validators' => array(
+                array('validator' => 'StringLength', 'options' => array(3, 45)),
+            ),
+	    ));
 	
         
         if ($this->_request->isPost()) {
@@ -251,9 +251,16 @@ class UserController extends Integration_Controller_Action
                 
                 $modelCoupon = new Application_Model_Coupon();
                 $coupon = $modelCoupon->findByCode($formData['coupon']);
-                
-                if (!$coupon || $modelCoupon->isUnused() === false ){
-                    $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Coupon has been already used!'));
+                                
+                if (!$coupon ){
+		  $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'No coupon found!'));
+                    return $this->_helper->redirector->gotoRoute(array(
+                            'module'     => 'default',
+                            'controller' => 'user',
+                            'action'     => 'register',
+                    ), 'default', true);
+                } elseif ($modelCoupon->isUnused() === false ){
+                    $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Coupon has already been used!'));
                     return $this->_helper->redirector->gotoRoute(array(
                             'module'     => 'default',
                             'controller' => 'user',
@@ -263,7 +270,7 @@ class UserController extends Integration_Controller_Action
                 
                 $user->setOptions($form->getValues());
                 $user = $user->save();
-                
+    
                 if ($coupon) {
                     $result = $modelCoupon->apply($coupon->getId(), $user->getId());
                     if ($result) {
@@ -274,7 +281,7 @@ class UserController extends Integration_Controller_Action
                         $user = $user->save();
                     }
                 }
-                
+
                 // send activation email to the specified user
                 $mailData = $this->getInvokeArg('bootstrap')
                                  ->getResource('config')

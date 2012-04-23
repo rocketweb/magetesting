@@ -153,8 +153,7 @@ class Application_Model_Coupon {
     
     public function findByCode($code)
     {
-        $this->getMapper()->findByCode($code, $this);
-        return $this;
+        return $this->getMapper()->findByCode($code, $this);
     }
 
     public function fetchAll($activeOnly=false)

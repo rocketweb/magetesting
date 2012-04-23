@@ -61,8 +61,7 @@ class Application_Model_CouponMapper {
     {
         $result = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('code = ?', $code));
         if (0 == count($result)) {
-            $coupon = false;
-            return $coupon;
+            return false;
         }
         
         $row = $result->current();
@@ -74,7 +73,7 @@ class Application_Model_CouponMapper {
              ->setDuration($row->duration)
              ->setActiveTo($row->active_to)
              ;
-        return $coupon;
+        return true;
     }
 
     public function fetchAll($activeOnly = false)
@@ -130,7 +129,7 @@ class Application_Model_CouponMapper {
         $coupon = $this->find($coupon_id, new Application_Model_Coupon());
         
         if ($coupon){
-            if (!$coupon->getUserId()){
+            if ($coupon->getUserId()){
                 if ($user->getGroup()=='free-user'){
                     if(strtotime($coupon->getActiveTo()) > time()){
                         
