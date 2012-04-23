@@ -85,6 +85,12 @@ body {
     margin-left: 40px;
 }
 
+#coupon-holder ul.errors {
+    width: 215px;
+    margin: 0px auto;
+    padding-left: 50px;
+}
+
 .number-money { background: url(../img/32x32/money_bag.png) no-repeat 0 5px; margin-bottom: 20px; }
 .number-date { background: url(../img/32x32/calendar_view_day.png ) no-repeat 0 5px; margin-bottom: 20px; }
 .number-instances { background: url(../img/32x32/application_cascade.png ) no-repeat 0 5px;  margin-bottom: 20px; }
