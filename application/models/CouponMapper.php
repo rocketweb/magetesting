@@ -61,7 +61,8 @@ class Application_Model_CouponMapper {
     {
         $result = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('code = ?', $code));
         if (0 == count($result)) {
-            return;
+            $coupon = false;
+            return $coupon;
         }
         
         $row = $result->current();
