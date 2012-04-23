@@ -129,7 +129,7 @@ class Application_Model_CouponMapper {
         $coupon = $this->find($coupon_id, new Application_Model_Coupon());
         
         if ($coupon){
-            if ($coupon->getUserId()){
+            if (!$coupon->getUserId()){
                 if ($user->getGroup()=='free-user'){
                     if(strtotime($coupon->getActiveTo()) > time()){
                         
