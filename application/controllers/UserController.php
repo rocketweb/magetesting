@@ -252,8 +252,8 @@ class UserController extends Integration_Controller_Action
                 $modelCoupon = new Application_Model_Coupon();
                 $coupon = $modelCoupon->findByCode($formData['coupon']);
                                 
-                if (!$coupon ){
-		  $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'No coupon found!'));
+                if (!$coupon){
+		            $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'No coupon found!'));
                     return $this->_helper->redirector->gotoRoute(array(
                             'module'     => 'default',
                             'controller' => 'user',
@@ -270,9 +270,9 @@ class UserController extends Integration_Controller_Action
                 
                 $user->setOptions($form->getValues());
                 $user = $user->save();
-    
+
                 if ($coupon) {
-                    $result = $modelCoupon->apply($coupon->getId(), $user->getId());
+                    $result = $modelCoupon->apply($modelCoupon->getId(), $user->getId());
                     if ($result) {
                         //cupon->apply changed user so we need to fetch it again
                         $modelUser = new Application_Model_User();
