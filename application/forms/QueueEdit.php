@@ -17,13 +17,13 @@ class Application_Form_QueueEdit extends Integration_Form{
         $this->addElement('text', 'backend_login', array(
                 'label'    => 'Backend login',
                 'ignore'   => true,
-                'disabled' => true
+                'readonly' => true
         ));
 
         $this->addElement('text', 'backend_password', array(
                 'label'    => 'Backend password',
                 'ignore'   => true,
-                'disabled' => true
+                'readonly' => true
         ));
 
         // Add the submit button

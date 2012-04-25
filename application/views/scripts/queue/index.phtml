@@ -46,7 +46,7 @@
             </td>
             <td>
             <?php if(in_array($item['status'], array('closed','pending','installing'))): ?>
-                <a class="btn btn-success disabled">V<i class="icon-white icon-eye-close"></i>&nbsp;isit</a>
+                <a class="btn btn-success disabled"><i class="icon-white icon-eye-close"></i>&nbsp;Visit</a>
                 <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
             <?php else: ?>
                 <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success"><i class="icon-white icon-eye-open"></i>&nbsp;Visit</a>
