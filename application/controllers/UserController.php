@@ -250,28 +250,30 @@ class UserController extends Integration_Controller_Action
             if($form->isValid($formData)) {
                 
                 $modelCoupon = new Application_Model_Coupon();
-                $coupon = $modelCoupon->findByCode($formData['coupon']);
-                                
-                if (!$coupon){
-		            $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'No coupon found!'));
-                    return $this->_helper->redirector->gotoRoute(array(
-                            'module'     => 'default',
-                            'controller' => 'user',
-                            'action'     => 'register',
-                    ), 'default', true);
-                } elseif ($modelCoupon->isUnused() === false ){
-                    $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Coupon has already been used!'));
-                    return $this->_helper->redirector->gotoRoute(array(
-                            'module'     => 'default',
-                            'controller' => 'user',
-                            'action'     => 'register',
-                    ), 'default', true);
+                if ($useCoupons) {
+                    $coupon = $modelCoupon->findByCode($formData['coupon']);
+
+                    if (!$coupon){
+                        $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'No coupon found!'));
+                        return $this->_helper->redirector->gotoRoute(array(
+                                'module'     => 'default',
+                                'controller' => 'user',
+                                'action'     => 'register',
+                        ), 'default', true);
+                    } elseif ($modelCoupon->isUnused() === false ){
+                        $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Coupon has already been used!'));
+                        return $this->_helper->redirector->gotoRoute(array(
+                                'module'     => 'default',
+                                'controller' => 'user',
+                                'action'     => 'register',
+                        ), 'default', true);
+                    }
                 }
                 
                 $user->setOptions($form->getValues());
                 $user = $user->save();
 
-                if ($coupon) {
+                if ($useCoupons && $coupon) {
                     $result = $modelCoupon->apply($modelCoupon->getId(), $user->getId());
                     if ($result) {
                         //cupon->apply changed user so we need to fetch it again
