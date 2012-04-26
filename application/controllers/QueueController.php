@@ -63,6 +63,8 @@ class QueueController extends Integration_Controller_Action
                                      ->magento
                                      ->standardUser
                                      ->instances;
+                } elseif($userGroup == 'admin'){
+                    $maxInstances = 9999;
                 } else {
                     $modelUser = new Application_Model_User();
                     $user = $modelUser->find($this->auth->getIdentity()->id);
