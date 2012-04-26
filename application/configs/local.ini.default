@@ -9,7 +9,7 @@ magento.dbhost = "db.magetesting.com"
 
 magento.standardUser.instances = 3
 
-magento.instanceTimeExecution = 5
+magento.instanceTimeExecution = 1
 
 magento.instanceprefix = 'INST_'
 magento.userprefix = 'mi_'
