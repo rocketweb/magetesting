@@ -94,32 +94,34 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $log->log($message, LOG_DEBUG);
             unset($output);
 
-            /* send email with account details start */
-            $html = new Zend_View();
-            $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
-            // assign valeues
-            $html->assign('ftphost', $config->magento->ftphost);
-            $html->assign('ftpuser', $config->magento->userprefix . $dbuser);
-            $html->assign('ftppass', $dbpass);
+            if('free-user' != $queueElement['group']) {
+                /* send email with account details start */
+                $html = new Zend_View();
+                $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+                // assign valeues
+                $html->assign('ftphost', $config->magento->ftphost);
+                $html->assign('ftpuser', $config->magento->userprefix . $dbuser);
+                $html->assign('ftppass', $dbpass);
 
-            $html->assign('dbhost', $config->magento->dbhost);
-            $html->assign('dbuser', $config->magento->userprefix . $dbuser);
-            $html->assign('dbpass', $dbpass);
+                $html->assign('dbhost', $config->magento->dbhost);
+                $html->assign('dbuser', $config->magento->userprefix . $dbuser);
+                $html->assign('dbpass', $dbpass);
 
-            $html->assign('storeUrl', $config->magento->storeUrl);
+                $html->assign('storeUrl', $config->magento->storeUrl);
+            
+                // render view
+                $bodyText = $html->render('system-account-created.phtml');
 
-            // render view
-            $bodyText = $html->render('system-account-created.phtml');
-
-            // create mail object
-            $mail = new Zend_Mail('utf-8');
-            // configure base stuff
-            $mail->addTo($queueElement['email']);
-            $mail->setSubject($config->cron->systemAccountCreated->subject);
-            $mail->setFrom($config->cron->systemAccountCreated->from->email, $config->cron->systemAccountCreated->from->desc);
-            $mail->setBodyHtml($bodyText);
-            $mail->send();
-            /* send email with account details stop */
+                // create mail object
+                $mail = new Zend_Mail('utf-8');
+                // configure base stuff
+                $mail->addTo($queueElement['email']);
+                $mail->setSubject($config->cron->systemAccountCreated->subject);
+                $mail->setFrom($config->cron->systemAccountCreated->from->email, $config->cron->systemAccountCreated->from->desc);
+                $mail->setBodyHtml($bodyText);
+                $mail->send();
+                /* send email with account details stop */
+            }
         }
         $adminuser = $queueElement['login'];
         $adminpass = substr(
