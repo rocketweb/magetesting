@@ -28,7 +28,8 @@ class Integration_Mail_UserResetPassword
                 'controller' => 'user',
                 'action'     => 'set-new-password',
                 'id'         => $this->user->getId(),
-                'key'        => $this->user->getPassword()
+                'key'        => $this->user->getPassword(),
+                'login'        => $this->user->getLogin(),
             )
         );
         $this->view->resetLink = $this->view->serverUrl().$resetUrl;
