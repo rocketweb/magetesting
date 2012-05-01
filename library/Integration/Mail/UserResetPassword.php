@@ -29,11 +29,10 @@ class Integration_Mail_UserResetPassword
                 'action'     => 'set-new-password',
                 'id'         => $this->user->getId(),
                 'key'        => $this->user->getPassword(),
-                'login'        => $this->user->getLogin(),
             )
         );
         $this->view->resetLink = $this->view->serverUrl().$resetUrl;
-
+        $this->view->login  = $this->user->getLogin();
         //body setup here
         $msg = $this->view->render('_emails/user-reset-password.phtml');
 
