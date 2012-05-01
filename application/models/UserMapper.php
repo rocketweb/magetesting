@@ -174,9 +174,9 @@ class Application_Model_UserMapper {
         return 1;
     }
 
-    public function resetPassword($login, $email, $userObject)
+    public function resetPassword($email, $userObject)
     {
-        $row = $this->getDbTable()->findByLoginAndEmail($login,$email);
+        $row = $this->getDbTable()->findByEmail($email);
         $newPassword = '';
         if($row) {
             $userObject->setOptions($row->toArray());

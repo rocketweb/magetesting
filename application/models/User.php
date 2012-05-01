@@ -370,9 +370,9 @@ class Application_Model_User {
         return $this->getMapper()->activateUser($id, $hash);
     }
 
-    public function resetPassword($login, $email)
+    public function resetPassword($email)
     {
-        return $this->getMapper()->resetPassword($login, $email, $this);
+        return $this->getMapper()->resetPassword($email, $this);
     }
     public function __toArray()
     {

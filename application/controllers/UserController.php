@@ -49,7 +49,6 @@ class UserController extends Integration_Controller_Action
     
                 $user = new Application_Model_User();
                 $newPassword = $user->resetPassword(
-                    $form->login->getValue(),
                     $form->email->getValue()
                 );
 

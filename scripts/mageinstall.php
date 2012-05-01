@@ -86,7 +86,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             /** WARNING!
              * in order for this to work, when you run this (console.php) file,
              * you need to cd to this (scripts) folder first, like this:
-              // * * * * * cd /var/www/magetesting/scripts/; php console.php --magentoinstall
+              // * * * * * cd /var/www/magetesting/scripts/; php mageinstall.php
              *
              */
             exec('sudo ./create_user.sh ' . $config->magento->userprefix . $dbuser . ' ' . $dbpass . ' ' . $config->magento->usersalt . ' ' . $config->magento->systemHomeFolder, $output);

@@ -9,16 +9,6 @@ class Application_Form_UserResetPassword extends Integration_Form
         $this->setMethod('post');
         $this->setAttrib('class', 'form-horizontal');
 
-        // Add a login element
-        $this->addElement('text', 'login', array(
-                'label'      => 'Username:',
-                'required'   => true,
-                'filters'    => array('StripTags', 'StringTrim'),
-                'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 255))
-                )
-        ));
-
         // Add a email element
         $this->addElement('text', 'email', array(
                 'label'      => 'E-mail',
