@@ -7,7 +7,7 @@ class Application_Form_UserRegister extends Integration_Form
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
-        $this->setAttrib('class', 'form-stacked');
+        $this->setAttrib('class', 'form-stacked form-register');
 
         // Add a login element
         $this->addElement('text', 'login', array(
