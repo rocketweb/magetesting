@@ -34,6 +34,12 @@ body {
 .split-columns {
     border-right: 1px solid #E4E4E4; 
 }
+.modal-body.extend-height {
+    max-height: 410px;
+}
+.halfoffset1 {
+    margin-left: 50px;
+}
 .form-horizontal .control-group .split-columns {
     padding-right: 20px;
 }

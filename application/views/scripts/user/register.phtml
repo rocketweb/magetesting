@@ -15,23 +15,31 @@
             <div class="modal-header">
                 <h3>Create Account</h3>
             </div>
-            <div class="modal-body">
-                <table class="table">
-                    <tbody>
-                    <tr>
-                        <td class="split-columns">
+            <div class="modal-body extend-height">
+                    <div class="row">
+                        <div class="span3 halfoffset1">
                             <?php echo $this->form->login; ?>
-                            <?php echo $this->form->password; ?>
-                            <?php echo $this->form->password_repeat; ?>
-                        </td>
-                        <td>
+                        </div>
+                        <div class="span3 offset1">
                             <?php echo $this->form->email; ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span3 halfoffset1">
                             <?php echo $this->form->firstname; ?>
+                        </div>
+                        <div class="span3 offset1">
                             <?php echo $this->form->lastname; ?>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span3 halfoffset1">
+                            <?php echo $this->form->password; ?>
+                        </div>
+                        <div class="span3 offset1">
+                            <?php echo $this->form->password_repeat; ?>
+                        </div>
+                    </div>
                 <div id="coupon-holder">
                      <?php echo $this->form->coupon; ?>
                 </div>
