@@ -36,7 +36,7 @@ class PayPalController extends Integration_Controller_Action
         // log response from success event
         $this->getInvokeArg('bootstrap')->getResource('log')->log('PayPal - Success', Zend_Log::DEBUG, json_encode($_POST));
         
-        $this->_helper->flashMessenger(array('type' => 'success', 'message' => 'You successfully signed up to the subscription.'));
+        $this->_helper->flashMessenger(array('type' => 'success', 'message' => 'You have been successfully signed up to the subscription.'));
         $this->_helper->flashMessenger(array('from_scratch' => true, 'type' => 'notify', 'message' => '<strong>Remember!</strong> You have to wait (max 24h) for confirmation.'));
         return $this->_helper->redirector->goToRoute(
                 array(
