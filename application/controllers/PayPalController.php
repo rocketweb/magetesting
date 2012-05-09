@@ -16,7 +16,7 @@ class PayPalController extends Integration_Controller_Action
      */
     public function cancelAction()
     {
-        $this->_helper->flashMessenger(array('type' => 'notify', 'message' => 'Your subscription sign up has been canceled.'));
+        $this->_helper->flashMessenger(array('type' => 'notice', 'message' => 'Your subscription sign up has been canceled.'));
         return $this->_helper->redirector->goToRoute(
                 array(
                     'controller' => 'my-account',
@@ -37,7 +37,7 @@ class PayPalController extends Integration_Controller_Action
         $this->getInvokeArg('bootstrap')->getResource('log')->log('PayPal - Success', Zend_Log::DEBUG, json_encode($_POST));
         
         $this->_helper->flashMessenger(array('type' => 'success', 'message' => 'You successfully signed up to the subscription.'));
-        $this->_helper->flashMessenger(array('type' => 'notify', 'message' => '<strong>Remember!</strong> You have to wait (max 24h) for confirmation.'));
+        $this->_helper->flashMessenger(array('from_scratch' => true, 'type' => 'notify', 'message' => '<strong>Remember!</strong> You have to wait (max 24h) for confirmation.'));
         return $this->_helper->redirector->goToRoute(
                 array(
                         'controller' => 'my-account',

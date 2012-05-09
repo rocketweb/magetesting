@@ -77,6 +77,7 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('commercial-user', 'default_my-account');
+        $this->allow('commercial-user', 'default_pay-pal', array('cancel', 'success'));
 
         /**
          * Set up privileges for awaiting-user
@@ -90,6 +91,7 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('awaiting-user', 'default_my-account');
+        $this->allow('awaiting-user', 'default_pay-pal', array('cancel', 'success'));
         
     }
 
