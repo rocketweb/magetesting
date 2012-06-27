@@ -61,7 +61,7 @@ class UserController extends Integration_Controller_Action
                     $mail = new Integration_Mail_UserResetPassword($mailData, $user);
                     $mail->send();
                     $message['type']    = 'success';
-                    $message['message'] = 'We sent you new password.'; 
+                    $message['message'] = 'We sent you link with form to set your new password.'; 
                 } else {
                     $message['type']    = 'notice';
                     $message['message'] = 'Wrong credentials.';
@@ -99,7 +99,7 @@ class UserController extends Integration_Controller_Action
 
         $user = new Application_Model_User();
         $user->find($id, true);
-        if(!$user->getId() OR $user->getPassword() != $key) {
+        if(!$user->getId() OR sha1($user->getAddedDate().$user->getPassword()) != $key) {
             return $this->_helper->redirector->goToRoute(
                     $redirect,
                     'default',
