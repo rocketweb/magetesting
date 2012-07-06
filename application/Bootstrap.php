@@ -75,6 +75,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         return $config;
     }
-    
-    
+
+    /*
+     * SQL Updater
+     */
+    protected function _initSqlUpdater()
+    {
+        $sqlUpdater = new RocketWeb_SqlUpdater();
+        $sqlUpdater->setDb($this->getPluginResource('db')->getDbAdapter());
+        $sqlUpdater->setConfig($this->getResource('config'));
+        if(!$sqlUpdater->syncData()) {
+            /* @var $log Zend_Log */
+            $log = $this->getResource('log');
+            if($log) {
+                echo $sqlUpdater->getError();
+                $log->log($sqlUpdater->getError(), Zend_Log::ERR, 'a');
+            }
+        }
+    }
 }

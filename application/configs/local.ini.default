@@ -36,6 +36,10 @@ cron.systemAccountCreated.from.desc = "Mage Testing Team"
 
 register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
 
+;SQL Updater
+; remember that this must be absolute path
+sqlUpdater.directoryPath = APPLICATION_PATH "/../scripts/db";
+
 [staging : production]
 
 [testing : production]

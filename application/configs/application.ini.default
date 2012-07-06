@@ -9,6 +9,7 @@ includePaths.library = APPLICATION_PATH "/../library"
 ; Autoloader
 autoloaderNamespaces.zend = Zend_
 autoloaderNamespaces.integration = Integration_
+autoloaderNamespaces.rocketweb = RocketWeb_
 
 ; Bootstrap
 bootstrap.path = APPLICATION_PATH "/Bootstrap.php"
