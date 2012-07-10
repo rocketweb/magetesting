@@ -387,6 +387,24 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         unset($output);
         
         
+        //applying patches for xml-rpc issue
+        if ($magentoVersion > '1.3.2.3' AND $magentoVersion < '1.4.1.2'){
+            //we're somewhere between 1.3.2.4 and 1.4.1.1
+            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1400_1411/Request.php ' . $instanceFolder . '/' . $domain . '/lib/Zend/XmlRpc/Request.php');
+            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1400_1411/Response.php ' . $instanceFolder . '/' . $domain . '/lib/Zend/XmlRpc/Response.php');
+            
+        } elseif ($magentoVersion == '1.4.2.0'){
+            //1.4.2.0 - thank you captain obvious
+            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Request.php ' . $instanceFolder . '/' . $domain . '/lib/Zend/XmlRpc/Request.php');
+            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Response.php ' . $instanceFolder . '/' . $domain . '/lib/Zend/XmlRpc/Response.php');
+            
+        } elseif ($magentoVersion > '1.4.9.9' AND $magentoVersion < '1.7.0.2') {
+            //we're somewhere between 1.5.0.0 and 1.7.0.1
+            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Request.php ' . $instanceFolder . '/' . $domain . '/lib/Zend/XmlRpc/Request.php');
+            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Response.php ' . $instanceFolder . '/' . $domain . '/lib/Zend/XmlRpc/Response.php');
+        }
+        
+        
         echo "Finished installing Magento\n";
 
 
