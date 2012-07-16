@@ -156,6 +156,15 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
 
         chdir($instanceFolder);
 
+        
+        if (!file_exists(APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-sample-data-' . $sampleDataVersion . '.tar.gz')){
+            $message = 'Couldn\'t find sample data file, will not install sample data';
+            //echo $message;
+            $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $log->log($message, LOG_DEBUG);
+            continue; //jump to next queue element
+        }
+        
         if ($installSampleData) {
             echo "Now installing Magento with sample data...\n";
         } else {
@@ -171,6 +180,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         if (!file_exists($instanceFolder . '/' . $domain) || !is_dir($instanceFolder . '/' . $domain)) {
             $message = 'Directory does not exist, aborting';
             echo $message;
+            $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
         }
 
@@ -182,6 +192,15 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         chdir($domain);
 
         echo "Copying package to target directory...\n";
+        
+        if (!file_exists(APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-' . $magentoVersion . '.tar.gz')){
+            $message = 'Couldn\'t find package files, aborting';
+            echo $message;
+            $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $log->log($message, LOG_DEBUG);
+            continue; //jump to next queue element
+        }
+        
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-' . $magentoVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . '/', $output);
         $message = var_export($output, true);
         $log->log("\nsudo cp " . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-' . $magentoVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . "/\n" . $message, LOG_DEBUG);
@@ -191,6 +210,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/keyset1.sql ' . $instanceFolder . '/' . $domain . '/');
 
         if ($installSampleData) {
+            
             echo "Copying sample data package to target directory...\n";
             exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-sample-data-' . $sampleDataVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . '/', $output);
             $message = var_export($output, true);
