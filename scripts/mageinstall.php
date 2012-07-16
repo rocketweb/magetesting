@@ -78,6 +78,12 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         $dbname = $queueElement['login'] . '_' . $queueElement['domain'];
         $dbuser = $queueElement['login']; //fetch from zend config
         $dbpass = substr(sha1($config->magento->usersalt . $config->magento->userprefix . $queueElement['login']), 0, 10); //fetch from zend config
+        
+        $filePrefix = array(
+            'CE' => 'magento',
+            'EE' => 'enterprise',
+            'PE' => 'professional',
+        );
 
         $instanceFolder = $config->magento->systemHomeFolder . '/' . $config->magento->userprefix . $dbuser . '/public_html';
         if ($queueElement['has_system_account'] == 0) {
@@ -157,7 +163,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         chdir($instanceFolder);
 
         if ($installSampleData && !file_exists(APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-sample-data-' . $sampleDataVersion . '.tar.gz')){
-            $message = 'Couldn\'t find sample data file, will not install sample data';
+            $message = 'Couldn\'t find sample data file, will not install queue element';
             //echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
@@ -192,7 +198,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
 
         echo "Copying package to target directory...\n";
         
-        if (!file_exists(APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-' . $magentoVersion . '.tar.gz')){
+        if (!file_exists(APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/'.$filePrefix[$queueElement['edition']].'-' . $magentoVersion . '.tar.gz')){
             $message = 'Couldn\'t find package files, aborting';
             echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
@@ -200,7 +206,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             continue; //jump to next queue element
         }
         
-        exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-' . $magentoVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . '/', $output);
+        exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/'.$filePrefix[$queueElement['edition']].'-' . $magentoVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . '/', $output);
         $message = var_export($output, true);
         $log->log("\nsudo cp " . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-' . $magentoVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . "/\n" . $message, LOG_DEBUG);
         unset($output);
@@ -218,14 +224,14 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         }
 
         echo "Extracting data...\n";
-        exec('sudo tar -zxvf magento-' . $magentoVersion . '.tar.gz', $output);
+        exec('sudo tar -zxvf '.$filePrefix[$queueElement['edition']].'-' . $magentoVersion . '.tar.gz', $output);
         $message = var_export($output, true);
-        $log->log("\nsudo tar -zxvf magento-" . $magentoVersion . ".tar.gz\n" . $message, LOG_DEBUG);
+        $log->log("\nsudo tar -zxvf ".$filePrefix[$queueElement['edition']]."-" . $magentoVersion . ".tar.gz\n" . $message, LOG_DEBUG);
         unset($output);
 
         if ($installSampleData) {
             echo "Extracting sample data...\n";
-            exec('sudo tar -zxvf magento-sample-data-' . $sampleDataVersion . '.tar.gz', $output);
+            exec('sudo tar -zxvf '.$filePrefix[$queueElement['edition']].'-sample-data-' . $sampleDataVersion . '.tar.gz', $output);
             $message = var_export($output, true);
             $log->log("\nsudo tar -zxvf magento-sample-data-" . $sampleDataVersion . ".tar.gz\n" . $message, LOG_DEBUG);
             unset($output);
@@ -283,9 +289,9 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         $log->log("\nsudo rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*\n" . $message, LOG_DEBUG);
         unset($output);
 
-        exec('sudo rm -rf magento/ magento-' . $magentoVersion . '.tar.gz', $output);
+        exec('sudo rm -rf magento/ '.$filePrefix[$queueElement['edition']].'-' . $magentoVersion . '.tar.gz', $output);
         $message = var_export($output, true);
-        $log->log("\nsudo rm -rf magento/ magento-" . $magentoVersion . ".tar.gz\n" . $message, LOG_DEBUG);
+        $log->log("\nsudo rm -rf magento/ ".$filePrefix[$queueElement['edition']]."-" . $magentoVersion . ".tar.gz\n" . $message, LOG_DEBUG);
         unset($output);
 
         exec('sudo rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt', $output);
