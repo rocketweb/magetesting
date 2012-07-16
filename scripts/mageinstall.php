@@ -156,8 +156,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
 
         chdir($instanceFolder);
 
-        
-        if (!file_exists(APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-sample-data-' . $sampleDataVersion . '.tar.gz')){
+        if ($installSampleData && !file_exists(APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-sample-data-' . $sampleDataVersion . '.tar.gz')){
             $message = 'Couldn\'t find sample data file, will not install sample data';
             //echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
