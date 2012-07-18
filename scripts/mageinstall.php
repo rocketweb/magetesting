@@ -208,7 +208,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/'.$filePrefix[$queueElement['edition']].'-' . $magentoVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . '/', $output);
         $message = var_export($output, true);
-        $log->log("\nsudo cp " . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-' . $magentoVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . "/\n" . $message, LOG_DEBUG);
+        $log->log("\nsudo cp " . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/'.$filePrefix[$queueElement['edition']].'-' . $magentoVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . "/\n" . $message, LOG_DEBUG);
         unset($output);
 
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/keyset0.sql ' . $instanceFolder . '/' . $domain . '/');
@@ -231,7 +231,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
 
         if ($installSampleData) {
             echo "Extracting sample data...\n";
-            exec('sudo tar -zxvf '.$filePrefix[$queueElement['edition']].'-sample-data-' . $sampleDataVersion . '.tar.gz', $output);
+            exec('sudo tar -zxvf magento-sample-data-' . $sampleDataVersion . '.tar.gz', $output);
             $message = var_export($output, true);
             $log->log("\nsudo tar -zxvf magento-sample-data-" . $sampleDataVersion . ".tar.gz\n" . $message, LOG_DEBUG);
             unset($output);
