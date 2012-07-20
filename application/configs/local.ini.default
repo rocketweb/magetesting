@@ -11,26 +11,26 @@ magento.standardUser.instances = 3
 
 magento.instanceTimeExecution = 1
 
-magento.instanceprefix = 'INST_'
-magento.userprefix = 'mi_'
-magento.usersalt = 'a63hd93u' ;used for mysql user password creation
-magento.systemHomeFolder = '/home' ;where should instance user folders land in
+magento.instanceprefix = "INST_"
+magento.userprefix = "mi_"
+magento.usersalt = "a63hd93u" ;used for mysql user password creation
+magento.systemHomeFolder = "/home" ;where should instance user folders land in
 
-google.analyticsId = ''
+google.analyticsId = ""
 
-user.activationEmail.subject = 'Activation'
+user.activationEmail.subject = "Activation"
 user.activationEmail.from.email = "support@magetesting.com"
 user.activationEmail.from.desc = "Magento Testing Team"
 
-user.resetPassword.subject = 'Reset Password'
+user.resetPassword.subject = "Reset Password"
 user.resetPassword.from.email = "support@magetesting.com"
 user.resetPassword.from.desc = "Magento Testing Team"
 
-cron.queueItemReady.subject = 'Your Instance is Ready!'
+cron.queueItemReady.subject = "Your Instance is Ready!"
 cron.queueItemReady.from.email = "support@magetesting.com"
 cron.queueItemReady.from.desc = "Mage Testing Team"
 
-cron.systemAccountCreated.subject = 'Mage Testing Account!'
+cron.systemAccountCreated.subject = "Mage Testing Account!"
 cron.systemAccountCreated.from.email = "support@magetesting.com"
 cron.systemAccountCreated.from.desc = "Mage Testing Team"
 
