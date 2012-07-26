@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_QueueAdd extends Integration_Form{
+class Application_Form_QueueAddClean extends Integration_Form{
 
     public function init()
     {

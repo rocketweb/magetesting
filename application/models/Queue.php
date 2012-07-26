@@ -19,6 +19,15 @@ class Application_Model_Queue {
     protected $_instance_name;
 
     protected $_backend_password;
+    
+    protected $_type;
+    protected $_custom_protocol;
+    protected $_custom_host;
+    protected $_custom_remote_path;
+    protected $_custom_login;
+    protected $_custom_pass;
+    protected $_custom_sql;
+    
 
     protected $_mapper;
 
@@ -187,7 +196,14 @@ class Application_Model_Queue {
                 'domain'           => $this->getDomain(),
                 'instance_name'    => $this->getInstanceName(),
                 'backend_password' => $this->getBackendPassword(),
-                'sample_data'      => $this->getSampleData()
+                'sample_data'      => $this->getSampleData(),
+                'custom_protocol'  => $this->getCustomProtocol(),
+                'custom_host'      => $this->getCustomHost(),
+                'custom_remote_path' => $this->getCustomRemotePath(),
+                'custom_login'     =>  $this->getCustomLogin(),
+                'custom_pass'      => $this->getCustomPass(),
+                'custom_sql'       => $this->getCustomSql(),
+                'type'       => $this->getType(),
         );
     }
 
@@ -220,5 +236,68 @@ class Application_Model_Queue {
     public function getPendingItems($timeExecution)
     {
         return $this->getMapper()->getPendingItems($timeExecution);
+    }
+    
+    public function getCustomProtocol(){
+      return $this->_custom_protocol;
+    }
+    
+    public function setCustomProtocol($value){
+      $this->_custom_protocol = $value;
+      return $this;
+    }
+    
+    public function getCustomHost(){
+      return $this->_custom_host;
+    }
+    
+    public function setCustomHost($value){
+      $this->_custom_host = $value;
+      return $this;
+    }
+    
+    public function getCustomRemotePath(){
+      return $this->_custom_remote_path;
+    }
+    
+    public function setCustomRemotePath($value){
+      $this->_custom_remote_path = $value;
+      return $this;
+    }
+    
+    public function getCustomLogin(){
+      return $this->_custom_login;
+    }
+    
+    public function setCustomLogin($value){
+      $this->_custom_login = $value;
+      return $this;
+    }
+    
+    public function getCustomPass(){
+      return $this->_custom_pass;
+    }
+    
+    public function setCustomPass($value){
+      $this->_custom_pass = $value;
+      return $this;
+    }
+    
+    public function getCustomSql(){
+      return $this->_custom_sql;
+    }
+    
+    public function setCustomSql($value){
+      $this->_custom_sql = $value;
+      return $this;
+    }
+    
+    public function getType(){
+      return $this->_type;
+    }
+    
+    public function setType($value){
+      $this->_type = $value;
+      return $this;
     }
 }

@@ -1,0 +1,57 @@
+<?php 
+$this->headScript()->appendScript('
+$(document).ready(function(){
+    $("#edition").change(function(){
+        
+        $.ajax({
+            type: "POST",
+            url: "'.$this->baseUrl("queue/getVersions").'",
+            data: "edition="+ $("#edition").val(),
+            dataType: "json",
+            success: function(json){
+                var opts = "";
+                console.log(json);
+
+                $.each(json,function(index, item){
+                    opts =  opts + "<option value=\""+ item.id +"\">" + item.version + "</option>";
+                });
+
+                $("#version").html(opts);
+            }
+
+        });
+        
+    });
+});');    
+?>
+<div class="row">
+    <div class="span8 offset2">
+        <form action="<?php echo $this->form->getAction() ?>"
+            enctype="<?php echo $this->form->getEnctype() ?>"
+            method="<?php echo $this->form->getMethod() ?>"
+            id="<?php echo $this->form->getId() ?>"
+            class="<?php echo $this->form->getAttrib('class') ?>">
+            <div class="modal-header">
+                <h3>Setup your custom environment</h3>
+            </div>
+            <div class="modal-body">
+                <fieldset>
+                    <?php echo $this->form->instance_name ?>
+                    <?php echo $this->form->edition ?>
+                    <?php echo $this->form->version ?>
+                    <?php echo $this->form->custom_protocol ?>
+                    <?php echo $this->form->custom_host ?>
+                    <?php echo $this->form->custom_remote_path ?>
+                    <?php echo $this->form->custom_sql ?>
+                    <?php echo $this->form->custom_login ?>
+                    <?php echo $this->form->custom_pass ?>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name="<?php echo $this->form->queueAdd->getName(); ?>" id="<?php echo $this->form->queueAdd->getId() ?>" class="btn btn-primary">
+                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->queueAdd->getLabel() ?>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

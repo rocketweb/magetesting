@@ -29,7 +29,12 @@ class QueueController extends Integration_Controller_Action
 
     public function addAction()
     {
-        $form = new Application_Form_QueueAdd();
+        
+    }
+    
+    public function addCleanAction()
+    {
+        $form = new Application_Form_QueueAddClean();
         $form->populate($this->getRequest()->getParams());
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -131,6 +136,115 @@ class QueueController extends Integration_Controller_Action
         //assign to templates
         $editionModel = new Application_Model_Edition();
         $this->view->editions = $editionModel->getAll();
+        $this->view->form = $form;
+    }
+       
+    public function addCustomAction(){
+        
+        $request = $this->getRequest();
+        
+        $form = new Application_Form_QueueAddCustom();
+        $form->populate($request->getParams());
+        
+        if ($request->isPost()){
+            $userGroup = $this->auth->getIdentity()->group;
+            if ($form->isValid($request->getParams())){
+                //needs validation!
+                $queueModel = new Application_Model_Queue();
+                $userId = $this->auth->getIdentity()->id;
+                
+                $userInstances = $queueModel->countUserInstances($userId);
+
+                if ($userGroup == 'free-user'){
+                    $maxInstances = (int)$this->getInvokeArg('bootstrap')
+                                     ->getResource('config')
+                                     ->magento
+                                     ->standardUser
+                                     ->instances;
+                } else {
+                    $modelUser = new Application_Model_User();
+                    $user = $modelUser->find($this->auth->getIdentity()->id);
+                    
+                    $modelPlan = new Application_Model_Plan();
+                    $plan = $modelPlan->find($user->getPlanId());
+                    
+                    $maxInstances = $plan->getInstances();
+                }
+                
+                
+                if($userInstances < $maxInstances || $userGroup == 'admin'){
+                    
+                    
+                    /*var_dump($form->custom_protocol->getValue());
+                    var_dump($form->custom_host->getValue());
+                    var_dump($form->custom_remote_path->getValue());
+                    var_dump($form->custom_login->getValue());
+                    var_dump($form->custom_pass->getValue());
+                    var_dump($form->custom_sql->getValue());*/
+
+                    //start adding instance
+                     $queueModel->setVersionId($form->version->getValue())
+                     ->setEdition($form->edition->getValue())
+                     ->setSampleData(1)
+                     ->setInstanceName($form->instance_name->getValue())
+                    
+                     
+                    ->setUserId($userId)
+                    ->setDomain(
+                            substr(
+                                str_shuffle(
+                                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 5)
+                                )
+                                , 0, 5).substr(
+                                str_shuffle(
+                                    str_repeat('0123456789', 5)
+                                )
+                                , 0, 4)
+                    )
+                    ->setStatus( 'pending' )
+                    ->setCustomProtocol($form->custom_protocol->getValue())
+                    ->setCustomHost($form->custom_host->getValue())
+                    ->setCustomRemotePath($form->custom_remote_path->getValue())
+                    ->setCustomLogin($form->custom_login->getValue())
+                    ->setCustomPass($form->custom_pass->getValue())
+                    ->setCustomSql($form->custom_sql->getValue())
+                    ->setType('custom');
+                    $queueModel->save();
+                    $this->_helper->FlashMessenger('New installation added to queue');
+                    
+                    //magetesting user creates database
+                    try{
+                        $db = Zend_Db_Table::getDefaultAdapter();
+                        $DbManager = new Application_Model_DbTable_Privilege($db,$this->getInvokeArg('bootstrap')
+                                     ->getResource('config'));
+                        $DbManager->createDatabase($this->auth->getIdentity()->login.'_'.$queueModel->getDomain());
+                        
+                        if (!$DbManager->checkIfUserExists($this->auth->getIdentity()->login)){
+                            $DbManager->createUser($this->auth->getIdentity()->login);
+                        }                       
+                    } catch(PDOException $e){
+                        $message = 'Could not create database for instance, aborting';
+                        echo $message;
+                        if ($log = $this->getLog()) {
+                            $log->log($message, LOG_ERR);
+                        }
+                        throw $e;
+                    }         
+                    //stop adding instance
+                    $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'You have successfully added your custom instance.'));
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
+                } else {
+                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more instances.'));
+                }
+            } else {
+                $this->_helper->FlashMessenger('Form invalid');
+            }
+        }
+                
         $this->view->form = $form;
     }
 

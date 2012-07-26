@@ -35,7 +35,14 @@ class Application_Model_QueueMapper {
                 'domain'           => $queue->getDomain(),
                 'instance_name'    => $queue->getInstanceName(),
                 'sample_data'      => $queue->getSampleData(),
-                'backend_password' => ''
+                'backend_password' => '',
+                'custom_protocol'  => $queue->getCustomProtocol(),
+                'custom_host'      => $queue->getCustomHost(),
+                'custom_remote_path' => $queue->getCustomRemotePath(),
+                'custom_login'     =>  $queue->getCustomLogin(),
+                'custom_pass'      => $queue->getCustomPass(),
+                'custom_sql'       => $queue->getCustomSql(),
+                'type'       => $queue->getType(),
         );
 
         if (null === ($id = $queue->getId())) {
@@ -62,7 +69,15 @@ class Application_Model_QueueMapper {
                 ->setDomain($row->domain)
                 ->setInstanceName($row->instance_name)
                 ->setSampleData($row->sample_data)
-                ->setBackendPassword($row->backend_password);
+                ->setBackendPassword($row->backend_password)
+                ->setCustomProtocol($row->custom_protocol)
+                ->setCustomHost($row->custom_host)
+                ->setCustomRemotePath($row->custom_remote_path)
+                ->setCustomLogin($row->custom_login)
+                ->setCustomPass($row->custom_pass)
+                ->setCustomSql($row->custom_sql)
+                ->setType($row->type)
+                ;
         return $queue;
     }
 
@@ -85,7 +100,15 @@ class Application_Model_QueueMapper {
                     ->setDomain($row->domain)
                     ->setInstanceName($row->instance_name)
                     ->setSampleData($row->sample_data)
-                    ->setBackendPassword($row->backend_password);
+                    ->setBackendPassword($row->backend_password)
+		   ->setCustomProtocol($row->custom_protocol)
+                    ->setCustomHost($row->custom_host)
+                    ->setCustomRemotePath($row->custom_remote_path)
+                    ->setCustomLogin($row->custom_login)
+                    ->setCustomPass($row->custom_pass)
+                    ->setCustomSql($row->custom_sql)
+                    ->setType($row->type)
+                    ;
             $entries[] = $entry;
         }
         return $entries;
