@@ -447,6 +447,10 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         $log->log("\nsudo chown -R ".$config->magento->userprefix.$dbuser.':'.$config->magento->userprefix.$dbuser.' '.$instanceFolder.'/'.$domain."\n" . $message, LOG_DEBUG);
         unset($output);
         
+        //update core_config_data with new url
+        exec('mysql -u' . $config->magento->userprefix . $dbuser . ' -p' . $dbpass . ' ' . $config->magento->instanceprefix . $dbname . ' -e "UPDATE core_config_data SET value = \''.$config->magento->storeUrl.'/instance/'.$domain.'/\' WHERE path=\'web/unsecure/base_url\'"');
+        exec('mysql -u' . $config->magento->userprefix . $dbuser . ' -p' . $dbpass . ' ' . $config->magento->instanceprefix . $dbname . ' -e "UPDATE core_config_data SET value = \''.$config->magento->storeUrl.'/instance/'.$domain.'/\' WHERE path=\'web/secure/base_url\'"');
+        
         
         echo "Finished installing Magento\n";
 
