@@ -97,7 +97,8 @@ class QueueController extends Integration_Controller_Action
                                 )
                                 , 0, 4)
                     )
-                    ->setStatus( 'pending' );
+                    ->setStatus( 'pending' )
+                    ->setType('clean');
                     $queueModel->save();
                     $this->_helper->FlashMessenger('New installation added to queue');
                     
