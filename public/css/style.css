@@ -133,3 +133,7 @@ body {
 #custom-queue-form select {
     width:275px;
 }
+
+#user-edit-form td {
+  padding-left:45px;
+}

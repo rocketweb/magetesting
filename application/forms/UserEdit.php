@@ -8,6 +8,7 @@ class Application_Form_UserEdit extends Integration_Form
         // Set the method for the display form to POST
         $this->setMethod('post');
         $this->setAttrib('class', 'form-stacked');
+        $this->setAttrib('id', 'user-edit-form');
 
         // Add a firstname element
         $this->addElement('text', 'firstname', array(

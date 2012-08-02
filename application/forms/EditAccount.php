@@ -13,6 +13,7 @@ class Application_Form_EditAccount extends Integration_Form
         // Set the method for the display form to POST
         $this->setMethod('post');
         $this->setAttrib('class', 'form-stacked');
+        $this->setAttrib('id', 'edit-account-form');
 
         // Add a firstname element
         $this->addElement('text', 'firstname', array(
