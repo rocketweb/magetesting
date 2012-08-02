@@ -434,9 +434,11 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         
         echo "Finished installing Magento\n";
 
-
+        //disable adminnotifications output
+        exec('mysql -u' . $config->magento->userprefix . $dbuser . ' -p' . $dbpass . ' ' . $config->magento->instanceprefix . $dbname . ' -e \'INSERT INTO core_config_data (`scope`,`scope_id`,`path`,`value`) VALUES ("default",0,"advanced/modules_disable_output/Mage_AdminNotification",1) ON DUPLICATE KEY UPDATE `value` = 1\'');
+        
 //TODO: add mail info about ready installation
-
+        
         exec('ln -s ' . $instanceFolder . '/' . $domain . ' ' . INSTANCE_PATH . $domain);
 
         $db->update('queue', array('status' => 'ready'), 'id=' . $queueElement['id']);
