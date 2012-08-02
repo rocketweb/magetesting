@@ -112,3 +112,24 @@ body {
 .number-date h2, .number-date p { padding-left: 45px; }
 .number-instances h2, .number-instances p { padding-left: 45px; }
 .number-people h2, .number-people p { padding-left: 45px; }
+
+.no-max-h {
+    max-height:none;
+}
+
+.row-name{
+    margin:0px;
+    
+}
+
+#instance_name{
+    width:585px !important;
+}
+
+#custom-queue-form input {
+    width:265px;
+}
+
+#custom-queue-form select {
+    width:275px;
+}

@@ -34,17 +34,43 @@ $(document).ready(function(){
             <div class="modal-header">
                 <h3>Setup your custom environment</h3>
             </div>
-            <div class="modal-body">
+            <div class="modal-body no-max-h">
                 <fieldset>
-                    <?php echo $this->form->instance_name ?>
-                    <?php echo $this->form->edition ?>
-                    <?php echo $this->form->version ?>
-                    <?php echo $this->form->custom_protocol ?>
-                    <?php echo $this->form->custom_host ?>
-                    <?php echo $this->form->custom_remote_path ?>
-                    <?php echo $this->form->custom_sql ?>
-                    <?php echo $this->form->custom_login ?>
-                    <?php echo $this->form->custom_pass ?>
+                    <div class="row-name">
+                        <?php echo $this->form->instance_name ?>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            <?php echo $this->form->edition ?>
+                        </div>
+                        <div class="span3">
+                            <?php echo $this->form->version ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            <?php echo $this->form->custom_protocol ?>
+                        </div>
+                        <div class="span3">
+                            <?php echo $this->form->custom_host ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            <?php echo $this->form->custom_remote_path ?>
+                        </div>
+                        <div class="span3">
+                            <?php echo $this->form->custom_sql ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            <?php echo $this->form->custom_login ?>
+                        </div>
+                        <div class="span3">
+                            <?php echo $this->form->custom_pass ?>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
             <div class="modal-footer">

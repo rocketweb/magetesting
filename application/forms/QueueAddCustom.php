@@ -7,6 +7,7 @@ class Application_Form_QueueAddCustom extends Integration_Form{
         // Set the method for the display form to POST
         $this->setMethod('post');
         $this->setAttrib('class', 'form-stacked');
+        $this->setAttrib('id', 'custom-queue-form');
         //TODO: move model usage to controller
 
         
@@ -62,7 +63,7 @@ class Application_Form_QueueAddCustom extends Integration_Form{
         $this->custom_host->setAttrib('onfocus',"if(this.value=='ie. ftp.my-company.com'){this.value='';}");
         
         $this->addElement('text', 'custom_remote_path', array(
-                'label'       => 'Remote Path',
+                'label'       => 'Remote Path to Magento Root',
                 'required'    => true,
                 'label_class' => 'radio inline'
         ));
