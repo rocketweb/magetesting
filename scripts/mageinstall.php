@@ -97,7 +97,8 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
               // * * * * * cd /var/www/magetesting/scripts/; php mageinstall.php
              *
              */
-            exec('sudo ./create_user.sh ' . $config->magento->userprefix . $dbuser . ' ' . $dbpass . ' ' . $config->magento->usersalt . ' ' . $config->magento->systemHomeFolder, $output);
+            $systempass = substr(sha1($config->magento->usersalt . $config->magento->userprefix . $queueElement['login']), 10, 10); //fetch from zend config
+            exec('sudo ./create_user.sh ' . $config->magento->userprefix . $dbuser . ' ' . $systempass . ' ' . $config->magento->usersalt . ' ' . $config->magento->systemHomeFolder, $output);
             $message = var_export($output, true);
             $log->log($message, LOG_DEBUG);
             unset($output);
@@ -109,7 +110,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
                 // assign valeues
                 $html->assign('ftphost', $config->magento->ftphost);
                 $html->assign('ftpuser', $config->magento->userprefix . $dbuser);
-                $html->assign('ftppass', $dbpass);
+                $html->assign('ftppass', $systempass);
 
                 $html->assign('dbhost', $config->magento->dbhost);
                 $html->assign('dbuser', $config->magento->userprefix . $dbuser);
@@ -341,7 +342,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         $header = '::ConnectConfig::v::1.0::';
         $ftp_user_host = str_replace(
             'ftp://',
-            'ftp://'.$config->magento->userprefix.$dbuser.':'.$dbpass.'@',
+            'ftp://'.$config->magento->userprefix.$dbuser.':'.$systempass.'@',
             $config->magento->ftphost
         );
         $connect_cfg = array(

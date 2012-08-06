@@ -56,7 +56,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'default_error', array('error'));
         $this->allow('free-user', 'default_index', array('index'));
         $this->allow('free-user', 'default_queue', array(
-                'add','add-custom','add-clean', 'close', 'getVersions', 'edit'
+                'add','add-clean', 'close', 'getVersions', 'edit'
         ));
         $this->allow('free-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
@@ -78,7 +78,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('commercial-user', 'default_my-account');
         $this->allow('commercial-user', 'default_pay-pal', array('cancel', 'success'));
-
+        
         /**
          * Set up privileges for awaiting-user
          */

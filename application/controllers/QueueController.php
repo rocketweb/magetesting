@@ -29,7 +29,7 @@ class QueueController extends Integration_Controller_Action
 
     public function addAction()
     {
-        
+        $this->view->userGroup = $this->auth->getIdentity()->group;       
     }
     
     public function addCleanAction()
@@ -142,13 +142,25 @@ class QueueController extends Integration_Controller_Action
        
     public function addCustomAction(){
         
+        $userGroup = $this->auth->getIdentity()->group;
+        
+        //deny this action for demo users
+        if ($userGroup =='demo'){
+            $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'You are not allowed to have custom instance.'));
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
+        }
+        
         $request = $this->getRequest();
         
         $form = new Application_Form_QueueAddCustom();
         $form->populate($request->getParams());
         
         if ($request->isPost()){
-            $userGroup = $this->auth->getIdentity()->group;
+            
             if ($form->isValid($request->getParams())){
                 //needs validation!
                 $queueModel = new Application_Model_Queue();
@@ -175,14 +187,6 @@ class QueueController extends Integration_Controller_Action
                 
                 if($userInstances < $maxInstances || $userGroup == 'admin'){
                     
-                    
-                    /*var_dump($form->custom_protocol->getValue());
-                    var_dump($form->custom_host->getValue());
-                    var_dump($form->custom_remote_path->getValue());
-                    var_dump($form->custom_login->getValue());
-                    var_dump($form->custom_pass->getValue());
-                    var_dump($form->custom_sql->getValue());*/
-
                     //start adding instance
                      $queueModel->setVersionId($form->version->getValue())
                      ->setEdition($form->edition->getValue())

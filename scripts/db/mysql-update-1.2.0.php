@@ -1,7 +1,7 @@
 <?php
 
-
-$version = '1.1.0';
+/* this version adds support for extension installer for instances */
+$version = '1.2.0';
 
 $sql[] = '
 DROP TABLE IF EXISTS `extension` 
