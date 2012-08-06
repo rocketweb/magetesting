@@ -70,6 +70,7 @@
             <?php else: ?>
                 <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success"><i class="icon-eye-open icon-white"></i>&nbsp;Visit</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>" class="btn btn-info"><i class="icon-pencil icon-white"></i>&nbsp;Edit</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-info"><i class="icon-star icon-white"></i>&nbsp;Install Extensions</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain']), 'default', true); ?>" class="btn btn-danger"><i class="icon-trash icon-white"></i>&nbsp;Close</a>
             <?php endif;?>
             </td>

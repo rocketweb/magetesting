@@ -172,4 +172,11 @@ class Application_Model_QueueMapper {
         }
         return $keys;
     }
+    
+    public function findByName($instance_name)
+    {
+        return $this->getDbTable()
+                    ->findByName($instance_name);
+        
+    }
 }

@@ -48,7 +48,7 @@ class Application_Model_EditionMapper {
             return;
         }
         $row = $result->current();
-        $entry->setId($row->id)
+        $edition->setId($row->id)
         ->setKey($row->key)
         ->setName($row->name);
         return $edition;

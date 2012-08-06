@@ -62,4 +62,15 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
     
         return $this->fetchAll($select);
     }
+    
+    public function findByName($instance_name)
+    {
+        $select = $this->select()
+                        ->setIntegrityCheck(false)
+                       ->from($this->_name)
+                       ->join('version', 'queue.version_id = version.id', 'version')
+                       ->where('domain = ?', $instance_name);
+                       
+        return $this->fetchRow($select);
+    }
 }

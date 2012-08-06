@@ -351,5 +351,68 @@ class QueueController extends Integration_Controller_Action
         }
         $this->view->form = $form;
     }
-
+    
+    public function extensionsAction(){
+        
+        $request = $this->getRequest();
+        $instance_name = $request->getParam('instance'); 
+        $extensionModel = new Application_Model_Extension();
+            $extensions = $extensionModel->getAllForInstance($instance_name);
+            if(empty($extensions)){
+                $extensions = array(
+                    '' => 'no extensions found'
+                );
+            }
+            
+            $form = new Application_Form_ExtensionInstall($extensions);
+            $form->extension->setMultiOptions($extensions);
+        
+         $form->instance_name->setValue($instance_name);
+        if ($request->isPost()){
+            if($form->isValid($request->getPost())){
+                
+                //pobranie 
+                $queueModel = new Application_Model_Queue();
+                $queueItem = $queueModel->findByName($instance_name);
+                
+                
+                foreach($form->extension->getValue() as $ext){
+                
+		  //dodawanie do kolejki
+		  try{
+		      $extensionQueueItem = new Application_Model_ExtensionQueue();
+		      $extensionQueueItem->setQueueId($queueItem->id);
+		      $extensionQueueItem->setStatus('pending');
+		      $extensionQueueItem->setUserId($queueItem->user_id);
+		      $extensionQueueItem->setExtensionId($ext);
+		      $extensionQueueItem->save();
+		  } catch (Exception $e){
+				
+		      $this->_helper->FlashMessenger('Error while adding extension to queue');
+		      return $this->_helper->redirector->gotoRoute(array(
+			  'module'     => 'default',
+			  'controller' => 'user',
+			  'action'     => 'dashboard',
+		  ), 'default', true);
+		  }
+	      }
+                
+               
+                $this->_helper->FlashMessenger('Extension successfully added to queue');
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
+                
+            } else {
+                $this->_helper->FlashMessenger('Error while adding extension to queue, please check the form');
+            }
+        }
+         
+         $installed = $extensions = $extensionModel->getInstalledForInstance($instance_name);
+        
+         $this->view->installed_extensions = $installed;
+         $this->view->form = $form;
+    }
 }

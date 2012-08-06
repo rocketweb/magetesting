@@ -300,4 +300,9 @@ class Application_Model_Queue {
       $this->_type = $value;
       return $this;
     }
+    
+    public function findByName( $instance_name )
+    {
+        return $this->getMapper()->findByName( $instance_name );
+    }
 }

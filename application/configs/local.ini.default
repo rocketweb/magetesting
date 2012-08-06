@@ -40,6 +40,9 @@ register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
 ; remember that this must be absolute path
 sqlUpdater.directoryPath = APPLICATION_PATH "/../scripts/db";
 
+;Extensions
+extension.directoryPath = APPLICATION_PATH "/../data/extensions";
+
 [staging : production]
 
 [testing : production]
