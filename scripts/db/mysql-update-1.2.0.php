@@ -48,8 +48,6 @@ CREATE  TABLE IF NOT EXISTS `extension_queue` (
     FOREIGN KEY (`extension_id` )
     REFERENCES `extension` (`id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-    PRIMARY KEY (`id`)    
-),    
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION   
+) ENGINE = InnoDB;
 ';
