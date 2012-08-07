@@ -8,7 +8,7 @@ class Integration_Acl extends Zend_Acl
     public function __construct()
     {
         /**
-         * Set up roles
+         * Set up rolesz
          */
         $this->addRole(new Zend_Acl_Role('guest'))
         ->addRole(new Zend_Acl_Role('free-user'))
@@ -56,7 +56,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'default_error', array('error'));
         $this->allow('free-user', 'default_index', array('index'));
         $this->allow('free-user', 'default_queue', array(
-                'add','add-clean', 'close', 'getVersions', 'edit'
+                'add','add-clean', 'close', 'getVersions', 'edit','extensions'
         ));
         $this->allow('free-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
@@ -71,7 +71,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('commercial-user', 'default_error', array('error'));
         $this->allow('commercial-user', 'default_index', array('index'));
         $this->allow('commercial-user', 'default_queue', array(
-                'add','add-custom','add-clean', 'close', 'getVersions', 'edit'
+                'add','add-custom','add-clean', 'close', 'getVersions', 'edit','extensions'
         ));
         $this->allow('commercial-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
@@ -85,7 +85,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('awaiting-user', 'default_error', array('error'));
         $this->allow('awaiting-user', 'default_index', array('index'));
         $this->allow('awaiting-user', 'default_queue', array(
-                'add','add-custom','add-clean', 'close', 'getVersions', 'edit'
+                'add','add-custom','add-clean', 'close', 'getVersions', 'edit','extensions'
         ));
         $this->allow('awaiting-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
