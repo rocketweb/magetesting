@@ -26,7 +26,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                 ->where(' ? BETWEEN REPLACE(from_version,\'.\',\'\') AND REPLACE(to_version,\'.\',\'\')',(int)str_replace('.','',$instance['version']));
                 
                 if (count($exclude)>0){
-                $select->where('id NOT IN (?) ',implode(',',$exclude));
+                $select->where('id NOT IN (?) ',$exclude);
                 }
                 
 //                var_dump($select->__toString());
