@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_ExtensionInstall extends Integration_Form {
+class Application_Form_DevExtensionInstall extends Integration_Form {
 
     private static $matchingExtensions = '';
 
@@ -14,7 +14,7 @@ class Application_Form_ExtensionInstall extends Integration_Form {
         // Set the method for the display form to POST
         $this->setMethod('post');
         $this->setAttrib('class', 'form-stacked');
-        $this->setAttrib('id', 'extension-install-form');
+        $this->setAttrib('id', 'devextension-install-form');
         
         $this->addElement('hidden', 'instance_name', array(
                 'label'      => '',
@@ -22,7 +22,10 @@ class Application_Form_ExtensionInstall extends Integration_Form {
                 'filters'    => array('StripTags', 'StringTrim'),                
         ));
          
-        
+        if (!empty(self::$matchingExtensions)){
+            
+            var_dump(array_keys(self::$matchingExtensions));
+            
         $this->addElement('multiselect', 'extension', array(
                 'label'      => 'Extension',
                 'required'   => true,
@@ -31,12 +34,14 @@ class Application_Form_ExtensionInstall extends Integration_Form {
                         new Zend_Validate_InArray(array_keys(self::$matchingExtensions))
                 )
         ));
+        
         $emptyVersion = array('' => 'Choose...');
         $this->extension->addMultiOptions($emptyVersion);
-        $this->extension->removeDecorator('HtmlTag');
-        $this->extension->removeDecorator('overall');
-        $this->extension->removeDecorator('Label');
-               
+        
+        }
+
+        
+        
         // Add the submit button
         $this->addElement('submit', 'extensionAdd', array(
                 'ignore'   => true,

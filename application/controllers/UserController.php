@@ -30,6 +30,7 @@ class UserController extends Integration_Controller_Action
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
 
+        $this->view->userGroup = $this->auth->getIdentity()->group;
         $this->view->queue = $paginator;
         $this->view->queueCounter = $queueCounter;
         $this->view->timeExecution = $timeExecution;

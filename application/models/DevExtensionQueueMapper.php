@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_ExtensionQueueMapper {
+class Application_Model_DevExtensionQueueMapper {
 
     protected $_dbTable;
 
@@ -19,19 +19,19 @@ class Application_Model_ExtensionQueueMapper {
     public function getDbTable()
     {
         if (null === $this->_dbTable) {
-            $this->setDbTable('Application_Model_DbTable_ExtensionQueue');
+            $this->setDbTable('Application_Model_DbTable_DevExtensionQueue');
         }
         return $this->_dbTable;
     }
 
-    public function save(Application_Model_ExtensionQueue $extensionQueue)
+    public function save(Application_Model_DevExtensionQueue $extensionQueue)
     {
         $data = array(
             'id' => $extensionQueue->getId(),
             'queue_id' => $extensionQueue->getQueueId(),
             'status' => $extensionQueue->getStatus(),
             'user_id' => $extensionQueue->getUserId(),
-            'extension_id' => $extensionQueue->getExtensionId(),
+            'dev_extension_id' => $extensionQueue->getDevExtensionId(),
         );
 
         if (null === ($id = $extensionQueue->getId())) {
@@ -43,7 +43,7 @@ class Application_Model_ExtensionQueueMapper {
 
     }
 
-    public function find($id, Application_Model_ExtensionQueue $extensionQueue)
+    public function find($id, Application_Model_DevExtensionQueue $extensionQueue)
     {
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
@@ -54,7 +54,7 @@ class Application_Model_ExtensionQueueMapper {
         ->setQueueId($row->queue_id)
         ->setStatus($row->status)
         ->setUserId($row->user_id)
-        ->setExtensionId($row->extension_id);
+        ->setDevExtensionId($row->dev_extension_id);
         return $extensionQueue;
     }
 
@@ -68,12 +68,12 @@ class Application_Model_ExtensionQueueMapper {
         $resultSet = $this->getDbTable()->fetchAll();
         $entries   = array();
         foreach ($resultSet as $row) {
-            $entry = new Application_Model_ExtensionQueue();
+            $entry = new Application_Model_DevExtensionQueue();
             $entry->setId($row->id)
             ->setQueueId($row->queue_id)
             ->setStatus($row->status)
             ->setUserId($row->user_id)
-            ->setExtensionId($row->extension_id);
+            ->setDevExtensionId($row->dev_extension_id);
             $entries[] = $entry;
         }
         return $entries;
