@@ -17,6 +17,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
     foreach($extensions as $ext){
     
         $db->update('extension_queue', array('status' => 'installing'), 'id=' . $ext['id']);
+        $db->update('queue', array('status' => 'installing-extension'), 'id=' . $ext['queue_id']);
         
         //get instance data
         $modelQueue = new Application_Model_Queue();
@@ -47,6 +48,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         
         //set extension as installed
         $db->update('extension_queue', array('status' => 'ready'), 'id=' . $ext['id']);
+        $db->update('queue', array('status' => 'ready'), 'id=' . $ext['queue_id']);
     }
     //finish
     

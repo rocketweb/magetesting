@@ -368,7 +368,11 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel = new Application_Model_Queue();
                 $queueItem = $queueModel->findByName($instance_name);
 
-
+                if (count($form->extension->getValue())>0){
+                    $queueRow = $queueModel->find($queueItem->id);
+                    $queueRow->setStatus('installing-extension');
+                    $queueRow->save();
+                
                 foreach ($form->extension->getValue() as $ext) {
 
                     //dodawanie do kolejki
@@ -388,6 +392,8 @@ class QueueController extends Integration_Controller_Action {
                                     'action' => 'dashboard',
                                         ), 'default', true);
                     }
+                }
+                
                 }
 
 
