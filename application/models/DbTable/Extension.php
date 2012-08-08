@@ -23,14 +23,13 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $select = $this->select()
                 ->from($this->_name)
                 ->where('edition = ?', $instance['edition'])
-                ->where('from_version <= ?', $instance['version'])
-                ->where('to_version >= ?', $instance['version']);
+                ->where(' ? BETWEEN REPLACE(from_version,\'.\',\'\') AND REPLACE(to_version,\'.\',\'\')',(int)str_replace('.','',$instance['version']));
                 
                 if (count($exclude)>0){
                 $select->where('id NOT IN (?) ',implode(',',$exclude));
                 }
                 
-                //var_dump($select->__toString());exit;
+//                var_dump($select->__toString());
                
         return $this->fetchAll($select);
     }
@@ -44,6 +43,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                 ->where('queue_id = ?', $instance['id'])
                 ;
                
+               //var_dump($select->__toString());
         return $this->fetchAll($select);
     }
 }
