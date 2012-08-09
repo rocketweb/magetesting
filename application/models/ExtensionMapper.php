@@ -29,10 +29,13 @@ class Application_Model_ExtensionMapper {
         $data = array(
             'id' => $extension->getId(),
             'name'   => $extension->getName(),
+            'description'   => $extension->getDescription(),
             'file_name'   => $extension->getFileName(),
+            'namespace_module'   => $extension->getNamespaceModule(),
             'from_version'   => $extension->getFromVersion(),
             'to_version'   => $extension->getToVersion(),
             'edition'   => $extension->getEdition(),
+            'is_dev'   => $extension->getIsDev(),
         );
 
         if (null === ($id = $extension->getId())) {
@@ -53,10 +56,13 @@ class Application_Model_ExtensionMapper {
         $row = $result->current();
         $extension->setId($row->id)
         ->setName($row->name)
+        ->setDescription($row->description)
         ->setFileName($row->file_name)
+        ->setNamespaceModule($row->namespace_module)
         ->setFromVersion($row->from_version)
         ->setToVersion($row->to_version)
-        ->setEdition($row->edition);
+        ->setEdition($row->edition)
+        ->setIsDev($row->is_dev);
         return $extension;
     }
 
@@ -73,10 +79,13 @@ class Application_Model_ExtensionMapper {
             $entry = new Application_Model_Extension();
             $entry->setId($row->id)
             ->setName($row->name)
+            ->setDescription($row->description)
             ->setFileName($row->file_name)
+            ->setNamespaceModule($row->namespace_module)
             ->setFromVersion($row->from_version)
             ->setToVersion($row->to_version)
-            ->setEdition($row->edition);
+            ->setEdition($row->edition)
+            ->setIsDev($row->is_dev);
             $entries[] = $entry;
         }
         return $entries;
@@ -140,6 +149,25 @@ class Application_Model_ExtensionMapper {
         }
         return $returnedArray;
         
+    }
+    
+    
+    public function findByFilters(array $filters, Application_Model_Extension $extension){    
+        $row = $this->getDbTable()->findByFilters($filters);
+        if (empty($row)) {
+            return;
+        }
+        $extension->setId($row->id)
+                ->setName($row->name)
+                ->setDescription($row->description)
+                ->setFileName($row->file_name)
+                ->setNamespaceModule($row->namespace_module)
+                ->setFromVersion($row->from_version)
+                ->setToVersion($row->to_version)
+                ->setEdition($row->edition)
+                ->setIsDev($row->is_dev);
+        ;
+        return $extension;
     }
 
 }

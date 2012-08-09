@@ -79,7 +79,7 @@ class Application_Model_DevExtensionMapper {
         $resultSet = $this->getDbTable()->fetchAll();
         $entries   = array();
         foreach ($resultSet as $row) {
-            $entry = new Application_Model_Extension();
+            $entry = new Application_Model_DevExtension();
             $entry->setId($row->id)
             ->setName($row->name)
                 ->setRepoType($row->repo_type)
@@ -136,6 +136,25 @@ class Application_Model_DevExtensionMapper {
         }
         return $returnedArray;
         
+    }
+    
+    public function findByFilters(array $filters, Application_Model_DevExtension $extension){    
+        $row = $this->getDbTable()->findByFilters($filters);
+        if (empty($row)) {
+            return;
+        }
+        $extension->setId($row->id)
+        ->setName($row->name)
+        ->setRepoType($row->repo_type)
+        ->setRepoUrl($row->repo_url)
+                ->setRepoUser($row->repo_user)
+                ->setRepoPassword($row->repo_password)
+                ->setEdition($row->edition)
+                ->setFromVersion($row->from_version)
+                ->setToVersion($row->to_version)
+                ->setExtensionConfigFile($row->extension_config_file)
+        ;
+        return $extension;
     }
 
 }

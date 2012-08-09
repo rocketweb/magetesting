@@ -197,7 +197,7 @@ class Application_Model_DevExtension {
         return array(
             'id' => $this->getId(),
             'name' => $this->getName(),
-            'repo_name' => $this->getRepoType(),
+            'repo_type' => $this->getRepoType(),
             'repo_url' => $this->getRepoUrl(),
             'repo_user' => $this->getRepoUser(),
             'repo_password' => $this->getRepoPassword(),
@@ -220,6 +220,10 @@ class Application_Model_DevExtension {
     
     public function getAllForInstance($instance_name){
         return $this->getMapper()->getAllForInstance($instance_name);
+    }
+    
+    public function findByFilters(array $filters){
+        return $this->getMapper()->findByFilters($filters ,$this);
     }
     
 }
