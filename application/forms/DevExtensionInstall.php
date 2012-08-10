@@ -22,10 +22,8 @@ class Application_Form_DevExtensionInstall extends Integration_Form {
                 'filters'    => array('StripTags', 'StringTrim'),                
         ));
          
-        if (!empty(self::$matchingExtensions)){
-            
-            var_dump(array_keys(self::$matchingExtensions));
-            
+        
+                       
         $this->addElement('multiselect', 'extension', array(
                 'label'      => 'Extension',
                 'required'   => true,
@@ -38,7 +36,7 @@ class Application_Form_DevExtensionInstall extends Integration_Form {
         $emptyVersion = array('' => 'Choose...');
         $this->extension->addMultiOptions($emptyVersion);
         
-        }
+        
 
         
         
