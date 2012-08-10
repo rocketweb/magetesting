@@ -15,8 +15,9 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
     $extensions = $select->query()->fetchAll();
 
     foreach ($extensions as $ext) {
-
+        
         $db->update('dev_extension_queue', array('status' => 'installing'), 'id=' . $ext['id']);
+        $db->update('queue', array('status' => 'installing-extension'), 'id=' . $ext['queue_id']);
 
         //get instance data
         $modelQueue = new Application_Model_Queue();
@@ -61,6 +62,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         exec('sudo rm -R ' . $config->magento->systemHomeFolder . '/' . $config->magento->userprefix . $userInfo->getLogin() . '/public_html/' . $queueItem->getDomain() . '/var/cache/*');
 
         //set extension as installed
+        $db->update('queue', array('status' => 'ready'), 'id=' . $ext['queue_id']);
         $db->update('dev_extension_queue', array('status' => 'ready'), 'id=' . $ext['id']);
     }
     //finish
