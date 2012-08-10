@@ -364,45 +364,45 @@ class QueueController extends Integration_Controller_Action {
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
 
-                //pobranie 
+                //fetch queue data
                 $queueModel = new Application_Model_Queue();
                 $queueItem = $queueModel->findByName($instance_name);
 
-                if (count($form->extension->getValue())>0){
+                if (count($form->extension->getValue()) > 0) {
                     $queueRow = $queueModel->find($queueItem->id);
                     $queueRow->setStatus('installing-extension');
                     $queueRow->save();
-                
-                foreach ($form->extension->getValue() as $ext) {
 
-                    //dodawanie do kolejki
-                    try {
-                        $extensionQueueItem = new Application_Model_ExtensionQueue();
-                        $extensionQueueItem->setQueueId($queueItem->id);
-                        $extensionQueueItem->setStatus('pending');
-                        $extensionQueueItem->setUserId($queueItem->user_id);
-                        $extensionQueueItem->setExtensionId($ext);
-                        $extensionQueueItem->save();
-                    } catch (Exception $e) {
+                    foreach ($form->extension->getValue() as $ext) {
 
-                        $this->_helper->FlashMessenger('Error while adding extension to queue');
-                        return $this->_helper->redirector->gotoRoute(array(
-                                    'module' => 'default',
-                                    'controller' => 'user',
-                                    'action' => 'dashboard',
-                                        ), 'default', true);
+                        /* Adding extension to queue */
+                        try {
+                            $extensionQueueItem = new Application_Model_ExtensionQueue();
+                            $extensionQueueItem->setQueueId($queueItem->id);
+                            $extensionQueueItem->setStatus('pending');
+                            $extensionQueueItem->setUserId($queueItem->user_id);
+                            $extensionQueueItem->setExtensionId($ext);
+                            $extensionQueueItem->save();
+                        } catch (Exception $e) {
+
+                            $this->_helper->FlashMessenger('Error while adding extension to queue');
+                            return $this->_helper->redirector->gotoRoute(array(
+                                        'module' => 'default',
+                                        'controller' => 'user',
+                                        'action' => 'dashboard',
+                                            ), 'default', true);
+                        }
                     }
                 }
-                
-                }
-
 
                 $this->_helper->FlashMessenger('Extension successfully added to queue');
                 return $this->_helper->redirector->gotoRoute(array(
                             'module' => 'default',
                             'controller' => 'user',
                             'action' => 'dashboard',
-                                ), 'default', true);
+                                ), 'default', true
+                );
+                
             } else {
                 $this->_helper->FlashMessenger('Error while adding extension to queue, please check the form');
             }
@@ -429,19 +429,18 @@ class QueueController extends Integration_Controller_Action {
 
                 $instanceModel = new Application_Model_Queue();
                 $instanceInfo = $instanceModel->findByName($this->getRequest()->getParam('instance'));
-                             
+
                 //navigate through file list and download them
                 foreach ($form->extension->getValue() as $ext) {
-                    
+
                     $devExt = new Application_Model_DevExtensionQueue();
                     $devExt->setDevExtensionId($ext);
                     $devExt->setQueueId($instanceInfo->id);
                     $devExt->setUserId($instanceInfo->user_id);
                     $devExt->setStatus('pending');
-                    $devExt->save();                    
+                    $devExt->save();
                     //////
                 }
-                
             }
         }
 

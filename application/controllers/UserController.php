@@ -428,6 +428,7 @@ class UserController extends Integration_Controller_Action
             }
         }
         
+        //TODO: account removal
         // here account removal or deactivating is made        ?
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Hendles responses from paypal
+ * Handles responses from paypal
  * @author golaod
  * @package PayPalController
  * @method cancelAction

@@ -140,5 +140,5 @@ class Application_Model_ExtensionQueue {
     {
         return $this->getMapper()->fetchAll();
     }
-
+    
 }

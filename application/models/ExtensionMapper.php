@@ -101,7 +101,6 @@ class Application_Model_ExtensionMapper {
 
     }
 
-    /* change this method to fetch all extensions that match selected instance */ 
     public function getOptions() {
         $temp = array();
         $authGroup = Zend_Auth::getInstance()->getIdentity()->group;

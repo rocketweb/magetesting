@@ -41,13 +41,12 @@ class ErrorController extends Integration_Controller_Action
         }
 
         $this->view->request   = $errors->request;
-        }
-
-        public function stopAction()
-        {
-            // action body
-        }
-
-
     }
+
+    public function stopAction()
+    {
+        // action body
+    }
+
+}
 
