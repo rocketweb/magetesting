@@ -5,11 +5,13 @@ phpSettings.display_errors = 0
 
 ; Include path
 includePaths.library = APPLICATION_PATH "/../library"
+includePaths.braintree = APPLICATION_PATH "/../library/Braintree"
 
 ; Autoloader
 autoloaderNamespaces.zend = Zend_
 autoloaderNamespaces.integration = Integration_
 autoloaderNamespaces.rocketweb = RocketWeb_
+autoloaderNamespaces.rocketweb = Braintree_
 
 ; Bootstrap
 bootstrap.path = APPLICATION_PATH "/Bootstrap.php"

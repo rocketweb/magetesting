@@ -137,3 +137,12 @@ body {
 #user-edit-form td {
   padding-left:60px;
 }
+
+.col-left{
+    display:inline-block;
+    width:49%;
+}
+.col-right{
+    display:inline-block;
+    width:49%;
+}

@@ -1,0 +1,51 @@
+<!-- this was for just payment -->
+<!--<form id='payment-form' action='<?php echo Braintree_TransparentRedirect::url() ?>' method='POST'>
+      <input type='hidden' name='tr_data' value='<?php echo htmlentities($this->trData) ?>' />
+      <div>
+        <h2>Credit Card</h2>
+        <label for='braintree_credit_card_number'>Credit Card Number</label>
+        <input type='text' name='transaction[credit_card][number]' id='braintree_credit_card_number' value='4111111111111111'></input>
+        <label for='braintree_credit_card_exp'>Credit Card Expiry (mm/yyyy)</label>
+        <input type='text' name='transaction[credit_card][expiration_date]' id='braintree_credit_card_exp' value='12/2015'></input>
+      </div>
+      <input class='submit-button' type='submit' />
+    </form>-->
+
+
+<!--this is for creating customer-->
+<form id='payment-form' action='<?php echo Braintree_TransparentRedirect::url() ?>' method='POST'>
+      <input type='hidden' name='tr_data' value='<?php echo htmlentities($this->trData) ?>' />
+      <div class="col-left">
+        <div>
+            <!--<h2>Customer Information</h2>-->
+            <!--<label for='customer_first_name'>First Name</label>-->
+            <input type='hidden' name='customer[first_name]' id='customer_first_name' value="<?php echo $this->user->getFirstname() ?>"></input>
+            <!--<label for='customer_last_name'>Last Name</label>-->
+            <input type='hidden' name='customer[last_name]' id='customer_last_name' value="<?php echo $this->user->getFirstname() ?>"></input>
+            <!--<label for='customer_email'>Email</label>-->
+            <input type='hidden' name='customer[email]' id='customer_email' value="<?php echo $this->user->getEmail() ?>"></input>
+        </div>
+        <div>
+            <h2>Credit Card</h2>
+            <label for='braintree_credit_card_number'>Credit Card Number</label>
+            <input type='text' name='customer[credit_card][number]' id='braintree_credit_card_number' value='4111111111111111'></input>
+            <label for='braintree_credit_card_exp'>Credit Card Expiry (mm/yyyy)</label>
+            <input type='text' name='customer[credit_card][expiration_date]' id='braintree_credit_card_exp' value='12/2015'></input>
+        </div>
+      </div>
+      <div class="col-right">
+        <!--<h2>Billing Address</h2>-->
+        <!--<label for='billing_street_address'>Street Address</label>-->
+        <input type='hidden' name='customer[credit_card][billing_address][street_address]' id='billing_street_address' value="<?php echo $this->user->getStreet() ?>"></input>
+        <!--<label for='billing_extended_address'>Extended Address</label>-->
+        <input type='hidden' name='customer[credit_card][billing_address][extended_address]' id='billing_extended_address' value="<?php echo $this->user->getCity() ?>"></input>
+        <!--<label for='billing_locality'>Locality</label>-->
+        <input type='hidden' name='customer[credit_card][billing_address][locality]' id='billing_locality' value="<?php echo $this->user->getCountry() ?>"></input>
+        <!--<label for='billing_region'>Region</label>-->
+        <input type='hidden' name='customer[credit_card][billing_address][region]' id='billing_region' value="<?php echo $this->user->getState() ?>"></input>
+        <!--<label for='billing_postal_code'>Postal Code</label>-->
+        <input type='hidden' name='customer[credit_card][billing_address][postal_code]' id='billing_postal_code' value="<?php echo $this->user->getPostalCode() ?>"></input>
+      </div>
+      
+        <input class='submit-button btn btn-success' type='submit' value="Subscribe" />
+    </form>

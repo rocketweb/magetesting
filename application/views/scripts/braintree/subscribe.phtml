@@ -1,0 +1,11 @@
+<h1>Subscription Response</h1>
+<ul>
+    <?php if (is_array($this->message)): ?>
+        <?php foreach ($this->message as $m): ?>
+            <li>Status - <?php echo $m->message ?></li>  
+        <?php endforeach; ?>
+
+    <?php else: ?>
+        <li>Status - <?php echo $this->message ?></li>
+    <?php endif; ?>
+</ul>

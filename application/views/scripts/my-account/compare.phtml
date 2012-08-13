@@ -29,56 +29,108 @@
             <td><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
         </tr>
         <tr>
-            <td><strong>Price</strong></td>
+            <td><strong>Paypal</strong></td>
             <td>
                 <label class="btn">Free!</label>
             </td>
             <td>
-                <?php if(!$this->renderPayPal): ?>
-                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
-                        Subscribe for $5
-                    </a>
+                <?php if (!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
+                    <?php if(!$this->renderPayPal): ?>
+                        <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                            Subscribe for $5
+                        </a>
+                    <?php else: ?>
+                        <form class="paypal form-inline" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                            <input type="hidden" name="cmd" value="_s-xclick">
+                            <input type="hidden" name="hosted_button_id" value="Y48F49QFEHAV2">
+                            <input type="hidden" name="address_override" value="1">
+                            <input type="hidden" name="no_shipping" value="2">
+                            <input type="hidden" name="custom" value="<?php echo $user->getId(); ?>:1">
+                            <input type="hidden" name="address1" value="<?php echo $user->getStreet(); ?>">
+                            <input type="hidden" name="city" value="<?php echo $user->getCity(); ?>">
+                            <input type="hidden" name="country" value="<?php echo $user->getCountry(); ?>">
+                            <input type="hidden" name="email" value="<?php echo $user->getEmail(); ?>">
+                            <input type="hidden" name="first_name" value="<?php echo $user->getFirstname(); ?>">
+                            <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
+                            <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
+                            <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
+                            <input class="btn btn-success" type="submit" name="submit" value="Subscribe for $5">
+                        </form>
+                    <?php endif; ?>
                 <?php else: ?>
-                    <form class="paypal form-inline" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                        <input type="hidden" name="cmd" value="_s-xclick">
-                        <input type="hidden" name="hosted_button_id" value="Y48F49QFEHAV2">
-                        <input type="hidden" name="address_override" value="1">
-                        <input type="hidden" name="no_shipping" value="2">
-                        <input type="hidden" name="custom" value="<?php echo $user->getId(); ?>:1">
-                        <input type="hidden" name="address1" value="<?php echo $user->getStreet(); ?>">
-                        <input type="hidden" name="city" value="<?php echo $user->getCity(); ?>">
-                        <input type="hidden" name="country" value="<?php echo $user->getCountry(); ?>">
-                        <input type="hidden" name="email" value="<?php echo $user->getEmail(); ?>">
-                        <input type="hidden" name="first_name" value="<?php echo $user->getFirstname(); ?>">
-                        <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
-                        <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
-                        <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
-                        <input class="btn btn-success" type="submit" name="submit" value="Subscribe for $5">
-                    </form>
+                    <?php if ($this->user->getSubscrId()): ?>
+                        <a class="btn ctn-warning" href="#">Unsubscribe</a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </td>
             <td>
-                <?php if(!$this->renderPayPal): ?>
+                <?php if (!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
+                    <?php if(!$this->renderPayPal): ?>
+                        <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                            Subscribe for $10
+                        </a>
+                    <?php else: ?>
+                        <form class="paypal form-inline" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                            <input type="hidden" name="cmd" value="_s-xclick">
+                            <input type="hidden" name="hosted_button_id" value="DYS5CU8LCDQ48">
+                            <input type="hidden" name="address_override" value="1">
+                            <input type="hidden" name="no_shipping" value="2">
+                            <input type="hidden" name="custom" value="<?php echo $user->getId(); ?>:2">
+                            <input type="hidden" name="address1" value="<?php echo $user->getStreet(); ?>">
+                            <input type="hidden" name="city" value="<?php echo $user->getCity(); ?>">
+                            <input type="hidden" name="country" value="<?php echo $user->getCountry(); ?>">
+                            <input type="hidden" name="email" value="<?php echo $user->getEmail(); ?>">
+                            <input type="hidden" name="first_name" value="<?php echo $user->getFirstname(); ?>">
+                            <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
+                            <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
+                            <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
+                            <input class="btn btn-success" type="submit" name="submit" value="Subscribe for $10">
+                        </form>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php if ($this->user->getSubscrId()): ?>
+                        <a class="btn ctn-warning" href="#">Unsubscribe</a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Credit Card</strong></td>
+            <td>
+                <label class="btn">Free!</label>
+            </td>
+            <td>
+                <?php if (!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
+                    <?php if(!$this->renderBraintree): ?>
+                        <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                            Update account to enable
+                        </a>
+                    <?php else: ?>
+                        <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment', 'plan' => 'standard')); ?>">
+                            Subscribe for $5
+                        </a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php if ($this->user->getBraintreeSubscriptionId()): ?>
+                        <a class="btn btn-warning" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'unsubscribe')); ?>">Unsubscribe</a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if (!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
+                    <?php if(!$this->renderBraintree): ?>
                     <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                            Update account to enable
+                    </a>
+                    <?php else: ?>
+                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment', 'plan' => 'business')); ?>">
                         Subscribe for $10
                     </a>
+                    <?php endif; ?>
                 <?php else: ?>
-                    <form class="paypal form-inline" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                        <input type="hidden" name="cmd" value="_s-xclick">
-                        <input type="hidden" name="hosted_button_id" value="DYS5CU8LCDQ48">
-                        <input type="hidden" name="address_override" value="1">
-                        <input type="hidden" name="no_shipping" value="2">
-                        <input type="hidden" name="custom" value="<?php echo $user->getId(); ?>:2">
-                        <input type="hidden" name="address1" value="<?php echo $user->getStreet(); ?>">
-                        <input type="hidden" name="city" value="<?php echo $user->getCity(); ?>">
-                        <input type="hidden" name="country" value="<?php echo $user->getCountry(); ?>">
-                        <input type="hidden" name="email" value="<?php echo $user->getEmail(); ?>">
-                        <input type="hidden" name="first_name" value="<?php echo $user->getFirstname(); ?>">
-                        <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
-                        <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
-                        <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
-                        <input class="btn btn-success" type="submit" name="submit" value="Subscribe for $10">
-                    </form>
+                    <?php if ($this->user->getBraintreeSubscriptionId()): ?>
+                        <a class="btn btn-warning" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'unsubscribe')); ?>">Unsubscribe</a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </td>
         </tr>

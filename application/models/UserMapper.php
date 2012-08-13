@@ -75,7 +75,9 @@ class Application_Model_UserMapper {
              ->setPlanActiveTo($row->plan_active_to)
              ->setHasSystemAccount($row->has_system_account)
              ->setSystemAccountName($row->system_account_name)
-             ->setDowngraded($row->downgraded);
+             ->setDowngraded($row->downgraded)
+             ->setBraintreeVaultId($row->braintree_vault_id)
+             ->setBraintreeSubscriptionId($row->braintree_subscription_id);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -113,7 +115,9 @@ class Application_Model_UserMapper {
                   ->setPlanActiveTo($row->plan_active_to)
                   ->setHasSystemAccount($row->has_system_account)
                   ->setSystemAccountName($row->system_account_name)
-                  ->setDowngraded($row->downgraded);
+                  ->setDowngraded($row->downgraded)
+                  ->setBraintreeVaultId($row->braintree_vault_id)
+                  ->setBraintreeSubscriptionId($row->braintree_subscription_id);
 
             $entries[] = $entry;
         }

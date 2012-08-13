@@ -138,9 +138,16 @@ class MyAccountController extends Integration_Controller_Action
         $user->find($this->auth->getIdentity()->id);
 
         $this->view->renderPayPal = false;
+        $this->view->renderBraintree = false;
+        
         if($user->getId()) {
             if($user->getCity() AND $user->getStreet()) {
                 $this->view->renderPayPal = true;
+                $this->view->user = $user;
+            }
+            
+            if ($user->getCity() && $user->getStreet() && $user->getCountry() && $user->getPostalCode() && $user->getState() && $user->getFirstname() && $user->getLastname()){
+                $this->view->renderBraintree = true;
                 $this->view->user = $user;
             }
         }

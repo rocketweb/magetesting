@@ -41,6 +41,10 @@ class Application_Model_User {
     protected $_plan_active_to;
 
     protected $_downgraded;
+    
+    protected $_braintree_vault_id;
+    
+    protected $_braintree_subscription_id;
 
     protected $_mapper;
 
@@ -316,6 +320,28 @@ class Application_Model_User {
         return $this->_downgraded;
     }
 
+    public function setBraintreeVaultId($value)
+    {
+        $this->_braintree_vault_id = $value;
+        return $this;
+    }
+    
+    public function getBraintreeVaultId()
+    {
+        return $this->_braintree_vault_id;        
+    }
+    
+    public function setBraintreeSubscriptionId($value)
+    {
+        $this->_braintree_subscription_id = $value;
+        return $this;
+    }
+    
+    public function getBraintreeSubscriptionId()
+    {
+        return $this->_braintree_subscription_id;        
+    }
+    
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -395,7 +421,9 @@ class Application_Model_User {
             'plan_active_to' => $this->getPlanActiveTo(),
             'has_system_account' =>$this->getHasSystemAccount(),
             'system_account_name' => $this->getSystemAccountName(),
-            'downgraded' => $this->getDowngraded()
+            'downgraded' => $this->getDowngraded(),
+            'braintree_vault_id' => $this->getBraintreeVaultId(),
+            'braintree_subscription_id' => $this->getBraintreeSubscriptionId(),
         );
     }
     

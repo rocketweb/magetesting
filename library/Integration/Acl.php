@@ -19,6 +19,7 @@ class Integration_Acl extends Zend_Acl
         /**
          * Set up resources
          */
+        $this->add(new Zend_Acl_Resource('default_braintree'));
         $this->add(new Zend_Acl_Resource('default_pay-pal'));
         $this->add(new Zend_Acl_Resource('default_error'));
         $this->add(new Zend_Acl_Resource('default_index'));
@@ -64,6 +65,8 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'default_my-account');
 
         $this->allow('free-user', 'default_pay-pal', array('cancel', 'success'));
+        
+        $this->allow('free-user', 'default_braintree', array('payment','result','subscribe','unsubscribe'));
 
         /**
          * Set up privileges for commercial-user
@@ -78,6 +81,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('commercial-user', 'default_my-account');
         $this->allow('commercial-user', 'default_pay-pal', array('cancel', 'success'));
+        $this->allow('commercial-user', 'default_braintree', array('payment','result','subscribe','unsubscribe'));
         
         /**
          * Set up privileges for awaiting-user
@@ -92,6 +96,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('awaiting-user', 'default_my-account');
         $this->allow('awaiting-user', 'default_pay-pal', array('cancel', 'success'));
+        $this->allow('awaiting-user', 'default_braintree', array('payment','result','subscribe','unsubscribe'));
         
     }
 
