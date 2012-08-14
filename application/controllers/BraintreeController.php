@@ -132,7 +132,7 @@ class BraintreeController extends Integration_Controller_Action
                 $this->_helper->flashMessenger(
                         array(
                             'type' => 'success', 
-                            'message' => "Subscription status ".$result->subscription->status
+                            'message' => 'You have been successfully subscribed to Magetesting'
                         )
                     );        
             }
@@ -164,7 +164,7 @@ class BraintreeController extends Integration_Controller_Action
                     $this->_helper->flashMessenger(
                         array(
                             'type' => 'success', 
-                            'message' => "Subscription status ".$result->subscription->status
+                            'message' => 'You have been successfully unsubscribed from Magetesting'
                         )
                     );                
                 } else {
