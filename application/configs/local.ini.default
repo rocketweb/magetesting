@@ -43,6 +43,15 @@ sqlUpdater.directoryPath = APPLICATION_PATH "/../scripts/db";
 ;Extensions
 extension.directoryPath = APPLICATION_PATH "/../data/extensions";
 
+;Braintree
+braintree.environment = 
+braintree.merchantId = 
+braintree.publicKey = 
+braintree.privateKey = 
+
+braintree.standardPlanId = 
+braintree.businessPlanId = 
+
 [staging : production]
 
 [testing : production]

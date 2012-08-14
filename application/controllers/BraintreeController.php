@@ -4,44 +4,68 @@
 class BraintreeController extends Integration_Controller_Action
 {
     
+    protected $_standard_plan_id = '';
+    protected $_business_plan_id = '';
+    
     public function init(){
         require_once 'Braintree.php';
-        Braintree_Configuration::environment('sandbox');
-        Braintree_Configuration::merchantId('gy64jt4tk79ry5sf');
-        Braintree_Configuration::publicKey('xwkcvn9jvrmzv68k');
-        Braintree_Configuration::privateKey('f33vs7ytx4zd62xd');
+        $config = $this->getInvokeArg('bootstrap')
+                        ->getResource('config');
+        
+        Braintree_Configuration::environment($config->braintree->environment);
+        Braintree_Configuration::merchantId($config->braintree->merchantId);
+        Braintree_Configuration::publicKey($config->braintree->publicKey);
+        Braintree_Configuration::privateKey($config->braintree->privateKey);
+        $this->_standard_plan_id = $config->braintree->standardPlanId;
+        $this->_business_plan_id = $config->braintree->businessPlanId;
     }
     
     public function paymentAction(){
         
         $this->init();
-        
-        $plan = $this->getRequest()->getParam('plan','standard'); 
-        if ($plan == 'standard' ){
+
+        $plan = $this->getRequest()->getParam('plan', 'standard');
+        if ($plan == 'standard') {
             $amount = 5;
-        } elseif ($plan == 'business' ){
+        } elseif ($plan == 'business') {
             $amount = 10;
         } else {
             return $this->_helper->redirector->gotoRoute(
-                array('controller'=>'braintree','action'=>'subscribe','plan'=>$plan), 'default', false
-            );
-        }        
-        
-        $user = new Application_Model_User();
-        $user->find($this->auth->getIdentity()->id);
-	
-	if ($user->getBraintreeVaultId() != 0){
-            return $this->_helper->redirector->gotoRoute(
-                array('controller'=>'braintree','action'=>'subscribe','plan'=>$plan), 'default', false
-            );
-	} else {
-        
-            /* this is for storing customer in valut*/
-            $trData = Braintree_TransparentRedirect::createCustomerData(
-                array('redirectUrl' => $this->view->serverUrl().$this->view->url(array('controller'=>'braintree','action'=>'result','plan'=>$plan)))
+                array(
+                    'controller' => 'braintree', 
+                    'action' => 'subscribe', 
+                    'plan' => $plan
+                ), 'default', false
             );
         }
-        
+
+        $user = new Application_Model_User();
+        $user->find($this->auth->getIdentity()->id);
+
+        if ($user->getBraintreeVaultId() != 0) {
+            return $this->_helper->redirector->gotoRoute(
+                            array(
+                        'controller' => 'braintree',
+                        'action' => 'subscribe',
+                        'plan' => $plan
+                            ), 'default', false
+            );
+        } else {
+
+            /* this is for storing customer in valut */
+            $trData = Braintree_TransparentRedirect::createCustomerData(
+                            array(
+                                'redirectUrl' => $this->view->serverUrl() . $this->view->url(
+                                        array(
+                                            'controller' => 'braintree',
+                                            'action' => 'result',
+                                            'plan' => $plan
+                                        )
+                                )
+                            )
+            );
+        }
+
         $this->view->trData = $trData;
         $this->view->user = $user;
         
@@ -79,12 +103,14 @@ class BraintreeController extends Integration_Controller_Action
        
     public function subscribeAction(){
         
+        $this->init();
+        
         $plan = $this->getRequest()->getParam('plan','standard'); 
         if ($plan =='standard'){
-            $planId = 'srzg';
+            $planId = $this->_standard_plan_id;
             $internalPlanId = 1;
         } elseif ($plan =='business'){
-            $planId = 'ctn6';
+            $planId = $this->_business_plan_id;
             $internalPlanId = 2;
         }
         
@@ -99,16 +125,27 @@ class BraintreeController extends Integration_Controller_Action
             ));
 
             if ($result->success) {
-                $message = "Subscription status ".$result->subscription->status;
                 $user->setPlanId($internalPlanId);
                 $user->setBraintreeSubscriptionId($result->subscription->id);
                 $user->save();
+                
+                $this->_helper->flashMessenger(
+                        array(
+                            'type' => 'success', 
+                            'message' => "Subscription status ".$result->subscription->status
+                        )
+                    );        
             }
             else {
                 $message = $result->errors->deepAll();
             }
         } else {
-            $message = 'The customer cannot be found in our subscription payments vault';
+            $this->_helper->flashMessenger(
+                array(
+                    'type' => 'error', 
+                    'message' => 'The customer cannot be found in our subscription payments vault'
+                )
+            );    
         }
         
     }
@@ -124,21 +161,41 @@ class BraintreeController extends Integration_Controller_Action
                     $user->setPlanId(0);
                     $user->setBraintreeSubscriptionId(NULL);
                     $user->save();
-                    $this->view->messages[] = array('type' => 'success', 'message' => "Subscription status ".$result->subscription->status);                
+                    $this->_helper->flashMessenger(
+                        array(
+                            'type' => 'success', 
+                            'message' => "Subscription status ".$result->subscription->status
+                        )
+                    );                
                 } else {
                     $message = $result->errors->deepAll();
                     foreach ($message as $m){
-                        $this->_helper->flashMessenger(array('type' => 'error', 'message' => "Subscription status ".$m->message));
+                        $this->_helper->flashMessenger(
+                            array(
+                                'type' => 'error', 
+                                'message' => "Subscription status ".$m->message
+                            )
+                        );
                     }
                 }
             
             } catch (Exception $e){
                 //TODO: check if this works beyond sandbox, in sandbox it throws 404
-                $this->_helper->flashMessenger(array('type' => 'error', 'message' => "There was a problem while cancelling the subscription, please contact us with your details"));
+                $this->_helper->flashMessenger(
+                    array(
+                        'type' => 'error', 
+                        'message' => "There was a problem while cancelling the subscription, please contact us with your details"
+                    )
+                );
             }
             
-            
-            
-            return $this->_helper->redirector->goToRoute(array('controller'=>'my-account','action'=>'compare'), 'default', true);
+            return $this->_helper->redirector->goToRoute(
+                array(
+                    'controller'=>'my-account',
+                    'action'=>'compare'
+                ), 
+                'default', 
+                true
+            );
     }
 }
