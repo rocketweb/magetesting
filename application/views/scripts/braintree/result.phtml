@@ -1,4 +1,5 @@
 <h1>Account Response</h1>
+<?php if ($this->message): ?>
 <ul>
     <?php if (is_array($this->message)): ?>
         <?php foreach ($this->message as $m): ?>
@@ -9,3 +10,4 @@
         <li>Status - <?php echo $this->message ?></li>
     <?php endif; ?>
 </ul>
+<?php endif; ?>

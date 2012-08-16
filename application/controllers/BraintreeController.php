@@ -138,6 +138,14 @@ class BraintreeController extends Integration_Controller_Action
             }
             else {
                 $message = $result->errors->deepAll();
+                foreach($message as $m){
+		  $this->_helper->flashMessenger(
+		    array(
+			'type' => 'error', 
+			'message' => 'Subscription status: '. $m->messsage
+		    )
+		  ); 
+                }
             }
         } else {
             $this->_helper->flashMessenger(
@@ -148,6 +156,14 @@ class BraintreeController extends Integration_Controller_Action
             );    
         }
         
+        return $this->_helper->redirector->goToRoute(
+                array(
+                    'controller'=>'my-account',
+                    'action'=>'compare'
+                ), 
+                'default', 
+                true
+            );
     }
     
     public function unsubscribeAction(){
