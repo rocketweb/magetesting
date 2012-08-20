@@ -48,7 +48,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('guest', 'default_user', array(
                 'login', 'password-recovery', 'register', 'activate', 'reset-password', 'set-new-password'
         ));
-
+        $this->allow('guest', 'default_braintree', array('webhook'));
         $this->allow('guest', 'default_pay-pal');
 
         /**

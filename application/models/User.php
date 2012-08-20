@@ -427,5 +427,7 @@ class Application_Model_User {
         );
     }
     
-    
+    public function findByBraintreeSubscriptionId($subscription_id){
+        return $this->getMapper()->findByBraintreeSubscriptionId($subscription_id,$this);
+    }
 }

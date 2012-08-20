@@ -214,4 +214,83 @@ class BraintreeController extends Integration_Controller_Action
                 true
             );
     }
+    
+    public function webhookAction(){
+        
+        $log = $this->getInvokeArg('bootstrap')->getResource('log');
+        
+        
+        $this->_helper->viewRenderer->setNoRender();
+        $this->_helper->layout->disableLayout();
+        
+        
+        $verifyResult = Braintree_WebhookNotification::verify($this->getRequest()->getParam('bt_challenge'));
+        
+        
+        //Use to test
+        /*$sampleNotification = Braintree_WebhookTesting::sampleNotification(
+            Braintree_WebhookNotification::SUBSCRIPTION_WENT_PAST_DUE,
+            '78r4yb'
+        );
+
+        $webhookNotification = Braintree_WebhookNotification::parse(
+            $sampleNotification['signature'],
+            $sampleNotification['payload']
+        );*/
+        
+        $webhookNotification = Braintree_WebhookNotification::parse(
+            $this->getRequest()->getParam('bt_signature_param'), 
+            $this->getRequest()->getParam('bt_payload_param')
+        );
+        
+        //not sure why but in sandbox mode, this is no go, works with sample notification though
+        $log->log('Braintree - Notify', Zend_Log::DEBUG, json_encode($webhookNotification));
+        
+        $userModel = new Application_Model_User();
+        
+        $user  = $userModel->findByBraintreeSubscriptionId($webhookNotification->subscription->id);
+        
+        //TODO: behaviour still to be confirmed
+        switch ($webhookNotification->kind){
+            
+            case Braintree_WebhookNotification::SUBSCRIPTION_CANCELED:
+                $user->setPlanId(0);
+                $user->setBraintreeSubscriptionId(null);
+            break;
+        
+            case Braintree_WebhookNotification::SUBSCRIPTION_CHARGED_SUCCESSFULLY:
+                $user->setGroup('commercial-user');
+            break;
+        
+            case Braintree_WebhookNotification::SUBSCRIPTION_CHARGED_UNSUCCESSFULLY: 
+                $user->setGroup('awaiting-user');
+            break;
+        
+            case Braintree_WebhookNotification::SUBSCRIPTION_EXPIRED:
+                $user->setGroup('awaiting-user');
+                $user->setPlanId(0);
+                $user->setBraintreeSubscriptionId(null);
+            break;
+        
+            case Braintree_WebhookNotification::SUBSCRIPTION_TRIAL_ENDED:
+                /* we dont have trials, but when we do, 
+                 * send a email notification to user instead of unsetting 
+                 * subscription data, maybe (s)he wants to pay?
+                 */
+                $user->setPlanId(0);
+                $user->setBraintreeSubscriptionId(null);
+            break;
+        
+            case Braintree_WebhookNotification::SUBSCRIPTION_WENT_ACTIVE:
+                $user->setGroup('commercial-user');
+            break;
+        
+            case Braintree_WebhookNotification::SUBSCRIPTION_WENT_PAST_DUE;
+                $user->setGroup('awaiting-user');
+            break;
+        }
+        $user->save();
+                
+        echo $verifyResult;
+    }
 }

@@ -190,4 +190,13 @@ class Application_Model_UserMapper {
         }
         return $newPassword;
     }
+    
+    public function findByBraintreeSubscriptionId($subscription_id, Application_Model_User $userObject){
+        
+        $row = $this->getDbTable()->findByBraintreeSubscriptionId($subscription_id);
+         if($row) {
+             $userObject->setOptions($row->toArray());
+         }
+        return $userObject;
+    }
 }

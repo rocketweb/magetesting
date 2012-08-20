@@ -12,4 +12,12 @@ class Application_Model_DbTable_User extends Zend_Db_Table_Abstract
                        ->limit(1);
         return $this->fetchRow($select);
     }
+    
+    public function findByBraintreeSubscriptionId($subscription_id)
+    {
+        $select = $this->select()
+                       ->where('braintree_subscription_id = ?', $subscription_id)
+                       ->limit(1);
+        return $this->fetchRow($select);
+    }
 }
