@@ -155,13 +155,34 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         
         //fetch sql file or yield error when not found
         
-        //make sure remote path containts slash
+        //HOST
+        //make sure custom host have slash at the end
+        if(substr($queueElement['custom_host'],-1)!="/"){
+            $queueElement['custom_host'] .= '/';
+        }
+        
+        
+        //PATH
+        //make sure remote path containts slash at the end
         if(substr($queueElement['custom_remote_path'],-1)!="/"){
             $queueElement['custom_remote_path'] .= '/';
         }
         
-        if(substr($queueElement['custom_host'],-1)!="/"){
-            $queueElement['custom_host'] .= '/';
+        //make sure remote path does not contain slash at the beginning       
+        if(substr($queueElement['custom_remote_path'],0,1)=="/"){
+            $queueElement['custom_remote_path'] = substr($queueElement['custom_remote_path'],1);
+        }
+        
+        //make sure remote path contains prefix:
+        if ($queueElement['custom_protocol']=='ftp'){
+            if(substr($queueElement['custom_host'], 0, 6)!='ftp://'){
+                $queueElement['custom_host'] = 'ftp://'.$queueElement['custom_host'];
+            }
+        }
+        //FILE
+         //make sure sql file path does not contain slash at the beginning       
+        if(substr($queueElement['custom_sql'],0,1)=="/"){
+            $queueElement['custom_sql'] = substr($queueElement['custom_sql'],1);
         }
         
         //do a sample connection to wget to check if protocol credentials are ok
