@@ -146,22 +146,22 @@ if(isset($opts->package)) {
     exit;
 }
 
-if(isset($opts->list)) {
-  $devExtensionModel = new Application_Model_DevExtension();
-  $devExtensions = $devExtensionModel->fetchAll();
+if (isset($opts->list)) {
+    $devExtensionModel = new Application_Model_DevExtension();
+    $devExtensions = $devExtensionModel->fetchAll();
 
-  if(count($devExtensions)>0){
-    echo 'Available extensions:';
-    foreach ($devExtensions as $de){
-      echo PHP_EOL.' - '.$de->getName();
+    if (count($devExtensions) > 0) {
+        echo 'Available extensions:';
+        foreach ($devExtensions as $de) {
+            echo PHP_EOL . ' - ' . $de->getName();
+        }
+
+    } else {
+        echo 'No available extensions' . PHP_EOL;
     }
-
-	echo PHP_EOL;
-	exit;
-    }
-
-} else {
-  echo 'No available extensions'.PHP_EOL;
+    
+    echo PHP_EOL;
+    exit;
 }
 
 //bam rest should work
