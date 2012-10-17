@@ -68,6 +68,8 @@ if ($DbManager->checkIfDatabaseExists($dbname)){
     $message = 'database does not exist, ignoring...';
     echo $message;
     $log->log($message, LOG_ERR);
+    
+    
 }
 
 //remove folder recursively
@@ -80,6 +82,12 @@ unlink($queueElement['domain']);
 chdir($startCwd);
 
 $db->getConnection()->exec("use ".$config->resources->db->params->dbname);
+
+//remove dev_extension_queue elements for removed queue
+$db->delete('dev_extension_queue','queue_id='.$queueElement['id']);
+
+//remove extension_queue elements for removed queue
+$db->delete('extension_queue','queue_id='.$queueElement['id']);
 
 $db->delete('queue','id='.$queueElement['id']);
 unlink(APPLICATION_PATH . '/../data/logs/'.$queueElement['login'].'_'.$queueElement['domain'].'.log');
