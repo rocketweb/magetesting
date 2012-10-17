@@ -131,7 +131,13 @@ class Application_Model_DevExtensionMapper {
         //return them 
         $returnedArray = array();
         foreach($matchingExtensions as $me){
-	  $returnedArray[$me->id] = $me->name;
+            
+            $name = $me->name;
+            if ($me->version){
+                $name .= ' ('.$me->version.')';
+            }
+            
+	    $returnedArray[$me->id] = $name;
         }
         return $returnedArray;
         
