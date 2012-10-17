@@ -120,6 +120,7 @@ if(isset($opts->package)) {
 	}
       	
 	$newExt->setName($devExtension->getName());
+        $newExt->setVersion($version);
 	$newExt->setFileName($devExtension->getName().'-'.$version.'.tgz');
 	$newExt->setNamespaceModule($devExtension->getName());
 	$newExt->setFromVersion($devExtension->getFromVersion());
@@ -153,7 +154,7 @@ if (isset($opts->list)) {
     if (count($devExtensions) > 0) {
         echo 'Available extensions:';
         foreach ($devExtensions as $de) {
-            echo PHP_EOL . ' - ' . $de->getName();
+            echo PHP_EOL . ' - ' . $de->getName() . '(' . $de->getVersion() . ')';
         }
 
     } else {
@@ -234,7 +235,6 @@ die('Please enable support for '.$target.' path!!!!');
       }
   }
 }
-
 
 function rrmdir($dir) {
     foreach(glob($dir . '/*') as $file) {

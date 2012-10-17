@@ -150,7 +150,14 @@ class Application_Model_ExtensionMapper {
         //return them 
         $returnedArray = array();
         foreach($installedExtensions as $me){
-	  $returnedArray[$me->id] = $me->name;
+            
+            
+	  $name = $me->name;
+            if ($me->version){
+                $name .= ' ('.$me->version.')';
+            }
+            
+	    $returnedArray[$me->id] = $name;
         }
         return $returnedArray;
         
