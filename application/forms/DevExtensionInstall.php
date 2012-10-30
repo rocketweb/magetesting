@@ -26,6 +26,7 @@ class Application_Form_DevExtensionInstall extends Integration_Form {
                        
         $this->addElement('multiselect', 'extension', array(
                 'label'      => 'Extension',
+                'class' => 'span7',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
