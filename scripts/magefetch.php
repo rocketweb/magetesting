@@ -76,6 +76,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
 	
         
         if ($queueElement['has_system_account'] == 0) {
+            $db->update('queue', array('status' => 'installing-user'), 'id=' . $queueElement['id']);
             $db->update('user', array('system_account_name' => $config->magento->userprefix . $dbuser), 'id=' . $queueElement['user_id']);
 
             /** WARNING!
@@ -118,7 +119,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
                 /* send email with account details stop */
             }
         }
-        
+        $db->update('queue', array('status' => 'installing-magento'), 'id=' . $queueElement['id']);
         $adminuser = $queueElement['login'];
         $adminpass = substr(
                         str_shuffle(
@@ -192,7 +193,10 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
              "--password='".$queueElement['custom_pass']."' ".
              "".$queueElement['custom_host']." 2>&1 | grep 'Logged in!'",$output);
         
+        $db->update('queue', array('status' => 'installing-data'), 'id=' . $queueElement['id']);
         if (!isset($output[0])){
+            $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $db->update('queue', array('error_message' => 'Protocol credentials does not match'), 'id=' . $queueElement['id']);
             $log->log("Protocol credentials does not match\n", LOG_DEBUG);
         }
             
@@ -223,10 +227,11 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         $log->log($sqlSizeInfo[1], LOG_DEBUG);
         
        //limit is in bytes!
-        if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){
+        if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){           
             $message = 'Couldn\'t find sql data file, will not install queue element';
             //echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $db->update('queue', array('error_message' => $message), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
             continue; //jump to next queue element
         }
@@ -236,6 +241,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $message = 'Sql file is too big, aborting';
             //echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $db->update('queue', array('error_message' => $message), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
             continue; //jump to next queue element
         }
@@ -250,6 +256,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $message = 'Directory does not exist, aborting';
             echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $db->update('queue', array('error_message' => $message), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
         }
         
@@ -259,7 +266,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         unset($output);
 
         chdir($domain);
-
+        $db->update('queue', array('status' => 'installing-files'), 'id=' . $queueElement['id']);
         echo "Copying package to target directory...\n";
         //do a sample connection, and check for index.php, if it works, start fetching
         exec("wget --spider ".$queueElement['custom_host'].$queueElement['custom_remote_path']."app/Mage.php 2>&1 ".
@@ -283,6 +290,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $message = 'Couldn\'t find app/Mage.php file data, will not install queue element';
             //echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $db->update('queue', array('error_message' => $message), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
             continue; //jump to next queue element
         }
@@ -317,6 +325,8 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
              "".$queueElement['custom_host'].$queueElement['custom_remote_path']."\n" . $message, LOG_DEBUG);
         unset($output);
         
+        
+        $db->update('queue', array('status' => 'installing-data'), 'id=' . $queueElement['id']);
         exec("wget  ".$queueElement['custom_host'].$queueElement['custom_sql']." ".
             "--passive-ftp ".
             "--user='".$queueElement['custom_login']."' ".
@@ -337,7 +347,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         exec('sudo mysql -u' . $config->magento->userprefix . $dbuser . ' -p' . $dbpass . ' ' . $config->magento->instanceprefix . $dbname . ' < '.$path_parts['basename'].'');
 
 
-     
+     $db->update('queue', array('status' => 'installing-magento'), 'id=' . $queueElement['id']);
         echo "Moving downloaded sources to main folder...\n";
         exec('sudo mv '.$queueElement['custom_remote_path'].'* .', $output);
         $message = var_export($output, true);

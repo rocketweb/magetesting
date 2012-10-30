@@ -20,25 +20,15 @@
     <tbody>
         <?php $refreshed = 0; ?>
         <?php foreach($this->queue as $item): ?>
-        <tr>
+        <tr <?php echo (substr($item['status'],0,10) == 'installing' || $item['status'] == 'pending') ? 'class="installing"' : '' ?> >
             <td><?php echo $item['instance_name']?></td>
             <?php switch($item['status']): 
             case 'ready':?>
-                <td><span class="label label-success"><?php echo ucfirst($item['status']) ?></span> </td>
+                <td><span class="label label-success item-status-label"><?php echo ucfirst($item['status']) ?></span> </td>
             <?php break; case 'pending':  ?>
             <?php if( ! $refreshed++ ) { $this->response->setHeader('Refresh', $this->timeExecution*60); } ?>
                 <td>
-                    <!--
-                    <div class="progress progress-info progress-striped active">
-                        <div class="bar" style="width: 100%;">
-                            <span class="label label-warning">In Queue</span>
-                            <span class="label">
-                                <?php echo $this->queueCounter[$item['id']]; ?>
-                                minutes left
-                            </span>
-                        </div>
-                    </div>-->
-                    <div class="progress progress-striped active" style="margin-bottom:0px;margin-top:5px;">
+                    <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
                         <div class="bar" style="width: 100%;">
                             In Queue - <?php echo $this->queueCounter[$item['id']]; ?> minutes left
                         </div>
@@ -47,11 +37,66 @@
             <?php break; case 'closed': ?>
                 <td><span class="label label-important">Closed</span></td>
             <?php break; case 'installing': ?>
-                <td><span class="label label-success">Installing..</span></td>
+            
+                <td>
+	      <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
+                        <div class="bar bar-success" style="width: 100%;">
+                            Installing..
+                        </div>
+                    </div>
+	    </td>
             <?php break; case 'installing-extension': ?>
-                <td><span class="label label-success">Installing Extension..</span></td>
-            <?php break; case 'error': ?>
-                <td><span class="label label-important">Error!</span></td>
+                <td>
+	      <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
+                        <div class="bar bar-success" style="width: 100%;">
+                            Installing Extension..
+                        </div>
+                    </div>
+	    </td>
+                
+	    <?php break; case 'installing-magento': ?>
+                <td>
+	      <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
+                        <div class="bar bar-success" style="width: 100%;">
+                            Installing Magento..
+                        </div>
+                    </div>
+	    </td>
+	    <?php break; case 'installing-samples': ?>
+                <td>
+	      <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
+                        <div class="bar bar-success" style="width: 100%;">
+                            Installing Sample Data..
+                        </div>
+                    </div>
+	    </td>
+	    <?php break; case 'installing-user': ?>
+                <td>
+	      <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
+                        <div class="bar bar-success" style="width: 100%;">
+                            Installing User..
+                        </div>
+                    </div>
+	    </td>
+	    <?php break; case 'installing-files': ?>
+                <td>
+	      <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
+                        <div class="bar bar-success" style="width: 100%;">
+                            Installing Files..
+                        </div>
+                    </div>
+	    </td>
+	    <?php break; case 'installing-date': ?>
+	    <td>
+	      <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
+                        <div class="bar bar-success" style="width: 100%;">
+                            Installing Data/Database..
+                        </div>
+                    </div>
+	    </td>                
+	    <?php break; case 'error': ?>
+                <td><span class="label label-important">Error!</span>
+                <?php echo ($item['error_message']) ? $item['error_message'] : ''  ?></td>
             <?php break; default: ?>
                 <td><span class="label label-warning"></span></td>
             <?php endswitch; ?>
@@ -65,10 +110,11 @@
             <?php endif; ?>
             </td>
             <td>
-            <?php if(in_array($item['status'], array('closed','pending','installing'))): ?>
+            <?php if(in_array($item['status'], array('closed','pending','installing','installing-extension','installing-magento','installing-samples','installing-user','installing-files','installing-data'))): ?>
                 <a class="btn btn-success disabled"><i class="icon-eye-close icon-white"></i>&nbsp;Visit</a>
                 <a class="btn btn-info disabled"><i class="icon-pencil icon-white"></i>&nbsp;Edit</a>
                 <a class="btn btn-danger disabled"><i class="icon-trash icon-white"></i>&nbsp;Close</a>
+                <input type="hidden" class="instancedomain" value="<?php echo $item['domain'] ?>" />
             <?php else: ?>
                 <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success"><i class="icon-eye-open icon-white"></i>&nbsp;Visit</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>" class="btn btn-info"><i class="icon-pencil icon-white"></i>&nbsp;Edit</a>
@@ -85,3 +131,89 @@
     </tbody>
 </table>
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>
+<script type="text/javascript">
+    //define globals
+    var requests = [];
+    var domain;
+  
+    //refresh statuses
+    setInterval(updateStatuses,5000);
+
+function updateStatuses(){
+ 
+  $('tr.installing').each(function(){
+  
+      var current_tr = $(this);
+              
+      //create 
+      domain = $(this).find('.instancedomain').val();
+      requests[domain];
+
+      //abort last request if it is still in queue
+      if(typeof requests[domain] !== 'undefined'){
+	  requests[domain].abort();
+      }
+      
+      //make new request
+      requests[domain] = $.ajax({
+            type: "POST",
+            url: "<?php echo $this->baseUrl("queue/getStatus") ?>",
+            data: "domain="+ $(this).find('.instancedomain').val(),
+            dataType: "json",
+            success: function(json){
+                
+                
+                updateLabel(current_tr,json);
+        
+            }
+      });
+      
+      
+  });
+}
+
+function updateLabel(row,new_status){
+    var labels = {
+        'pending': 'Pending', /* shouldn't update to this status anyway */
+        'installing': 'Installing',
+        'ready': 'Ready',
+        'closed' : 'Closed',
+        'error': 'Error',
+        'installing-extension': 'Installing Extension',
+        'installing-magento': 'Installing Magento',
+        'installing-samples' : 'Installing Sample Data',
+        'installing-user' : 'Installing User',
+        'installing-files' : 'Installing Files',
+        'installing-data' : 'Installing Data/Database'
+    }
+    
+        if (new_status=='ready'){
+            //remove progress bar and just insert label
+            row.find('div.bar').parent().parent().html('<span class="label label-success item-status-label">' + labels[new_status] + '</span>');
+            location.reload();
+        } else if(new_status != 'pending') {
+            //update progress bar status
+            row.find('div.bar').html('' + labels[new_status] + '');
+        } else {
+            //update pending time counter
+	    $.ajax({
+            type: "POST",
+            url: "<?php echo $this->baseUrl("queue/getminutesleft") ?>",
+            data: "domain="+ row.find('.instancedomain').val(),
+            dataType: "json",
+            success: function(json){
+                var time = <?php echo $this->timeExecution ?>*json;
+                row.find('div.bar').html('In Queue - ' + time + ' minutes left');
+            }
+      });
+        }
+        
+        //remove installing label now when everything is updated
+        if (new_status.substr(0,10)!='installing' && new_status != 'pending'){
+            row.removeClass('installing');
+        }
+}
+
+
+
+</script>

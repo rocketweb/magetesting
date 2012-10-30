@@ -73,4 +73,26 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                        
         return $this->fetchRow($select);
     }
+    
+    public function findPositionByName($instance_name)
+    {
+	/**
+	SELECT COUNT( q.id )
+	FROM `queue` `q`
+	WHERE `q`.`id` <= (
+	SELECT id
+	FROM queue
+	WHERE domain = '$instance_name' )
+	AND `status` = 'ready'
+	*/
+    
+        $select = $this->select()
+                        ->setIntegrityCheck(false)
+                       ->from($this->_name, array('num' => 'count(queue.id)'))
+                       ->where("queue.id <= (SELECT id FROM queue WHERE domain = '".$instance_name."')")
+                ->where('status = ?','pending');
+                       
+	//Zend_Debug::Dump($select->assemble());
+        return $this->fetchRow($select);
+    }
 }

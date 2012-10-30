@@ -89,6 +89,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
 
         $instanceFolder = $config->magento->systemHomeFolder . '/' . $config->magento->userprefix . $dbuser . '/public_html';
         if ($queueElement['has_system_account'] == 0) {
+            $db->update('queue', array('status' => 'installing-user'), 'id=' . $queueElement['id']);
             $db->update('user', array('system_account_name' => $config->magento->userprefix . $dbuser), 'id=' . $queueElement['user_id']);
 
             /** WARNING!
@@ -132,6 +133,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
                 /* send email with account details stop */
             }
         }
+        $db->update('queue', array('status' => 'installing-magento'), 'id=' . $queueElement['id']);
         $adminuser = $queueElement['login'];
         $adminpass = substr(
                         str_shuffle(
@@ -169,6 +171,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $message = 'Couldn\'t find sample data file, will not install queue element';
             //echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $db->update('queue', array('error_message' => $message), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
             continue; //jump to next queue element
         }
@@ -189,7 +192,9 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $message = 'Directory does not exist, aborting';
             echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $db->update('queue', array('error_message' => $message), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
+            //shouldn't continue be here?
         }
 
         exec('sudo chmod +x ' . $instanceFolder . '/' . $domain, $output);
@@ -205,6 +210,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $message = 'Couldn\'t find package files, aborting';
             echo $message;
             $db->update('queue', array('status' => 'error'), 'id=' . $queueElement['id']);
+            $db->update('queue', array('error_message' => $message), 'id=' . $queueElement['id']);
             $log->log($message, LOG_DEBUG);
             continue; //jump to next queue element
         }
@@ -218,7 +224,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/keyset1.sql ' . $instanceFolder . '/' . $domain . '/');
 
         if ($installSampleData) {
-            
+            $db->update('queue', array('status' => 'installing-samples'), 'id=' . $queueElement['id']);
             echo "Copying sample data package to target directory...\n";
             exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $queueElement['edition'] . '/magento-sample-data-' . $sampleDataVersion . '.tar.gz ' . $instanceFolder . '/' . $domain . '/', $output);
             $message = var_export($output, true);
@@ -226,6 +232,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             unset($output);
         }
 
+        $db->update('queue', array('status' => 'installing-files'), 'id=' . $queueElement['id']);
         echo "Extracting data...\n";
         exec('sudo tar -zxvf '.$filePrefix[$queueElement['edition']].'-' . $magentoVersion . '.tar.gz', $output);
         $message = var_export($output, true);
@@ -233,6 +240,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         unset($output);
 
         if ($installSampleData) {
+            $db->update('queue', array('status' => 'installing-samples'), 'id=' . $queueElement['id']);
             echo "Extracting sample data...\n";
             exec('sudo tar -zxvf magento-sample-data-' . $sampleDataVersion . '.tar.gz', $output);
             $message = var_export($output, true);
@@ -246,6 +254,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             unset($output);
         }
 
+        $db->update('queue', array('status' => 'installing-files'), 'id=' . $queueElement['id']);
         echo "Moving files...\n";
         exec('sudo cp -R magento/* .', $output);
         $message = var_export($output, true);
@@ -282,10 +291,11 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         unset($output);
 
         if ($installSampleData) {
+            $db->update('queue', array('status' => 'installing-samples'), 'id=' . $queueElement['id']);
             echo "Inserting sample data\n";
             exec('sudo mysql -u' . $config->magento->userprefix . $dbuser . ' -p' . $dbpass . ' ' . $config->magento->instanceprefix . $dbname . ' < magento_sample_data_for_' . $sampleDataVersion . '.sql');
         }
-
+        $db->update('queue', array('status' => 'installing-magento'), 'id=' . $queueElement['id']);
         echo "Cleaning up files...\n";
         exec('sudo rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*', $output);
         $message = var_export($output, true);
@@ -308,7 +318,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $log->log("\nsudo rm -rf magento-sample-data-" . $sampleDataVersion . "/ magento-sample-data-" . $sampleDataVersion . ".tar.gz magento_sample_data_for_" . $sampleDataVersion . ".sql\n" . $message, LOG_DEBUG);
             unset($output);
         }
-
+        $db->update('queue', array('status' => 'installing-magento'), 'id=' . $queueElement['id']);
         echo "Installing Magento...\n";
         exec('sudo mysql -u' . $config->magento->userprefix . $dbuser . ' -p' . $dbpass . ' ' . $config->magento->instanceprefix . $dbname . ' < keyset0.sql');
         exec('cd ' . $instanceFolder . '/' . $domain . ';sudo  /usr/bin/php -f install.php --' .

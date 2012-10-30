@@ -447,4 +447,32 @@ class QueueController extends Integration_Controller_Action {
         //get dev extension list from database
         $this->view->form = $form;
     }
+    
+    public function getstatusAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        $domain = $request->getParam('domain', null);
+        if ($request->isPost() && $domain!=null) {
+            $queueModel = new Application_Model_Queue();
+            $queueItem = $queueModel->findByName($domain);
+            
+            echo Zend_Json_Encoder::encode($queueItem->status);
+        } 
+    }
+    
+    public function getminutesleftAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        $domain = $request->getParam('domain', null);
+        if ($request->isPost() && $domain!=null) {
+            $queueModel = new Application_Model_Queue();
+            $queueItem = $queueModel->findPositionByName($domain);
+            
+            echo Zend_Json_Encoder::encode($queueItem->num);
+        } 
+    }
 }

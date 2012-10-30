@@ -42,6 +42,7 @@ class Application_Model_QueueMapper {
                 'custom_login'     =>  $queue->getCustomLogin(),
                 'custom_pass'      => $queue->getCustomPass(),
                 'custom_sql'       => $queue->getCustomSql(),
+                'error_message'       => $queue->getErrorMessage(),
                 'type'       => $queue->getType(),
         );
 
@@ -76,6 +77,7 @@ class Application_Model_QueueMapper {
                 ->setCustomLogin($row->custom_login)
                 ->setCustomPass($row->custom_pass)
                 ->setCustomSql($row->custom_sql)
+                ->setErrorMessage($row->error_message)
                 ->setType($row->type)
                 ;
         return $queue;
@@ -101,12 +103,13 @@ class Application_Model_QueueMapper {
                     ->setInstanceName($row->instance_name)
                     ->setSampleData($row->sample_data)
                     ->setBackendPassword($row->backend_password)
-		   ->setCustomProtocol($row->custom_protocol)
+		    ->setCustomProtocol($row->custom_protocol)
                     ->setCustomHost($row->custom_host)
                     ->setCustomRemotePath($row->custom_remote_path)
                     ->setCustomLogin($row->custom_login)
                     ->setCustomPass($row->custom_pass)
                     ->setCustomSql($row->custom_sql)
+                    ->setErrorMessage($row->error_message)
                     ->setType($row->type)
                     ;
             $entries[] = $entry;
@@ -177,6 +180,13 @@ class Application_Model_QueueMapper {
     {
         return $this->getDbTable()
                     ->findByName($instance_name);
+        
+    }
+    
+    public function findPositionByName($instance_name)
+    {
+        return $this->getDbTable()
+                    ->findPositionByName($instance_name);
         
     }
 }

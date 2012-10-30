@@ -28,7 +28,8 @@ class Application_Model_Queue {
     protected $_custom_pass;
     protected $_custom_sql;
     
-
+    protected $_error_message;
+    
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -203,6 +204,7 @@ class Application_Model_Queue {
                 'custom_login'     =>  $this->getCustomLogin(),
                 'custom_pass'      => $this->getCustomPass(),
                 'custom_sql'       => $this->getCustomSql(),
+                'error_message'       => $this->getErrorMessage(),
                 'type'       => $this->getType(),
         );
     }
@@ -301,8 +303,22 @@ class Application_Model_Queue {
       return $this;
     }
     
+    public function getErrorMessage(){
+      return $this->_error_message;
+    }
+    
+    public function setErrorMessage($value){
+      $this->_error_message = $value;
+      return $this;
+    }
+    
     public function findByName( $instance_name )
     {
         return $this->getMapper()->findByName( $instance_name );
+    }
+    
+    public function findPositionByName( $instance_name )
+    {
+        return $this->getMapper()->findPositionByName( $instance_name );
     }
 }
