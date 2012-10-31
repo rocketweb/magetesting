@@ -20,6 +20,8 @@ class Application_Model_DevExtension {
     
     protected $_to_version;
     
+    protected $_version;
+    
     protected $_extension_config_file;
 
     protected $_mapper;
@@ -141,6 +143,17 @@ class Application_Model_DevExtension {
     }
     
     public function getToVersion()
+    {
+        return $this->_to_version;
+    }
+    
+    public function setVersion($value)
+    {
+        $this->_to_version = $value;
+        return $this;
+    }
+    
+    public function getVersion()
     {
         return $this->_to_version;
     }

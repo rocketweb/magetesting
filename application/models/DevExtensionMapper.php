@@ -36,6 +36,7 @@ class Application_Model_DevExtensionMapper {
             'edition' => $extension->getEdition(),
             'from_version' => $extension->getFromVersion(),
             'to_version' => $extension->getToVersion(),
+            'version' => $extension->getVersion(),
             'extension_config_file' => $extension->getExtensionConfigFile(),
         );
 
@@ -64,6 +65,7 @@ class Application_Model_DevExtensionMapper {
                 ->setEdition($row->edition)
                 ->setFromVersion($row->from_version)
                 ->setToVersion($row->to_version)
+                ->setVersion($row->version)
                 ->setExtensionConfigFile($row->extension_config_file)
         ;
         return $extension;
@@ -89,6 +91,7 @@ class Application_Model_DevExtensionMapper {
                 ->setEdition($row->edition)
                 ->setFromVersion($row->from_version)
                 ->setToVersion($row->to_version)
+                ->setVersion($row->version)
                 ->setExtensionConfigFile($row->extension_config_file)
                 ;
             $entries[] = $entry;
@@ -157,6 +160,7 @@ class Application_Model_DevExtensionMapper {
                 ->setEdition($row->edition)
                 ->setFromVersion($row->from_version)
                 ->setToVersion($row->to_version)
+                ->setVersion($row->version)
                 ->setExtensionConfigFile($row->extension_config_file)
         ;
         return $extension;
