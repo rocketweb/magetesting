@@ -1,3 +1,83 @@
+<?php 
+$this->headScript()->appendScript('
+ //define globals
+    var requests = [];
+    var domain;
+  
+    //refresh statuses
+    setInterval(updateStatuses,5000);
+
+function updateStatuses(){
+ 
+  $("tr.installing").each(function(){
+  
+      var current_tr = $(this);
+              
+      //create 
+      domain = $(this).find(".instancedomain").val();
+      requests[domain];
+
+      //abort last request if it is still in queue
+      if(typeof requests[domain] !== "undefined"){
+	  requests[domain].abort();
+      }
+      
+      //make new request
+      requests[domain] = $.ajax({
+            type: "POST",
+            url: "'. $this->baseUrl("queue/getStatus") .'",
+            data: "domain="+ $(this).find(".instancedomain").val(),
+            dataType: "json",
+            success: function(json){
+                updateLabel(current_tr,json);
+            }
+      });
+  });
+}
+
+function updateLabel(row,new_status){
+    var labels = {
+        "pending": "Pending", /* shouldn\'t update to this status anyway */
+        "installing": "Installing",
+        "ready": "Ready",
+        "closed" : "Closed",
+        "error": "Error",
+        "installing-extension": "Installing Extension",
+        "installing-magento": "Installing Magento",
+        "installing-samples" : "Installing Sample Data",
+        "installing-user" : "Installing User",
+        "installing-files" : "Installing Files",
+        "installing-data" : "Installing Data/Database"
+    }
+    
+        if (new_status=="ready"){
+            //remove progress bar and just insert label
+            row.find("div.bar").parent().parent().html("<span class=\"label label-success item-status-label\">" + labels[new_status] + "</span>");
+            location.reload();
+        } else if(new_status != "pending") {
+            //update progress bar status
+            row.find("div.bar").html("" + labels[new_status] + "");
+        } else {
+            //update pending time counter
+	    $.ajax({
+            type: "POST",
+            url: "'. $this->baseUrl("queue/getminutesleft") .'",
+            data: "domain=" + row.find(".instancedomain").val(),
+            dataType: "json",
+            success: function(json){
+                var time = '. $this->timeExecution .'*json;
+                row.find("div.bar").html("In Queue - " + time + " minutes left");
+            }
+      });
+        }
+        
+        //remove installing label now when everything is updated
+        if (new_status.substr(0,10) != "installing" && new_status != "pending"){
+            row.removeClass("installing");
+        }
+}');
+?>
+
 <h1>Your stores</h1>
 
 <p>
@@ -131,89 +211,3 @@
     </tbody>
 </table>
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>
-<script type="text/javascript">
-    //define globals
-    var requests = [];
-    var domain;
-  
-    //refresh statuses
-    setInterval(updateStatuses,5000);
-
-function updateStatuses(){
- 
-  $('tr.installing').each(function(){
-  
-      var current_tr = $(this);
-              
-      //create 
-      domain = $(this).find('.instancedomain').val();
-      requests[domain];
-
-      //abort last request if it is still in queue
-      if(typeof requests[domain] !== 'undefined'){
-	  requests[domain].abort();
-      }
-      
-      //make new request
-      requests[domain] = $.ajax({
-            type: "POST",
-            url: "<?php echo $this->baseUrl("queue/getStatus") ?>",
-            data: "domain="+ $(this).find('.instancedomain').val(),
-            dataType: "json",
-            success: function(json){
-                
-                
-                updateLabel(current_tr,json);
-        
-            }
-      });
-      
-      
-  });
-}
-
-function updateLabel(row,new_status){
-    var labels = {
-        'pending': 'Pending', /* shouldn't update to this status anyway */
-        'installing': 'Installing',
-        'ready': 'Ready',
-        'closed' : 'Closed',
-        'error': 'Error',
-        'installing-extension': 'Installing Extension',
-        'installing-magento': 'Installing Magento',
-        'installing-samples' : 'Installing Sample Data',
-        'installing-user' : 'Installing User',
-        'installing-files' : 'Installing Files',
-        'installing-data' : 'Installing Data/Database'
-    }
-    
-        if (new_status=='ready'){
-            //remove progress bar and just insert label
-            row.find('div.bar').parent().parent().html('<span class="label label-success item-status-label">' + labels[new_status] + '</span>');
-            location.reload();
-        } else if(new_status != 'pending') {
-            //update progress bar status
-            row.find('div.bar').html('' + labels[new_status] + '');
-        } else {
-            //update pending time counter
-	    $.ajax({
-            type: "POST",
-            url: "<?php echo $this->baseUrl("queue/getminutesleft") ?>",
-            data: "domain="+ row.find('.instancedomain').val(),
-            dataType: "json",
-            success: function(json){
-                var time = <?php echo $this->timeExecution ?>*json;
-                row.find('div.bar').html('In Queue - ' + time + ' minutes left');
-            }
-      });
-        }
-        
-        //remove installing label now when everything is updated
-        if (new_status.substr(0,10)!='installing' && new_status != 'pending'){
-            row.removeClass('installing');
-        }
-}
-
-
-
-</script>
