@@ -11,7 +11,7 @@ includePaths.braintree = APPLICATION_PATH "/../library/Braintree"
 autoloaderNamespaces.zend = Zend_
 autoloaderNamespaces.integration = Integration_
 autoloaderNamespaces.rocketweb = RocketWeb_
-autoloaderNamespaces.rocketweb = Braintree_
+autoloaderNamespaces.braintree = Braintree_
 
 ; Bootstrap
 bootstrap.path = APPLICATION_PATH "/Bootstrap.php"
