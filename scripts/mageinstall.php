@@ -52,7 +52,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
     $sql = $select
             ->from('queue')
             ->joinLeft('version', 'queue.version_id = version.id', array('version', 'sample_data_version'))
-            ->joinLeft('user', 'queue.user_id = user.id', array('email', 'login', 'group', 'firstname', 'lastname', 'has_system_account'))
+            ->joinLeft('user', 'queue.user_id = user.id', array('email', 'login', 'group', 'firstname', 'lastname', 'has_system_account','plan_id'))
             ->where('queue.status =?', 'pending')
             ->where('user.status =?', 'active')
             ->where('queue.type = ? ','clean');
@@ -104,6 +104,12 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
             $log->log($message, LOG_DEBUG);
             unset($output);
 
+            //TODO: Move this logic somewhere else, 
+            // we're going tu use plan update for this
+            //
+            //TODO: check if $queueElement['plan_id'] has access 
+            // to ftp account and send over credentials
+            
             if('free-user' != $queueElement['group']) {
                 /* send email with account details start */
                 $html = new Zend_View();
