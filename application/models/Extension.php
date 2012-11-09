@@ -8,6 +8,8 @@ class Application_Model_Extension {
     
     protected $_description;
     
+    protected $_logo;
+    
     protected $_file_name;
     
     protected $_namespace_module;
@@ -19,6 +21,8 @@ class Application_Model_Extension {
     protected $_edition;
 
     protected $_is_dev;
+    
+    protected $_price;
     
     protected $_mapper;
         
@@ -74,8 +78,19 @@ class Application_Model_Extension {
     {
         return $this->_description;
     }
-    
-        public function setFileName($value)
+
+    public function setLogo($logo)
+    {
+        $this->_logo = $logo;
+        return $this;
+    }
+
+    public function getLogo()
+    {
+        return $this->_logo;
+    }
+
+    public function setFileName($value)
     {
         $this->_file_name = $value;
         return $this;
@@ -140,6 +155,17 @@ class Application_Model_Extension {
         return $this->_is_dev;
     }   
 
+    public function setPrice($price)
+    {
+        $this->_price = $price;
+        return $this;
+    }
+
+    public function getPrice()
+    {
+        return $this->_price;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -172,7 +198,14 @@ class Application_Model_Extension {
 
     public function fetchAll()
     {
-        return $this->getMapper()->fetchAll();
+        $extensions = array();
+        foreach($this->getMapper()->fetchAll() as $row) {
+            $extensions[] = array(
+                'item' => $row,
+                'screenshots' => $row->fetchScreenshots()
+            );
+        }
+        return $extensions;
     }
 
     public function __toArray()
@@ -181,12 +214,14 @@ class Application_Model_Extension {
                 'id' => $this->getId(),
                 'name' => $this->getName(),
                 'description' => $this->getDescription(),
+                'logo' => $this->getLogo(),
                 'file_name' => $this->getFileName(),
                 'namespace_module' => $this->getNamespaceModule(),
                 'from_version' => $this->getFromVersion(),
                 'to_version' => $this->getToVersion(),
                 'edition' => $this->getEdition(),
                 'is_dev' => $this->getIsDev(),
+                'price' => $this->getPrice(),
         );
     }
 
@@ -215,5 +250,14 @@ class Application_Model_Extension {
     
     public function findByFilters($filters){
         return $this->getMapper()->findByFilters($filters,  $this);
+    }
+
+    public function fetchScreenshots($id = 0) {
+        $id = (int)$id ? (int)$id : (int)$this->getId();
+        if(!$id) {
+            return array();
+        }
+        $model = new Application_Model_ExtensionScreenshot();
+        return $model->fetchByExtensionId($id);
     }
 }

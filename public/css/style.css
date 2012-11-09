@@ -146,3 +146,22 @@ body {
     display:inline-block;
     width:49%;
 }
+
+
+/* @group admin extension grid */
+.admin-extensions .logo {
+    padding-right: 10px;
+    max-width: 100px;
+}
+.admin-extensions .show-screenshots {
+    
+}
+.admin-extensions .screenshots-container{
+    display: none;
+}
+.logo-container img {
+    max-width: 100px;
+}
+.screenshots img {
+    max-width: 200px;
+}

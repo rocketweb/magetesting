@@ -25,6 +25,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_index'));
         $this->add(new Zend_Acl_Resource('default_user'));
         $this->add(new Zend_Acl_Resource('default_queue'));
+        $this->add(new Zend_Acl_Resource('default_extension'));
         $this->add(new Zend_Acl_Resource('default_my-account'));
         /**
          * Deny for all (we use white list)

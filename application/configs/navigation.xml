@@ -80,6 +80,18 @@
                 <float>right</float>
                 <icon>icon-white icon-time</icon>
             </wholeQueue>
+            <supportedExtensions>
+                <label>Extensions</label>
+                <module>default</module>
+                <controller>extension</controller>
+                <action>index</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_extension</resource>
+                <privilege>index</privilege>
+                <float>right</float>
+                <icon>icon-white icon-time</icon>
+            </supportedExtensions>
             <dashboard>
                 <label>Dashboard</label>
                 <module>default</module>

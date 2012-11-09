@@ -188,7 +188,6 @@ CREATE  TABLE IF NOT EXISTS `payment` (
     `subscr_id` VARCHAR(19) NOT NULL ,
     PRIMARY KEY (`id`) ,
     INDEX `user_has_payments` (`user_id` ASC) ,
-    INDEX `plan_has_payments` (`user_id` ASC) ,
     INDEX `plan_has_payments` (`plan_id` ASC) ,
     CONSTRAINT `user_has_payments`
         FOREIGN KEY (`user_id` )
@@ -234,10 +233,10 @@ INSERT INTO `edition` VALUES  (1,'CE','Community'),
 ";
 
 $sql[] = "
-INSERT INTO `user` VALUES
-(1,'admin','d033e22ae348aeb5660fc2140aec35850c4da997','jan@rocketweb.com','John','Admin', 'street', 'postal code', 'city', 'state','country','2012-01-01 00:00:00','active','admin',0,'',0),
-(2,'commercial-user','616821f7a69735aacee22f88f870d00062c0f2d2','jan@rocketweb.com','John','Commercial', 'street', 'postal code', 'city', 'state','country','2012-01-01 00:00:00','active','commercial-user',0,'',0),
-(3,'standard-user','d285033046d5df2851143596830bca4811bf3af8','jan@rocketweb.com','John','Standard', 'street', 'postal code', 'city', 'state','country','2012-01-01 00:00:00','active','free-user',0,'',0)
+INSERT INTO `user` (`id`, `login`, `password`, `email`, `firstname`, `lastname`, `street`, `postal_code`, `city`, `state`, `added_date`, `subscr_id`, `plan_id`, `plan_active_to`, `status`, `group`, `has_system_account`, `system_account_name`, `country`, `downgraded`) VALUES
+(1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'jan@rocketweb.com', 'John', 'Admin', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', NULL, 0, NULL, 'active', 'admin', 1, 'mi_admin', NULL, 2),
+(2, 'commercial-user', '616821f7a69735aacee22f88f870d00062c0f2d2', 'jan@rocketweb.com', 'John', 'Commercial', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', NULL, 0, NULL, 'active', 'free-user', 0, NULL, NULL, 2),
+(3, 'standard-user', 'd285033046d5df2851143596830bca4811bf3af8', 'jan@rocketweb.com', 'John', 'Standard', 'Some street 12', '501234x', 'New York City', 'New York', '0000-00-00 00:00:00', NULL, NULL, NULL, 'active', 'free-user', 0, NULL, 'USA', 1)
 ";
 
 $sql[] = "

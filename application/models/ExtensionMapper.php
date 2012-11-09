@@ -26,25 +26,14 @@ class Application_Model_ExtensionMapper {
 
     public function save(Application_Model_Extension $extension)
     {
-        $data = array(
-            'id' => $extension->getId(),
-            'name'   => $extension->getName(),
-            'description'   => $extension->getDescription(),
-            'file_name'   => $extension->getFileName(),
-            'namespace_module'   => $extension->getNamespaceModule(),
-            'from_version'   => $extension->getFromVersion(),
-            'to_version'   => $extension->getToVersion(),
-            'edition'   => $extension->getEdition(),
-            'is_dev'   => $extension->getIsDev(),
-        );
-
+        $data = $extension->__toArray();
         if (null === ($id = $extension->getId())) {
             unset($data['id']);
-            $this->getDbTable()->insert($data);
+            $extension->setId($this->getDbTable()->insert($data));
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
-
+        return $extension;
     }
 
     public function find($id, Application_Model_Extension $extension)
@@ -57,12 +46,14 @@ class Application_Model_ExtensionMapper {
         $extension->setId($row->id)
         ->setName($row->name)
         ->setDescription($row->description)
+        ->setLogo($row->logo)
         ->setFileName($row->file_name)
         ->setNamespaceModule($row->namespace_module)
         ->setFromVersion($row->from_version)
         ->setToVersion($row->to_version)
         ->setEdition($row->edition)
-        ->setIsDev($row->is_dev);
+        ->setIsDev($row->is_dev)
+        ->setPrice($row->price);
         return $extension;
     }
 
@@ -80,12 +71,14 @@ class Application_Model_ExtensionMapper {
             $entry->setId($row->id)
             ->setName($row->name)
             ->setDescription($row->description)
+            ->setLogo($row->logo)
             ->setFileName($row->file_name)
             ->setNamespaceModule($row->namespace_module)
             ->setFromVersion($row->from_version)
             ->setToVersion($row->to_version)
             ->setEdition($row->edition)
-            ->setIsDev($row->is_dev);
+            ->setIsDev($row->is_dev)
+            ->setPrice($row->price);
             $entries[] = $entry;
         }
         return $entries;
@@ -172,12 +165,14 @@ class Application_Model_ExtensionMapper {
         $extension->setId($row->id)
                 ->setName($row->name)
                 ->setDescription($row->description)
+                ->setLogo($row->logo)
                 ->setFileName($row->file_name)
                 ->setNamespaceModule($row->namespace_module)
                 ->setFromVersion($row->from_version)
                 ->setToVersion($row->to_version)
                 ->setEdition($row->edition)
-                ->setIsDev($row->is_dev);
+                ->setIsDev($row->is_dev)
+                ->setPrice($row->price);
         ;
         return $extension;
     }

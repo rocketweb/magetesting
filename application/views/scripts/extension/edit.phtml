@@ -1,0 +1,201 @@
+<?php
+$this->headScript()->appendFile($this->baseUrl('public/js/jquery_uploader/js/vendor/jquery.ui.widget.js'));
+$this->headScript()->appendFile('http://blueimp.github.com/JavaScript-Templates/tmpl.min.js');
+$this->headScript()->appendFile('http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js');
+$this->headScript()->appendFile('http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js');
+$this->headScript()->appendFile('http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js');
+$this->headScript()->appendFile($this->baseUrl('public/js/jquery_uploader/js/jquery.iframe-transport.js'));
+$this->headScript()->appendFile($this->baseUrl('public/js/jquery_uploader/js/jquery.fileupload.js'));
+$this->headScript()->appendFile($this->baseUrl('public/js/jquery_uploader/js/jquery.fileupload-fp.js'));
+$this->headScript()->appendFile($this->baseUrl('public/js/jquery_uploader/js/jquery.fileupload-ui.js'));
+$this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/css/jquery.fileupload-ui.css'));
+?>
+<?php if(!isset($this->add_form)): ?>
+<div class="row">
+    <div class="span11">
+        <form class="form-horizontal" method="post" id="extension-form">
+            <fieldset>
+                <legend>Edit Extension</legend>
+<?php endif; ?>
+                <?php echo $this->form->directory_hash; ?>
+                <div class="form-desc"><h4>Required fields listed in bold.</h4></div>
+                <div class="control-group <?php echo $this->form->logo->hasErrors() ? 'error' : ''; ?>">
+                    <label for="logo" class="control-label required">Logo</label>
+                    <div class="controls logo-container">
+                    <?php if($this->logo): ?>
+                        <?php if(isset($this->old_logo) AND $this->old_logo): ?>
+                            <input type="hidden" name="old_logo" value="<?php echo $this->old_logo; ?>" />
+                            <img src="<?php echo $this->ImagePath($this->old_logo, 'extension/logo', false); ?>" />
+                        <?php else: ?>
+                            <img src="<?php echo $this->baseUrl('public/assets/img/temp/'.$this->directoryHash.'/'.$this->logo); ?>" />
+                        <?php endif; ?>
+                        <input type="hidden" name="logo" value="<?php echo $this->logo; ?>">
+                    <?php endif; ?>
+                    <?php if($this->form->logo->hasErrors()): ?>
+                        <ul class="errors">
+                            <li>You have to upload image first.</li>
+                        </ul>
+                    <?php endif; ?>
+                    </div>
+                </div>
+                <?php echo $this->form->title; ?>
+                <?php echo $this->form->description; ?>
+                <?php echo $this->form->price; ?>
+                <div class="control-group <?php echo ($this->form->screenshots->hasErrors() ? 'error' : ''); ?>">
+                    <label class="control-label required">Screenshots</label>
+                    <div class="controls screenshots">
+                        <?php if($this->form->screenshots->hasErrors()): ?>
+                        <ul class="errors">
+                            <li>You have to upload at least one image.</li>
+                        </ul>
+                        <?php endif; ?>
+                        <?php foreach($this->screenshots as $key => $screenshot): ?>
+                            <?php if(isset($this->screenshots_ids[$key]) AND $this->screenshots_ids[$key]): ?>
+                               <input type="hidden" name="screenshots_ids[]" value="<?php echo $this->screenshots_ids[$key]; ?>">
+                               <img src="<?php echo $this->ImagePath($screenshot, 'extension/screenshots', false); ?>" />
+                            <?php else: ?>
+                                <img src="<?php echo $this->baseUrl('public/assets/img/temp/'.$this->directoryHash.'/'.$screenshot); ?>" />
+                            <?php endif; ?>
+                            <input type="hidden" name="screenshots[]" value="<?php echo $screenshot; ?>">
+                        <?php endforeach; ?>
+                    </div>
+                </div><!-- /control-group -->
+                <hr />
+            </fieldset>
+        </form>
+        <fieldset>
+<!-- The file upload form used as target for the file upload widget -->
+<form id="fileupload" action="<?php echo $this->baseUrl('extension/upload'); ?>" method="POST" enctype="multipart/form-data">
+    <!-- Redirect browsers with JavaScript disabled to the origin page -->
+    <noscript><input type="hidden" name="redirect" value="http://blueimp.github.com/jQuery-File-Upload/"></noscript>
+    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+    <div class="row fileupload-buttonbar">
+        <div class="span7">
+            <!-- The fileinput-button span is used to style the file input field as button -->
+            <span class="btn btn-success fileinput-button">
+                <i class="icon-plus icon-white"></i>
+                <span>Add files...</span>
+                <input type="file" name="files[]" multiple>
+            </span>
+        </div>
+    </div>
+    <!-- The loading indicator is shown during file processing -->
+    <div class="fileupload-loading"></div>
+    <br>
+    <!-- The table listing the files available for upload/download -->
+    <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+</form>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-upload fade">
+            <td class="preview"><span class="fade"></span></td>
+            <td class="name"><span>{%=file.name%}</span></td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            {% if (file.error) { %}
+                <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
+            {% } else if (o.files.valid && !i) { %}
+                <td>
+                    <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+                </td>
+                <td class="start">{% if (!o.options.autoUpload) { %}
+                    <button class="btn btn-primary">
+                        <i class="icon-upload icon-white"></i>
+                        <span>Start</span>
+                    </button>
+                {% } %}</td>
+            {% } else { %}
+                <td colspan="2"></td>
+            {% } %}
+            <td class="as-logo">
+                <span class="btn as-logo">As Logo <input type="checkbox" name="as_logo[]" value="1" /></button>
+            </td>
+            <td class="cancel">{% if (!i) { %}
+                <button class="btn btn-warning">
+                    <i class="icon-ban-circle icon-white"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}</td>
+        </tr>
+    {% } %}
+</script>
+<script>
+$(function(){
+    var $jquery_uploader = $('table[role=presentation]');
+    if($jquery_uploader.length) {
+        $jquery_uploader.on('click', '.delete-row', function(){
+            $(this).parents('tr:first').remove();
+        });
+    }
+});
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-download fade">
+            {% if (file.error) { %}
+                <td></td>
+                <td class="name"><span>{%=file.name%}</span></td>
+                <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+                <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
+            {% } else { %}
+                <td class="preview">{% if (!file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img style="max-width:200px;" src="{%=file.url%}"></a>
+                {% } %}</td>
+                <td class="name">
+                    <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+                </td>
+                <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+                <td colspan="2"></td>
+            {% } %}
+            <td class="delete">
+            {% if (file.error) { %}
+                <button class="btn btn-danger delete-row">
+                    <i class="icon-trash icon-white"></i>
+                    <span>Delete</span>
+                </button>
+            {% } else { %}
+                <button class="btn btn-success">
+                    <i class="icon-ok icon-white"></i>
+                    <span>Success</span>
+                </button>
+            {% } %}
+            </td>
+        </tr>
+    {% } %}
+</script>
+        </fieldset>
+            <fieldset>
+                <div class="form-actions" style="padding-left: 160px;">
+                    <?php echo $this->form->submit; ?>
+                    <a href="<?php echo $this->url(array('cancel' => 1), 'default', false); ?>" class="btn btn-danger">Cancel</a>
+                </div>
+            </fieldset>
+    </div>
+</div>
+<script id="template-image-row" type="text/x-tmpl">
+<div class="image-row">
+    <div class="control-group custom">
+        <input type="hidden" name="screenshots_ids[]" value="" />
+        <label for="content_extra" class="control-label"><a href="#" class="btn btn-danger"><i class="icon-remove icon-white"></i></a> Image File</label>
+        <div class="controls">
+            <input type="hidden" name="files[]" value="{%=o.image_name%}">
+            <img src="{%=o.image_url%}" />
+        </div>
+    </div>
+    <div class="control-group custom">
+        <label for="content_extra" class="control-label">Image Title</label>
+        <div class="controls">
+            <input type="text" name="titles[]" value="" class="span9 required">
+        </div>
+    </div>
+    <div class="control-group custom">
+        <label for="content_extra" class="control-label">Image Caption</label>
+        <div class="controls">
+            <textarea class="span9 required editor" name="captions[]"></textarea>
+        </div>
+    </div>
+    <hr />
+</div>
+</script>
