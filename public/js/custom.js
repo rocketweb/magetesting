@@ -4,6 +4,9 @@ $(document).ready(function () {
         placement: 'bottom'
     });
 
+    /* prevent click event and init popover */
+    $('[rel=popover]').click(function(){return false;}).popover();
+
     var $admin_extension = $('table.admin-extensions'),
         $admin_extension_uploader = $('#fileupload'),
         $screenshots = $('.screenshots'),

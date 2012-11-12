@@ -15,7 +15,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
     <thead>
         <tr>
             <th>Title</th>
-            <th>Description</th>
+            <th>Edition</th>
             <th>Price</th>
             <th>Actions</th>
         </tr>
@@ -23,15 +23,35 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
     <tbody>
         <?php foreach($this->extensions as $extension): ?>
         <tr>
-            <td>
-                <img class="logo" src="<?php echo $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, true); ?>" />
-                <?php echo $extension['item']->getName(); ?>
+            <td><div class="media">
+                <?php if($extension['item']->getLogo()): ?>
+                    <img class="pull-left logo" src="<?php echo $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, true); ?>" />
+                <?php endif; ?>
+                <b><?php echo $extension['item']->getName(); ?></b> ( <?php echo $extension['item']->getVersion(); ?> )
+                <p><?php echo $extension['item']->getDescription(); ?></p>
+                </div>
             </td>
-            <td><?php echo $extension['item']->getDescription(); ?></td>
-            <td><?php echo $extension['item']->getPrice(); ?></td>
             <td>
-                <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $extension['item']->getId()), 'default', true); ?>" class="btn btn-success"><i class="icon-pencil"></i> Edit</a>
-                <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $extension['item']->getId()), 'default', true); ?>" class="btn btn-danger"><i class="icon-trash"></i> Delete</a>
+                <?php
+                $supported_versions = '';
+                $supported_versions .= (($version = $extension['item']->getFromVersion()) ? 'From: '.$version.'<br />' : '');
+                $supported_versions .= (($version = $extension['item']->getToVersion()) ? 'To: '.$version : '');
+                if(!$supported_versions) {
+                    $supported_versions = 'N.A.';
+                }
+                ?>
+                <a href="#" 
+                   class="label label-success"
+                   rel="popover"
+                   data-placement="top"
+                   data-content="<?php echo $supported_versions; ?>"
+                   data-original-title="Supported versions.">
+                <?php echo $extension['item']->getEdition(); ?></a>
+            </td>
+            <td><?php echo $extension['item']->getPrice(); ?></td>
+            <td class="nowrap">
+                <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $extension['item']->getId()), 'default', true); ?>" class="btn btn-success"><i class="icon-pencil icon-white"></i> Edit</a>
+                <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $extension['item']->getId()), 'default', true); ?>" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete</a>
                 <a href="#" class="btn show-screenshots"><i class="icon-camera"></i></a>
                 <div class="screenshots-container">
                     <?php foreach($extension['screenshots'] as $key => $screenshot): ?>

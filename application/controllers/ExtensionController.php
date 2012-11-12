@@ -33,8 +33,20 @@ class ExtensionController extends Integration_Controller_Action {
     {
         $id = (int) $this->_getParam('id', 0);
 
+        if(($cancel = (int)$this->_getParam('cancel', 0)) AND $cancel) {
+            return $this->_helper->redirector->gotoRoute(array(
+                'module'     => 'default',
+                'controller' => 'extension',
+                'action'     => 'index',
+            ), 'default', true);
+        }
+
         $extension_data = array(
             'title'          => $this->_getParam('title', ''),
+            'version'        => $this->_getParam('version', ''),
+            'edition'        => $this->_getParam('edition', ''),
+            'from_version'   => $this->_getParam('from_version', ''),
+            'to_version'     => $this->_getParam('to_version', ''),
             'description'    => $this->_getParam('description', ''),
             'price'          => $this->_getParam('price', ''),
             'logo'           => $this->_getParam('logo', ''),
@@ -42,9 +54,10 @@ class ExtensionController extends Integration_Controller_Action {
             'directory_hash' => $this->_getParam('directory_hash', time().'-'.uniqid())
         );
         $form = new Application_Form_ExtensionAdd();
-        $success_message = 'Extension has benn added properly.';
+        $success_message = 'Extension has been added properly.';
 
         $extension = new Application_Model_Extension();
+        $extension_entity_data = array();
         $screenshots = array();
         $screenshots_ids = array();
 
@@ -57,13 +70,17 @@ class ExtensionController extends Integration_Controller_Action {
                     $screenshots_ids[] = $row->getId();
                     $screenshots[] = $row->getImage();
                 }
-                $extension_data = array_merge($extension_data, array(
+                $extension_entity_data = array(
                     'title' => $extension->getName(),
                     'description' => $extension->getDescription(),
+                    'version' => $extension->getVersion(),
+                    'edition' => $extension->getEdition(),
+                    'from_version' => $extension->getFromVersion(),
+                    'to_version' => $extension->getToVersion(),
                     'price' => $extension->getPrice(),
                     'logo' => $extension->getLogo(),
                     'screenshots' => $screenshots
-                ));
+                );
                 $form = new Application_Form_ExtensionEdit();
                 $success_message = 'Extension has benn changed properly.';
             } else {
@@ -81,7 +98,7 @@ class ExtensionController extends Integration_Controller_Action {
             return $this->_helper->redirector->gotoRoute(array(
                     'module'     => 'default',
                     'controller' => 'extension',
-                    'action'     => '',
+                    'action'     => 'index',
             ), 'default', true);
         }
 
@@ -93,7 +110,7 @@ class ExtensionController extends Integration_Controller_Action {
             $this->view->logo = $this->_getParam('logo');
 
             $formData = $this->_request->getPost();
-    
+
             if($form->isValid($formData)) {
                 $old_logo = $extension->getLogo();
                 $new_logo = $this->_getParam('logo');
@@ -131,6 +148,7 @@ class ExtensionController extends Integration_Controller_Action {
                 ), 'default', true);
             }
         } else {
+            $extension_data = array_merge($extension_data, $extension_entity_data);
             $this->view->old_logo = $extension->getLogo();
             $this->view->logo = $this->view->old_logo;
         }

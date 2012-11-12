@@ -150,7 +150,6 @@ body {
 
 /* @group admin extension grid */
 .admin-extensions .logo {
-    padding-right: 10px;
     max-width: 100px;
 }
 .admin-extensions .show-screenshots {
@@ -164,4 +163,8 @@ body {
 }
 .screenshots img {
     max-width: 200px;
+}
+
+.nowrap {
+    white-space: nowrap;
 }

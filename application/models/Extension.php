@@ -10,6 +10,8 @@ class Application_Model_Extension {
     
     protected $_logo;
     
+    protected $_version;
+    
     protected $_file_name;
     
     protected $_namespace_module;
@@ -111,7 +113,18 @@ class Application_Model_Extension {
     {
         return $this->_namespace_module;
     }
-    
+
+    public function setVersion($value)
+    {
+        $this->_version = $value;
+        return $this;
+    }
+
+    public function getVersion()
+    {
+        return $this->_version;
+    }
+
     public function setFromVersion($value)
     {
         $this->_from_version = $value;
@@ -214,6 +227,7 @@ class Application_Model_Extension {
                 'id' => $this->getId(),
                 'name' => $this->getName(),
                 'description' => $this->getDescription(),
+                'version' => $this->getVersion(),
                 'logo' => $this->getLogo(),
                 'file_name' => $this->getFileName(),
                 'namespace_module' => $this->getNamespaceModule(),

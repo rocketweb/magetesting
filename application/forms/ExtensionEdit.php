@@ -63,21 +63,46 @@ class Application_Form_ExtensionEdit extends Integration_Form
         // Add logo element
         $this->addElement('hidden', 'logo', array(
                 'label'      => 'Logo',
-                'required'   => true,
+                'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
-                'allowEmpty' => false
+                'allowEmpty' => true
         ));
         $this->addElement('hidden', 'old_logo', array(
                 'ignore'   => true,
                 'label'    => 'Old logo',
         ));
 
+        $this->addElement('text', 'version', array(
+                'label'      => 'Extension Version',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'allowEmpty' => true
+        ));
+        $this->addElement('text', 'edition', array(
+                'label'      => 'Edition',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'allowEmpty' => true
+        ));
+        $this->addElement('text', 'from_version', array(
+                'label'      => 'Supported from',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'allowEmpty' => true
+        ));
+        $this->addElement('text', 'to_version', array(
+                'label'      => 'Supported to',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'allowEmpty' => true
+        ));
+
         // Add screenshots element
         $this->addElement('hidden', 'screenshots', array(
                 'label'      => 'Screenshot',
-                'required'   => true,
+                'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
-                'allowEmpty' => false
+                'allowEmpty' => true
         ));
 
         // Add the submit button
