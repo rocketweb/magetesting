@@ -178,7 +178,7 @@ class ExtensionController extends Integration_Controller_Action {
             umask(0);
             
             if(!file_exists($this->_tempDir)) {
-                @mkdir($this->_tempDir, $chmod);
+                @mkdir($this->_tempDir, $chmod, true);
             }
             
             /* delete old temp files */
