@@ -7,16 +7,16 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function indexAction() {
-        $queueModel = new Application_Model_Queue();
+        $instanceModel = new Application_Model_Instance();
 
         $timeExecution = $this->getInvokeArg('bootstrap')
                         ->getResource('config')
                 ->magento
                 ->instanceTimeExecution;
-        $queueCounter = $queueModel->getPendingItems($timeExecution);
+        $queueCounter = $instanceModel->getPendingItems($timeExecution);
 
         $page = (int) $this->_getParam('page', 0);
-        $paginator = $queueModel->getWholeQueue();
+        $paginator = $instanceModel->getWholeQueue();
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
 
@@ -29,7 +29,7 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function addCleanAction() {
-        $form = new Application_Form_QueueAddClean();
+        $form = new Application_Form_InstanceAddClean();
         $form->populate($this->getRequest()->getParams());
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
@@ -52,10 +52,10 @@ class QueueController extends Integration_Controller_Action {
 
             if ($form->isValid($this->getRequest()->getParams())) {
                 //needs validation!
-                $queueModel = new Application_Model_Queue();
+                $instanceModel = new Application_Model_Instance();
                 $userId = $this->auth->getIdentity()->id;
 
-                $userInstances = $queueModel->countUserInstances($userId);
+                $userInstances = $instanceModel->countUserInstances($userId);
 
                 if ($userGroup == 'free-user') {
                     $maxInstances = (int) $this->getInvokeArg('bootstrap')
@@ -76,7 +76,7 @@ class QueueController extends Integration_Controller_Action {
 
                 if ($userInstances < $maxInstances || $userGroup == 'admin') {
 
-                    $queueModel->setVersionId($form->version->getValue())
+                    $instanceModel->setVersionId($form->version->getValue())
                             ->setEdition($form->edition->getValue())
                             ->setUserId($userId)
                             ->setSampleData($form->sample_data->getValue())
@@ -94,7 +94,21 @@ class QueueController extends Integration_Controller_Action {
                             )
                             ->setStatus('pending')
                             ->setType('clean');
+                                       
+                    $instanceId = $instanceModel->save();
+                    
+                    //TODO: Add queue item with MagentoInstall
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('MagentoInstall');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId(1); /* TODO: select this somehow, server model method select server? */
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId(0);  
                     $queueModel->save();
+                    
+                    
                     $this->_helper->FlashMessenger('New installation added to queue');
 
                     //magetesting user creates database
@@ -102,7 +116,7 @@ class QueueController extends Integration_Controller_Action {
                         $db = Zend_Db_Table::getDefaultAdapter();
                         $DbManager = new Application_Model_DbTable_Privilege($db, $this->getInvokeArg('bootstrap')
                                                 ->getResource('config'));
-                        $DbManager->createDatabase($this->auth->getIdentity()->login . '_' . $queueModel->getDomain());
+                        $DbManager->createDatabase($this->auth->getIdentity()->login . '_' . $instanceModel->getDomain());
 
                         if (!$DbManager->checkIfUserExists($this->auth->getIdentity()->login)) {
                             $DbManager->createUser($this->auth->getIdentity()->login);
@@ -150,17 +164,17 @@ class QueueController extends Integration_Controller_Action {
 
         $request = $this->getRequest();
 
-        $form = new Application_Form_QueueAddCustom();
+        $form = new Application_Form_InstanceAddCustom();
         $form->populate($request->getParams());
 
         if ($request->isPost()) {
 
             if ($form->isValid($request->getParams())) {
                 //needs validation!
-                $queueModel = new Application_Model_Queue();
+                $instanceModel = new Application_Model_Instance();
                 $userId = $this->auth->getIdentity()->id;
 
-                $userInstances = $queueModel->countUserInstances($userId);
+                $userInstances = $instanceModel->countUserInstances($userId);
 
                 if ($userGroup == 'free-user') {
                     $maxInstances = (int) $this->getInvokeArg('bootstrap')
@@ -181,8 +195,10 @@ class QueueController extends Integration_Controller_Action {
 
                 if ($userInstances < $maxInstances || $userGroup == 'admin') {
 
+                    
+                    
                     //start adding instance
-                    $queueModel->setVersionId($form->version->getValue())
+                    $instanceModel->setVersionId($form->version->getValue())
                             ->setEdition($form->edition->getValue())
                             ->setSampleData(1)
                             ->setInstanceName($form->instance_name->getValue())
@@ -206,15 +222,29 @@ class QueueController extends Integration_Controller_Action {
                             ->setCustomPass($form->custom_pass->getValue())
                             ->setCustomSql($form->custom_sql->getValue())
                             ->setType('custom');
-                    $queueModel->save();
+                    $newInstanceId = $instanceModel->save();
                     $this->_helper->FlashMessenger('New installation added to queue');
 
+                    
+                    $queueModel = new Application_Model_Queue();
+                    //TODO: Add queue item with MagentoDownload
+                    $queueModel->setInstanceId($newInstanceId);
+                    $queueModel->setTask('MagentoDownload');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId(1); /* TODO: select this somehow, server model method select server? */
+                    $queueModel->setParentId(0);
+                    $queueModel->setExtensionId(0);
+                    $queueModel->save();
+                    
+                    //TODO: Add queue Item with MagentoInstall and parent id from above
+                    
                     //magetesting user creates database
                     try {
                         $db = Zend_Db_Table::getDefaultAdapter();
                         $DbManager = new Application_Model_DbTable_Privilege($db, $this->getInvokeArg('bootstrap')
                                                 ->getResource('config'));
-                        $DbManager->createDatabase($this->auth->getIdentity()->login . '_' . $queueModel->getDomain());
+                        $DbManager->createDatabase($this->auth->getIdentity()->login . '_' . $instanceModel->getDomain());
 
                         if (!$DbManager->checkIfUserExists($this->auth->getIdentity()->login)) {
                             $DbManager->createUser($this->auth->getIdentity()->login);
@@ -246,7 +276,7 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function closeAction() {
-        $form = new Application_Form_QueueClose();
+        $form = new Application_Form_InstanceClose();
         $this->view->form = $form;
 
         $domain = $this->getRequest()->getParam('domain');
@@ -255,14 +285,28 @@ class QueueController extends Integration_Controller_Action {
 
             $close = (int) $this->getRequest()->getParam('close');
 
-            if ($close AND $domain) {
-                $queue = new Application_Model_Queue();
-                $queue->setUserId($this->auth->getIdentity()->id)
+            if ($close AND $domain) {                      
+                
+                $instanceModel = new Application_Model_Instance();
+                $instanceModel->setUserId($this->auth->getIdentity()->id)
                         ->setDomain($domain);
                 $byAdmin = $this->auth->GetIdentity()
                         ->group == 'admin' ? true : false;
 
-                $queue->changeStatusToClose($byAdmin);
+                $instanceModel->changeStatusToClose($byAdmin);
+                              
+                $currentInstance = $instanceModel->findByName($domain);
+
+                //add remove task to queue
+                $queueModel = new Application_Model_Queue();
+                $queueModel->setTask('MagentoRemove')
+                        ->setInstanceId($currentInstance->id)
+                        ->setUserId($this->auth->getIdentity()->id)
+                        ->setParentId(0)
+                        ->setExtensionId(0)
+                        ->setServerId(1)
+                        ->setStatus('pending')
+                        ->save();
 
                 $this->_helper->FlashMessenger('Store added to close queue.');
             }
@@ -277,7 +321,7 @@ class QueueController extends Integration_Controller_Action {
                         'module' => 'default',
                         'controller' => $controller,
                         'action' => $action,
-                            ), 'default', true);
+                    ), 'default', true);
         }
     }
 
@@ -304,8 +348,8 @@ class QueueController extends Integration_Controller_Action {
     public function editAction() {
         $id = (int) $this->_getParam('id', 0);
 
-        $queueItem = new Application_Model_Queue();
-        $instance = $queueItem->find($id);
+        $instanceModel = new Application_Model_Instance();
+        $instance = $instanceModel->find($id);
 
         if ($instance->getUserId() == $this->auth->getIdentity()->id) {
             //its ok to edit
@@ -319,7 +363,7 @@ class QueueController extends Integration_Controller_Action {
             }
         }
 
-        $form = new Application_Form_QueueEdit();
+        $form = new Application_Form_InstanceEdit();
         $populate = array(
             'instance_name' => $instance->getInstanceName(),
             'backend_password' => $instance->getBackendPassword(),
@@ -365,22 +409,22 @@ class QueueController extends Integration_Controller_Action {
             if ($form->isValid($request->getPost())) {
 
                 //fetch queue data
-                $queueModel = new Application_Model_Queue();
-                $queueItem = $queueModel->findByName($instance_name);
+                $instanceModel = new Application_Model_Instance();
+                $instance = $instanceModel->findByName($instance_name);
 
                 if (count($form->extension->getValue()) > 0) {
-                    $queueRow = $queueModel->find($queueItem->id);
-                    $queueRow->setStatus('installing-extension');
-                    $queueRow->save();
+                    $instanceRow = $instanceModel->find($instance->id);
+                    $instanceRow->setStatus('installing-extension');
+                    $instanceRow->save();
 
                     foreach ($form->extension->getValue() as $ext) {
 
                         /* Adding extension to queue */
                         try {
                             $extensionQueueItem = new Application_Model_ExtensionQueue();
-                            $extensionQueueItem->setQueueId($queueItem->id);
+                            $extensionQueueItem->setInstanceId($instance->id);
                             $extensionQueueItem->setStatus('pending');
-                            $extensionQueueItem->setUserId($queueItem->user_id);
+                            $extensionQueueItem->setUserId($instance->user_id);
                             $extensionQueueItem->setExtensionId($ext);
                             $extensionQueueItem->save();
                         } catch (Exception $e) {
@@ -427,7 +471,7 @@ class QueueController extends Integration_Controller_Action {
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
 
-                $instanceModel = new Application_Model_Queue();
+                $instanceModel = new Application_Model_Instance();
                 $instanceInfo = $instanceModel->findByName($this->getRequest()->getParam('instance'));
 
                 //navigate through file list and download them
@@ -455,10 +499,10 @@ class QueueController extends Integration_Controller_Action {
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $domain = $request->getParam('domain', null);
         if ($request->isPost() && $domain!=null) {
-            $queueModel = new Application_Model_Queue();
-            $queueItem = $queueModel->findByName($domain);
+            $instanceModel = new Application_Model_Instance();
+            $instanceItem = $instanceModel->findByName($domain);
             
-            echo Zend_Json_Encoder::encode($queueItem->status);
+            echo Zend_Json_Encoder::encode($instanceItem->status);
         } 
     }
     
@@ -469,10 +513,11 @@ class QueueController extends Integration_Controller_Action {
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $domain = $request->getParam('domain', null);
         if ($request->isPost() && $domain!=null) {
-            $queueModel = new Application_Model_Queue();
-            $queueItem = $queueModel->findPositionByName($domain);
             
-            echo Zend_Json_Encoder::encode($queueItem->num);
+            $instanceModel = new Application_Model_Instance();
+            $instanceItem = $instanceModel->findPositionByName($domain);
+            
+            echo Zend_Json_Encoder::encode($instanceItem->num);
         } 
     }
 }

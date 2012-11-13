@@ -7,6 +7,8 @@ class Application_Model_Version {
     protected $_edition;
 
     protected $_version;
+    
+    protected $_sample_data_version;
 
     protected $_mapper;
 
@@ -62,6 +64,17 @@ class Application_Model_Version {
     {
         return $this->_version;
     }
+    
+    public function setSampleDataVersion($version)
+    {
+        $this->_sample_data_version = $version;
+        return $this;
+    }
+
+    public function getSampleDataVersion()
+    {
+        return $this->_sample_data_version;
+    }
 
     public function setMapper($mapper)
     {
@@ -103,7 +116,8 @@ class Application_Model_Version {
         return array(
                 'id' => $this->getId(),
                 'edition' => $this->getEdition(),
-                'version' => $this->getVersion()
+                'version' => $this->getVersion(),
+                'sample_data_version' => $this->getSampleDataVersion()
         );
     }
 

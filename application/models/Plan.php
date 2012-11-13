@@ -13,6 +13,10 @@ class Application_Model_Plan {
     protected $_instances;
 
     protected $_price;
+    
+    protected $_ftp_access;
+    
+    protected $_phpmyadmin_access;
 
     protected $_mapper;
 
@@ -81,6 +85,28 @@ class Application_Model_Plan {
         return $this->_price;
     }
     
+    public function setFtpAccess($value)
+    {
+        $this->_ftp_access = $value;
+        return $this;
+    }
+    
+    public function getFtpAccess()
+    {
+        return $this->_ftp_access;
+    }
+    
+    public function setPhpmyadminAccess($value)
+    {
+        $this->_phpmyadmin_access = $value;
+        return $this;
+    }
+    
+    public function getPhpmyadminAccess()
+    {
+        return $this->_phpmyadmin_access;
+    }
+    
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -122,13 +148,28 @@ class Application_Model_Plan {
                 'id'        => $this->getId(),
                 'name'      => $this->getName(),
                 'instances' => $this->getInstances(),
+                'ftp_access' => $this->getFtpAccess(),
+                'phpmyadmin_access' => $this->getPhpmyadminAccess(),
                 'price'     => $this->getPrice()
         );
     }
 
+    /* TODO: rewrite to not use this, currently an alias */
+    /**
+     * @deprecated
+     * @return type
+     */
     public function getAll()
     {
         return $this->getMapper()->fetchAll();
+    }
+    
+    /**
+     * 
+     * @param type $has
+     */
+    public function getAllByPhpmyadminAccess($has){
+        return $this->getMapper()->getAllByPhpmyadminAccess($has);
     }
 
 }

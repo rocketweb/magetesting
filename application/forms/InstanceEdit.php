@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_QueueEdit extends Integration_Form{
+class Application_Form_InstanceEdit extends Integration_Form{
 
     public function init()
     {
@@ -27,17 +27,17 @@ class Application_Form_QueueEdit extends Integration_Form{
         ));
 
         // Add the submit button
-        $this->addElement('submit', 'queueSave', array(
+        $this->addElement('submit', 'instanceSave', array(
                 'ignore'   => true,
                 'label'    => 'Save',
         ));
 
         $this->_setDecorators();
 
-        $this->queueSave->removeDecorator('HtmlTag');
-        $this->queueSave->removeDecorator('overall');
-        $this->queueSave->setAttrib('class','btn btn-primary');
-        $this->queueSave->removeDecorator('Label');
+        $this->instanceSave->removeDecorator('HtmlTag');
+        $this->instanceSave->removeDecorator('overall');
+        $this->instanceSave->setAttrib('class','btn btn-primary');
+        $this->instanceSave->removeDecorator('Label');
 
     }
 
