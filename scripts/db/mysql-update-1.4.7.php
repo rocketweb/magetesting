@@ -2,6 +2,16 @@
 
 $sql[]="ALTER TABLE `queue` RENAME TO `instance`;";
 
+$sql[]="ALTER TABLE `mageintegration`.`instance` DROP INDEX `queue_to_version` ,
+ADD INDEX `instance_to_version` ( `version_id` )
+";
+$sql[]="ALTER TABLE `mageintegration`.`instance` DROP INDEX `queue_to_user1` ,
+ADD INDEX `instance_to_user1` ( `user_id` ) ";
+
+//bring back constraints on (instance) - old queue
+
+
+
 $sql[]="CREATE  TABLE `user_extension` (
   `extension_id` INT NOT NULL ,
   `user_id` INT NULL ,
@@ -27,7 +37,9 @@ $sql[]="CREATE  TABLE `server` (
   ) ENGINE = InnoDB;
 ";
 
-$sql[]="INSERT INTO `server` (`name`,`description`,`domain`,`ip`) VALUES ('Magetesting server1','this server','dev.magetesting.com','127.0.0.1')";
+$sql[]="INSERT INTO `server` (`name`,`description`,`domain`,`ip`) 
+    VALUES 
+    ('Magetesting server1','this server','dev.magetesting.com','127.0.0.1')";
 
 $sql[]="ALTER TABLE `dev_extension_queue` DROP FOREIGN KEY `fk_dev_extension_queue_queue1` ;";
 
@@ -40,10 +52,21 @@ $sql[]="ALTER TABLE `dev_extension_queue` CHANGE COLUMN `queue_id` `instance_id`
 , DROP INDEX `fk_dev_extension_queue_queue1` 
 , ADD INDEX `fk_dev_extension_queue_queue1` (`instance_id` ASC) ;";
 
+
+
 $sql[]="ALTER TABLE `extension_queue` 
     ADD COLUMN `task` VARCHAR(45) NULL  AFTER `extension_id` , 
     RENAME TO  `queue` ;
 ";
+
+$sql[]="ALTER TABLE `mageintegration`.`queue` DROP INDEX `fk_extension_queue_queue1` ,
+ADD INDEX `fk_queue_queue1` ( `instance_id` ) ";
+
+$sql[]="ALTER TABLE `mageintegration`.`queue` DROP INDEX `fk_extension_queue_user1` ,
+ADD INDEX `fk_queue_user1` ( `user_id` ) ";
+
+$sql[]="ALTER TABLE `mageintegration`.`queue` DROP INDEX `fk_extension_queue_extension1` ,
+ADD INDEX `fk_queue_extension1` ( `extension_id` ) ";
 
 $sql[]="ALTER TABLE `queue` 
     DROP FOREIGN KEY `fk_extension_queue_queue1` ;";
