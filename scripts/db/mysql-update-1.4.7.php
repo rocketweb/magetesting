@@ -15,13 +15,15 @@ $sql[]="CREATE  TABLE `instance_extension` (
 ";
 
 $sql[]="CREATE  TABLE `server` (
-  `id` INT(11) UNSIGNED NOT NULL ,
-  `name` VARCHAR(45) NULL ,
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT
+,  `name` VARCHAR(45) NULL ,
   `description` VARCHAR(255) NULL ,
   `domain` VARCHAR(60) NULL ,
   `ip` VARCHAR(15) NULL ,
   PRIMARY KEY (`id`) );
 ";
+
+$sql[]="INSERT INTO `server` (`name`,`description`,`domain`,`ip`) VALUES ('Magetesting server1','this server','dev.magetesting.com','127.0.0.1')";
 
 $sql[]="ALTER TABLE `dev_extension_queue` DROP FOREIGN KEY `fk_dev_extension_queue_queue1` ;";
 
@@ -39,18 +41,25 @@ $sql[]="ALTER TABLE `extension_queue`
     RENAME TO  `queue` ;
 ";
 
-$sql[]="ALTER TABLE `queue` DROP FOREIGN KEY `fk_extension_queue_queue1` ;";
+$sql[]="ALTER TABLE `queue` 
+    DROP FOREIGN KEY `fk_extension_queue_queue1` ;";
+
+$sql[]="ALTER TABLE `queue` CHANGE COLUMN `queue_id` `instance_id` INT(11) NOT NULL";
 
 $sql[]="ALTER TABLE `queue` 
   ADD CONSTRAINT `fk_queue_instance1`
   FOREIGN KEY (`instance_id` )
   REFERENCES `instance` (`id` )
   ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
+  ON UPDATE NO ACTION
 , ADD INDEX `fk_queue_instance1` (`instance_id` ASC) ;";
 
-$sql[]="ALTER TABLE `queue` ADD COLUMN `server_id` INT(11) UNSIGNED NOT NULL  AFTER `extension_id`, 
-  ADD CONSTRAINT `fk_queue_server1`
+
+$sql[]="ALTER TABLE `queue` ADD COLUMN `server_id` INT(11) UNSIGNED NOT NULL  AFTER `extension_id`";
+ 
+$sql[]="ALTER TABLE `queue` SET `server_id`=1;";
+
+$sql[]="ALTER TABLE `queue` ADD CONSTRAINT `fk_queue_server1`
   FOREIGN KEY (`server_id` )
   REFERENCES `server` (`id` )
   ON DELETE CASCADE
