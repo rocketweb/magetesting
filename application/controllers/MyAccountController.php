@@ -16,7 +16,7 @@ class MyAccountController extends Integration_Controller_Action
         $modelPlan = new Application_Model_Plan();
         $payments = new Application_Model_Payment();
 
-        $modelUser = new Application_Model_User();             
+        $modelUser = new Application_Model_User();
         $user = $modelUser->find($this->auth->getIdentity()->id);
                
         $this->view->plan = $modelPlan->find($user->getPlanId());
