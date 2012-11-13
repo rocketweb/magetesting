@@ -27,23 +27,14 @@ class Application_Model_QueueMapper {
     public function save(Application_Model_Queue $queue)
     {
         $data = array(
-                'id' => $queue->getId(),
-                'edition'          => $queue->getEdition(),
-                'status'           => $queue->getStatus(),
-                'version_id'       => $queue->getVersionId(),
-                'user_id'          => $queue->getUserId(),
-                'domain'           => $queue->getDomain(),
-                'instance_name'    => $queue->getInstanceName(),
-                'sample_data'      => $queue->getSampleData(),
-                'backend_password' => '',
-                'custom_protocol'  => $queue->getCustomProtocol(),
-                'custom_host'      => $queue->getCustomHost(),
-                'custom_remote_path' => $queue->getCustomRemotePath(),
-                'custom_login'     =>  $queue->getCustomLogin(),
-                'custom_pass'      => $queue->getCustomPass(),
-                'custom_sql'       => $queue->getCustomSql(),
-                'error_message'       => $queue->getErrorMessage(),
-                'type'       => $queue->getType(),
+            'id' => $queue->getId(),
+            'instance_id' => $queue->getInstanceId(),
+            'status' => $queue->getStatus(),
+            'user_id' => $queue->getUserId(),
+            'extension_id' => $queue->getExtensionId(),
+            'task' => $queue->getTask(),
+            'server_id' => $queue->getServerId(),
+            'parent_id' => $queue->getParentId(),
         );
 
         if (null === ($id = $queue->getId())) {
@@ -63,23 +54,13 @@ class Application_Model_QueueMapper {
         }
         $row = $result->current();
         $queue->setId($row->id)
-                ->setEdition($row->edition)
-                ->setStatus($row->status)
-                ->setVersionId($row->version_id)
-                ->setUserId($row->user_id)
-                ->setDomain($row->domain)
-                ->setInstanceName($row->instance_name)
-                ->setSampleData($row->sample_data)
-                ->setBackendPassword($row->backend_password)
-                ->setCustomProtocol($row->custom_protocol)
-                ->setCustomHost($row->custom_host)
-                ->setCustomRemotePath($row->custom_remote_path)
-                ->setCustomLogin($row->custom_login)
-                ->setCustomPass($row->custom_pass)
-                ->setCustomSql($row->custom_sql)
-                ->setErrorMessage($row->error_message)
-                ->setType($row->type)
-                ;
+        ->setQueueId($row->queue_id)
+        ->setStatus($row->status)
+        ->setUserId($row->user_id)
+        ->setExtensionId($row->extension_id)
+        ->setTask($row->task)
+        ->setServerId($row->server_id)
+        ->setParentId($row->parent_id);
         return $queue;
     }
 
@@ -95,98 +76,33 @@ class Application_Model_QueueMapper {
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Queue();
             $entry->setId($row->id)
-                    ->setEdition($row->edition)
-                    ->setStatus($row->status)
-                    ->setVersionId($row->version_id)
-                    ->setUserId($row->user_id)
-                    ->setDomain($row->domain)
-                    ->setInstanceName($row->instance_name)
-                    ->setSampleData($row->sample_data)
-                    ->setBackendPassword($row->backend_password)
-		    ->setCustomProtocol($row->custom_protocol)
-                    ->setCustomHost($row->custom_host)
-                    ->setCustomRemotePath($row->custom_remote_path)
-                    ->setCustomLogin($row->custom_login)
-                    ->setCustomPass($row->custom_pass)
-                    ->setCustomSql($row->custom_sql)
-                    ->setErrorMessage($row->error_message)
-                    ->setType($row->type)
-                    ;
+            ->setInstanceId($row->instance_id)
+            ->setStatus($row->status)
+            ->setUserId($row->user_id)
+            ->setExtensionId($row->extension_id)
+            ->setTask($row->task)
+            ->setServerId($row->server_id)
+            ->setParentId($row->parent_id);
             $entries[] = $entry;
         }
         return $entries;
     }
-
-    public function getAll()
-    {
-        return $this->getDbTable()->getAllJoinedWithVersions();
-    }
-
-    public function changeStatusToClose($queue, $byAdmin)
-    {
-        if($queue->getUserId() AND $queue->getDomain()) {
-            if($byAdmin) {
-                
-                $this->getDbTable()->update(
-                        array('status' => 'closed'),
-                        array('domain = ?' => $queue->getDomain())
-                );
-            } else {
-                $this->getDbTable()->changeStatusToClose(
-                        $queue->getUserId(),
-                        $queue->getDomain()
-                );
-            }
+    
+    public function getForServer($worker_id,$type){
+        $resultSet = $this->getDbTable()->getForServer($worker_id,$type);
+        $entries   = array();
+        foreach ($resultSet as $row) {
+            $entry = new Application_Model_Queue();
+            $entry->setId($row->id)
+            ->setInstanceId($row->instance_id)
+            ->setStatus($row->status)
+            ->setUserId($row->user_id)
+            ->setExtensionId($row->extension_id)
+            ->setTask($row->task)
+            ->setServerId($row->server_id)
+            ->setParentId($row->parent_id);
+            $entries[] = $entry;
         }
-    }
-
-    public function getAllForUser($user_id)
-    {
-        $select = $this->getDbTable()
-                       ->findAllByUser($user_id);
-        $adapter = new Zend_Paginator_Adapter_DbSelect($select);
-        
-        return new Zend_Paginator($adapter);
-    }
-
-    public function countUserInstances( $user_id )
-    {
-        $data = $this->getDbTable()
-                     ->countUserInstances( $user_id )
-                     ->current();
-
-        return (int)$data->instances;
-    }
-    
-    public function getWholeQueue()
-    {
-        $select = $this->getDbTable()
-                     ->getWholeQueueWithUsersName();
-        $adapter = new Zend_Paginator_Adapter_DbSelect($select);
-        
-        return new Zend_Paginator($adapter);
-    }
-
-    public function getPendingItems($timeExecution)
-    {
-        $keys = array();
-        foreach($this->getDbTable()->getPendingItems() as $key => $row) {
-            $keys[$row->id] = ++$key*$timeExecution;
-        }
-        return $keys;
-    }
-    
-    public function findByName($instance_name)
-    {
-        return $this->getDbTable()
-                    ->findByName($instance_name);
-        
-    }
-    
-    public function findPositionByName($instance_name)
-    {
-        return $this->getDbTable()
-                    ->findPositionByName($instance_name);
-        
+        return $entries;
     }
 }

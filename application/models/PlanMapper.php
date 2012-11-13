@@ -51,7 +51,10 @@ class Application_Model_PlanMapper {
         $plan->setId($row->id)
               ->setName($row->name)
               ->setInstances($row->instances)
-              ->setPrice($row->price);
+              ->setPrice($row->price)
+              ->setFtpAccess($row->ftp_access)
+              ->setPhpmyadminAccess($row->phpmyadmin_access);
+        
         return $plan;
     }
 
@@ -69,7 +72,26 @@ class Application_Model_PlanMapper {
             $entry->setId($row->id)
                   ->setName($row->name)
                   ->setInstances($row->instances)
-                  ->setPrice($row->price);
+                  ->setPrice($row->price)
+                    ->setFtpAccess($row->ftp_access)
+                    ->setPhpmyadminAccess($row->phpmyadmin_access);
+            $entries[] = $entry;
+        }
+        return $entries;
+    }
+    
+    public function getAllByPhpmyadminAccess($has){
+        
+        $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('phpmyadmin_access = ?', $has));
+        $entries   = array();
+        foreach ($resultSet as $row) {
+            $entry = new Application_Model_Plan();
+            $entry->setId($row->id)
+                  ->setName($row->name)
+                  ->setInstances($row->instances)
+                  ->setPrice($row->price)
+                    ->setFtpAccess($row->ftp_access)
+                    ->setPhpmyadminAccess($row->phpmyadmin_access);
             $entries[] = $entry;
         }
         return $entries;

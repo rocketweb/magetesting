@@ -430,4 +430,161 @@ class Application_Model_User {
     public function findByBraintreeSubscriptionId($subscription_id){
         return $this->getMapper()->findByBraintreeSubscriptionId($subscription_id,$this);
     }
+    
+    //TODO Functions
+    
+    /**
+     * Sends email with ftp credentials to user account email
+     */
+    public function sendFtpEmail($config, array $user_details){
+        /* send email with account details start */
+        $html = new Zend_View();
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        // assign valeues
+        $html->assign('ftphost', $config->magento->ftphost);
+        $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
+        $html->assign('ftppass', $user_details['systempass']);
+
+        $html->assign('dbhost', $config->magento->dbhost);
+        $html->assign('dbuser', $config->magento->userprefix . $user_details['dbuser']);
+        $html->assign('dbpass', $user_details['dbpass']);
+
+        $html->assign('storeUrl', $config->magento->storeUrl);
+
+        // render view
+        $bodyText = $html->render('system-account-created.phtml');
+
+        // create mail object
+        $mail = new Zend_Mail('utf-8');
+        // configure base stuff
+        $mail->addTo($user_details['email']);
+        $mail->setSubject($this->config->cron->systemAccountCreated->subject);
+        $mail->setFrom($this->config->cron->systemAccountCreated->from->email, $this->config->cron->systemAccountCreated->from->desc);
+        $mail->setBodyHtml($bodyText);
+        $mail->send();
+        /* send email with account details stop */
+    }
+    
+    /**
+     * Sends email with phpmyadmin credentials to user account email
+     */
+    public function sendPhpmyadminEmail($config, array $user_details){
+        /* send email with account details start */
+        $html = new Zend_View();
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        // assign valeues
+        $html->assign('ftphost', $config->magento->ftphost);
+        $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
+        $html->assign('ftppass', $user_details['systempass']);
+
+        $html->assign('dbhost', $config->magento->dbhost);
+        $html->assign('dbuser', $config->magento->userprefix . $user_details['dbuser']);
+        $html->assign('dbpass', $user_details['dbpass']);
+
+        $html->assign('storeUrl', $config->magento->storeUrl);
+
+        // render view
+        $bodyText = $html->render('system-account-created.phtml');
+
+        // create mail object
+        $mail = new Zend_Mail('utf-8');
+        // configure base stuff
+        $mail->addTo($user_details['email']);
+        $mail->setSubject($this->config->cron->systemAccountCreated->subject);
+        $mail->setFrom($this->config->cron->systemAccountCreated->from->email, $this->config->cron->systemAccountCreated->from->desc);
+        $mail->setBodyHtml($bodyText);
+        $mail->send();
+        /* send email with account details stop */
+    }
+    
+    /**
+     * @deprecated, only ftp and phpmyadmin emails are now supported
+     */
+    public function sendSystemAccountEmail($config, array $user_details){
+        /* send email with account details start */
+        $html = new Zend_View();
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        // assign valeues
+        $html->assign('ftphost', $config->magento->ftphost);
+        $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
+        $html->assign('ftppass', $user_details['systempass']);
+
+        $html->assign('dbhost', $config->magento->dbhost);
+        $html->assign('dbuser', $config->magento->userprefix . $user_details['dbuser']);
+        $html->assign('dbpass', $user_details['dbpass']);
+
+        $html->assign('storeUrl', $config->magento->storeUrl);
+
+        // render view
+        $bodyText = $html->render('system-account-created.phtml');
+
+        // create mail object
+        $mail = new Zend_Mail('utf-8');
+        // configure base stuff
+        $mail->addTo($user_details['email']);
+        $mail->setSubject($this->config->cron->systemAccountCreated->subject);
+        $mail->setFrom($this->config->cron->systemAccountCreated->from->email, $this->config->cron->systemAccountCreated->from->desc);
+        $mail->setBodyHtml($bodyText);
+        $mail->send();
+        /* send email with account details stop */
+    }
+    
+    /**
+     * Adds user to authorized ftp users
+     */
+    public function enableFtp($config, $login){
+        exec('sudo ./ftp-user-add.sh ' . $config->magento->userprefix . $login . ' ',$output);
+    }
+    
+    /**
+     * Adds user to authorized phpmyadmin users
+     * but currently, it just rebuilds denied user list
+     */
+    public function enablePhpmyadmin($config, $dbuser){
+        $this->_rebuildPhpmyadminRules($config);
+    }
+    
+    /**
+     * Removes user from authorized ftp users
+     */
+    public function disableFtp($config, $login){
+        exec('sudo ./ftp-user-remove.sh ' . $config->magento->userprefix . $login . ' ',$output);
+    }
+    
+    /**
+     * Removes user from authorized phpmyadmin
+     * but currently, just rebuilds denied user list
+     */
+    public function disablePhpmyadmin($config, $login){
+        $this->_rebuildPhpmyadminRules($config);
+    }
+    
+    public function rebuildRules($config){
+        $this->_rebuildPhpmyadminRules($config);
+    }
+    
+    /**
+     * Rebuild deny list in phpmyadmin custom configuration file.
+     * @param object $config - Application config
+     */
+    protected function _rebuildPhpmyadminRules($config){
+        
+        $modelPlan = new Application_Model_Plan();
+        $plans_without = $modelPlan->getAllByPhpmyadminAccess(0);
+        
+        foreach($plans_without as $plan){
+            $plansIdsWithoutPma[] = $plan->getId();
+        }
+        
+        $disabledUsers = $this->getMapper()->getAllByPlanId($plansIdsWithoutPma);
+        
+        $disableArray = array();
+        
+        foreach($disabledUsers as $user){
+            $disableArray[]= "'".$config->magento->userprefix . $user->getLogin()."'";
+        }
+        
+        $deniedList = implode(',',$disableArray);
+        exec('sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'"',$output);
+    }
 }

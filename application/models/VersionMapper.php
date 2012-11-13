@@ -29,7 +29,8 @@ class Application_Model_VersionMapper {
         $data = array(
             'id'       => $user->getId(),
             'edition'  => $user->getEdition(),
-            'version'  => $user->getVersion()
+            'version'  => $user->getVersion(),
+            'sample_data_version'  => $user->getVersion()
         );
 
         if (null === ($id = $version->getId())) {
@@ -50,7 +51,8 @@ class Application_Model_VersionMapper {
         $row = $result->current();
         $version->setId($row->id)
                 ->setEdition($row->edition)
-                ->setVersion($row->version);
+                ->setVersion($row->version)
+                ->setSampleDataVersion($row->sample_data_version);
         return $version;
     }
 
@@ -67,7 +69,8 @@ class Application_Model_VersionMapper {
             $entry = new Application_Model_Version();
             $entry->setId($row->id)
                     ->setEdition($row->edition)
-                    ->setVersion($row->version);
+                    ->setVersion($row->version)
+                    ->setSampleDataVersion($row->sample_data_version);
             $entries[] = $entry;
         }
         return $entries;

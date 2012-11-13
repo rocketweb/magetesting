@@ -112,7 +112,7 @@ class Application_Model_ExtensionMapper {
     public function getAllForInstance($instance_name){
         
         //find instance by name 
-        $instanceModel = new Application_Model_Queue();
+        $instanceModel = new Application_Model_Instance();
         $instance = $instanceModel->findByName($instance_name);
         
         //find extensions that match version and edition
@@ -136,7 +136,7 @@ class Application_Model_ExtensionMapper {
     public function getInstalledForInstance($instance_name){
         
         //find instance by name 
-        $instanceModel = new Application_Model_Queue();
+        $instanceModel = new Application_Model_Instance();
         $instance = $instanceModel->findByName($instance_name);
         
         //find extensions that match version and edition

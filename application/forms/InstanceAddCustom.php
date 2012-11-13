@@ -1,13 +1,13 @@
 <?php
 
-class Application_Form_QueueAddCustom extends Integration_Form{
+class Application_Form_InstanceAddCustom extends Integration_Form{
 
     public function init()
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
         $this->setAttrib('class', 'form-stacked');
-        $this->setAttrib('id', 'custom-queue-form');
+        $this->setAttrib('id', 'custom-instance-form');
         //TODO: move model usage to controller
 
         
@@ -94,16 +94,16 @@ class Application_Form_QueueAddCustom extends Integration_Form{
         ));
         
         // Add the submit button
-        $this->addElement('submit', 'queueAdd', array(
+        $this->addElement('submit', 'instanceAdd', array(
                 'ignore'   => true,
                 'label'    => 'Install',
         ));
 
         $this->_setDecorators();
 
-        $this->queueAdd->removeDecorator('HtmlTag');
-        $this->queueAdd->removeDecorator('overall');
-        $this->queueAdd->setAttrib('class','btn btn-primary');
+        $this->instanceAdd->removeDecorator('HtmlTag');
+        $this->instanceAdd->removeDecorator('overall');
+        $this->instanceAdd->setAttrib('class','btn btn-primary');
 
         $this->custom_protocol->removeDecorator('HtmlTag');
         $this->custom_protocol->removeDecorator('overall');

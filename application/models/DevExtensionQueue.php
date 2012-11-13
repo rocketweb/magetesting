@@ -4,7 +4,7 @@ class Application_Model_DevExtensionQueue {
 
     protected $_id;
 
-    protected $_queue_id;
+    protected $_instance_id;
     
     protected $_status;
     
@@ -45,15 +45,15 @@ class Application_Model_DevExtensionQueue {
         return $this->_id;
     }
 
-    public function setQueueId($value)
+    public function setInstanceId($value)
     {
-        $this->_queue_id = $value;
+        $this->_instance_id = $value;
         return $this;
     }
 
-    public function getQueueId()
+    public function getInstanceId()
     {
-        return $this->_queue_id;
+        return $this->_instance_id;
     }
 
     public function setStatus($value)
@@ -129,7 +129,7 @@ class Application_Model_DevExtensionQueue {
     {
         return array(
                 'id' => $this->getId(),
-                'queue_id' => $this->getQueueId(),
+                'instance_id' => $this->getInstanceId(),
                 'status' => $this->getStatus(),
                 'user_id' => $this->getUserId(),
                 'dev_extension_id' => $this->getDevExtensionId(),

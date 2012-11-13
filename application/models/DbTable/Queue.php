@@ -5,94 +5,52 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
 
     protected $_name = 'queue';
 
-    public function getAllJoinedWithVersions()
-    {
-        $select = $this->select()
-                        ->from($this->_name)
-                        ->setIntegrityCheck(false)
-                        ->join('version', 'queue.version_id = version.id',array('version'));
-        return $this->fetchAll($select);
-    }
-
-    public function findAllByUser($user_id)
-    {
-        $select = $this->select()
-                       ->from($this->_name)
-                       ->setIntegrityCheck(false)
-                       ->join('version', 'queue.version_id = version.id',array('version'))
-                       ->where( 'user_id = ?', $user_id )
-                       ->order(array('status asc', 'queue.id asc'));
-        return $select;
-    }
-
-    public function countUserInstances($user_id)
-    {
-        $select = $this->select()
-                       ->from($this->_name, 'count(user_id) as instances')
-                       ->where('user_id = ?', $user_id);
-
-        return $this->fetchAll($select);
-    }
-
-    public function changeStatusToClose($userId, $domain)
-    {
-        $data = array('status' => 'closed');
-        $where = array(
-            'user_id = ?' => $userId,
-            'domain = ?' => $domain
-        );
-
-        $this->update($data, $where);
-    }
-    
-    public function getWholeQueueWithUsersName()
-    {
-        return $this->select()
+    public function getForServer($server_id,$type)
+    {  
+        switch($type){
+            
+            case 'allbutdownload':
+                $select = $this->select()
                     ->setIntegrityCheck(false)
                     ->from($this->_name)
-                    ->join('user', 'user.id = queue.user_id', 'login')
-                    ->join('version', 'queue.version_id = version.id', 'version')
-                    ->order(array('status asc', 'queue.id asc'));
-    }
-
-    public function getPendingItems()
-    {
-        $select = $this->select()
-        ->where('status = ?', 'pending');
-    
+                    ->join('instance', 'instance.id = queue.instance_id')
+                    ->join('user', 'user.id = instance.user_id', 'login')
+                    ->join('version', 'instance.version_id = version.id', 'version')
+                    ->where('server_id = ?',$server_id)
+                    ->where('task <> ?','MagentoDownload')
+                    ->where('queue.status = ?','pending')
+                    ->order(array('queue.id ASC', 'parent_id asc'));
+            break;
+            
+            case 'download':
+                $select = $this->select()
+                    ->setIntegrityCheck(false)
+                    ->from($this->_name)
+                        ->join('instance', 'instance.id = queue.instance_id')
+                    ->join('user', 'user.id = instance.user_id', 'login')
+                    ->join('version', 'instance.version_id = version.id', 'version')
+                    ->where('server_id = ?',$server_id)
+                    ->where('task = ?','MagentoDownload')
+                    ->where('queue.status = ?','pending')
+                    ->order(array('queue.id ASC', 'parent_id asc'));
+            break;
+            
+            case 'all':
+            default:
+                $select = $this->select()
+                    ->setIntegrityCheck(false)
+                    ->from($this->_name)
+                        ->join('instance', 'instance.id = queue.instance_id')
+                    ->join('user', 'user.id = instance.user_id', 'login')
+                    ->join('version', 'instance.version_id = version.id', 'version')
+                    ->where('server_id = ?',$server_id)
+                    ->where('queue.status = ?','pending')
+                    ->order(array('queue.id ASC', 'parent_id asc'));
+            break;
+            
+                
+        }       
+        
         return $this->fetchAll($select);
-    }
-    
-    public function findByName($instance_name)
-    {
-        $select = $this->select()
-                        ->setIntegrityCheck(false)
-                       ->from($this->_name)
-                       ->join('version', 'queue.version_id = version.id', 'version')
-                       ->where('domain = ?', $instance_name);
-                       
-        return $this->fetchRow($select);
-    }
-    
-    public function findPositionByName($instance_name)
-    {
-	/**
-	SELECT COUNT( q.id )
-	FROM `queue` `q`
-	WHERE `q`.`id` <= (
-	SELECT id
-	FROM queue
-	WHERE domain = '$instance_name' )
-	AND `status` = 'ready'
-	*/
-    
-        $select = $this->select()
-                        ->setIntegrityCheck(false)
-                       ->from($this->_name, array('num' => 'count(queue.id)'))
-                       ->where("queue.id <= (SELECT id FROM queue WHERE domain = '".$instance_name."')")
-                ->where('status = ?','pending');
-                       
-	//Zend_Debug::Dump($select->assemble());
-        return $this->fetchRow($select);
     }
 }

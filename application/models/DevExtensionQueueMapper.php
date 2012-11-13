@@ -28,7 +28,7 @@ class Application_Model_DevExtensionQueueMapper {
     {
         $data = array(
             'id' => $extensionQueue->getId(),
-            'queue_id' => $extensionQueue->getQueueId(),
+            'instance_id' => $extensionQueue->getInstanceId(),
             'status' => $extensionQueue->getStatus(),
             'user_id' => $extensionQueue->getUserId(),
             'dev_extension_id' => $extensionQueue->getDevExtensionId(),
@@ -51,7 +51,7 @@ class Application_Model_DevExtensionQueueMapper {
         }
         $row = $result->current();
         $extensionQueue->setId($row->id)
-        ->setQueueId($row->queue_id)
+        ->setInstanceId($row->instance_id)
         ->setStatus($row->status)
         ->setUserId($row->user_id)
         ->setDevExtensionId($row->dev_extension_id);
@@ -70,7 +70,7 @@ class Application_Model_DevExtensionQueueMapper {
         foreach ($resultSet as $row) {
             $entry = new Application_Model_DevExtensionQueue();
             $entry->setId($row->id)
-            ->setQueueId($row->queue_id)
+            ->setInstanceId($row->instance_id)
             ->setStatus($row->status)
             ->setUserId($row->user_id)
             ->setDevExtensionId($row->dev_extension_id);
