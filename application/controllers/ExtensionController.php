@@ -107,13 +107,13 @@ class ExtensionController extends Integration_Controller_Action {
             $extension_data['screenshots'] = $this->_getParam('screenshots', array());
             $extension_data['screenshots_ids'] = $this->_getParam('screenshots_ids', array());
 
-            $this->view->logo = $this->_getParam('logo');
+            $this->view->logo = $this->_getParam('logo', '');
 
             $formData = $this->_request->getPost();
 
             if($form->isValid($formData)) {
                 $old_logo = $extension->getLogo();
-                $new_logo = $this->_getParam('logo');
+                $new_logo = $this->_getParam('logo', '');
 
                 $formData['name'] = $formData['title'];
                 if($extension->getId()) {
@@ -163,17 +163,69 @@ class ExtensionController extends Integration_Controller_Action {
     
     public function deleteAction()
     {
-        if ($id == $this->auth->getIdentity()->id){
-    
-            //should we allow people to remove their accounts?
-        } else {
-            if($this->auth->getIdentity()->group != 'admin'){
-                //you have no right to be here,redirect
+        // array with redirect to grid page
+        $redirect = array(
+                'module'      => 'default',
+                'controller'  => 'extension',
+                'action'      => 'index'
+        );
+
+        // init form object
+        $form = new Application_Form_ExtensionDelete();
+
+        // shorten request
+        $request = $this->getRequest();
+
+        // if request is without proper id param
+        // redirect to grid with information message 
+        if(((int)$request->getParam('id', 0)) == 0) {
+            // set message
+            $this->_helper->FlashMessenger(
+                array(
+                    'type' => 'error',
+                    'message' => 'You cannot delete extension with specified id.'
+                )
+            );
+            // redirect to grid
+            return $this->_helper->redirector->gotoRoute(
+                    $redirect, 'default', true
+            );
+        }
+
+        if($request->isPost()) {
+            // has post data and sent data is valid
+            if($form->isValid($request->getParams())) {
+                // someone agreed deletion 
+                if($request->getParam('submit') == 'Yes') {
+                    $extension = new Application_Model_Extension();
+                    // set news id to the one passed by get param
+                    
+                    $extension->delete($request->getParam('id'));
+                    // set message
+                    $this->_helper->FlashMessenger(
+                        array(
+                            'type' => 'success',
+                            'message' => 'You have deleted extension successfully.'
+                        )
+                    );
+                } else {
+                    // deletion cancelled
+                    // set message
+                    $this->_helper->FlashMessenger(
+                        array(
+                            'type' => 'notice',
+                            'message' => 'Extension deletion cancelled.'
+                        )
+                    );
+                }
+                // redirect to grid if request is withou ajax
+                return $this->_helper->redirector->gotoRoute(
+                    $redirect, 'default', true
+                );
             }
         }
-    
-        //TODO: account removal
-        // here account removal or deactivating is made        ?
+
+        $this->view->form = $form;
     }
 
     public function uploadAction()

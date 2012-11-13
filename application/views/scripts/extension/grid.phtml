@@ -27,7 +27,10 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
                 <?php if($extension['item']->getLogo()): ?>
                     <img class="pull-left logo" src="<?php echo $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, true); ?>" />
                 <?php endif; ?>
-                <b><?php echo $extension['item']->getName(); ?></b> ( <?php echo $extension['item']->getVersion(); ?> )
+                <b><?php echo $extension['item']->getName(); ?></b>
+                <?php if($extension['item']->getVersion()): ?>
+                ( <?php echo $extension['item']->getVersion(); ?> )
+                <?php endif; ?>
                 <p><?php echo $extension['item']->getDescription(); ?></p>
                 </div>
             </td>
