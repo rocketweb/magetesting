@@ -1,17 +1,20 @@
 <?php
 
-$sql[]="ALTER TABLE `queue` RENAME TO `instance` ;";
+$sql[]="ALTER TABLE `queue` RENAME TO `instance`;";
 
 $sql[]="CREATE  TABLE `user_extension` (
   `extension_id` INT NOT NULL ,
   `user_id` INT NULL ,
-  PRIMARY KEY (`extension_id`) );
+  PRIMARY KEY (`extension_id`) 
+  ) ENGINE = InnoDB;
 ";
 
 $sql[]="CREATE  TABLE `instance_extension` (
   `extension_id` INT NOT NULL ,
   `instance_id` INT NULL ,
-  PRIMARY KEY (`extension_id`) );
+  PRIMARY KEY (`extension_id`) 
+  ) ENGINE = InnoDB
+  ;
 ";
 
 $sql[]="CREATE  TABLE `server` (
@@ -20,7 +23,8 @@ $sql[]="CREATE  TABLE `server` (
   `description` VARCHAR(255) NULL ,
   `domain` VARCHAR(60) NULL ,
   `ip` VARCHAR(15) NULL ,
-  PRIMARY KEY (`id`) );
+  PRIMARY KEY (`id`) 
+  ) ENGINE = InnoDB;
 ";
 
 $sql[]="INSERT INTO `server` (`name`,`description`,`domain`,`ip`) VALUES ('Magetesting server1','this server','dev.magetesting.com','127.0.0.1')";
