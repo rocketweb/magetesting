@@ -48,7 +48,6 @@ $sql[]="ALTER TABLE `dev_extension_queue` CHANGE COLUMN `queue_id` `instance_id`
 , DROP INDEX `fk_dev_extension_queue_queue1` 
 , ADD INDEX `fk_dev_extension_queue_queue1` (`instance_id` ASC) ;";
 
-
 $sql[]="ALTER TABLE `extension_queue` 
     ADD COLUMN `task` VARCHAR(45) NULL  AFTER `extension_id` , 
     RENAME TO  `queue` ;
