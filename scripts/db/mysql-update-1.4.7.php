@@ -65,22 +65,16 @@ $sql[]="ALTER TABLE `queue` DROP INDEX `fk_extension_queue_extension1` ,
 ADD INDEX `fk_queue_extension1` ( `extension_id` ) ";
 
 $sql[]="ALTER TABLE `queue` 
-    DROP FOREIGN KEY `fk_extension_queue_queue1` ;";
-
-
-
-$sql[]="ALTER TABLE `queue` 
   ADD CONSTRAINT `fk_queue_instance1`
   FOREIGN KEY (`instance_id` )
   REFERENCES `instance` (`id` )
   ON DELETE NO ACTION
-  ON UPDATE NO ACTION
-, ADD INDEX `fk_queue_instance1` (`instance_id` ASC) ;";
+  ON UPDATE NO ACTION";
 
 
 $sql[]="ALTER TABLE `queue` ADD COLUMN `server_id` INT(11) UNSIGNED NOT NULL  AFTER `extension_id`";
  
-$sql[]="ALTER TABLE `queue` SET `server_id`=1;";
+$sql[]="UPDATE `queue` SET `server_id`=1;";
 
 $sql[]="ALTER TABLE `queue` ADD CONSTRAINT `fk_queue_server1`
   FOREIGN KEY (`server_id` )
