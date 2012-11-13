@@ -39,7 +39,10 @@ $sql[]="ALTER TABLE `extension_queue`
     RENAME TO  `queue` ;
 ";
 
-$sql[]="ALTER TABLE `queue` DROP FOREIGN KEY `fk_extension_queue_queue1` ;";
+$sql[]="ALTER TABLE `queue` 
+    DROP FOREIGN KEY `fk_extension_queue_queue1` ;";
+
+$sql[]="ALTER TABLE `queue` CHANGE COLUMN `queue_id` `instance_id` INT(11) NOT NULL";
 
 $sql[]="ALTER TABLE `queue` 
   ADD CONSTRAINT `fk_queue_instance1`
