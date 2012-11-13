@@ -90,7 +90,7 @@
                 <resource>default_extension</resource>
                 <privilege>index</privilege>
                 <float>right</float>
-                <icon>icon-white icon-time</icon>
+                <icon>icon-white icon-th-list</icon>
             </supportedExtensions>
             <dashboard>
                 <label>Dashboard</label>
