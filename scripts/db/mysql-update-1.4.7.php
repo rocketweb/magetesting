@@ -40,7 +40,7 @@ $sql[]="INSERT INTO `server` (`name`,`description`,`domain`,`ip`)
 $sql[]="ALTER TABLE `dev_extension_queue` DROP FOREIGN KEY `fk_dev_extension_queue_queue1` ;";
 
 $sql[]="ALTER TABLE `dev_extension_queue` CHANGE COLUMN `queue_id` `instance_id` INT(11) NOT NULL  , 
-  ADD CONSTRAINT `fk_dev_extension_queue_queue1`
+  ADD CONSTRAINT `fk_dev_extension_queue_instance1`
   FOREIGN KEY (`instance_id` )
   REFERENCES `instance` (`id` )
   ON DELETE NO ACTION

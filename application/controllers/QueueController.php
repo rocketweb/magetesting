@@ -421,11 +421,14 @@ class QueueController extends Integration_Controller_Action {
 
                         /* Adding extension to queue */
                         try {
-                            $extensionQueueItem = new Application_Model_ExtensionQueue();
+                            $extensionQueueItem = new Application_Model_Queue();
                             $extensionQueueItem->setInstanceId($instance->id);
                             $extensionQueueItem->setStatus('pending');
                             $extensionQueueItem->setUserId($instance->user_id);
                             $extensionQueueItem->setExtensionId($ext);
+                            $extensionQueueItem->setParentId(0);
+                            $extensionQueueItem->setServerId(1);
+                            $extensionQueueItem->setTask('ExtensionInstall');
                             $extensionQueueItem->save();
                         } catch (Exception $e) {
 
