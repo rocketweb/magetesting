@@ -395,15 +395,24 @@ class UserController extends Integration_Controller_Action
         
         $user = new Application_Model_User();
         $user = $user->find($id);
+        $server_model = new Application_Model_Server();
+        $servers = array();
+        $servers[0] = '';
+        foreach($server_model->fetchAll() as $row) {
+            $servers[$row->getId()] = $row->getName();
+        }
 
         $form = new Application_Form_UserEdit();
+        $form->server_id->setMultiOptions($servers);
         $form->populate($user->__toArray());
 
         if ($this->_request->isPost()) {
             $formData = $this->_request->getPost();
-
             if($form->isValid($formData)) {
-                $user->setOptions($form->getValues());
+                if($formData['server_id'] == '0') {
+                    $formData['server_id'] = NULL;
+                }
+                $user->setOptions($formData);
                 $user->save();
 
                 $this->_helper->FlashMessenger('User data has been changed successfully');

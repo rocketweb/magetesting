@@ -3,6 +3,7 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
+            <th>Server</th>
             <th>User</th>
             <th>Status</th>
             <th>First name</th>
@@ -14,6 +15,7 @@
     <tbody>
         <?php foreach($this->users as $user): ?>
         <tr>
+            <td><?php echo $user['server_label']; ?></td>
             <td><?php echo $user['login']; ?></td>
             <td><?php echo $user['status']; ?></td>
             <td><?php echo $user['firstname']; ?></td>

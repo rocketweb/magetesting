@@ -45,6 +45,13 @@ class Application_Form_UserEdit extends Integration_Form
                 )
         ));
 
+        // Add a server element
+        $this->addElement('select', 'server_id', array(
+                'label'      => 'Server',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim')
+        ));
+
         // Add the submit button
         $this->addElement('submit', 'submit', array(
                 'ignore'   => true,

@@ -45,6 +45,8 @@ class Application_Model_User {
     protected $_braintree_vault_id;
     
     protected $_braintree_subscription_id;
+    
+    protected $_server_id;
 
     protected $_mapper;
 
@@ -342,6 +344,17 @@ class Application_Model_User {
         return $this->_braintree_subscription_id;        
     }
     
+    public function setServerId($value)
+    {
+        $this->_server_id = $value;
+        return $this;
+    }
+    
+    public function getServerId()
+    {
+        return $this->_server_id;
+    }
+    
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -422,8 +435,10 @@ class Application_Model_User {
             'has_system_account' =>$this->getHasSystemAccount(),
             'system_account_name' => $this->getSystemAccountName(),
             'downgraded' => $this->getDowngraded(),
+            'server_id' => $this->getServerId(),
             'braintree_vault_id' => $this->getBraintreeVaultId(),
             'braintree_subscription_id' => $this->getBraintreeSubscriptionId(),
+            'server_id' => $this->getServerId()
         );
     }
     
