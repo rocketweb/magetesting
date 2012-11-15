@@ -54,7 +54,7 @@ class Application_Model_QueueMapper {
         }
         $row = $result->current();
         $queue->setId($row->id)
-        ->setQueueId($row->queue_id)
+        ->setInstanceId($row->instance_id)
         ->setStatus($row->status)
         ->setUserId($row->user_id)
         ->setExtensionId($row->extension_id)

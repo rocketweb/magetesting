@@ -994,35 +994,62 @@ $DbManager = new Application_Model_DbTable_Privilege($this->db,$this->config);
      */
     public function extensionInstall(Application_Model_Queue $queueElement){
         
-        $db->update('queue', array('status' => 'installing-extension'), 'id=' . $queueElement->getId());
-        $db->update('instance', array('status' => 'installing-extension'), 'id=' . $queueElement->getInstanceId());
+        $this->db->update('queue', array('status' => 'installing-extension'), 'id=' . $queueElement->getId());
+        $this->db->update('instance', array('status' => 'installing-extension'), 'id=' . $queueElement->getInstanceId());
         
         //get instance data
-        $modelQueue = new Application_Model_Queue();
+        $instanceModel = new Application_Model_Instance();
+        $instanceModel->find($queueElement->getInstanceId());
         $queueItem = $queueElement;
     
         //get extension data
         $modelExtension = new Application_Model_Extension();
         $extensionData = $modelExtension->find($queueElement->getExtensionId());
         
+        $versionModel = new Application_Model_Version();
+        $versionModel->find($instanceModel->getVersionId());
+        $magentoVersion = $versionModel->getVersion();
+        $magentoEdition = $versionModel->getEdition();
+        $sampleDataVersion = $versionModel->getSampleDataVersion();
+        
         //get user data
         $modelUser = new Application_Model_User();
         $userData = $modelUser->find($queueElement->getUserId());
 
         //prepare a logger
-        $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/' . $userData->getLogin() . '_' . $queueItem->getDomain() . '.log');
+        $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/' . $userData->getLogin() . '_' . $instanceModel->getDomain() . '.log');
         $log = new Zend_Log($writer);
+        
+        
+        //first check if we have that files
+        if (!file_exists($this->config->extension->directoryPath.'/'.$magentoEdition.'/'.$extensionData->getFileName())){
+            $message = 'Extension file for '.$extensionData->getName().' could not be found';
+            $this->db->update('queue', array('status' => 'error'), 'id=' . $queueElement->getId());
+            $this->db->update('instance', array('status' => 'error'), 'id=' . $queueElement->getInstanceId());
+            $this->db->update('instance', array('error_message' => $message), 'id=' . $queueElement->getInstanceId());
+            return false;
+        } else {
+            
+        }
         
         //untar extension to instance folder
         exec('tar -zxvf '.
-            $this->config->extension->directoryPath.'/'.$queueItem->getEdition().'/'.$extensionData->getFileName().
-            ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $userData->getLogin() . '/public_html/'.$queueItem->getDomain()
+            $this->config->extension->directoryPath.'/'.$magentoEdition.'/'.$extensionData->getFileName().
+            ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $userData->getLogin() . '/public_html/'.$instanceModel->getDomain()
         ,$output);
+        //output contains unpacked files list, so it should never be empty if unpacking suceed
+        if (count($output)==0){
+            $message = 'There was an error while installing extension '.$extensionData->getName();
+            $this->db->update('queue', array('status' => 'error'), 'id=' . $queueElement->getId());
+            $this->db->update('instance', array('status' => 'error'), 'id=' . $queueElement->getInstanceId());
+            $this->db->update('instance', array('error_message' => $message), 'id=' . $queueElement->getInstanceId());
+            return false;
+        }
         $log->log(var_export($output,true),LOG_DEBUG);
         unset($output);
         
         //clear instance cache
-        exec('sudo rm -R '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $userData->getLogin() . '/public_html/'.$queueItem->getDomain().'/var/cache/*');
+        exec('sudo rm -R '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $userData->getLogin() . '/public_html/'.$instanceModel->getDomain().'/var/cache/*');
         
         //set extension as installed
         $this->db->update('queue', array('status' => 'ready'), 'id=' . $queueElement->getId());
