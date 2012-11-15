@@ -117,19 +117,8 @@ class Application_Model_ExtensionMapper {
         
         //find extensions that match version and edition
         $matchingExtensions = $this->getDbTable()->findMatching($instance);
-        
-        //return them 
-        $returnedArray = array();
-        foreach($matchingExtensions as $me){
-            
-            $name = $me->name;
-            if ($me->version){
-                $name .= ' ('.$me->version.')';
-            }
-            
-	    $returnedArray[$me->id] = $name;
-        }
-        return $returnedArray;
+
+        return $matchingExtensions;
         
     }
     
@@ -141,20 +130,8 @@ class Application_Model_ExtensionMapper {
         
         //find extensions that match version and edition
         $installedExtensions = $this->getDbTable()->findInstalled($instance);
-        
-        //return them 
-        $returnedArray = array();
-        foreach($installedExtensions as $me){
-            
-            
-	  $name = $me->name;
-            if ($me->version){
-                $name .= ' ('.$me->version.')';
-            }
-            
-	    $returnedArray[$me->id] = $name;
-        }
-        return $returnedArray;
+
+        return $installedExtensions;
         
     }
     

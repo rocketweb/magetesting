@@ -394,15 +394,27 @@ class QueueController extends Integration_Controller_Action {
         $request = $this->getRequest();
         $instance_name = $request->getParam('instance');
         $extensionModel = new Application_Model_Extension();
-        $extensions = $extensionModel->getAllForInstance($instance_name);
+        $this->view->instance_extensions = $extensions = $extensionModel->getAllForInstance($instance_name);
+
+        $old_extensions = array();
+        foreach($extensions as $me){
+        
+            $name = $me->name;
+            if ($me->version){
+                $name .= ' ('.$me->version.')';
+            }
+        
+            $old_extensions[$me->id] = $name;
+        }
+
         if (empty($extensions)) {
             $extensions = array(
                 '' => 'no extensions found'
             );
         }
 
-        $form = new Application_Form_ExtensionInstall($extensions);
-        $form->extension->setMultiOptions($extensions);
+        $form = new Application_Form_ExtensionInstall($old_extensions);
+        $form->extension->setMultiOptions($old_extensions);
 
         $form->instance_name->setValue($instance_name);
         if ($request->isPost()) {
@@ -455,9 +467,21 @@ class QueueController extends Integration_Controller_Action {
             }
         }
 
-        $installed = $extensions = $extensionModel->getInstalledForInstance($instance_name);
+        $installed = $extensionModel->getInstalledForInstance($instance_name);
+        $old_installed = array();
+        foreach($installed as $me){
+        
+        
+            $name = $me->name;
+            if ($me->version){
+                $name .= ' ('.$me->version.')';
+            }
+        
+            $old_installed[$me->id] = $name;
+        }
 
         $this->view->installed_extensions = $installed;
+        $this->view->old_installed_extensions = $old_installed;
         $this->view->form = $form;
     }
 

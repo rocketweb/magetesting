@@ -1,3 +1,59 @@
+<h1>Instance '<?php echo $this->form->instance_name->getValue(); ?>' Extensions</h1>
+<form action="<?php echo $this->form->getAction() ?>"
+            enctype="<?php echo $this->form->getEnctype() ?>"
+            method="<?php echo $this->form->getMethod() ?>"
+            id="<?php echo $this->form->getId() ?>"
+            class="<?php echo $this->form->getAttrib('class') ?>">
+<input type="hidden" name="extension[]" id="new-instance-extension-id" />
+<?php echo $this->form->instance_name ?>
+<table class="table table-bordered table-striped">
+    <thead>
+        <th>Extension Name</th>
+        <th>Description</th>
+        <th>Installed</th>
+    </thead>
+    <tbody>
+    <?php foreach($this->instance_extensions as $extension): ?>
+    <tr>
+        <td>
+            <p class="pull-left">
+                <b><?php echo $extension['name']; ?></b>
+                <?php echo $extension['version'] ? '( '.$extension['version'].' )' : ''; ?>
+            </p>
+            <span class="pull-right">
+                <?php if(!(int)$extension['price']): ?>
+                    <button class="btn btn-success new-instance-extension-installer" data-extension-id="<?php echo $extension['id']; ?>">Install</button>
+                <?php else: ?>
+                    <button class="btn btn-primary">Buy</button>
+                <?php endif; ?>
+            </span>
+        </td>
+        <td>
+            <p><?php echo $extension['description']; ?></p>
+        </td>
+        <td><span class="label label-info">No</span></td>
+    </tr>
+    <?php endforeach; ?>
+    <?php foreach($this->installed_extensions as $extension): ?>
+    <tr>
+        <td>
+            <p class="pull-left">
+                <b><?php echo $extension['name']; ?></b>
+                <?php echo $extension['version'] ? '( '.$extension['version'].' )' : ''; ?>
+            </p>
+            <span class="pull-right">
+                <button class="btn btn-danger">Remove</button>
+            </span>
+        </td>
+        <td>
+            <p></p>
+        </td>
+        <td><span class="label label-success">Yes</span></td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+</form>
 <div class="row">
     <div class="span8 offset2">
         <form action="<?php echo $this->form->getAction() ?>"
@@ -14,7 +70,7 @@
                     <?php echo $this->form->instance_name ?>
                     Installed Extensions:
                     <ul>
-                    <?php foreach($this->installed_extensions as $iext): ?>
+                    <?php foreach($this->old_installed_extensions as $iext): ?>
                         <li><?php echo $iext ?></li>
                     <?php endforeach; ?>
                     </ul>
