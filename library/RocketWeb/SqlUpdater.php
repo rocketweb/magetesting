@@ -12,6 +12,9 @@ class RocketWeb_SqlUpdater
     protected $_directoryPath = null;
     protected $_error = '';
     protected $_prefix = 'mysql';
+    
+    /* for log purposes */
+    protected $_currentFile = '';
 
     /**
      * @param Zend_Db_Adapter_Abstract $db
@@ -89,6 +92,7 @@ class RocketWeb_SqlUpdater
             ksort($sorted_directory, SORT_STRING);
             $update_from_now = false;
             foreach($sorted_directory as $file) {
+                $this->_currentFile = $file->getFilename();
                 $sql = array();
                 $version = '';
                 $is_good_file = preg_match('#^'.$this->_prefix.'-(?:(?:install\.php)|(?:update-(\d\.\d\.\d)\.php))$#i', $file->getFilename(), $match);
@@ -132,7 +136,8 @@ class RocketWeb_SqlUpdater
             }
             $result = true;
         } catch(Exception $e) {
-            $this->_error = $e->getMessage();
+            $message = 'Error in version file:'.$this->_currentFile;
+            $this->_error = $message . $this->_error;
             @$this->_db->rollBack();
         }
         return $result;
@@ -142,9 +147,19 @@ class RocketWeb_SqlUpdater
     {
         foreach($execute as $query) {
             if(is_array($query) AND isset($query['bind'])) {
+                //calls to sql updater table
                 $this->_db->query($query[0], $query['bind']);
             } else {
-                $this->_db->query($query);
+                try {
+                    $this->_db->query($query);
+                } catch (Exception $e){
+                    $message = "\nat query:";
+                    $message .= "\n".$query;
+                    $message .= "\nError message: ";
+                    $message .= var_export($e->getMessage(),true);
+                    $this->_error = $message;
+                    throw $e;
+                }
             }
         }
     }

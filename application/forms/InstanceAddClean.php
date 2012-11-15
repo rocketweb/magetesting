@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_QueueAddClean extends Integration_Form{
+class Application_Form_InstanceAddClean extends Integration_Form{
 
     public function init()
     {
@@ -57,17 +57,17 @@ class Application_Form_QueueAddClean extends Integration_Form{
 
          
         // Add the submit button
-        $this->addElement('submit', 'queueAdd', array(
+        $this->addElement('submit', 'instanceAdd', array(
                 'ignore'   => true,
                 'label'    => 'Install',
         ));
 
         $this->_setDecorators();
 
-        $this->queueAdd->removeDecorator('HtmlTag');
-        $this->queueAdd->removeDecorator('overall');
-        $this->queueAdd->setAttrib('class','btn btn-primary');
-        $this->queueAdd->removeDecorator('Label');
+        $this->instanceAdd->removeDecorator('HtmlTag');
+        $this->instanceAdd->removeDecorator('overall');
+        $this->instanceAdd->setAttrib('class','btn btn-primary');
+        $this->instanceAdd->removeDecorator('Label');
 
         $this->edition->removeDecorator('HtmlTag');
         $this->edition->removeDecorator('overall');

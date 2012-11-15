@@ -168,3 +168,9 @@ body {
 .nowrap {
     white-space: nowrap;
 }
+.display-inline {
+    display: inline;
+}
+.display-block {
+    display: block;
+}

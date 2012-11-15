@@ -3,7 +3,7 @@ $this->headScript()->appendFile($this->baseUrl('public/js/lightbox.js'));
 $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
 ?>
 <div class="row">
-    <div class="pull-left span5">
+    <div class="pull-left span6">
         <h1 class="page-title">Supported Extensions</h1>
     </div>
     <div class="pull-right">
@@ -23,12 +23,18 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
     <tbody>
         <?php foreach($this->extensions as $extension): ?>
         <tr>
-            <td><div class="media">
-                <?php if($extension['item']->getLogo()): ?>
-                    <img class="pull-left logo" src="<?php echo $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, true); ?>" />
-                <?php endif; ?>
-                <b><?php echo $extension['item']->getName(); ?></b> ( <?php echo $extension['item']->getVersion(); ?> )
-                <p><?php echo $extension['item']->getDescription(); ?></p>
+            <td>
+                <div class="media">
+                    <?php if($extension['item']->getLogo()): ?>
+                        <img class="pull-left media-object logo" src="<?php echo $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, true); ?>" />
+                    <?php endif; ?>
+                    <div class="media-body">
+                        <h4 class="media-heading display-inline"><?php echo $extension['item']->getName(); ?></h4>
+                        <?php if($extension['item']->getVersion()): ?>
+                        <p class="display-inline">( <?php echo $extension['item']->getVersion(); ?> )</p>
+                        <?php endif; ?>
+                        <p><?php echo $extension['item']->getDescription(); ?></p>
+                    </div>
                 </div>
             </td>
             <td>
@@ -54,7 +60,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
                 <a href="#" class="btn show-screenshots"><i class="icon-camera"></i></a>
                 <div class="screenshots-container">
                     <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
-                        <a href="<?php echo $this->ImagePath($screenshot->getImage(), 'extension/screenshots', false); ?>" rel="lightbox[ext<?php echo $extension['item']->getId(); ?>]"><?php echo $extension['item']->getName(), ' ', $key+1; ?>#</a>
+                        <a href="<?php echo $this->ImagePath($screenshot->getImage(), 'extension/screenshots', false); ?>" rel="lightbox[ext<?php echo $extension['item']->getId(); ?>]" title="<?php echo $extension['item']->getName(), ' ', $key+1; ?>#"><?php echo $extension['item']->getName(), ' ', $key+1; ?>#</a>
                     <?php endforeach; ?>
                 </div>
             </td>

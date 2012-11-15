@@ -77,7 +77,8 @@ class Application_Model_UserMapper {
              ->setSystemAccountName($row->system_account_name)
              ->setDowngraded($row->downgraded)
              ->setBraintreeVaultId($row->braintree_vault_id)
-             ->setBraintreeSubscriptionId($row->braintree_subscription_id);
+             ->setBraintreeSubscriptionId($row->braintree_subscription_id)
+             ->setServerId($row->server_id);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -129,19 +130,20 @@ class Application_Model_UserMapper {
         $select = $this->getDbTable()
                 ->select()
                 ->setIntegrityCheck(false)
-                ->from(array('u'=>'user'),array(                             
+                ->from(array('u'=>'user'),array(
                     'login' => 'login',
                     'status' => 'status',
                     'id' => 'id',
                     'group' => 'group',
                     'firstname' => 'firstname',
                     'lastname' => 'lastname',
+                    'server_id' => 'server_id'
                     )
                 )
-                ->joinLeft('queue','queue.user_id = u.id',array('instances'=>'COUNT(queue.id)'))
+                ->joinLeft('instance','instance.user_id = u.id',array('instances'=>'COUNT(instance.id)'))
+                ->joinLeft('server', 'server.id = u.server_id', array('server_label' => 'server.name'))
                 ->group('u.id')
                 ->query();
-                
         $adapter = new Zend_Paginator_Adapter_Array($select->fetchAll());
         
         return new Zend_Paginator($adapter);
@@ -199,4 +201,40 @@ class Application_Model_UserMapper {
          }
         return $userObject;
     }
+    /**
+     * Fetches users by plan id,
+     * can also take array of plan ids
+     * @param type $plan_id
+     * @return \Application_Model_User
+     */
+    public function getAllByPlanId($plan_id){
+        
+        if (!is_array($plan_id)){
+            $plan_id = array($plan_id);
+        }
+        
+        /* Just in case someone would like to pass string as a plan_id */
+        foreach ($plan_id as &$id){
+            (int)$id;
+        }
+        
+        $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('plan_id IN (?)', implode(',',$plan_id)));
+
+        $entries   = array();
+        foreach ($resultSet as $row) {
+
+            $entry = new Application_Model_User();
+            
+            /*This one doesn't have other fields set on purpose,
+             * User::_rebuildPhpmyadminRules only needs logins
+             */
+            $entry->setId($row->id)
+                  ->setLogin($row->login);
+
+            $entries[] = $entry;
+        }
+        return $entries;
+        
+    }
+  
 }

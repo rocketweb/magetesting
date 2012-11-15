@@ -1,19 +1,19 @@
 <?php
 
-class Application_Model_ExtensionQueue {
+class Application_Model_Server {
 
     protected $_id;
 
-    protected $_queue_id;
+    protected $_name;
     
-    protected $_status;
+    protected $_description;
     
-    protected $_user_id;
+    protected $_domain;
     
-    protected $_extension_id;
-
+    protected $_ip;
+    
     protected $_mapper;
-
+        
     public function __construct(array $options = null)
     {
         if (is_array($options)) {
@@ -45,51 +45,50 @@ class Application_Model_ExtensionQueue {
         return $this->_id;
     }
 
-    public function setQueueId($value)
+   public function setName($name)
     {
-        $this->_queue_id = $value;
+        $this->_name = $name;
         return $this;
     }
 
-    public function getQueueId()
+    public function getName()
     {
-        return $this->_queue_id;
+        return $this->_name;
     }
 
-    public function setStatus($value)
+    public function setDescription($value)
     {
-        $this->_status = $value;
+        $this->_description = $value;
         return $this;
     }
 
-    public function getStatus()
+    public function getDescription()
     {
-        return $this->_status;
-    }
-    
-    
-    public function setUserId($value)
-    {
-        $this->_user_id = $value;
-        return $this;
+        return $this->_description;
     }
 
-    public function getUserId()
+    public function setDomain($value)
     {
-        return $this->_user_id;
-    }
-    
-    public function setExtensionId($value)
-    {
-        $this->_extension_id = $value;
+        $this->_domain = $value;
         return $this;
     }
-
-    public function getExtensionId()
+    
+    public function getDomain()
     {
-        return $this->_extension_id;
+        return $this->_domain;
+    }
+
+    public function setIp($value)
+    {
+        $this->_ip = $value;
+        return $this;
     }
     
+    public function getIp()
+    {
+        return $this->_ip;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -99,7 +98,7 @@ class Application_Model_ExtensionQueue {
     public function getMapper()
     {
         if (null === $this->_mapper) {
-            $this->setMapper(new Application_Model_ExtensionQueueMapper());
+            $this->setMapper(new Application_Model_ServerMapper());
         }
         return $this->_mapper;
     }
@@ -129,10 +128,10 @@ class Application_Model_ExtensionQueue {
     {
         return array(
                 'id' => $this->getId(),
-                'queue_id' => $this->getQueueId(),
-                'status' => $this->getStatus(),
-                'user_id' => $this->getUserId(),
-                'extension_id' => $this->getExtensionId(),
+                'name' => $this->getName(),
+                'description' => $this->getDescription(),
+                'domain' => $this->getDomain(),
+                'ip' => $this->getIp(),
         );
     }
 
@@ -140,5 +139,14 @@ class Application_Model_ExtensionQueue {
     {
         return $this->getMapper()->fetchAll();
     }
-    
+
+    public function getKeys()
+    {
+        return $this->getMapper()->getKeys();
+    }
+
+    public function getOptions()
+    {
+        return $this->getMapper()->getOptions();
+    }
 }

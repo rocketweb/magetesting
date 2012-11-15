@@ -8,21 +8,20 @@
             <div class="modal-header">
                 <h3>Edit Account</h3>
             </div>
-            <div class="modal-body">
-                <table>
-                    <tbody>
-                    <tr>
-                        <td class="split-columns">
-                            
-                        </td>
-                        <td>
-                            <?php echo $this->form->email; ?>
-                            <?php echo $this->form->firstname; ?>
-                            <?php echo $this->form->lastname; ?>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="modal-body extend-height">
+                <div class="row">
+                    <div class="span3 halfoffset1">
+                        <?php echo $this->form->firstname; ?>
+                        <?php echo $this->form->password; ?>
+                        <?php echo $this->form->email; ?>
+                        
+                    </div>
+                    <div class="span3 offset1">
+                        <?php echo $this->form->lastname; ?>
+                        <?php echo $this->form->password_repeat; ?>
+                        <?php echo $this->form->server_id; ?>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <small><a href="<?php echo $this->url(array('module' => 'default',

@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_QueueClose extends Integration_Form
+class Application_Form_InstanceClose extends Integration_Form
 {
 
     public function init()

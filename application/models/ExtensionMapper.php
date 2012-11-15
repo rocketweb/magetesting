@@ -60,7 +60,7 @@ class Application_Model_ExtensionMapper {
 
     public function delete($id)
     {
-        $this->getDbTable()->delete($id);
+        $this->getDbTable()->delete(array('id = ?' => $id));
     }
 
     public function fetchAll()
@@ -112,49 +112,26 @@ class Application_Model_ExtensionMapper {
     public function getAllForInstance($instance_name){
         
         //find instance by name 
-        $instanceModel = new Application_Model_Queue();
+        $instanceModel = new Application_Model_Instance();
         $instance = $instanceModel->findByName($instance_name);
         
         //find extensions that match version and edition
         $matchingExtensions = $this->getDbTable()->findMatching($instance);
-        
-        //return them 
-        $returnedArray = array();
-        foreach($matchingExtensions as $me){
-            
-            $name = $me->name;
-            if ($me->version){
-                $name .= ' ('.$me->version.')';
-            }
-            
-	    $returnedArray[$me->id] = $name;
-        }
-        return $returnedArray;
+
+        return $matchingExtensions;
         
     }
     
     public function getInstalledForInstance($instance_name){
         
         //find instance by name 
-        $instanceModel = new Application_Model_Queue();
+        $instanceModel = new Application_Model_Instance();
         $instance = $instanceModel->findByName($instance_name);
         
         //find extensions that match version and edition
         $installedExtensions = $this->getDbTable()->findInstalled($instance);
-        
-        //return them 
-        $returnedArray = array();
-        foreach($installedExtensions as $me){
-            
-            
-	  $name = $me->name;
-            if ($me->version){
-                $name .= ' ('.$me->version.')';
-            }
-            
-	    $returnedArray[$me->id] = $name;
-        }
-        return $returnedArray;
+
+        return $installedExtensions;
         
     }
     
