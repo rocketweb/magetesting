@@ -31,7 +31,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
                     <div class="media-body">
                         <h4 class="media-heading display-inline"><?php echo $extension['item']->getName(); ?></h4>
                         <?php if($extension['item']->getVersion()): ?>
-                        ( <?php echo $extension['item']->getVersion(); ?> )
+                        <p class="display-inline">( <?php echo $extension['item']->getVersion(); ?> )</p>
                         <?php endif; ?>
                         <p><?php echo $extension['item']->getDescription(); ?></p>
                     </div>
