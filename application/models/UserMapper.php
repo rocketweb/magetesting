@@ -77,7 +77,8 @@ class Application_Model_UserMapper {
              ->setSystemAccountName($row->system_account_name)
              ->setDowngraded($row->downgraded)
              ->setBraintreeVaultId($row->braintree_vault_id)
-             ->setBraintreeSubscriptionId($row->braintree_subscription_id);
+             ->setBraintreeSubscriptionId($row->braintree_subscription_id)
+             ->setServerId($row->server_id);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -129,19 +130,20 @@ class Application_Model_UserMapper {
         $select = $this->getDbTable()
                 ->select()
                 ->setIntegrityCheck(false)
-                ->from(array('u'=>'user'),array(                             
+                ->from(array('u'=>'user'),array(
                     'login' => 'login',
                     'status' => 'status',
                     'id' => 'id',
                     'group' => 'group',
                     'firstname' => 'firstname',
                     'lastname' => 'lastname',
+                    'server_id' => 'server_id'
                     )
                 )
                 ->joinLeft('instance','instance.user_id = u.id',array('instances'=>'COUNT(instance.id)'))
+                ->joinLeft('server', 'server.id = u.server_id', array('server_label' => 'server.name'))
                 ->group('u.id')
                 ->query();
-                
         $adapter = new Zend_Paginator_Adapter_Array($select->fetchAll());
         
         return new Zend_Paginator($adapter);
