@@ -60,7 +60,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
                 <a href="#" class="btn show-screenshots"><i class="icon-camera"></i></a>
                 <div class="screenshots-container">
                     <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
-                        <a href="<?php echo $this->ImagePath($screenshot->getImage(), 'extension/screenshots', false); ?>" rel="lightbox[ext<?php echo $extension['item']->getId(); ?>]"><?php echo $extension['item']->getName(), ' ', $key+1; ?>#</a>
+                        <a href="<?php echo $this->ImagePath($screenshot->getImage(), 'extension/screenshots', false); ?>" rel="lightbox[ext<?php echo $extension['item']->getId(); ?>]" title="<?php echo $extension['item']->getName(), ' ', $key+1; ?>#"><?php echo $extension['item']->getName(), ' ', $key+1; ?>#</a>
                     <?php endforeach; ?>
                 </div>
             </td>
