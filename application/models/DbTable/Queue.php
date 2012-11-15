@@ -16,7 +16,7 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->join('instance', 'instance.id = queue.instance_id')
                     ->join('user', 'user.id = instance.user_id', 'login')
                     ->join('version', 'instance.version_id = version.id', 'version')
-                    ->where('server_id = ?',$server_id)
+                    ->where('queue.server_id = ?',$server_id)
                     ->where('task <> ?','MagentoDownload')
                     ->where('queue.status = ?','pending')
                     ->order(array('queue.id ASC', 'parent_id asc'));
@@ -29,7 +29,7 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                         ->join('instance', 'instance.id = queue.instance_id')
                     ->join('user', 'user.id = instance.user_id', 'login')
                     ->join('version', 'instance.version_id = version.id', 'version')
-                    ->where('server_id = ?',$server_id)
+                    ->where('queue.server_id = ?',$server_id)
                     ->where('task = ?','MagentoDownload')
                     ->where('queue.status = ?','pending')
                     ->order(array('queue.id ASC', 'parent_id asc'));
@@ -43,7 +43,7 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                         ->join('instance', 'instance.id = queue.instance_id')
                     ->join('user', 'user.id = instance.user_id', 'login')
                     ->join('version', 'instance.version_id = version.id', 'version')
-                    ->where('server_id = ?',$server_id)
+                    ->where('queue.server_id = ?',$server_id)
                     ->where('queue.status = ?','pending')
                     ->order(array('queue.id ASC', 'parent_id asc'));
             break;
