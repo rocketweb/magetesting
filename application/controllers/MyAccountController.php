@@ -143,13 +143,18 @@ class MyAccountController extends Integration_Controller_Action
         if($user->getId()) {
             if($user->getCity() AND $user->getStreet()) {
                 $this->view->renderPayPal = true;
-                $this->view->user = $user;
             }
             
             if ($user->getCity() && $user->getStreet() && $user->getCountry() && $user->getPostalCode() && $user->getState() && $user->getFirstname() && $user->getLastname()){
                 $this->view->renderBraintree = true;
-                $this->view->user = $user;
             }
+            $this->view->user = $user;
+        } else {
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'my-account',
+                    'action' => 'index',
+            ), 'default', true);
         }
     }
     
