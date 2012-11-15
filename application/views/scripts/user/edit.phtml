@@ -11,11 +11,14 @@
             <div class="modal-body extend-height">
                 <div class="row">
                     <div class="span3 halfoffset1">
-                        <?php echo $this->form->email; ?>
                         <?php echo $this->form->firstname; ?>
-                        <?php echo $this->form->lastname; ?>
+                        <?php echo $this->form->password; ?>
+                        <?php echo $this->form->email; ?>
+                        
                     </div>
                     <div class="span3 offset1">
+                        <?php echo $this->form->lastname; ?>
+                        <?php echo $this->form->password_repeat; ?>
                         <?php echo $this->form->server_id; ?>
                     </div>
                 </div>

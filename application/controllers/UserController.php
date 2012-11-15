@@ -408,12 +408,22 @@ class UserController extends Integration_Controller_Action
 
         if ($this->_request->isPost()) {
             $formData = $this->_request->getPost();
+            if(strlen($this->_request->getParam('password'))) {
+                $form->password->setRequired(true);
+                $form->password_repeat->setRequired(true);
+            } else {
+                unset($formData['password'], $formData['password_repeat']);
+            }
             if($form->isValid($formData)) {
                 if($formData['server_id'] == '0') {
                     $formData['server_id'] = NULL;
                 }
+                if(strlen($formData['password'])) {
+                    unset($formData['password_repeat']);
+                    $formData['password'] = sha1($formData['password']);
+                }
                 $user->setOptions($formData);
-                $user->save();
+                $user->save(true);
 
                 $this->_helper->FlashMessenger('User data has been changed successfully');
                 return $this->_helper->redirector->gotoRoute(array(
