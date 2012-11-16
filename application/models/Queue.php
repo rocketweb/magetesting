@@ -19,6 +19,8 @@ class Application_Model_Queue {
     protected $_parent_id;
     
     protected $_version_id;
+    
+    protected $_added_date;
 
     protected $_mapper;
 
@@ -143,6 +145,15 @@ class Application_Model_Queue {
     public function getParentId()
     {
         return $this->_parent_id;
+    }
+    
+    public function setAddedDate($value){
+        $this->_added_date = $value;
+        return $this;
+    }
+    
+    public function getAddedDate(){
+        return $this->_added_date;
     }
     
     public function setMapper($mapper)

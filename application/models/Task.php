@@ -50,7 +50,6 @@ class Application_Model_Task {
      */
     public function setup(Application_Model_Queue $queueElement) {
         $this->_queueObject = $queueElement;
-        var_dump($queueElement);
         
         //setup other model objects (user/version/instance)
         $instanceModel = new Application_Model_Instance();
@@ -119,7 +118,6 @@ class Application_Model_Task {
     }
        
     protected function _updateStatus($status,$errorMessage=null){
-        var_dump('calling status update');
         $statuses = array(
             
             'pending',
@@ -151,8 +149,6 @@ $vals = explode(',', $matches[1]);
             return false;
         }
         try {
-            var_dump($this->_queueObject->getId());
-            var_dump($this->_instanceObject->getId());
         self::$db->update('queue', array('status' => $status), 'id=' . $this->_queueObject->getId());
         self::$db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
         } catch (Exception $e){
