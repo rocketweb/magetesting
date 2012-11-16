@@ -193,7 +193,7 @@ function updateLabel(row,new_status){
             <?php if(in_array($item['status'], array('closed','pending','installing','installing-extension','installing-magento','installing-samples','installing-user','installing-files','installing-data'))): ?>
                 <a class="btn btn-success disabled" rel="tooltip" data-placement="top" title="Visit store"><i class="icon-eye-close icon-white"></i></a>
                 <a class="btn btn-info disabled" rel="tooltip" data-placement="top" title="Edit store details"><i class="icon-pencil icon-white"></i></a>
-                <a class="btn btn-danger disabled" rel="tooltip" data-placement="top" title="Delete store"><i class="icon-trash icon-white"></i>&nbsp;Close</a>
+                <a class="btn btn-danger disabled" rel="tooltip" data-placement="top" title="Delete store"><i class="icon-trash icon-white"></i></a>
                 <input type="hidden" class="instancedomain" value="<?php echo $item['domain'] ?>" />
             <?php else: ?>
                 <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success" rel="tooltip" data-placement="top" title="Visit store"><i class="icon-eye-open icon-white"></i></a>
