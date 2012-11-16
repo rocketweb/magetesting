@@ -53,7 +53,11 @@ class Application_Model_PlanMapper {
               ->setInstances($row->instances)
               ->setPrice($row->price)
               ->setFtpAccess($row->ftp_access)
-              ->setPhpmyadminAccess($row->phpmyadmin_access);
+              ->setPhpmyadminAccess($row->phpmyadmin_access)
+              ->setBillingPeriod($row->billing_period)
+              ->setPaypalId($row->paypal_id)
+              ->setBraintreeId($row->braintree_id)
+              ->setIsHidden($row->is_hidden);
         
         return $plan;
     }
@@ -63,9 +67,13 @@ class Application_Model_PlanMapper {
         $this->getDbTable()->delete($id);
     }
 
-    public function fetchAll()
+    public function fetchAll($fetch_hidden = false)
     {
-        $resultSet = $this->getDbTable()->fetchAll();
+        $where = null;
+        if(!$fetch_hidden) {
+            $where = $this->getDbTable()->select()->where('is_hidden = ?', 0);
+        }
+        $resultSet = $this->getDbTable()->fetchAll($where);
         $entries   = array();
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Plan();
@@ -73,8 +81,12 @@ class Application_Model_PlanMapper {
                   ->setName($row->name)
                   ->setInstances($row->instances)
                   ->setPrice($row->price)
-                    ->setFtpAccess($row->ftp_access)
-                    ->setPhpmyadminAccess($row->phpmyadmin_access);
+                  ->setFtpAccess($row->ftp_access)
+                  ->setPhpmyadminAccess($row->phpmyadmin_access)
+                  ->setBillingPeriod($row->billing_period)
+                  ->setPaypalId($row->paypal_id)
+                  ->setBraintreeId($row->braintree_id)
+                  ->setIsHidden($row->is_hidden);
             $entries[] = $entry;
         }
         return $entries;
@@ -90,8 +102,12 @@ class Application_Model_PlanMapper {
                   ->setName($row->name)
                   ->setInstances($row->instances)
                   ->setPrice($row->price)
-                    ->setFtpAccess($row->ftp_access)
-                    ->setPhpmyadminAccess($row->phpmyadmin_access);
+                  ->setFtpAccess($row->ftp_access)
+                  ->setPhpmyadminAccess($row->phpmyadmin_access)
+                  ->setBillingPeriod($row->billing_period)
+                  ->setPaypalId($row->paypal_id)
+                  ->setBraintreeId($row->braintree_id)
+                  ->setIsHidden($row->is_hidden);
             $entries[] = $entry;
         }
         return $entries;
