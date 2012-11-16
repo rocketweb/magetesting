@@ -1,4 +1,5 @@
 .buildpath
 .project
+data/extensions/
 nbproject
 nbproject/private/
