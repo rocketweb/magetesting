@@ -202,7 +202,7 @@ function updateLabel(row,new_status){
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain']), 'default', true); ?>" class="btn btn-danger" rel="tooltip" data-placement="top" title="Delete store"><i class="icon-trash icon-white"></i></a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Install extensions"><i class="icon-star icon-white"></i>&nbsp; Extensions</a>
                 <?php if ($this->userGroup == 'admin'): ?>
-                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'devextensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-info"><i class="icon-star icon-white"></i>&nbsp;Repo Extensions</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'devextensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Install extensions from Rocket Web repository."><i class="icon-star icon-white"></i>&nbsp;SVN</a>
                 <?php endif; ?>
             <?php endif;?>
             </td>

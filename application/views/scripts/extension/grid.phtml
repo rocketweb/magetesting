@@ -40,8 +40,8 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
             <td>
                 <?php
                 $supported_versions = '';
-                $supported_versions .= (($version = $extension['item']->getFromVersion()) ? 'From: '.$version.'<br />' : '');
-                $supported_versions .= (($version = $extension['item']->getToVersion()) ? 'To: '.$version : '');
+                $supported_versions .= (($version = $extension['item']->getFromVersion()) ? 'From  '.$version : '');
+                $supported_versions .= (($version = $extension['item']->getToVersion()) ? ' to '.$version : '');
                 if(!$supported_versions) {
                     $supported_versions = 'N.A.';
                 }
