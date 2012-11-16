@@ -548,7 +548,7 @@ class Application_Model_User {
      * Adds user to authorized ftp users
      */
     public function enableFtp($config, $login){
-        exec('sudo ./ftp-user-add.sh ' . $config->magento->userprefix . $login . ' ',$output);
+        exec('sudo worker/ftp-user-add.sh ' . $config->magento->userprefix . $login . ' ',$output);
     }
     
     /**
@@ -563,7 +563,7 @@ class Application_Model_User {
      * Removes user from authorized ftp users
      */
     public function disableFtp($config, $login){
-        exec('sudo ./ftp-user-remove.sh ' . $config->magento->userprefix . $login . ' ',$output);
+        exec('sudo worker/ftp-user-remove.sh ' . $config->magento->userprefix . $login . ' ',$output);
     }
     
     /**
@@ -600,6 +600,6 @@ class Application_Model_User {
         }
         
         $deniedList = implode(',',$disableArray);
-        exec('sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'"',$output);
+        exec('sudo worker/phpmyadmin-user-rebuild.sh "'.$deniedList.'"',$output);
     }
 }
