@@ -192,7 +192,7 @@ class Application_Model_Plan {
     /**
      * @param boolean $fetch_hidden - whether fetch also hidden plans
      */
-    public function fetchAll($fetch_hidden = 0)
+    public function fetchAll($fetch_hidden = false)
     {
         return $this->getMapper()->fetchAll($fetch_hidden);
     }
