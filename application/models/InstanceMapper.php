@@ -35,7 +35,7 @@ class Application_Model_InstanceMapper {
                 'domain'           => $instance->getDomain(),
                 'instance_name'    => $instance->getInstanceName(),
                 'sample_data'      => $instance->getSampleData(),
-                'backend_password' => '',
+                'backend_password' => $instance->getBackendPassword(),
                 'custom_protocol'  => $instance->getCustomProtocol(),
                 'custom_host'      => $instance->getCustomHost(),
                 'custom_remote_path' => $instance->getCustomRemotePath(),
@@ -48,6 +48,7 @@ class Application_Model_InstanceMapper {
 
         if (null === ($id = $instance->getId())) {
             unset($data['id']);
+            $data['backend_password'] = '';
             return $this->getDbTable()->insert($data);
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
