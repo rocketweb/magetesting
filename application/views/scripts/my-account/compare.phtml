@@ -84,7 +84,7 @@
                     <?php if (!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
                         <?php if(!$this->renderBraintree): ?>
                             <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
-                                Update account to enable
+                                Subscribe for $<?php echo $plan->getPrice(); ?>
                             </a>
                         <?php else: ?>
                             <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment', 'plan' => $plan->getBraintreeId())); ?>">
