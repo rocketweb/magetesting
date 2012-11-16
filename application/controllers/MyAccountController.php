@@ -141,6 +141,9 @@ class MyAccountController extends Integration_Controller_Action
         $this->view->renderBraintree = false;
         
         if($user->getId()) {
+            $plan_model = new Application_Model_Plan();
+            $this->view->plans = $plan_model->fetchAll();
+
             if($user->getCity() AND $user->getStreet()) {
                 $this->view->renderPayPal = true;
             }
