@@ -1,1 +1,4 @@
-/nbproject/private/
+.buildpath
+.project
+nbproject
+nbproject/private/
