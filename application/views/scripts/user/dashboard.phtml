@@ -78,19 +78,24 @@ function updateLabel(row,new_status){
 }');
 ?>
 
-<h1>Your stores</h1>
-
-<p>
-    <a
-        href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>"
-        class="btn btn-primary btn-large"><i class="icon-plus icon-white"></i>&nbsp;New Build</a>
-</p>
+<div class="row">
+    <div class="span6">
+        <h1>Your stores</h1>
+    </div>
+    <div class="span6">
+        <p>
+            <a
+                href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>"
+                class="btn btn-primary btn-large pull-right"><i class="icon-plus icon-white"></i>&nbsp;Add store</a>
+        </p>
+    </div>
+</div>
 
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Status</th>
+            <th width="20%">Status</th>
             <th>Edition</th>
             <th>Version</th>
             <th>Sample Data</th>
@@ -108,7 +113,7 @@ function updateLabel(row,new_status){
             <?php break; case 'pending':  ?>
             <?php if( ! $refreshed++ ) { $this->response->setHeader('Refresh', $this->timeExecution*60); } ?>
                 <td>
-                    <div class="progress progress-striped active span2" style="margin-bottom:0px;margin-top:5px;">
+                    <div class="progress progress-striped active" style="margin-bottom:0px;margin-top:5px;">
                         <div class="bar" style="width: 100%;">
                             In Queue - <?php echo $this->queueCounter[$item['id']]; ?> minutes left
                         </div>
