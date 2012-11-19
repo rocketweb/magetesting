@@ -60,6 +60,25 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'allowEmpty' => false
         ));
 
+        // Add extension file element
+        $this->addElement('file', 'extension_file', array(
+                'label'      => 'Extension File',
+                'required'   => false,
+                'allowEmpty' => true,
+                'validators' => array(
+                        array('Extension', false, 'gz')
+                )
+        ));
+        // Add extension encoded file element
+        $this->addElement('file', 'extension_encoded_file', array(
+                'label'      => 'Extension Encoded File',
+                'required'   => false,
+                'allowEmpty' => true,
+                'validators' => array(
+                        array('Extension', false, 'gz')
+                )
+        ));
+
         // Add logo element
         $this->addElement('hidden', 'logo', array(
                 'label'      => 'Logo',
@@ -120,6 +139,9 @@ class Application_Form_ExtensionEdit extends Integration_Form
         // setters for class have to be before setdecorators method call which adds class and not overwrite them
         $this->_setDecorators();
 
+        $this->extension_file->setDecorators(array('File', array('ViewScript', array('viewScript' => '_partials/bootstrap_file_input.phtml', 'placement' => false))));
+        $this->extension_encoded_file->setDecorators(array('File', array('ViewScript', array('viewScript' => '_partials/bootstrap_file_input.phtml', 'placement' => false))));
+
         $this->old_logo->removeDecorator('HtmlTag');
         $this->old_logo->removeDecorator('Overall');
         $this->directory_hash->removeDecorator('HtmlTag');
@@ -129,5 +151,9 @@ class Application_Form_ExtensionEdit extends Integration_Form
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('Overall');
 
+    }
+
+    public function checkFileType($file) {
+        var_dump($file);die;
     }
 }
