@@ -16,7 +16,6 @@ class ExtensionController extends Integration_Controller_Action {
     }
 
     public function listAction() {
-        $server = new Application_Model_Server();
         $extensionModel = new Application_Model_Extension();
         // that should add extension screenshots to it
         $this->view->extensions = $extensionModel->fetchAll();
