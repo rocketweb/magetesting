@@ -124,6 +124,11 @@ class Application_Model_Server {
         return $this->getMapper()->fetchAll();
     }
 
+    public function fetchMostEmptyServerId()
+    {
+        return $this->getMapper()->fetchMostEmptyServerId();
+    }
+
     public function __toArray()
     {
         return array(
