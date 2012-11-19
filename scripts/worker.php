@@ -2,7 +2,6 @@
 include 'init.console.php';
 
 $current_server_id = 1;
-$output = '';
 $select = new Zend_Db_Select($db);
 
 try {

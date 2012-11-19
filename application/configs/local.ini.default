@@ -44,11 +44,13 @@ sqlUpdater.directoryPath = APPLICATION_PATH "/../scripts/db";
 extension.directoryPath = APPLICATION_PATH "/../data/extensions";
 
 ;Braintree
-braintree.environment = 
+braintree.environment = ;this is either sandbox or production
+;Following id/keys can be found after logging in to your braintree account (eg. sandbox.braintreegateway.com)
 braintree.merchantId = 
 braintree.publicKey = 
 braintree.privateKey = 
 
+;Found and setup at https://sandbox.braintreegateway.com/ -> Recurring Billing -> Plans
 braintree.standardPlanId = 
 braintree.businessPlanId = 
 

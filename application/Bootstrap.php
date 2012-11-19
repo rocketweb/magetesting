@@ -73,6 +73,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 APPLICATION_ENV
         );
 
+        Zend_Registry::set('config', $config);
+        
         return $config;
     }
 

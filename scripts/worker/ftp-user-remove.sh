@@ -27,6 +27,6 @@ if grep -q $USERLOGIN $FILE; then
 fi
 
 #restart server if changes applied
-if [$RESTART == 1] then
+if [ "$RESTART" == "1" ]; then
     /etc/init.d/vsftpd restart
 fi

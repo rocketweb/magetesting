@@ -217,8 +217,8 @@ class Application_Model_UserMapper {
         foreach ($plan_id as &$id){
             (int)$id;
         }
-        
-        $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('plan_id IN (?)', implode(',',$plan_id)));
+               
+        $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('plan_id IN (?)',$plan_id));
 
         $entries   = array();
         foreach ($resultSet as $row) {
