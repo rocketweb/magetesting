@@ -12,7 +12,9 @@ class Application_Model_Extension {
     
     protected $_version;
     
-    protected $_file_name;
+    protected $_extension;
+    
+    protected $_extension_encoded;
     
     protected $_namespace_module;
     
@@ -92,15 +94,26 @@ class Application_Model_Extension {
         return $this->_logo;
     }
 
-    public function setFileName($value)
+    public function setExtension($value)
     {
-        $this->_file_name = $value;
+        $this->_extension = $value;
         return $this;
     }
 
-    public function getFileName()
+    public function getExtension()
     {
-        return $this->_file_name;
+        return $this->_extension;
+    }
+    
+    public function setExtensionEncoded($value)
+    {
+        $this->_extension_encoded = $value;
+        return $this;
+    }
+    
+    public function getExtensionEncoded()
+    {
+        return $this->_extension_encoded;
     }
     
     public function setNamespaceModule($value)
@@ -229,7 +242,8 @@ class Application_Model_Extension {
                 'description' => $this->getDescription(),
                 'version' => $this->getVersion(),
                 'logo' => $this->getLogo(),
-                'file_name' => $this->getFileName(),
+                'extension' => $this->getExtension(),
+                'extension_encoded' => $this->getExtensionEncoded(),
                 'namespace_module' => $this->getNamespaceModule(),
                 'from_version' => $this->getFromVersion(),
                 'to_version' => $this->getToVersion(),
