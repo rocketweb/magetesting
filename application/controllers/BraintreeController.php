@@ -127,6 +127,11 @@ class BraintreeController extends Integration_Controller_Action
             if ($result->success) {
                 $user->setPlanId($internalPlanId);
                 $user->setBraintreeSubscriptionId($result->subscription->id);
+                
+                $modelPlan = new Application_Model_Plan();
+                $modelPlan->find($internalPlanId);
+                
+                $user->setPlanActiveTo(date('Y-m-d H:i:s',strtotime($modelPlan->getBillingPeriod(),time())));
                 $user->save();
                 
                 $this->_helper->flashMessenger(

@@ -80,7 +80,7 @@ class PayPalController extends Integration_Controller_Action
                             if(!$activeTo OR $_POST['subscr_id'] != $user->getSubscrId()) {
                                 $activeTo = $_POST['payment_date'];
                             }
-                            $activeTo = date('Y-m-d H:i:s', strtotime('+1 month', strtotime($activeTo)));
+                            $activeTo = date('Y-m-d H:i:s', strtotime($plan->getBillingPeriod(), strtotime($activeTo)));
 
                             $user->setPlanActiveTo($activeTo);
                             
