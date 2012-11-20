@@ -215,6 +215,8 @@ function updateLabel(row,new_status){
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'devextensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Install extensions from Rocket Web repository."><i class="icon-star icon-white"></i>&nbsp;SVN</a>
                 <?php endif; ?>
             <?php endif;?>
+                <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Install extensions"><i class="icon-star icon-white"></i>&nbsp; ZenDesk</a>
+                <a href=""><i class="icon-eye-open icon-white"></i></a>
             </td>
         </tr>
         <?php endforeach; ?>
