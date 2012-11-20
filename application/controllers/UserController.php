@@ -395,16 +395,35 @@ class UserController extends Integration_Controller_Action
         
         $user = new Application_Model_User();
         $user = $user->find($id);
+        $server_model = new Application_Model_Server();
+        $servers = array();
+        $servers[0] = '';
+        foreach($server_model->fetchAll() as $row) {
+            $servers[$row->getId()] = $row->getName();
+        }
 
         $form = new Application_Form_UserEdit();
+        $form->server_id->setMultiOptions($servers);
         $form->populate($user->__toArray());
 
         if ($this->_request->isPost()) {
             $formData = $this->_request->getPost();
-
+            if(strlen($this->_request->getParam('password'))) {
+                $form->password->setRequired(true);
+                $form->password_repeat->setRequired(true);
+            } else {
+                unset($formData['password'], $formData['password_repeat']);
+            }
             if($form->isValid($formData)) {
-                $user->setOptions($form->getValues());
-                $user->save();
+                if($formData['server_id'] == '0') {
+                    $formData['server_id'] = NULL;
+                }
+                if(strlen($formData['password'])) {
+                    unset($formData['password_repeat']);
+                    $formData['password'] = sha1($formData['password']);
+                }
+                $user->setOptions($formData);
+                $user->save(true);
 
                 $this->_helper->FlashMessenger('User data has been changed successfully');
                 return $this->_helper->redirector->gotoRoute(array(

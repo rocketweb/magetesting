@@ -7,6 +7,13 @@ $(document).ready(function () {
     /* prevent click event and init popover */
     $('[rel=popover]').click(function(){return false;}).popover();
 
+    var $extension_button = $('.new-instance-extension-installer'),
+        $extension_id = $('#new-instance-extension-id');
+    $extension_button.click(function(e) {
+        e.preventDefault();
+        $extension_id.val($(this).data('extension-id')).parent('form').submit();
+    });
+
     var $admin_extension = $('table.admin-extensions'),
         $admin_extension_uploader = $('#fileupload'),
         $screenshots = $('.screenshots'),

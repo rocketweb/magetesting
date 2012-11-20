@@ -48,7 +48,8 @@ class Application_Model_ExtensionMapper {
         ->setDescription($row->description)
         ->setLogo($row->logo)
         ->setVersion($row->version)
-        ->setFileName($row->file_name)
+        ->setExtension($row->extension)
+        ->setExtensionEncoded($row->extension_encoded)
         ->setNamespaceModule($row->namespace_module)
         ->setFromVersion($row->from_version)
         ->setToVersion($row->to_version)
@@ -74,7 +75,8 @@ class Application_Model_ExtensionMapper {
             ->setDescription($row->description)
             ->setLogo($row->logo)
             ->setVersion($row->version)
-            ->setFileName($row->file_name)
+            ->setExtension($row->extension)
+            ->setExtensionEncoded($row->extension_encoded)
             ->setNamespaceModule($row->namespace_module)
             ->setFromVersion($row->from_version)
             ->setToVersion($row->to_version)
@@ -117,19 +119,8 @@ class Application_Model_ExtensionMapper {
         
         //find extensions that match version and edition
         $matchingExtensions = $this->getDbTable()->findMatching($instance);
-        
-        //return them 
-        $returnedArray = array();
-        foreach($matchingExtensions as $me){
-            
-            $name = $me->name;
-            if ($me->version){
-                $name .= ' ('.$me->version.')';
-            }
-            
-	    $returnedArray[$me->id] = $name;
-        }
-        return $returnedArray;
+
+        return $matchingExtensions;
         
     }
     
@@ -141,20 +132,8 @@ class Application_Model_ExtensionMapper {
         
         //find extensions that match version and edition
         $installedExtensions = $this->getDbTable()->findInstalled($instance);
-        
-        //return them 
-        $returnedArray = array();
-        foreach($installedExtensions as $me){
-            
-            
-	  $name = $me->name;
-            if ($me->version){
-                $name .= ' ('.$me->version.')';
-            }
-            
-	    $returnedArray[$me->id] = $name;
-        }
-        return $returnedArray;
+
+        return $installedExtensions;
         
     }
     
@@ -169,7 +148,8 @@ class Application_Model_ExtensionMapper {
                 ->setDescription($row->description)
                 ->setLogo($row->logo)
                 ->setVersion($row->version)
-                ->setFileName($row->file_name)
+                ->setExtension($row->extension)
+                ->setExtensionEncoded($row->extension_encoded)
                 ->setNamespaceModule($row->namespace_module)
                 ->setFromVersion($row->from_version)
                 ->setToVersion($row->to_version)

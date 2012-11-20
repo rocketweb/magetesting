@@ -8,6 +8,7 @@
             <th>First name</th>
             <th>Last name</th>
             <th>Instances</th>
+            <th>Server</th>
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -19,6 +20,7 @@
             <td><?php echo $user['firstname']; ?></td>
             <td><?php echo $user['lastname']; ?></td>
             <td><?php echo $user['instances'] ?></td>
+            <td><?php echo $user['server_label']; ?></td>
             <td>
                 <a href="<?php echo $this->url(array('module' => 'default', 
                     'controller' => 'user',

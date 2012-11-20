@@ -16,7 +16,7 @@ class MyAccountController extends Integration_Controller_Action
         $modelPlan = new Application_Model_Plan();
         $payments = new Application_Model_Payment();
 
-        $modelUser = new Application_Model_User();             
+        $modelUser = new Application_Model_User();
         $user = $modelUser->find($this->auth->getIdentity()->id);
                
         $this->view->plan = $modelPlan->find($user->getPlanId());
@@ -141,15 +141,23 @@ class MyAccountController extends Integration_Controller_Action
         $this->view->renderBraintree = false;
         
         if($user->getId()) {
+            $plan_model = new Application_Model_Plan();
+            $this->view->plans = $plan_model->fetchAll();
+
             if($user->getCity() AND $user->getStreet()) {
                 $this->view->renderPayPal = true;
-                $this->view->user = $user;
             }
             
             if ($user->getCity() && $user->getStreet() && $user->getCountry() && $user->getPostalCode() && $user->getState() && $user->getFirstname() && $user->getLastname()){
                 $this->view->renderBraintree = true;
-                $this->view->user = $user;
             }
+            $this->view->user = $user;
+        } else {
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'my-account',
+                    'action' => 'index',
+            ), 'default', true);
         }
     }
     

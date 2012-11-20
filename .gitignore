@@ -1,1 +1,6 @@
-/nbproject/private/
+.buildpath
+.project
+.zfproject.xml
+data/extensions/
+nbproject
+nbproject/private/

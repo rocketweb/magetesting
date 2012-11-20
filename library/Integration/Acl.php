@@ -58,7 +58,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'default_error', array('error'));
         $this->allow('free-user', 'default_index', array('index'));
         $this->allow('free-user', 'default_queue', array(
-                'add','add-clean', 'close', 'getVersions', 'edit','extensions'
+                'add','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus'
         ));
         $this->allow('free-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
@@ -75,7 +75,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('commercial-user', 'default_error', array('error'));
         $this->allow('commercial-user', 'default_index', array('index'));
         $this->allow('commercial-user', 'default_queue', array(
-                'add','add-custom','add-clean', 'close', 'getVersions', 'edit','extensions'
+                'add','add-custom','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus'
         ));
         $this->allow('commercial-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
@@ -90,7 +90,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('awaiting-user', 'default_error', array('error'));
         $this->allow('awaiting-user', 'default_index', array('index'));
         $this->allow('awaiting-user', 'default_queue', array(
-                'add','add-custom','add-clean', 'close', 'getVersions', 'edit','extensions'
+                'add','add-custom','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus'
         ));
         $this->allow('awaiting-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'

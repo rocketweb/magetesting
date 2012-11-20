@@ -19,7 +19,6 @@ set_include_path(
         APPLICATION_PATH . '/../application/extends' . PATH_SEPARATOR .
         get_include_path());
 
-
 /**
  * Zend Autoloader
  */

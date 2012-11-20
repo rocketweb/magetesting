@@ -17,6 +17,14 @@ class Application_Model_Plan {
     protected $_ftp_access;
     
     protected $_phpmyadmin_access;
+    
+    protected $_billing_period;
+    
+    protected $_paypal_id;
+    
+    protected $_braintree_id;
+    
+    protected $_is_hidden;
 
     protected $_mapper;
 
@@ -107,6 +115,50 @@ class Application_Model_Plan {
         return $this->_phpmyadmin_access;
     }
     
+    public function setBillingPeriod($value)
+    {
+        $this->_billing_period = $value;
+        return $this;
+    }
+    
+    public function getBillingPeriod()
+    {
+        return $this->_billing_period;
+    }
+    
+    public function setPaypalId($value)
+    {
+        $this->_paypal_id = $value;
+        return $this;
+    }
+    
+    public function getPaypalId()
+    {
+        return $this->_paypal_id;
+    }
+    
+    public function setBraintreeId($value)
+    {
+        $this->_braintree_id = $value;
+        return $this;
+    }
+    
+    public function getBraintreeId()
+    {
+        return $this->_braintree_id;
+    }
+    
+    public function setIsHidden($value)
+    {
+        $this->_is_hidden = ((int)$value ? 1 : 0);
+        return $this;
+    }
+    
+    public function getIsHidden()
+    {
+        return $this->_is_hidden;
+    }
+    
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -137,9 +189,12 @@ class Application_Model_Plan {
         return $this;
     }
 
-    public function fetchAll()
+    /**
+     * @param boolean $fetch_hidden - whether fetch also hidden plans
+     */
+    public function fetchAll($fetch_hidden = false)
     {
-        return $this->getMapper()->fetchAll();
+        return $this->getMapper()->fetchAll($fetch_hidden);
     }
 
     public function __toArray()
@@ -150,7 +205,11 @@ class Application_Model_Plan {
                 'instances' => $this->getInstances(),
                 'ftp_access' => $this->getFtpAccess(),
                 'phpmyadmin_access' => $this->getPhpmyadminAccess(),
-                'price'     => $this->getPrice()
+                'billing_period' => $this->getBillingPeriod(),
+                'price'     => $this->getPrice(),
+                'paypal_id' => $this->getPaypalId(),
+                'braintree_id' => $this->getBraintreeId(),
+                'is_hidden' => $this->getIsHidden()
         );
     }
 

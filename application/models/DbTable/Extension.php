@@ -46,7 +46,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $select = $this->select()
 		->setIntegrityCheck(false)
                 ->from($this->_name)
-                ->join('queue', $this->_name.'.id = queue.extension_id')
+                ->join('instance_extension', $this->_name.'.id = instance_extension.extension_id')
                 ->where('instance_id = ?', $instance['id'])
                 ;
                

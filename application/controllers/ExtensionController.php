@@ -110,7 +110,6 @@ class ExtensionController extends Integration_Controller_Action {
             $this->view->logo = $this->_getParam('logo', '');
 
             $formData = $this->_request->getPost();
-
             if($form->isValid($formData)) {
                 $old_logo = $extension->getLogo();
                 $new_logo = $this->_getParam('logo', '');
@@ -119,8 +118,50 @@ class ExtensionController extends Integration_Controller_Action {
                 if($extension->getId()) {
                     unset($formData['logo']);
                 }
-                $extension->setOptions($formData);
+                
                 $extension->setIsDev(0);
+
+                $extension_new_name = (isset($_FILES["extension_file"]) && $_FILES["extension_file"]["name"] ? $_FILES["extension_file"]["name"] : '');
+                $extension_encoded_new_name = (isset($_FILES["extension_encoded_file"]) && $_FILES["extension_encoded_file"]["name"] ? $_FILES["extension_encoded_file"]["name"] : '');
+
+                $adapter = new Zend_File_Transfer_Adapter_Http();
+                if($extension_new_name) {
+                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/';
+                    if(!file_exists($dir)) {
+                        @mkdir($dir, 0777, true);
+                    }
+                    $adapter->setDestination($dir);
+                    $adapter->receive('extension_file');
+                }
+                if($extension_encoded_new_name) {
+                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/encoded/';
+                    if(!file_exists($dir)) {
+                        @mkdir($dir, 0777, true);
+                    }
+                    $adapter->setDestination($dir);
+                    $adapter->receive('extension_encoded_file');
+                }
+
+                if($extension_new_name) {
+                    if($extension->getExtension() AND $extension->getExtension() != $extension_new_name) {
+                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/'.$extension->getExtension();
+                        if(file_exists($file_to_delete)) {
+                            @unlink($file_to_delete);
+                        }
+                    }
+                    $extension->setExtension($extension_new_name);
+                }
+                if($extension_encoded_new_name) {
+                    if($extension->getExtensionEncoded() AND $extension->getExtensionEncoded() != $extension_encoded_new_name) {
+                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/encoded/'.$extension->getExtensionEncoded();
+                        if(file_exists($file_to_delete)) {
+                            @unlink($file_to_delete);
+                        }
+                    }
+                    $extension->setExtensionEncoded($extension_encoded_new_name);
+                }
+
+                $extension->setOptions($formData);
                 $extension->save();
                 $extension_id = $extension->getId();
                 if($old_logo != $new_logo) {

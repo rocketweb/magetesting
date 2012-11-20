@@ -35,6 +35,7 @@ class Application_Model_QueueMapper {
             'task' => $queue->getTask(),
             'server_id' => $queue->getServerId(),
             'parent_id' => $queue->getParentId(),
+            'added_date' => $queue->getAddedDate(),
         );
 
         if (null === ($id = $queue->getId())) {
@@ -60,7 +61,8 @@ class Application_Model_QueueMapper {
         ->setExtensionId($row->extension_id)
         ->setTask($row->task)
         ->setServerId($row->server_id)
-        ->setParentId($row->parent_id);
+        ->setParentId($row->parent_id)
+        ->setAddedDate($row->added_date);
         return $queue;
     }
 
@@ -82,7 +84,8 @@ class Application_Model_QueueMapper {
             ->setExtensionId($row->extension_id)
             ->setTask($row->task)
             ->setServerId($row->server_id)
-            ->setParentId($row->parent_id);
+            ->setParentId($row->parent_id)
+            ->setAddedDate($row->added_date);
             $entries[] = $entry;
         }
         return $entries;
@@ -100,7 +103,8 @@ class Application_Model_QueueMapper {
             ->setExtensionId($row->extension_id)
             ->setTask($row->task)
             ->setServerId($row->server_id)
-            ->setParentId($row->parent_id);
+            ->setParentId($row->parent_id)
+            ->setAddedDate($row->added_date);
             $entries[] = $entry;
         }
         return $entries;

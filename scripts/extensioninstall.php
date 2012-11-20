@@ -37,7 +37,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
         
         //untar extension to instance folder
         exec('tar -zxvf '.
-            $config->extension->directoryPath.'/'.$queueItem->getEdition().'/'.$extensionData->getFileName().
+            $config->extension->directoryPath.'/'.$queueItem->getEdition().'/'.$extensionData->getExtension().
             ' -C '.$config->magento->systemHomeFolder . '/' . $config->magento->userprefix . $userData->getLogin() . '/public_html/'.$queueItem->getDomain()
         ,$output);
         $log->log(var_export($output,true),LOG_DEBUG);

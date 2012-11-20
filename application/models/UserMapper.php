@@ -36,8 +36,10 @@ class Application_Model_UserMapper {
             unset($data['group']);
             unset($data['downgraded']);
             $data['added_date'] = date('Y-m-d H:i:s');
-            $user->setAddedDate($data['added_date']);           
+            $user->setAddedDate($data['added_date']);
             $data['password'] = sha1($user->getPassword());
+            $server = new Application_Model_Server();
+            $data['server_id'] = $server->fetchMostEmptyServerId();
             $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
@@ -77,7 +79,8 @@ class Application_Model_UserMapper {
              ->setSystemAccountName($row->system_account_name)
              ->setDowngraded($row->downgraded)
              ->setBraintreeVaultId($row->braintree_vault_id)
-             ->setBraintreeSubscriptionId($row->braintree_subscription_id);
+             ->setBraintreeSubscriptionId($row->braintree_subscription_id)
+             ->setServerId($row->server_id);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -129,19 +132,20 @@ class Application_Model_UserMapper {
         $select = $this->getDbTable()
                 ->select()
                 ->setIntegrityCheck(false)
-                ->from(array('u'=>'user'),array(                             
+                ->from(array('u'=>'user'),array(
                     'login' => 'login',
                     'status' => 'status',
                     'id' => 'id',
                     'group' => 'group',
                     'firstname' => 'firstname',
                     'lastname' => 'lastname',
+                    'server_id' => 'server_id'
                     )
                 )
                 ->joinLeft('instance','instance.user_id = u.id',array('instances'=>'COUNT(instance.id)'))
+                ->joinLeft('server', 'server.id = u.server_id', array('server_label' => 'server.name'))
                 ->group('u.id')
                 ->query();
-                
         $adapter = new Zend_Paginator_Adapter_Array($select->fetchAll());
         
         return new Zend_Paginator($adapter);
@@ -215,8 +219,8 @@ class Application_Model_UserMapper {
         foreach ($plan_id as &$id){
             (int)$id;
         }
-        
-        $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('plan_id IN (?)', implode(',',$plan_id)));
+               
+        $resultSet = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('plan_id IN (?)',$plan_id));
 
         $entries   = array();
         foreach ($resultSet as $row) {
