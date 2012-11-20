@@ -66,7 +66,8 @@ class PayPalController extends Integration_Controller_Action
             $user->find($user_id); $plan->find($plan_id);
             // and break on failure
             if(!$plan->getId() OR !$user->getId()) {
-                break;
+                /* ? */
+                break; 
             }
             $this->db->beginTransaction();
             // check what kind of notice sends to us paypal 
@@ -80,7 +81,7 @@ class PayPalController extends Integration_Controller_Action
                             if(!$activeTo OR $_POST['subscr_id'] != $user->getSubscrId()) {
                                 $activeTo = $_POST['payment_date'];
                             }
-                            $activeTo = date('Y-m-d H:i:s', strtotime($plan->getBillingPeriod(), strtotime($activeTo)));
+                            $activeTo = date('Y-m-d H:i:s', strtotime('+'.$plan->getBillingPeriod(), strtotime($activeTo)));
 
                             $user->setPlanActiveTo($activeTo);
                             

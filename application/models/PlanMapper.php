@@ -112,5 +112,28 @@ class Application_Model_PlanMapper {
         }
         return $entries;
     }
+    
+    public function findByBraintreeId($braintree_id){
+        
+        $row = $this->getDbTable()->fetchRow($this->getDbTable()->select()->where('braintree_id = ?', $braintree_id),PDO::FETCH_OBJ);
+
+        if (!$row){
+            return null;
+        }
+        
+        $entry = new Application_Model_Plan();
+        $entry->setId($row->id)
+              ->setName($row->name)
+              ->setInstances($row->instances)
+              ->setPrice($row->price)
+              ->setFtpAccess($row->ftp_access)
+              ->setPhpmyadminAccess($row->phpmyadmin_access)
+              ->setBillingPeriod($row->billing_period)
+              ->setPaypalId($row->paypal_id)
+              ->setBraintreeId($row->braintree_id)
+              ->setIsHidden($row->is_hidden);
+        return $entry;
+
+    }
 
 }

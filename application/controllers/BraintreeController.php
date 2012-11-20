@@ -3,10 +3,7 @@
 
 class BraintreeController extends Integration_Controller_Action
 {
-    
-    protected $_standard_plan_id = '';
-    protected $_business_plan_id = '';
-    
+       
     public function init(){
         require_once 'Braintree.php';
         $config = $this->getInvokeArg('bootstrap')
@@ -16,19 +13,22 @@ class BraintreeController extends Integration_Controller_Action
         Braintree_Configuration::merchantId($config->braintree->merchantId);
         Braintree_Configuration::publicKey($config->braintree->publicKey);
         Braintree_Configuration::privateKey($config->braintree->privateKey);
-        $this->_standard_plan_id = $config->braintree->standardPlanId;
-        $this->_business_plan_id = $config->braintree->businessPlanId;
     }
     
     public function paymentAction(){
         
         $this->init();
 
-        $plan = $this->getRequest()->getParam('plan', 'standard');
-        if ($plan == 'standard') {
-            $amount = 5;
-        } elseif ($plan == 'business') {
-            $amount = 10;
+        $plan = $this->getRequest()->getParam('plan', null);
+        
+        $modelPlan = new Application_Model_Plan();
+        $modelPlan->findByBraintreeId($plan);
+        
+        if ($modelPlan != null) {
+
+            /* what is amount used for ? */
+            $amount = $modelPlan->getPrice();
+            
         } else {
             return $this->_helper->redirector->gotoRoute(
                 array(
@@ -42,7 +42,7 @@ class BraintreeController extends Integration_Controller_Action
         $user = new Application_Model_User();
         $user->find($this->auth->getIdentity()->id);
 
-        if ($user->getBraintreeVaultId() != 0) {
+        if ($user->getBraintreeVaultId() > 0) {
             return $this->_helper->redirector->gotoRoute(
                             array(
                         'controller' => 'braintree',
@@ -78,7 +78,7 @@ class BraintreeController extends Integration_Controller_Action
         
         /*this is for creating customer*/
         $queryString = $_SERVER['QUERY_STRING'];
-        $plan = $this->getRequest()->getParam('plan','standard'); 
+        $plan = $this->getRequest()->getParam('plan',null); 
         $result = Braintree_TransparentRedirect::confirm($queryString);
         if ($result->success) {
         
@@ -105,14 +105,31 @@ class BraintreeController extends Integration_Controller_Action
         
         $this->init();
         
-        $plan = $this->getRequest()->getParam('plan','standard'); 
-        if ($plan =='standard'){
-            $planId = $this->_standard_plan_id;
-            $internalPlanId = 1;
-        } elseif ($plan =='business'){
-            $planId = $this->_business_plan_id;
-            $internalPlanId = 2;
+        $plan = $this->getRequest()->getParam('plan',null); 
+                var_dump($plan);
+        $modelPlan = new Application_Model_Plan();
+        $modelPlan = $modelPlan->findByBraintreeId($plan);
+               
+        if ($plan == null || !$modelPlan){
+             $this->_helper->flashMessenger(
+                array(
+                    'type' => 'error', 
+                    'message' => 'Sorry, we do not support specified plan'
+                )
+            );    
+            
+            return $this->_helper->redirector->goToRoute(
+                array(
+                    'controller'=>'my-account',
+                    'action'=>'compare'
+                ), 
+                'default', 
+                true
+            );
         }
+        
+        $planId = $plan; /* braintree plan id */
+        $internalPlanId  = $modelPlan->getId();
         
         $user = new Application_Model_User();
         $user->find($this->auth->getIdentity()->id);
@@ -130,8 +147,9 @@ class BraintreeController extends Integration_Controller_Action
                 
                 $modelPlan = new Application_Model_Plan();
                 $modelPlan->find($internalPlanId);
-                
-                $user->setPlanActiveTo(date('Y-m-d H:i:s',strtotime($modelPlan->getBillingPeriod(),time())));
+                $strtotime = strtotime('+'.$modelPlan->getBillingPeriod());
+                $planActiveTo = date('Y-m-d H:i:s',$strtotime);
+                $user->setPlanActiveTo( $planActiveTo );
                 $user->save();
                 
                 $this->_helper->flashMessenger(

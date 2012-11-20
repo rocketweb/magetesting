@@ -230,5 +230,9 @@ class Application_Model_Plan {
     public function getAllByPhpmyadminAccess($has){
         return $this->getMapper()->getAllByPhpmyadminAccess($has);
     }
+    
+    public function findByBraintreeId($braintree_id){
+        return $this->getMapper()->findByBraintreeId($braintree_id);
+    }
 
 }
