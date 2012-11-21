@@ -72,7 +72,7 @@ implements Application_Model_Task_Interface {
         $this->_setupMagentoConnect();
         //remove main fetched folder
         $parts = explode('/',$this->_customRemotePath);
-        exec('sudo rm '.$parts.' -R', $output);
+        exec('sudo rm '.$parts[0].' -R', $output);
         unset($parts);
 
         echo "Setting permissions...\n";
@@ -104,7 +104,7 @@ implements Application_Model_Task_Interface {
         // update backend admin password
         $set = array('backend_password' => $this->_adminpass);
         $where = array('domain = ?' => $this->_domain);
-        $log->log(PHP_EOL . 'Updating queue backend password: ' . $this->db->update('queue', $set, $where), Zend_Log::DEBUG);
+        $log->log(PHP_EOL . 'Updating queue backend password: ' . $this->db->update('instance', $set, $where), Zend_Log::DEBUG);
         // end
         // create magento connect ftp config and remove settings for free user
         
@@ -375,7 +375,7 @@ implements Application_Model_Task_Interface {
         echo "Moving downloaded sources to main folder...\n";
         exec('sudo mv '.$this->_customRemotePath.'* .', $output);
         $message = var_export($output, true);
-        $log->log("\nsudo mv ".$customRemotePath."* .\n" . $message, LOG_DEBUG);
+        $log->log("\nsudo mv ".$this->_customRemotePath."* .\n" . $message, LOG_DEBUG);
         unset($output);
     }
 
