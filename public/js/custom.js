@@ -78,4 +78,142 @@ $(document).ready(function () {
             }
         );
     }
+
+    /* INSTANCE EXTENSIONS ISOTOPE */
+    var $extensions_isotope = $('.extensions_well > #container'),
+        $extensions_filter_container = $('#options'),
+        $extensions_filter_options = $extensions_filter_container.find('a')
+        ElementPad        = 5,
+        ElementWidth    = 135 + (ElementPad * 2),
+        ElementHeight    = 112,
+        ColumnWidth        = ElementWidth + ElementPad,
+        RowHeight        = ElementHeight + ElementPad;
+
+    if($extensions_isotope.length) {
+        $extensions_isotope.isotope({
+            masonry : {
+                columnWidth : ColumnWidth
+              },
+              masonryHorizontal : {
+                rowHeight: RowHeight
+              },
+              cellsByRow : {
+                columnWidth : ColumnWidth * 2,
+                rowHeight : RowHeight * 2
+              },
+              cellsByColumn : {
+                columnWidth : ColumnWidth * 2,
+                rowHeight : RowHeight * 2
+              }
+        });
+        $extensions_filter_options.click(function() {
+            var $this = $(this);
+            if(! $this.hasClass('selected')) {
+                $this.siblings()
+                     .removeClass('selected')
+                     .end()
+                     .addClass('selected');
+                var $filter = '';
+                $extensions_filter_container.find('.selected').each(function() {
+                    var $option = $(this).data('option-value');
+                    if($option != '*') {
+                        $filter += $option;
+                    }
+                });
+                $extensions_isotope.isotope({filter: $filter});
+            }
+            return false;
+        });
+    }
+ // EVENT: On click "Install" button
+    $('.install').click(function(event){
+        "use strict";
+        var $this = $(this);
+
+        $this.addClass('disabled');
+        $.ajax({
+            url     : $extensions_filter_container.data('form-action'),
+            type    : 'POST',
+            data    : {extension_id : $this.data('install-extension')},
+            success : function(response) {
+                $this.addClass('hidden').prev('.progress').removeClass('hidden');
+            }
+        });
+        
+        
+        return false;
+    });
+    
+    var _screenshotCarousel = $('#screenshotCarousel');
+    var _screenshotModal = $('#screenshotModal').modal({show: false});
+    
+    // EVENT: On click "View screens" button
+    $('a.btn-screenshots').click(function(event){
+        "use strict";
+        
+        var _this = $(this);
+        var _extension = _this.parent().parent().parent();
+        var _carousel = $('#screenshotCarousel div.carousel-inner');
+        
+        _carousel.empty();
+        
+        var active = true;
+        
+        _extension.find('.screenshots li').each(function(){
+            var _screenshot = $(this);
+            
+            var _item = $('<div>').addClass('item');
+            if(active){
+                _item.addClass('active');
+                active = false;
+            }
+            _item.append($('<div>')
+                .addClass('modal-header')
+                .append($('<button>')
+                    .addClass('close')
+                    .attr('type', 'button')
+                    .attr('data-dismiss', 'modal')
+                    .html('&times;')
+                )
+                .append($('<h5>')
+                    .text(_screenshot.attr('data-id'))
+                )
+            ).append($('<div>')
+                .addClass('modal-body')
+                .css('max-height','100%')
+                .append($('<img>')
+                    // Preload function
+                    /*.load(function(){
+                    })*/
+                    .attr('src', _screenshot.text())
+                )
+            );
+            _carousel.append(_item);
+        });
+        
+        _screenshotModal.modal('show');
+        _screenshotCarousel.carousel({'interval': false});
+        
+        // Code for resizing and centering modal
+        /*_screenshotCarousel.bind('slid', function() {
+            _screenshotModal.css({
+                width: 'auto',
+                'margin-left': function(){
+                    return -($(this).width() / 2);
+                }
+            });
+        });*/
+        
+        $('.carousel-control').css('top', '56%');
+        
+        event.preventDefault();
+        event.stopPropagation();
+    });
+    
+    // change size of clicked element
+    $extensions_isotope.find('.element').click(function() {
+        $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
+        $extensions_isotope.isotope('reLayout');
+    });
+    /* INSTANCE EXTENSIONS ISOTOPE */
 });

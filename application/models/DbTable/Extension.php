@@ -41,6 +41,37 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
     
+    public function fetchInstanceExtensions($instance) {
+        $select = $this->select()
+                        ->from($this->_name)
+                        ->setIntegrityCheck(false)
+                        ->where('edition = ?', $instance['edition'])
+                        ->where(' ? 
+                                 BETWEEN REPLACE(from_version,\'.\',\'\')
+                                 AND REPLACE(to_version,\'.\',\'\')',
+                            (int)str_replace('.','',$instance['version'])
+                        );
+        $select->joinLeft(
+                'instance_extension',
+                'extension.id = instance_extension.extension_id AND (instance_id IS NULL OR instance_id = '.$this->_db->quote($instance->id).')',
+                'instance_id'
+        );
+        $select->joinLeft(
+            'queue',
+            'queue.instance_id = instance_extension.instance_id AND queue.extension_id = extension.id',
+            'status'
+        );
+        $select->order(array('instance_id DESC', 'price DESC'));
+        //get also developr extensions for admins
+        if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
+            $select->where('is_dev IN (?)',array(0,1));
+        } else {
+            $select->where('is_dev  = ? ',0);
+        }
+        //echo $select->__toString();die;
+        return $this->fetchAll($select);
+    }
+    
     public function findInstalled($instance)
     {
         $select = $this->select()
