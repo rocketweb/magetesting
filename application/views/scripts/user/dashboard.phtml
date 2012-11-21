@@ -25,7 +25,7 @@ function updateStatuses(){
       //make new request
       requests[domain] = $.ajax({
             type: "POST",
-            url: "'. $this->baseUrl("queue/getStatus") .'",
+            url: "'. $this->baseUrl("queue/getstatus") .'",
             data: "domain="+ $(this).find(".instancedomain").val(),
             dataType: "json",
             success: function(json){
