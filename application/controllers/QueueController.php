@@ -412,8 +412,10 @@ class QueueController extends Integration_Controller_Action {
 
                 if ((int)$request->getParam('extension_id') > 0) {
                     $instanceRow = $instanceModel->find($instance->id);
+			if ($instanceRow->getStatus()=='ready'){
                     $instanceRow->setStatus('installing-extension');
-                    $instanceRow->save();
+                    $instanceRow->save();				
+			}
 
                     /* Adding extension to queue */
                     try {
