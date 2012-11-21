@@ -28,7 +28,7 @@ implements Application_Model_Task_Interface {
         $this->_updateStatus('installing');
         $this->_createSystemAccount();
         
-        $this->_update('installing-magento');
+        $this->_updateStatus('installing-magento');
 
         $startCwd = getcwd();
         $message = 'domain: ' . $domain;
@@ -140,9 +140,9 @@ implements Application_Model_Task_Interface {
         //TODO: add mail info about ready installation
         exec('ln -s ' . $instanceFolder . '/' . $domain . ' '.INSTANCE_PATH . $domain);
         $log->log(PHP_EOL . 'ln -s ' . $instanceFolder . '/' . $domain . ' '. INSTANCE_PATH . $domain, Zend_Log::DEBUG);
-        $this->db->update('queue', array('status' => 'ready'), 'id=' . $queueElement->getId());
-        $this->db->update('instance', array('status' => 'ready'), 'id=' . $queueElement->getInstanceId());
-
+        
+        $this->_updateStatus('ready');
+        
         chdir($startCwd);
 
         /* send email to instance owner start */
@@ -166,7 +166,11 @@ implements Application_Model_Task_Interface {
         $mail->setSubject($config->cron->queueItemReady->subject);
         $mail->setFrom($config->cron->queueItemReady->from->email, $config->cron->queueItemReady->from->desc);
         $mail->setBodyHtml($bodyText);
-        $mail->send();
+        try {
+          $mail->send();
+        } catch (Zend_Mail_Transport_Exception $e){
+	  $this->logger->log('Mail could not be sent', LOG_CRIT, $e->getTraceAsString());
+        }
         /* send email to instance owner stop */
 
         //fetch custom instances fetch
