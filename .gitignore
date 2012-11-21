@@ -4,3 +4,5 @@
 data/extensions/
 nbproject
 nbproject/private/
+application/configs/application.ini
+application/configs/local.ini
