@@ -2,6 +2,7 @@
 ; Debug output
 phpSettings.display_startup_errors = 0
 phpSettings.display_errors = 0
+phpSettings.date.timezone = "UTC"
 
 ; Include path
 includePaths.library = APPLICATION_PATH "/../library"
