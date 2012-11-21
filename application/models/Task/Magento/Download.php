@@ -19,7 +19,6 @@ implements Application_Model_Task_Interface {
     }
     
     public function setup(Application_Model_Queue $queueElement){
-        
         parent::setup($queueElement);
     }
     
@@ -174,7 +173,8 @@ implements Application_Model_Task_Interface {
         try {
           $mail->send();
         } catch (Zend_Mail_Transport_Exception $e){
-	  $this->logger->log('Mail could not be sent', LOG_CRIT, $e->getTraceAsString());
+            
+	  $log->log('Mail could not be sent', LOG_CRIT, $e->getTraceAsString());
         }
         /* send email to instance owner stop */
 
@@ -240,6 +240,7 @@ implements Application_Model_Task_Interface {
     /* check if database file exist and is not bigger than limit */
 
     protected function _checkDatabaseDump() {
+        $log = $this->_getLogger();
         exec("wget --spider ".$this->_customHost.$this->_customSql." 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_instanceObject->getCustomLogin()."' ".
@@ -289,6 +290,7 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _setupFilesystem() {
+        $log = $this->_getLogger();
         echo "Preparing directory...\n";
         exec('sudo mkdir ' . $this->_instanceFolder . '/' . $this->_domain, $output);
         $message = var_export($output, true);
@@ -307,6 +309,7 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _downloadInstanceFiles() {
+        $log = $this->_getLogger();
          echo "Copying package to target directory...\n";
         //do a sample connection, and check for index.php, if it works, start fetching
         $command = "wget --spider ".$this->_customHost.$this->_customRemotePath."app/Mage.php 2>&1 ".
@@ -347,7 +350,7 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _downloadDatabase() {
-        
+        $log = $this->_getLogger();
         
         $command = "wget  ".$this->_customHost.$this->_customSql." ".
             "--passive-ftp ".
@@ -367,6 +370,7 @@ implements Application_Model_Task_Interface {
     
     protected function _importFiles(){
         
+        $log = $this->_getLogger();
         
         echo "Moving downloaded sources to main folder...\n";
         exec('sudo mv '.$this->_customRemotePath.'* .', $output);
