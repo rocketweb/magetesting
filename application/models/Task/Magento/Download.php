@@ -248,7 +248,7 @@ implements Application_Model_Task_Interface {
             "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'",$output);
 
         $message = var_export($output, true);
-        $log->log("wget --spider ".$this->_ustomHost.$this->_customSql." 2>&1 ".
+        $log->log("wget --spider ".$this->_customHost.$this->_customSql." 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_instanceObject->getCustomLogin()."' ".
             "--password='".$this->_instanceObject->getCustomPass()."' ".
