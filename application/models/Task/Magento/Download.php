@@ -9,10 +9,7 @@ implements Application_Model_Task_Interface {
     
     protected $_customHost = '';
     protected $_customSql = '';
-    protected $_customRemotePath = '';
-
-    private $db;
-    private $config;
+    protected $_customRemotePath = ''; 
     
     /* Prevents from running contructor of Application_Model_Task */
     public function __construct(){
