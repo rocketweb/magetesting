@@ -117,13 +117,13 @@ class Application_Model_Plan {
         return $this->_phpmyadmin_access;
     }
     
-    public function setCanAddCustomIstance($value)
+    public function setCanAddCustomInstance($value)
     {
         $this->_can_add_custom_instance = $value;
         return $this;
     }
     
-    public function getCanAddCustomIstance()
+    public function getCanAddCustomInstance()
     {
         return $this->_can_add_custom_instance;
     }
