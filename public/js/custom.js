@@ -41,6 +41,7 @@ $(document).ready(function () {
             // Uncomment the following to send cross-domain cookies:
             //xhrFields: {withCredentials: true},
             url: $admin_extension_uploader.attr('action'),
+            dropZone: $('.fileinput-button.btn.btn-success'),
             dataType: 'json',
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
             formData: {directory_hash: $directory_hash}
