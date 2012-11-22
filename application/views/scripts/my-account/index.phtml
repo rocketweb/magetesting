@@ -16,13 +16,20 @@
     <hr />
     <h3>Current plan: <?php if($this->plan->getId()==0): ?>
         None
-        <?php else: 
+        <?php else:
+        if($this->plan->getId()!=0 && $this->user->getGroup()=='free-user'){ 
+        
+            echo '<div class="label label-warning">Pending</div>&nbsp;';
+        
+        }
         echo $this->escape($this->plan->getName());  
         endif;
         ?></h3>
     <div class="row">
         <div class="span4">
-        <?php if($this->plan->getId()!=0): ?>
+        <?php if($this->plan->getId()!=0 && $this->user->getGroup()=='free-user'){ ?>
+            Your account has been queued for the update. Please wait few minutes while we process your payment and update your account.
+        <?php } else if($this->plan->getId()!=0): ?>
             Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
             <?php endif; ?>
         </div>
