@@ -1,8 +1,10 @@
 .buildpath
 .project
 .zfproject.xml
+data/cache/
 data/extensions/
 nbproject
 nbproject/private/
 application/configs/application.ini
 application/configs/local.ini
+library/Zend/

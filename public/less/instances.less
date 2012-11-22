@@ -1,0 +1,115 @@
+.mt {
+	margin-top: 40px;
+}
+
+.accordion-group {
+	margin-bottom: -1px;
+	border-radius: 0px;
+	
+	.accordion-heading {
+		height: @ElementSize;
+		font-size: 18px;
+		
+		&.active-accordion-header {
+			background: #f7f7f7;
+		}
+		
+		.tab-stripe {
+			float: left;
+			min-height: @ElementSize;
+			min-width: @ElementPad;
+			background: @Blue;
+		}
+		
+        .tab-stripe-active {
+			background: @Grey;
+		}
+        
+		.accordion-toggle {
+			padding: 15px;
+			color: #6d6d6d;
+			outline: 0;
+			text-decoration: none;
+			
+			.arrow {
+				width: @ElementSize;
+				margin-right: ((@ElementSize / 4) - @ElementPad);
+				text-align: center;
+				
+				i {
+					margin-top: 8px;
+				}
+			}
+			
+			.title {
+				position: relative;
+    			top: 5px;
+    			
+    			&:hover {
+    				text-decoration: underline;
+    			}
+			}
+			
+			.pending {
+				clear: right;
+				color: @Red;
+				font-size: 11px;
+				text-transform: none;
+			}
+		}
+	}
+	
+	.accordion-inner {
+		border-top: none;
+		
+		.version-info {
+			margin: 6px 0 12px 0;
+			padding-bottom: 12px;
+			border-bottom: 1px solid @Grey;
+			
+			.first {
+				margin-left: 0;
+			}
+		}
+		
+		.panel {
+			h5 {
+				color: @Blue;
+			}
+			
+			.table {
+				margin-bottom: 0px;	
+			}
+			
+			&.details {
+				border-right: 1px solid #ddd;
+				
+				table {
+					font-size: 12px;
+				}
+				
+				/*a.btn {
+					width: 25%;
+				}*/
+			}
+			
+			&.deployment {
+				border-right: 1px solid #ddd;
+				
+				h5 span.version {
+					float: right;
+					margin-right: 10px;
+					font-size: 11px;
+					font-weight: normal;
+					color: @DarkGrey;
+				}
+			}
+		}
+		
+	}
+	
+	.mt_instance {
+		background: #fff;
+	}
+	
+}

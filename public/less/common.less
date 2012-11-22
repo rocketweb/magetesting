@@ -1,0 +1,51 @@
+body {
+	font-family: @MainFamily;
+}
+
+#Sandbox_MainMenu {
+    position: absolute;
+    display: block;
+}
+
+.mt_shadow {
+	.shadow;
+}
+
+.btn-mini .icon {
+	margin-top: 0px;
+}
+
+/* CUSTOM BUTTONS */
+.btn-red {
+	.customButton(@Red);
+}
+.btn-blue {
+	.customButton(@Blue);
+}
+.btn-deploy {
+	width: 25%;
+}
+
+/* CUSTOM BADGES */
+.badge-red {
+	.customBadge(@Red);
+}
+.badge-blue {
+	.customBadge(@Blue);
+}
+
+/* CUSTOM ALERTS */
+.alert-red {
+	.customAlert(@Red);
+}
+.alert-blue {
+	.customAlert(@Blue);
+}
+
+.accordion-group {
+	.accordion-heading {
+		.accordion-toggle {
+			outline: 0;
+		}
+	}
+}
