@@ -8,7 +8,7 @@
             href="<?php echo $this->url(array('controller' => 'queue', 'action' => 'add-clean')) ?>"
             class="btn btn-success btn-large"><i class="icon-plus icon-white"></i>&nbsp;Clean Magento</a>
     </div>
-    <?php if ($this->userGroup != 'free-user'): ?>
+    <?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
         <div class="span5">
             <a
                 href="<?php echo $this->url(array('controller' => 'queue', 'action' => 'add-custom')) ?>"
@@ -24,7 +24,7 @@
     <div class="span5">
         Easy
     </div>
-    <?php if ($this->userGroup != 'free-user'): ?>
+    <?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
         <div class="span5">
             Medium
         </div>
@@ -38,7 +38,7 @@
     <div class="span5">
         Anyone who wants to test extensions on any magento version, test themes or custom code. 
     </div>
-    <?php if ($this->userGroup != 'free-user'): ?>
+    <?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
         <div class="span5">
             Anyone who already own Magento store and wants to test how new extension will go along  with their current codebase.
         </div>

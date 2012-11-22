@@ -18,6 +18,8 @@ class Application_Model_Plan {
     
     protected $_phpmyadmin_access;
     
+    protected $_can_add_custom_instance;
+    
     protected $_billing_period;
     
     protected $_paypal_id;
@@ -115,6 +117,17 @@ class Application_Model_Plan {
         return $this->_phpmyadmin_access;
     }
     
+    public function setCanAddCustomIstance($value)
+    {
+        $this->_can_add_custom_instance = $value;
+        return $this;
+    }
+    
+    public function getCanAddCustomIstance()
+    {
+        return $this->_can_add_custom_instance;
+    }
+    
     public function setBillingPeriod($value)
     {
         $this->_billing_period = $value;
@@ -205,6 +218,7 @@ class Application_Model_Plan {
                 'instances' => $this->getInstances(),
                 'ftp_access' => $this->getFtpAccess(),
                 'phpmyadmin_access' => $this->getPhpmyadminAccess(),
+                'can_add_custom_instance' => $this->getCanAddCustomIstance(),
                 'billing_period' => $this->getBillingPeriod(),
                 'price'     => $this->getPrice(),
                 'paypal_id' => $this->getPaypalId(),

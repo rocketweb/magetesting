@@ -26,6 +26,15 @@ class QueueController extends Integration_Controller_Action {
 
     public function addAction() {
         $this->view->userGroup = $this->auth->getIdentity()->group;
+        
+        $userModel = new Application_Model_User();
+        $userModel->find($this->auth->getIdentity()->id);
+        
+        $planModel = new Application_Model_Plan();
+        $planModel->find($userModel->getPlanId());
+        
+        $this->view->userGroup = $this->auth->getIdentity()->group;
+        $this->view->userPlan = $planModel;
     }
 
     public function addCleanAction() {
@@ -107,7 +116,6 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId(0);  
                     $queueModel->save();
-                    
                     
                     $this->_helper->FlashMessenger('New installation added to queue');
 
