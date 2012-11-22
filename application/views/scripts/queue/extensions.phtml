@@ -53,7 +53,7 @@
                 </div>
                 
                 <div class="extras hidden">
-                    <p class="description">Lorem ipsum<?php echo $extension['description']; ?></p>
+                    <p class="description"><?php echo $extension['description']; ?></p>
                 <?php if($extension['status'] != 'ready'): ?>
                     <div class="progress progress-striped progress-danger pull-right <?php echo (! (int)$extension['instance_id'] ? 'hidden' : ''); ?> active" style="width: 100px;height:10px;">
                         <div class="bar" style="width: 100%;"></div>

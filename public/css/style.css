@@ -234,3 +234,6 @@ html,body{height:100%;}
 .clickable .element:hover h2{color:white;}
 
 /** LESS - END COMPILED CSS **/
+
+
+.element.premium .wrapper .icon { max-width: 84px; max-height: 112px; }
