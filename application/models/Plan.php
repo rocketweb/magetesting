@@ -218,7 +218,7 @@ class Application_Model_Plan {
                 'instances' => $this->getInstances(),
                 'ftp_access' => $this->getFtpAccess(),
                 'phpmyadmin_access' => $this->getPhpmyadminAccess(),
-                'can_add_custom_instance' => $this->getCanAddCustomIstance(),
+                'can_add_custom_instance' => $this->getCanAddCustomInstance(),
                 'billing_period' => $this->getBillingPeriod(),
                 'price'     => $this->getPrice(),
                 'paypal_id' => $this->getPaypalId(),
