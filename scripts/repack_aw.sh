@@ -36,13 +36,13 @@ else
     cp -r ${BASEDIR}/temp/step2/ ${BASEDIR}/temp/step1 
 
     # encode step1 directory
-    $IONCUBE --obfuscate all --obfuscation-key "$KEY" --ignore .svn/ --ignore .DS_Store  --encode "*.php" --encode "*.phtml" ${BASEDIR}/temp/step1 -o ${BASEDIR}/temp/step1-encoded
+    $IONCUBE --allowed-server *.magetesting.com --obfuscate all --obfuscation-key "$KEY" --ignore .svn/ --ignore .DS_Store  --encode "*.php" --encode "*.phtml" ${BASEDIR}/temp/step1 -o ${BASEDIR}/temp/step1-encoded
 
     # pack step1 as our open source extension
-    tar -czf ${BASEDIR}/${FILENAME}.tar.gz -C ${BASEDIR}/temp/step1 .
+    tar -czf ${BASEDIR}/open/${FILENAME}.tar.gz -C ${BASEDIR}/temp/step1 .
 
     # pack step1-encoded as our encoded extension
-    tar -czf ${BASEDIR}/${FILENAME}-encoded.tar.gz -C ${BASEDIR}/temp/step1-encoded .
+    tar -czf ${BASEDIR}/encoded/${FILENAME}-encoded.tar.gz -C ${BASEDIR}/temp/step1-encoded .
 
     # delete temp directory
     rm -r ${BASEDIR}/temp
