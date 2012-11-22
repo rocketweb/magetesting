@@ -154,6 +154,8 @@ class QueueController extends Integration_Controller_Action {
         $editionModel = new Application_Model_Edition();
         $this->view->editions = $editionModel->getAll();
         $this->view->form = $form;
+        
+        $this->view->headScript()->appendFile('/public/js/queue-addclean.js', 'text/javascript');
     }
 
     public function addCustomAction() {
@@ -279,6 +281,7 @@ class QueueController extends Integration_Controller_Action {
         }
 
         $this->view->form = $form;
+        $this->view->headScript()->appendFile('/public/js/queue-addcustom.js', 'text/javascript');
     }
 
     public function closeAction() {
