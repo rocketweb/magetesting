@@ -37,6 +37,16 @@
             <?php endforeach; ?>
         </tr>
         <tr>
+            <td>Custom Store Import</td>
+            <?php foreach($this->plans as $plan): ?>
+                <?php if((int)$plan->getCanAddCustomInstance()): ?>
+                    <td><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                <?php else: ?>
+                    <td><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </tr>
+        <tr>
             <td>Billing Period</td>
             <?php foreach($this->plans as $plan): ?>
                 <td><?php echo $plan->getBillingPeriod(); ?></td>
