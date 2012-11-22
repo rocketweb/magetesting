@@ -89,7 +89,17 @@ $(document).ready(function () {
         ColumnWidth        = ElementWidth + ElementPad,
         RowHeight        = ElementHeight + ElementPad;
 
+	
     if($extensions_isotope.length) {
+		$('.element.premium .wrapper div.icon').css({
+			'margin-top': function(){
+				var margin = (112 - $(this).find('img').height()) / 2;
+				if(margin < 0){ margin = 0; }
+				return margin;
+			}
+		});
+		
+		
         $extensions_isotope.isotope({
             masonry : {
                 columnWidth : ColumnWidth
@@ -125,7 +135,7 @@ $(document).ready(function () {
             return false;
         });
     }
- // EVENT: On click "Install" button
+	// EVENT: On click "Install" button
     $('.install').click(function(event){
         "use strict";
         var $this = $(this);

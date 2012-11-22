@@ -58,7 +58,11 @@
                         <div class="bar" style="width: 100%;"></div>
                     </div>
                 <?php if(! (int)$extension['instance_id']): ?>
-                    <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>">Install</a>
+                    <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
+                <?php else: ?>
+                	<?php if($extension['status'] === 'ready'): ?>
+                    <a href="#" class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</a>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <?php endif; ?>
                 <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>

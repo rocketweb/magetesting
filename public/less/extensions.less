@@ -103,8 +103,84 @@ body {
 	
 	.ribbon {
 		position: absolute;
-		right:0;
+		right: 0;
 		z-index: 9999;
+	}
+	
+	&.premium {
+		width: (@ElementWidth * 2) + (@ElementPad * 3);
+		background: #fff;
+		
+		.wrapper {
+			.info {
+				color: @Red;
+			}
+		}
+	}
+	
+	&.free {
+		.wrapper {
+			text-align: center;
+			margin: 0 auto;
+			
+			div.icon {
+				padding: 12px 0;
+			}
+			
+			.info {
+				color: #6d6d6d;
+				
+				h5 {
+					padding: 0 8px;
+				    word-wrap: break-word;
+					margin: 0;
+					font-size: 13px;
+					line-height: 16px;
+				}
+				
+				p {
+					font-size: 11px;
+				}
+			}
+		}
+	}
+	
+	&.premium, &.large {
+		.wrapper {
+			margin-top: 0;
+			text-align: left;
+			
+			div.icon {
+				float: left;
+				min-width: 84px;
+				min-height: @ElementHeight;
+				text-align: center;
+				margin-top: 24px;
+				
+				img {
+    				position: relative;
+				}
+			}
+			
+			.info {
+				float: left;
+				width: (@ElementWidth * 2) - 100;
+				margin-left: 12px;
+				text-align: left;
+				
+				h5 {
+					padding: 0 8px 0 0;
+					margin: 34px 0 0 0;
+					font-size: 13px;
+					line-height: 16px;
+				}
+				
+				p {
+					font-size: 11px;
+					color: #6d6d6d;
+				}
+			}
+		}
 	}
 	
 	&.large {
@@ -128,7 +204,7 @@ body {
 		
 		.btn-mini {
 		    border-radius: 12px 12px 12px 12px;
-		    font-size: 10.5px;
+		    font-size: 11px;
 		    padding: 1px 12px;
 		}
 		
@@ -137,98 +213,6 @@ body {
 		}
 	}
 	
-	&.premium {
-		width: (@ElementWidth * 2) + (@ElementPad * 3);
-		background: #fff;
-		
-		.wrapper {
-			div.icon {
-				float: left;
-			}
-			
-			.info {
-				float: left;
-				width: (@ElementWidth * 2) - 100;
-				color: #f64135;
-				margin-left: 12px;
-				
-				h5 {
-					margin: 34px 0 0 0;
-					font-size: 13px;
-					line-height: 16px;
-				}
-				
-				p {
-					font-size: 11px;
-					color: #6d6d6d;
-				}
-			}
-		}
-	}
-	
-	&.free {
-		&.large {
-			
-			.wrapper {
-				div.icon {
-					float: left;
-					width: 100px;
-					margin-top: 50px;
-				}
-				
-				.info {
-					bottom: auto;
-				    left: 100px;
-				    text-align: left;
-				    top: 52px;
-					max-width: 170px;
-				    min-width: 100%;
-				    
-				    h5 {
-				    	padding: 0 8px 0 0;
-				    	word-wrap: break-word;
-				    }
-				}
-				
-				.extras {
-					.description {
-						text-align: left;
-					}
-				}
-			}
-		}
-		
-		.wrapper {
-			text-align: center;
-			margin: 0 auto;
-			
-			div.icon {
-				//margin: 12px auto 0 auto;
-				padding: 12px 0;
-			}
-			
-			.info {
-				position: absolute;
-				bottom: 0px;
-				max-width: @ElementWidth;
-				min-width: 100%;
-				height: 60px;
-				color: #6d6d6d;
-				
-				h5 {
-					padding: 0 8px;
-				    word-wrap: break-word;
-					margin: 0;
-					font-size: 13px;
-					line-height: 16px;
-				}
-				
-				p {
-					font-size: 11px;
-				}
-			}
-		}
-	}
 }
 
 .element.large,

@@ -217,23 +217,20 @@ html,body{height:100%;}
 .well.extensions_well{background:#eee;border:1px solid #E3E3E3;border-radius:none;box-shadow:none;}
 #container{margin-bottom:20px;}
 .element{width:135px;height:112px;margin:5px;float:left;overflow:hidden;position:relative;background:#f7f7f7;color:#222;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}.element .ribbon{position:absolute;right:0;z-index:9999;}
+.element.premium{width:285px;background:#fff;}.element.premium .wrapper .info{color:#f64135;}
+.element.free .wrapper{text-align:center;margin:0 auto;}.element.free .wrapper div.icon{padding:12px 0;}
+.element.free .wrapper .info{color:#6d6d6d;}.element.free .wrapper .info h5{padding:0 8px;word-wrap:break-word;margin:0;font-size:13px;line-height:16px;}
+.element.free .wrapper .info p{font-size:11px;}
+.element.premium .wrapper,.element.large .wrapper{margin-top:0;text-align:left;}.element.premium .wrapper div.icon,.element.large .wrapper div.icon{float:left;min-width:84px;min-height:112px;text-align:center;margin-top:24px;}.element.premium .wrapper div.icon img,.element.large .wrapper div.icon img{position:relative;}
+.element.premium .wrapper .info,.element.large .wrapper .info{float:left;width:170px;margin-left:12px;text-align:left;}.element.premium .wrapper .info h5,.element.large .wrapper .info h5{padding:0 8px 0 0;margin:34px 0 0 0;font-size:13px;line-height:16px;}
+.element.premium .wrapper .info p,.element.large .wrapper .info p{font-size:11px;color:#6d6d6d;}
 .element.large{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}
 .element .extras{position:absolute;bottom:0;height:100px;font-size:11px;color:#6d6d6d;margin:0 20px;}.element .extras .description{height:52px;line-height:13px;min-width:245px;overflow:hidden;}
-.element .extras .btn-mini{border-radius:12px 12px 12px 12px;font-size:10.5px;padding:1px 12px;}
+.element .extras .btn-mini{border-radius:12px 12px 12px 12px;font-size:11px;padding:1px 12px;}
 .element .extras .progress{margin:8px 10px 0 8px;}
-.element.premium{width:285px;background:#fff;}.element.premium .wrapper div.icon{float:left;}
-.element.premium .wrapper .info{float:left;width:170px;color:#f64135;margin-left:12px;}.element.premium .wrapper .info h5{margin:34px 0 0 0;font-size:13px;line-height:16px;}
-.element.premium .wrapper .info p{font-size:11px;color:#6d6d6d;}
-.element.free.large .wrapper div.icon{float:left;width:100px;margin-top:50px;}
-.element.free.large .wrapper .info{bottom:auto;left:100px;text-align:left;top:52px;max-width:170px;}.element.free.large .wrapper .info h5{padding:0 8px 0 0;word-wrap:break-word;}
-.element.free.large .wrapper .extras .description{text-align:left;}
-.element.free .wrapper{text-align:center;margin:0 auto;}.element.free .wrapper div.icon{padding:12px 0;}
-.element.free .wrapper .info{position:absolute;bottom:0px;max-width:135px;height:60px;color:#6d6d6d;}.element.free .wrapper .info h5{padding:0 8px;word-wrap:break-word;margin:0;font-size:13px;line-height:16px;}
-.element.free .wrapper .info p{font-size:11px;}
 .element.large,.variable-sizes .element.large,.variable-sizes .element.large.width2.height2{font-size:3.0em;width:285px;height:236px;z-index:100;}
 .clickable .element:hover{cursor:pointer;}
 .clickable .element:hover h3{text-shadow:0 0 10px white, 0 0 10px white ;}
 .clickable .element:hover h2{color:white;}
-
 
 /** LESS - END COMPILED CSS **/
