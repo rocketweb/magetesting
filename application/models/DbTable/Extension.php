@@ -45,7 +45,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $select = $this->select()
                         ->from($this->_name)
                         ->setIntegrityCheck(false)
-                        ->where('edition = ?', $instance['edition'])
+                        ->where('extension.edition = ?', $instance['edition'])
                         ->where(' ? 
                                  BETWEEN REPLACE(from_version,\'.\',\'\')
                                  AND REPLACE(to_version,\'.\',\'\')',
@@ -61,6 +61,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             'queue.instance_id = instance_extension.instance_id AND queue.extension_id = extension.id',
             'status'
         );
+        $select->joinLeft('extension_category', 'extension_category.id = extension.category_id', 'extension_category.class as category_class');
         $select->order(array('instance_id DESC', 'price DESC'));
         //get also developr extensions for admins
         if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
@@ -71,11 +72,11 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         //echo $select->__toString();die;
         return $this->fetchAll($select);
     }
-    
+
     public function findInstalled($instance)
     {
         $select = $this->select()
-		->setIntegrityCheck(false)
+        ->setIntegrityCheck(false)
                 ->from($this->_name)
                 ->join('instance_extension', $this->_name.'.id = instance_extension.extension_id')
                 ->where('instance_id = ?', $instance['id'])
@@ -89,7 +90,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         
          $allowed_keys = array(
              'name',
-             'namespace_module',           
+             'namespace_module',
              'from_version',
              'to_version',
              'edition',

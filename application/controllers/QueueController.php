@@ -403,7 +403,9 @@ class QueueController extends Integration_Controller_Action {
         $request = $this->getRequest();
         $instance_name = $request->getParam('instance');
         $extensionModel = new Application_Model_Extension();
+        $extensionCategoryModel = new Application_Model_ExtensionCategory();
         $this->view->extensions = $extensions = $extensionModel->fetchInstanceExtensions($instance_name);
+        $this->view->categories = $extensionCategoryModel->fetchAll();
 
         $this->view->instance_name = $instance_name;
         if ($request->isPost()) {
@@ -421,10 +423,10 @@ class QueueController extends Integration_Controller_Action {
 
                 if ((int)$request->getParam('extension_id') > 0) {
                     $instanceRow = $instanceModel->find($instance->id);
-			if ($instanceRow->getStatus()=='ready'){
+            if ($instanceRow->getStatus()=='ready'){
                     $instanceRow->setStatus('installing-extension');
-                    $instanceRow->save();				
-			}
+                    $instanceRow->save();
+            }
 
                     /* Adding extension to queue */
                     try {
