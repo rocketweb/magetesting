@@ -58,7 +58,7 @@ implements Application_Model_Task_Interface {
                 return false;
             } 
         } else {
-            if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$this->_extensionObject->getExtension())){
+            if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension())){
                 $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
                 $this->_updateStatus('error',$message);
                 return false;
@@ -80,7 +80,7 @@ implements Application_Model_Task_Interface {
         } else {
         
             exec('tar -zxvf '.
-                $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$this->_extensionObject->getExtension().
+                $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension().
                 ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain()
             ,$output);
 
