@@ -126,7 +126,7 @@ class ExtensionController extends Integration_Controller_Action {
 
                 $adapter = new Zend_File_Transfer_Adapter_Http();
                 if($extension_new_name) {
-                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/';
+                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/open/';
                     if(!file_exists($dir)) {
                         @mkdir($dir, 0777, true);
                     }
@@ -144,7 +144,7 @@ class ExtensionController extends Integration_Controller_Action {
 
                 if($extension_new_name) {
                     if($extension->getExtension() AND $extension->getExtension() != $extension_new_name) {
-                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/'.$extension->getExtension();
+                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/open/'.$extension->getExtension();
                         if(file_exists($file_to_delete)) {
                             @unlink($file_to_delete);
                         }
