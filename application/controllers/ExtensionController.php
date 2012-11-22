@@ -51,7 +51,9 @@ class ExtensionController extends Integration_Controller_Action {
             'price'          => $this->_getParam('price', ''),
             'logo'           => $this->_getParam('logo', ''),
             'screenshots'    => $this->_getParam('screenshots', array()),
-            'directory_hash' => $this->_getParam('directory_hash', time().'-'.uniqid())
+            'directory_hash' => $this->_getParam('directory_hash', time().'-'.uniqid()),
+            'category_id'    => $this->_getParam('category_id', ''),
+            'author'         => $this->_getParam('author', '')
         );
         $form = new Application_Form_ExtensionAdd();
         $success_message = 'Extension has been added properly.';
@@ -60,6 +62,17 @@ class ExtensionController extends Integration_Controller_Action {
         $extension_entity_data = array();
         $screenshots = array();
         $screenshots_ids = array();
+
+        $cat_model = new Application_Model_ExtensionCategory();
+        $extension_categories = array();
+        foreach($cat_model->fetchAll() as $category) {
+            $extension_categories[$category->getId()] = $category->getName();
+        }
+        $form->category_id->addValidator(
+            new Zend_Validate_InArray(array_keys($extension_categories))
+        );
+
+        $form->category_id->addMultiOptions($extension_categories);
 
         /* $id > 0 AND extension found in database */
         $noExtension = false;
@@ -79,9 +92,10 @@ class ExtensionController extends Integration_Controller_Action {
                     'to_version' => $extension->getToVersion(),
                     'price' => $extension->getPrice(),
                     'logo' => $extension->getLogo(),
-                    'screenshots' => $screenshots
+                    'screenshots' => $screenshots,
+                    'author' => $extension->getAuthor(),
+                    'category_id' => $extension->getCategoryId()
                 );
-                $form = new Application_Form_ExtensionEdit();
                 $success_message = 'Extension has benn changed properly.';
             } else {
                 $noExtension = true;

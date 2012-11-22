@@ -35,6 +35,26 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'allowEmpty' => false
         ));
 
+        // Add category element
+        $this->addElement('select', 'category_id', array(
+                'label'      => 'Extension Category',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'allowEmpty' => false
+        ));
+        $this->category_id->addMultiOptions(array('' => 'Select Category:'));
+
+        // Add Author element
+        $this->addElement('text', 'author', array(
+                'label'      => 'Author',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(1, 100))
+                ),
+                'allowEmpty' => false
+        ));
+
         // Add description element
         $this->addElement('hidden', 'directory_hash', array(
                 'id'         => 'directory_hash',

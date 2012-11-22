@@ -7,7 +7,11 @@ class Application_Model_Extension {
     protected $_name;
     
     protected $_description;
-    
+
+    protected $_category_id;
+
+    protected $_author;
+
     protected $_logo;
     
     protected $_version;
@@ -82,6 +86,29 @@ class Application_Model_Extension {
     {
         return $this->_description;
     }
+
+    public function setCategoryId($value)
+    {
+        $this->_category_id = $value;
+        return $this;
+    }
+
+    public function getCategoryId()
+    {
+        return $this->_category_id;
+    }
+
+    public function setAuthor($value)
+    {
+        $this->_author = $value;
+        return $this;
+    }
+
+    public function getAuthor()
+    {
+        return $this->_author;
+    }
+    
 
     public function setLogo($logo)
     {
@@ -240,6 +267,8 @@ class Application_Model_Extension {
                 'id' => $this->getId(),
                 'name' => $this->getName(),
                 'description' => $this->getDescription(),
+                'category_id' => $this->getCategoryId(),
+                'author' => $this->getAuthor(),
                 'version' => $this->getVersion(),
                 'logo' => $this->getLogo(),
                 'extension' => $this->getExtension(),
