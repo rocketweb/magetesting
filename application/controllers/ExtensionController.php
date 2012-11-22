@@ -199,6 +199,7 @@ class ExtensionController extends Integration_Controller_Action {
         $this->view->screenshots = $extension_data['screenshots'];
         $this->view->screenshots_ids = $screenshots_ids;
         $this->view->form = $form;
+        $this->view->headScript()->appendFile('/public/js/extension-edit.js', 'text/javascript');
     
     }
     

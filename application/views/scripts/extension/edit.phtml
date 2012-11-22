@@ -126,16 +126,6 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
         </tr>
     {% } %}
 </script>
-<script>
-$(function(){
-    var $jquery_uploader = $('table[role=presentation]');
-    if($jquery_uploader.length) {
-        $jquery_uploader.on('click', '.delete-row', function(){
-            $(this).parents('tr:first').remove();
-        });
-    }
-});
-</script>
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
     {% for (var i=0, file; file=o.files[i]; i++) { %}
