@@ -272,6 +272,24 @@ class Application_Model_Extension {
         return $this->getMapper()->getAllForInstance($instance_name);
     }
     
+    /**
+     * fetches available and installed extensions for given instance
+     * @param string $instance_name
+     */
+    public function fetchInstanceExtensions($instance_name){
+        $extensions = $this->getMapper()->fetchInstanceExtensions($instance_name)->toArray();
+        foreach($extensions as $key => $extension) {
+            $extensions[$key]['screenshots'] = array();
+            $screenshots = $this->fetchScreenshots($extension['id']);
+            if($screenshots) {
+                foreach($screenshots as $screenshot) {
+                    $extensions[$key]['screenshots'][] = $screenshot->getImage();
+                }
+            }
+        }
+        return $extensions;
+    }
+    
     public function getInstalledForInstance($instance_name){
         return $this->getMapper()->getInstalledForInstance($instance_name);
     }

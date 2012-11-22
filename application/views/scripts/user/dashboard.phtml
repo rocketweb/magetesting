@@ -1,4 +1,5 @@
-<?php 
+<?php
+$this->headMeta()->appendHttpEquiv('refresh','60');
 $this->headScript()->appendScript('
  //define globals
     var requests = [];
@@ -25,7 +26,7 @@ function updateStatuses(){
       //make new request
       requests[domain] = $.ajax({
             type: "POST",
-            url: "'. $this->baseUrl("queue/getStatus") .'",
+            url: "'. $this->baseUrl("queue/getstatus") .'",
             data: "domain="+ $(this).find(".instancedomain").val(),
             dataType: "json",
             success: function(json){
@@ -195,7 +196,7 @@ function updateLabel(row,new_status){
             <?php endif; ?>
             </td>
             <td>
-            <?php if(in_array($item['status'], array('closed','pending','installing','installing-extension','installing-magento','installing-samples','installing-user','installing-files','installing-data'))): ?>
+            <?php if(in_array($item['status'], array('closed'))): ?>
                 <a class="btn btn-success disabled" rel="tooltip" data-placement="top" title="Visit store"><i class="icon-eye-close icon-white"></i></a>
                 <a class="btn btn-info disabled" rel="tooltip" data-placement="top" title="Edit store details"><i class="icon-pencil icon-white"></i></a>
                 <a class="btn btn-warning disabled" rel="tooltip" data-placement="top" title="Log in into store backend"><i class="icon-cog icon-white"></i></a>
@@ -203,6 +204,16 @@ function updateLabel(row,new_status){
                 <a class="btn btn-info disabled" rel="tooltip" data-placement="top" title="Install extensions"><i class="icon-star icon-white"></i>&nbsp; Extensions</a>
                 <?php if ($this->userGroup == 'admin'): ?>
                 <a class="btn btn-info disabled" rel="tooltip" data-placement="top" title="Install extensions from Rocket Web repository."><i class="icon-star icon-white"></i>&nbsp;SVN</a>
+                <?php endif; ?>
+                <input type="hidden" class="instancedomain" value="<?php echo $item['domain'] ?>" />
+            <?php elseif(in_array($item['status'], array('pending','installing','installing-magento','installing-samples','installing-user','installing-files','installing-data'))): ?>
+                <a class="btn btn-success disabled" rel="tooltip" data-placement="top" title="Visit store"><i class="icon-eye-close icon-white"></i></a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Edit store details"><i class="icon-pencil icon-white"></i></a>
+                <a class="btn btn-warning disabled" rel="tooltip" data-placement="top" title="Log in into store backend"><i class="icon-cog icon-white"></i></a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain']), 'default', true); ?>" class="btn btn-danger" rel="tooltip" data-placement="top" title="Delete store"><i class="icon-trash icon-white"></i></a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Install extensions"><i class="icon-star icon-white"></i>&nbsp; Extensions</a>
+                <?php if ($this->userGroup == 'admin'): ?>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'devextensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Install extensions from Rocket Web repository."><i class="icon-star icon-white"></i>&nbsp;SVN</a>
                 <?php endif; ?>
                 <input type="hidden" class="instancedomain" value="<?php echo $item['domain'] ?>" />
             <?php else: ?>
@@ -214,7 +225,9 @@ function updateLabel(row,new_status){
                 <?php if ($this->userGroup == 'admin'): ?>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'devextensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Install extensions from Rocket Web repository."><i class="icon-star icon-white"></i>&nbsp;SVN</a>
                 <?php endif; ?>
+                <input type="hidden" class="instancedomain" value="<?php echo $item['domain'] ?>" />
             <?php endif;?>
+                <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn btn-info" rel="tooltip" data-placement="top" title="Submit a ticket"><i class="icon-star icon-white"></i>&nbsp; ZenDesk</a>
             </td>
         </tr>
         <?php endforeach; ?>

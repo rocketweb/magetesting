@@ -72,6 +72,12 @@ class Application_Model_ServerMapper {
         return $entries;
     }
 
+    public function fetchMostEmptyServerId()
+    {
+        $data = $this->getDbTable()->fetchMostEmptyServer();
+        return ((is_object($data) AND isset($data->id)) ? $data->id : 0);
+    }
+
     public function getKeys() {
 
         $temp = array();

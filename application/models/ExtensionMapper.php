@@ -137,6 +137,13 @@ class Application_Model_ExtensionMapper {
         
     }
     
+    public function fetchInstanceExtensions($instance_name) {
+        //find instance by name
+        $instanceModel = new Application_Model_Instance();
+        $instance = $instanceModel->findByName($instance_name);
+
+        return $this->getDbTable()->fetchInstanceExtensions($instance);
+    }
     
     public function findByFilters(array $filters, Application_Model_Extension $extension){    
         $row = $this->getDbTable()->findByFilters($filters);

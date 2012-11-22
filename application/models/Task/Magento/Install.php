@@ -61,7 +61,7 @@ implements Application_Model_Task_Interface {
 
         chdir($startCwd);
 
-        //$this->_sendInstanceReadyEmail();
+        $this->_sendInstanceReadyEmail();
     }
 
     protected function _prepareFileSystem() {

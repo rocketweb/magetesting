@@ -50,10 +50,6 @@ braintree.merchantId =
 braintree.publicKey = 
 braintree.privateKey = 
 
-;Found and setup at https://sandbox.braintreegateway.com/ -> Recurring Billing -> Plans
-braintree.standardPlanId = 
-braintree.businessPlanId = 
-
 [staging : production]
 
 [testing : production]

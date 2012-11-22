@@ -68,7 +68,12 @@ extends Application_Model_Task {
         $mail->setSubject($this->config->cron->queueItemReady->subject);
         $mail->setFrom($this->config->cron->queueItemReady->from->email, $this->config->cron->queueItemReady->from->desc);
         $mail->setBodyHtml($bodyText);
-        $mail->send();
+        
+        try {
+          $mail->send();
+        } catch (Zend_Mail_Transport_Exception $e){
+	  $this->logger->log('Mail could not be sent', LOG_CRIT, $e->getTraceAsString());
+        }
         
     }
     

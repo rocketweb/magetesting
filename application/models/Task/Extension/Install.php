@@ -49,27 +49,53 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _checkPackage() {
-        if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$this->_extensionObject->getFileName())){
-            $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
-            $this->_updateStatus('error',$message);
-            return false;
-        } 
+        
+        //if extension is commercial, check existence of encoded file, 
+        if ($this->_extensionObject->getPrice() > 0 ){
+            if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded())){
+                $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
+                $this->_updateStatus('error',$message);
+                return false;
+            } 
+        } else {
+            if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$this->_extensionObject->getExtension())){
+                $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
+                $this->_updateStatus('error',$message);
+                return false;
+            } 
+        }
+        
+        
     }
 
     protected function _install() {
-        exec('tar -zxvf '.
-            $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$this->_extensionObject->getFileName().
-            ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain()
-        ,$output);
+        $output='';
+        if ($this->_extensionObject->getPrice() > 0 ){
+            
+            exec('tar -zxvf '.
+                $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded().
+                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain()
+            ,$output);
+            
+        } else {
+        
+            exec('tar -zxvf '.
+                $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$this->_extensionObject->getExtension().
+                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain()
+            ,$output);
+
+        }
         
         //output contains unpacked files list, so it should never be empty if unpacking suceed
+        $this->logger->log(var_export($output,true),LOG_DEBUG);
         if (count($output)==0){
+            
             $message = 'There was an error while installing extension '.$this->_extensionObject->getName();
             $this->_updateStatus('error',$message);
+            unset($output);
             return false;
-        }
-        $this->logger->log(var_export($output,true),LOG_DEBUG);
-        unset($output);
-    }
+        }      
+        
+    }    
 
 }
