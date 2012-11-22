@@ -209,7 +209,7 @@ implements Application_Model_Task_Interface {
         if(substr($customRemotePath,0,1)=="/"){
             $customRemotePath = substr($customRemotePath,1);
         }
-        $this->_customRemotePath = $customHost;
+        $this->_customRemotePath = $customRemotePath;
        
         //FILE
          //make sure sql file path does not contain slash at the beginning       
