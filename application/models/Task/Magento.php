@@ -98,7 +98,7 @@ extends Application_Model_Task {
               // * * * * * cd /var/www/magetesting/scripts/; php worker.php
              *
              */
-            exec('sudo worker/create_user.sh ' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_systempass . ' ' . $this->config->magento->usersalt . ' ' . $this->config->magento->systemHomeFolder, $output);
+            exec('cd worker;sudo ./create_user.sh ' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_systempass . ' ' . $this->config->magento->usersalt . ' ' . $this->config->magento->systemHomeFolder.'; cd ..;', $output);
             $message = var_export($output, true);
             $this->logger->log($message, LOG_DEBUG);
             unset($output);
