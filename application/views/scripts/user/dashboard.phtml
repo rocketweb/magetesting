@@ -1,5 +1,5 @@
 <?php
-$this->headMeta()->appendHttpEquiv('refresh','60');
+//$this->headMeta()->appendHttpEquiv('refresh','60');
 $this->headScript()->appendScript('
  //define globals
     var requests = [];
@@ -79,19 +79,9 @@ function updateLabel(row,new_status){
 }');
 ?>
 
-<div class="row">
-    <div class="span6">
-        <h1>Your stores</h1>
-    </div>
-    <div class="span6">
-        <p>
-            <a
-                href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>"
-                class="btn btn-primary btn-large pull-right"><i class="icon-plus icon-white"></i>&nbsp;Add store</a>
-        </p>
-    </div>
-</div>
 
+
+<?php /*
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -232,5 +222,145 @@ function updateLabel(row,new_status){
         </tr>
         <?php endforeach; ?>
     </tbody>
-</table>
+</table>-->
+                
+	*/ ?>
+	
+	<!-- START INSTANCES PAGE -->
+	<div class="container mt">
+		<div class="row">
+			<div class="span12">
+				<h3>Your instances <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h3>
+                                
+                                <?php foreach ($this->queue as $item): ?>
+				<!-- START ACCORDION -->
+				<div class="accordion" id="accordion">
+				
+					<!-- START INSTANCE -->
+					<div class="accordion-group" data-active="0">
+						<div class="accordion-heading">
+							<div class="tab-stripe"></div>
+							<a class="accordion-toggle instance-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+							
+                                                            
+                                                            <?php 
+                                                            $progressClass = '';
+                                                            switch($item['status']): 
+            case 'ready':
+                $progressClass = 'progress-success';
+            break; case 'pending':  
+               $progressClass = 'progress-info';      
+            break; case 'closed': 
+                $progressClass = 'progress-danger';      
+            break; case 'installing': 
+            case 'installing-extension':               
+	    case 'installing-magento': 
+            case 'installing-samples': 
+            case 'installing-user': 
+            case 'installing-files':
+            case 'installing-date': 
+                $progressClass = '';
+	      
+	     break; case 'error': 
+                $progressClass = 'progress-danger';      
+                
+             break; default: 
+                 $progressClass = 'progress-info';      
+            endswitch; ?>	
+                                                            
+                                                            
+                                                            <span class="span2 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px">
+									<span class="bar" style="width: 100%;"></span>
+								</span> 
+                                                            
+								<span class="pending pull-right" rel="popover" data-placement="right" title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>"><?php echo $this->escape(ucfirst($item['status'])); ?></span>
+								<span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
+								<?php echo $this->escape($item['instance_name']) ?>
+							</a>
+						</div>
+						<div id="collapse1" class="accordion-body collapse mt_instance">
+							<div class="accordion-inner">
+								<div class="row version-info">
+									<div class="span2 first"><strong>Edition:</strong> <?php echo $this->escape($item['edition']); ?></div>
+									<div class="span2"><strong>Version:</strong> <?php echo $this->escape($item['version']); ?> </div>
+									<div class="span2"><strong>Sample data:</strong> 
+                                                                            <?php if($item['sample_data']): ?>
+                                                                                Yes
+                                                                            <?php else: ?>
+                                                                                No
+                                                                            <?php endif; ?></div>
+								</div>
+								
+								<p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. In aliquid quis accusamus tempore eum facilis alias praesentium omnis et iusto iure velit quasi molestias aperiam amet! Nesciunt mollitia explicabo minus!</p>
+								
+								<div class="row">
+
+									<!-- START DETAILS BOX -->
+									<div class="span4 panel details">
+										<h5>Details</h5>
+										<div class="control-group">
+											<div class="controls">
+                                                                                            <?php if($item['status']=='closed'): ?>
+												<a href="#" class="btn btn-mini disabled"><i class="icon icon-pencil"></i> Edit Details</a>
+                                                                                                <?php else: ?>
+                                                                                                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>" class="btn btn-mini"><i class="icon icon-pencil"></i> Edit Details</a>
+                                                                                                <?php endif; ?>
+                                                                                                
+                                                                                                <?php if(in_array($item['status'], array('closed'))): ?>
+                                                                                                <a href="#" class="btn btn-mini btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                                                                                <?php else: ?>
+<a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" class="btn btn-mini btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                                                                                <?php endif; ?>
+												
+											</div>
+										</div>
+									</div>
+									<!-- END DETAILS BOX -->
+									
+									
+										
+									<!-- START DEPLOYMENT BOX -->
+									<div class="span4 panel deployment">
+										<h5>Deployment <span class="version">version <span class="badge badge-blue">1</span></span></h5>
+										<div class="control-group">
+											<div class="controls">
+												<a href="#" class="btn btn-mini btn-deploy disabled"><i class="icon icon-circle-arrow-left"></i> Roll Back</a>
+												<a href="#" class="btn btn-mini btn-deploy disabled"><i class="icon icon-ok-sign"></i> Commit</a>
+												<a href="#" class="btn btn-mini btn-deploy disabled">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
+											</div>
+										</div>
+									</div>
+									<!-- END DEPLOYMENT BOX -->
+									
+									
+									
+									<!-- START PROBLEMS BOX -->
+									<div class="span3 panel">
+										<h5>Problems</h5>
+										<div class="control-group">
+											<div class="controls">
+												<a href="#" class="btn btn-mini disabled"><i class="icon icon-info-sign"></i> Show Logs</a>
+												<a href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn btn-mini "><i class="icon icon-question-sign"></i> Get Help</a>
+											</div>
+										</div>
+									</div>
+									<!-- END PROBLEMS BOX -->
+									
+								</div>
+								
+							</div>
+						</div>
+					</div>
+					<!-- END INSTANCE -->
+					
+                                    <?php endforeach; ?>
+					
+				</div>
+				<!-- END ACCORDION -->
+				
+			</div>
+		</div>
+	</div>
+	<!-- START INSTANCES PAGE -->                
+                
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>
