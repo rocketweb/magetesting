@@ -231,8 +231,6 @@ class QueueController extends Integration_Controller_Action {
                             ->setCustomSql($form->custom_sql->getValue())
                             ->setType('custom');
                     $newInstanceId = $instanceModel->save();
-                    $this->_helper->FlashMessenger('New installation added to queue');
-
                     
                     $queueModel = new Application_Model_Queue();
                     //TODO: Add queue item with MagentoDownload
@@ -266,7 +264,7 @@ class QueueController extends Integration_Controller_Action {
                         throw $e;
                     }
                     //stop adding instance
-                    $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'You have successfully added your custom instance.'));
+                    $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'You have successfully added your custom instance to queue.'));
                     return $this->_helper->redirector->gotoRoute(array(
                                 'module' => 'default',
                                 'controller' => 'user',
