@@ -117,10 +117,21 @@ extends Application_Model_Task {
                     'systempass' => $this->_systempass,
                     'email' => $this->_userObject->getEmail(),
                 );
-                $this->_sendFtpEmail($user_details);
-                $this->_sendPhpmyadminEmail($user_details);
+                
+                $planModel = new Application_Model_Plan();
+                $planModel->find($this->_userObject->getPlanId());
+                
+                if ($planModel->getFtpAccess()){
+                    $this->_sendFtpEmail($user_details);
+                }
+                
+                if ($planModel->getPhpmyadminAccess()){
+                    $this->_sendPhpmyadminEmail($user_details);
+                }
                 /* send email with account details stop */
             }
+            
+            
         }
     }
     
@@ -140,21 +151,17 @@ extends Application_Model_Task {
         $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
         $html->assign('ftppass', $user_details['systempass']);
 
-        $html->assign('dbhost', $config->magento->dbhost);
-        $html->assign('dbuser', $config->magento->userprefix . $user_details['dbuser']);
-        $html->assign('dbpass', $user_details['dbpass']);
-
         $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
-        $bodyText = $html->render('system-account-created.phtml');
+        $bodyText = $html->render('ftp-account-credentials.phtml');
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
         // configure base stuff
         $mail->addTo($user_details['email']);
-        $mail->setSubject($this->config->cron->systemAccountCreated->subject);
-        $mail->setFrom($this->config->cron->systemAccountCreated->from->email, $this->config->cron->systemAccountCreated->from->desc);
+        $mail->setSubject($this->config->cron->ftpAccountCreated->subject);
+        $mail->setFrom($this->config->cron->ftpAccountCreated->from->email, $this->config->cron->ftpAccountCreated->from->desc);
         $mail->setBodyHtml($bodyText);
         $mail->send();
         /* send email with account details stop */
@@ -169,10 +176,6 @@ extends Application_Model_Task {
         $html = new Zend_View();
         $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
         // assign valeues
-        $html->assign('ftphost', $config->magento->ftphost);
-        $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
-        $html->assign('ftppass', $user_details['systempass']);
-
         $html->assign('dbhost', $config->magento->dbhost);
         $html->assign('dbuser', $config->magento->userprefix . $user_details['dbuser']);
         $html->assign('dbpass', $user_details['dbpass']);
@@ -180,14 +183,14 @@ extends Application_Model_Task {
         $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
-        $bodyText = $html->render('system-account-created.phtml');
+        $bodyText = $html->render('phpmyadmin-credentials.phtml');
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
         // configure base stuff
         $mail->addTo($user_details['email']);
-        $mail->setSubject($this->config->cron->systemAccountCreated->subject);
-        $mail->setFrom($this->config->cron->systemAccountCreated->from->email, $this->config->cron->systemAccountCreated->from->desc);
+        $mail->setSubject($this->config->cron->phpmyadminAccountCreated->subject);
+        $mail->setFrom($this->config->cron->phpmyadminAccountCreated->from->email, $this->config->cron->phpmyadminAccountCreated->from->desc);
         $mail->setBodyHtml($bodyText);
         $mail->send();
         /* send email with account details stop */

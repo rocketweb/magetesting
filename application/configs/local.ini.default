@@ -30,9 +30,13 @@ cron.queueItemReady.subject = "Your Instance is Ready!"
 cron.queueItemReady.from.email = "support@magetesting.com"
 cron.queueItemReady.from.desc = "Mage Testing Team"
 
-cron.systemAccountCreated.subject = "Mage Testing Account!"
-cron.systemAccountCreated.from.email = "support@magetesting.com"
-cron.systemAccountCreated.from.desc = "Mage Testing Team"
+cron.ftpAccountCreated.subject = "Mage Testing FTP Account!"
+cron.ftpAccountCreated.from.email = "support@magetesting.com"
+cron.ftpAccountCreated.from.desc = "Mage Testing Team"
+
+cron.phpmyadminAccountCreated.subject = "Mage Testing Database Account!"
+cron.phpmyadminAccountCreated.from.email = "support@magetesting.com"
+cron.phpmyadminAccountCreated.from.desc = "Mage Testing Team"
 
 register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
 
