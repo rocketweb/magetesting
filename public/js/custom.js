@@ -102,11 +102,11 @@ $(document).ready(function () {
                 var $opened_window = $(window.open($this.prev().attr('href')+'/admin'));
                 $opened_window.ready(function(){
                     $created_link.remove();
-                    $($opened_window.contents())
+                    $($opened_window[0].document)
                         .find('input:text').val($this.data('admin-login'))
                         .end().find('input:password').val($this.data('admin-password'))
                         .parents('form:first').submit();
-                    $opened_window.focus();
+                    $opened_window[0].focus();
                 });
                 return false;
             });
