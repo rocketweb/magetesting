@@ -80,6 +80,40 @@ $(document).ready(function () {
         );
     }
 
+    var $view_store = $('.view-store'),
+        $admin_panel = $('.admin-panel');
+
+    if($view_store.length) {
+        $view_store.click(function(e) {
+            // stop bootstrap collapsing
+            e.stopPropagation();
+        })
+    }
+    if($admin_panel.length) {
+        $admin_panel.click(function(e) {
+            // stop bootstrap collapsing
+            e.stopPropagation();
+
+            // create fake link to avoid popup closing
+            $('body').append('<a class="hidden" id="open_admin_panel">Fake click</a>');
+            var $this = $(this),
+                $created_link = $('#open_admin_panel');
+            $created_link.click(function(){
+                var $opened_window = $(window.open($this.prev().attr('href')+'/admin'));
+                $opened_window.ready(function(){
+                    $created_link.remove();
+                    $($opened_window.contents())
+                        .find('input:text').val($this.data('admin-login'))
+                        .end().find('input:password').val($this.data('admin-password'))
+                        .parents('form:first').submit();
+                    $opened_window.focus();
+                });
+                return false;
+            });
+            $created_link.click();
+        });
+    }
+
     /* INSTANCE EXTENSIONS ISOTOPE */
     var $extensions_isotope = $('.extensions_well > #container'),
         $extensions_filter_container = $('#options'),
@@ -228,18 +262,3 @@ $(document).ready(function () {
     });
     /* INSTANCE EXTENSIONS ISOTOPE */
 });
-
-
-
-/* FFU
-var $my_window;
-$('body').append('<a id="mya">');
-$('#mya').text('click it');
-$('#mya').click(function(){
-$my_window = $(window.open('http://dev.magetesting.com/instance/lWItk2787/admin/'));
-$my_window.ready(function(){
-$my_window.focus();
-});
-return false;
-});
-*/
