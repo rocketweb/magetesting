@@ -99,15 +99,25 @@ $(document).ready(function () {
             var $this = $(this),
                 $created_link = $('#open_admin_panel');
             $created_link.click(function(){
-                var $opened_window = $(window.open($this.prev().attr('href')+'/admin'));
-                $opened_window.ready(function(){
-                    $created_link.remove();
-                    $($opened_window[0].document)
-                        .find('input:text').val($this.data('admin-login'))
+                var $opened_window = window.open($this.prev().attr('href')+'/admin'),
+                    $attempts = 0,
+                    $fill_window_form = function() {
+                    console.log('doing something');
+                    var $window_context = $($opened_window.document).contents();
+                    var $login = $window_context.find('input:text'),
+                        $password = $login.end().find('input:password');
+                    if($login.length) {
+                        $login.val($this.data('admin-login'))
                         .end().find('input:password').val($this.data('admin-password'))
                         .parents('form:first').submit();
-                    $opened_window[0].focus();
-                });
+                        $opened_window.focus();
+                    } else if(!$window_context.find('body > *').length && $attempts < 100) {
+                        $attempts++;
+                        setTimeout($fill_window_form, 100);
+                    }
+                }
+                setTimeout($fill_window_form, 100);
+                $created_link.remove();
                 return false;
             });
             $created_link.click();
