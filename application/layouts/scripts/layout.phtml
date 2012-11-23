@@ -39,19 +39,21 @@
 
 <body>
 
-    <div class="navbar navbar-fixed-top navbar-inverse"> 
-        <div class="navbar-inner navbar-fixed-top"> 
-            <div class="container">
-                <a class="brand"
-                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">
-                    <img src="<?php echo $this->baseUrl(); ?>/public/img/mage-testing.png" alt="Mage Testing">
-                </a>
-                <?php echo $this->navigation()->menu()->setPartial(array('_partials/extendedTopMenu.phtml','default')); ?>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
+	<!-- START GLOBAL NAVBAR -->
+	<div class="red-bar"></div>
+	<div class="navbar navbar-static-top navbar-global">
+		<div class="container">
+			<a class="brand"
+                href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">
+                <img src="<?php echo $this->baseUrl(); ?>/public/img/logo_magetesting.jpg" alt="Mage Testing">
+            </a>
+			<?php echo $this->navigation()->menu()->setPartial(array('_partials/extendedTopMenu.phtml','default')); ?>
+		</div>
+	</div>
+	<!-- END GLOBAL NAVBAR -->
+	
+	
+    <div class="container mt">
 
         <?php echo $this->render('_partials/messages.phtml'); ?>
 

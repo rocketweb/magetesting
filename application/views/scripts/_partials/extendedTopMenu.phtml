@@ -1,15 +1,30 @@
 <?php foreach( $this->container as $name => $page ): ?>
-<ul class="nav span9 pull-right">
+<ul class="nav pull-right">
+	<?php
+		$index = 0;
+		$allPages = 0;
+		foreach( $page->pages as $subpage ){
+			if($this->menu()->accept($subpage)){
+				$allPages++;
+			}
+		}
+	?>
+	
     <?php foreach( $page->pages as $subpage ): ?>
         <?php if($this->menu()->accept($subpage)):
         $class = array();
         if($subpage->isActive()) { $class[] = 'active'; }
         if($subpage->get('float')) { $class[] = 'right'; }
+		
+		if($index === 0){ $class[] = 'last'; }
+		if($index === $allPages - 1){ $class[] = 'first'; }
+		
         $class = implode(' ',$class);
         ?>
             <li class="<?php echo $class; ?>">
                 <?php echo $this->iconMenu()->htmlify($subpage); ?>
             </li>
+        <?php $index++; ?>
         <?php endif; ?>
     <?php endforeach; ?>
 </ul>

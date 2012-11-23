@@ -2,9 +2,60 @@ body {
 	font-family: @MainFamily;
 }
 
-#Sandbox_MainMenu {
-    position: absolute;
-    display: block;
+.red-bar {
+	height: 5px;
+	background: @Red;
+}
+.navbar-global {
+	.shadow;
+	//height: 108px;
+	border-bottom: 1px solid @Grey;
+	
+	div.container {
+		background: white;
+	}
+	
+	.nav > li > a {
+		padding: 4px 15px;
+		background: @Red;
+		color: #fff;
+		text-shadow: none;
+		border-right: 1px solid #fff;
+	}
+	
+	.nav > .active > a {
+	    background-color: @Red;
+		box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5) inset;
+	    color: #fff;
+	    text-decoration: none;
+	}
+	
+	.nav > .active > a:hover,
+	.nav > .active > a:focus,
+	.nav > li > a:hover,
+	.nav > li > a:focus {
+	    background-color: @Blue;
+	    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5) inset;
+	    color: #fff;
+	    text-decoration: none;
+	    
+	}
+	
+	.nav > .first > a,
+	.nav > .first > a:hover, 
+	.nav > .first > a:focus {
+	    -webkit-border-bottom-left-radius: 6px;
+		-moz-border-radius-bottomleft: 6px;
+		border-bottom-left-radius: 6px;
+	}
+	
+	.nav > .last > a,
+	.nav > .last > a:hover, 
+	.nav > .last > a:focus {
+	    -webkit-border-bottom-right-radius: 6px;
+		-moz-border-radius-bottomright: 6px;
+		border-bottom-right-radius: 6px;
+	}
 }
 
 .mt_shadow {
