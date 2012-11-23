@@ -231,16 +231,16 @@ function updateLabel(row,new_status){
 		<div class="row">
 			<div class="span12">
 				<h3>Your instances <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h3>
-                                
-                                <?php foreach ($this->queue as $item): ?>
-				<!-- START ACCORDION -->
+                                <!-- START ACCORDION -->
 				<div class="accordion" id="accordion">
+                                <?php foreach ($this->queue as $key => $item): ?>
+				
 				
 					<!-- START INSTANCE -->
 					<div class="accordion-group" data-active="0">
 						<div class="accordion-heading">
 							<div class="tab-stripe"></div>
-							<a class="accordion-toggle instance-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+							<a class="accordion-toggle instance-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>">
 							
                                                             
                                                             <?php 
@@ -278,7 +278,7 @@ function updateLabel(row,new_status){
 								<?php echo $this->escape($item['instance_name']) ?>
 							</a>
 						</div>
-						<div id="collapse1" class="accordion-body collapse mt_instance">
+						<div id="collapse<?php echo $key; ?>" class="accordion-body collapse mt_instance">
 							<div class="accordion-inner">
 								<div class="row version-info">
 									<div class="span2 first"><strong>Edition:</strong> <?php echo $this->escape($item['edition']); ?></div>
