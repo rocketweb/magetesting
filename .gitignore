@@ -6,6 +6,7 @@ data/cache/
 data/extensions/
 data/pkg/
 data/logs/
+data/locks/
 nbproject
 nbproject/private/
 application/configs/application.ini

@@ -41,7 +41,7 @@ if(isset($opts->help)) {
     exit;
 } elseif(isset($opts->downloadonly)) {
     /* process only downloads */
-    $fp = fopen("worker_downloadonly.lock", "c");
+    $fp = fopen(APPLICATION_PATH . '/../data/locks/worker_downloadonly.lock', "c");
 
     if (flock($fp, LOCK_EX | LOCK_NB)) { 
         $queueModel = new Application_Model_Queue();
@@ -49,7 +49,7 @@ if(isset($opts->help)) {
     }
 } elseif(isset($opts->disabledownload)) {
     /* process everything but downloads */
-    $fp = fopen("worker_disabledownload.lock", "c");
+    $fp = fopen(APPLICATION_PATH . '/../data/locks/worker_disabledownload.lock', "c");
 
     if (flock($fp, LOCK_EX | LOCK_NB)) { 
                
@@ -59,7 +59,7 @@ if(isset($opts->help)) {
     }
 } else {
     /* process all queue tasks */ 
-    $fp = fopen("worker_all.lock", "c");
+    $fp = fopen(APPLICATION_PATH . '/../data/locks/worker_all.lock', "c");
         if (flock($fp, LOCK_EX | LOCK_NB)) { 
 
         $queueModel = new Application_Model_Queue();
