@@ -358,7 +358,7 @@ class QueueController extends Integration_Controller_Action {
         $id = (int) $this->_getParam('id', 0);
 
         $instanceModel = new Application_Model_Instance();
-        $instance = $instanceModel->find($id);
+        $this->view->instance = $instance = $instanceModel->find($id);
 
         if ($instance->getUserId() == $this->auth->getIdentity()->id) {
             //its ok to edit
@@ -372,20 +372,25 @@ class QueueController extends Integration_Controller_Action {
             }
         }
 
-        $form = new Application_Form_InstanceEdit();
-        $populate = array(
-            'instance_name' => $instance->getInstanceName(),
-            'backend_password' => $instance->getBackendPassword(),
-            'backend_login' => $this->auth->getIdentity()->login
+        $form = new Application_Form_InstanceEdit($instance->getStatus() == 'pending');
+        $populate = array_merge(
+            array(
+                'instance_name' => $instance->getInstanceName(),
+                'backend_password' => $instance->getBackendPassword(),
+                'backend_login' => $this->auth->getIdentity()->login
+            ),
+            $instance->__toArray(),
+            array('custom_pass_confirm' => $instance->getCustomPass())
         );
         $form->populate($populate);
 
         if ($this->_request->isPost()) {
-            $formData = $this->_request->getPost();
 
-            if ($form->isValid($formData)) {
+            if ($form->isValid($this->_request->getPost())) {
                 $instance->setOptions($form->getValues());
-                $instance->save();
+                if($instance->getStatus() == 'pending') {
+                    $instance->save();
+                }
 
                 $this->_helper->FlashMessenger('Store data has been changed successfully');
                 return $this->_helper->redirector->gotoRoute(array(
