@@ -10,7 +10,6 @@ nbproject
 nbproject/private/
 application/configs/application.ini
 application/configs/local.ini
-library/Zend/
 scripts/worker_downloadonly.lock
 scripts/worker_disabledownload.lock
 scripts/worker_all.lock

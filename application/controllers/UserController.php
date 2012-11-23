@@ -36,6 +36,7 @@ class UserController extends Integration_Controller_Action
         $this->view->queueCounter = $instanceCounter;
         $this->view->timeExecution = $timeExecution;
         $this->view->response = $this->getResponse();
+        $this->view->headScript()->appendFile('/public/js/user-dashboard.js', 'text/javascript');
     }
 
     public function resetPasswordAction()
