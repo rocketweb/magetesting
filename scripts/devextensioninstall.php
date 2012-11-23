@@ -1,6 +1,6 @@
 <?php
 
-$fp = fopen("dev_extension_install_lock.txt", "c");
+$fp = fopen(APPLICATION_PATH . '/../data/locks/dev_extension_install_lock.txt', "c");
 
 if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
     include 'init.console.php';
