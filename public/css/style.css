@@ -237,3 +237,4 @@ html,body{height:100%;}
 
 
 .element.premium .wrapper .icon { max-width: 84px; max-height: 112px; }
+.element.free .wrapper .icon img { max-width: 28px; max-height: 38px; }
