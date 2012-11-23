@@ -90,6 +90,16 @@ $(document).ready(function () {
         RowHeight        = ElementHeight + ElementPad;
 
     if($extensions_isotope.length) {
+        $extensions_isotope.imagesLoaded(function() {
+            $('.element.premium .wrapper div.icon').css({
+                'margin-top': function(){
+                    var margin = (112 - $(this).find('img').height()) / 2;
+                    if(margin < 0){ margin = 0; }
+                    return margin;
+                }
+            });
+        })
+
         $extensions_isotope.isotope({
             masonry : {
                 columnWidth : ColumnWidth
@@ -125,7 +135,7 @@ $(document).ready(function () {
             return false;
         });
     }
- // EVENT: On click "Install" button
+	// EVENT: On click "Install" button
     $('.install').click(function(event){
         "use strict";
         var $this = $(this);
@@ -217,3 +227,18 @@ $(document).ready(function () {
     });
     /* INSTANCE EXTENSIONS ISOTOPE */
 });
+
+
+
+/* FFU
+var $my_window;
+$('body').append('<a id="mya">');
+$('#mya').text('click it');
+$('#mya').click(function(){
+$my_window = $(window.open('http://dev.magetesting.com/instance/lWItk2787/admin/'));
+$my_window.ready(function(){
+$my_window.focus();
+});
+return false;
+});
+*/

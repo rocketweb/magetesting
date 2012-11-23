@@ -17,9 +17,9 @@
             <li>Categories <span class="divider"> </span></li>
             <li>
                 <a href="#filter" data-option-value="*" class="btn btn-mini">All</a>
-                <a href="#filter" data-option-value=".cX" class="btn btn-mini">User experience</a>
-                <a href="#filter" data-option-value=".site" class="btn btn-mini">Site management</a>
-                <a href="#filter" data-option-value=".promo" class="btn btn-mini">Promotion</a>
+            <?php foreach($this->categories as $category): ?>
+                <a href="#filter" data-option-value=".<?php echo $category->getClass(); ?>" class="btn btn-mini"><?php echo $category->getName(); ?></a>
+            <?php endforeach; ?>
             </li>
         </ul>
     </section>
@@ -28,7 +28,7 @@
 <div class="well extensions_well">
     <div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
     <?php foreach($this->extensions as $extension): ?>
-        <div class="element site <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['instance_id'] ? ' installed' : ''); ?>" data-symbol="Re" data-category="site">
+        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['instance_id'] ? ' installed' : ''); ?>">
             <div class="wrapper">
                 <!-- INSTALLED or either PREMIUM or FREE -->
             <?php if((int)$extension['instance_id']): ?>
@@ -49,17 +49,20 @@
                 
                 <div class="info">
                     <h5><?php echo $extension['name']; ?></h5>
+                    <p>by <?php echo $extension['author']; ?></p>
                 </div>
                 
                 <div class="extras hidden">
-                    <p class="description">Lorem ipsum<?php echo $extension['description']; ?></p>
+                    <p class="description"><?php echo $extension['description']; ?></p>
                 <?php if($extension['status'] != 'ready'): ?>
                     <div class="progress progress-striped progress-danger pull-right <?php echo (! (int)$extension['instance_id'] ? 'hidden' : ''); ?> active" style="width: 100px;height:10px;">
                         <div class="bar" style="width: 100%;"></div>
                     </div>
-                <?php if(! (int)$extension['instance_id']): ?>
-                    <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>">Install</a>
-                <?php endif; ?>
+                    <?php if(! (int)$extension['instance_id']): ?>
+                        <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <a href="#" class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</a>
                 <?php endif; ?>
                 <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
                     <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View screens</a>
