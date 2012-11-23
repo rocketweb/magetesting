@@ -102,7 +102,6 @@ $(document).ready(function () {
                 var $opened_window = window.open($this.prev().attr('href')+'/admin'),
                     $attempts = 0,
                     $fill_window_form = function() {
-                    console.log('doing something');
                     var $window_context = $($opened_window.document).contents();
                     var $login = $window_context.find('input:text'),
                         $password = $login.end().find('input:password');
