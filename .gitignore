@@ -11,8 +11,5 @@ nbproject
 nbproject/private/
 application/configs/application.ini
 application/configs/local.ini
-scripts/worker_downloadonly.lock
-scripts/worker_disabledownload.lock
-scripts/worker_all.lock
 scripts/worker/create_user.sh
 instance/

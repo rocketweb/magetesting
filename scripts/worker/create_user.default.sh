@@ -26,8 +26,8 @@ if [ $# -eq 4 ]; then
       sudo chmod 774 -R ${args[3]}/${args[0]}
       
       #others need to have execute in order for symlinks to work
-      sudo chmod o+x ${args[3]}/${args[0]}
-      sudo chmod o+x ${args[3]}/${args[0]}/public_html
+      sudo chmod a+x ${args[3]}/${args[0]}
+      sudo chmod a+x ${args[3]}/${args[0]}/public_html
       
       sudo chown -R ${args[0]} ${args[3]}/${args[0]}
       sudo chgrp -R ${args[0]} ${args[3]}/${args[0]}

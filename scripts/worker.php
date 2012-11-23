@@ -4,6 +4,11 @@ include 'init.console.php';
 $current_server_id = 1;
 $select = new Zend_Db_Select($db);
 
+$lockDir = APPLICATION_PATH . '/../data/locks/';
+if (!file_exists($lockDir) || !is_dir($lockDir)){
+    mkdir($lockDir);    
+}
+
 try {
     $opts = new Zend_Console_Getopt(
         array(
