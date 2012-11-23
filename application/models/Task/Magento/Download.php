@@ -53,7 +53,7 @@ implements Application_Model_Task_Interface {
         $this->_setupFilesystem();
 
         chdir($this->_domain);
-        
+       
         $this->_updateStatus('installing-files');
         $this->_downloadInstanceFiles(); 
         
@@ -349,7 +349,8 @@ implements Application_Model_Task_Interface {
              "-m ".
              "-np ".
              "-R 'sql,tar,gz,zip,rar' ".
-             "-X '.htaccess' " . 
+             "-X '.htaccess' " .
+             "-N ".   
              "-I '".$this->_customRemotePath."app,".$this->_customRemotePath."downloader,".$this->_customRemotePath."errors,".$this->_customRemotePath."includes,".$this->_customRemotePath."js,".$this->_customRemotePath."lib,".$this->_customRemotePath."pkginfo,".$this->_customRemotePath."shell,".$this->_customRemotePath."skin' " .
              "--user='".$this->_instanceObject->getCustomLogin()."' ".
              "--password='".$this->_instanceObject->getCustomPass()."' ".
@@ -365,6 +366,7 @@ implements Application_Model_Task_Interface {
         
         $command = "wget  ".$this->_customHost.$this->_customSql." ".
             "--passive-ftp ".
+            "-N ".  
             "--user='".$this->_instanceObject->getCustomLogin()."' ".
             "--password='".$this->_instanceObject->getCustomPass()."' ".
             "".$this->_customHost.$this->_customRemotePath." ";
