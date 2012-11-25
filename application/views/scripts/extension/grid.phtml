@@ -57,12 +57,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/css/lightbox.css'));
             <td class="nowrap">
                 <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $extension['item']->getId()), 'default', true); ?>" class="btn btn-success"><i class="icon-pencil icon-white"></i> Edit</a>
                 <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $extension['item']->getId()), 'default', true); ?>" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete</a>
-                <a href="#" class="btn show-screenshots"><i class="icon-camera"></i></a>
-                <div class="screenshots-container">
-                    <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
-                        <a href="<?php echo $this->ImagePath($screenshot->getImage(), 'extension/screenshots', false); ?>" rel="lightbox[ext<?php echo $extension['item']->getId(); ?>]" title="<?php echo $extension['item']->getName(), ' ', $key+1; ?>#"><?php echo $extension['item']->getName(), ' ', $key+1; ?>#</a>
-                    <?php endforeach; ?>
-                </div>
+                
             </td>
         </tr>
         <?php endforeach; ?>
