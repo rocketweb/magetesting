@@ -130,7 +130,7 @@ class QueueController extends Integration_Controller_Action {
                             $DbManager->createUser($this->auth->getIdentity()->login);
                         }
                     } catch (PDOException $e) {
-                        $message = 'Could not create database for instance, aborting';
+                        $message = 'Could not create database for store, aborting';
                         echo $message;
                         if ($log = $this->getLog()) {
                             $log->log($message, LOG_ERR);
@@ -138,7 +138,7 @@ class QueueController extends Integration_Controller_Action {
                         throw $e;
                     }
                 } else {
-                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more instances.'));
+                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
                 }
 
                 return $this->_helper->redirector->gotoRoute(array(
@@ -164,7 +164,7 @@ class QueueController extends Integration_Controller_Action {
 
         //deny this action for demo users
         if ($userGroup == 'demo') {
-            $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'You are not allowed to have custom instance.'));
+            $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'You are not allowed to have custom store.'));
             return $this->_helper->redirector->gotoRoute(array(
                         'module' => 'default',
                         'controller' => 'user',
@@ -258,22 +258,22 @@ class QueueController extends Integration_Controller_Action {
                             $DbManager->createUser($this->auth->getIdentity()->login);
                         }
                     } catch (PDOException $e) {
-                        $message = 'Could not create database for instance, aborting';
+                        $message = 'Could not create database for store, aborting';
                         echo $message;
                         if ($log = $this->getLog()) {
                             $log->log($message, LOG_ERR);
                         }
                         throw $e;
                     }
-                    //stop adding instance
-                    $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'You have successfully added your custom instance to queue.'));
+                    //stop adding store
+                    $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'You have successfully added your custom store to queue.'));
                     return $this->_helper->redirector->gotoRoute(array(
                                 'module' => 'default',
                                 'controller' => 'user',
                                 'action' => 'dashboard',
                                     ), 'default', true);
                 } else {
-                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more instances.'));
+                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
                 }
             } else {
                 $this->_helper->FlashMessenger('Form invalid');
