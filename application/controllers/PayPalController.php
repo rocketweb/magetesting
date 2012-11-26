@@ -96,7 +96,7 @@ class PayPalController extends Integration_Controller_Action
                                     'last_name' => $_POST['last_name'],
                                     'price' => $_POST['payment_gross'],
                                     'date' => date('Y-m-d H:i:s', strtotime($_POST['payment_date'])),
-                                    'plan_id' => $plan_id,
+                                    'plan_name' => $plan->getName(),
                                     'user_id' => $user_id,
                                     'subscr_id' => $_POST['subscr_id']
                             );

@@ -57,7 +57,7 @@ class Application_Model_PaymentMapper {
                 ->setState($row->state)
                 ->setCountry($row->country)
                 ->setDate($row->date)
-                ->setPlanId($row->plan_id)
+                ->setPlanName($row->plan_name)
                 ->setUserId($row->user_id)
                 ->setSubscrId($row->subscr_id);
         return $payment;
@@ -80,7 +80,7 @@ class Application_Model_PaymentMapper {
                   ->setState($row->state)
                   ->setCountry($row->country)
                   ->setDate($row->date)
-                  ->setPlanId($row->plan_id)
+                  ->setPlanName($row->plan_name)
                   ->setUserId($row->user_id)
                   ->setSubscrId($row->subscr_id);
             $entries[] = $entry;
@@ -109,7 +109,7 @@ class Application_Model_PaymentMapper {
                   ->setState($row->state)
                   ->setCountry($row->country)
                   ->setDate($row->date)
-                  ->setPlanId($row->plan_id)
+                  ->setPlanName($row->plan_name)
                   ->setUserId($row->user_id)
                   ->setSubscrId($row->subscr_id);
             $entries[] = $entry;

@@ -14,7 +14,7 @@
                 <div class="span1"><strong>DATE</strong>:</div><?php echo date('F d, Y', strtotime($payment->getDate()))?>
             </div>
             <div class="row">
-                <div class="span1"><strong>INVOICE</strong> #</div><?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getPlanId().$payment->getId(); ?>
+                <div class="span1"><strong>INVOICE</strong> #</div><?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><?php echo $payment->getPlan()->getName(); ?></td>
+                        <td><?php echo $payment->getPlanName(); ?></td>
                         <td>$<?php echo $payment->getPrice(); ?></td>
                     </tr>
                 </tbody>

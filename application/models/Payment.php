@@ -26,7 +26,7 @@ class Application_Model_Payment {
 
     protected $_date;
 
-    protected $_plan_id;
+    protected $_plan_name;
 
     protected $_user_id;
 
@@ -164,15 +164,15 @@ class Application_Model_Payment {
         return $this->_date;
     }
 
-    public function setPlanId($plan_id)
+    public function setPlanName($value)
     {
-        $this->_plan_id = (int)$plan_id;
+        $this->_plan_name = $value;
         return $this;
     }
 
-    public function getPlanId()
+    public function getPlanName()
     {
-        return $this->_plan_id;
+        return $this->_plan_name;
     }
 
     public function setUserId($user_id)
@@ -245,7 +245,7 @@ class Application_Model_Payment {
             'state'       => $this->getState(),
             'country'     => $this->getCountry(),
             'date'        => $this->getDate(),
-            'plan_id'     => $this->getPlanId(),
+            'plan_name'     => $this->getPlanName(),
             'user_id'     => $this->getUserId(),
             'subscr_id'   => $this->getSubscrId()
         );
@@ -254,11 +254,5 @@ class Application_Model_Payment {
     public function fetchUserPayments($id)
     {
         return $this->getMapper()->fetchPaymentsByUser($id);
-    }
-
-    public function getPlan()
-    {
-        $plan = new Application_Model_Plan();
-        return $plan->find($this->getPlanId());
     }
 }
