@@ -51,7 +51,7 @@ class Zend_View_Helper_IconMenu extends Zend_View_Helper_Navigation_Menu
 	    if(strpos($page->icon,'.')){
 	      $icon = '<img src="'.$this->view->baseUrl().$this->_iconPath.'/'.$page->icon.'" alt="" /> ';
 	    } else {
-	      $icon = '<i class="'.$page->icon.'"></i>';
+	      $icon = '<i class="'.$page->icon.'"></i> ';
 	    }
         } else {
             $icon = '';
