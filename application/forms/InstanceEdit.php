@@ -18,7 +18,6 @@ class Application_Form_InstanceEdit extends Integration_Form{
         $this->addElement('text', 'instance_name', array(
                 'label'      => 'Name or note',
                 'required'   => false,
-                'class'      => 'span5',
                 'filters'    => array('StripTags', 'StringTrim'),
         ));
 

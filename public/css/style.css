@@ -236,3 +236,17 @@ html,body{height:100%;}
 .element.premium .wrapper .icon { max-width: 84px; max-height: 112px; }
 .element.free .wrapper .icon img { max-width: 28px; max-height: 38px; }
 ADDED TO LESS - 2012.11.23 */
+
+.instance-edit .control-group:first-child {
+    width: 100%;
+}
+.instance-edit .control-group input {
+    width: 96%;
+}
+.instance-edit #instance_name {
+    width: 98%;
+}
+.instance-edit .control-group {
+
+    width: 50%;
+}
