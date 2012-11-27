@@ -1,24 +1,23 @@
 <?php foreach( $this->container as $name => $page ): ?>
 <ul class="nav pull-right">
-	<?php
-		$index = 0;
-		$allPages = 0;
-		foreach( $page->pages as $subpage ){
-			if($this->menu()->accept($subpage)){
-				$allPages++;
-			}
-		}
-	?>
-	
+    <?php
+        $index = 0;
+        $allPages = 0;
+        foreach( $page->pages as $subpage ){
+            if($this->menu()->accept($subpage)){
+                $allPages++;
+            }
+        }
+    ?>
+    
     <?php foreach( $page->pages as $subpage ): ?>
         <?php if($this->menu()->accept($subpage)):
         $class = array();
         if($subpage->isActive()) { $class[] = 'active'; }
-        if($subpage->get('float')) { $class[] = 'right'; }
-		
-		if($index === 0){ $class[] = 'last'; }
-		if($index === $allPages - 1){ $class[] = 'first'; }
-		
+        
+        if($index === 0){ $class[] = 'first'; }
+        if($index === $allPages - 1){ $class[] = 'last'; }
+        
         $class = implode(' ',$class);
         ?>
             <li class="<?php echo $class; ?>">

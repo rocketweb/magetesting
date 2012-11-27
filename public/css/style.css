@@ -255,4 +255,17 @@ ADDED TO LESS - 2012.11.23 */
 
     width: 50%;
 }
+<<<<<<< Updated upstream
 ADDED TO LESS (instances.less) - 2012.11.27 */
+=======
+.edit-account .btn-primary {
+    margin-left: 5px;
+}
+.secondary {
+    line-height: 28px;
+    margin-right: 5px;
+}
+.form-register .btn-primary {
+    margin-left: 5px;
+}
+>>>>>>> Stashed changes

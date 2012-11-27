@@ -8,90 +8,6 @@
         <route>default</route>
         <reset_params>true</reset_params>
         <pages>
-            <userLogin>
-                <label>Log in</label>
-                <module>default</module>
-                <controller>user</controller>
-                <action>login</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_user</resource>
-                <privilege>login</privilege>
-                <float>right</float>
-                <icon>icon-white icon-arrow-down</icon>
-            </userLogin>
-            <userRegister>
-                <label>Create Account</label>
-                <module>default</module>
-                <controller>user</controller>
-                <action>register</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_user</resource>
-                <privilege>register</privilege>
-                <float>right</float>
-                <icon>glyphicons_044_keys_white_half.png</icon>
-            </userRegister>
-            <userLogout>
-                <label>Logout</label>
-                <module>default</module>
-                <controller>user</controller>
-                <action>logout</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_user</resource>
-                <privilege>logout</privilege>
-                <float>righ</float>
-                <icon>icon-white icon-off</icon>
-            </userLogout>
-            <userAccount>
-                <label>My Account</label>
-                <module>default</module>
-                <controller>my-account</controller>
-                <action>index</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_my-account</resource>
-                <privilege>index</privilege>
-                <float>righ</float>
-                <icon>icon-white icon-user</icon>
-            </userAccount>
-            <userList>
-                <label>Users</label>
-                <module>default</module>
-                <controller>user</controller>
-                <action>list</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_user</resource>
-                <privilege>list</privilege>
-                <float>right</float>
-                <icon>icon-white icon-user</icon>
-            </userList>
-            <wholeQueue>
-                <label>Queue</label>
-                <module>default</module>
-                <controller>queue</controller>
-                <action>index</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_queue</resource>
-                <privilege>index</privilege>
-                <float>right</float>
-                <icon>icon-white icon-time</icon>
-            </wholeQueue>
-            <supportedExtensions>
-                <label>Extensions</label>
-                <module>default</module>
-                <controller>extension</controller>
-                <action>index</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_extension</resource>
-                <privilege>index</privilege>
-                <float>right</float>
-                <icon>icon-white icon-th-list</icon>
-            </supportedExtensions>
             <dashboard>
                 <label>Dashboard</label>
                 <module>default</module>
@@ -101,9 +17,85 @@
                 <reset_params>true</reset_params>
                 <resource>default_user</resource>
                 <privilege>dashboard</privilege>
-                <float>right</float>
                 <icon>icon-white icon-list-alt</icon>
             </dashboard>
+            <supportedExtensions>
+                <label>Extensions</label>
+                <module>default</module>
+                <controller>extension</controller>
+                <action>index</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_extension</resource>
+                <privilege>index</privilege>
+                <icon>icon-white icon-th-list</icon>
+            </supportedExtensions>
+            <userAccount>
+                <label>My Account</label>
+                <module>default</module>
+                <controller>my-account</controller>
+                <action>index</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_my-account</resource>
+                <privilege>index</privilege>
+                <icon>icon-white icon-user</icon>
+            </userAccount>
+            <wholeQueue>
+                <label>Queue</label>
+                <module>default</module>
+                <controller>queue</controller>
+                <action>index</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_queue</resource>
+                <privilege>index</privilege>
+                <icon>icon-white icon-time</icon>
+            </wholeQueue>
+            <userList>
+                <label>Users</label>
+                <module>default</module>
+                <controller>user</controller>
+                <action>list</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_user</resource>
+                <privilege>list</privilege>
+                <icon>icon-white icon-user</icon>
+            </userList>
+            <userRegister>
+                <label>Create Account</label>
+                <module>default</module>
+                <controller>user</controller>
+                <action>register</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_user</resource>
+                <privilege>register</privilege>
+                <icon>glyphicons_044_keys_white_half.png</icon>
+            </userRegister>
+            <userLogin>
+                <label>Log in</label>
+                <module>default</module>
+                <controller>user</controller>
+                <action>login</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_user</resource>
+                <privilege>login</privilege>
+                <icon>icon-white icon-arrow-down</icon>
+            </userLogin>
+            <userLogout>
+                <label>Logout</label>
+                <module>default</module>
+                <controller>user</controller>
+                <action>logout</action>
+                <route>default</route>
+                <reset_params>true</reset_params>
+                <resource>default_user</resource>
+                <privilege>logout</privilege>
+                <icon>icon-white icon-off</icon>
+            </userLogout>
         </pages>
     </nav>
 </configdata>

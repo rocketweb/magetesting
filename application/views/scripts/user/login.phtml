@@ -1,24 +1,26 @@
 <div class="row">
-    <div class="span6 offset3">
+    <div class="span12">
         <form action="<?php echo $this->form->getAction() ?>"
             enctype="<?php echo $this->form->getEnctype() ?>"
             method="<?php echo $this->form->getMethod() ?>"
             id="<?php echo $this->form->getId() ?>"
             class="<?php echo $this->form->getAttrib('class') ?>">
-            <div class="modal-header">
+            <legend>
                 <h3>Login</h3>
-            </div>
-            <div class="modal-body">
+            </legend>
+            <fieldset>
                 <div class="row">
-                    <div class="span3">
-                        <?php echo $this->form->login; ?>                         
-                        <?php echo $this->form->password; ?>                        
+                    <div class="span6">
+                        <?php echo $this->form->login; ?>
+                    </div>
+                    <div class="span6">
+                        <?php echo $this->form->password; ?>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
+            </fieldset>
+            <div class="form-actions">
                 <a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'reset-password'), 'default', true); ?>" class="secondary pull-left">Forgot password?</a>
-                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary">
+                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary pull-right">
                     <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
                 </button>
             </div>

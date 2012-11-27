@@ -39,7 +39,7 @@ class Application_Form_UserEdit extends Integration_Form
         // Add a email element
         $this->addElement('text', 'email', array(
                 'label'      => 'E-mail',
-                'tabindex'   => 5,
+                'tabindex'   => 3,
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
@@ -51,7 +51,7 @@ class Application_Form_UserEdit extends Integration_Form
         // Add a password element
         $this->addElement('password', 'password', array(
                 'label'      => 'Password',
-                'tabindex'   => 3,
+                'tabindex'   => 4,
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
@@ -63,7 +63,7 @@ class Application_Form_UserEdit extends Integration_Form
         // Add a repeated password element
         $this->addElement('password', 'password_repeat', array(
                 'label'      => 'Repeat Password',
-                'tabindex'   => 4,
+                'tabindex'   => 5,
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(

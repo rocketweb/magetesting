@@ -1,23 +1,21 @@
 <div class="row">
-    <div class="span8 offset2">
+    <div class="span12">
         <form action="<?php echo $this->form->getAction() ?>"
             enctype="<?php echo $this->form->getEnctype() ?>"
             method="<?php echo $this->form->getMethod() ?>"
             id="<?php echo $this->form->getId() ?>"
             class="<?php echo $this->form->getAttrib('class') ?>">
-            <div class="modal-header">
+            <legend>
                 <h3>Setup your environment</h3>
-            </div>
-            <div class="modal-body">
-                <fieldset>
-                    <?php echo $this->form->edition ?>
-                    <?php echo $this->form->version ?>
-                    <?php echo $this->form->sample_data ?>
-                    <?php echo $this->form->instance_name ?>
-                </fieldset>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" name="<?php echo $this->form->instanceAdd->getName(); ?>" id="<?php echo $this->form->instanceAdd->getId() ?>" class="btn btn-primary">
+            </legend>
+            <fieldset>
+                <?php echo $this->form->edition ?>
+                <?php echo $this->form->version ?>
+                <?php echo $this->form->sample_data ?>
+                <?php echo $this->form->instance_name ?>
+            </fieldset>
+            <div class="form-actions">
+                <button type="submit" name="<?php echo $this->form->instanceAdd->getName(); ?>" id="<?php echo $this->form->instanceAdd->getId() ?>" class="btn btn-primary pull-right">
                     <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->instanceAdd->getLabel() ?>
                 </button>
             </div>

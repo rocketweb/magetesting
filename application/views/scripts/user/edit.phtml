@@ -1,36 +1,45 @@
 <div class="row">
-    <div class="span8 offset2">
+    <div class="span12">
         <form
             enctype="<?php echo $this->form->getEnctype() ?>"
             method="<?php echo $this->form->getMethod() ?>"
             class="<?php echo $this->form->getAttrib('class') ?>"
             id="<?php echo $this->form->getAttrib('id') ?>">
-            <div class="modal-header">
+            <legend>
                 <h3>Edit Account</h3>
-            </div>
-            <div class="modal-body extend-height">
+            </legend>
+            <fieldset>
                 <div class="row">
-                    <div class="span3 halfoffset1">
+                    <div class="span3">
                         <?php echo $this->form->firstname; ?>
-                        <?php echo $this->form->password; ?>
-                        <?php echo $this->form->email; ?>
-                        
                     </div>
-                    <div class="span3 offset1">
+                    <div class="span3">
                         <?php echo $this->form->lastname; ?>
+                    </div>
+                    <div class="span3">
+                        <?php echo $this->form->email; ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <?php echo $this->form->password; ?>
+                    </div>
+                    <div class="span3">
                         <?php echo $this->form->password_repeat; ?>
+                    </div>
+                    <div class="span3">
                         <?php echo $this->form->server_id; ?>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <small><a href="<?php echo $this->url(array('module' => 'default',
+            </fieldset>
+            <div class="form-actions">
+                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary pull-right">
+                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
+                </button>
+                <small class="pull-right"><a href="<?php echo $this->url(array('module' => 'default',
                         'controller'=>'user',
                         'action'=>'list',
                         ),'default',true); ?>" class="secondary">View list</a> </small>
-                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary">
-                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
-                </button>
             </div>
         </form>
     </div>

@@ -9,7 +9,6 @@ $(document).ready(function () {
 	
 	/* DELETE STORE BUTTON - prevent accordion click event */
 	$('.delete-store').click(function(event){
-		event.preventDefault();
 		event.stopPropagation();
 	});
 	

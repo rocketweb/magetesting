@@ -7,11 +7,12 @@ class Application_Form_UserSetNewPassword extends Integration_Form
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
-        $this->setAttrib('class', 'form-horizontal');
+        $this->setAttrib('class', 'form-stacked');
         // Add a password element
 
         $this->addElement('password', 'password', array(
                 'label'      => 'Password',
+                'class'      => 'span6',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
@@ -23,6 +24,7 @@ class Application_Form_UserSetNewPassword extends Integration_Form
         // Add a password element
         $this->addElement('password', 'password_repeat', array(
                 'label'      => 'Repeat password',
+                'class'      => 'span6',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(

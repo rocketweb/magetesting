@@ -1,5 +1,5 @@
 <div class="row instance-edit">
-    <div class="span8 offset2">
+    <div class="span12">
         <form action="<?php echo $this->form->getAction() ?>"
             enctype="<?php echo $this->form->getEnctype() ?>"
             method="<?php echo $this->form->getMethod() ?>"
@@ -11,20 +11,20 @@
             <fieldset>
             <?php echo $this->form->instance_name ?>
                 <div class="row">
-                    <div class="span4"><?php echo $this->form->backend_login ?></div>
-                    <div class="span4"><?php echo $this->form->backend_password ?></div>
+                    <div class="span6"><?php echo $this->form->backend_login ?></div>
+                    <div class="span6"><?php echo $this->form->backend_password ?></div>
                 </div>
                 <div class="row">
-                    <div class="span4"><?php echo $this->form->custom_host; ?></div>
-                    <div class="span4"><?php echo $this->form->custom_login; ?></div>
+                    <div class="span6"><?php echo $this->form->custom_host; ?></div>
+                    <div class="span6"><?php echo $this->form->custom_login; ?></div>
                 </div>
                 <div class="row">
-                    <div class="span4"><?php echo $this->form->custom_pass; ?></div>
-                    <div class="span4"><?php echo $this->form->custom_pass_confirm; ?></div>
+                    <div class="span6"><?php echo $this->form->custom_pass; ?></div>
+                    <div class="span6"><?php echo $this->form->custom_pass_confirm; ?></div>
                 </div>
                 <div class="row">
-                    <div class="span4"><?php echo $this->form->custom_remote_path; ?></div>
-                    <div class="span4"><?php echo $this->form->custom_sql; ?></div>
+                    <div class="span6"><?php echo $this->form->custom_remote_path; ?></div>
+                    <div class="span6"><?php echo $this->form->custom_sql; ?></div>
                 </div>
             </fieldset>
             <div class="form-actions">

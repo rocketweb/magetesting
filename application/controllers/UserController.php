@@ -451,6 +451,7 @@ class UserController extends Integration_Controller_Action
     }
     
     public function removeAction(){
+        $id = (int)$this->_getParam('id', 0);
         if ($id == $this->auth->getIdentity()->id){
             
             //should we allow people to remove their accounts?
