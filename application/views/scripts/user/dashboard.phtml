@@ -1,5 +1,4 @@
-<!-- START INSTANCES PAGE -->
-<div class="container mt">
+	<!-- START INSTANCES PAGE -->
     <div class="row">
         <div class="span12">
             <h3>Your stores <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h3>
@@ -46,7 +45,7 @@
                                 <a href="#" class="btn btn-danger btn-minimini delete-store"><i class="icon icon-white icon-remove"></i></a>
                             </div> 
                             <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
-                            <?php echo $this->escape($item['instance_name']) ?>
+                            <span class="title"><?php echo $this->escape($item['instance_name']) ?></span>
                             <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                         </div>
                     </div>
@@ -124,7 +123,6 @@
             
         </div>
     </div>
-</div>
-<!-- START INSTANCES PAGE -->
+	<!-- START INSTANCES PAGE -->
 
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>
