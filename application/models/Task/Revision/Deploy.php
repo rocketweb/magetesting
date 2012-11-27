@@ -4,9 +4,6 @@ class Application_Model_Task_Revision_Deploy
 extends Application_Model_Task_Revision 
 implements Application_Model_Task_Interface {
 
-    private $db;
-    private $config;
-    
     /* Prevents from running contructor of Application_Model_Task */
     public function __construct(){
         

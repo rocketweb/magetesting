@@ -30,6 +30,8 @@ class Application_Model_Instance {
     
     protected $_error_message;
     
+    protected $_revision_count;
+    
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -205,6 +207,7 @@ class Application_Model_Instance {
                 'custom_pass'      => $this->getCustomPass(),
                 'custom_sql'       => $this->getCustomSql(),
                 'error_message'       => $this->getErrorMessage(),
+                'revision_count'       => $this->getRevisionCount(),
                 'type'       => $this->getType(),
         );
     }
@@ -309,6 +312,15 @@ class Application_Model_Instance {
     
     public function setErrorMessage($value){
       $this->_error_message = $value;
+      return $this;
+    }
+    
+    public function getRevisionCount(){
+      return $this->_revision_count;
+    }
+    
+    public function setRevisionCount($value){
+      $this->_revision_count = $value;
       return $this;
     }
     

@@ -43,7 +43,9 @@ class Application_Model_InstanceMapper {
                 'custom_pass'      => $instance->getCustomPass(),
                 'custom_sql'       => $instance->getCustomSql(),
                 'error_message'       => $instance->getErrorMessage(),
+                'revision_count'       => $instance->getRevisionCount(),
                 'type'       => $instance->getType(),
+                
         );
 
         if (null === ($id = $instance->getId())) {
@@ -79,6 +81,7 @@ class Application_Model_InstanceMapper {
                 ->setCustomPass($row->custom_pass)
                 ->setCustomSql($row->custom_sql)
                 ->setErrorMessage($row->error_message)
+                ->setRevisionCount($row->revision_count)
                 ->setType($row->type)
                 ;
         return $instance;
@@ -111,6 +114,7 @@ class Application_Model_InstanceMapper {
                     ->setCustomPass($row->custom_pass)
                     ->setCustomSql($row->custom_sql)
                     ->setErrorMessage($row->error_message)
+                    ->setRevisionCount($row->revision_count)
                     ->setType($row->type)
                     ;
             $entries[] = $entry;

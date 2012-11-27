@@ -75,7 +75,7 @@ function updateStatuses(){
  
   $("div.accordion-toggle.installing").each(function(){
   
-      var current_tr = $(this);
+      var row = $(this);
               
       //create 
       domain = $(this).find(".instancedomain").val();
@@ -93,7 +93,7 @@ function updateStatuses(){
             data: "domain=" + $(this).find(".instancedomain").val(),
             dataType: "json",
             success: function(json){
-                updateLabel(current_tr,json);
+                updateLabel(row,json);
             }
       });
   });

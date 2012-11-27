@@ -8,7 +8,6 @@ $(document).ready(function(){
             dataType: "json",
             success: function(json){
                 var opts = "";
-                console.log(json);
 
                 $.each(json,function(index, item){
                     opts =  opts + "<option value=\""+ item.id +"\">" + item.version + "</option>";

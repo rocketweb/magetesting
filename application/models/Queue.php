@@ -14,6 +14,8 @@ class Application_Model_Queue {
     
     protected $_task;
     
+    protected $_task_params;
+    
     protected $_server_id;
     
     protected $_parent_id;
@@ -21,7 +23,7 @@ class Application_Model_Queue {
     protected $_version_id;
     
     protected $_added_date;
-
+    
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -111,6 +113,7 @@ class Application_Model_Queue {
      * - RevisionRollback
      * - RevisionCommit
      * - RevisionDeploy
+     * - RevisionInit
      * @param string $value
      * @return Application_Model_Queue
      */
@@ -123,6 +126,17 @@ class Application_Model_Queue {
     public function getTask()
     {
         return $this->_task;
+    }
+    
+    public function setTaskParams($value)
+    {
+        $this->_task_params = serialize($value);
+        return $this;
+    }
+
+    public function getTaskParams()
+    {
+        return unserialize($this->_task_params);
     }
     
     public function setServerId($value)
@@ -200,6 +214,7 @@ class Application_Model_Queue {
                 'user_id' => $this->getUserId(),
                 'extension_id' => $this->getExtensionId(),
                 'task' => $this->getTask(),
+                'task_params' => $this->getTaskParams(),
                 'parent_id' => $this->getParentId(),
                 'server_id' => $this->getServerId(),
         );

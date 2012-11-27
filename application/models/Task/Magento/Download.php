@@ -75,86 +75,31 @@ implements Application_Model_Task_Interface {
         exec('sudo rm '.$parts[0].' -R', $output);
         unset($parts);
 
-        echo "Setting permissions...\n";
-        exec('sudo mkdir var');
-        exec('sudo mkdir downloader');
-        exec('sudo mkdir media');
-
-        exec('sudo chmod 777 var/.htaccess app/etc', $output);
-        $message = var_export($output, true);
-        $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n" . $message, LOG_DEBUG);
-        unset($output);
-
-        exec('sudo chmod 777 var -R', $output);
-        $message = var_export($output, true);
-        $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n" . $message, LOG_DEBUG);
-        unset($output);
-
-
-        exec('sudo chmod 777 downloader', $output);
-        $message = var_export($output, true);
-        $log->log("\nsudo sudo chmod 777 downloader\n" . $message, LOG_DEBUG);
-        unset($output);
-
-        exec('sudo chmod 777 media -R', $output);
-        $message = var_export($output, true);
-        $log->log("\nsudo chmod -R 777 media\n" . $message, LOG_DEBUG);
-        unset($output);
+        $this->_cleanupFilesystem();
 
         // update backend admin password
         $set = array('backend_password' => $this->_adminpass);
         $where = array('domain = ?' => $this->_domain);
         $log->log(PHP_EOL . 'Updating queue backend password: ' . $this->db->update('instance', $set, $where), Zend_Log::DEBUG);
-        // end
-        // create magento connect ftp config and remove settings for free user
-        
-        // end
 
         //copy new htaccess over
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/Custom/.htaccess ' . $this->_instanceFolder . '/' . $this->_domain . '/.htaccess');
 
         //applying patches for xml-rpc issue
-        if ($this->_versionObject->getVersion() > '1.3.2.3' AND $this->_versionObject->getVersion() < '1.4.1.2'){
-            //we're somewhere between 1.3.2.4 and 1.4.1.1
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1400_1411/Request.php ' . $this->_instanceFolder . '/' . $this->_domain . '/lib/Zend/XmlRpc/Request.php');
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1400_1411/Response.php ' . $this->_instanceFolder . '/' . $this->_domain . '/lib/Zend/XmlRpc/Response.php');
-
-        } elseif ($this->_versionObject->getVersion() == '1.4.2.0'){
-            //1.4.2.0 - thank you captain obvious
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Request.php ' . $this->_instanceFolder . '/' . $this->_domain . '/lib/Zend/XmlRpc/Request.php');
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Response.php ' . $this->_instanceFolder . '/' . $this->_domain . '/lib/Zend/XmlRpc/Response.php');
-
-        } elseif ($this->_versionObject->getVersion() > '1.4.9.9' AND $this->_versionObject->getVersion() < '1.7.0.2') {
-            //we're somewhere between 1.5.0.0 and 1.7.0.1
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Request.php ' . $this->_instanceFolder . '/' . $this->_domain . '/lib/Zend/XmlRpc/Request.php');
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Response.php ' . $this->_instanceFolder . '/' . $this->_domain . '/lib/Zend/XmlRpc/Response.php');
-        }
-
-        exec('sudo chown -R '.$this->config->magento->userprefix.$this->_dbuser.':'.$this->config->magento->userprefix.$this->_dbuser.' '.$this->_instanceFolder.'/'.$this->_domain, $output);
+        $this->_applyXmlRpcPatch();
+        
+        $command = 'sudo chown -R '.$this->config->magento->userprefix.$this->_dbuser.':'.$this->config->magento->userprefix.$this->_dbuser.' '.$this->_instanceFolder.'/'.$this->_domain;
+        exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\nsudo chown -R ".$this->config->magento->userprefix.$this->_dbuser.':'.$this->config->magento->userprefix.$this->_dbuser.' '.$this->_instanceFolder.'/'.$this->_domain."\n" . $message, LOG_DEBUG);
+        $log->log("\n". $command."\n" . $message, LOG_DEBUG);
         unset($output);
 
-        //update core_config_data with new url
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE core_config_data SET value = \''.$this->config->magento->storeUrl.'/instance/'.$this->_domain.'/\' WHERE path=\'web/unsecure/base_url\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE core_config_data SET value = \''.$this->config->magento->storeUrl.'/instance/'.$this->_domain.'/\' WHERE path=\'web/secure/base_url\'"');
-
-        //update contact emails
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'contacts/email/recipient_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'catalog/productalert_cron/error_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sitemap/generate/error_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sales_email/order/copy_to\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sales_email/shipment/copy_to\';"');
-        
-        /* Disable Google Analytics */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \'0\' WHERE  `path` = \'google/analytics/active\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \'\' WHERE  `path` = \'google/analytics/account\';"');
-        
-        echo "Finished installing Magento\n";
+        $this->_updateCoreConfigData();
 
         //TODO: add mail info about ready installation
-        exec('ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '.INSTANCE_PATH . $this->_domain);
-        $log->log(PHP_EOL . 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '. INSTANCE_PATH . $this->_domain, Zend_Log::DEBUG);
+        $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '.INSTANCE_PATH . $this->_domain;
+        exec($command);
+        $log->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
         
         $this->_updateStatus('ready');
         
@@ -182,10 +127,9 @@ implements Application_Model_Task_Interface {
         $mail->setFrom($this->config->cron->queueItemReady->from->email, $this->config->cron->queueItemReady->from->desc);
         $mail->setBodyHtml($bodyText);
         try {
-          $mail->send();
+            $mail->send();
         } catch (Zend_Mail_Transport_Exception $e){
-            
-	  $log->log('Mail could not be sent', LOG_CRIT, $e->getTraceAsString());
+            $log->log('Mail could not be sent', LOG_CRIT, $e->getTraceAsString());
         }
         /* send email to instance owner stop */
 
@@ -408,7 +352,31 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _cleanupFilesystem() {
-        
+        echo "Setting permissions...\n";
+        exec('sudo mkdir var');
+        exec('sudo mkdir downloader');
+        exec('sudo mkdir media');
+
+        exec('sudo chmod 777 var/.htaccess app/etc', $output);
+        $message = var_export($output, true);
+        $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n" . $message, LOG_DEBUG);
+        unset($output);
+
+        exec('sudo chmod 777 var -R', $output);
+        $message = var_export($output, true);
+        $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n" . $message, LOG_DEBUG);
+        unset($output);
+
+
+        exec('sudo chmod 777 downloader', $output);
+        $message = var_export($output, true);
+        $log->log("\nsudo sudo chmod 777 downloader\n" . $message, LOG_DEBUG);
+        unset($output);
+
+        exec('sudo chmod 777 media -R', $output);
+        $message = var_export($output, true);
+        $log->log("\nsudo chmod -R 777 media\n" . $message, LOG_DEBUG);
+        unset($output);
     }
 
     protected function _setupMagentoConnect() {
@@ -461,6 +429,20 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _updateCoreConfigData() {
+        //update core_config_data with new url
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE core_config_data SET value = \''.$this->config->magento->storeUrl.'/instance/'.$this->_domain.'/\' WHERE path=\'web/unsecure/base_url\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE core_config_data SET value = \''.$this->config->magento->storeUrl.'/instance/'.$this->_domain.'/\' WHERE path=\'web/secure/base_url\'"');
+
+        //update contact emails
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'contacts/email/recipient_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'catalog/productalert_cron/error_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sitemap/generate/error_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sales_email/order/copy_to\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sales_email/shipment/copy_to\';"');
+        
+        /* Disable Google Analytics */
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \'0\' WHERE  `path` = \'google/analytics/active\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \'\' WHERE  `path` = \'google/analytics/account\';"');
         
     }
     

@@ -10,7 +10,7 @@
                 <div class="accordion-group" data-active="0">
                     <div class="accordion-heading">
                         <div class="tab-stripe"></div>
-                        <div class="accordion-toggle instance-toggle <?php echo (substr($item['status'],0,10)=='installing')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>">
+                        <div class="accordion-toggle instance-toggle <?php echo (substr($item['status'],0,10)=='installing' || $item['status']=='pending')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>">
                         <?php 
                             $progressClass = '';
                             switch($item['status']): 
@@ -90,7 +90,7 @@
 
                                 <!-- START DEPLOYMENT BOX -->
                                 <div class="span4 panel deployment">
-                                    <h5>Deployment <span class="version">version <span class="badge badge-blue">1</span></span></h5>
+                                    <h5>Deployment <span class="version">version <span class="badge badge-blue"><?php echo $this->escape($item['revision_count'])?></span></span></h5>
                                     <div class="control-group">
                                         <div class="controls">
                                             <a href="#" class="btn disabled"><i class="icon icon-circle-arrow-left"></i> Roll Back</a>

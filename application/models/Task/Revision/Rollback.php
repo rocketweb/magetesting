@@ -16,6 +16,8 @@ implements Application_Model_Task_Interface {
     
     public function process() {
         
+        $this->_rollbackTo();
+        
     }
 
     protected function _checkCredentials() {
@@ -23,6 +25,19 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _rollbackTo() {
+        
+        $startCwd = getcwd();
+        
+        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        exec('git add -A');
+        
+        $params = $this->_queueObject->getTaskParams();
+        $params = unserialize($params);
+        
+        exec('git ');
+        chdir($startCwd);
+        
+        $this->_updateStatus('ready');
         
     }
 

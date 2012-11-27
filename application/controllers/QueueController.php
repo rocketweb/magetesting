@@ -106,7 +106,8 @@ class QueueController extends Integration_Controller_Action {
                                        
                     $instanceId = $instanceModel->save();
                     
-                    //TODO: Add queue item with MagentoInstall
+                    unset($queueModel);
+                    //Add queue item with MagentoInstall
                     $queueModel = new Application_Model_Queue();                    
                     $queueModel->setInstanceId($instanceId);
                     $queueModel->setTask('MagentoInstall');
@@ -115,6 +116,20 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setServerId(1); /* TODO: select this somehow, server model method select server? */
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId(0);  
+                    $queueModel->save();
+                    
+                    $installId = $queueModel->getId();
+                    
+                    unset($queueModel);
+                    //Add queue item with RevisionInit
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('RevisionInit');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId(1); /* TODO: select this somehow, server model method select server? */
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId($installId);  
                     $queueModel->save();
                     
                     $this->_helper->FlashMessenger('New installation added to queue');
@@ -444,6 +459,29 @@ class QueueController extends Integration_Controller_Action {
                         $extensionQueueItem->setServerId($this->auth->getIdentity()->server_id);
                         $extensionQueueItem->setTask('ExtensionInstall');
                         $extensionQueueItem->save();
+                        
+                        /* Get extension data and add commit task */
+                        $extensionModel = new Application_Model_Extension();
+                        $extensionModel->find($request->getParam('extension_id'));
+                        
+                        $queueId = $extensionQueueItem->getId();
+                        $queueModel = new Application_Model_Queue();
+                        $queueModel->setInstanceId($instance->id);
+                        $queueModel->setStatus('pending');
+                        $queueModel->setUserId($instance->user_id);
+                        $queueModel->setExtensionId(0);
+                        $queueModel->setParentId($queueId);
+                        $queueModel->setServerId($this->auth->getIdentity()->server_id);
+                        $queueModel->setTask('RevisionCommit');
+                        $queueModel->setTaskParams(serialize(
+                            array(
+                                'commit_comment' => 'Adding '.$extensionModel->getName().' ('.$extensionModel->getVersion().')',
+                                'commit_type' => 'extension-install'
+                                
+                                )
+                            )
+                        );
+                        $queueModel->save();
                         
                         //add row to instance_extension
                         $instanceExtensionModel = new Application_Model_InstanceExtension();
