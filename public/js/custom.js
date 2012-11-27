@@ -6,7 +6,13 @@ $(document).ready(function () {
 
     /* prevent click event and init popover */
     $('[rel=popover]').click(function(){return false;}).popover();
-
+	
+	/* DELETE STORE BUTTON - prevent accordion click event */
+	$('.delete-store').click(function(event){
+		event.preventDefault();
+		event.stopPropagation();
+	});
+	
     var $extension_button = $('.new-instance-extension-installer'),
         $extension_id = $('#new-instance-extension-id');
     $extension_button.click(function(e) {

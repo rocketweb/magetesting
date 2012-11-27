@@ -41,8 +41,9 @@
                                 <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>"><?php echo $this->escape(ucfirst($item['status'])); ?></span>
                             </div>
                             <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
-                                <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn view-store">View Store</a>
-                                <a href="#" class="btn admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>">Admin Panel</a>
+                                <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn view-store"><i class="icon icon-home"></i> View Store</a>
+                                <a href="#" class="btn admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
+                                <a href="#" class="btn btn-danger btn-minimini delete-store"><i class="icon icon-white icon-remove"></i></a>
                             </div> 
                             <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
                             <?php echo $this->escape($item['instance_name']) ?>

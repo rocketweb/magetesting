@@ -24,10 +24,10 @@ $(document).ready(function(){
 						}
 					);
 					_parent.removeClass('mt_shadow');
-					_instance.parent().removeClass('active-accordion-header');
+					//_instance.parent().removeClass('active-accordion-header');
 				} else {
 					_parent.addClass('mt_shadow');
-					_instance.parent().addClass('active-accordion-header');
+					//_instance.parent().addClass('active-accordion-header');
 				}
 			});
 			
@@ -53,7 +53,7 @@ $(document).ready(function(){
 					}
 				);
 				_parent.removeClass('mt_shadow');
-				_instance.parent().addClass('active-accordion-header');
+				//_instance.parent().parent().removeClass('active-accordion-header');
 			});
 		}
 		
