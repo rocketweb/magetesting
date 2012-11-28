@@ -28,14 +28,22 @@ class Zend_View_Helper_IconMenu extends Zend_View_Helper_Navigation_Menu
                 $title = $t->translate($title);
             }
         }
-
+		
+		
         // get attribs for element
         $attribs = array(
             'id'     => $page->getId(),
             'title'  => $title,
             'class'  => $page->getClass()
         );
-
+		
+		// is a dropdown?
+		$dropDownCaret = '';
+		if(count($page->pages)){
+			$attribs['data-toggle'] = 'dropdown';
+			$dropDownCaret = ' <b class="caret caret-white"></b>';
+		}
+		
         // does page have a href?
         if ($href = $page->getHref()) {
             $element = 'a';
@@ -59,7 +67,7 @@ class Zend_View_Helper_IconMenu extends Zend_View_Helper_Navigation_Menu
 
         return '<' . $element . $this->_htmlAttribs($attribs) . '>'
              . $icon
-             . $this->view->escape($label)
+             . $this->view->escape($label) . $dropDownCaret
              . '</' . $element . '>';
     }
 }

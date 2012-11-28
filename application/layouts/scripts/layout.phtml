@@ -42,7 +42,7 @@
 	<div class="red-bar"></div>
 	<div class="navbar navbar-static-top navbar-global">
 		<div class="container">
-			<a class="pull-left"
+			<a class="logo pull-left"
 				href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">
 				<img src="<?php echo $this->baseUrl(); ?>/public/img/logo_magetesting.jpg" alt="Mage Testing" />
 			</a>
@@ -58,24 +58,26 @@
 
         <?php echo $this->layout()->content; ?>
 
-        <hr />
-        <footer>
-            <div class="row">
-                <div class="span6">
-                   <p>Copyright ©2011-2012 Rocket Web Inc. All rights reserved.</p>
-                </div>
-                <div class="span6">
-                    <p class="right">
-                      <a href="#">Terms</a> |
-                      <a href="#">Guided Tour</a> |
-                      <a href="#">Contact</a>
-                    </p>
-                </div>
-            </div>
-        </footer>
-
     </div>
     <!-- /container -->
+    
+    <footer>
+		<div class="container">
+        	<hr />
+        	<div class="row">
+        	    <div class="span6">
+        	       <p>Copyright ©2011-2012 Rocket Web Inc. All rights reserved.</p>
+        	    </div>
+        	    <div class="span6">
+        	        <p class="right">
+        	          <a href="#">Terms</a> |
+        	          <a href="#">Guided Tour</a> |
+        	          <a href="#">Contact</a>
+        	        </p>
+        	    </div>
+        	</div>
+        </div>
+    </footer>
 
     <?php echo $this->render('_partials/googleAnalytics.phtml'); ?>
 

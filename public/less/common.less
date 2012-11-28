@@ -1,18 +1,20 @@
-body {
+html, body {
+	height: 100%;
 	font-family: @MainFamily;
+}
+
+.logo {
+	margin: 20px 0;
 }
 
 .red-bar {
 	height: 5px;
 	background: @Red;
 }
+
 .navbar-global {
 	.shadow;
 	border-bottom: 1px solid @Grey;
-	
-	div.container {
-		background: white;
-	}
 	
 	.nav > li > a {
 		padding: 4px 15px;
@@ -20,6 +22,7 @@ body {
 		color: #fff;
 		text-shadow: none;
 		border-right: 1px solid #fff;
+		outline: 0;
 	}
 	
 	.nav > .active > a {
@@ -37,7 +40,7 @@ body {
 	    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5) inset;
 	    color: #fff;
 	    text-decoration: none;
-	    
+	    outline: 0;
 	}
 	
 	.nav > .first > a,
@@ -55,6 +58,39 @@ body {
 		-moz-border-radius-bottomright: 6px;
 		border-bottom-right-radius: 6px;
 	}
+	
+	.dropdown {
+		&.dropdown-mainmenu {
+			.caret-white {
+				border-top: 4px solid #ffffff;
+			}
+		}
+	}
+	
+	.pull-right > li > .dropdown-menu {
+		background: @Blue;
+	    margin-right: 94px;
+	    margin-top: 0;
+	    -webkit-border-top-left-radius: 0;
+	    -webkit-border-top-right-radius: 0;
+		-moz-border-radius-topleft: 0;
+		-moz-border-radius-topright: 0;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		border: 0;
+		
+		a {
+			color: white;
+		}
+	}
+	.nav > li > .dropdown-menu:after {
+    	border-bottom: 0;
+	}
+}
+
+h1 {
+	font-size: 28px;
+	font-weight: 300;
 }
 
 .mt {
@@ -65,6 +101,16 @@ body {
 	.shadow;
 }
 
+.edit-account .btn-primary {
+    margin-left: 5px;
+}
+.secondary {
+    line-height: 28px;
+    margin-right: 5px;
+}
+.form-register .btn-primary {
+    margin-left: 5px;
+}
 
 /* CUSTOM BUTTONS */
 .btn-mini .icon {
@@ -104,5 +150,14 @@ body {
 		.accordion-toggle {
 			outline: 0;
 		}
+	}
+}
+
+footer {
+	position: relative;
+	bottom: 0;
+
+	a {
+		color: @Red;
 	}
 }

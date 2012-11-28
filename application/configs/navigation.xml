@@ -19,17 +19,53 @@
                 <privilege>dashboard</privilege>
                 <icon>icon-white icon-list-alt</icon>
             </dashboard>
-            <supportedExtensions>
-                <label>Extensions</label>
+            <manage>
+                <label>Manage</label>
                 <module>default</module>
-                <controller>extension</controller>
+                <controller>user</controller>
                 <action>index</action>
                 <route>default</route>
                 <reset_params>true</reset_params>
-                <resource>default_extension</resource>
-                <privilege>index</privilege>
-                <icon>icon-white icon-th-list</icon>
-            </supportedExtensions>
+                <resource>default_user</resource>
+                <privilege>dashboard</privilege>
+                <icon>icon-white icon-cog</icon>
+                <class>dropdown dropdown-mainmenu</class>
+                <pages>
+		            <supportedExtensions>
+		                <label>Extensions</label>
+		                <module>default</module>
+		                <controller>extension</controller>
+		                <action>index</action>
+		                <route>default</route>
+		                <reset_params>true</reset_params>
+		                <resource>default_extension</resource>
+		                <privilege>index</privilege>
+		                <icon>icon-white icon-th-list</icon>
+		            </supportedExtensions>
+		            <wholeQueue>
+		                <label>Stores</label>
+		                <module>default</module>
+		                <controller>queue</controller>
+		                <action>index</action>
+		                <route>default</route>
+		                <reset_params>true</reset_params>
+		                <resource>default_queue</resource>
+		                <privilege>index</privilege>
+		                <icon>icon-white icon-time</icon>
+		            </wholeQueue>
+		            <userList>
+		                <label>Users</label>
+		                <module>default</module>
+		                <controller>user</controller>
+		                <action>list</action>
+		                <route>default</route>
+		                <reset_params>true</reset_params>
+		                <resource>default_user</resource>
+		                <privilege>list</privilege>
+		                <icon>icon-white icon-user</icon>
+		            </userList>
+                </pages>
+            </manage>
             <userAccount>
                 <label>My Account</label>
                 <module>default</module>
@@ -41,28 +77,6 @@
                 <privilege>index</privilege>
                 <icon>icon-white icon-user</icon>
             </userAccount>
-            <wholeQueue>
-                <label>Queue</label>
-                <module>default</module>
-                <controller>queue</controller>
-                <action>index</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_queue</resource>
-                <privilege>index</privilege>
-                <icon>icon-white icon-time</icon>
-            </wholeQueue>
-            <userList>
-                <label>Users</label>
-                <module>default</module>
-                <controller>user</controller>
-                <action>list</action>
-                <route>default</route>
-                <reset_params>true</reset_params>
-                <resource>default_user</resource>
-                <privilege>list</privilege>
-                <icon>icon-white icon-user</icon>
-            </userList>
             <userRegister>
                 <label>Create Account</label>
                 <module>default</module>
