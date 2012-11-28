@@ -134,6 +134,7 @@ class UserController extends Integration_Controller_Action
 
     public function loginAction()
     {
+        $this->_helper->layout->disableLayout();
         $request = $this->getRequest();
         $form    = new Application_Form_UserLogin();
 

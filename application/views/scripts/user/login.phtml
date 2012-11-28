@@ -1,29 +1,81 @@
-<div class="row">
-    <div class="span12">
-        <form action="<?php echo $this->form->getAction() ?>"
-            enctype="<?php echo $this->form->getEnctype() ?>"
-            method="<?php echo $this->form->getMethod() ?>"
-            id="<?php echo $this->form->getId() ?>"
-            class="<?php echo $this->form->getAttrib('class') ?>">
-            <legend>
-                <h3>Login</h3>
-            </legend>
-            <fieldset>
-                <div class="row">
-                    <div class="span6">
-                        <?php echo $this->form->login; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mage Testing</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <?php 
+  
+    $this->headLink()->prependStylesheet($this->baseUrl('public/css/style.css'));
+    $this->headLink()->prependStylesheet($this->baseUrl('public/css/bootstrap-responsive.min.css'));
+    $this->headLink()->prependStylesheet($this->baseUrl('public/css/bootstrap.min.css'));
+    $this->headScript()->prependFile($this->baseUrl('public/js/custom.js'));
+    $this->headScript()->prependFile($this->baseUrl('public/js/bootstrap.min.js'));
+    $this->headScript()->prependFile($this->baseUrl('public/js/jquery-1.7.1.min.js'));
+    
+    ?>
+    
+    <?php  ?>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    
+    <?php echo $this->headTitle() . "\n"; ?>
+    <?php echo $this->headMeta() . "\n"; ?>
+    <?php echo $this->headLink() . "\n"; ?>
+    <?php echo $this->headScript() . "\n"; ?>
+    <?php echo $this->headStyle(); ?>
+    
+  </head>
+
+<body>
+
+    <div class="container mt">
+
+        <?php echo $this->render('_partials/messages.phtml'); ?>
+
+        <div class="row">
+            <div class="span12">
+                <form action="<?php echo $this->form->getAction() ?>"
+                    enctype="<?php echo $this->form->getEnctype() ?>"
+                    method="<?php echo $this->form->getMethod() ?>"
+                    id="<?php echo $this->form->getId() ?>"
+                    class="<?php echo $this->form->getAttrib('class') ?>">
+                    <legend>
+                        <h3>Login</h3>
+                    </legend>
+                    <fieldset>
+                        <div class="row">
+                            <div class="span6">
+                                <?php echo $this->form->login; ?>
+                            </div>
+                            <div class="span6">
+                                <?php echo $this->form->password; ?>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-actions">
+                        <a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'reset-password'), 'default', true); ?>" class="secondary pull-left">Forgot password?</a>
+                        <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary pull-right">
+                            <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
+                        </button>
                     </div>
-                    <div class="span6">
-                        <?php echo $this->form->password; ?>
-                    </div>
-                </div>
-            </fieldset>
-            <div class="form-actions">
-                <a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'reset-password'), 'default', true); ?>" class="secondary pull-left">Forgot password?</a>
-                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-primary pull-right">
-                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
-                </button>
+                </form>
             </div>
-        </form>
+        </div>
+
     </div>
-</div>
+    <!-- /container -->
+
+    <?php echo $this->render('_partials/googleAnalytics.phtml'); ?>
+
+</body>
+</html>
