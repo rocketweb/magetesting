@@ -6,11 +6,13 @@ $(document).ready(function(){
 	// On click accordion row
 	_instances.click(function(){
 		"use strict";
-	 	var _thisClicked = $(this);
+		var _thisClicked = $(this);
 		var _id = _thisClicked.attr('href');
-		
+		if(_thisClicked.find('.statusHolder').text() == 'Closed') {
+		    return false;
+		}
 		if(_thisClicked.parent().parent().attr('data-active') == 0){
-			_instances.each(function(){
+			_instances.each(function(e){
 				var _instance = $(this);
 				var _parent = _instance.parent().parent();
 				
