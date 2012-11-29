@@ -71,12 +71,12 @@ body {
   height: 100%;
 }
 
-.well.extensions_well {
+/*.well.extensions_well {
 	background: #eee;
 	border: 1px solid #E3E3E3;
     border-radius: none;
     box-shadow: none;
-}
+}*/
 
 #container {
   margin-bottom: 20px;
@@ -86,6 +86,23 @@ body {
 @ElementWidth	: 135px;
 @ElementHeight	: 112px;
 
+#extensions {
+	.shadow;
+	border: 1px solid @Grey;
+	
+	.mt_filters {
+		padding: 10px 25px;
+		
+		.btn-group + .btn-group {
+			margin-left: 43px;
+		}
+	}
+	
+	.extensions_well {
+		padding: 10px 19px;
+	}
+}
+
 .element {
 
 	width: @ElementWidth;
@@ -94,7 +111,7 @@ body {
 	float: left;
 	overflow: hidden;
 	position: relative;
-	background: #f7f7f7;
+	background: #ffffff;
 	color: #222;
 	border: 1px solid #ddd;
 	-webkit-border-radius: 4px;

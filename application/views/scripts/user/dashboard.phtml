@@ -1,165 +1,149 @@
 <!-- START INSTANCES PAGE -->
-<div class="container mt">
-    <div class="row">
-        <div class="span12">
-            <h3>Your stores <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h3>
-                            <!-- START ACCORDION -->
-            <div class="accordion" id="accordion">
-            <?php foreach ($this->queue as $key => $item): ?>
-                <!-- START INSTANCE -->
-                <div class="accordion-group" data-active="0">
-                    <div class="accordion-heading">
-                        <div class="tab-stripe"></div>
-                        <div class="accordion-toggle instance-toggle <?php echo (substr($item['status'],0,10)=='installing' || $item['status']=='pending')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>">
-                        <?php 
-                            $progressClass = '';
-                            switch($item['status']): 
-                                case 'ready':
-                                    $progressClass = 'progress-success';
-                                break; case 'pending':
-                                    $progressClass = 'progress-info';
-                                break; case 'closed': 
-                                    $progressClass = 'progress-danger';
-                                break; case 'installing': 
-                                       case 'installing-extension':
-                                       case 'installing-magento':
-                                       case 'installing-samples':
-                                       case 'installing-user': 
-                                       case 'installing-files':
-                                       case 'installing-date': 
-                                   $progressClass = '';
-                               break; case 'error': 
-                                   $progressClass = 'progress-danger';
-                               break; default: 
-                                   $progressClass = 'progress-info';
-                            endswitch;
-                        ?>
-                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''); ?>">
-                                <span class="span2 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px">
-                                    <span class="bar" style="width: 100%;"></span>
-                                </span>
-                                <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>"><?php echo $this->escape(ucfirst($item['status'])); ?></span>
-                            </div>
-                            <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
-                                <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn view-store"><i class="icon icon-home"></i> View Store</a>
-                                <a href="#" class="btn admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
-                                <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-minimini delete-store"><i class="icon icon-white icon-remove"></i></a>
-                            </div> 
-                            <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
-                            <span class="title"><?php echo $this->escape($item['instance_name']) ?></span>
-                            <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
+<div class="row">
+    <div class="span12">
+        <h1>Your stores <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h1>
+		<!-- START ACCORDION -->
+        <div class="accordion" id="accordion">
+        <?php foreach ($this->queue as $key => $item): ?>
+            <!-- START INSTANCE -->
+            <div class="accordion-group" data-active="0">
+                <div class="accordion-heading">
+                    <div class="tab-stripe"></div>
+                    <div class="accordion-toggle instance-toggle <?php echo (substr($item['status'],0,10)=='installing' || $item['status']=='pending')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>">
+                    <?php 
+                        $progressClass = '';
+                        switch($item['status']): 
+                            case 'ready':
+                                $progressClass = 'progress-success';
+                            break; case 'pending':
+                                $progressClass = 'progress-info';
+                            break; case 'closed': 
+                                $progressClass = 'progress-danger';
+                            break; case 'installing': 
+                                   case 'installing-extension':
+                                   case 'installing-magento':
+                                   case 'installing-samples':
+                                   case 'installing-user': 
+                                   case 'installing-files':
+                                   case 'installing-date': 
+                               $progressClass = '';
+                           break; case 'error': 
+                               $progressClass = 'progress-danger';
+                           break; default: 
+                               $progressClass = 'progress-info';
+                        endswitch;
+                    ?>
+                        <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''); ?>">
+                            <span class="span2 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px">
+                                <span class="bar" style="width: 100%;"></span>
+                            </span>
+                            <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>"><?php echo $this->escape(ucfirst($item['status'])); ?></span>
                         </div>
-                    </div>
-                    <div id="collapse<?php echo $key; ?>" class="accordion-body collapse mt_instance">
-                        <div class="accordion-inner">
-                            <div class="row version-info">
-                                <div class="span2 first"><strong>Edition:</strong> <?php echo $this->escape($item['edition']); ?></div>
-                                <div class="span2"><strong>Version:</strong> <?php echo $this->escape($item['version']); ?> </div>
-                                <div class="span2">
-                                    <strong>Sample data:</strong> 
-                                <?php if($item['sample_data']): ?>
-                                    Yes
-                                <?php else: ?>
-                                    No
-                                <?php endif; ?>
-                                </div>
-                            </div>
-                            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. In aliquid quis accusamus tempore eum facilis alias praesentium omnis et iusto iure velit quasi molestias aperiam amet! Nesciunt mollitia explicabo minus!</p>
-                            <div class="row">
-                                <!-- START DETAILS BOX -->
-                                <div class="span4 panel details">
-                                    <h5>Details</h5>
-                                    <div class="control-group">
-                                        <div class="controls">
-                                        <?php if($item['status']=='closed'): ?>
-                                            <a href="#" class="btn disabled"><i class="icon icon-pencil"></i> Edit Details</a>
-                                        <?php else: ?>
-                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
-                                               class="btn"><i class="icon icon-pencil"></i> Edit Details</a>
-                                        <?php endif; ?>
-                                        <?php if(in_array($item['status'], array('closed'))): ?>
-                                            <a href="#" class="btn btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
-                                        <?php else: ?>
-                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" 
-                                               class="btn btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
-                                        <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- END DETAILS BOX -->
-
-                                <!-- START DEPLOYMENT BOX -->
-                                <div class="span4 panel deployment">
-                                    <h5>Deployment <span class="version">version <span class="badge badge-blue"><?php echo $this->escape($item['revision_count'])?></span></span></h5>
-                                    <div class="control-group">
-                                        <div class="controls">
-                                            <a href="#" class="btn disabled"><i class="icon icon-circle-arrow-left"></i> Roll Back</a>
-                                            <a href="#commitModal" class="btn commit-button" data-toggle="modal"><i class="icon icon-ok-sign"></i> Commit</a>
-                                            <a href="#" class="btn disabled">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- END DEPLOYMENT BOX -->
-
-                                <!-- START PROBLEMS BOX -->
-                                <div class="span3 panel">
-                                    <h5>Problems</h5>
-                                    <div class="control-group">
-                                        <div class="controls">
-                                            <a href="#" class="btn disabled"><i class="icon icon-info-sign"></i> Show Logs</a>
-                                            <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn "><i class="icon icon-question-sign"></i> Get Help</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- END PROBLEMS BOX -->
-                            </div>
-                            
-                        </div>
+                        <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
+                            <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn view-store"><i class="icon icon-home"></i> View Store</a>
+                            <a href="#" class="btn admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
+                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-minimini delete-store"><i class="icon icon-white icon-remove"></i></a>
+                        </div> 
+                        <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
+                        <?php echo $this->escape($item['instance_name']) ?>
+                        <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                     </div>
                 </div>
-                <!-- END INSTANCE -->
-                <?php endforeach; ?>
+                <div id="collapse<?php echo $key; ?>" class="accordion-body collapse mt_instance">
+                    <div class="accordion-inner">
+                        <div class="row version-info">
+                            <div class="span2 first"><strong>Edition:</strong> <?php echo $this->escape($item['edition']); ?></div>
+                            <div class="span2"><strong>Version:</strong> <?php echo $this->escape($item['version']); ?> </div>
+                            <div class="span2">
+                                <strong>Sample data:</strong> 
+                            <?php if($item['sample_data']): ?>
+                                Yes
+                            <?php else: ?>
+                                No
+                            <?php endif; ?>
+                            </div>
+                        </div>
+                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. In aliquid quis accusamus tempore eum facilis alias praesentium omnis et iusto iure velit quasi molestias aperiam amet! Nesciunt mollitia explicabo minus!</p>
+                        <div class="row">
+                            <!-- START DETAILS BOX -->
+                            <div class="span4 panel details">
+                                <h5>Details</h5>
+                                <div class="control-group">
+                                    <div class="controls">
+                                    <?php if($item['status']=='closed'): ?>
+                                        <a href="#" class="btn disabled"><i class="icon icon-pencil"></i> Edit Details</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
+                                           class="btn"><i class="icon icon-pencil"></i> Edit Details</a>
+                                    <?php endif; ?>
+                                    <?php if(in_array($item['status'], array('closed'))): ?>
+                                        <a href="#" class="btn btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" 
+                                           class="btn btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                    <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END DETAILS BOX -->
+
+                            <!-- START DEPLOYMENT BOX -->
+                            <div class="span4 panel deployment">
+                                <h5>Deployment <span class="version">version <span class="badge badge-blue"><?php echo $this->escape($item['revision_count'])?></span></span></h5>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <a href="#" class="btn disabled"><i class="icon icon-circle-arrow-left"></i> Roll Back</a>
+                                        <a href="#commitModal" class="btn commit-button" data-toggle="modal"><i class="icon icon-ok-sign"></i> Commit</a>
+                                        <a href="#" class="btn disabled">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END DEPLOYMENT BOX -->
+
+                            <!-- START PROBLEMS BOX -->
+                            <div class="span3 panel">
+                                <h5>Problems</h5>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <a href="#" class="btn disabled"><i class="icon icon-info-sign"></i> Show Logs</a>
+                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn "><i class="icon icon-question-sign"></i> Get Help</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END PROBLEMS BOX -->
+                        </div>
+                        
+                    </div>
+                </div>
             </div>
-            <!-- END ACCORDION -->
-            
+            <!-- END INSTANCE -->
+            <?php endforeach; ?>
         </div>
+        <!-- END ACCORDION -->
+        
     </div>
 </div>
 <!-- START INSTANCES PAGE -->
+
 <div id="commitModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Commit your changes</h3>
-    </div>
-    <div class="modal-body">
-        <p>All your changes made manually will be commited to repository</p>
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Commit your changes</h3>
+</div>
+<div class="modal-body">
+<p>All your changes made manually will be commited to repository</p>
 
-        <p>
-            Briefly explain what has been changed:
-            <br />
-            <textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here" ></textarea>
-        </p>
-        <input type="hidden" value="" id="commit-domain" name="commit-domain" />
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary commit-confirm">Commit changes</button>
-    </div>
+<p>
+Briefly explain what has been changed:
+<br />
+<textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here" ></textarea>
+</p>
+<input type="hidden" value="" id="commit-domain" name="commit-domain" />
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button class="btn btn-primary commit-confirm">Commit changes</button>
+</div>
 </div>
 
-<div id="close-instance" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Close Store</h3>
-    </div>
-    <div class="modal-body">
-        <p>Do you really want to close store<span class="close-instance-name"></span>? There is no undo!</p>
-    </div>
-    <div class="modal-footer">
-        <form>
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-            <button class="btn btn-danger">Close</button>
-        </form>
-    </div>
-</div>
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>

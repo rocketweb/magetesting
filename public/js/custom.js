@@ -174,7 +174,7 @@ $(document).ready(function () {
     /* INSTANCE EXTENSIONS ISOTOPE */
     var $extensions_isotope = $('.extensions_well > #container'),
         $extensions_filter_container = $('#options'),
-        $extensions_filter_options = $extensions_filter_container.find('a')
+        $extensions_filter_options = $extensions_filter_container.find('button')
         ElementPad        = 5,
         ElementWidth    = 135 + (ElementPad * 2),
         ElementHeight    = 112,
@@ -191,7 +191,10 @@ $(document).ready(function () {
                 }
             });
         })
-
+		
+		// Pre-toggle "All" buttons
+		$('.btn-all').button('toggle');
+		
         $extensions_isotope.isotope({
             masonry : {
                 columnWidth : ColumnWidth
@@ -210,13 +213,15 @@ $(document).ready(function () {
         });
         $extensions_filter_options.click(function() {
             var $this = $(this);
-            if(! $this.hasClass('selected')) {
+            var selector = 'selected';
+            if(! $this.hasClass(selector)) {
                 $this.siblings()
-                     .removeClass('selected')
+                     .removeClass(selector)
+                     .removeClass('active')
                      .end()
-                     .addClass('selected');
+                     .addClass(selector + ' active');
                 var $filter = '';
-                $extensions_filter_container.find('.selected').each(function() {
+                $extensions_filter_container.find('.' + selector).each(function() {
                     var $option = $(this).data('option-value');
                     if($option != '*') {
                         $filter += $option;

@@ -1,87 +1,100 @@
 <?php
     $this->headScript()->appendFile($this->baseUrl('public/js/jquery.isotope.min.js'));
 ?>
-<h1>Store '<?php echo $this->instance_name; ?>' Extensions</h1>
-<div class="mt_filters">
-    <section id="options" class="clearfix">
-        <ul class="breadcrumb option-set" data-option-key="filter" style="z-index: 99999">
-            <li>Filters <span class="divider"> </span></li>
-            <li>
-                <a href="#filter" data-option-value="*" class="btn btn-mini">All</a>
-                <a href="#filter" data-option-value=".premium" class="btn btn-warning"><i class="icon-star icon-white"></i> Premium <i class="icon-star icon-white"></i></a>
-                <a href="#filter" data-option-value=".free" class="btn btn-mini btn-success">Free</a>
-                <a href="#filter" data-option-value=".installed" class="btn btn-mini btn-info">Installed</a>
-            </li>
-        </ul>
-        <ul class="breadcrumb option-set" data-option-key="filter" style="z-index: 99999">
-            <li>Categories <span class="divider"> </span></li>
-            <li>
-                <a href="#filter" data-option-value="*" class="btn btn-mini">All</a>
-            <?php foreach($this->categories as $category): ?>
-                <a href="#filter" data-option-value=".<?php echo $category->getClass(); ?>" class="btn btn-mini"><?php echo $category->getName(); ?></a>
-            <?php endforeach; ?>
-            </li>
-        </ul>
-    </section>
+<div class="row">
+    <div class="span12">
+		<h1>Store '<?php echo $this->instance_name; ?>' Extensions</h1>
+		<div id="extensions">
+			<div class="tab-stripe"></div>
+			<div class="mt_filters">
+				<section id="options" class="clearfix">
+					<div class="btn-toolbar">
+						<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
+			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
+			                <button class="btn btn-small btn-success" data-option-value=".premium"><i class="icon-star icon-white"></i> Premium</button>
+			                <button class="btn btn-small btn-inverse" data-option-value=".free">Free</button>
+						</div>
+						<div class="btn-group option-set data-toggle="buttons-radio" data-option-key="filter">
+							<button class="btn btn-small btn-all" data-option-value="*">All</button>
+			            	<?php foreach($this->categories as $category): ?>
+			                <button class="btn btn-small" data-option-value=".<?php echo $category->getClass(); ?>"><?php echo $category->getName(); ?></button>
+			            	<?php endforeach; ?>
+						</div>
+						<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
+			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
+			                <button class="btn btn-small" data-option-value=".installed">Installed</button>
+			                <button class="btn btn-small" data-option-value=".notInstalled">Not installed</button>
+						</div>
+					</div>
+			    </section>
+			</div>
+			<div class="extensions_well">
+				<div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
+			    <?php foreach($this->extensions as $extension): ?>
+			        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['instance_id'] ? ' installed' : ' notInstalled'); ?>">
+			            <div class="wrapper">
+			                <!-- INSTALLED or either PREMIUM or FREE -->
+			                <?php if((float)$extension['price']): ?>
+			                	<?php if((int)$extension['instance_id']): ?>
+			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium_installed.png'); ?>" alt="premium" /></div>
+			                	<?php else: ?>
+			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium.png'); ?>" alt="premium" /></div>
+			                	<?php endif; ?>
+			                <?php else: ?>
+			                	<?php if((int)$extension['instance_id']): ?>
+			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free_installed.png'); ?>" alt="free" /></div>
+			                	<?php else: ?>
+			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free.png'); ?>" alt="free" /></div>
+			                	<?php endif; ?>
+			                <?php endif; ?>
+			                
+			                <div class="icon">
+			                <?php if($extension['logo']): ?>
+			                    <img src="<?php echo $this->ImagePath($extension['logo'], 'extension/logo', false, true); ?>" alt="">
+			                <?php else: ?>
+			                    <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
+			                <?php endif; ?>
+			                </div>
+			                
+			                <div class="info">
+			                    <h5><?php echo $extension['name']; ?></h5>
+			                    <p>by <?php echo $extension['author']; ?></p>
+			                </div>
+			                
+			                <div class="extras hidden">
+			                    <p class="description"><?php echo $extension['description']; ?></p>
+			                <?php if($extension['status'] != 'ready'): ?>
+			                    <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
+			                        <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View screens</a>
+			                        <!-- START EXTENSION'S SCREENSHOTS -->
+			                        <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions --> 
+			                        <ul class="screenshots hidden">
+			                        <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
+			                            <li data-id="<?php echo $extension['name'].' #'.$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
+			                        <?php endforeach; ?>
+			                        </ul>
+			                        <!-- END EXTENSION'S SCREENSHOTS -->
+			                    <?php endif; ?>
+			                    <div class="progress progress-striped progress-danger pull-right <?php echo (! (int)$extension['instance_id'] ? 'hidden' : ''); ?> active" style="width: 100px;height:10px;">
+			                        <div class="bar" style="width: 100%;"></div>
+			                    </div>
+			                    <?php if(! (int)$extension['instance_id']): ?>
+			                        <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
+			                    <?php endif; ?>
+			                <?php else: ?>
+			                    <a href="#" class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</a>
+			                <?php endif; ?>
+			                </div>
+			            </div>
+			        </div>
+			    <?php endforeach; ?>
+			    </div>
+			</div>
+		</div>
+	</div>
 </div>
-<!-- START EXTENSIONS -->
-<div class="well extensions_well">
-    <div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
-    <?php foreach($this->extensions as $extension): ?>
-        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['instance_id'] ? ' installed' : ''); ?>">
-            <div class="wrapper">
-                <!-- INSTALLED or either PREMIUM or FREE -->
-            <?php if((int)$extension['instance_id']): ?>
-                <div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_installed.png'); ?>" alt="installed" /></div>
-            <?php elseif((float)$extension['price']): ?>
-                <div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium.png'); ?>" alt="premium" /></div>
-            <?php else: ?>
-                <div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free.png'); ?>" alt="free" /></div>
-            <?php endif; ?>
-                
-                <div class="icon">
-                <?php if($extension['logo']): ?>
-                    <img src="<?php echo $this->ImagePath($extension['logo'], 'extension/logo', false, true); ?>" alt="">
-                <?php else: ?>
-                    <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
-                <?php endif; ?>
-                </div>
-                
-                <div class="info">
-                    <h5><?php echo $extension['name']; ?></h5>
-                    <p>by <?php echo $extension['author']; ?></p>
-                </div>
-                
-                <div class="extras hidden">
-                    <p class="description"><?php echo $extension['description']; ?></p>
-                <?php if($extension['status'] != 'ready'): ?>
-                    <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
-                        <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View screens</a>
-                        <!-- START EXTENSION'S SCREENSHOTS -->
-                        <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions --> 
-                        <ul class="screenshots hidden">
-                        <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
-                            <li data-id="<?php echo $extension['name'].' #'.$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
-                        <?php endforeach; ?>
-                        </ul>
-                        <!-- END EXTENSION'S SCREENSHOTS -->
-                    <?php endif; ?>
-                    <div class="progress progress-striped progress-danger pull-right <?php echo (! (int)$extension['instance_id'] ? 'hidden' : ''); ?> active" style="width: 100px;height:10px;">
-                        <div class="bar" style="width: 100%;"></div>
-                    </div>
-                    <?php if(! (int)$extension['instance_id']): ?>
-                        <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
-                    <?php endif; ?>
-                <?php else: ?>
-                    <a href="#" class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</a>
-                <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    <?php endforeach; ?>
-    </div>
-</div>
-<!-- END EXTENSIONS -->
+
+
 <!-- START SCREENSHOTS CAROUSEL -->
 <div id="screenshots">
     <div id="screenshotModal" class="modal fade">
