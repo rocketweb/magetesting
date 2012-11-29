@@ -6,12 +6,55 @@ $(document).ready(function () {
 
     /* prevent click event and init popover */
     $('[rel=popover]').click(function(){return false;}).popover();
-	
-	/* DELETE STORE BUTTON - prevent accordion click event */
-	$('.delete-store').click(function(event){
-		event.stopPropagation();
-	});
-	
+
+    var $modal_close_instance = $('#close-instance');
+    $modal_close_instance.find('form .btn-danger').click(function() {
+        var $this = $(this);
+        // do not allow for multiple clicks
+        if(!$this.hasClass('disabled')) {
+            $this.addClass('disabled');
+            $.ajax({
+                url  : $modal_close_instance.data('form-action'),
+                type : 'POST',
+                data : {close : 1},
+                dataType : 'json',
+                success : function(result) {
+                    if(typeof result == 'object' && typeof result.status == 'string') {
+                        if(result.status == 'ok') {
+                            $('.mt').prepend(result.html);
+                            
+                            // remove alert after 2 second
+                            setTimeout(function() { $('.alert').alert('close'); }, 2000);
+                        }
+                    }
+                    $this.removeClass('disabled');
+                    $modal_close_instance.modal('hide');
+                },
+                error: function() {
+                    $this.removeClass('disabled');
+                    $modal_close_instance.modal('hide');
+                }
+            });
+        }
+        return false;
+    });
+
+    /* DELETE STORE BUTTON - prevent accordion click event */
+    $('.delete-store').click(function(event){
+        event.stopPropagation();
+        var $this = $(this),
+            $instance_name = $this.parent().nextAll('.title').text(),
+            $modal_instance_name_container = $modal_close_instance.find('.close-instance-name');
+        $modal_close_instance.data('form-action', $this.attr('href'));
+        if($instance_name.length) {
+            $modal_instance_name_container.text(' "'+$instance_name+'"');
+        } else {
+            $modal_instance_name_container.text('');
+        }
+        $modal_close_instance.modal('show');
+        return false;
+    });
+    
     var $extension_button = $('.new-instance-extension-installer'),
         $extension_id = $('#new-instance-extension-id');
     $extension_button.click(function(e) {
@@ -184,7 +227,7 @@ $(document).ready(function () {
             return false;
         });
     }
-	// EVENT: On click "Install" button
+    // EVENT: On click "Install" button
     $('.install').click(function(event){
         "use strict";
         var $this = $(this);
