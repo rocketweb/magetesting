@@ -46,7 +46,7 @@
                                 <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-minimini delete-store"><i class="icon icon-white icon-remove"></i></a>
                             </div> 
                             <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
-                            <?php echo $this->escape($item['instance_name']) ?>
+                            <span class="title"><?php echo $this->escape($item['instance_name']) ?></span>
                             <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                         </div>
                     </div>
