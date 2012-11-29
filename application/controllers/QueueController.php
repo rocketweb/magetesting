@@ -475,8 +475,7 @@ class QueueController extends Integration_Controller_Action {
                         $queueModel->setTaskParams(serialize(
                             array(
                                 'commit_comment' => 'Adding '.$extensionModel->getName().' ('.$extensionModel->getVersion().')',
-                                'commit_type' => 'extension-install'
-                                
+                                'commit_type' => 'extension-install'                               
                                 )
                             )
                         );

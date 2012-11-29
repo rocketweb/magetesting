@@ -106,7 +106,12 @@ implements Application_Model_Task_Interface {
         exec('git add -A');
         
         $output = '';
-        $params = $this->_queueObject->getTaskParams();      
+        $params = $this->_queueObject->getTaskParams(); 
+        
+        if (trim($params['commit_comment'])==''){
+            $params['commit_comment']='No comment given for this commit';
+        }
+        
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
         
         
@@ -159,10 +164,11 @@ implements Application_Model_Task_Interface {
                
         $revisionModel->setUserId($this->_userObject->getId());
         $revisionModel->setInstanceId($this->_instanceObject->getId());
+        $revisionModel->setExtensionId($this->_queueObject->getExtensionId());
         $revisionModel->setHash($this->_revisionHash);
         $revisionModel->setType($params['commit_type']);
         $revisionModel->setDbBeforeRevision($this->_dbBackupPath);
-        $revisionModel->setComment('');
+        $revisionModel->setComment($params['commit_comment']);
         $revisionModel->setFileName($this->_revisionHash.'.tgz');    
         $revisionModel->save();
     }

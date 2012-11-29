@@ -162,7 +162,8 @@ $(document).ready(function(){
                 data: "domain=" + instance + "&commit_comment=" + $('#commit_comment').val(),
                 dataType: "json",
                 success: function(json){
-                                $(this).modal('hide');
+                    $('#commitModal').hide();
+                    $('.modal-backdrop').removeClass('in');
                 }
 
           });

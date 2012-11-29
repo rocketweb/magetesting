@@ -7,6 +7,8 @@ class Application_Model_Revision {
     protected $_instance_id;
 
     protected $_user_id;
+    
+    protected $_extension_id;
 
     protected $_type;
     
@@ -73,6 +75,17 @@ class Application_Model_Revision {
         return $this;
     }
 
+    public function getExtensionId()
+    {
+        return $this->_extension_id;
+    }
+
+    public function setExtensionId($value)
+    {
+        $this->_extension_id = $value;
+        return $this;
+    }
+    
     public function getType()
     {
         return $this->_type;

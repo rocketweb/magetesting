@@ -48,6 +48,7 @@ class Application_Model_RevisionMapper {
         $revision->setId($row->id)
               ->setUserId($row->user_id)
                 ->setInstanceId($row->instance_id)
+                ->setExtensionId($row->extension_id)
                 ->setType($row->type)
                 ->setHash($row->hash)
                 ->setComment($row->comment)
@@ -73,8 +74,9 @@ class Application_Model_RevisionMapper {
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Revision();
             $entry->setId($row->id)
-                  ->setUserId($row->user_id)
+                ->setUserId($row->user_id)
                 ->setInstanceId($row->instance_id)
+                ->setExtensionId($row->extension_id)
                 ->setType($row->type)
                 ->setHash($row->hash)
                 ->setComment($row->comment)
