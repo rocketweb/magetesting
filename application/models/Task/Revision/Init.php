@@ -38,7 +38,8 @@ implements Application_Model_Task_Interface {
     
     protected function _prepareGitIgnore(){
         $data = "".
-        "var/cache/".PHP_EOL.
+        "var/".PHP_EOL.
+        "media/".PHP_EOL.
         "";
         
         file_put_contents($this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/.gitignore', $data);

@@ -32,7 +32,7 @@ implements Application_Model_Task_Interface {
         exec('git add -A');
         
         $params = $this->_queueObject->getTaskParams();
-        $params = unserialize($params);
+       
         
         exec('git ');
         chdir($startCwd);

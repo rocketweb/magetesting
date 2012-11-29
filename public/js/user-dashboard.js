@@ -143,3 +143,29 @@ function updateLabel(row,new_status){
         }
 }
 /* status auto-update end*/
+
+
+/* commit modal handle  start */
+$(document).ready(function(){
+    $('.commit-button').click(function(){
+       $('#commit-domain').val($(this).parentsUntil('.accordion-group').parent().find('.instancedomain').val()); 
+    });
+
+    $('.commit-confirm').click(function(){      
+
+        instance = $(this).parentsUntil('commitModal').parent().find(".instancedomain").val();
+
+            $.ajax({
+
+                type: "POST",
+                url: "/queue/commit",
+                data: "domain=" + instance + "commit_comment=" + $('#commit_comment').val(),
+                dataType: "json",
+                success: function(json){
+
+                }
+
+          });
+    });
+});
+/* commit modal handle end */

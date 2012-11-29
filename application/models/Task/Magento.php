@@ -132,7 +132,7 @@ extends Application_Model_Task {
                 /* send email with account details stop */
             }
             
-            
+            $this->_userObject->setHasSystemAccount(1)->save();
         }
     }
     

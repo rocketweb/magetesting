@@ -1,7 +1,8 @@
-	<!-- START INSTANCES PAGE -->
+<!-- START INSTANCES PAGE -->
+<div class="container mt">
     <div class="row">
         <div class="span12">
-            <h1>Your stores <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h1>
+            <h3>Your stores <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h3>
                             <!-- START ACCORDION -->
             <div class="accordion" id="accordion">
             <?php foreach ($this->queue as $key => $item): ?>
@@ -40,16 +41,15 @@
                                 <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>"><?php echo $this->escape(ucfirst($item['status'])); ?></span>
                             </div>
                             <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
-                                <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store"><i class="icon icon-home"></i> View Store</a>
-                                <a href="#" class="btn btn-mini admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
-                                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain']), 'default', true); ?>" class="btn btn-danger btn-mini delete-store"><i class="icon icon-white icon-remove"></i></a>
+                                <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn view-store"><i class="icon icon-home"></i> View Store</a>
+                                <a href="#" class="btn admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
+                                <a href="#" class="btn btn-danger btn-minimini delete-store"><i class="icon icon-white icon-remove"></i></a>
                             </div> 
                             <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
-                            <span class="title"><?php echo $this->escape($item['instance_name']) ?></span>
+                            <?php echo $this->escape($item['instance_name']) ?>
                             <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                         </div>
                     </div>
-                    <?php if($item['status'] != 'closed'): ?>
                     <div id="collapse<?php echo $key; ?>" class="accordion-body collapse mt_instance">
                         <div class="accordion-inner">
                             <div class="row version-info">
@@ -71,17 +71,17 @@
                                     <h5>Details</h5>
                                     <div class="control-group">
                                         <div class="controls">
-                                        <?php if(in_array($item['status'], array('closed'))): ?>
-                                            <a href="#" class="btn btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
-                                        <?php else: ?>
-                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" 
-                                               class="btn btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
-                                        <?php endif; ?>
                                         <?php if($item['status']=='closed'): ?>
                                             <a href="#" class="btn disabled"><i class="icon icon-pencil"></i> Edit Details</a>
                                         <?php else: ?>
                                             <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
                                                class="btn"><i class="icon icon-pencil"></i> Edit Details</a>
+                                        <?php endif; ?>
+                                        <?php if(in_array($item['status'], array('closed'))): ?>
+                                            <a href="#" class="btn btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                        <?php else: ?>
+                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" 
+                                               class="btn btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                         <?php endif; ?>
                                         </div>
                                     </div>
@@ -116,7 +116,6 @@
                             
                         </div>
                     </div>
-                    <?php endif; ?>
                 </div>
                 <!-- END INSTANCE -->
                 <?php endforeach; ?>
@@ -125,6 +124,27 @@
             
         </div>
     </div>
-	<!-- START INSTANCES PAGE -->
+</div>
+<!-- START INSTANCES PAGE -->
+<div id="commitModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Commit your changes</h3>
+</div>
+<div class="modal-body">
+<p>All your changes made manually will be commited to repository</p>
+
+<p>
+Briefly explain what has been changed:
+<br />
+<textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here" ></textarea>
+</p>
+<input type="hidden" value="" id="commit-domain" name="commit-domain" />
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button class="btn btn-primary commit-confirm">Commit changes</button>
+</div>
+</div>
 
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>

@@ -33,7 +33,7 @@ class Application_Model_QueueMapper {
             'user_id' => $queue->getUserId(),
             'extension_id' => $queue->getExtensionId(),
             'task' => $queue->getTask(),
-            'task_params' => $queue->getTaskParams(),
+            'task_params' => $queue->getTaskParams(true),
             'server_id' => $queue->getServerId(),
             'parent_id' => $queue->getParentId(),
             'added_date' => $queue->getAddedDate(),
@@ -63,7 +63,7 @@ class Application_Model_QueueMapper {
         ->setUserId($row->user_id)
         ->setExtensionId($row->extension_id)
         ->setTask($row->task)
-        ->setTaskParams($row->task_params)
+        ->setTaskParams($row->task_params,false)
         ->setServerId($row->server_id)
         ->setParentId($row->parent_id)
         ->setAddedDate($row->added_date);
@@ -87,7 +87,7 @@ class Application_Model_QueueMapper {
             ->setUserId($row->user_id)
             ->setExtensionId($row->extension_id)
             ->setTask($row->task)
-            ->setTaskParams($row->task_params)
+            ->setTaskParams($row->task_params,false)
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
             ->setAddedDate($row->added_date);
@@ -107,7 +107,7 @@ class Application_Model_QueueMapper {
             ->setUserId($row->user_id)
             ->setExtensionId($row->extension_id)
             ->setTask($row->task)
-            ->setTaskParams($row->task_params)
+            ->setTaskParams($row->task_params,false)
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
             ->setAddedDate($row->added_date);

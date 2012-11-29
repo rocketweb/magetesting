@@ -128,15 +128,28 @@ class Application_Model_Queue {
         return $this->_task;
     }
     
-    public function setTaskParams($value)
+    public function setTaskParams($value,$serialize=true)
     {
-        $this->_task_params = serialize($value);
+        if ($serialize){
+        $serialized = serialize($value);
+        $this->_task_params = $serialized;
+        } else {
+            $this->_task_params = $value;
+        }
+        
         return $this;
     }
 
-    public function getTaskParams()
+    public function getTaskParams($unserialize = true)
     {
-        return unserialize($this->_task_params);
+        if ($unserialize){
+            $unserialized = unserialize($this->_task_params);
+            return $unserialized;
+        } else {
+            return $this->_task_params;
+        }
+        
+        
     }
     
     public function setServerId($value)

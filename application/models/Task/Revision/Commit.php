@@ -71,19 +71,7 @@ implements Application_Model_Task_Interface {
         $apppath = str_replace('application','', APPLICATION_PATH);
         exec('sudo tar -zcf '.$apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$hash.'.tgz '.$hash.'/mageroot');
                
-        $revisionModel = new Application_Model_Revision();
-        $params = $this->_queueObject->getTaskParams();
-        $params = unserialize($params);
-               
-        $revisionModel->setUserId($this->_userObject->getId());
-        $revisionModel->setInstanceId($this->_instanceObject->getId());
-        $revisionModel->setHash($this->_revisionHash);
-        $revisionModel->setType($params['commit_type']);
-        //$this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/'.
-        $revisionModel->setDbBeforeRevision($this->_dbBackupPath);
-        $revisionModel->setComment('');
-        $revisionModel->setFileName($hash.'.tgz');    
-        $revisionModel->save();
+        $this->_insertRevisionInfo();
         
         $this->_updateStatus('ready');
         
@@ -94,14 +82,31 @@ implements Application_Model_Task_Interface {
 
     protected function _commit() {
         
+        $params = $this->_queueObject->getTaskParams();      
+        
         $startCwd = getcwd();
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        if ($params['commit_type']=='manual'){
+            $this->_commitManual(); 
+        } else {
+            $this->_commitAutomatic();
+        }
+       
+        chdir($startCwd);
+         
+    }
+    
+    
+    /* For now just an alias */
+    protected function _commitManual(){
+        $this->_commitAutomatic();
+    }
+    
+    protected function _commitAutomatic(){
         exec('git add -A');
         
-        $params = $this->_queueObject->getTaskParams();
-        $params = unserialize($params);
         $output = '';
-        
+        $params = $this->_queueObject->getTaskParams();      
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
         
         //get revision committed
@@ -109,10 +114,7 @@ implements Application_Model_Task_Interface {
         
         //insert revision entry
         $this->_revisionHash  = $matches[2];
-        
-        chdir($startCwd);
-      
-        
+        var_dump($output);
     }
 
     /* Not used yet */
@@ -129,18 +131,29 @@ implements Application_Model_Task_Interface {
         $dbDir = $apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$this->_instanceObject->getDomain().'/db/';
         exec('mkdir -p '.$dbDir);
         $dbFileName = $dbDir.'db_backup_'.date("Y_m_d_H_i_s");
-        //var_dump($dbFileName);
-        //var_dump(realpath($dbFileName));
         $command = 'mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' > '.$dbFileName;
         exec($command);
         
         //pack it up
         $pathinfo = pathinfo($dbFileName);
-        //var_dump($pathinfo);
         exec('tar -zcf '.$pathinfo['filename'].'.tgz '.$dbFileName);
         
         chdir($startCwd);
         $this->_dbBackupPath = $dbFileName.'.tgz';
+    }
+    
+    protected function _insertRevisionInfo(){
+        $revisionModel = new Application_Model_Revision();
+        $params = $this->_queueObject->getTaskParams();
+               
+        $revisionModel->setUserId($this->_userObject->getId());
+        $revisionModel->setInstanceId($this->_instanceObject->getId());
+        $revisionModel->setHash($this->_revisionHash);
+        $revisionModel->setType($params['commit_type']);
+        $revisionModel->setDbBeforeRevision($this->_dbBackupPath);
+        $revisionModel->setComment('');
+        $revisionModel->setFileName($this->_revisionHash.'.tgz');    
+        $revisionModel->save();
     }
 
 }

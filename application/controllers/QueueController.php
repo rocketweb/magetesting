@@ -567,4 +567,30 @@ class QueueController extends Integration_Controller_Action {
             echo Zend_Json_Encoder::encode($instanceItem->num);
         } 
     }
+    
+    public function commitAction(){
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $domain = $this->getRequest()->getParam('domain');
+        $instanceModel=  new Application_Model_Instance();
+        $instance = $instanceModel->findByName($domain);      
+        
+        $queueModel = new Application_Model_Queue();
+        $queueModel->setTask('RevisionCommit');
+        $queueModel->setTaskParams(
+            array(
+                'commit_type'=>'manual',
+                'commit_comment' => $this->getRequest()->getParam('commit_comment')
+            )
+        );
+        $queueModel->setInstanceId($instance->id);
+        $queueModel->setServerId(1);
+        $queueModel->setParentId(0);
+        $queueModel->setExtensionId(0);
+        $queueModel->setAddedDate(date("Y-m-d H:i:s"));
+        $queueModel->setStatus('pending');
+        $queueModel->setUserId($this->auth->getIdentity()->id);
+        $queueModel->save();
+    }
 }
