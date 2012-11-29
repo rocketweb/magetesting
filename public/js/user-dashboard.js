@@ -148,7 +148,7 @@ function updateLabel(row,new_status){
 /* commit modal handle  start */
 $(document).ready(function(){
     $('.commit-button').click(function(){
-       $('#commit-domain').val($(this).parentsUntil('.accordion-group').parent().find('.instancedomain').val()); 
+       $('#commit-domain').val($(this).parentsUntil('.accordion-group').parent().find('.instancedomain').val());        
     });
 
     $('.commit-confirm').click(function(){      
@@ -159,10 +159,10 @@ $(document).ready(function(){
 
                 type: "POST",
                 url: "/queue/commit",
-                data: "domain=" + instance + "commit_comment=" + $('#commit_comment').val(),
+                data: "domain=" + instance + "&commit_comment=" + $('#commit_comment').val(),
                 dataType: "json",
                 success: function(json){
-
+                                $(this).modal('hide');
                 }
 
           });

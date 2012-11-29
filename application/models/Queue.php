@@ -130,9 +130,9 @@ class Application_Model_Queue {
     
     public function setTaskParams($value,$serialize=true)
     {
-        if ($serialize){
-        $serialized = serialize($value);
-        $this->_task_params = $serialized;
+        if ($serialize === true){
+            $serialized = serialize($value);
+            $this->_task_params = $serialized;
         } else {
             $this->_task_params = $value;
         }
@@ -140,6 +140,11 @@ class Application_Model_Queue {
         return $this;
     }
 
+    /**
+     * 
+     * @param type $unserialize
+     * @return array/serialized
+     */
     public function getTaskParams($unserialize = true)
     {
         if ($unserialize){

@@ -33,12 +33,12 @@ class Application_Model_QueueMapper {
             'user_id' => $queue->getUserId(),
             'extension_id' => $queue->getExtensionId(),
             'task' => $queue->getTask(),
-            'task_params' => $queue->getTaskParams(true),
+            'task_params' => $queue->getTaskParams(false),
             'server_id' => $queue->getServerId(),
             'parent_id' => $queue->getParentId(),
             'added_date' => $queue->getAddedDate(),
         );
-
+        
         if (null === ($id = $queue->getId())) {
             unset($data['id']);
             $queue->setId($this->getDbTable()->insert($data));

@@ -43,7 +43,7 @@
                             <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
                                 <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn view-store"><i class="icon icon-home"></i> View Store</a>
                                 <a href="#" class="btn admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
-                                <a href="#" class="btn btn-danger btn-minimini delete-store"><i class="icon icon-white icon-remove"></i></a>
+                                <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-minimini delete-store"><i class="icon icon-white icon-remove"></i></a>
                             </div> 
                             <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
                             <?php echo $this->escape($item['instance_name']) ?>
@@ -94,7 +94,7 @@
                                     <div class="control-group">
                                         <div class="controls">
                                             <a href="#" class="btn disabled"><i class="icon icon-circle-arrow-left"></i> Roll Back</a>
-                                            <a href="#" class="btn disabled"><i class="icon icon-ok-sign"></i> Commit</a>
+                                            <a href="#commitModal" class="btn commit-button" data-toggle="modal"><i class="icon icon-ok-sign"></i> Commit</a>
                                             <a href="#" class="btn disabled">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
                                         </div>
                                     </div>

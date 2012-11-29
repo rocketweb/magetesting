@@ -59,7 +59,7 @@ implements Application_Model_Task_Interface {
         foreach($changedFiles as $file){
             $pathinfo = pathinfo($file);
             /* create destination dir */
-            if (!file_exists($hash.'/mageroot/'.$pathinfo['dirname']) || !is_dir($hash.'/mageroot/'.$pathinfo['dirname'])){
+            if (isset($pathinfo['dirname']) &&  (!file_exists($hash.'/mageroot/'.$pathinfo['dirname']) || !is_dir($hash.'/mageroot/'.$pathinfo['dirname']))){
                 exec('mkdir -p '.$hash.'/mageroot/'.$pathinfo['dirname']);
             }
             
@@ -109,12 +109,23 @@ implements Application_Model_Task_Interface {
         $params = $this->_queueObject->getTaskParams();      
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
         
+        
+        if (!count($output)){
+            $this->_updateStatus('error', 'No changes have been made, manual commit aborted');
+            exit;
+        }
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
         
+        if (!isset($matches[2])){
+            $this->_updateStatus('error', 'Could not find revision information, aborting');
+            exit;
+        }
+        
+        
         //insert revision entry
         $this->_revisionHash  = $matches[2];
-        var_dump($output);
+        
     }
 
     /* Not used yet */

@@ -571,11 +571,10 @@ class QueueController extends Integration_Controller_Action {
     public function commitAction(){
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        
-        $domain = $this->getRequest()->getParam('domain');
+        $domain = $this->getRequest()->getParam('domain');        
         $instanceModel=  new Application_Model_Instance();
         $instance = $instanceModel->findByName($domain);      
-        
+                
         $queueModel = new Application_Model_Queue();
         $queueModel->setTask('RevisionCommit');
         $queueModel->setTaskParams(
