@@ -113,7 +113,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setTask('MagentoInstall');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId(1); /* TODO: select this somehow, server model method select server? */
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId(0);  
                     $queueModel->save();
@@ -127,7 +127,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setTask('RevisionInit');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId(1); /* TODO: select this somehow, server model method select server? */
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
@@ -255,7 +255,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setTask('MagentoDownload');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId(1); /* TODO: select this somehow, server model method select server? */
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setParentId(0);
                     $queueModel->setExtensionId(0);
                     $queueModel->save();
@@ -333,7 +333,7 @@ class QueueController extends Integration_Controller_Action {
                         ->setUserId($this->auth->getIdentity()->id)
                         ->setParentId(0)
                         ->setExtensionId(0)
-                        ->setServerId(1)
+                        ->setServerId($this->auth->getIdentity()->server_id)
                         ->setStatus('pending')
                         ->save();
 

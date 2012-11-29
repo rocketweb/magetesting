@@ -273,13 +273,16 @@ class UserController extends Integration_Controller_Action
                     }
                 }
                 
+                $serverModel = new Application_Model_Server();
+                
                 $user->setOptions($form->getValues());
+                $user->setServerId($serverModel->fetchMostEmptyServerId());
                 $user = $user->save();
 
                 if ($useCoupons && $coupon) {
                     $result = $modelCoupon->apply($modelCoupon->getId(), $user->getId());
                     if ($result) {
-                        //cupon->apply changed user so we need to fetch it again
+                        //coupon->apply changed user so we need to fetch it again
                         $modelUser = new Application_Model_User();
                         $user = $modelUser->find($user->getId());
                         $user->setGroup('commercial-user');
