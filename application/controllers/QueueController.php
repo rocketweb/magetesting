@@ -300,16 +300,21 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function closeAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         $form = new Application_Form_InstanceClose();
-        $this->view->form = $form;
 
         $domain = $this->getRequest()->getParam('domain');
+
+        $response = new stdClass();
+        $response->status = 'error';
 
         if ($this->getRequest()->isPost()) {
 
             $close = (int) $this->getRequest()->getParam('close');
 
-            if ($close AND $domain) {                      
+            if ($close AND $domain) {
                 
                 $instanceModel = new Application_Model_Instance();
                 $instanceModel->setUserId($this->auth->getIdentity()->id)
@@ -332,21 +337,15 @@ class QueueController extends Integration_Controller_Action {
                         ->setStatus('pending')
                         ->save();
 
-                $this->_helper->FlashMessenger('Store added to close queue.');
+                $response->status = 'ok';
+                $response->html = $this->view->partial('_partials/messages.phtml', array(
+                        'messages' => array(
+                            'Store added to close queue.'
+                        )
+                ));
             }
-
-            $controller = 'user';
-            $action = 'dashboard';
-            if ($this->_getParam('redirect', 0) === 'admin') {
-                $controller = 'queue';
-                $action = 'index';
-            }
-            return $this->_helper->redirector->gotoRoute(array(
-                        'module' => 'default',
-                        'controller' => $controller,
-                        'action' => $action,
-                    ), 'default', true);
         }
+        echo json_encode($response);
     }
 
     public function getversionsAction() {

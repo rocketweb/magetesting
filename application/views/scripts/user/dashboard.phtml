@@ -147,4 +147,19 @@ Briefly explain what has been changed:
 </div>
 </div>
 
+<div id="close-instance" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Close Store</h3>
+    </div>
+    <div class="modal-body">
+        <p>Do you really want to close store<span class="close-instance-name"></span>? There is no undo!</p>
+    </div>
+    <div class="modal-footer">
+        <form>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-danger">Close</button>
+        </form>
+    </div>
+</div>
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>
