@@ -26,44 +26,44 @@
                 <action>index</action>
                 <route>default</route>
                 <reset_params>true</reset_params>
-                <resource>default_user</resource>
+                <resource>default_queue</resource>
                 <privilege>dashboard</privilege>
                 <icon>icon-white icon-cog</icon>
                 <class>dropdown dropdown-mainmenu</class>
                 <pages>
-		            <supportedExtensions>
-		                <label>Extensions</label>
-		                <module>default</module>
-		                <controller>extension</controller>
-		                <action>index</action>
-		                <route>default</route>
-		                <reset_params>true</reset_params>
-		                <resource>default_extension</resource>
-		                <privilege>index</privilege>
-		                <icon>icon-white icon-th-list</icon>
-		            </supportedExtensions>
-		            <wholeQueue>
-		                <label>Stores</label>
-		                <module>default</module>
-		                <controller>queue</controller>
-		                <action>index</action>
-		                <route>default</route>
-		                <reset_params>true</reset_params>
-		                <resource>default_queue</resource>
-		                <privilege>index</privilege>
-		                <icon>icon-white icon-time</icon>
-		            </wholeQueue>
-		            <userList>
-		                <label>Users</label>
-		                <module>default</module>
-		                <controller>user</controller>
-		                <action>list</action>
-		                <route>default</route>
-		                <reset_params>true</reset_params>
-		                <resource>default_user</resource>
-		                <privilege>list</privilege>
-		                <icon>icon-white icon-user</icon>
-		            </userList>
+                    <supportedExtensions>
+                        <label>Extensions</label>
+                        <module>default</module>
+                        <controller>extension</controller>
+                        <action>index</action>
+                        <route>default</route>
+                        <reset_params>true</reset_params>
+                        <resource>default_extension</resource>
+                        <privilege>index</privilege>
+                        <icon>icon-white icon-th-list</icon>
+                    </supportedExtensions>
+                    <wholeQueue>
+                        <label>Stores</label>
+                        <module>default</module>
+                        <controller>queue</controller>
+                        <action>index</action>
+                        <route>default</route>
+                        <reset_params>true</reset_params>
+                        <resource>default_queue</resource>
+                        <privilege>index</privilege>
+                        <icon>icon-white icon-time</icon>
+                    </wholeQueue>
+                    <userList>
+                        <label>Users</label>
+                        <module>default</module>
+                        <controller>user</controller>
+                        <action>list</action>
+                        <route>default</route>
+                        <reset_params>true</reset_params>
+                        <resource>default_user</resource>
+                        <privilege>list</privilege>
+                        <icon>icon-white icon-user</icon>
+                    </userList>
                 </pages>
             </manage>
             <userAccount>
