@@ -1,3 +1,35 @@
+/* FONTS
+
+-- PRAGMATICA WEB --
+
+Extra Light	"pragmatica-web"	200	normal	
+Extra Light Oblique	"pragmatica-web"	200	italic	
+Light	"pragmatica-web"	300	normal	
+Light Oblique	"pragmatica-web"	300	italic	
+Book	"pragmatica-web"	400	normal	
+Oblique	"pragmatica-web"	400	italic	
+Bold	"pragmatica-web"	700	normal	
+Bold Oblique	"pragmatica-web"	700	italic	
+Black	"pragmatica-web"	900	normal
+EXAMPLE
+font-family: "pragmatica-web",sans-serif;
+font-style: normal;
+font-weight: 200;
+
+-- PRAGMATICA WEB --
+Extra Light	"pragmatica-web-condensed"	300	normal	
+Extra Light Oblique	"pragmatica-web-condensed"	300	italic	
+Book	"pragmatica-web-condensed"	400	normal	
+Oblique	"pragmatica-web-condensed"	400	italic	
+Black	"pragmatica-web-condensed"	900	normal	
+Black Oblique	"pragmatica-web-condensed"	900	italic
+EXAMPLE
+font-family: "pragmatica-web-condensed",sans-serif;
+font-style: normal;
+font-weight: 300;
+
+*/
+
 /*body {
     padding-top: 90px;
 }*/
