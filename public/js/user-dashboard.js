@@ -131,8 +131,7 @@ function updateLabel(row,new_status){
             data: "domain=" + row.find(".instancedomain").val(),
             dataType: "json",
             success: function(json){
-                var time = '. $this->timeExecution .'*json;
-                row.find("span.statusHolder").html("In Queue - " + time + " minutes left");
+                row.find("span.statusHolder").html("In Queue - " + json + " minutes left");
             }
       });
         }

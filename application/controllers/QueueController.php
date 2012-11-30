@@ -455,7 +455,7 @@ class QueueController extends Integration_Controller_Action {
                         $extensionQueueItem->setUserId($instance->user_id);
                         $extensionQueueItem->setExtensionId($request->getParam('extension_id'));
                         $extensionQueueItem->setParentId(0);
-                        $extensionQueueItem->setServerId($this->auth->getIdentity()->server_id);
+                        $extensionQueueItem->setServerId($instance->server_id);
                         $extensionQueueItem->setTask('ExtensionInstall');
                         $extensionQueueItem->save();
                         
@@ -470,7 +470,7 @@ class QueueController extends Integration_Controller_Action {
                         $queueModel->setUserId($instance->user_id);
                         $queueModel->setExtensionId(0);
                         $queueModel->setParentId($queueId);
-                        $queueModel->setServerId($this->auth->getIdentity()->server_id);
+                        $queueModel->setServerId($instance->server_id);
                         $queueModel->setTask('RevisionCommit');
                         $queueModel->setTaskParams(serialize(
                             array(
@@ -559,10 +559,15 @@ class QueueController extends Integration_Controller_Action {
         $domain = $request->getParam('domain', null);
         if ($request->isPost() && $domain!=null) {
             
+            $timeExecution = $this->getInvokeArg('bootstrap')
+                        ->getResource('config')
+                ->magento
+                ->instanceTimeExecution;
+            
             $instanceModel = new Application_Model_Instance();
             $instanceItem = $instanceModel->findPositionByName($domain);
             
-            echo Zend_Json_Encoder::encode($instanceItem->num);
+            echo Zend_Json_Encoder::encode($instanceItem->num*$timeExecution);
         } 
     }
     

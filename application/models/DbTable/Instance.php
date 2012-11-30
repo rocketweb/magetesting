@@ -63,13 +63,21 @@ class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
     
+    /**
+     * @deprecated: use findByDomain
+     * @param type $instance_name
+     */
     public function findByName($instance_name)
     {
+        return $this->findByDomain($instance_name);
+    }
+    
+    public function findByDomain($domain){
         $select = $this->select()
                         ->setIntegrityCheck(false)
                        ->from($this->_name)
                        ->join('version', 'instance.version_id = version.id', 'version')
-                       ->where('domain = ?', $instance_name);
+                       ->where('domain = ?', $domain);
                        
         return $this->fetchRow($select);
     }

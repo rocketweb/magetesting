@@ -13,6 +13,8 @@ class Application_Model_Instance {
     protected $_sample_data;
 
     protected $_user_id;
+    
+    protected $_server_id;
 
     protected $_domain;
 
@@ -107,6 +109,17 @@ class Application_Model_Instance {
     public function getUserId()
     {
         return $this->_user_id;
+    }
+    
+    public function getServerId()
+    {
+        return $this->_server_id;
+    }
+    
+    public function setServerId($server_id)
+    {
+        $this->_server_id = $server_id;
+        return $this;
     }
 
     public function setSampleData($sample_data)

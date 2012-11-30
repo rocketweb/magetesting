@@ -96,6 +96,8 @@ implements Application_Model_Task_Interface {
 
         $this->_updateCoreConfigData();
 
+        $this->_createAdminUser();
+        
         //TODO: add mail info about ready installation
         $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '.INSTANCE_PATH . $this->_domain;
         exec($command);
@@ -444,6 +446,66 @@ implements Application_Model_Task_Interface {
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \'0\' WHERE  `path` = \'google/analytics/active\';"');
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \'\' WHERE  `path` = \'google/analytics/account\';"');
         
+        
+        
+    }
+    
+    protected function _createAdminUser(){
+        
+        $password = $this->_getHash($this->_adminpass,2);
+        exec('mysql ' . $this->config->magento->userprefix . 
+              $this->_dbuser . ' -p' . $this->_dbpass . 
+        ' ' . $this->config->magento->instanceprefix . $this->_dbname . 
+        ' -e "INSERT INTO admin_user'.
+        ' (firstname,lastname,email,username,password,created,is_active) VALUES'.
+        ' (\''.$this->_userObject->getFirstName().'\',\''.$this->_userObject->getLastName().'\',\''.$this->_userObject->getEmail().'\',\'admin\',\''.$password.'\',\''.date("Y-m-d H:i:s").',1)\''.
+        ' ON DUPLICATE KEY UPDATE password = \''.$password.'\', email = \''.$this->_userObject->getEmail().'\' "');
+        
+    }
+    
+    /* taken from Mage_Core_Helper_Data */
+    public function getRandomString($len, $chars=null)
+    {
+        if (is_null($chars)) {
+            $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        }
+        mt_srand(10000000*(double)microtime());
+        for ($i = 0, $str = '', $lc = strlen($chars)-1; $i < $len; $i++) {
+            $str .= $chars[mt_rand(0, $lc)];
+        }
+        return $str;
+    }
+    
+    /* taken from Mage_Core_Model_Encryption */
+    /**
+     * Generate a [salted] hash.
+     *
+     * $salt can be:
+     * false - a random will be generated
+     * integer - a random with specified length will be generated
+     * string
+     *
+     * @param string $password
+     * @param mixed $salt
+     * @return string
+     */
+    public function getHash($password, $salt = false)
+    {
+        if (is_integer($salt)) {
+            $salt = $this->_helper->getRandomString($salt);
+        }
+        return $salt === false ? $this->hash($password) : $this->hash($salt . $password) . ':' . $salt;
+    }
+
+    /**
+     * Hash a string
+     *
+     * @param string $data
+     * @return string
+     */
+    public function hash($data)
+    {
+        return md5($data);
     }
     
 }
