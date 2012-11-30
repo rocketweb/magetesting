@@ -98,6 +98,8 @@ implements Application_Model_Task_Interface {
 
         $this->_createAdminUser();
         
+        $this->_importAdminFrontname();
+        
         //TODO: add mail info about ready installation
         $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '.INSTANCE_PATH . $this->_domain;
         exec($command);
@@ -506,6 +508,27 @@ implements Application_Model_Task_Interface {
     public function hash($data)
     {
         return md5($data);
+    }
+    
+    protected function _importAdminFrontname(){
+        
+        $localXml = file_get_contents($this->_instanceFolder . '/' . $this->_domain.'/app/etc/local.xml');
+        preg_match("#<frontName>(.*?)</frontName>#is",$localXml,$matches);
+        
+        if (isset($matches[1])){
+            $frontname = str_replace(array('<![CDATA[',']]>'),'',$matches[1]);
+        
+            if (trim($frontname)!=''){
+                $set = array('backend_name' => $frontname);
+            } else {
+                 $set = array('backend_name' => 'admin');
+            }
+        } else {
+            $set = array('backend_name' => 'admin');
+        }
+     
+        $where = array('id = ?' => $this->_instanceObject->getId());
+        $this->db->update('instance', $set, $where);
     }
     
 }
