@@ -14,9 +14,9 @@ class Application_Model_DbTable_Server extends Zend_Db_Table_Abstract
         $select = $this->select()
                        ->from(array('s' => $this->_name), array('s.id'))
                        ->setIntegrityCheck(false)
-                       ->joinLeft(array('q' => 'queue'), 'q.server_id = s.id', array(new Zend_Db_Expr('IF(q.instance_id IS NULL, 0, count(s.id) ) instances')))
-                       ->where('q.status = ?', 'ready')
-                       ->orWhere('q.status IS NULL')
+                       ->joinLeft(array('i' => 'instance'), 'i.server_id = s.id', array(new Zend_Db_Expr('IF(i.id IS NULL, 0, count(s.id) ) instances')))
+                       ->where('i.status = ?', 'ready')
+                       ->orWhere('i.status IS NULL')
                        ->group('s.id')
                        ->order('instances asc')
                        ->limit(1);
