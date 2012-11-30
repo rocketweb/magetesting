@@ -12,7 +12,10 @@ magento.standardUser.instances = 3
 magento.instanceTimeExecution = 1
 
 magento.instanceprefix = "INST_"
+
+;IMPORTANT - check Application_Form_UserRegister::init(); for setting up length
 magento.userprefix = "mi_"
+
 magento.usersalt = "a63hd93u" ;used for mysql user password creation
 magento.systemHomeFolder = "/home" ;where should instance user folders land in
 
