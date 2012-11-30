@@ -201,7 +201,7 @@ font-weight: 300;
 /** LESS - START COMPILED CSS **/
 .icon-blue{background-image:url("../img/glyphicons-halflings-blue.png");}
 .icon-red{background-image:url("../img/glyphicons-halflings-red.png");}
-html,body{height:100%;font-family: Helvetica,Arial,sans-serif;}
+html,body{height:100%;font-family:Helvetica,Arial,sans-serif;}
 .logo{margin:20px 0;}
 .red-bar{height:5px;background:#f64135;}
 .navbar-global{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;border-bottom:1px solid #e5e5e5;}.navbar-global .nav>li>a{padding:4px 15px;background:#f64135;color:#fff;text-shadow:none;border-right:1px solid #fff;outline:0;}
@@ -212,7 +212,7 @@ html,body{height:100%;font-family: Helvetica,Arial,sans-serif;}
 .navbar-global .dropdown.dropdown-mainmenu .caret-white{border-top:4px solid #ffffff;}
 .navbar-global .pull-right>li>.dropdown-menu{background:#34aae5;margin-right:94px;margin-top:0;-webkit-border-top-left-radius:0;-webkit-border-top-right-radius:0;-moz-border-radius-topleft:0;-moz-border-radius-topright:0;border-top-left-radius:0;border-top-right-radius:0;border:0;}.navbar-global .pull-right>li>.dropdown-menu a{color:white;}
 .navbar-global .nav>li>.dropdown-menu:after{border-bottom:0;}
-h1{font-size:28px;font-weight:300;}
+h1{font-family:"pragmatica-web-condensed",sans-serif;font-style:normal;font-weight:300;font-size:28px;}
 .mt{margin-top:40px;}
 .mt_shadow{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}
 .tab-stripe{float:left;min-height:60px;min-width:5px;background:#34aae5;}
@@ -231,7 +231,10 @@ h1{font-size:28px;font-weight:300;}
 .alert-blue{padding:8px 35px 8px 14px;margin-bottom:20px;color:darker(#34aae5, 10%);text-shadow:0 1px 0 rgba(255, 255, 255, 0.5);background-color:#34aae5;border:1px solid darker(#34aae5, 5%);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}.alert-blue h4{margin:0;}
 .alert-blue .close{position:relative;top:-2px;right:-21px;line-height:20px;}
 .accordion-group .accordion-heading .accordion-toggle{outline:0;}
-footer{position:relative;bottom:0;}footer a{color:#f64135;}
+footer a{color:#f64135;}
+.mt-login{position:absolute;top:50%;left:50%;margin:-155px 0 0 -210px;width:420px;height:310px;padding:20px;border:1px solid #e5e5e5;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}.mt-login legend{padding-bottom:20px;}
+.mt-login .mt-login-input input{width:407px;}
+.mt-login .mt-pad{margin:20px 0;}
 .instance-edit .control-group{width:50%;}.instance-edit .control-group:first-child{width:100%;}
 .instance-edit .control-group input{width:96%;}
 .instance-edit .control-group #instance_name{width:98%;}
