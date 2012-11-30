@@ -105,7 +105,7 @@ function handle_node(DomNode $node, $nesting, $dir, $target,$instance_name) {
 
             //get necessary data
             $instanceModel = new Application_Model_Queue();
-            $instanceInfo = $instanceModel->findByName($instance_name);
+            $instanceInfo = $instanceModel->findByDomain($instance_name);
 
             $userModel = new Application_Model_User();
             $userInfo = $userModel->find($instanceInfo->user_id);

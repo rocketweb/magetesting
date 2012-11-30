@@ -24,7 +24,7 @@ implements Application_Model_Task_Interface {
         $this->_extensionObject = $extensionModel;
     }
     
-    public function process() {
+    public function process(Application_Model_Queue $queueElement = null) {
 
         //remove extension config from etc/modules
         $this->_removeFiles();

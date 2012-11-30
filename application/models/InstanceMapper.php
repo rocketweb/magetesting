@@ -189,17 +189,6 @@ class Application_Model_InstanceMapper {
                     ->findByDomain($domain);
     }
     
-    /**
-     * @deprecated: use findByDomain instead
-     * @param type $instance_name
-     * @return type
-     */
-    public function findByName($instance_name)
-    {
-        return $this->findByDomain($instance_name);
-        
-    }
-    
     public function findPositionByName($instance_name)
     {
         return $this->getDbTable()

@@ -358,7 +358,7 @@ class QueueController extends Integration_Controller_Action {
 
                 $instanceModel->changeStatusToClose($byAdmin);
                               
-                $currentInstance = $instanceModel->findByName($domain);
+                $currentInstance = $instanceModel->findByDomain($domain);
 
                 //add remove task to queue
                 $queueModel = new Application_Model_Queue();
@@ -472,7 +472,7 @@ class QueueController extends Integration_Controller_Action {
 
                 //fetch queue data
                 $instanceModel = new Application_Model_Instance();
-                $instance = $instanceModel->findByName($instance_name);
+                $instance = $instanceModel->findByDomain($instance_name);
 
                 if ((int)$request->getParam('extension_id') > 0) {
                     $instanceRow = $instanceModel->find($instance->id);
@@ -551,7 +551,7 @@ class QueueController extends Integration_Controller_Action {
             if ($form->isValid($request->getPost())) {
 
                 $instanceModel = new Application_Model_Instance();
-                $instanceInfo = $instanceModel->findByName($this->getRequest()->getParam('instance'));
+                $instanceInfo = $instanceModel->findByDomain($this->getRequest()->getParam('instance'));
 
                 //navigate through file list and download them
                 foreach ($form->extension->getValue() as $ext) {
@@ -579,7 +579,7 @@ class QueueController extends Integration_Controller_Action {
         $domain = $request->getParam('domain', null);
         if ($request->isPost() && $domain!=null) {
             $instanceModel = new Application_Model_Instance();
-            $instanceItem = $instanceModel->findByName($domain);
+            $instanceItem = $instanceModel->findByDomain($domain);
             
             echo Zend_Json_Encoder::encode($instanceItem->status);
         } 
@@ -610,7 +610,7 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(true);
         $domain = $this->getRequest()->getParam('domain');        
         $instanceModel=  new Application_Model_Instance();
-        $instance = $instanceModel->findByName($domain);      
+        $instance = $instanceModel->findByDomain($domain);      
                 
         $queueModel = new Application_Model_Queue();
         $queueModel->setTask('RevisionCommit');
