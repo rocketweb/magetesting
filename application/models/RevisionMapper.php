@@ -86,6 +86,16 @@ class Application_Model_RevisionMapper {
         }
         return $entries;
     }
-    
-    
+
+    public function getAllForInstance($instance_id)
+    {
+        $result = array();
+        if((int)$instance_id) {
+            $tmp = $this->getDbTable()->getAllForInstance($instance_id);
+            if($tmp) {
+                $result = $tmp;
+            }
+        }
+        return $result;
+    }
 }
