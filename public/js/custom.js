@@ -147,7 +147,7 @@ $(document).ready(function () {
             var $this = $(this),
                 $created_link = $('#open_admin_panel');
             $created_link.click(function(){
-                var $opened_window = window.open($this.prev().attr('href')+'/admin'),
+                var $opened_window = window.open($this.prev().attr('href')+'/'+$this.data('admin-frontname')),
                     $attempts = 0,
                     $fill_window_form = function() {
                     var $window_context = $($opened_window.document).contents();
