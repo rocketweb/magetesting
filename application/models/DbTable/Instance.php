@@ -20,7 +20,8 @@ class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
                        ->from($this->_name)
                        ->setIntegrityCheck(false)
                        ->join('version', 'instance.version_id = version.id',array('version'))
-                       ->where( 'user_id = ?', $user_id )
+                       ->joinLeft(array('r' => new Zend_Db_Expr('(SELECT r.comment, r.instance_id, e.name FROM revision r LEFT JOIN extension e ON e.id = r.extension_id WHERE user_id = '.$this->_db->quote($user_id).' GROUP BY instance_id DESC)')), 'r.instance_id = '.$this->_name.'.id', array('r.comment', new Zend_Db_Expr('r.name as extension_name')))
+                       ->where('user_id = ?', $user_id)
                        ->order(array('status asc', 'instance.id asc'));
         return $select;
     }

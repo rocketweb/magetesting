@@ -7,34 +7,67 @@ $(document).ready(function () {
     /* prevent click event and init popover */
     $('[rel=popover]').click(function(){return false;}).popover();
 
-    var $modal_close_instance = $('#close-instance');
+    var $deployment_modal = $('#instance-deployment'),
+        $deployment_form = $deployment_modal.find('form'),
+        $rollback_name = $deployment_modal.find('.rollback-name'),
+        $commit_comment = $deployment_modal.find('#commit_comment'),
+        $deploy_table_body = $deployment_modal.find('.table tbody'),
+        $base_url = $('#base-url').val();
+    // deployment modals
+    $('.panel.deployment .btn').click(function() {
+        var $this = $(this);
+        if(!$this.hasClass('disabled')) {
+            var $domain = $this.nextAll('.instancedomain').val(),
+                $form_action = $base_url+'/queue/[replace]/domain/'+$domain,
+                $remove_class = '',
+                $add_class = '';
+            if($this.hasClass('rollback-button')) {
+                // set name of rollback ( extension name | manual commit | commit comment )
+                $rollback_name.empty().text($this.data('rollback-name'));
+                // set form action path
+                $form_action = $form_action.replace('[replace]', 'rollback');
+                // show modal with proper pre-class
+                $remove_class = 'modal-commit modal-deploy';
+                $add_class = 'modal-rollback';
+            } else if($this.hasClass('commit-button')) {
+                // set form action path
+                $form_action = $form_action.replace('[replace]', 'commit');
+                // reset comment
+                $commit_comment.val('');
+                // show modal with proper pre-class
+                $remove_class = 'modal-rollback modal-deploy';
+                $add_class = 'modal-commit';
+            } else if($this.hasClass('deploy-button')) {
+                // set form action path
+                $form_action = $form_action.replace('[replace]', 'deploy');
+                $deploy_table_body.empty();
+                $.ajax({
+                   url : $base_url+'/queue/fetch-deployment-list/domain/'+$domain,
+                   async : false,
+                   success : function(html) {
+                       if(typeof html == 'string' && html.length) {
+                           $deploy_table_body.append(html);
+                       }
+                   }
+                });
+                // show modal with proper pre-class
+                $remove_class = 'modal-rolback modal-commit';
+                $add_class = 'modal-deploy';
+            }
+            $deployment_modal.removeClass($remove_class).addClass($add_class).modal('show');
+            $deployment_form.attr('action', $form_action);
+        }
+        return false;
+    });
+
+    var $modal_close_instance = $('#close-instance'),
+        $modal_close_instance_form = $modal_close_instance.find('form');
     $modal_close_instance.find('form .btn-danger').click(function() {
         var $this = $(this);
         // do not allow for multiple clicks
         if(!$this.hasClass('disabled')) {
             $this.addClass('disabled');
-            $.ajax({
-                url  : $modal_close_instance.data('form-action'),
-                type : 'POST',
-                data : {close : 1},
-                dataType : 'json',
-                success : function(result) {
-                    if(typeof result == 'object' && typeof result.status == 'string') {
-                        if(result.status == 'ok') {
-                            $('.mt').prepend(result.html);
-                            
-                            // remove alert after 2 second
-                            setTimeout(function() { $('.alert').alert('close'); }, 2000);
-                        }
-                    }
-                    $this.removeClass('disabled');
-                    $modal_close_instance.modal('hide');
-                },
-                error: function() {
-                    $this.removeClass('disabled');
-                    $modal_close_instance.modal('hide');
-                }
-            });
+            $modal_close_instance_form.submit();
         }
         return false;
     });
@@ -45,7 +78,7 @@ $(document).ready(function () {
         var $this = $(this),
             $instance_name = $this.parent().nextAll('.title').text(),
             $modal_instance_name_container = $modal_close_instance.find('.close-instance-name');
-        $modal_close_instance.data('form-action', $this.attr('href'));
+        $modal_close_instance_form.attr('action', $this.attr('href'));
         if($instance_name.length) {
             $modal_instance_name_container.text(' "'+$instance_name+'"');
         } else {

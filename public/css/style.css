@@ -293,3 +293,14 @@ background: linear-gradient(to bottom,  rgba(0,0,0,0.02) 0%,rgba(0,0,0,0.04) 38%
 @media only screen and (min-device-width:320px) and (max-device-width:480px){}@media only screen and (min-width:321px){}@media only screen and (max-width:320px){}@media only screen and (min-device-width:768px) and (max-device-width:1024px){}@media only screen and (min-device-width:768px) and (max-device-width:1024px) and (orientation:landscape){}@media only screen and (min-device-width:768px) and (max-device-width:1024px) and (orientation:portrait){}@media only screen and (min-width:1224px){}@media only screen and (min-width:1824px){}@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5){}
 
 /** LESS - END COMPILED CSS **/
+
+
+#instance-deployment .rollback, #instance-deployment .commit, #instance-deployment .deploy {
+    display: none;
+}
+#instance-deployment.modal-rollback .rollback, #instance-deployment.modal-commit .commit, #instance-deployment.modal-deploy .deploy {
+    display: initial;
+}
+#instance-deployment form {
+    margin: 0px;
+}

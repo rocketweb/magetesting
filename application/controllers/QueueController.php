@@ -384,15 +384,14 @@ class QueueController extends Integration_Controller_Action {
                         ->setStatus('pending')
                         ->save();
 
-                $response->status = 'ok';
-                $response->html = $this->view->partial('_partials/messages.phtml', array(
-                        'messages' => array(
-                            'Store added to close queue.'
-                        )
-                ));
+                $this->_helper->FlashMessenger('Store added to close queue.');
             }
         }
-        echo json_encode($response);
+        return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+        ), 'default', true);
     }
 
     public function getversionsAction() {
@@ -607,5 +606,65 @@ class QueueController extends Integration_Controller_Action {
         $queueModel->setStatus('pending');
         $queueModel->setUserId($this->auth->getIdentity()->id);
         $queueModel->save();
+        $this->_helper->FlashMessenger('Files has been scheduled to commit them into repository.');
+        return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+        ), 'default', true);
+    }
+
+    public function deployAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        // $this->_getParam('domain');
+        // $this->_getParam('deploy'); - revision id
+        $this->_helper->FlashMessenger('Deployment action has been added to queue.');
+        return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+        ), 'default', true);
+    }
+
+    public function rollbackAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $this->_helper->FlashMessenger('Rollback action has been added to queue.');
+        return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+        ), 'default', true);
+    }
+
+    public function fetchDeploymentListAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $domain = $this->getParam('domain');
+        $instance = null;
+        if($domain) {
+            $model = new Application_Model_Instance();
+            $instance = $model->findByDomain($domain);
+        }
+        $content = '';
+        if(
+            is_object($instance) AND
+            (int)$instance->id AND
+            $instance->user_id == $this->auth->getIdentity()->id
+        ) {
+            $model = new Application_Model_Revision();
+            foreach($model->getAllForInstance($instance->id) as $revision) {
+                $content .= '<tr>';
+                $name = ((int)$revision['extension_id'] ? $revision['extension_name'] : ($revision['comment'] ? $revision['comment'] : 'Manual Comment'));
+                $content .= '<td>'.$name.'</td>';
+                $content .= '<td>
+                    <button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
+                    <a class="btn btn-primary" href="#">Download</a>
+                </td>';
+                $content .= '</tr>';
+            }
+        }
+        echo $content;
     }
 }
