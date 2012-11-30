@@ -1,3 +1,6 @@
+/* @override 
+	http://dev.magetesting.com/public/css/style.css */
+
 /* FONTS
 
 -- PRAGMATICA WEB --
@@ -175,7 +178,23 @@ font-weight: 300;
     width:49%;
 }
 
-
+/* Account Page */
+.account_page h1{
+margin-bottom: 20px;
+}
+.account_page h3{
+	font-size: 18px;
+	font-weight: 600;
+	border-bottom: 1px solid #eeeeee;
+	border-top: 1px solid #eeeeee;
+	margin-top: 60px;
+}
+.account_member{
+	margin-top: 5px;	
+}
+.account_plans{
+	margin-bottom: 10px;
+}
 /* @group admin extension grid */
 .admin-extensions .logo {
     max-width: 100px;
@@ -201,7 +220,7 @@ font-weight: 300;
 /** LESS - START COMPILED CSS **/
 .icon-blue{background-image:url("../img/glyphicons-halflings-blue.png");}
 .icon-red{background-image:url("../img/glyphicons-halflings-red.png");}
-html,body{height:100%;font-family:Helvetica,Arial,sans-serif;}
+html,body{height:100%;font-family:pragmatica-web, Helvetica,Arial,sans-serif;}
 .logo{margin:20px 0;}
 .red-bar{height:5px;background:#f64135;}
 .navbar-global{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;border-bottom:1px solid #e5e5e5;}.navbar-global .nav>li>a{padding:4px 15px;background:#f64135;color:#fff;text-shadow:none;border-right:1px solid #fff;outline:0;}
@@ -212,7 +231,7 @@ html,body{height:100%;font-family:Helvetica,Arial,sans-serif;}
 .navbar-global .dropdown.dropdown-mainmenu .caret-white{border-top:4px solid #ffffff;}
 .navbar-global .pull-right>li>.dropdown-menu{background:#34aae5;margin-right:94px;margin-top:0;-webkit-border-top-left-radius:0;-webkit-border-top-right-radius:0;-moz-border-radius-topleft:0;-moz-border-radius-topright:0;border-top-left-radius:0;border-top-right-radius:0;border:0;}.navbar-global .pull-right>li>.dropdown-menu a{color:white;}
 .navbar-global .nav>li>.dropdown-menu:after{border-bottom:0;}
-h1{font-family:"pragmatica-web-condensed",sans-serif;font-style:normal;font-weight:300;font-size:28px;}
+h1{font-family:"pragmatica-web-condensed",sans-serif;font-style:normal;font-weight:300;font-size:30px;}
 .mt{margin-top:40px;}
 .mt_shadow{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}
 .tab-stripe{float:left;min-height:60px;min-width:5px;background:#34aae5;}
@@ -262,6 +281,7 @@ html,body{height:100%;}
 #extensions{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;border:1px solid #e5e5e5;}#extensions .mt_filters{padding:10px 25px;}#extensions .mt_filters .btn-group+.btn-group{margin-left:43px;}
 #extensions .extensions_well{padding:10px 19px;}
 .element{width:135px;height:112px;margin:5px;float:left;overflow:hidden;position:relative;background:#ffffff;color:#222;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
+
 /*
 .hover_inner_shadow{position: absolute;right: 0;width: 100%;height: 100%;z-index: auto; 
 }
