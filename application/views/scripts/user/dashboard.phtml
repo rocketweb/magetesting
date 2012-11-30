@@ -1,8 +1,9 @@
 <!-- START INSTANCES PAGE -->
 <div class="row">
     <div class="span12">
+        <input id="base-url" type="hidden" value="<?php echo $this->baseUrl(); ?>" />
         <h1>Your stores <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h1>
-		<!-- START ACCORDION -->
+        <!-- START ACCORDION -->
         <div class="accordion" id="accordion">
         <?php foreach ($this->queue as $key => $item): ?>
             <!-- START INSTANCE -->
@@ -41,11 +42,11 @@
                         </div>
                         <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
                             <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store"><i class="icon icon-home"></i> View Store</a>
-                            <a href="#" class="btn btn-mini admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>" data-admin-frontname="<?php echo $item['backend_name']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
+                            <a href="#" class="btn btn-mini admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
                             <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store"><i class="icon icon-white icon-remove"></i></a>
-                        </div> 
+                        </div>
                         <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
-                        <?php echo $this->escape($item['instance_name']) ?>
+                        <span class="title"><?php echo $this->escape($item['instance_name']) ?></span>
                         <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                     </div>
                 </div>
@@ -92,9 +93,12 @@
                                 <h5>Deployment <span class="version">version <span class="badge badge-blue"><?php echo $this->escape($item['revision_count'])?></span></span></h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <a href="#" class="btn disabled"><i class="icon icon-circle-arrow-left"></i> Roll Back</a>
-                                        <a href="#commitModal" class="btn commit-button" data-toggle="modal"><i class="icon icon-ok-sign"></i> Commit</a>
-                                        <a href="#" class="btn disabled">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
+                                        <a href="#" class="btn rollback-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>" data-rollback-name='<?php echo ' "'.($item['extension_name'] ? $item['extension_name'].'" installation' : ($item['comment'] ? $item['comment'] : 'Manual Commit').'"'); ?>'>
+                                            <i class="icon icon-circle-arrow-left"></i> Roll Back
+                                        </a>
+                                        <a href="#" class="btn commit-button" ><i class="icon icon-ok-sign"></i> Commit</a>
+                                        <a href="#" class="btn deploy-button">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
+                                        <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -126,24 +130,94 @@
 <!-- START INSTANCES PAGE -->
 
 <div id="commitModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-<h3 id="myModalLabel">Commit your changes</h3>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Commit your changes</h3>
+    </div>
+    <div class="modal-body">
+        <p>All your changes made manually will be commited to repository</p>
+        <p>
+            Briefly explain what has been changed:
+            <br />
+            <textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here" ></textarea>
+        </p>
+        <input type="hidden" value="" id="commit-domain" name="commit-domain" />
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary commit-confirm">Commit changes</button>
+    </div>
 </div>
-<div class="modal-body">
-<p>All your changes made manually will be commited to repository</p>
 
-<p>
-Briefly explain what has been changed:
-<br />
-<textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here" ></textarea>
-</p>
-<input type="hidden" value="" id="commit-domain" name="commit-domain" />
+<div id="close-instance" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Close Store</h3>
+    </div>
+    <div class="modal-body">
+        <p>Do you really want to close store<span class="close-instance-name"></span>? There is no undo!</p>
+    </div>
+    <div class="modal-footer">
+        <form method="post">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <input type="hidden" name="close" value="1" />
+            <button class="btn btn-danger">Close</button>
+        </form>
+    </div>
 </div>
-<div class="modal-footer">
-<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-<button class="btn btn-primary commit-confirm">Commit changes</button>
-</div>
+
+<div id="instance-deployment" class="modal hide fade modal-deploy" tabindex="-1" role="dialog" aria-hidden="true">
+    <form method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 class="rollback">Rollback</h3>
+            <h3 class="deploy">Deployment List</h3>
+            <h3 class="commit">Manual Commit</h3>
+        </div>
+        <div class="modal-body">
+            <p class="rollback">
+                This will rollback<span class="rollback-name"></span>. Are you sure you want rollback theese changes?<br />
+                Note: all changes made in magento admin panel after that extension installation will be lost.
+            </p>
+            <p class="commit">
+                This will save state of all files added and edited using FTP in your store. You will have an ability to rollback that change in the future. Are you sure you want to continue?<br />
+                Briefly explain what has been changed:<br />
+                <textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here"></textarea>
+            </p>
+            <div class="deploy">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>First name</td>
+                            <td>
+                                <button type="submit" class="btn" name="deploy" value="id">Deploy</button>
+                                <button type="submit" class="btn" name="deploy" value="id">Deploy</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="commit">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">No</button>
+                <button type="submit" value="commit" name="action" class="btn btn-primary">Yes</button>
+            </div>
+            <div class="rollback">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">No, cancel</button>
+                <button type="submit" value="rollback" name="action" class="btn btn-primary">Yes, please rollback</button>
+            </div>
+            <p class="deploy pull-left">
+                Choose commited state to deploy it on your own server.
+            </p>
+        </div>
+    </form>
 </div>
 
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>

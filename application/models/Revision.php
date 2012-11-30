@@ -202,5 +202,14 @@ class Application_Model_Revision {
     {
         return $this->getMapper()->fetchAll();
     }
-    
+
+    /**
+     * fetches array of all revisions for instance<br />
+     * joined with extension table to get extension name
+     * @param int $instance_id
+     */
+    public function getAllForInstance($instance_id)
+    {
+        return $this->getMapper()->getAllForInstance($instance_id);
+    }
 }
