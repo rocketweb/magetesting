@@ -46,10 +46,7 @@ implements Application_Model_Task_Interface {
         chdir($startCwd);
 
         $this->db->getConnection()->exec("use ".$this->config->resources->db->params->dbname);
-
-        //remove dev_extension_queue elements for removed queue
-        $this->db->delete('dev_extension_queue','instance_id='.$this->_instanceObject->getId());
-       
+      
         //remove instance extensions
         $this->db->delete('instance_extension','instance_id='.$this->_instanceObject->getId());
         
