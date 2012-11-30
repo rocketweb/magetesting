@@ -119,7 +119,7 @@ class Application_Model_ExtensionMapper {
         
         //find instance by name 
         $instanceModel = new Application_Model_Instance();
-        $instance = $instanceModel->findByName($instance_name);
+        $instance = $instanceModel->findByDomain($instance_name);
         
         //find extensions that match version and edition
         $matchingExtensions = $this->getDbTable()->findMatching($instance);
@@ -132,7 +132,7 @@ class Application_Model_ExtensionMapper {
         
         //find instance by name 
         $instanceModel = new Application_Model_Instance();
-        $instance = $instanceModel->findByName($instance_name);
+        $instance = $instanceModel->findByDomain($instance_name);
         
         //find extensions that match version and edition
         $installedExtensions = $this->getDbTable()->findInstalled($instance);
@@ -144,7 +144,7 @@ class Application_Model_ExtensionMapper {
     public function fetchInstanceExtensions($instance_name) {
         //find instance by name
         $instanceModel = new Application_Model_Instance();
-        $instance = $instanceModel->findByName($instance_name);
+        $instance = $instanceModel->findByDomain($instance_name);
 
         return $this->getDbTable()->fetchInstanceExtensions($instance);
     }

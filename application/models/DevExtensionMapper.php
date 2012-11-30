@@ -124,9 +124,9 @@ class Application_Model_DevExtensionMapper {
     
     public function getAllForInstance($instance_name){
         
-        //find instance by name 
+        //find instance by domain 
         $instanceModel = new Application_Model_Queue();
-        $instance = $instanceModel->findByName($instance_name);
+        $instance = $instanceModel->findByDomain($instance_name);
         
         //find extensions that match version and edition
         $matchingExtensions = $this->getDbTable()->findMatching($instance);
