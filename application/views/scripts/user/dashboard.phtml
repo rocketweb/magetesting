@@ -41,7 +41,7 @@
                         </div>
                         <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
                             <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store"><i class="icon icon-home"></i> View Store</a>
-                            <a href="#" class="btn btn-mini admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
+                            <a href="#" class="btn btn-mini admin-panel" data-admin-login="<?php echo $this->user->login; ?>" data-admin-password="<?php echo $item['backend_password']; ?>" data-admin-frontname="<?php echo $item['backend_name']; ?>"><i class="icon icon-wrench"></i> Admin Panel</a>
                             <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store"><i class="icon icon-white icon-remove"></i></a>
                         </div> 
                         <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
