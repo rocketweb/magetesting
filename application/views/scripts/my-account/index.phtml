@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container account_page">
     <h1>Your account details</h1>
     <div class="row">
         <div class="span3">
@@ -6,14 +6,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="span">
+        <div class="span account_member">
             Member since <?php echo date('F j,Y', strtotime($this->user->getAddedDate())); ?>
         </div>
         <div class="span2">
             <a class="btn btn-blue"href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account'), 'default', true); ?>">Edit account</a>
         </div>
     </div>
-    <hr />
     <h3>Current plan: <?php if($this->plan->getId()==0): ?>
         None
         <?php else:
@@ -36,15 +35,14 @@
     </div>
     <br />
     <div class="row">
-        <div class="span2">
-            <a class="btn btn-large btn-primary" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">Plans comparison</a>
+        <div class="span account_plans">
+            <a class="btn btn-large btn-inverse" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">Plans comparison</a>
         </div>
     </div>
     <?php if ($this->user->getGroup()=='free-user'): ?>
     <br />
     Have a coupon code? <a class="btn btn-blue" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'coupon')); ?>">Redeem your bonus!</a>
     <?php endif; ?>
-    <hr />
     <?php /*
     <div class="row">
         <div class="span3">
