@@ -132,6 +132,17 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
                     
+                    //Add queue item with RevisionInit
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('RevisionCommit');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId($installId);  
+                    $queueModel->save();
+                    
                     $this->_helper->FlashMessenger('New installation added to queue');
 
                     //magetesting user creates database
@@ -258,6 +269,29 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setParentId(0);
                     $queueModel->setExtensionId(0);
+                    $queueModel->save();
+                    $installId = $queueModel->getId();
+                    
+                    unset($queueModel);
+                    
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('RevisionInit');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId($installId);  
+                    $queueModel->save();
+                    
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('RevisionCommit');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId($installId);  
                     $queueModel->save();
                     
                     //TODO: Add queue Item with MagentoInstall and parent id from above
