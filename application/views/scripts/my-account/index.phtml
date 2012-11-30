@@ -41,8 +41,10 @@
     </div>
     <?php if ($this->user->getGroup()=='free-user'): ?>
     <br />
+    <div class="row">
     <div class="span account_member">Have a coupon code?</div> 
     <div class="span"><a class="btn btn-blue" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'coupon')); ?>">Redeem your bonus!</a></div>
+    </div>
     <?php endif; ?>
     <?php /*
     <div class="row">
