@@ -132,6 +132,17 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
                     
+                    //Add queue item with RevisionInit
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('RevisionCommit');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId($installId);  
+                    $queueModel->save();
+                    
                     $this->_helper->FlashMessenger('New installation added to queue');
 
                     //magetesting user creates database
@@ -258,6 +269,29 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setParentId(0);
                     $queueModel->setExtensionId(0);
+                    $queueModel->save();
+                    $installId = $queueModel->getId();
+                    
+                    unset($queueModel);
+                    
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('RevisionInit');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId($installId);  
+                    $queueModel->save();
+                    
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('RevisionCommit');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId($installId);  
                     $queueModel->save();
                     
                     //TODO: Add queue Item with MagentoInstall and parent id from above
@@ -455,7 +489,7 @@ class QueueController extends Integration_Controller_Action {
                         $extensionQueueItem->setUserId($instance->user_id);
                         $extensionQueueItem->setExtensionId($request->getParam('extension_id'));
                         $extensionQueueItem->setParentId(0);
-                        $extensionQueueItem->setServerId($this->auth->getIdentity()->server_id);
+                        $extensionQueueItem->setServerId($instance->server_id);
                         $extensionQueueItem->setTask('ExtensionInstall');
                         $extensionQueueItem->save();
                         
@@ -470,7 +504,7 @@ class QueueController extends Integration_Controller_Action {
                         $queueModel->setUserId($instance->user_id);
                         $queueModel->setExtensionId(0);
                         $queueModel->setParentId($queueId);
-                        $queueModel->setServerId($this->auth->getIdentity()->server_id);
+                        $queueModel->setServerId($instance->server_id);
                         $queueModel->setTask('RevisionCommit');
                         $queueModel->setTaskParams(serialize(
                             array(
@@ -559,10 +593,15 @@ class QueueController extends Integration_Controller_Action {
         $domain = $request->getParam('domain', null);
         if ($request->isPost() && $domain!=null) {
             
+            $timeExecution = $this->getInvokeArg('bootstrap')
+                        ->getResource('config')
+                ->magento
+                ->instanceTimeExecution;
+            
             $instanceModel = new Application_Model_Instance();
             $instanceItem = $instanceModel->findPositionByName($domain);
             
-            echo Zend_Json_Encoder::encode($instanceItem->num);
+            echo Zend_Json_Encoder::encode($instanceItem->num*$timeExecution);
         } 
     }
     

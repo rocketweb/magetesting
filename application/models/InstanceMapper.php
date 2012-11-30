@@ -32,6 +32,7 @@ class Application_Model_InstanceMapper {
                 'status'           => $instance->getStatus(),
                 'version_id'       => $instance->getVersionId(),
                 'user_id'          => $instance->getUserId(),
+                'server_id'        => $instance->getServerId(),
                 'domain'           => $instance->getDomain(),
                 'instance_name'    => $instance->getInstanceName(),
                 'sample_data'      => $instance->getSampleData(),
@@ -70,6 +71,7 @@ class Application_Model_InstanceMapper {
                 ->setStatus($row->status)
                 ->setVersionId($row->version_id)
                 ->setUserId($row->user_id)
+                ->setServerId($row->server_id)
                 ->setDomain($row->domain)
                 ->setInstanceName($row->instance_name)
                 ->setSampleData($row->sample_data)
@@ -103,11 +105,12 @@ class Application_Model_InstanceMapper {
                     ->setStatus($row->status)
                     ->setVersionId($row->version_id)
                     ->setUserId($row->user_id)
+                    ->setServerId($row->server_id)
                     ->setDomain($row->domain)
                     ->setInstanceName($row->instance_name)
                     ->setSampleData($row->sample_data)
                     ->setBackendPassword($row->backend_password)
-		    ->setCustomProtocol($row->custom_protocol)
+                    ->setCustomProtocol($row->custom_protocol)
                     ->setCustomHost($row->custom_host)
                     ->setCustomRemotePath($row->custom_remote_path)
                     ->setCustomLogin($row->custom_login)
@@ -181,10 +184,19 @@ class Application_Model_InstanceMapper {
         return $keys;
     }
     
+    public function findByDomain($domain){
+        return $this->getDbTable()
+                    ->findByDomain($domain);
+    }
+    
+    /**
+     * @deprecated: use findByDomain instead
+     * @param type $instance_name
+     * @return type
+     */
     public function findByName($instance_name)
     {
-        return $this->getDbTable()
-                    ->findByName($instance_name);
+        return $this->findByDomain($instance_name);
         
     }
     
