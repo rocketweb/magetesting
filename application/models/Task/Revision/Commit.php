@@ -16,7 +16,7 @@ implements Application_Model_Task_Interface {
         $this->config = $this->_getConfig();
     }
     
-    public function process() {
+    public function process(Application_Model_Queue $queueElement = null) {
         
         $this->_createDbBackup();
         $this->_commit();
