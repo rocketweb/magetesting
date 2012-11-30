@@ -131,7 +131,7 @@ class Application_Model_Queue {
     public function setTaskParams($value,$serialize=true)
     {
         if ($serialize === true){
-            $serialized = serialize($value);
+            $serialized = Zend_Json::encode($value);
             $this->_task_params = $serialized;
         } else {
             $this->_task_params = $value;
@@ -148,7 +148,7 @@ class Application_Model_Queue {
     public function getTaskParams($unserialize = true)
     {
         if ($unserialize){
-            $unserialized = unserialize($this->_task_params);
+            $unserialized = Zend_Json::decode($this->_task_params);
             return $unserialized;
         } else {
             return $this->_task_params;

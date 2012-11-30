@@ -17,7 +17,11 @@ class Application_Form_UserRegister extends Integration_Form
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 50)),
+                    /**
+                     * 13 used because of mysql username limit 
+                     * 13 + 3 from (magento.userprefix)
+                     */ 
+                        array('validator' => 'StringLength', 'options' => array(3, 13)),
                     $regex
                 ),
             
