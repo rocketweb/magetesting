@@ -34,6 +34,7 @@
 			        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['instance_id'] ? ' installed' : ' notInstalled'); ?>">
 			            <div class="wrapper">
 			                <!-- INSTALLED or either PREMIUM or FREE -->
+			                	<div class="hover_inner_shadow"></div>
 			                <?php if((float)$extension['price']): ?>
 			                	<?php if((int)$extension['instance_id']): ?>
 			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium_installed.png'); ?>" alt="premium" /></div>
