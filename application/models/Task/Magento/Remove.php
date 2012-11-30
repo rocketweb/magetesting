@@ -17,7 +17,7 @@ implements Application_Model_Task_Interface {
         $this->_instanceFolder = $this->_getInstanceFolder();
     }
     
-    public function process(Application_Model_Queue $queueElement = null) {
+    public function process(Application_Model_Queue &$queueElement = null) {
         
         $DbManager = new Application_Model_DbTable_Privilege($this->db,$this->config);
         if ($DbManager->checkIfDatabaseExists($this->_dbname)){

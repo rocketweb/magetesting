@@ -10,7 +10,7 @@ extends Application_Model_Task
         $this->config = $this->_getConfig();
     }
     
-    public function setup(Application_Model_Queue $queueElement){
+    public function setup(Application_Model_Queue &$queueElement){
         parent::setup($queueElement);
     }
     

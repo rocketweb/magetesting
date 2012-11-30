@@ -15,7 +15,7 @@ implements Application_Model_Task_Interface {
         $this->filePrefix = $this->_getFilePrefix();
     }
     
-    public function setup(Application_Model_Queue $queueElement) {
+    public function setup(Application_Model_Queue &$queueElement) {
         parent::setup($queueElement);
         $this->_adminemail = $this->config->magento->adminEmail; //fetch from zend config       
         $this->logger = $this->_getLogger();

@@ -88,6 +88,7 @@ class QueueController extends Integration_Controller_Action {
                     $instanceModel->setVersionId($form->version->getValue())
                             ->setEdition($form->edition->getValue())
                             ->setUserId($userId)
+                            ->setServerId($this->auth->getIdentity()->server_id)
                             ->setSampleData($form->sample_data->getValue())
                             ->setInstanceName($form->instance_name->getValue())
                             ->setDomain(
@@ -132,10 +133,16 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
                     
-                    //Add queue item with RevisionInit
+                    //Add queue item with RevisionCommit
                     $queueModel = new Application_Model_Queue();                    
                     $queueModel->setInstanceId($instanceId);
                     $queueModel->setTask('RevisionCommit');
+                    $queueModel->setTaskParams(
+                            array(
+                                'commit_comment' => 'Initial Magento Commit',
+                                'commit_type' => 'magento-init'                               
+                                )
+                        );
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
@@ -287,6 +294,12 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel = new Application_Model_Queue();                    
                     $queueModel->setInstanceId($instanceId);
                     $queueModel->setTask('RevisionCommit');
+                    $queueModel->setTaskParams(
+                            array(
+                                'commit_comment' => 'Initial Magento Commit',
+                                'commit_type' => 'magento-init'                               
+                                )
+                    );
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
@@ -506,12 +519,12 @@ class QueueController extends Integration_Controller_Action {
                         $queueModel->setParentId($queueId);
                         $queueModel->setServerId($instance->server_id);
                         $queueModel->setTask('RevisionCommit');
-                        $queueModel->setTaskParams(serialize(
+                        $queueModel->setTaskParams(
                             array(
                                 'commit_comment' => 'Adding '.$extensionModel->getName().' ('.$extensionModel->getVersion().')',
                                 'commit_type' => 'extension-install'                               
                                 )
-                            )
+                            
                         );
                         $queueModel->save();
                         

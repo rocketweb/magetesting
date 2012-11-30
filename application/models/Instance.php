@@ -337,9 +337,9 @@ class Application_Model_Instance {
       return $this;
     }
     
-    public function findByName( $instance_name )
+    public function findByDomain( $domain )
     {
-        return $this->getMapper()->findByName( $instance_name );
+        return $this->getMapper()->findByDomain( $domain );
     }
     
     public function findPositionByName( $instance_name )

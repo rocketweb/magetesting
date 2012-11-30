@@ -42,13 +42,18 @@ class Application_Model_Task {
         $customTaskModel = new $className();       
         $customTaskModel->setup($queueElement);
         $customTaskModel->process();
+        
+        /* only remove database row when no error was registered */
+        if ($queueElement->getStatus()=='ready'){
+            self::$db->delete('queue', array('id=' . $queueElement->getId()));
+        }
 
     }
     /**
      * Sets class's object we'll be working on
      * TODO: if possible, create method to get all info with one sql
      */
-    public function setup(Application_Model_Queue $queueElement) {
+    public function setup(Application_Model_Queue &$queueElement) {
         $this->_queueObject = $queueElement;
         
         //setup other model objects (user/version/instance)
@@ -149,8 +154,12 @@ $vals = explode(',', $matches[1]);
             return false;
         }
         try {
+            $this->_queueObject->setStatus($status);
+        $this->_instanceObject->setStatus($status);
+        
         self::$db->update('queue', array('status' => $status), 'id=' . $this->_queueObject->getId());
         self::$db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
+        
         } catch (Exception $e){
             var_dump($e->getMessage());
         }
