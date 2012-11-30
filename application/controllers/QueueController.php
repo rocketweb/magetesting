@@ -549,41 +549,7 @@ class QueueController extends Integration_Controller_Action {
             $this->_helper->viewRenderer->setNoRender(true);
         }
     }
-
-    public function devextensionsAction() {
-        $request = $this->getRequest();
-        $instance_name = $request->getParam('instance');
-
-        $devExtensionModel = new Application_Model_DevExtension();
-        $devExtensions = $devExtensionModel->getAllForInstance($instance_name);
-
-        $form = new Application_Form_DevExtensionInstall($devExtensions);
-        $form->extension->setMultiOptions($devExtensions);
-        $form->instance_name->setValue($instance_name);
-        if ($request->isPost()) {
-            if ($form->isValid($request->getPost())) {
-
-                $instanceModel = new Application_Model_Instance();
-                $instanceInfo = $instanceModel->findByDomain($this->getRequest()->getParam('instance'));
-
-                //navigate through file list and download them
-                foreach ($form->extension->getValue() as $ext) {
-
-                    $devExt = new Application_Model_DevExtensionQueue();
-                    $devExt->setDevExtensionId($ext);
-                    $devExt->setQueueId($instanceInfo->id);
-                    $devExt->setUserId($instanceInfo->user_id);
-                    $devExt->setStatus('pending');
-                    $devExt->save();
-                    //////
-                }
-            }
-        }
-
-        //get dev extension list from database
-        $this->view->form = $form;
-    }
-    
+   
     public function getstatusAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
