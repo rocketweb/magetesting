@@ -20,6 +20,8 @@ class Application_Model_Instance {
 
     protected $_instance_name;
 
+    protected $_description;
+
     protected $_backend_password;
     
     protected $_type;
@@ -155,6 +157,17 @@ class Application_Model_Instance {
         return $this->_instance_name;
     }
 
+    public function setDescription($name)
+    {
+        $this->_description = $name;
+        return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->_description;
+    }
+
     public function setBackendPassword($password)
     {
         $this->_backend_password = $password;
@@ -211,6 +224,7 @@ class Application_Model_Instance {
                 'user_id'          => $this->getUserId(),
                 'domain'           => $this->getDomain(),
                 'instance_name'    => $this->getInstanceName(),
+                'description'      => $this->getDescription(),
                 'backend_password' => $this->getBackendPassword(),
                 'sample_data'      => $this->getSampleData(),
                 'custom_protocol'  => $this->getCustomProtocol(),
