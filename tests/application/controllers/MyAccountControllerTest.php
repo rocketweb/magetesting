@@ -9,10 +9,6 @@ class MyAccountControllerTest extends ControllerTestCase
         $this->loginUser('standard-user', 'standard-user');
 
         $this->dispatch('/my-account/index');
-        
-                
-        
-        file_put_contents('test.log', var_export($this->getFrontController()->getResponse()->getBody(), true));
 
         $this->assertNotRedirect();
         $this->assertQueryContentContains('h1', 'Your account details');
