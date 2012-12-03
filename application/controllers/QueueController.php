@@ -661,11 +661,10 @@ class QueueController extends Integration_Controller_Action {
             $model = new Application_Model_Revision();
             foreach($model->getAllForInstance($instance->id) as $revision) {
                 $content .= '<tr>';
-                $name = ((int)$revision['extension_id'] ? $revision['extension_name'] : ($revision['comment'] ? $revision['comment'] : 'Manual Comment'));
-                $content .= '<td>'.$name.'</td>';
+                $content .= '<td>'.$revision['comment'].'</td>';
                 $content .= '<td>
-                    <button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
-                    <a class="btn btn-primary" href="#">Download</a>
+                    '//<button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
+                    .'<a class="btn btn-primary" href="#">Download</a>
                 </td>';
                 $content .= '</tr>';
             }
