@@ -324,3 +324,38 @@ html,body{height:100%;}
 .instance-edit .control-group #description {
     width: 98%;
 }
+
+/** COMPARE PAGE TABLE **/
+
+.compare-table-title-row{
+	width: 283px;
+	height: 150px;
+	background: none;
+	padding: 0 !important;
+}
+.compare-table-title{
+	display: block;
+	width: 233px;
+	height: 40px;
+	border: 1px solid #e7e7e7;
+	border-right: none;
+	border-bottom: 5px solid #34aae5;
+	border-top-left-radius: 6px;
+	padding: 26px 0 0 50px;
+	font-size: 24px;
+}
+.compare-table-data-name{
+	display: inline-block;
+	width: 244px;
+	height: 151px;
+	padding: 24px 0 0 24px !important;
+	background: #34aae5;
+	border: 1px solid #e7e7e7 !important;
+	border-top-left-radius: 6px !important;
+	border-top-right-radius: 6px !important;
+	border-top-style: solid !important;
+	color: #fff;
+	font-size: 24px;
+	font-weight: normal !important;
+	text-align: center;
+}
