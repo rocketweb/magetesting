@@ -7,15 +7,14 @@ class UserControllerTest extends ControllerTestCase
     public function testValidLoginShouldGoToDashboard()
     {
         $this->loginUser('standard-user', 'standard-user');
- 
-        $this->request->setMethod('GET')->setPost(array());
-        $this->dispatch('/user/dashboard');
         
-        $this->assertModule('default');
-        $this->assertController('user');
-        $this->assertAction('dashboard');
+        $this->dispatch('/user/dashboard');
+
         $this->assertNotRedirect();
-        $this->assertQueryContentContains('a', 'Logout');
+        $this->assertQueryContentContains('strong', 'You have been logged in successfully');
+        
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('/user/logout');
     }
     
     public function testNotValidLogin()
@@ -34,7 +33,7 @@ class UserControllerTest extends ControllerTestCase
         
         $this->resetRequest()->resetResponse();
         $this->dispatch('/user/login');
-        
+
         $this->assertQuery('form');
         $this->assertQueryContentContains('strong', 'You have entered wrong credentials. Please try again.');
     }
@@ -95,4 +94,34 @@ class UserControllerTest extends ControllerTestCase
         $this->assertQuery('form .errors');
     }
 
+    /**
+     * Before run the test, please change param in local.ini 
+     * In register.useCoupons set 0. register.useCoupons = 0
+     */
+    public function testValidRegistration()
+    {
+        $db = $this->bootstrap->getBootstrap()->getResource('db');
+        $db->beginTransaction();
+        
+        $data = array(
+            'login'           => 'testlogin',
+            'email'           => 'email@rocketweb.com',
+            'firstname'       => 'First',
+            'lastname'        => 'Last Name',
+            'password'        => 'password',
+            'password_repeat' => 'password',
+        );
+        $request = $this->getRequest();
+        $request->setMethod('POST')->setPost($data);
+        $this->dispatch('/user/register');
+        
+        $this->assertRedirectTo('/user/login');
+
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('GET')->setPost(array());
+        $this->dispatch('/user/login');
+        
+        $this->assertQueryContentContains('strong', 'You have been registered successfully');
+        $db->rollback();
+    }
 }

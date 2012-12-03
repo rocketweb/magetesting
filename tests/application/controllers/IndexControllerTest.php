@@ -1,14 +1,17 @@
 <?php
+require_once realpath(dirname(__FILE__) . '/../../ControllerTestCase.php');
 
-class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
+class IndexControllerTest extends ControllerTestCase
 {
-
-    public function setUp()
+    public function testHomePage()
     {
-        $this->bootstrap = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
-        parent::setUp();
+        $this->dispatch('/');
+        
+        $this->assertController('index');
+        $this->assertAction('index');
+        $this->assertNotRedirect();
+        $this->assertResponseCode(200);
+        $this->assertQuery('div.hero-unit');
     }
 
-
 }
-
