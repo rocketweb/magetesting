@@ -213,6 +213,7 @@ $(document).ready(function () {
                 return false;
             });
             $created_link.click();
+            e.preventDefault();
         });
     }
 
