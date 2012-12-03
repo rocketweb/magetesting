@@ -1,14 +1,15 @@
 @LoginWidth: 420px;
 @LoginHeight: 310px;
+@LoginPadding: 20px;
 
 .mt-login {
 	position: absolute;
   top: 50%;
   left: 50%;
-  margin:(@LoginHeight / -2) 0 0 (@LoginWidth / -2);
+  margin:((@LoginHeight / -2) - @LoginPadding) 0 0 ((@LoginWidth / -2) - @LoginPadding);
   width: @LoginWidth;
 	height: @LoginHeight;
-	padding: 20px;
+	padding: @LoginPadding;
 	
 	border: 1px solid @Grey;
 	-webkit-border-radius: 6px;
