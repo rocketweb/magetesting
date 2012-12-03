@@ -90,14 +90,14 @@
 
                             <!-- START DEPLOYMENT BOX -->
                             <div class="span4 panel deployment">
-                                <h5>Deployment <span class="version">version <span class="badge badge-blue"><?php echo $this->escape($item['revision_count'])?></span></span></h5>
+                                <h5>Deployment <span class="version">version <span class="badge badge-blue"><?php echo (int)$this->escape($item['revision_count'])?></span></span></h5>
                                 <div class="control-group">
                                     <div class="controls">
                                         <a href="#" class="btn rollback-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>" data-rollback-name='<?php echo ' "'.($item['extension_name'] ? $item['extension_name'].'" installation' : ($item['comment'] ? $item['comment'] : 'Manual Commit').'"'); ?>'>
                                             <i class="icon icon-circle-arrow-left"></i> Roll Back
                                         </a>
-                                        <a href="#" class="btn commit-button" ><i class="icon icon-ok-sign"></i> Commit</a>
-                                        <a href="#" class="btn deploy-button">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
+                                        <a href="#" class="btn commit-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>" ><i class="icon icon-ok-sign"></i> Commit</a>
+                                        <a href="#" class="btn deploy-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
                                         <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                                     </div>
                                 </div>
@@ -152,7 +152,7 @@
 <div id="close-instance" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Close Store</h3>
+        <h3>Delete Store</h3>
     </div>
     <div class="modal-body">
         <p>Do you really want to close store<span class="close-instance-name"></span>? There is no undo!</p>
