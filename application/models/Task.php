@@ -32,7 +32,7 @@ class Application_Model_Task {
     }
      
     /* Runs specific method depending on task type */
-    public function process(Application_Model_Queue $queueElement){
+    public function process(Application_Model_Queue &$queueElement){
                
         $filter = new Zend_Filter_Word_CamelCaseToUnderscore();
         $classSuffix = $filter->filter($queueElement->getTask());
