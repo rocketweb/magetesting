@@ -448,9 +448,7 @@ class QueueController extends Integration_Controller_Action {
 
             if ($form->isValid($this->_request->getPost())) {
                 $instance->setOptions($form->getValues());
-                if($instance->getStatus() == 'pending') {
-                    $instance->save();
-                }
+                $instance->save();
 
                 $this->_helper->FlashMessenger('Store data has been changed successfully');
                 return $this->_helper->redirector->gotoRoute(array(

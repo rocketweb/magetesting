@@ -23,7 +23,7 @@ $(document).ready(function () {
                 $add_class = '';
             if($this.hasClass('rollback-button')) {
                 // set name of rollback ( extension name | manual commit | commit comment )
-                var $rollback_name_string = ' <span class="label label-warning">',
+                var $rollback_name_string = ' <span class="label label-info">',
                     $comment = $this.data('comment'),
                     $match = $comment.match(/Adding ([^\(]*[^\(\s])(?: \(.*\))*/i);
                 if($match) {
