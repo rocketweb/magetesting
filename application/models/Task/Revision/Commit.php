@@ -16,7 +16,7 @@ implements Application_Model_Task_Interface {
         $this->config = $this->_getConfig();
     }
     
-    public function process(Application_Model_Queue $queueElement = null) {
+    public function process(Application_Model_Queue &$queueElement = null) {
         
         $this->_createDbBackup();
         $this->_commit();
@@ -122,6 +122,7 @@ implements Application_Model_Task_Interface {
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
         
+                
         if (!isset($matches[2])){
             $this->_updateStatus('error', 'Could not find revision information, aborting');
             exit;
