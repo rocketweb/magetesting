@@ -13,7 +13,7 @@ html,body{height:100%;font-family:Helvetica,Arial,sans-serif;}
 .navbar-global .nav>li>.dropdown-menu:after{border-bottom:0;}
 h1{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:300;font-size:28px;}
 h4{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:300;font-size:21px;}
-fieldset.margins{margin:40px 0;}
+fieldset.margins{margin:20px 0 70px 0;}
 .mt{margin-top:40px;}
 .mt_shadow{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}
 .tab-stripe{float:left;min-height:60px;min-width:5px;background:#34aae5;}
