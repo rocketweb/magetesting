@@ -365,6 +365,9 @@ $(document).ready(function () {
     
     // change size of clicked element
     $extensions_isotope.find('.element').click(function() {
+        if( !($(this).hasClass('large'))){
+            $('.large').removeClass('large').find('div.extras').addClass('hidden');
+        }
         $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
         $extensions_isotope.isotope('reLayout');
     });
