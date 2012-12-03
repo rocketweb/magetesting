@@ -3,9 +3,9 @@
 <table class="table table-striped" >
     <thead>
         <tr>
-            <th class="compare-table-title-row"><h3><span class="compare-table-title">Featrues</span></h3><h2><span><?php foreach($this->plans as $plan): ?></span></h2></th>
+            <th class="compare-table-title-row"><span class="compare-table-title">Featrues</th>
             
-                <th class="compare-table-data-name"><?php echo $plan->getName(); ?></th>
+                <th class="compare-table-data-name"><h3><span><?php echo $plan->getName(); ?></span></h3><h2><span><?php foreach($this->plans as $plan): ?></span></h2></th>
                 <th class="compare-table-empty-first"></th>
             <?php endforeach; ?>
         </tr>
