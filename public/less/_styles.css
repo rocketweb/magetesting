@@ -31,7 +31,7 @@ h1{font-family:"pragmatica-web-condensed",sans-serif;font-style:normal;font-weig
 .alert-blue .close{position:relative;top:-2px;right:-21px;line-height:20px;}
 .accordion-group .accordion-heading .accordion-toggle{outline:0;}
 footer a{color:#f64135;}
-.mt-login{position:absolute;top:50%;left:50%;margin:-155px 0 0 -210px;width:420px;height:310px;padding:20px;border:1px solid #e5e5e5;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}.mt-login legend{padding-bottom:20px;}
+.mt-login{position:absolute;top:50%;left:50%;margin:-175px 0 0 -230px;width:420px;height:310px;padding:20px;border:1px solid #e5e5e5;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}.mt-login legend{padding-bottom:20px;}
 .mt-login .mt-login-input input{width:407px;}
 .mt-login .mt-pad{margin:20px 0;}
 .instance-edit .control-group{width:50%;}.instance-edit .control-group:first-child{width:100%;}
