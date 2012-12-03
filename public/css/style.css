@@ -331,7 +331,6 @@ html,body{height:100%;}
 }
 
 /** COMPARE PAGE TABLE **/
-
 .compare-table-title-row{
 	width: 283px;
 	height: 150px;
@@ -351,11 +350,12 @@ html,body{height:100%;}
 }
 .compare-table-data-name{
 	display: inline-block;
-	width: 244px;
+	width: 268px;
 	height: 151px;
-	padding: 24px 0 0 24px !important;
+	padding: 0 !important;
 	background: #34aae5;
 	border: 1px solid #e7e7e7 !important;
+	border-bottom: none !important;
 	border-top-left-radius: 6px !important;
 	border-top-right-radius: 6px !important;
 	border-top-style: solid !important;
@@ -363,4 +363,33 @@ html,body{height:100%;}
 	font-size: 24px;
 	font-weight: normal !important;
 	text-align: center;
+}
+
+.compare-table-data-name h3 span, .compare-table-data-name h2 span{
+	text-shadow: 1px 1px 1px #353535;
+}
+
+.compare-table-data-name h3{
+	margin-top: 20px;
+}
+.compare-table-data-name h3 span{
+	font-size: 24px;
+	display: block;
+	width: 268px;
+	text-align: center;
+}
+.compare-table-data-name h2{
+	font-size: 70px;
+	width: 100%;
+	text-align: center;
+	display: block;
+	margin-top: 10px;
+}
+.compare-table-data-name h2 span.compare-table-dollar{
+	font-size: 30px;
+	margin-right: 5px;
+}
+.compare-table-row-title{
+	background: #13272e;
+	color: #ffffff;
 }
