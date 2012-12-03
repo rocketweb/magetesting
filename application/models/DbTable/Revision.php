@@ -24,7 +24,7 @@ class Application_Model_DbTable_Revision extends Zend_Db_Table_Abstract
     public function getPreLastForInstance($instance_id)
     {
         $select = $this->select()
-                       ->from(array('r' => $this->_name), array('r.id', 'r.comment', 'r.filename', 'r.db_before_revision', 'r.hash'))
+                       ->from($this->_name)
                        ->where('r.instance_id = ?', $instance_id)
                        ->order('r.id DESC')
                        ->limit(1, 1);
