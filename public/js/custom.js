@@ -1,4 +1,9 @@
 $(document).ready(function () {
+	if( ! ($(document).height() > $('body').height()) ){
+		$('footer').css('bottom', '40px');
+	}
+	
+	
     // configure tooltip messages in place of default browser title popovers
     $("a[rel=tooltip]").tooltip({
         placement: 'bottom'
@@ -352,6 +357,9 @@ $(document).ready(function () {
     
     // change size of clicked element
     $extensions_isotope.find('.element').click(function() {
+    	if(!($(this).hasClass('large'))){
+	    	$('.element.large').removeClass('large').find('div.extras').addClass('hidden');
+    	}
         $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
         $extensions_isotope.isotope('reLayout');
     });
