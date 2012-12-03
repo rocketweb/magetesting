@@ -68,7 +68,8 @@ implements Application_Model_Task_Interface {
         }
        
         /*TODO: decide if move to user revision/ folder next to public_html ? */
-        $apppath = str_replace('application','', APPLICATION_PATH);
+        $apppath = str_replace('/application','', APPLICATION_PATH);
+        
         exec('sudo tar -zcf '.$apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$hash.'.tgz '.$hash.'/mageroot');
                
         $this->_insertRevisionInfo();
@@ -144,7 +145,7 @@ implements Application_Model_Task_Interface {
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         
         //export backup
-        $apppath = str_replace('application','', APPLICATION_PATH);
+        $apppath = str_replace('/application','', APPLICATION_PATH);
         $dbDir = $apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$this->_instanceObject->getDomain().'/db/';
         exec('sudo mkdir -p '.$dbDir);
         $dbFileName = $dbDir.'db_backup_'.date("Y_m_d_H_i_s");
