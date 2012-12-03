@@ -214,7 +214,7 @@ class Application_Model_Revision {
     }
     
     public function getPreLastForInstance($instance_id){
-        return $this->getMapper()->getPreLastForInstance($instance_id);
+        return $this->getMapper()->getPreLastForInstance($instance_id, $this);
     }
     
 }
