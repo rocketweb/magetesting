@@ -12,7 +12,7 @@
     <![endif]-->
 
     <?php 
-  
+    $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->baseUrl('favicon.ico')));
     $this->headLink()->prependStylesheet($this->baseUrl('public/css/style.css'));
     $this->headLink()->prependStylesheet($this->baseUrl('public/css/bootstrap-responsive.min.css'));
     $this->headLink()->prependStylesheet($this->baseUrl('public/css/bootstrap.min.css'));
@@ -23,8 +23,10 @@
     ?>
     
     <?php  ?>
-    
-    <link rel="shortcut icon" href="favicon.ico">
+
+    <script type="text/javascript" src="//use.typekit.net/qva5ffr.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
