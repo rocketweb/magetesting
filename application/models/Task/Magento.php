@@ -104,12 +104,6 @@ extends Application_Model_Task {
             $this->logger->log($message, LOG_DEBUG);
             unset($output);
 
-            //TODO: Move this logic somewhere else, 
-            // we're going tu use plan update for this
-            //
-            //TODO: check if $queueElement['plan_id'] has access 
-            // to ftp account and send over credentials
-
             if ('free-user' != $this->_userObject->getGroup()) {
                 /* send email with account details start */
                 $user_details = array(
