@@ -12,11 +12,20 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
 
         
         $this->addElement('text', 'instance_name', array(
-                'label'      => 'Name or note',
+                'label'      => 'Name',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
         ));
-        
+
+        $this->addElement('text', 'description', array(
+                'label'      => 'Description',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                    array('validator' => 'StringLength', 'options' => array('max' => 300))
+                )
+        ));
+
         $editionModel = new Application_Model_Edition();
         $this->addElement('select', 'edition', array(
                 'label'      => 'Used Edition',

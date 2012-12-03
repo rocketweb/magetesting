@@ -318,3 +318,9 @@ html,body{height:100%;}
 #instance-deployment label {
     margin-top: 10px;
 }
+.instance-edit .control-group:nth-child(2) {
+    width: 100%;
+}
+.instance-edit .control-group #description {
+    width: 98%;
+}
