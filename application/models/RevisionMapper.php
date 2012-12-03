@@ -99,13 +99,12 @@ class Application_Model_RevisionMapper {
         return $result;
     }
     
-    public function getPreLastForInstance($instance_id)
+    public function getPreLastForInstance($instance_id, Application_Model_Revision $revision)
     {
-        $result = new Application_Model_Revision();
         if((int)$instance_id) {
             $row = $this->getDbTable()->getPreLastForInstance($instance_id);
             if($row) {
-                $result->setId($row->id)
+                $revision->setId($row->id)
                 ->setUserId($row->user_id)
                 ->setInstanceId($row->instance_id)
                 ->setExtensionId($row->extension_id)
@@ -116,6 +115,6 @@ class Application_Model_RevisionMapper {
                 ->setDbBeforeRevision($row->db_before_revision);
             }
         }
-        return $result;
+        return $revision;
     }
 }
