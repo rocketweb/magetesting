@@ -307,7 +307,7 @@ html,body{height:100%;}
     display: none;
 }
 #instance-deployment.modal-rollback .rollback, #instance-deployment.modal-commit .commit, #instance-deployment.modal-deploy .deploy {
-    display: initial;
+    display: inline;
 }
 #instance-deployment form {
     margin: 0px;
