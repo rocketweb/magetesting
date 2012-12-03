@@ -101,11 +101,14 @@
                                 <h5>Deployment <span class="version">version <span class="badge badge-blue"><?php echo (int)$this->escape($item['revision_count'])?></span></span></h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <a href="#" class="btn rollback-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>" data-rollback-name='<?php echo ' "'.($item['extension_name'] ? $item['extension_name'].'" installation' : ($item['comment'] ? $item['comment'] : 'Manual Commit').'"'); ?>'>
+                                        <a href="#"
+                                           class="btn rollback-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>"
+                                           data-comment="<?php echo $item['extension_name']; ?>"
+                                           >
                                             <i class="icon icon-circle-arrow-left"></i> Roll Back
                                         </a>
-                                        <a href="#" class="btn commit-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>" ><i class="icon icon-ok-sign"></i> Commit</a>
-                                        <a href="#" class="btn deploy-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
+                                        <a href="#" class="btn commit-button<?php echo ((int)$item['revision_count'] > 0 ? '' : ' disabled'); ?>" ><i class="icon icon-ok-sign"></i> Commit</a>
+                                        <a href="#" class="btn deploy-button<?php echo ((int)$item['revision_count'] > 0 ? '' : ' disabled'); ?>">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
                                         <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                                     </div>
                                 </div>
@@ -163,13 +166,13 @@
         <h3>Delete Store</h3>
     </div>
     <div class="modal-body">
-        <p>Do you really want to close store<span class="close-instance-name"></span>? There is no undo!</p>
+        <p>Do you really want to delete store<span class="close-instance-name"></span>? There is no undo!</p>
     </div>
     <div class="modal-footer">
         <form method="post">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
             <input type="hidden" name="close" value="1" />
-            <button class="btn btn-danger">Close</button>
+            <button class="btn btn-danger">Delete</button>
         </form>
     </div>
 </div>
@@ -189,11 +192,12 @@
             </p>
             <p class="commit">
                 This will save state of all files added and edited using FTP in your store. You will have an ability to rollback that change in the future. Are you sure you want to continue?<br />
-                Briefly explain what has been changed:<br />
+                <label>Your comment:</label>
                 <textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here"></textarea>
+                <span class="help-block">Briefly explain what has been changed.</span>
             </p>
             <div class="deploy">
-                <table class="table">
+                <table class="table table-striped table-condensed">
                     <thead>
                         <tr>
                             <td>Name</td>
@@ -201,28 +205,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>First name</td>
-                            <td>
-                                <button type="submit" class="btn" name="deploy" value="id">Deploy</button>
-                                <button type="submit" class="btn" name="deploy" value="id">Deploy</button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="modal-footer">
             <div class="commit">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">No</button>
-                <button type="submit" value="commit" name="action" class="btn btn-primary">Yes</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">No, cancel</button>
+                <button type="submit" value="commit" name="action" class="btn btn-primary">Yes, commit</button>
             </div>
             <div class="rollback">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">No, cancel</button>
                 <button type="submit" value="rollback" name="action" class="btn btn-primary">Yes, please rollback</button>
             </div>
             <p class="deploy pull-left">
-                Choose commited state to deploy it on your own server.
+                Choose saved state of your store and download that to deploy on your server.
             </p>
         </div>
     </form>

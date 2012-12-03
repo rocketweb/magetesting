@@ -1,9 +1,4 @@
 $(document).ready(function () {
-	if( ! ($(document).height() > $('body').height()) ){
-		$('footer').css('bottom', '40px');
-	}
-	
-	
     // configure tooltip messages in place of default browser title popovers
     $("a[rel=tooltip]").tooltip({
         placement: 'bottom'
@@ -28,7 +23,17 @@ $(document).ready(function () {
                 $add_class = '';
             if($this.hasClass('rollback-button')) {
                 // set name of rollback ( extension name | manual commit | commit comment )
-                $rollback_name.empty().text($this.data('rollback-name'));
+                var $rollback_name_string = ' <span class="label label-warning">',
+                    $comment = $this.data('comment'),
+                    $match = $comment.match(/Adding ([^\(]*[^\(\s])(?: \(.*\))*/i);
+                if($match) {
+                    $rollback_name_string += $.trim($match[1])+'</span> installation';
+                } else if($comment) {
+                    $rollback_name_string += $comment+'</span>';
+                } else {
+                    $rollback_name_string += 'Manual Commit</span>';
+                }
+                $rollback_name.empty().append($rollback_name_string);
                 // set form action path
                 $form_action = $form_action.replace('[replace]', 'rollback');
                 // show modal with proper pre-class
@@ -45,18 +50,20 @@ $(document).ready(function () {
             } else if($this.hasClass('deploy-button')) {
                 // set form action path
                 $form_action = $form_action.replace('[replace]', 'deploy');
-                $deploy_table_body.empty();
-                $.ajax({
-                   url : $base_url+'/queue/fetch-deployment-list/domain/'+$domain,
-                   async : false,
-                   success : function(html) {
-                       if(typeof html == 'string' && html.length) {
-                           $deploy_table_body.append(html);
+                if($deployment_form.attr('action') != $form_action) {
+                    $deploy_table_body.empty();
+                    $.ajax({
+                       url : $base_url+'/queue/fetch-deployment-list/domain/'+$domain,
+                       async : false,
+                       success : function(html) {
+                           if(typeof html == 'string' && html.length) {
+                               $deploy_table_body.append(html.replace(/(Adding )([^\(]*[^\(\s])( \(.*\))*\</ig, '$2<'));
+                           }
                        }
-                   }
-                });
+                    });
+                }
                 // show modal with proper pre-class
-                $remove_class = 'modal-rolback modal-commit';
+                $remove_class = 'modal-rollback modal-commit';
                 $add_class = 'modal-deploy';
             }
             $deployment_modal.removeClass($remove_class).addClass($add_class).modal('show');
@@ -357,9 +364,6 @@ $(document).ready(function () {
     
     // change size of clicked element
     $extensions_isotope.find('.element').click(function() {
-    	if(!($(this).hasClass('large'))){
-	    	$('.element.large').removeClass('large').find('div.extras').addClass('hidden');
-    	}
         $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
         $extensions_isotope.isotope('reLayout');
     });
