@@ -76,7 +76,9 @@ class Integration_Acl extends Zend_Acl
         $this->allow('commercial-user', 'default_error', array('error'));
         $this->allow('commercial-user', 'default_index', array('index'));
         $this->allow('commercial-user', 'default_queue', array(
-                'add','add-custom','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus', 'fetch-deployment-list', 'rollback', 'commit', 'deploy'
+                'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
+                'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
+                'commit', 'deploy','getminutesleft'
         ));
         $this->allow('commercial-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
@@ -91,7 +93,9 @@ class Integration_Acl extends Zend_Acl
         $this->allow('awaiting-user', 'default_error', array('error'));
         $this->allow('awaiting-user', 'default_index', array('index'));
         $this->allow('awaiting-user', 'default_queue', array(
-                'add','add-custom','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus', 'fetch-deployment-list', 'rollback', 'commit', 'deploy'
+                'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
+                'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
+                'commit', 'deploy','getminutesleft'
         ));
         $this->allow('awaiting-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
