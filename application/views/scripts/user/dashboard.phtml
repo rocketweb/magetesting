@@ -107,8 +107,8 @@
                                            >
                                             <i class="icon icon-circle-arrow-left"></i> Roll Back
                                         </a>
-                                        <a href="#" class="btn commit-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>" ><i class="icon icon-ok-sign"></i> Commit</a>
-                                        <a href="#" class="btn deploy-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
+                                        <a href="#" class="btn commit-button<?php echo ((int)$item['revision_count'] > 0 ? '' : ' disabled'); ?>" ><i class="icon icon-ok-sign"></i> Commit</a>
+                                        <a href="#" class="btn deploy-button<?php echo ((int)$item['revision_count'] > 0 ? '' : ' disabled'); ?>">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
                                         <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                                     </div>
                                 </div>
