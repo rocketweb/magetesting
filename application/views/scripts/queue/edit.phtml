@@ -6,10 +6,10 @@
             id="<?php echo $this->form->getId() ?>"
             class="<?php echo $this->form->getAttrib('class') ?>">
             <legend>
-                <h3>Edit our store</h3>
+                <h1>Edit your store</h1>
             </legend>
             <fieldset>
-            <?php echo $this->form->instance_name ?>
+            	<?php echo $this->form->instance_name ?>
                 <div class="row">
                     <div class="span6"><?php echo $this->form->backend_login ?></div>
                     <div class="span6"><?php echo $this->form->backend_password ?></div>
@@ -31,7 +31,7 @@
                 <button 
                     type="submit"
                     name="<?php echo $this->form->instanceSave->getName(); ?>"
-                    class="btn btn-primary pull-right">
+                    class="btn btn-inverse pull-right">
                 <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->instanceSave->getLabel() ?></button>
             </div>
         </form>
