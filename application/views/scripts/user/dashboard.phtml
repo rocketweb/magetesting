@@ -2,7 +2,8 @@
 <div class="row">
     <div class="span12">
         <input id="base-url" type="hidden" value="<?php echo $this->baseUrl(); ?>" />
-        <h1>Your stores <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a></h1>
+        <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a>
+        <h1>Your stores</h1>
         <!-- START ACCORDION -->
         <div class="accordion" id="accordion">
         <?php foreach ($this->queue as $key => $item): ?>
