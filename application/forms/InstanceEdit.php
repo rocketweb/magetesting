@@ -16,9 +16,18 @@ class Application_Form_InstanceEdit extends Integration_Form{
         $this->setAttrib('class', 'form-stacked');
 
         $this->addElement('text', 'instance_name', array(
-                'label'      => 'Name or note',
+                'label'      => 'Name',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
+        ));
+
+        $this->addElement('text', 'description', array(
+                'label'      => 'Description',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                    array('validator' => 'StringLength', 'options' => array('max' => 300))
+                )
         ));
 
         $this->addElement('text', 'backend_login', array(
