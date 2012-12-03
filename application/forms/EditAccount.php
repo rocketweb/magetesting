@@ -100,7 +100,7 @@ class Application_Form_EditAccount extends Integration_Form
         // Add the reset button
         $this->addElement('reset', 'reset', array(
                 'ignore'   => true,
-                'label'    => 'Clear form',
+                'label'    => 'Reset form',
                 'class'    => 'btn'
         ));
 
