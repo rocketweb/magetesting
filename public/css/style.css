@@ -309,6 +309,10 @@ html,body{height:100%;}
 #instance-deployment.modal-rollback .rollback, #instance-deployment.modal-commit .commit, #instance-deployment.modal-deploy .deploy {
     display: inline;
 }
+#instance-deployment.modal-rollback .rollback.alert {
+    display: block;
+    margin-top: 10px;
+}
 #instance-deployment form {
     margin: 0px;
 }
