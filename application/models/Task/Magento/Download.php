@@ -18,7 +18,7 @@ implements Application_Model_Task_Interface {
         $this->config = $this->_getConfig();
     }
     
-    public function setup(Application_Model_Queue $queueElement){
+    public function setup(Application_Model_Queue &$queueElement){
         parent::setup($queueElement);
     }
     

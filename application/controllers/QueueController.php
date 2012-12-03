@@ -481,6 +481,7 @@ class QueueController extends Integration_Controller_Action {
                 }
             }
             if($not_installed) {
+                
 
                 //fetch queue data
                 $instanceModel = new Application_Model_Instance();
@@ -495,11 +496,13 @@ class QueueController extends Integration_Controller_Action {
 
                     /* Adding extension to queue */
                     try {
+                        $extensionId = $request->getParam('extension_id');
+                        
                         $extensionQueueItem = new Application_Model_Queue();
                         $extensionQueueItem->setInstanceId($instance->id);
                         $extensionQueueItem->setStatus('pending');
                         $extensionQueueItem->setUserId($instance->user_id);
-                        $extensionQueueItem->setExtensionId($request->getParam('extension_id'));
+                        $extensionQueueItem->setExtensionId($extensionId);
                         $extensionQueueItem->setParentId(0);
                         $extensionQueueItem->setServerId($instance->server_id);
                         $extensionQueueItem->setTask('ExtensionInstall');
@@ -509,12 +512,14 @@ class QueueController extends Integration_Controller_Action {
                         $extensionModel = new Application_Model_Extension();
                         $extensionModel->find($request->getParam('extension_id'));
                         
+
+                        
                         $queueId = $extensionQueueItem->getId();
                         $queueModel = new Application_Model_Queue();
                         $queueModel->setInstanceId($instance->id);
                         $queueModel->setStatus('pending');
                         $queueModel->setUserId($instance->user_id);
-                        $queueModel->setExtensionId(0);
+                        $queueModel->setExtensionId($extensionId);
                         $queueModel->setParentId($queueId);
                         $queueModel->setServerId($instance->server_id);
                         $queueModel->setTask('RevisionCommit');
@@ -530,7 +535,7 @@ class QueueController extends Integration_Controller_Action {
                         //add row to instance_extension
                         $instanceExtensionModel = new Application_Model_InstanceExtension();
                         $instanceExtensionModel->setInstanceId($instance->id);
-                        $instanceExtensionModel->setExtensionId($request->getParam('extension_id'));
+                        $instanceExtensionModel->setExtensionId($extensionId);
                         $instanceExtensionModel->save();
 
                         echo 'done';
