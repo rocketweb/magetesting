@@ -25,8 +25,8 @@ class Application_Model_DbTable_Revision extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
                        ->from($this->_name)
-                       ->where('r.instance_id = ?', $instance_id)
-                       ->order('r.id DESC')
+                       ->where('instance_id = ?', $instance_id)
+                       ->order('id DESC')
                        ->limit(1, 1);
         return $this->fetchRow($select);
     }
