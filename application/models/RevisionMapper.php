@@ -98,4 +98,16 @@ class Application_Model_RevisionMapper {
         }
         return $result;
     }
+    
+    public function getPreLastForInstance($instance_id)
+    {
+        $result = array();
+        if((int)$instance_id) {
+            $tmp = $this->getDbTable()->getPreLastForInstance($instance_id);
+            if($tmp) {
+                $result = $tmp;
+            }
+        }
+        return $result;
+    }
 }
