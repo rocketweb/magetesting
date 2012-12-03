@@ -1,17 +1,42 @@
-<phpunit bootstrap="./bootstrap.php">
-    <testsuite name="Application Test Suite">
+<phpunit bootstrap="./bootstrap.php"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnFailure="true"
+    syntaxCheck="true">
+    
+
+    <testsuite name="Application Test Suite (controllers)">
         <directory>./application</directory>
     </testsuite>
-    <testsuite name="Library Test Suite">
-        <directory>./library</directory>
-    </testsuite>
+
     
     <filter>
         <!-- If Zend Framework is inside your project's library, uncomment this filter -->
-        <!-- 
         <whitelist>
-            <directory suffix=".php">../../library/Zend</directory>
+            <directory suffix=".php">/usr/share/pear/share/pear/PHPUnit/</directory>
+            <directory suffix=".php">../library/</directory>
+            <directory suffix=".php">../application/</directory>
+            <exclude>
+                <directory suffix=".phtml">../application/</directory>
+            </exclude>
+            <exclude>
+                <directory suffix=".php">../library/Zend/</directory>
+            </exclude>
         </whitelist>
-        -->
     </filter>
+
+    <logging>
+        <log type="coverage-html" target="./log/report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />
+        <log type="testdox-html" target="./log/testdox.html" />
+        <log type="testdox-text" target="./log/testdox.txt"/>
+        <log type="graphviz" target="./log/logfile.dot"/>
+        <log type="json" target="./log/logfile.json"/>
+        <log type="metrics-xml" target="./log/metrics.xml"/>
+        <log type="plain" target="./log/logfile.txt"/>
+        <log type="pmd-xml" target="./log/pmd.xml" cpdMinLines="5" cpdMinMatches="70"/>
+        <log type="tap" target="./log/logfile.tap"/>
+        <log type="test-xml" target="./log/logfile.xml" logIncompleteSkipped="false"/>
+    </logging>
 </phpunit>

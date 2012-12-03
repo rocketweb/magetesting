@@ -91,6 +91,7 @@ class RocketWeb_SqlUpdater
             }
             ksort($sorted_directory, SORT_STRING);
             $update_from_now = false;
+            
             foreach($sorted_directory as $file) {
                 $this->_currentFile = $file->getFilename();
                 $sql = array();
@@ -100,10 +101,11 @@ class RocketWeb_SqlUpdater
                 if(isset($match[1])) {
                     $found_version = $match[1];
                 }
-
+                
                 // if version does not exist, find install sql
                 if($file->getFilename() == $this->_prefix.'-install.php') {
-                    include_once $file->getPathname();
+                    include $file->getPathname();
+
                     if(!isset($version) OR !$version) {
                         throw new Exception('File '.$file->getFilename().' should contain variable $version.');
                     }
@@ -118,10 +120,10 @@ class RocketWeb_SqlUpdater
                     $update_from_now = true;
                     continue;
                 }
-
+                
                 if($update_from_now AND $is_good_file AND ($last_version != $found_version OR $last_version == '')) {
-                    $this->_db->beginTransaction();
-                    include_once $file->getPathname();
+//                    $this->_db->beginTransaction();
+                    include $file->getPathname();
                     if($found_version) {
                         $sql[] = array('UPDATE sql_updater SET version = ?', 'bind' => array($found_version));
                     } else {
@@ -131,14 +133,16 @@ class RocketWeb_SqlUpdater
 
                     $this->_executeSql($sql);
                     $last_file = $file->getPathname();
-                    $this->_db->commit();
+//                    $this->_db->commit();
                 }
+
             }
             $result = true;
         } catch(Exception $e) {
             $message = 'Error in version file:'.$this->_currentFile;
             $this->_error = $message . $this->_error;
-            @$this->_db->rollBack();
+
+//            @$this->_db->rollBack();
         }
         return $result;
     }
