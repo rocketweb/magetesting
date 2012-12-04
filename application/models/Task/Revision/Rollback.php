@@ -24,8 +24,8 @@ implements Application_Model_Task_Interface {
         
         $this->_cleanup();
         
-        //$this->_rollback();
-        
+        $this->_updateRevisionCount('-1');
+                
         $this->_updateStatus('ready');
         
     }
@@ -37,7 +37,7 @@ implements Application_Model_Task_Interface {
         
         $params = $this->_queueObject->getTaskParams();
        
-        //revert files using rollback_files_to param
+        //revert files using rollback_files_to param, prevent opening commit message
         exec('git revert '.$params['rollback_files_to'].' --no-edit');
         chdir($startCwd);
     }
@@ -49,13 +49,14 @@ implements Application_Model_Task_Interface {
         
         exec('tar -zxf '.$params['rollback_db_to']);
         
-        $unpackedName = str_replace('.tgz','',$params['rollback_db_to']);
+        $pathinfo = pathinfo($params['rollback_db_to']);
+        
+        $unpackedName = str_replace('.tgz','',$pathinfo['basename']);
         $command = 'sudo mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' < '.$unpackedName;
         exec($command);
        
         //finish process
-        chdir($startCwd);
-             
+        chdir($startCwd);       
     }
     
     protected function _cleanup(){
@@ -67,9 +68,7 @@ implements Application_Model_Task_Interface {
                 )
             );
         }
-        
-        //lower revision_counter of instance
-        $this->_instanceObject->setRevisionCount($this->_instanceObject->getRevisionCount()-1)->save();
+               
     }
 
 }
