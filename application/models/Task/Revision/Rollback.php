@@ -16,16 +16,21 @@ implements Application_Model_Task_Interface {
     
     public function process(Application_Model_Queue &$queueElement = null) {
         
-        $this->_rollback();
+        $this->_updateStatus('installing');
+        
+        $this->_revertFiles();
+        
+        $this->_revertDatabase();
+        
+        $this->_cleanup();
+        
+        //$this->_rollback();
+        
+        $this->_updateStatus('ready');
         
     }
 
-    protected function _checkCredentials() {
-        
-    }
-
-    protected function _rollback() {
-        
+    protected function _revertFiles(){
         $startCwd = getcwd();
         
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
@@ -34,8 +39,14 @@ implements Application_Model_Task_Interface {
        
         //revert files using rollback_files_to param
         exec('git revert '.$params['rollback_files_to']);
+        chdir($startCwd);
+    }
+    
+    protected function _revertDatabase(){
+        $startCwd = getcwd();
         
-        //restore database backup using rollback_db_to param     
+        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        
         exec('tar -zxf '.$params['rollback_database_to']);
         
         $unpackedName = str_replace('.tgz','',$params['rollback_database_to']);
@@ -45,6 +56,9 @@ implements Application_Model_Task_Interface {
         //finish process
         chdir($startCwd);
              
+    }
+    
+    protected function _cleanup(){
         //remove extension id from instance_extension if there was extension in this commit.
         if ($this->_queueObject->getExtensionId()!=0){
             $this->db->delete('instance_extension',array(
@@ -56,8 +70,6 @@ implements Application_Model_Task_Interface {
         
         //lower revision_counter of instance
         $this->_instanceObject->setRevisionCount($this->_instanceObject->getRevisionCount()-1)->save();
-        
-        $this->_updateStatus('ready');
     }
 
 }
