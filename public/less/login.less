@@ -3,31 +3,39 @@
 @LoginPadding: 20px;
 
 .mt-login {
-	position: absolute;
-  top: 50%;
-  left: 50%;
-  margin:((@LoginHeight / -2) - @LoginPadding) 0 0 ((@LoginWidth / -2) - @LoginPadding);
-  width: @LoginWidth;
-	height: @LoginHeight;
-	padding: @LoginPadding;
-	
-	border: 1px solid @Grey;
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
-	border-radius: 6px;
-	.shadow;
-	
-	legend {
-		padding-bottom: 20px;
-	}
-	
-	.mt-login-input {
-		input {
-			width: 407px;
-		}
-	}
-	
-	.mt-pad {
-		margin: 20px 0;
-	}
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin:((@LoginHeight / -2) - @LoginPadding) 0 0 ((@LoginWidth / -2) - @LoginPadding);
+    width: @LoginWidth;
+    min-height: @LoginHeight;
+    padding: @LoginPadding;
+    
+    border: 1px solid @Grey;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    .shadow;
+    
+    .alert-login {
+        padding: 8px 14px;
+    }
+    
+    form {
+        margin: 0;
+    }
+    
+    legend {
+        padding-bottom: 20px;
+    }
+    
+    .mt-login-input {
+        input {
+            width: 407px;
+        }
+    }
+    
+    .mt-pad {
+        margin: 20px 0;
+    }
 }

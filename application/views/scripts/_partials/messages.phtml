@@ -14,8 +14,8 @@
             break;
         }
     ?>
-        <div class="alert <?php echo $class; ?>" data-dismiss="alert">
-            <a class="close" href="#">&times;</a>
+        <div class="alert <?php echo $class; ?> alert-login" data-dismiss="alert">
+            <?php /*<a class="close" href="#">&times;</a>*/ ?>
             <?php if(isset($msg['from_scratch']) and $msg['from_scratch']): ?>
                 <?php echo $msg['message']; ?>
             <?php else: ?>

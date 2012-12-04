@@ -41,8 +41,6 @@
 
     <div class="container">
 
-        <?php echo $this->render('_partials/messages.phtml'); ?>
-
         <div class="row">
             <div class="span6 offset3">
             	<div class="mt-login">
@@ -56,6 +54,9 @@
 							<h1 class="pull-right">Login</h1>
 							<div class="clearfix"></div>
             		    </legend>
+            		    
+            		    <?php echo $this->render('_partials/messages.phtml'); ?>
+            		    
             		    <fieldset>
             		        <div class="row">
             		            <div class="span6 mt-login-input">
