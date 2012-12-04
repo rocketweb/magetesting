@@ -57,14 +57,14 @@
         <tr>
             <td class="compare-table-row-title">Billing Period</td>
             <?php foreach($this->plans as $plan): ?>
-                <td class="compare-table-data"><?php echo $plan->getBillingPeriod(); ?></td>
+                <td class="compare-table-data last-data"><?php echo $plan->getBillingPeriod(); ?></td>
                 <td class="compare-table-empty"></td>
             <?php endforeach; ?>
         </tr>
         <tr>
             <td class="compare-table-price-empty"></td>
             <?php foreach($this->plans as $plan): ?>
-                <td class="compare-table-price-button"><a class="btn btn-success" href="#">Subscribe now</td>
+                <td class="compare-table-price-button"><a class="btn btn-large btn-inverse" href="#">Subscribe now</td>
                 <td class="compare-table-price-empty"></td>
             <?php endforeach; ?>
         </tr>
