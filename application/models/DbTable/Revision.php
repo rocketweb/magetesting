@@ -43,7 +43,7 @@ class Application_Model_DbTable_Revision extends Zend_Db_Table_Abstract
                        ->from($this->_name)
                        ->where('instance_id = ?', $instance_id)
                        ->order('id DESC')
-                       ->limit(1, 1);
+                       ->limit(1);
         return $this->fetchRow($select);
     }
 }
