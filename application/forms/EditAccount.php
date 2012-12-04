@@ -103,6 +103,58 @@ class Application_Form_EditAccount extends Integration_Form
                 'label'    => 'Reset form',
                 'class'    => 'btn'
         ));
+        
+        $regex = new Zend_Validate_Regex("/^[a-z0-9_-]+$/i");
+        $regex->setMessage('Allowed chars: a-z, digits, dash, underscore', 'regexNotMatch');
+        $this->addElement('text', 'login', array(
+                'label'      => 'Username',
+                'disabled'   => true,
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                    /**
+                     * 13 used because of mysql username limit 
+                     * 13 + 3 from (magento.userprefix)
+                     */ 
+                        array('validator' => 'StringLength', 'options' => array(3, 13)),
+                    $regex
+                ),
+            
+            
+        ));
+
+        // Add a password element
+        $this->addElement('password', 'password', array(
+                'label'      => 'Password',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(6, 45)),
+                ),
+                'allowEmpty' => true
+        ));
+
+        // Add a password element
+        $this->addElement('password', 'password_repeat', array(
+                'label'      => 'Repeat password',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        new Zend_Validate_Identical('password'),
+                ),
+        ));
+        
+        // Add a email element
+        $this->addElement('text', 'email', array(
+                'label'      => 'E-mail',
+                'required'   => false,
+                'disabled'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(2, 50)),
+                        new Zend_Validate_EmailAddress()
+                )
+        ));
 
         $this->_setDecorators();
 
