@@ -78,7 +78,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('commercial-user', 'default_queue', array(
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
-                'commit', 'deploy','getminutesleft'
+                'commit', 'deploy','getminutesleft', 'request-deployment'
         ));
         $this->allow('commercial-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
@@ -95,7 +95,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('awaiting-user', 'default_queue', array(
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
-                'commit', 'deploy','getminutesleft'
+                'commit', 'deploy','getminutesleft', 'request-deployment'
         ));
         $this->allow('awaiting-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
