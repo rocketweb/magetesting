@@ -2,7 +2,7 @@
 <?php $user = $this->user; ?>
 <table class="table compare-table" >
     <thead>
-        <tr>
+        <tr class="compare-table-title-row">
             <th class="compare-table-title-row"><span class="compare-table-title">Featrues</span></th>
             <?php foreach($this->plans as $plan): ?>
                 <th class="compare-table-data-name"><h3><span><?php echo $plan->getName(); ?></span></h3><h2><span class="compare-table-dollar">$</span><span><?php echo $plan->getPrice(); ?></span></h2></th>
@@ -11,14 +11,14 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr class="compare-table-row-title">
             <td class="compare-table-row-title">Stores</td>
             <?php foreach($this->plans as $plan): ?>
                 <td class="compare-table-data"><?php echo $plan->getInstances(); ?></td>
                 <td class="compare-table-empty"></td>
             <?php endforeach; ?>
         </tr>
-        <tr>
+        <tr class="compare-table-row-title">
             <td class="compare-table-row-title">FTP Access</td>
             <?php foreach($this->plans as $plan): ?>
                 <?php if((int)$plan->getFtpAccess()): ?>
@@ -30,7 +30,7 @@
                 <?php endif; ?>
             <?php endforeach; ?>
         </tr>
-        <tr>
+        <tr class="compare-table-row-title">
             <td class="compare-table-row-title">phpMyAdmin Access</td>
             <?php foreach($this->plans as $plan): ?>
                 <?php if((int)$plan->getPhpmyadminAccess()): ?>
@@ -42,7 +42,7 @@
                 <?php endif; ?>
             <?php endforeach; ?>
         </tr>
-        <tr>
+        <tr class="compare-table-row-title">
             <td class="compare-table-row-title">Custom Store Import</td>
             <?php foreach($this->plans as $plan): ?>
                 <?php if((int)$plan->getCanAddCustomInstance()): ?>
@@ -50,18 +50,18 @@
                     <td class="compare-table-empty"></td>
                 <?php else: ?>
                     <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty compare-table-empty-last"></td>
+                    <td class="compare-table-empty"></td>
                 <?php endif; ?>
             <?php endforeach; ?>
         </tr>
-        <tr>
+        <tr class="compare-table-row-title compare-table-row-title-last">
             <td class="compare-table-row-title  compare-table-row-title-last">Billing Period</td>
             <?php foreach($this->plans as $plan): ?>
                 <td class="compare-table-data last-data"><?php echo $plan->getBillingPeriod(); ?></td>
                 <td class="compare-table-empty"></td>
             <?php endforeach; ?>
         </tr>
-        <tr>
+        <tr class="compare-table-row-title-empty">
             <td class="compare-table-price-empty"></td>
             <?php foreach($this->plans as $plan): ?>
                 <td class="compare-table-price-button"><a class="btn btn-large btn-inverse" href="#">Subscribe now</td>
