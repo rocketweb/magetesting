@@ -641,7 +641,7 @@ class QueueController extends Integration_Controller_Action {
         $instance = $instanceModel->findByDomain($domain);
         
         $revisionModel = new Application_Model_Revision();
-        $revisionModel->getPreLastForInstance($instance->id);
+        $revisionModel->getLastForInstance($instance->id);
         
         /* add task with RevisionRollback */
                         $queueModel = new Application_Model_Queue();
