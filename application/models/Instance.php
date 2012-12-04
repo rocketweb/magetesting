@@ -37,6 +37,8 @@ class Application_Model_Instance {
     protected $_revision_count;
     
     protected $_mapper;
+    
+    protected $_custom_file;
 
     public function __construct(array $options = null)
     {
@@ -359,5 +361,14 @@ class Application_Model_Instance {
     public function findPositionByName( $instance_name )
     {
         return $this->getMapper()->findPositionByName( $instance_name );
+    }
+    
+    public function getCustomFile(){
+      return $this->_custom_file;
+    }
+    
+    public function setCustomFile($value){
+      $this->_custom_file = $value;
+      return $this;
     }
 }
