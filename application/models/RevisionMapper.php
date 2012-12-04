@@ -117,4 +117,23 @@ class Application_Model_RevisionMapper {
         }
         return $revision;
     }
+    
+    public function getLastForInstance($instance_id, Application_Model_Revision $revision)
+    {
+        if((int)$instance_id) {
+            $row = $this->getDbTable()->getLastForInstance($instance_id);
+            if($row) {
+                $revision->setId($row->id)
+                ->setUserId($row->user_id)
+                ->setInstanceId($row->instance_id)
+                ->setExtensionId($row->extension_id)
+                ->setType($row->type)
+                ->setHash($row->hash)
+                ->setComment($row->comment)
+                ->setFilename($row->filename)
+                ->setDbBeforeRevision($row->db_before_revision);
+            }
+        }
+        return $revision;
+    }
 }
