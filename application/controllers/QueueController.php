@@ -604,7 +604,7 @@ class QueueController extends Integration_Controller_Action {
             )
         );
         $queueModel->setInstanceId($instance->id);
-        $queueModel->setServerId(1);
+        $queueModel->setServerId($instance->server_id);
         $queueModel->setParentId(0);
         $queueModel->setExtensionId(0);
         $queueModel->setAddedDate(date("Y-m-d H:i:s"));
@@ -624,6 +624,31 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(true);
         // $this->_getParam('domain');
         // $this->_getParam('deploy'); - revision id
+        
+        $revisionModel = new Application_Model_Revision;
+        $revisionModel->find($this->_getParam('deploy'));
+        
+        $domain = $this->_getParam('domain');        
+        $instanceModel=  new Application_Model_Instance();
+        $instance = $instanceModel->findByDomain($domain);      
+                
+        $queueModel = new Application_Model_Queue();
+        $queueModel->setTask('RevisionDeploy');
+        $queueModel->setTaskParams(
+            array(
+                'revision_id'=> $this->_getParam('deploy')
+            )
+        );
+        
+        $queueModel->setInstanceId($instance->id);
+        $queueModel->setServerId($instance->server_id);
+        $queueModel->setParentId(0);
+        $queueModel->setExtensionId($revisionModel->extension_id);
+        $queueModel->setAddedDate(date("Y-m-d H:i:s"));
+        $queueModel->setStatus('pending');
+        $queueModel->setUserId($this->auth->getIdentity()->id);
+        $queueModel->save();
+        
         $this->_helper->FlashMessenger('Deployment action has been added to queue.');
         return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
@@ -646,24 +671,24 @@ class QueueController extends Integration_Controller_Action {
         $revisionModel->getLastForInstance($instance->id);
         
         /* add task with RevisionRollback */
-                        $queueModel = new Application_Model_Queue();
-                        $queueModel->setInstanceId($instance->id);
-                        $queueModel->setStatus('pending');
-                        $queueModel->setUserId($instance->user_id);
-                        $queueModel->setExtensionId($revisionModel->getExtensionId());
-                        $queueModel->setParentId(0);
-                        $queueModel->setServerId($instance->server_id);
-                        $queueModel->setTask('RevisionRollback');
-                        $queueModel->setTaskParams(
-                            array(
-                                /*'commit_comment' => 'Adding '.$extensionModel->getName().' ('.$extensionModel->getVersion().')',
-                                'commit_type' => 'extension-install' */
-                                'rollback_files_to' => $revisionModel->getHash(),
-                                'rollback_db_to' => $revisionModel->getDbBeforeRevision(),
-                                )
-                            
-                        );
-                        $queueModel->save();
+        $queueModel = new Application_Model_Queue();
+        $queueModel->setInstanceId($instance->id);
+        $queueModel->setStatus('pending');
+        $queueModel->setUserId($instance->user_id);
+        $queueModel->setExtensionId($revisionModel->getExtensionId());
+        $queueModel->setParentId(0);
+        $queueModel->setServerId($instance->server_id);
+        $queueModel->setTask('RevisionRollback');
+        $queueModel->setTaskParams(
+            array(
+                /*'commit_comment' => 'Adding '.$extensionModel->getName().' ('.$extensionModel->getVersion().')',
+                'commit_type' => 'extension-install' */
+                'rollback_files_to' => $revisionModel->getHash(),
+                'rollback_db_to' => $revisionModel->getDbBeforeRevision(),
+                )
+
+        );
+        $queueModel->save();
         
         $this->_helper->FlashMessenger('Rollback action has been added to queue.');
         return $this->_helper->redirector->gotoRoute(array(

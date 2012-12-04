@@ -49,7 +49,31 @@ implements Application_Model_Task_Interface {
     
     /* For now just an alias */
     protected function _commitManual(){
-        $this->_commitAutomatic();
+        exec('git add -A');
+        
+        $output = '';
+        $params = $this->_queueObject->getTaskParams(); 
+        
+        if (trim($params['commit_comment'])==''){
+            $params['commit_comment']='No comment given for this commit';
+        }
+
+        exec('git commit -m "'.$params['commit_comment'].'"',$output);
+        
+        if (!count($output)){
+            $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
+            exit;
+        }
+        //get revision committed
+        preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
+               
+        if (!isset($matches[2])){
+            $this->_updateStatus('ready', 'Could not find revision information, aborting');
+            exit;
+        }
+        
+        //insert revision entry
+        $this->_revisionHash  = $matches[2];
     }
     
     protected function _commitAutomatic(){
@@ -66,7 +90,7 @@ implements Application_Model_Task_Interface {
         
         
         if (!count($output)){
-            $this->_updateStatus('error', 'No changes have been made, manual commit aborted');
+            $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
             exit;
         }
         //get revision committed
@@ -74,7 +98,7 @@ implements Application_Model_Task_Interface {
         
                 
         if (!isset($matches[2])){
-            $this->_updateStatus('error', 'Could not find revision information, aborting');
+            $this->_updateStatus('ready', 'Could not find revision information, aborting');
             exit;
         }
         
