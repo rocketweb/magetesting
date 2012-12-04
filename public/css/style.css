@@ -489,3 +489,28 @@ td.compare-table-price-button{
 	-moz-box-shadow: 0 8px 6px -6px #888888;
 	box-shadow: 0 8px 6px -6px #888888;
 }
+
+/** Stores Border Radious **/
+div.accordion div.accordion-group:first-child{
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+div.accordion div.accordion-group:first-child div.accordion-heading div.tab-stripe{
+	border-top-left-radius: 6px;
+}
+div.accordion div.accordion-group:last-child{
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+div.accordion div.accordion-group:last-child div.accordion-heading div.tab-stripe{
+	border-bottom-left-radius: 6px;
+}
+
+div.accordion div.accordion-group.mt_shadow:last-child div.accordion-heading div.tab-stripe{
+	border-bottom-left-radius: 0;
+}
+
+
+
+
+
