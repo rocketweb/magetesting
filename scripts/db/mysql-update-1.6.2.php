@@ -3,7 +3,7 @@
 $version = '1.6.2';
 
 $sql[] = '
-ALTER TABLE queue 
+ALTER TABLE instance 
 ADD COLUMN custom_file
 VARCHAR(255)
 NULL
