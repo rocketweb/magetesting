@@ -380,8 +380,9 @@ th.compare-table-empty-first{
 th.compare-table-data-name{
 	display: inline-block;
 	width: 270px;
-	height: 151px;
+	height: 140px;
 	padding: 0;
+	padding-top: 15px;
 	background: #34aae5;
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
