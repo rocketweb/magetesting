@@ -38,13 +38,13 @@ implements Application_Model_Task_Interface {
         $params = $this->_queueObject->getTaskParams();
        
         //revert files using rollback_files_to param
-        exec('git revert '.$params['rollback_files_to']);
+        exec('git revert '.$params['rollback_files_to'].' --no-edit');
         chdir($startCwd);
     }
     
     protected function _revertDatabase(){
         $startCwd = getcwd();
-        
+        $params = $this->_queueObject->getTaskParams();
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         
         exec('tar -zxf '.$params['rollback_database_to']);
