@@ -37,7 +37,7 @@ class Integration_Form extends Zend_Form
         foreach ($submitButtons as $submit) {
             if ($this->{$submit} instanceof Zend_Form_Element) {
                 $this->{$submit}->getDecorator('overall')->setOption('class', 'actions');
-                $this->{$submit}->setAttrib('class', 'btn btn-primary');
+                $this->{$submit}->setAttrib('class', 'btn btn-inverse');
                 $this->{$submit}->removeDecorator('Label');
             }
         }
