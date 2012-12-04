@@ -448,9 +448,7 @@ class QueueController extends Integration_Controller_Action {
 
             if ($form->isValid($this->_request->getPost())) {
                 $instance->setOptions($form->getValues());
-                if($instance->getStatus() == 'pending') {
-                    $instance->save();
-                }
+                $instance->save();
 
                 $this->_helper->FlashMessenger('Store data has been changed successfully');
                 return $this->_helper->redirector->gotoRoute(array(
@@ -635,6 +633,36 @@ class QueueController extends Integration_Controller_Action {
     public function rollbackAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
+        
+        $domain = $this->getRequest()->getParam('domain');
+        
+        /* get last revision for this domain */
+        $instanceModel = new Application_Model_Instance();
+        $instance = $instanceModel->findByDomain($domain);
+        
+        $revisionModel = new Application_Model_Revision();
+        $revisionModel->getPreLastForInstance($instance->id);
+        
+        /* add task with RevisionRollback */
+                        $queueModel = new Application_Model_Queue();
+                        $queueModel->setInstanceId($instance->id);
+                        $queueModel->setStatus('pending');
+                        $queueModel->setUserId($instance->user_id);
+                        $queueModel->setExtensionId(0);
+                        $queueModel->setParentId(0);
+                        $queueModel->setServerId($instance->server_id);
+                        $queueModel->setTask('RevisionRollback');
+                        $queueModel->setTaskParams(
+                            array(
+                                /*'commit_comment' => 'Adding '.$extensionModel->getName().' ('.$extensionModel->getVersion().')',
+                                'commit_type' => 'extension-install' */
+                                'rollback_files_to' => $revisionModel->getHash(),
+                                'rollback_db_to' => $revisionModel->getDbBeforeRevision(),
+                                )
+                            
+                        );
+                        $queueModel->save();
+        
         $this->_helper->FlashMessenger('Rollback action has been added to queue.');
         return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',

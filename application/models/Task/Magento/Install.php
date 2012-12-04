@@ -22,7 +22,7 @@ implements Application_Model_Task_Interface {
         $this->_instanceFolder = $this->_getInstanceFolder();
     }
     
-    public function process(Application_Model_Queue $queueElement = null) {
+    public function process(Application_Model_Queue &$queueElement = null) {
                
         $this->_updateStatus('installing');
         $this->_createSystemAccount();

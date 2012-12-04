@@ -35,6 +35,7 @@ class Application_Model_InstanceMapper {
                 'server_id'        => $instance->getServerId(),
                 'domain'           => $instance->getDomain(),
                 'instance_name'    => $instance->getInstanceName(),
+                'description'      => $instance->getDescription(),
                 'sample_data'      => $instance->getSampleData(),
                 'backend_password' => $instance->getBackendPassword(),
                 'custom_protocol'  => $instance->getCustomProtocol(),
@@ -74,6 +75,7 @@ class Application_Model_InstanceMapper {
                 ->setServerId($row->server_id)
                 ->setDomain($row->domain)
                 ->setInstanceName($row->instance_name)
+                ->setDescription($row->description)
                 ->setSampleData($row->sample_data)
                 ->setBackendPassword($row->backend_password)
                 ->setCustomProtocol($row->custom_protocol)
@@ -108,6 +110,7 @@ class Application_Model_InstanceMapper {
                     ->setServerId($row->server_id)
                     ->setDomain($row->domain)
                     ->setInstanceName($row->instance_name)
+                    ->setDescription($row->description)
                     ->setSampleData($row->sample_data)
                     ->setBackendPassword($row->backend_password)
                     ->setCustomProtocol($row->custom_protocol)

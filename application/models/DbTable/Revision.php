@@ -14,4 +14,20 @@ class Application_Model_DbTable_Revision extends Zend_Db_Table_Abstract
                        ->order('r.id DESC');
         return $this->fetchAll($select);
     }
+    
+    /**
+     * Used only in revert
+     * @param type $instance_id
+     * @return type
+     */
+     
+    public function getPreLastForInstance($instance_id)
+    {
+        $select = $this->select()
+                       ->from($this->_name)
+                       ->where('instance_id = ?', $instance_id)
+                       ->order('id DESC')
+                       ->limit(1, 1);
+        return $this->fetchRow($select);
+    }
 }

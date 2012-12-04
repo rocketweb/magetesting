@@ -16,7 +16,7 @@ implements Application_Model_Task_Interface {
         $this->config = $this->_getConfig();
     }
     
-    public function process(Application_Model_Queue $queueElement = null) {
+    public function process(Application_Model_Queue &$queueElement = null) {
         
         $this->_createDbBackup();
         $this->_commit();
@@ -68,7 +68,8 @@ implements Application_Model_Task_Interface {
         }
        
         /*TODO: decide if move to user revision/ folder next to public_html ? */
-        $apppath = str_replace('application','', APPLICATION_PATH);
+        $apppath = str_replace('/application','', APPLICATION_PATH);
+        
         exec('sudo tar -zcf '.$apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$hash.'.tgz '.$hash.'/mageroot');
                
         $this->_insertRevisionInfo();
@@ -122,6 +123,7 @@ implements Application_Model_Task_Interface {
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
         
+                
         if (!isset($matches[2])){
             $this->_updateStatus('error', 'Could not find revision information, aborting');
             exit;
@@ -143,16 +145,23 @@ implements Application_Model_Task_Interface {
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         
         //export backup
-        $apppath = str_replace('application','', APPLICATION_PATH);
+        $apppath = str_replace('/application','', APPLICATION_PATH);
         $dbDir = $apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$this->_instanceObject->getDomain().'/db/';
-        exec('mkdir -p '.$dbDir);
+        exec('sudo mkdir -p '.$dbDir);
         $dbFileName = $dbDir.'db_backup_'.date("Y_m_d_H_i_s");
-        $command = 'mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' > '.$dbFileName;
+        $command = 'sudo mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' > '.$dbFileName;
         exec($command);
         
         //pack it up
         $pathinfo = pathinfo($dbFileName);
-        exec('tar -zcf '.$pathinfo['filename'].'.tgz '.$dbFileName);
+        /* tar backup file */
+        exec('sudo tar -zcf '.$pathinfo['filename'].'.tgz '.$dbFileName);
+        
+        /* copy packed sql file to target dir */
+        exec('sudo mv '.$pathinfo['filename'].'.tgz '.$dbDir.$pathinfo['filename'].'.tgz');
+        
+        /* remove unpacked sqldump */
+        exec('sudo rm '.$dbFileName);
         
         chdir($startCwd);
         $this->_dbBackupPath = $dbFileName.'.tgz';

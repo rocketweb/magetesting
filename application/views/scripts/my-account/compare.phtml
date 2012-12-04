@@ -1,57 +1,74 @@
 <h1>Plans comparison</h1>
 <?php $user = $this->user; ?>
-<table class="table table-striped" >
+<table class="table compare-table" >
     <thead>
         <tr>
-            <th></th>
+            <th class="compare-table-title-row"><span class="compare-table-title">Featrues</span></th>
             <?php foreach($this->plans as $plan): ?>
-                <th><?php echo $plan->getName(); ?></th>
+                <th class="compare-table-data-name"><h3><span><?php echo $plan->getName(); ?></span></h3><h2><span class="compare-table-dollar">$</span><span><?php echo $plan->getPrice(); ?></span></h2></th>
+                <th class="compare-table-empty-first"></th>
             <?php endforeach; ?>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Stores</td>
+            <td class="compare-table-row-title">Stores</td>
             <?php foreach($this->plans as $plan): ?>
-                <td><?php echo $plan->getInstances(); ?></td>
+                <td class="compare-table-data"><?php echo $plan->getInstances(); ?></td>
+                <td class="compare-table-empty"></td>
             <?php endforeach; ?>
         </tr>
         <tr>
-            <td>FTP Access</td>
+            <td class="compare-table-row-title">FTP Access</td>
             <?php foreach($this->plans as $plan): ?>
                 <?php if((int)$plan->getFtpAccess()): ?>
-                    <td><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                    <td class="compare-table-empty"></td>
                 <?php else: ?>
-                    <td><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                    <td class="compare-table-empty"></td>
                 <?php endif; ?>
             <?php endforeach; ?>
         </tr>
         <tr>
-            <td>phpMyAdmin Access</td>
+            <td class="compare-table-row-title">phpMyAdmin Access</td>
             <?php foreach($this->plans as $plan): ?>
                 <?php if((int)$plan->getPhpmyadminAccess()): ?>
-                    <td><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                    <td class="compare-table-empty"></td>
                 <?php else: ?>
-                    <td><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                    <td class="compare-table-empty"></td>
                 <?php endif; ?>
             <?php endforeach; ?>
         </tr>
         <tr>
-            <td>Custom Store Import</td>
+            <td class="compare-table-row-title">Custom Store Import</td>
             <?php foreach($this->plans as $plan): ?>
                 <?php if((int)$plan->getCanAddCustomInstance()): ?>
-                    <td><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                    <td class="compare-table-empty"></td>
                 <?php else: ?>
-                    <td><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                    <td class="compare-table-empty"></td>
                 <?php endif; ?>
             <?php endforeach; ?>
         </tr>
         <tr>
-            <td>Billing Period</td>
+            <td class="compare-table-row-title">Billing Period</td>
             <?php foreach($this->plans as $plan): ?>
-                <td><?php echo $plan->getBillingPeriod(); ?></td>
+                <td class="compare-table-data"><?php echo $plan->getBillingPeriod(); ?></td>
+                <td class="compare-table-empty"></td>
             <?php endforeach; ?>
         </tr>
+        <tr>
+            <td class="compare-table-price-empty"></td>
+            <?php foreach($this->plans as $plan): ?>
+                <td class="compare-table-price-button"><a class="btn btn-success" href="#">Subscribe now</td>
+                <td class="compare-table-price-empty"></td>
+            <?php endforeach; ?>
+        </tr>
+        <?php /*
         <tr>
             <td><strong>Paypal</strong></td>
             <?php foreach($this->plans as $plan): ?>
@@ -109,5 +126,6 @@
                 </td>
             <?php endforeach; ?>
         </tr>
+        */ ?>
     </tbody>
 </table>
