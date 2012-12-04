@@ -55,7 +55,7 @@ implements Application_Model_Task_Interface {
         }
         
         //lower revision_counter of instance
-        $this->_instanceObject()->setRevisionCount($this->_instanceObject()->getRevisionCount()-1)->save();
+        $this->_instanceObject->setRevisionCount($this->_instanceObject->getRevisionCount()-1)->save();
         
         $this->_updateStatus('ready');
     }
