@@ -673,6 +673,34 @@ class QueueController extends Integration_Controller_Action {
         ), 'default', true);
     }
 
+    public function requestDeploymentAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $domain = $this->getParam('domain');
+        $revision = $this->getParam('revision', 0);
+        $instance = null;
+        if($domain) {
+            $model = new Application_Model_Instance();
+            $instance = $model->findByDomain($domain);
+        }
+        if(
+                is_object($instance) AND
+                (int)$instance->id AND
+                $instance->user_id == $this->auth->getIdentity()->id AND
+                is_numeric($revision) AND
+                (int)$revision > 0
+        ) {
+            $model = new Application_Model_Revision();
+            
+            $this->_helper->FlashMessenger('Requested.');
+        }
+        return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+        ), 'default', true);
+    }
+
     public function fetchDeploymentListAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -690,13 +718,19 @@ class QueueController extends Integration_Controller_Action {
         ) {
             $model = new Application_Model_Revision();
             foreach($model->getAllForInstance($instance->id) as $revision) {
-                $content .= '<tr>';
-                $content .= '<td>'.$revision['comment'].'</td>';
-                $content .= '<td>
-                    '//<button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
-                    .'<a class="btn btn-primary" href="#">Download</a>
-                </td>';
-                $content .= '</tr>';
+                $content .= '<tr>'.PHP_EOL;
+                $content .= '<td>'.$revision['comment'].'</td>'.PHP_EOL;
+                $content .= '<td>'.PHP_EOL;
+                    //<button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
+                $download_button = '<a class="btn btn-primary download-deployment" href="'.
+                    $this->view->url(array('module' => 'default', 'controller' => 'instance', 'action' => $domain), 'default', true).'/var/deployment/'.$revision['filename']
+                .'">Download</a>'.PHP_EOL;
+                $request_button = '<a class="btn request-deployment" href="'.
+                    $this->view->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-deployment', 'domain' => $domain, 'revision' => $revision['id']), 'default', true)
+                .'">Request Deployment</a>'.PHP_EOL;
+                $content .= (!$revision['filename'] ? $request_button : $download_button).PHP_EOL;
+                $content .= '</td>'.PHP_EOL;
+                $content .= '</tr>'.PHP_EOL;
             }
         }
         echo $content;
