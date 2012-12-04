@@ -50,7 +50,7 @@
                     <td class="compare-table-empty"></td>
                 <?php else: ?>
                     <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty"></td>
+                    <td class="compare-table-empty compare-table-empty-last"></td>
                 <?php endif; ?>
             <?php endforeach; ?>
         </tr>
@@ -65,7 +65,7 @@
             <td class="compare-table-price-empty"></td>
             <?php foreach($this->plans as $plan): ?>
                 <td class="compare-table-price-button"><a class="btn btn-large btn-inverse" href="#">Subscribe now</td>
-                <td class="compare-table-price-empty compare-table-price-empty-last"></td>
+                <td class="compare-table-price-empty"></td>
             <?php endforeach; ?>
         </tr>
         <?php /*
