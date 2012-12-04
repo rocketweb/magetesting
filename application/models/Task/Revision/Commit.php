@@ -97,7 +97,8 @@ implements Application_Model_Task_Interface {
         $apppath = str_replace('/application','', APPLICATION_PATH);
         $dbDir = $apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$this->_instanceObject->getDomain().'/db/';
         exec('sudo mkdir -p '.$dbDir);
-        $dbFileName = $dbDir.'db_backup_'.date("Y_m_d_H_i_s");
+        chdir($dbDir);
+        $dbFileName = 'db_backup_'.date("Y_m_d_H_i_s");
         $command = 'sudo mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' > '.$dbFileName;
         exec($command);
         
@@ -107,13 +108,13 @@ implements Application_Model_Task_Interface {
         exec('sudo tar -zcf '.$pathinfo['filename'].'.tgz '.$dbFileName);
         
         /* copy packed sql file to target dir */
-        exec('sudo mv '.$pathinfo['filename'].'.tgz '.$dbDir.$pathinfo['filename'].'.tgz');
+        //exec('sudo mv '.$pathinfo['filename'].'.tgz '.$dbDir.$pathinfo['filename'].'.tgz');
         
         /* remove unpacked sqldump */
         exec('sudo rm '.$dbFileName);
         
         chdir($startCwd);
-        $this->_dbBackupPath = $dbFileName.'.tgz';
+        $this->_dbBackupPath = $dbDir.$dbFileName.'.tgz';
     }
     
     protected function _insertRevisionInfo(){

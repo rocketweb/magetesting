@@ -4,12 +4,9 @@ class Application_Model_Task_Revision_Rollback
 extends Application_Model_Task_Revision 
 implements Application_Model_Task_Interface {
 
-    private $db;
-    private $config;
-    
+
     /* Prevents from running contructor of Application_Model_Task */
-    public function __construct(){
-        
+    public function __construct(){        
         $this->db = $this->_getDb();
         $this->config = $this->_getConfig();
     }
@@ -25,6 +22,8 @@ implements Application_Model_Task_Interface {
         $this->_cleanup();
         
         $this->_updateRevisionCount('-1');
+        
+        $this->_clearInstanceCache();
                 
         $this->_updateStatus('ready');
         
@@ -43,17 +42,24 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _revertDatabase(){
+	$log = $this->_getLogger();
         $startCwd = getcwd();
         $params = $this->_queueObject->getTaskParams();
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         
-        exec('tar -zxf '.$params['rollback_db_to']);
+        exec('sudo tar -zxf '.$params['rollback_db_to'].'');
         
         $pathinfo = pathinfo($params['rollback_db_to']);
         
         $unpackedName = str_replace('.tgz','',$pathinfo['basename']);
+        
+        $privilegeModel = new Application_Model_DbTable_Privilege($this->db,$this->config);
+        $privilegeModel->dropDatabase($this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain());
+        $privilegeModel->createDatabase($this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain());
+                
         $command = 'sudo mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' < '.$unpackedName;
-        exec($command);
+        exec($command,$output);
+        $log->log('mysql insert ',Zend_Log::DEBUG,var_export($output,true));
        
         //finish process
         chdir($startCwd);       
