@@ -50,7 +50,7 @@ class MyAccountController extends Integration_Controller_Action
 
             $form = new Application_Form_EditAccount();
             $form->populate($user->__toArray());
-
+            
             $informPayPal = (int)$this->getRequest()->getParam('inform', 0);
 
             if ($this->_request->isPost()) {
@@ -58,6 +58,18 @@ class MyAccountController extends Integration_Controller_Action
             
                 if($form->isValid($formData)) {
                     $auth = $this->auth->getIdentity();
+                    
+                    $form->removeElement('login');
+                    $form->removeElement('email');
+                    
+                    $pass = $form->getValue('password');
+                    $passRe = $form->getValue('password_repeat');
+                    
+                    if(empty($pass) && empty($passRe)) {
+                        $form->removeElement('password');
+                        $form->removeElement('password_repeat');
+                    }
+                    
                     $user->setOptions($form->getValues());
                     $user->setId($auth->id);
                     $user->save();
