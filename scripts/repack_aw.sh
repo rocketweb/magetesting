@@ -6,9 +6,12 @@
 # 
 # @author wojtek
 #  
-# Just provide filename as the only argument:
-# ./repack_aw.sh "../data/aw_affiliate-1.0.1.community_edition.zip"
+# Just provide Ahead Works ZIP filename as the only argument:
+# ./repack_aw.sh "../data/extensions/CE/aw_affiliate-1.0.1.community_edition.zip"
 #
+# It will produce two files:
+# * cleaned ready-to-paste .tar.gz in data/extensions/CE/open/ directory
+# * cleaned, encoded ready-to-paste .tar.gz in data/extensions/CE/encoded/ directory
 
 #locate ioncube binary
 IONCUBE=`locate ioncube_encoder53`

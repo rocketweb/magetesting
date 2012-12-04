@@ -14,7 +14,7 @@ implements Application_Model_Task_Interface {
         $this->config = $this->_getConfig();
     }
     
-    public function process(Application_Model_Queue $queueElement = null) {        
+    public function process(Application_Model_Queue &$queueElement = null) {        
         $this->_prepareGitIgnore();
         $this->_initRepo();
         $this->_updateStatus('ready');
@@ -31,8 +31,6 @@ implements Application_Model_Task_Interface {
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         exec('git init');
         
-        exec('git add .');
-        exec('git commit -m "Installed magento store (instance '.$this->_instanceObject->getDomain().').";');
         chdir($startCwd);
     }
     

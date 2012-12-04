@@ -16,7 +16,7 @@ class Application_Model_DbTable_Revision extends Zend_Db_Table_Abstract
     }
     
     /**
-     * Used only in revert
+     * Currently not used
      * @param type $instance_id
      * @return type
      */
@@ -28,6 +28,22 @@ class Application_Model_DbTable_Revision extends Zend_Db_Table_Abstract
                        ->where('instance_id = ?', $instance_id)
                        ->order('id DESC')
                        ->limit(1, 1);
+        return $this->fetchRow($select);
+    }
+    
+    /**
+     * Used only in revert
+     * @param type $instance_id
+     * @return type
+     */
+     
+    public function getLastForInstance($instance_id)
+    {
+        $select = $this->select()
+                       ->from($this->_name)
+                       ->where('instance_id = ?', $instance_id)
+                       ->order('id DESC')
+                       ->limit(1);
         return $this->fetchRow($select);
     }
 }
