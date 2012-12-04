@@ -386,7 +386,8 @@ th.compare-table-data-name{
 	background: #34aae5;
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
-	border-top-style: solid;
+	border-top-style: none;
+	border-top: none;
 	color: #fff;
 }
 .compare-table-data-name h3 span, .compare-table-data-name h2 span{
