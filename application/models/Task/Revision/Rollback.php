@@ -44,6 +44,19 @@ implements Application_Model_Task_Interface {
        
         //finish process
         chdir($startCwd);
+             
+        //remove extension id from instance_extension if there was extension in this commit.
+        if ($this->_queueObject->getExtensionId()!=0){
+            $this->db->delete('instance_extension',array(
+                'instance_id' => $this->_queueObject->getInstanceId(),
+                'extension_id' => $this->_queueObject->getExtensionId()
+                )
+            );
+        }
+        
+        //lower revision_counter of instance
+        $this->_instanceObject->setRevisionCount($this->_instanceObject->getRevisionCount()-1)->save();
+        
         $this->_updateStatus('ready');
     }
 
