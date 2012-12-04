@@ -648,7 +648,7 @@ class QueueController extends Integration_Controller_Action {
                         $queueModel->setInstanceId($instance->id);
                         $queueModel->setStatus('pending');
                         $queueModel->setUserId($instance->user_id);
-                        $queueModel->setExtensionId(0);
+                        $queueModel->setExtensionId($revisionModel->getExtensionId());
                         $queueModel->setParentId(0);
                         $queueModel->setServerId($instance->server_id);
                         $queueModel->setTask('RevisionRollback');
