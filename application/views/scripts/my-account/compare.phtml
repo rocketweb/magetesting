@@ -6,7 +6,7 @@
             <th class="compare-table-title-row"><span class="compare-table-title">Featrues</span></th>
             <?php foreach($this->plans as $plan): ?>
                 <th class="compare-table-data-name"><h3><span><?php echo $plan->getName(); ?></span></h3><h2><span class="compare-table-dollar">$</span><span><?php echo $plan->getPrice(); ?></span></h2></th>
-                <th class="compare-table-empty-first"></th>
+                <th class="compare-table-empty-first"><span class="compare-table-empty"></span></th>
             <?php endforeach; ?>
         </tr>
     </thead>
