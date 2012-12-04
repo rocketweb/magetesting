@@ -107,6 +107,16 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'ignore'   => true,
                 'label'    => 'Install',
         ));
+        
+        $this->addElement('text', 'custom_file', array(
+                'label'       => 'Remote Path to .zip or .tar.gz package containing all store files',
+                'required'    => false,
+                'label_class' => 'radio inline'
+        ));
+        
+        $this->custom_file->setValue('ie. /website/html/store_backup.tar.gz');
+        $this->custom_file->setAttrib('onblur', "if(this.value==''){this.value='ie. /website/html/store_backup.tar.gz'}");
+        $this->custom_file->setAttrib('onfocus',"if(this.value=='ie. /website/html/store_backup.tar.gz'){this.value='';}");
 
         $this->_setDecorators();
 
@@ -132,7 +142,8 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
         $this->custom_pass->removeDecorator('HtmlTag');
         $this->custom_pass->removeDecorator('overall');
         
-        
+        $this->custom_file->removeDecorator('HtmlTag');
+        $this->custom_file->removeDecorator('overall');
     }
 
 }

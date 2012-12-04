@@ -3,7 +3,8 @@
 class QueueController extends Integration_Controller_Action {
 
     public function init() {
-        /* Initialize action controller here */
+//        $this->_helper->noSslSwitch();
+        parent::init();
     }
 
     public function indexAction() {
@@ -264,7 +265,8 @@ class QueueController extends Integration_Controller_Action {
                             ->setCustomLogin($form->custom_login->getValue())
                             ->setCustomPass($form->custom_pass->getValue())
                             ->setCustomSql($form->custom_sql->getValue())
-                            ->setType('custom');
+                            ->setType('custom')
+                            ->setCustomFile($form->custom_file->getValue());
                     $newInstanceId = $instanceModel->save();
                     
                     $queueModel = new Application_Model_Queue();
