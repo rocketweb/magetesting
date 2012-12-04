@@ -331,13 +331,27 @@ html,body{height:100%;}
 }
 
 /** COMPARE PAGE TABLE **/
-.compare-table-title-row{
+.compare-table thead th {
+	max-width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	vertical-align: bottom;
+}
+.compare-table th, .compare-table td {
+	padding: 8px;
+	line-height: 20px;
+	vertical-align: top;
+}
+th.compare-table-title-row{
 	width: 283px;
 	height: 150px;
 	background: none;
-	padding: 0 !important;
+	padding: 0;
 }
-.compare-table-title{
+.compare-table td{
+	border-top: 1px solid #e7e7e7;
+}
+span.compare-table-title{
 	display: block;
 	width: 233px;
 	height: 40px;
@@ -347,30 +361,35 @@ html,body{height:100%;}
 	border-top-left-radius: 6px;
 	padding: 26px 0 0 50px;
 	font-size: 24px;
+	text-align: left;
 }
-.compare-table-data-name{
+span.compare-table-empty{
+	display: block;
+	padding: 0;
+	height: 56px;
+	border-bottom: 5px solid #34aae5;
+	border-top: 1px solid #e7e7e7;
+}
+th.compare-table-empty-first:last-child span.compare-table-empty{
+	border-right: 1px solid #e7e7e7;
+	border-top-right-radius: 6px
+}
+th.compare-table-empty-first{
+	padding: 0;
+}
+th.compare-table-data-name{
 	display: inline-block;
-	width: 268px;
+	width: 270px;
 	height: 151px;
-	padding: 0 !important;
+	padding: 0;
 	background: #34aae5;
-	border: 1px solid #e7e7e7 !important;
-	border-bottom: none !important;
-	border-top-left-radius: 6px !important;
-	border-top-right-radius: 6px !important;
-	border-top-style: solid !important;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	border-top-style: solid;
 	color: #fff;
-	font-size: 24px;
-	font-weight: normal !important;
-	text-align: center;
 }
-
 .compare-table-data-name h3 span, .compare-table-data-name h2 span{
 	text-shadow: 1px 1px 1px #353535;
-}
-
-.compare-table-data-name h3{
-	margin-top: 20px;
 }
 .compare-table-data-name h3 span{
 	font-size: 24px;
@@ -385,50 +404,71 @@ html,body{height:100%;}
 	display: block;
 	margin-top: 10px;
 }
-.compare-table-data-name h2 span.compare-table-dollar{
-	font-size: 30px;
-	margin-right: 5px;
-}
-.compare-table-row-title{
-	background: #13272e;
+td.compare-table-row-title{
 	color: #ffffff;
 }
-.compare-table-empty{
+tr.compare-table-row-title{
 	background: #13272e;
 }
-.compare-table-row-title{
-	padding: 18px 0 !important;
-	padding-left: 52px !important;
+.compare-table tbody tr.compare-table-row-title-empty{
+	background: none;
+	border: none;
+}
+td.compare-table-empty{
+	background: #13272e;
+}
+td.compare-table-row-title{
+	padding: 18px 0;
+	padding-left: 52px;
 	font-size: 15px;
 	font-weight: bold;
 	text-shadow: 1px 1px 1px #353535;
+	border-top: 1px solid #5c6a6d;
 }
-.compare-table tbody tr:first-child .compare-table-row-title, .compare-table tbody tr:first-child .compare-table-empty{
-	border-top: 1px solid #5c6a6f;
+td.compare-table-empty{
+	border-top: 1px solid #5c6a6d;
+	min-width: 40px;
 }
-
-.compare-table-data{
+td.compare-table-data{
 	width: 268px;
-	padding: 0 !important;
-	padding-top: 18px !important;
+	padding: 0 ;
 	vertical-align: middle;
 	font-size: 20px;
 	font-weight: bold;
-	text-align: center !important;
+	text-align: center;
 	background: #fff;
 	border-right: 1px solid #e7e7e7;
 }
-
-.compare-table-price-button{
-	height: 83px;
+td.compare-table-row-title-last{
+	display: inline-block;
+	border-bottom-left-radius: 6px ;
+	width: 232px;
+	background: #13272e;
+	border: none;
+	border-top: 1px solid #5c6a6d;
+}
+tr.compare-table-row-title-last{
+	background: none;
+	border: none;
+}
+tr.compare-table-row-title-last td.compare-table-empty:last-child{
+	display: inline-block;
+	height: 100%;
+	width: 42px;
+	border-bottom-right-radius: 6px ;
+}
+td.compare-table-price-button{
+	height: 69px;
 	display: inline-block;
 	width: 268px;
-	padding: 0 !important;
-	border: 1px solid #e7e7e7 !important;
-	border-bottom-left-radius: 6px !important;
-	border-bottom-right-radius: 6px !important;
+	padding: 0 ;
+	padding-top: 24px ;
+	vertical-align: middle ;
+	border: 1px solid #e7e7e7;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
 	color: #fff;
 	font-size: 24px;
-	font-weight: normal !important;
+	font-weight: normal;
 	text-align: center;
 }
