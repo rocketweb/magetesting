@@ -30,7 +30,17 @@ implements Application_Model_Task_Interface {
         
     }
 
-    protected function _deploy() {
+    
+    protected function _deploy(){
+        $hash = $this->_revisionObject->getHash();
+        
+        
+    }
+    
+    /**
+     * @deprectated
+     */
+    protected function _deployOld() {
         $hash = $this->_revisionObject->getHash();
         $startdir  = getcwd();
         $output = '';
