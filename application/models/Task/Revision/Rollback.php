@@ -47,9 +47,9 @@ implements Application_Model_Task_Interface {
         $params = $this->_queueObject->getTaskParams();
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         
-        exec('tar -zxf '.$params['rollback_database_to']);
+        exec('tar -zxf '.$params['rollback_db_to']);
         
-        $unpackedName = str_replace('.tgz','',$params['rollback_database_to']);
+        $unpackedName = str_replace('.tgz','',$params['rollback_db_to']);
         $command = 'sudo mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' < '.$unpackedName;
         exec($command);
        
