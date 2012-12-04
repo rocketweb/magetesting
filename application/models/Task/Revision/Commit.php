@@ -22,63 +22,12 @@ implements Application_Model_Task_Interface {
         $this->_commit();
         $hash = $this->_revisionHash;
         
-        $startdir  = getcwd();
-        $output = '';
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
-        
-        /* fetch changed files */
-        exec('git show --pretty="format:" --name-only '.$hash,$output);
-        
-        $changedFiles = array();
-        foreach($output as $gitChangedFile){
-            $changedFiles[]= $gitChangedFile;
-        }
-        
-        /* create temporary directory */
-        $tempdir = sys_get_temp_dir();
-        chdir($tempdir);
-        exec('mkdir '.$hash.';');
-        chdir($tempdir.'/'.$hash);      
-        /* clone repository into temporary directory */
-        $output = array();
-        //var_dump('sudo git clone '.$this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
-        exec('sudo git clone '.$this->_instanceFolder.'/'.$this->_instanceObject->getDomain(),$output);
-        //var_dump($output);
-        chdir($tempdir.'/'.$hash.'/'.$this->_instanceObject->getDomain());
-        unset($output);
-        
-        exec('git checkout '.$hash,$output);
-        //var_dump($output);
-        chdir($tempdir.'/'.$hash);
-        exec('sudo mkdir mageroot');
-        chdir($tempdir);
-        unset($output);
-        exec('pwd',$output);
-        //var_dump($output);
-        
-        foreach($changedFiles as $file){
-            $pathinfo = pathinfo($file);
-            /* create destination dir */
-            if (isset($pathinfo['dirname']) &&  (!file_exists($hash.'/mageroot/'.$pathinfo['dirname']) || !is_dir($hash.'/mageroot/'.$pathinfo['dirname']))){
-                exec('mkdir -p '.$hash.'/mageroot/'.$pathinfo['dirname']);
-            }
-            
-            //echo 'sudo cp ' . $hash . '/' . $this->_instanceObject->getDomain().'/'.$file. ' '.$hash.'/mageroot/'.$file.PHP_EOL;
-            exec('sudo cp ' . $hash . '/' . $this->_instanceObject->getDomain().'/'.$file . ' '.$hash.'/mageroot/'.$file);
-        }
-       
-        /*TODO: decide if move to user revision/ folder next to public_html ? */
-        $apppath = str_replace('/application','', APPLICATION_PATH);
-        
-        exec('sudo tar -zcf '.$apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$hash.'.tgz '.$hash.'/mageroot');
-               
         $this->_insertRevisionInfo();
         
         $this->_updateStatus('ready');
         
         $this->_updateRevisionCount('+1');
         
-        chdir($startdir);
     }
 
     protected function _commit() {
@@ -178,7 +127,7 @@ implements Application_Model_Task_Interface {
         $revisionModel->setType($params['commit_type']);
         $revisionModel->setDbBeforeRevision($this->_dbBackupPath);
         $revisionModel->setComment($params['commit_comment']);
-        $revisionModel->setFileName($this->_revisionHash.'.tgz');    
+        $revisionModel->setFileName('');    
         $revisionModel->save();
     }
 
