@@ -17,24 +17,54 @@
         <tr>
             <td><?php echo $item['login']; ?></td>
             <td><?php echo $item['instance_name']?></td>
-            <?php switch($item['status']): 
-            case 'ready':?>
-                <td><span class="label label-success"><?php echo ucfirst($item['status']) ?></span> </td>
-            <?php break; case 'pending':  ?>
-                <td>
-                    <div class="progress progress-striped active" style="margin-bottom:0px;margin-top:5px;">
-                        <div class="bar" style="width: 100%;">
-                            In Queue - <?php echo $this->queueCounter[$item['id']]; ?> minutes left
-                        </div>
+            <?php 
+                $progressClass = '';
+                switch($item['status']): 
+                    case 'ready':
+                        $progressClass = 'label-success';
+                    break; case 'closed':
+                        $progressClass = 'label-danger';
+                    break; case 'installing': 
+                           case 'installing-extension':
+                           case 'installing-magento':
+                           case 'installing-samples':
+                           case 'installing-user': 
+                           case 'installing-files':
+                           case 'installing-date': 
+                        $progressClass = 'label-info install-bar';
+                    break; case 'error': 
+                        $progressClass = 'label-important';
+                    break; default: 
+                        $progressClass = 'label-info';
+                endswitch;
+            ?>
+            <td>
+            <?php
+            $chunk = strpos($item['status'], '-');
+            $chunk = ($chunk === false ? strlen($item['status']) : $chunk);
+            switch(substr($item['status'], 0, $chunk)):
+                case 'pending':
+                case 'installing':
+                case 'installing-extension':
+                case 'installing-magento':
+                case 'installing-samples':
+                case 'installing-user':
+                case 'installing-files':
+                case 'installing-date':
+            ?>
+                <div class="progress progress-striped install-bar active" data-domain="<?php echo $item['domain']; ?>" style="margin-bottom:0px;margin-top:5px;">
+                    <div class="bar" style="width: 100%;">
+                    <?php if($item['status'] == 'pending'): ?>
+                        In Queue - <?php echo $this->queueCounter[$item['id']]; ?> minutes left
+                    <?php else: ?>
+                        <?php echo ucwords(str_replace('-', ' ', $item['status'])); ?>
+                    <?php endif; ?>
                     </div>
-                </td>
-            <?php break; case 'closed': ?>
-                <td><span class="label label-important">Closed</span></td>
-            <?php break; case 'installing': ?>
-                <td><span class="label label-success">Installing..</span></td>
+                </div>
             <?php break; default: ?>
-                <td><span class="label label-warning"></span></td>
+                <span class="label <?php echo $progressClass; ?>"><?php echo ucwords(str_replace('-', ' ', $item['status'])); ?></span>
             <?php endswitch; ?>
+            </td>
             <td><?php echo $item['edition']?></td>
             <td><?php echo $item['version']?></td>
             <td>
@@ -47,10 +77,10 @@
             <td>
             <?php if(in_array($item['status'], array('closed','pending','installing'))): ?>
                 <a class="btn btn-success disabled"><i class="icon-white icon-eye-close"></i>&nbsp;Visit</a>
-                <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
+                <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php else: ?>
                 <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success"><i class="icon-white icon-eye-open"></i>&nbsp;Visit</a>
-                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger delete-store admin"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger delete-store admin"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php endif;?>
             </td>
         </tr>
