@@ -25,7 +25,7 @@ function updateStatuses(){
       //make new request
       requests[domain] = $.ajax({
             type: "POST",
-            url: "/magetesting/queue/getstatus",
+            url: "/queue/getstatus",
             data: "domain=" + domain,
             dataType: "json",
             success: function(json){
@@ -60,7 +60,7 @@ function updateLabel(row, new_status, domain){
             //update pending time counter
             $.ajax({
                 type: "POST",
-                url: "/magetesting/queue/getminutesleft",
+                url: "/queue/getminutesleft",
                 data: "domain=" + domain,
                 dataType: "json",
                 success: function(json){
