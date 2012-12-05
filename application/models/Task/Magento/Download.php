@@ -467,7 +467,7 @@ implements Application_Model_Task_Interface {
         ' ' . $this->config->magento->instanceprefix . $this->_dbname . 
         ' -e "INSERT INTO admin_user'.
         ' (firstname,lastname,email,username,password,created,is_active) VALUES'.
-        ' (\''.$this->_userObject->getFirstName().'\',\''.$this->_userObject->getLastName().'\',\''.$this->_userObject->getEmail().'\',\'admin\',\''.$password.'\',\''.date("Y-m-d H:i:s").',1)\''.
+        ' (\''.$this->_userObject->getFirstName().'\',\''.$this->_userObject->getLastName().'\',\''.$this->_userObject->getEmail().'\',\''.$this->_userObject->getLogin().'\',\''.$password.'\',\''.date("Y-m-d H:i:s").',1)\''.
         ' ON DUPLICATE KEY UPDATE password = \''.$password.'\', email = \''.$this->_userObject->getEmail().'\' "');
         
     }
