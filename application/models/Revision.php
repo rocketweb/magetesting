@@ -185,7 +185,7 @@ class Application_Model_Revision {
                 'id'        => $this->getId(),
                 'instance_id'      => $this->getInstanceId(),
                 'user_id' => $this->getUserId(),
-                'extension_id' => $this->extensionId(),
+                'extension_id' => $this->getExtensionId(),
                 'type' => $this->getType(),
                 'comment' => $this->getComment(),
                 'hash' => $this->getHash(),
