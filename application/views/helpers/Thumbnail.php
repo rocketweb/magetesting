@@ -118,24 +118,29 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
         $title = '';
         $map = '';
         $class = '';
+        $style = '';
         
-        if (isset($attribs ['alt'])) {
-            $alt = 'alt="' . $this->view->escape($attribs ['alt']) . '" ';
+        if (isset($attribs['alt'])) {
+            $alt = 'alt="' . $this->view->escape($attribs['alt']) . '" ';
         }
 
-        if (isset($attribs ['title'])) {
-            $title = 'title="' . $this->view->escape($attribs ['title']) . '" ';
+        if (isset($attribs['title'])) {
+            $title = 'title="' . $this->view->escape($attribs['title']) . '" ';
         }
 
-        if (isset($attribs ['map'])) {
-            $map = 'usemap="#' . $this->view->escape($attribs ['map']) . '" ';
+        if (isset($attribs['map'])) {
+            $map = 'usemap="#' . $this->view->escape($attribs['map']) . '" ';
         }
 
-        if (isset($attribs ['class'])) {
-            $class = 'class="' . $this->view->escape($attribs ['class']) . '" ';
+        if (isset($attribs['class'])) {
+            $class = 'class="' . $this->view->escape($attribs['class']) . '" ';
+        }
+        
+        if (isset($attribs['style'])) {
+            $style = 'style="' . $this->view->escape($attribs['style']) . '" ';
         }
 
-        $this->_attribs = $alt . $title . $map . $class;
+        $this->_attribs = $alt . $title . $map . $class . $style;
     }
     
     /**
