@@ -750,9 +750,7 @@ class QueueController extends Integration_Controller_Action {
                 $download_button = '<a class="btn btn-primary download-deployment" href="'.
                     $this->view->url(array('module' => 'default', 'controller' => 'instance', 'action' => $domain), 'default', true).'/var/deployment/'.$revision['filename']
                 .'">Download</a>'.PHP_EOL;
-                $request_button = '<a class="btn request-deployment" href="'.
-                    $this->view->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-deployment', 'domain' => $domain, 'revision' => $revision['id']), 'default', true)
-                .'">Request Deployment</a>'.PHP_EOL;
+                $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                 $content .= (!$revision['filename'] ? $request_button : $download_button).PHP_EOL;
                 $content .= '</td>'.PHP_EOL;
                 $content .= '</tr>'.PHP_EOL;
