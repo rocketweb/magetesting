@@ -22,7 +22,8 @@
             <td>
                 <div class="media">
                     <?php if($extension['item']->getLogo()): ?>
-                        <img class="pull-left media-object logo" src="<?php echo $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, true); ?>" />
+                        <?php echo $this->Thumbnail($extension['item']->getLogo(), null, 100, array('class' => 'pull-left media-object logo'), $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, false)); ?>
+                        <!--<img class="pull-left media-object logo" src="<?php //echo $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, true); ?>" />-->
                     <?php endif; ?>
                     <div class="media-body">
                         <h4 class="media-heading display-inline"><?php echo $extension['item']->getName(); ?></h4>
