@@ -1,5 +1,6 @@
 /* @override
-	http://dev.magetesting.com/public/css/style.css */
+	http://dev.magetesting.com/public/css/style.css
+	http://magetesting:8888/public/css/style.css */
 
 /* FONTS
 
@@ -528,8 +529,7 @@ div.accordion div.accordion-group:first-child div.accordion-heading div.tab-stri
 }
 
 /* Edit Account */
-form.edit-account{
-	padding: 0 20px;
+div.form-box form.edit-account{
 	margin-top: 10px;
 	border: 1px solid 
 	#e5e5e5;
@@ -540,18 +540,23 @@ form.edit-account{
 	-moz-box-shadow: 0 8px 6px -6px #888888;
 	box-shadow: 0 8px 6px -6px #888888;
 }
-form.edit-account legend {
+div.form-box form.edit-account legend {
+    display: block;
+    float: left;
 	padding: 10px 0;
 	border: 0;
-	border-top: 1px solid #e5e5e5;
 }
-form.edit-account fieldset:first-child  legend{
-	border-top: none;
-	padding-top: 0;
+div.form-box fieldset{
+    padding: 0 20px;
+    margin: 0;
+    border-top: 1px solid #e5e5e5;
 }
-.form-actions {
-	padding: 20px 0;
-	margin: 0;
-	border-top: 1px solid 
-	#e5e5e5;
+div.form-box .edit-account fieldset:first-of-type{
+    border-top: none;
+}
+div.form-box div.tab-stripe:first-of-type{
+    border-top-left-radius: 6px;
+}
+div.form-box div.form-actions{
+    padding: 20px 20px 0 20px;
 }
