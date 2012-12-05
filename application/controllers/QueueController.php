@@ -8,6 +8,7 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function indexAction() {
+        $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-index.js'), 'text/javascript');
         $instanceModel = new Application_Model_Instance();
 
         $timeExecution = $this->getInvokeArg('bootstrap')
