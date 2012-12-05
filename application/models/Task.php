@@ -37,7 +37,7 @@ class Application_Model_Task {
         $filter = new Zend_Filter_Word_CamelCaseToUnderscore();
         $classSuffix = $filter->filter($queueElement->getTask());
         
-        $className = 'Application_Model_Task_'.$classSuffix; 
+        $className = __CLASS__ . '_'.$classSuffix; 
         
         $customTaskModel = new $className();       
         $customTaskModel->setup($queueElement);
