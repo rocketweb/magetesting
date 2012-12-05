@@ -78,9 +78,10 @@ implements Application_Model_Task_Interface {
         $this->_cleanupFilesystem();
 
         // update backend admin password
-        $set = array('backend_password' => $this->_adminpass);
-        $where = array('domain = ?' => $this->_domain);
-        $log->log(PHP_EOL . 'Updating queue backend password: ' . $this->db->update('instance', $set, $where), Zend_Log::DEBUG);
+        $this->_instanceObject->setBackendPassword($this->_adminpass)->save();
+        //$set = array('backend_password' => $this->_adminpass);
+        //$where = array('domain = ?' => $this->_domain);
+        $log->log(PHP_EOL . 'Updating queue backend password to : ' . $this->_adminpass, Zend_Log::DEBUG);
 
         //copy new htaccess over
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/Custom/.htaccess ' . $this->_instanceFolder . '/' . $this->_domain . '/.htaccess');
@@ -460,16 +461,18 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _createAdminUser(){
-        
+               
         $password = $this->getHash($this->_adminpass,2);
-        exec('mysql ' . $this->config->magento->userprefix . 
-              $this->_dbuser . ' -p' . $this->_dbpass . 
+        $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
+        ' -p' . $this->_dbpass . 
         ' ' . $this->config->magento->instanceprefix . $this->_dbname . 
         ' -e "INSERT INTO admin_user'.
         ' (firstname,lastname,email,username,password,created,is_active) VALUES'.
-        ' (\''.$this->_userObject->getFirstName().'\',\''.$this->_userObject->getLastName().'\',\''.$this->_userObject->getEmail().'\',\''.$this->_userObject->getLogin().'\',\''.$password.'\',\''.date("Y-m-d H:i:s").',1)\''.
-        ' ON DUPLICATE KEY UPDATE password = \''.$password.'\', email = \''.$this->_userObject->getEmail().'\' "');
+        ' (\''.$this->_userObject->getFirstName().'\',\''.$this->_userObject->getLastName().'\',\''.$this->_userObject->getEmail().'\',\''.$this->_userObject->getLogin().'\',\''.$password.'\',\''.date("Y-m-d H:i:s").'\',1)'.
+        ' ON DUPLICATE KEY UPDATE password = \''.$password.'\', email = \''.$this->_userObject->getEmail().'\' "';
         
+        exec($command, $output);
+        unset($output);
     }
     
     /* taken from Mage_Core_Helper_Data */
