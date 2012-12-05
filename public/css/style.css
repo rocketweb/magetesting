@@ -467,7 +467,9 @@ tr.compare-table-row-title-last td.compare-table-empty{
 	-moz-box-shadow: 0 2px 6px 0px #888888;
 	box-shadow: 0 2px 6px 0px #888888;
 }
-
+tr.compare-table-row-title-last td.compare-table-empty:last-child{
+	border-bottom-right-radius: 6px;
+}
 td.compare-table-price-empty{
 	border-top: none;
 }
@@ -489,6 +491,8 @@ td.compare-table-price-button{
 	-moz-box-shadow: 0 8px 6px -6px #888888;
 	box-shadow: 0 8px 6px -6px #888888;
 }
+
+tr
 
 /** Stores Border Radious **/
 div.accordion div.accordion-group:first-child{
