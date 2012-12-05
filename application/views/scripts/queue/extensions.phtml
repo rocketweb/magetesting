@@ -33,7 +33,6 @@
 			    <?php foreach($this->extensions as $extension): ?>
 			        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['instance_id'] ? ' installed' : ' notInstalled'); ?>">
 			            <div class="wrapper">
-			                <!-- INSTALLED or either PREMIUM or FREE -->
                             <!-- removing this one for now until some workaround is found -->
 			                	<!--<div class="hover_inner_shadow"></div>-->
                                 
@@ -51,14 +50,18 @@
 			                	<?php endif; ?>
 			                <?php endif; ?>
 			                
-			                <div class="icon">
 			                <?php if($extension['logo']): ?>
-                                            <?php echo $this->Thumbnail($extension['logo'], null, 110, array('class' => 'big', 'alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
-                                            <?php echo $this->Thumbnail($extension['logo'], null, 38, array('class' => 'small', 'alt' => $extension['logo'], 'style' => 'display: none;'), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
-			                <?php else: ?>
-			                    <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
-			                <?php endif; ?>
+			                <div class="icon big">
+                                <?php echo $this->Thumbnail($extension['logo'], null, 110, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
 			                </div>
+			                <div class="icon small">
+                                <?php echo $this->Thumbnail($extension['logo'], null, 38, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
+			                </div>
+			                <?php else: ?>
+			                <div class="icon">
+			                    <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
+			                </div>
+			                <?php endif; ?>
 			                
 			                <div class="info">
 			                    <h5><?php echo $extension['name']; ?></h5>
