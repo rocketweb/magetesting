@@ -65,30 +65,27 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
         $this->addElement('text', 'custom_host', array(
                 'label'       => 'Host',
                 'required'    => true,
-                'label_class' => 'radio inline'
+                'label_class' => 'radio inline',
+                'placeholder' => 'ie. ftp.my-company.com'
         ));
-        $this->custom_host->setValue('ie. ftp.my-company.com');
-        $this->custom_host->setAttrib('onblur', "if(this.value==''){this.value='ie. ftp.my-company.com'}");
-        $this->custom_host->setAttrib('onfocus',"if(this.value=='ie. ftp.my-company.com'){this.value='';}");
+//        $this->custom_host->setValue('ie. ftp.my-company.com');
         
         $this->addElement('text', 'custom_remote_path', array(
                 'label'       => 'Remote Path to Magento Root',
                 'required'    => true,
-                'label_class' => 'radio inline'
+                'label_class' => 'radio inline',
+                'placeholder' => 'ie. /website/html'
         ));
         
-        $this->custom_remote_path->setValue('ie. /website/html');
-        $this->custom_remote_path->setAttrib('onblur', "if(this.value==''){this.value='ie. /website/html'}");
-        $this->custom_remote_path->setAttrib('onfocus',"if(this.value=='ie. /website/html'){this.value='';}");
+//        $this->custom_remote_path->setValue('ie. /website/html');
         
         $this->addElement('text', 'custom_sql', array(
                 'label'       => 'Remote Path to SQL dump',
                 'required'    => true,
-                'label_class' => 'radio inline'
+                'label_class' => 'radio inline',
+                'placeholder' => 'ie. /website/html/dump.sql'
         ));
-        $this->custom_sql->setValue('ie. /website/html/dump.sql');
-        $this->custom_sql->setAttrib('onblur', "if(this.value==''){this.value='ie. /website/html/dump.sql'}");
-        $this->custom_sql->setAttrib('onfocus',"if(this.value=='ie. /website/html/dump.sql'){this.value='';}");
+//        $this->custom_sql->setValue('ie. /website/html/dump.sql');
         
         $this->addElement('text', 'custom_login', array(
                 'label'       => 'Login',
@@ -111,12 +108,11 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
         $this->addElement('text', 'custom_file', array(
                 'label'       => 'Remote Path to .zip or .tar.gz package containing all store files',
                 'required'    => false,
-                'label_class' => 'radio inline'
+                'label_class' => 'radio inline',
+                'placeholder' => 'ie. /website/html/store_backup.tar.gz'
         ));
         
-        $this->custom_file->setValue('ie. /website/html/store_backup.tar.gz');
-        $this->custom_file->setAttrib('onblur', "if(this.value==''){this.value='ie. /website/html/store_backup.tar.gz'}");
-        $this->custom_file->setAttrib('onfocus',"if(this.value=='ie. /website/html/store_backup.tar.gz'){this.value='';}");
+//        $this->custom_file->setValue('ie. /website/html/store_backup.tar.gz');
 
         $this->_setDecorators();
 
