@@ -457,7 +457,7 @@ implements Application_Model_Task_Interface {
     
     protected function _createAdminUser(){
         
-        $password = $this->_getHash($this->_adminpass,2);
+        $password = $this->getHash($this->_adminpass,2);
         exec('mysql ' . $this->config->magento->userprefix . 
               $this->_dbuser . ' -p' . $this->_dbpass . 
         ' ' . $this->config->magento->instanceprefix . $this->_dbname . 
