@@ -632,31 +632,7 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(true);
         // $this->_getParam('domain');
         // $this->_getParam('deploy'); - revision id
-        
-        $revisionModel = new Application_Model_Revision;
-        $revisionModel->find($this->_getParam('deploy'));
-        
-        $domain = $this->_getParam('domain');        
-        $instanceModel=  new Application_Model_Instance();
-        $instance = $instanceModel->findByDomain($domain);      
                 
-        $queueModel = new Application_Model_Queue();
-        $queueModel->setTask('RevisionDeploy');
-        $queueModel->setTaskParams(
-            array(
-                'revision_id'=> $this->_getParam('deploy')
-            )
-        );
-        
-        $queueModel->setInstanceId($instance->id);
-        $queueModel->setServerId($instance->server_id);
-        $queueModel->setParentId(0);
-        $queueModel->setExtensionId($revisionModel->extension_id);
-        $queueModel->setAddedDate(date("Y-m-d H:i:s"));
-        $queueModel->setStatus('pending');
-        $queueModel->setUserId($this->auth->getIdentity()->id);
-        $queueModel->save();
-        
         $this->_helper->FlashMessenger('Deployment action has been added to queue.');
         return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
