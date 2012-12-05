@@ -389,11 +389,16 @@ class QueueController extends Integration_Controller_Action {
                 $this->_helper->FlashMessenger('Store added to close queue.');
             }
         }
-        return $this->_helper->redirector->gotoRoute(array(
-                'module' => 'default',
-                'controller' => 'user',
-                'action' => 'dashboard',
-        ), 'default', true);
+        $redirect_to = array(
+            'module' => 'default',
+            'controller' => 'user',
+            'action' => 'dashboard',
+        );
+        if($this->_getParam('redirect') == 'admin') {
+            $redirect_to['controller'] = 'queue';
+            $redirect_to['action'] = 'index';
+        }
+        return $this->_helper->redirector->gotoRoute($redirect_to, 'default', true);
     }
 
     public function getversionsAction() {

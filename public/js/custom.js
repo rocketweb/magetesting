@@ -88,8 +88,13 @@ $(document).ready(function () {
     $('.delete-store').click(function(event){
         event.stopPropagation();
         var $this = $(this),
-            $instance_name = $this.parent().nextAll('.title').text(),
+            $instance_name,
             $modal_instance_name_container = $modal_close_instance.find('.close-instance-name');
+        if($this.hasClass('admin')) {
+            $instance_name = $this.parent().parent().children('td:eq(1)').text();
+        } else {
+            $instance_name = $this.parent().nextAll('.title').text();
+        }
         $modal_close_instance_form.attr('action', $this.attr('href'));
         if($instance_name.length) {
             $modal_instance_name_container.text(' "'+$instance_name+'"');

@@ -50,12 +50,29 @@
                 <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
             <?php else: ?>
                 <a href="<?php echo $this->baseUrl('instance/'.$item['domain']); ?>" class="btn btn-success"><i class="icon-white icon-eye-open"></i>&nbsp;Visit</a>
-                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger delete-store admin"><i class="icon-white icon-trash"></i>&nbsp;Close</a>
             <?php endif;?>
             </td>
         </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<div id="close-instance" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Delete Store</h3>
+    </div>
+    <div class="modal-body">
+        <p>Do you really want to delete store<span class="close-instance-name"></span>? There is no undo!</p>
+    </div>
+    <div class="modal-footer">
+        <form method="post">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <input type="hidden" name="close" value="1" />
+            <button class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
 
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>
