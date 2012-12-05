@@ -5,29 +5,28 @@
             method="<?php echo $this->form->getMethod() ?>"
             class="<?php echo $this->form->getAttrib('class') ?>"
             id="<?php echo $this->form->getAttrib('id') ?>">
-            <legend>
-                <h1>Edit Account</h1>
-            </legend>
+            
+            <h1>Edit Account</h1>
             <fieldset>
                 <div class="row">
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->firstname; ?>
                     </div>
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->lastname; ?>
                     </div>
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->email; ?>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->password; ?>
                     </div>
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->password_repeat; ?>
                     </div>
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->server_id; ?>
                     </div>
                 </div>
@@ -39,7 +38,7 @@
                 <small class="pull-right"><a href="<?php echo $this->url(array('module' => 'default',
                         'controller'=>'user',
                         'action'=>'list',
-                        ),'default',true); ?>" class="secondary">View list</a> </small>
+                        ),'default',true); ?>" class="secondary" style="margin-right: 12px">View list</a> </small>
             </div>
         </form>
     </div>

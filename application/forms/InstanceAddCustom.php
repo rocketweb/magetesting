@@ -15,6 +15,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'label'      => 'Name',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
+                'class'      => 'span4'
         ));
 
         $this->addElement('text', 'description', array(
@@ -23,7 +24,8 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                     array('validator' => 'StringLength', 'options' => array('max' => 300))
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         $editionModel = new Application_Model_Edition();
@@ -33,7 +35,8 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         new Zend_Validate_InArray(array_keys($editionModel->getKeys()))
-                )
+                ),
+                'class'      => 'span4'
         ));
         $emptyVersion = array('' => 'Choose...');
         $versions = array_merge($emptyVersion,$editionModel->getOptions());
@@ -47,7 +50,8 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         new Zend_Validate_InArray($versionModel->getKeys())
-                )
+                ),
+                'class'      => 'span4'
         ));
         
         $this->addElement('select', 'custom_protocol', array(
@@ -56,7 +60,8 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         new Zend_Validate_InArray(array('ftp'))
-                )
+                ),
+                'class'      => 'span4'
         ));
         $this->custom_protocol->addMultiOptions(array(
                 'ftp' => 'FTP',
@@ -66,7 +71,8 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'label'       => 'Host',
                 'required'    => true,
                 'label_class' => 'radio inline',
-                'placeholder' => 'ie. ftp.my-company.com'
+                'placeholder' => 'ie. ftp.my-company.com',
+                'class'      => 'span4'
         ));
 //        $this->custom_host->setValue('ie. ftp.my-company.com');
         
@@ -74,7 +80,8 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'label'       => 'Remote Path to Magento Root',
                 'required'    => true,
                 'label_class' => 'radio inline',
-                'placeholder' => 'ie. /website/html'
+                'placeholder' => 'ie. /website/html',
+                'class'      => 'span8'
         ));
         
 //        $this->custom_remote_path->setValue('ie. /website/html');
@@ -83,20 +90,23 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'label'       => 'Remote Path to SQL dump',
                 'required'    => true,
                 'label_class' => 'radio inline',
-                'placeholder' => 'ie. /website/html/dump.sql'
+                'placeholder' => 'ie. /website/html/dump.sql',
+                'class'      => 'span8'
         ));
 //        $this->custom_sql->setValue('ie. /website/html/dump.sql');
         
         $this->addElement('text', 'custom_login', array(
                 'label'       => 'Login',
                 'required'    => true,
-                'label_class' => 'radio inline'
+                'label_class' => 'radio inline',
+                'class'      => 'span4'
         ));
         
         $this->addElement('password', 'custom_pass', array(
                 'label'       => 'Password',
                 'required'    => true,
-                'label_class' => 'radio inline'
+                'label_class' => 'radio inline',
+                'class'      => 'span4'
         ));
         
         // Add the submit button
@@ -109,7 +119,8 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'label'       => 'Remote Path to .zip or .tar.gz package containing all store files',
                 'required'    => false,
                 'label_class' => 'radio inline',
-                'placeholder' => 'ie. /website/html/store_backup.tar.gz'
+                'placeholder' => 'ie. /website/html/store_backup.tar.gz',
+                'class'      => 'span8'
         ));
         
 //        $this->custom_file->setValue('ie. /website/html/store_backup.tar.gz');

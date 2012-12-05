@@ -23,7 +23,8 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 50)),
                         new Zend_Validate_Alpha()
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         $regex = new Zend_Validate_Regex("/^[a-z' -]+$/i");
@@ -36,7 +37,8 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 50)),
                         $regex
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         
@@ -48,6 +50,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 50)),
                 ),
+                'class'      => 'span4'
         ));
         
         // Add a postal code element
@@ -58,6 +61,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 10)),
                 ),
+                'class'      => 'span4'
         ));
 
         
@@ -69,6 +73,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                 ),
+                'class'      => 'span4'
         ));
         
         // Add a city element
@@ -79,6 +84,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 50)),
                 ),
+                'class'      => 'span4'
         ));
 
         // Add a city element
@@ -89,12 +95,13 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                 ),
+                'class'      => 'span4'
         ));
 
         // Add the submit button
         $this->addElement('submit', 'submit', array(
                 'ignore'   => true,
-                'label'    => 'Edit',
+                'label'    => 'Save',
         ));
         
         $regex = new Zend_Validate_Regex("/^[a-z0-9_-]+$/i");
@@ -112,8 +119,7 @@ class Application_Form_EditAccount extends Integration_Form
                         array('validator' => 'StringLength', 'options' => array(3, 13)),
                     $regex
                 ),
-            
-            
+                'class'      => 'span4'
         ));
 
         // Add a password element
@@ -124,7 +130,8 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(6, 45)),
                 ),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'class'      => 'span4'
         ));
 
         // Add a password element
@@ -135,6 +142,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         new Zend_Validate_Identical('password'),
                 ),
+                'class'      => 'span4'
         ));
         
         // Add a email element
@@ -146,7 +154,8 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                         new Zend_Validate_EmailAddress()
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         $this->_setDecorators();

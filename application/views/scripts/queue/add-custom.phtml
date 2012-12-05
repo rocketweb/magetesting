@@ -5,50 +5,71 @@
             method="<?php echo $this->form->getMethod() ?>"
             id="<?php echo $this->form->getId() ?>"
             class="<?php echo $this->form->getAttrib('class') ?>">
-            <legend>
-                <h3>Setup your custom environment</h3>
-            </legend>
-            <fieldset>
+
+            <h1>Setup your custom environment</h1>
+            
+            <fieldset class="margins margins-first margin-small">
+                <legend>Store details</legend>
                 <div class="row">
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->instance_name ?>
                     </div>
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->description ?>
                     </div>
-                    <div class="span3">
+                </div>
+                <div class="row">
+                    <div class="span4">
                         <?php echo $this->form->edition ?>
                     </div>
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->version ?>
                     </div>
                 </div>
+            </fieldset>
+            
+            
+            <fieldset class="margins margins-small">
+                <legend>Connection details</legend>
                 <div class="row">
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->custom_protocol ?>
                     </div>
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->custom_host ?>
-                    </div>
-                    <div class="span3">
-                        <?php echo $this->form->custom_remote_path ?>
-                    </div>
-                    <div class="span3">
-                        <?php echo $this->form->custom_sql ?>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->custom_login ?>
                     </div>
-                    <div class="span3">
+                    <div class="span4">
                         <?php echo $this->form->custom_pass ?>
                     </div>
-                    <div class="span3">
+                </div>
+            </fieldset>
+            
+            
+            <fieldset class="margins margins-small">
+                <legend>Store files and database</legend>
+                <div class="row row-large">
+                    <div class="span8">
+                        <?php echo $this->form->custom_remote_path ?>
+                    </div>
+                </div>
+                <div class="row row-large">
+                    <div class="span8">
+                        <?php echo $this->form->custom_sql ?>
+                    </div>
+                </div>
+                <div class="row row-large">
+                    <div class="span8">
                         <?php echo $this->form->custom_file ?>
                     </div>
                 </div>
             </fieldset>
+            
+            
             <div class="form-actions">
                 <button type="submit" name="<?php echo $this->form->instanceAdd->getName(); ?>" id="<?php echo $this->form->instanceAdd->getId() ?>" class="btn btn-inverse pull-right">
                     <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->instanceAdd->getLabel() ?>
