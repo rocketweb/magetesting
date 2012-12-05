@@ -48,12 +48,10 @@ $(document).ready(function () {
                 $remove_class = 'modal-rollback modal-deploy';
                 $add_class = 'modal-commit';
             } else if($this.hasClass('deploy-button')) {
-                // set form action path
-                $form_action = $form_action.replace('[replace]', 'deploy');
                 if($deployment_form.attr('action') != $form_action) {
                     $deploy_table_body.empty();
                     $.ajax({
-                       url : $base_url+'/queue/fetch-deployment-list/domain/'+$domain,
+                       url : $form_action.replace('[replace]', 'fetch-deployment-list'),
                        async : false,
                        success : function(html) {
                            if(typeof html == 'string' && html.length) {
@@ -62,6 +60,8 @@ $(document).ready(function () {
                        }
                     });
                 }
+                // set form action path
+                $form_action = $form_action.replace('[replace]', 'request-deployment');
                 // show modal with proper pre-class
                 $remove_class = 'modal-rollback modal-commit';
                 $add_class = 'modal-deploy';
