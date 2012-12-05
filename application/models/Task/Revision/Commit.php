@@ -72,14 +72,14 @@ implements Application_Model_Task_Interface {
         
         if (!count($output)){
             $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
-            exit;
+            return false;
         }
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
                
         if (!isset($matches[2])){
             $this->_updateStatus('ready', 'Could not find revision information, aborting');
-            exit;
+            return false;
         }
         
         //insert revision entry
@@ -104,7 +104,7 @@ implements Application_Model_Task_Interface {
         
         if (!count($output)){
             $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
-            exit;
+            return false;
         }
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
@@ -112,7 +112,7 @@ implements Application_Model_Task_Interface {
                 
         if (!isset($matches[2])){
             $this->_updateStatus('ready', 'Could not find revision information, aborting');
-            exit;
+            return false;
         }
         
         
