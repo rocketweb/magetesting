@@ -237,11 +237,6 @@ class Application_Model_Queue {
                 'server_id' => $this->getServerId(),
         );
     }
-
-    public function getAll()
-    {
-        return $this->getMapper()->fetchAll();
-    }
     
     public function getForServer($worker_id=null,$type='all'){
         return $this->getMapper()->getForServer($worker_id,$type);

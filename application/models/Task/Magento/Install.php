@@ -133,14 +133,10 @@ implements Application_Model_Task_Interface {
         $this->_installFiles();
 
         //echo "Moving files...\n";
-        exec('sudo cp -R magento/* .', $output);
+        $command = 'sudo mv magento/* magento/.??* .';
+        exec($command,$output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo cp -R magento/* .\n" . $message, LOG_DEBUG);
-        unset($output);
-
-        exec('sudo cp magento/.htaccess .', $output);
-        $message = var_export($output, true);
-        $this->logger->log("\nsudo cp magento/.htaccess .\n" . $message, LOG_DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
         exec('rm -R ' . $this->_instanceFolder . '/' . $this->_instanceObject->getDomain() . '/magento');
@@ -148,9 +144,15 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _installFiles() {
-        exec('sudo tar -zxvf ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz', $output);
+        /**
+         * strip-components=1 gets rid of magento folder and unpacks its contents  
+         * straight to our instance root
+         */
+        $command  = 'sudo tar -zxvf ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz --strip-components=1';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo tar -zxvf " . $this->filePrefix[$this->_magentoEdition] . "-" . $this->_magentoVersion . ".tar.gz\n" . $message, LOG_DEBUG);
+
+        $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
         if ($this->_instanceObject->getSampleData()) {
@@ -184,45 +186,51 @@ implements Application_Model_Task_Interface {
         $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
-        exec('sudo chmod 777 var -R', $output);
+        $command = 'sudo chmod 777 var -R';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo chmod 777 var var/.htaccess app/etc\n" . $message, LOG_DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
-        exec('sudo chmod 777 downloader', $output);
+        $command = 'sudo chmod 777 downloader';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo sudo chmod 777 downloader\n" . $message, LOG_DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
-        exec('sudo chmod 777 media -R', $output);
+        $command = 'sudo chmod 777 media -R';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo chmod -R 777 media\n" . $message, LOG_DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
     }
 
     protected function _cleanupFilesystem() {
         //echo "Cleaning up files...\n";
-        exec('sudo rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*', $output);
+        $command ='sudo rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*\n" . $message, LOG_DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
-        exec('sudo rm -rf magento/ ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz', $output);
+        $command = 'sudo rm -rf magento/ ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo rm -rf magento/ " . $this->filePrefix[$this->_magentoEdition] . "-" . $this->_magentoVersion . ".tar.gz\n" . $message, LOG_DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
-        exec('sudo rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt', $output);
+        $command = 'sudo rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt\n" . $message, LOG_DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
         if ($this->_instanceObject->getSampleData()) {
-            
             $sampleDataVersion = $this->_versionObject->getSampleDataVersion();
-            exec('sudo rm -rf magento-sample-data-' . $sampleDataVersion . '/ magento-sample-data-' . $sampleDataVersion . '.tar.gz magento_sample_data_for_' . $sampleDataVersion . '.sql', $output);
+            $command = 'sudo rm -rf magento-sample-data-' . $sampleDataVersion . '/ magento-sample-data-' . $sampleDataVersion . '.tar.gz magento_sample_data_for_' . $sampleDataVersion . '.sql';
+            exec($command, $output);
             $message = var_export($output, true);
-            $this->logger->log("\nsudo rm -rf magento-sample-data-" . $sampleDataVersion . "/ magento-sample-data-" . $sampleDataVersion . ".tar.gz magento_sample_data_for_" . $sampleDataVersion . ".sql\n" . $message, LOG_DEBUG);
+            $this->logger->log("\n".$command."\n" . $message, LOG_DEBUG);
             unset($output);
         }
     }

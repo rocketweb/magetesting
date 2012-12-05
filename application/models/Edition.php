@@ -107,11 +107,6 @@ class Application_Model_Edition {
         );
     }
 
-    public function getAll()
-    {
-        return $this->getMapper()->fetchAll();
-    }
-
     //TODO: prepare mapper for this
     public function getKeys()
     {

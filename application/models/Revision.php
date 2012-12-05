@@ -157,7 +157,7 @@ class Application_Model_Revision {
 
     public function save()
     {
-        $this->getMapper()->save($this);
+        return $this->getMapper()->save($this);
     }
 
     public function delete($id)
@@ -185,22 +185,13 @@ class Application_Model_Revision {
                 'id'        => $this->getId(),
                 'instance_id'      => $this->getInstanceId(),
                 'user_id' => $this->getUserId(),
+                'extension_id' => $this->extensionId(),
                 'type' => $this->getType(),
                 'comment' => $this->getComment(),
                 'hash' => $this->getHash(),
                 'filename' => $this->getFilename(),
                 'db_before_revision'     => $this->getDbBeforeRevision(),
         );
-    }
-
-    /* TODO: rewrite to not use this, currently an alias */
-    /**
-     * @deprecated
-     * @return type
-     */
-    public function getAll()
-    {
-        return $this->getMapper()->fetchAll();
     }
 
     /**

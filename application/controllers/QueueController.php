@@ -186,7 +186,7 @@ class QueueController extends Integration_Controller_Action {
         }
         //assign to templates
         $editionModel = new Application_Model_Edition();
-        $this->view->editions = $editionModel->getAll();
+        $this->view->editions = $editionModel->fetchAll();
         $this->view->form = $form;
         
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-addclean.js'), 'text/javascript');
@@ -502,6 +502,9 @@ class QueueController extends Integration_Controller_Action {
                     /* Adding extension to queue */
                     try {
                         $extensionId = $request->getParam('extension_id');
+                        var_dump($extensionId);
+                        var_dump($extension['id']);
+                        //exit;
                         
                         $extensionQueueItem = new Application_Model_Queue();
                         $extensionQueueItem->setInstanceId($instance->id);
@@ -686,8 +689,6 @@ class QueueController extends Integration_Controller_Action {
         $queueModel->setTask('RevisionRollback');
         $queueModel->setTaskParams(
             array(
-                /*'commit_comment' => 'Adding '.$extensionModel->getName().' ('.$extensionModel->getVersion().')',
-                'commit_type' => 'extension-install' */
                 'rollback_files_to' => $revisionModel->getHash(),
                 'rollback_db_to' => $revisionModel->getDbBeforeRevision(),
                 )
@@ -720,7 +721,29 @@ class QueueController extends Integration_Controller_Action {
                 is_numeric($revision) AND
                 (int)$revision > 0
         ) {
-            $model = new Application_Model_Revision();
+            $revisionModel = new Application_Model_Revision;
+            $revisionModel->find($this->_getParam('deploy'));
+
+            $domain = $this->_getParam('domain');        
+            $instanceModel=  new Application_Model_Instance();
+            $instance = $instanceModel->findByDomain($domain);      
+
+            $queueModel = new Application_Model_Queue();
+            $queueModel->setTask('RevisionDeploy');
+            $queueModel->setTaskParams(
+                array(
+                    'revision_id'=> $this->_getParam('deploy')
+                )
+            );
+
+            $queueModel->setInstanceId($instance->id);
+            $queueModel->setServerId($instance->server_id);
+            $queueModel->setParentId(0);
+            $queueModel->setExtensionId($revisionModel->extension_id);
+            $queueModel->setAddedDate(date("Y-m-d H:i:s"));
+            $queueModel->setStatus('pending');
+            $queueModel->setUserId($this->auth->getIdentity()->id);
+            $queueModel->save();
             
             $this->_helper->FlashMessenger('Requested.');
         }
