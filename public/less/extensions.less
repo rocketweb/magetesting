@@ -164,6 +164,14 @@ body {
             div.icon {
                 padding: 12px 0;
                 
+                &.small {
+                    display: block;
+                }
+                
+                &.big {
+                    display: none;
+                }
+                
                 img {
                     max-width: 28px;
                     max-height: 38px;
@@ -177,8 +185,6 @@ body {
                     padding: 0 8px;
                     word-wrap: break-word;
                     margin: 0;
-                    //font-family: @TypeKitCondensed;
-                    //font-weight: 300;
                     font-size: 13px;
                     line-height: 16px;
                 }
@@ -202,6 +208,21 @@ body {
                 text-align: center;
                 margin-top: 24px;
                 
+                &.small {
+                    display: none;
+                }
+                
+                &.big {
+                    display: block;
+                    margin-top: 0;
+                    padding-top: 0;
+                    
+                    img {
+                        max-width: 84px;
+                        max-height: @ElementHeight;
+                    }
+                }
+                                
                 img {
                     position: relative;
                 }

@@ -74,10 +74,14 @@ html,body{height:100%;}
 .element .ribbon{position:absolute;right:0;z-index:9999;}
 .element.premium{width:285px;background:#fff;}.element.premium .wrapper .info{color:#f64135;}
 .element.premium .wrapper div.icon{max-width:84px;max-height:112px;}
-.element.free .wrapper{text-align:center;margin:0 auto;}.element.free .wrapper div.icon{padding:12px 0;}.element.free .wrapper div.icon img{max-width:28px;max-height:38px;}
+.element.free .wrapper{text-align:center;margin:0 auto;}.element.free .wrapper div.icon{padding:12px 0;}.element.free .wrapper div.icon.small{display:block;}
+.element.free .wrapper div.icon.big{display:none;}
+.element.free .wrapper div.icon img{max-width:28px;max-height:38px;}
 .element.free .wrapper .info{color:#6d6d6d;}.element.free .wrapper .info h5{padding:0 8px;word-wrap:break-word;margin:0;font-size:13px;line-height:16px;}
 .element.free .wrapper .info p{font-size:11px;}
-.element.premium .wrapper,.element.large .wrapper{margin-top:0;text-align:left;}.element.premium .wrapper div.icon,.element.large .wrapper div.icon{float:left;min-width:84px;min-height:112px;text-align:center;margin-top:24px;}.element.premium .wrapper div.icon img,.element.large .wrapper div.icon img{position:relative;}
+.element.premium .wrapper,.element.large .wrapper{margin-top:0;text-align:left;}.element.premium .wrapper div.icon,.element.large .wrapper div.icon{float:left;min-width:84px;min-height:112px;text-align:center;margin-top:24px;}.element.premium .wrapper div.icon.small,.element.large .wrapper div.icon.small{display:none;}
+.element.premium .wrapper div.icon.big,.element.large .wrapper div.icon.big{display:block;margin-top:0;padding-top:0;}.element.premium .wrapper div.icon.big img,.element.large .wrapper div.icon.big img{max-width:84px;max-height:112px;}
+.element.premium .wrapper div.icon img,.element.large .wrapper div.icon img{position:relative;}
 .element.premium .wrapper .info,.element.large .wrapper .info{float:left;width:170px;margin-left:12px;text-align:left;}.element.premium .wrapper .info h5,.element.large .wrapper .info h5{padding:0 8px 0 0;margin:34px 0 0 0;font-size:15px;line-height:16px;}
 .element.premium .wrapper .info p,.element.large .wrapper .info p{font-size:12px;color:#6d6d6d;}
 .element.large{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}
