@@ -226,16 +226,6 @@ class Application_Model_Plan {
                 'is_hidden' => $this->getIsHidden()
         );
     }
-
-    /* TODO: rewrite to not use this, currently an alias */
-    /**
-     * @deprecated
-     * @return type
-     */
-    public function getAll()
-    {
-        return $this->getMapper()->fetchAll();
-    }
     
     /**
      * 
