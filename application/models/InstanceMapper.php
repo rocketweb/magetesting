@@ -47,6 +47,7 @@ class Application_Model_InstanceMapper {
                 'error_message'       => $instance->getErrorMessage(),
                 'revision_count'       => $instance->getRevisionCount(),
                 'type'       => $instance->getType(),
+                'custom_file'      => $instance->getCustomFile(),
                 
         );
 
@@ -87,6 +88,7 @@ class Application_Model_InstanceMapper {
                 ->setErrorMessage($row->error_message)
                 ->setRevisionCount($row->revision_count)
                 ->setType($row->type)
+                ->setCustomFile($row->custom_file)
                 ;
         return $instance;
     }
@@ -122,6 +124,7 @@ class Application_Model_InstanceMapper {
                     ->setErrorMessage($row->error_message)
                     ->setRevisionCount($row->revision_count)
                     ->setType($row->type)
+                    ->setCustomFile($row->custom_file)
                     ;
             $entries[] = $entry;
         }

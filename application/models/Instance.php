@@ -238,6 +238,7 @@ class Application_Model_Instance {
                 'error_message'       => $this->getErrorMessage(),
                 'revision_count'       => $this->getRevisionCount(),
                 'type'       => $this->getType(),
+                'custom_file'      => $this->getCustomFile(),
         );
     }
 
