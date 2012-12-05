@@ -356,30 +356,36 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _cleanupFilesystem() {
+        $log = $this->_getLogger();
         echo "Setting permissions...\n";
         exec('sudo mkdir var');
         exec('sudo mkdir downloader');
         exec('sudo mkdir media');
 
-        exec('sudo chmod 777 var/.htaccess app/etc', $output);
+        
+        $command = 'sudo chmod 777 var/.htaccess app/etc';
+        exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n" . $message, LOG_DEBUG);
+        $log->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
-        exec('sudo chmod 777 var -R', $output);
+        $command = 'sudo chmod 777 var -R';
+        exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\nsudo chmod 777 var var/.htaccess app/etc\n" . $message, LOG_DEBUG);
+        $log->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
 
-        exec('sudo chmod 777 downloader', $output);
+        $command = 'sudo chmod 777 downloader';
+        exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\nsudo sudo chmod 777 downloader\n" . $message, LOG_DEBUG);
+        $log->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
 
-        exec('sudo chmod 777 media -R', $output);
+        $command = 'sudo chmod 777 media -R';
+        exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\nsudo chmod -R 777 media\n" . $message, LOG_DEBUG);
+        $log->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
     }
 
