@@ -286,7 +286,7 @@ class QueueController extends Integration_Controller_Action {
                     unset($queueModel);
                     
                     $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setInstanceId($newInstanceId);
                     $queueModel->setTask('RevisionInit');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
@@ -296,7 +296,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->save();
                     
                     $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setInstanceId($newInstanceId);
                     $queueModel->setTask('RevisionCommit');
                     $queueModel->setTaskParams(
                             array(
