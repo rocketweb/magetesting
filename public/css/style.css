@@ -1,4 +1,4 @@
-/* @override 
+/* @override
 	http://dev.magetesting.com/public/css/style.css */
 
 /* FONTS
@@ -519,4 +519,32 @@ div.accordion div.accordion-group:first-child{
 }
 div.accordion div.accordion-group:first-child div.accordion-heading div.tab-stripe{
 	border-top-left-radius: 6px;
+}
+
+/* Edit Account */
+form.edit-account{
+	padding: 0 20px;
+	border: 1px solid 
+	#e5e5e5;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	-webkit-box-shadow: 0 8px 6px -6px #888888;
+	-moz-box-shadow: 0 8px 6px -6px #888888;
+	box-shadow: 0 8px 6px -6px #888888;
+}
+form.edit-account legend {
+	padding: 10px 0;
+	border: 0;
+	border-top: 1px solid #e5e5e5;
+}
+form.edit-account fieldset:first-child  legend{
+	border-top: none;
+	padding-top: 0;
+}
+.form-actions {
+	padding: 20px 0;
+	margin: 0;
+	border-top: 1px solid 
+	#e5e5e5;
 }
