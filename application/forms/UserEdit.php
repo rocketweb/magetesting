@@ -19,7 +19,8 @@ class Application_Form_UserEdit extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                         new Zend_Validate_Alpha()
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         $regex = new Zend_Validate_Regex("/^[a-z' -]+$/i");
@@ -33,7 +34,8 @@ class Application_Form_UserEdit extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                         $regex
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         // Add a email element
@@ -45,7 +47,8 @@ class Application_Form_UserEdit extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                         new Zend_Validate_EmailAddress()
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         // Add a password element
@@ -57,7 +60,8 @@ class Application_Form_UserEdit extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(6, 45)),
                 ),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'class'      => 'span4'
         ));
 
         // Add a repeated password element
@@ -70,7 +74,8 @@ class Application_Form_UserEdit extends Integration_Form
                         array('validator' => 'StringLength', 'options' => array(6, 45)),
                         new Zend_Validate_Identical('password'),
                 ),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'class'      => 'span4'
         ));
 
         // Add a server element
@@ -78,7 +83,8 @@ class Application_Form_UserEdit extends Integration_Form
                 'label'      => 'Server',
                 'tabindex'   => 6,
                 'required'   => true,
-                'filters'    => array('StripTags', 'StringTrim')
+                'filters'    => array('StripTags', 'StringTrim'),
+                'class'      => 'span4'
         ));
 
         // Add the submit button

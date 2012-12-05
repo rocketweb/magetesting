@@ -244,6 +244,7 @@ class UserController extends Integration_Controller_Action
             'validators' => array(
                 array('validator' => 'StringLength', 'options' => array(3, 45)),
             ),
+            'class'      => 'span4'
 	    ));
 	
         

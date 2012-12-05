@@ -17,7 +17,8 @@ class Application_Form_InstanceAddClean extends Integration_Form{
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         new Zend_Validate_InArray(array_keys($editionModel->getKeys()))
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         $this->addElement('radio', 'sample_data', array(
@@ -37,6 +38,7 @@ class Application_Form_InstanceAddClean extends Integration_Form{
                 'label'      => 'Name',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
+                'class'      => 'span4'
         ));
 
         $this->addElement('text', 'description', array(
@@ -45,7 +47,8 @@ class Application_Form_InstanceAddClean extends Integration_Form{
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                     array('validator' => 'StringLength', 'options' => array('max' => 300))
-                )
+                ),
+                'class'      => 'span8'
         ));
 
         $emptyVersion = array('' => 'Choose...');
@@ -60,7 +63,8 @@ class Application_Form_InstanceAddClean extends Integration_Form{
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         new Zend_Validate_InArray($versionModel->getKeys())
-                )
+                ),
+                'class'      => 'span4'
         ));
         //$this->version->addMultiOptions();
 

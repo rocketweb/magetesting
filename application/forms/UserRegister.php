@@ -24,8 +24,7 @@ class Application_Form_UserRegister extends Integration_Form
                         array('validator' => 'StringLength', 'options' => array(3, 13)),
                     $regex
                 ),
-            
-            
+                'class'      => 'span4'
         ));
 
         // Add a password element
@@ -36,7 +35,8 @@ class Application_Form_UserRegister extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(6, 45)),
                 ),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'class'      => 'span4'
         ));
 
         // Add a password element
@@ -47,6 +47,7 @@ class Application_Form_UserRegister extends Integration_Form
                 'validators' => array(
                         new Zend_Validate_Identical('password'),
                 ),
+                'class'      => 'span4'
         ));
 
         // Add a firstname element
@@ -57,7 +58,8 @@ class Application_Form_UserRegister extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                         new Zend_Validate_Alpha()
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         $regex = new Zend_Validate_Regex("/^[a-z' -]+$/i");
@@ -70,7 +72,8 @@ class Application_Form_UserRegister extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                         $regex
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         // Add a email element
@@ -81,7 +84,8 @@ class Application_Form_UserRegister extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                         new Zend_Validate_EmailAddress()
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         // Add the submit button

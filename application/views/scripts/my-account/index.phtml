@@ -1,14 +1,13 @@
 <div class="container account_page">
 	
 	
-	<legend>
-		<h1>Your account details</h1>
-	</legend>
-	<fieldset class="margins">
+	<h1>Your account details</h1>
+	
+	<fieldset class="margins margins-first">
 	    <div class="container">
 	        <div class="row">
 	        	<div class="span4">
-	        	    <p><?php echo $this->escape($this->user->getFirstname()).' '.$this->escape($this->user->getLastname()); ?></p>
+	        	    <p class="user-name"><?php echo $this->escape($this->user->getFirstname()).' '.$this->escape($this->user->getLastname()); ?></p>
                     <p>Member since <?php echo date('F j,Y', strtotime($this->user->getAddedDate())); ?></p>
 	        	</div>
 	        	<div class="span8"><a class="btn btn-blue"href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account'), 'default', true); ?>">Edit account</a></div>
@@ -17,10 +16,8 @@
 	</fieldset>
 	
 	
-	<legend>
-		<h4>Subscription</h4>
-	</legend>
 	<fieldset class="margins">
+	    <legend>Subscription</legend>
 	    <div class="container">
 	        <div class="row">
 	        	<div class="span4">
@@ -89,10 +86,8 @@
 	    */ ?>
 	</fieldset>
 	
-	<legend>
-	    <h4>Invoices</h4>
-	</legend>
 	<fieldset class="margins">
+	    <legend>Invoices</legend>
 	    <?php if($this->payments): ?>
 	        <?php foreach($this->payments as $payment): ?>
 	        <div class="row">
