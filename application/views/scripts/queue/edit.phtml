@@ -5,16 +5,27 @@
             method="<?php echo $this->form->getMethod() ?>"
             id="<?php echo $this->form->getId() ?>"
             class="<?php echo $this->form->getAttrib('class') ?>">
-            <legend>
-                <h1>Edit your store</h1>
-            </legend>
-            <fieldset>
-                <?php echo $this->form->instance_name ?>
-                <?php echo $this->form->description ?>
+
+            <h1>Edit your store</h1>
+
+            <fieldset class="margins margins-small">
+                <legend>Store details</legend>
+                <div class="row">
+                	<div class="span6"><?php echo $this->form->instance_name ?></div>
+                	<div class="span6"><?php echo $this->form->description ?></div>
+                </div>
+            </fieldset>
+            
+            <fieldset class="margins margins-small">
+                <legend>Authorization</legend>
                 <div class="row">
                     <div class="span6"><?php echo $this->form->backend_login ?></div>
                     <div class="span6"><?php echo $this->form->backend_password ?></div>
                 </div>
+            </fieldset>
+            
+            <fieldset class="margins margins-small">
+                <!--<legend>Remote details</legend>-->
                 <div class="row">
                     <div class="span6"><?php echo $this->form->custom_host; ?></div>
                     <div class="span6"><?php echo $this->form->custom_login; ?></div>
@@ -28,6 +39,7 @@
                     <div class="span6"><?php echo $this->form->custom_sql; ?></div>
                 </div>
             </fieldset>
+            
             <div class="form-actions">
                 <button 
                     type="submit"
