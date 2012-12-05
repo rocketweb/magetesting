@@ -96,13 +96,6 @@ class Application_Form_EditAccount extends Integration_Form
                 'ignore'   => true,
                 'label'    => 'Edit',
         ));
-
-        // Add the reset button
-        $this->addElement('reset', 'reset', array(
-                'ignore'   => true,
-                'label'    => 'Reset form',
-                'class'    => 'btn'
-        ));
         
         $regex = new Zend_Validate_Regex("/^[a-z0-9_-]+$/i");
         $regex->setMessage('Allowed chars: a-z, digits, dash, underscore', 'regexNotMatch');
@@ -157,10 +150,6 @@ class Application_Form_EditAccount extends Integration_Form
         ));
 
         $this->_setDecorators();
-
-        $this->reset->removeDecorator('HtmlTag');
-        $this->reset->removeDecorator('overall');
-        $this->reset->removeDecorator('label');
 
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('overall');

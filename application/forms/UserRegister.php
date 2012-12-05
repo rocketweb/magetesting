@@ -90,21 +90,10 @@ class Application_Form_UserRegister extends Integration_Form
                 'label'    => 'Register',
         ));
 
-        // Add the reset button
-        $this->addElement('reset', 'reset', array(
-                'ignore'   => true,
-                'label'    => 'Reset form',
-                'class'    => 'btn'
-        ));
-
         $this->login->setAttribs(array('autocomplete'=>'off'));
         $this->password->setAttribs(array('autocomplete'=>'off'));
 
         $this->_setDecorators();
-
-        $this->reset->removeDecorator('HtmlTag');
-        $this->reset->removeDecorator('overall');
-        $this->reset->removeDecorator('label');
 
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('overall');
