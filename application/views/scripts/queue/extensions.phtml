@@ -53,7 +53,7 @@
 			                
 			                <div class="icon">
 			                <?php if($extension['logo']): ?>
-			                    <img src="<?php echo $this->ImagePath($extension['logo'], 'extension/logo', false, true); ?>" alt="">
+                                            <?php echo $this->Thumbnail($extension['logo'], null, 110, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
 			                <?php else: ?>
 			                    <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
 			                <?php endif; ?>
