@@ -179,6 +179,33 @@ fieldset.margins {
 .btn-blue {
     .customButton(@Blue);
 }
+.btn-gold {
+	color: #333333;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #e5c200;
+	*background-color: #e5c200;
+	background-image: -moz-linear-gradient(top, #f1cc00, #e5c200);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e5c200), to(#e5c200));
+	background-image: -webkit-linear-gradient(top, #f1cc00, #e5c200);
+	background-image: -o-linear-gradient(top, #f1cc00, #e5c200);
+	background-image: linear-gradient(to bottom, #f1cc00, #e5c200);
+	background-repeat: repeat-x;
+	border-color: #f1cc00 #e5c200 #1f6377;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#61bdeb', endColorstr='#34aae5', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.btn-gold:hover,
+.btn-gold:active,
+.btn-gold.active,
+.btn-gold.disabled,
+.btn-gold[disabled] {
+	color: #333333;
+	background-color: #e5c200;
+	*background-color:#e5c200;
+}
+
 .btn-deploy {
     width: 25%;
 }
