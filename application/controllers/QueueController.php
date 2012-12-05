@@ -722,7 +722,7 @@ class QueueController extends Integration_Controller_Action {
                 (int)$revision > 0
         ) {
             $revisionModel = new Application_Model_Revision;
-            $revisionModel->find($this->_getParam('deploy'));
+            $revisionModel->find($this->_getParam('revision'));
 
             $domain = $this->_getParam('domain');        
             $instanceModel=  new Application_Model_Instance();
@@ -732,14 +732,14 @@ class QueueController extends Integration_Controller_Action {
             $queueModel->setTask('RevisionDeploy');
             $queueModel->setTaskParams(
                 array(
-                    'revision_id'=> $this->_getParam('deploy')
+                    'revision_id'=> $this->_getParam('revision')
                 )
             );
-
+           
             $queueModel->setInstanceId($instance->id);
             $queueModel->setServerId($instance->server_id);
             $queueModel->setParentId(0);
-            $queueModel->setExtensionId($revisionModel->extension_id);
+            $queueModel->setExtensionId($revisionModel->getExtensionId());
             $queueModel->setAddedDate(date("Y-m-d H:i:s"));
             $queueModel->setStatus('pending');
             $queueModel->setUserId($this->auth->getIdentity()->id);
