@@ -282,11 +282,6 @@ class Application_Model_Extension {
         );
     }
 
-    public function getAll()
-    {
-        return $this->getMapper()->fetchAll();
-    }
-
     public function getKeys()
     {
         return $this->getMapper()->getKeys();

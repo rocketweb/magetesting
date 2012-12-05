@@ -16,6 +16,16 @@ implements Application_Model_Task_Interface {
         $this->config = $this->_getConfig();
     }
     
+    public function setup(Application_Model_Queue &$queueElement){
+        parent::setup($queueElement);
+        
+        $extensionModel = new Application_Model_Extension();
+        $extensionModel->find($queueElement->getExtensionId());
+        $this->_extensionObject = $extensionModel;
+        $this->logger = $this->_getLogger();
+                
+    }
+    
     public function process(Application_Model_Queue &$queueElement = null) {
         
         $this->_createDbBackup();
@@ -88,6 +98,9 @@ implements Application_Model_Task_Interface {
         
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
         
+        $this->logger->log('commit update',  Zend_Log::DEBUG,'');
+        $this->logger->log(var_export($output,true),Zend_Log::DEBUG,'');
+        
         
         if (!count($output)){
             $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
@@ -144,6 +157,12 @@ implements Application_Model_Task_Interface {
     protected function _insertRevisionInfo(){
         $revisionModel = new Application_Model_Revision();
         $params = $this->_queueObject->getTaskParams();
+               
+	
+        $this->logger->log('queue_object',  Zend_Log::DEBUG,'');
+        $this->logger->log(var_export($this->_queueObject,true),LOG_DEBUG);
+        $this->logger->log('extension_id',  Zend_Log::DEBUG,'');
+        $this->logger->log(var_export($this->_queueObject->getExtensionId(),true),LOG_DEBUG);
                
         $revisionModel->setUserId($this->_userObject->getId());
         $revisionModel->setInstanceId($this->_instanceObject->getId());

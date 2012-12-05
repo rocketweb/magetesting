@@ -140,11 +140,6 @@ class Application_Model_Server {
         );
     }
 
-    public function getAll()
-    {
-        return $this->getMapper()->fetchAll();
-    }
-
     public function getKeys()
     {
         return $this->getMapper()->getKeys();

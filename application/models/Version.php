@@ -121,11 +121,6 @@ class Application_Model_Version {
         );
     }
 
-    public function getAll()
-    {
-        return $this->getMapper()->fetchAll();
-    }
-
     public function getAllForEdition( $edition )
     {
         return $this->getMapper()->getAllForEdition( $edition );

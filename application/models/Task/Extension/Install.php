@@ -23,7 +23,6 @@ implements Application_Model_Task_Interface {
         $extensionModel->find($queueElement->getExtensionId());
         $this->_extensionObject = $extensionModel;
         $this->logger = $this->_getLogger();
-                
     }
     
     public function process(Application_Model_Queue $queueElement = null) {

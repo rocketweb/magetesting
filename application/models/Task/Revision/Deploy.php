@@ -27,18 +27,39 @@ implements Application_Model_Task_Interface {
         $this->_deploy();
         $this->_updateFilename();
         
-        
     }
 
-    
     protected function _deploy(){
         $hash = $this->_revisionObject->getHash();
         
+        $startdir  = getcwd();
+        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        /* prepare dir for instance deply packages */
         
+        $deployPath = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/'.
+        'var/data/deploys/';
+        
+        if (!file_exists($deployPath) || !is_dir($deployPath)){
+            exec('mkdir -p var/deployment/');
+        }
+        /* create archive */
+        
+        /**
+         * git diff '.$hash.' '.$hash.'~1 --name-only - shows changed files between
+         * $hash and $hash~1
+         * 
+         * git archive --format zip --output var/data/deploys/'.$hash.'.zip '.$hash.'
+         * - packs files listed with the command above into zip 
+         *  within instance /var/data/deploys folder
+         */
+        
+        exec('git archive --format zip --output var/deployment/'.$hash.'.zip '.$hash.' `git diff '.$hash.' '.$hash.'~1 --name-only`');
+        
+        chdir($startdir);
     }
     
     /**
-     * @deprectated
+     * @deprectated: left for now for reference
      */
     protected function _deployOld() {
         $hash = $this->_revisionObject->getHash();
@@ -97,7 +118,7 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _updateFilename(){
-        
+        $this->_revisionObject->setFilename($this->_revisionObject->getHash().'.zip')->save();
     }
 
 }
