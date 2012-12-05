@@ -438,18 +438,18 @@ implements Application_Model_Task_Interface {
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE core_config_data SET value = \''.$this->config->magento->storeUrl.'/instance/'.$this->_domain.'/\' WHERE path=\'web/secure/base_url\'"');
 
         //update contact emails
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'contacts/email/recipient_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'catalog/productalert_cron/error_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sitemap/generate/error_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sales_email/order/copy_to\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \''.$this->_userObject->getEmail().'\' WHERE  `path` = \'sales_email/shipment/copy_to\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  value =  \''.$this->_userObject->getEmail().'\' WHERE  path = \'contacts/email/recipient_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  value =  \''.$this->_userObject->getEmail().'\' WHERE  path = \'catalog/productalert_cron/error_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  value =  \''.$this->_userObject->getEmail().'\' WHERE  path = \'sitemap/generate/error_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  value =  \''.$this->_userObject->getEmail().'\' WHERE  path = \'sales_email/order/copy_to\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  value =  \''.$this->_userObject->getEmail().'\' WHERE  path = \'sales_email/shipment/copy_to\';"');
         
         /* Disable Google Analytics */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \'0\' WHERE  `path` = \'google/analytics/active\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  `value` =  \'\' WHERE  `path` = \'google/analytics/account\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  value =  \'0\' WHERE  path = \'google/analytics/active\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  `core_config_data` SET  value =  \'\' WHERE  path = \'google/analytics/account\';"');
         
         /* update cache setting - disable all */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE `core_cache_option` SET `value`=\'0\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE `core_cache_option` SET value=\'0\'"');
         /* clear cache to apply new cache settings  */
         $this->_clearInstanceCache();
         
