@@ -248,6 +248,7 @@ class QueueController extends Integration_Controller_Action {
                             ->setSampleData(1)
                             ->setInstanceName($form->instance_name->getValue())
                             ->setUserId($userId)
+                            ->setServerId($this->auth->getIdentity()->server_id)
                             ->setDomain(
                                     substr(
                                             str_shuffle(
