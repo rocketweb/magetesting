@@ -133,8 +133,7 @@ implements Application_Model_Task_Interface {
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         
         //export backup
-        $apppath = str_replace('/application','', APPLICATION_PATH);
-        $dbDir = $apppath.'/data/revision/'.$this->_userObject->getLogin().'/'.$this->_instanceObject->getDomain().'/db/';
+        $dbDir = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/var/db/';
         exec('sudo mkdir -p '.$dbDir);
         chdir($dbDir);
         $dbFileName = 'db_backup_'.date("Y_m_d_H_i_s");
@@ -153,7 +152,7 @@ implements Application_Model_Task_Interface {
         exec('sudo rm '.$dbFileName);
         
         chdir($startCwd);
-        $this->_dbBackupPath = $dbDir.$dbFileName.'.tgz';
+        $this->_dbBackupPath = $dbFileName.'.tgz';
     }
     
     protected function _insertRevisionInfo(){
