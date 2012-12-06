@@ -64,6 +64,7 @@
                         <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                     </div>
                 </div>
+                <?php if($item['status'] != 'closed'): ?>
                 <div id="collapse<?php echo $key; ?>" class="accordion-body collapse mt_instance">
                     <div class="accordion-inner">
                         <div class="row version-info">
@@ -136,6 +137,7 @@
                         
                     </div>
                 </div>
+                <?php endif; // end div#collapse ?>
             </div>
             <!-- END INSTANCE -->
             <?php endforeach; ?>
