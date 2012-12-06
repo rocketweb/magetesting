@@ -1,15 +1,17 @@
 <?php
 
 class Application_Model_Transport {
-
+    
+    /* In Bytes */
+    protected $_sqlFileLimit = '60000000'; // move to config and set during setup?
+    
     protected $_protocol = '';
     protected $_host = '';
     protected $_user = '';
     protected $_pass = '';
+    protected $_errorMessage = '';
     
-    
-    public function setup(Application_Model_Instance $instance){
-        $this->prepareCustomVars($instance);
+    public function setup(Application_Model_Instance &$instance){
         $this->setConnection($instance);
     } 
     
@@ -82,19 +84,19 @@ class Application_Model_Transport {
                         return true;
                         
                     } else {
-                        //throw new Exception('Username has to be alphanumeric');
+                        
                         return false;
                     }
                 } else {
-                    //throw new Exception('Username has to be alphanumeric');
+                    $this->_errorMessage = 'Username has to be alphanumeric';
                     return false;
                 }
             } else {
-                //throw new Exception('Hostname is invalid');
+                $this->_errorMessage = 'Hostname is invalid';
                 return false;
             }
         } else {
-            //throw new Exception('Protocol not supported');
+            $this->_errorMessage = 'Protocol not supported';
             return false;
         }
     }

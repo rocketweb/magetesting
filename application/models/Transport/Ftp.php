@@ -4,8 +4,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
           
     protected $_customHost = '';
     protected $_customRemotePath = '';
-    protected $_customSql = '';
-    protected $_errorMessage = '';
+    protected $_customSql = ''; 
     
     public function setup(Application_Model_Instance &$instance){
         
@@ -15,7 +14,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $this->_prepareCustomVars($instance);
     }
     
-    protected function _checkProtocolCredentials(){
+    public function checkProtocolCredentials(){
         exec("wget --spider ".$this->_customHost." ".
              "--passive-ftp ".
              "--user='".$this->_instanceObject->getCustomLogin()."' ".
@@ -70,8 +69,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     
     
     
-    protected function _downloadInstanceFiles(){
-        $log = $this->_getLogger();
+    public function downloadInstanceFiles(){
+        //$log = $this->_getLogger();
          //echo "Copying package to target directory...\n";
         //do a sample connection, and check for index.php, if it works, start fetching
         $command = "wget --spider ".$this->_customHost.$this->_customRemotePath."app/Mage.php 2>&1 ".
@@ -81,7 +80,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'";
         exec($command, $output);
         $message = var_export($output, true);
-        $log->log($command."\n" . $message, LOG_DEBUG);
+        //$log->log($command."\n" . $message, LOG_DEBUG);
 
         $sqlSizeInfo = explode(' ... ',$output[0]);
 
@@ -115,7 +114,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
              "".$this->_customHost.$this->_customRemotePath."";
         exec($command, $output);
         $message = var_export($output, true);
-        $log->log($command."\n" . $message, LOG_DEBUG);
+        //$log->log($command."\n" . $message, LOG_DEBUG);
         unset($output);
         
         /**
@@ -125,8 +124,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         return true;
     }
 
-    protected function _checkDatabaseDump(){
-        $log = $this->_getLogger();
+    public function checkDatabaseDump(){
+        //$log = $this->_getLogger();
         $command = "wget --spider ".$this->_customHost.$this->_customSql." 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_instanceObject->getCustomLogin()."' ".
@@ -135,10 +134,10 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         exec($command,$output);
 
         $message = var_export($output, true);
-        $log->log("\n".$message."\n" . $message, LOG_DEBUG);
+       // $log->log("\n".$message."\n" . $message, LOG_DEBUG);
 
         foreach ($output as $out) {
-            $log->log(substr($out, 0, 8), LOG_DEBUG);
+            //$log->log(substr($out, 0, 8), LOG_DEBUG);
 
             if (substr($out, 0, 8) == '==> SIZE') {
                 $sqlSizeInfo = explode(' ... ', $out);
@@ -146,7 +145,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
 
         if(isset($sqlSizeInfo[1])){
-            $log->log($sqlSizeInfo[1], LOG_DEBUG);
+            //$log->log($sqlSizeInfo[1], LOG_DEBUG);
         }
 
        //limit is in bytes!
@@ -164,8 +163,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         return true;
     }
     
-    protected function _downloadDatabase(){
-        $log = $this->_getLogger();
+    public function downloadDatabase(){
+        //$log = $this->_getLogger();
         
         $command = "wget  ".$this->_customHost.$this->_customSql." ".
             "--passive-ftp ".
@@ -175,7 +174,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "".$this->_customHost.$this->_customRemotePath." ";
         exec($command,$output);
         $message = var_export($output, true);
-        $log->log($command."\n" . $message, LOG_DEBUG);
+        //$log->log($command."\n" . $message, LOG_DEBUG);
         unset($output);
         
         /* TODO: validate if local and reomte size are correct */
@@ -183,6 +182,18 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     
     public function getError(){
         return $this->_errorMessage;
+    }
+    
+    public function getCustomSql(){
+	return $this->_customSql;
+    }
+    
+    public function getCustomHost(){
+	return $this->_customHost;
+    }
+    
+    public function getCustomRemotePath(){
+	return $this->_customRemotePath;
     }
     
 }

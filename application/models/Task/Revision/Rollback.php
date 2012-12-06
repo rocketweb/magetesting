@@ -69,11 +69,19 @@ implements Application_Model_Task_Interface {
         //remove extension id from instance_extension if there was extension in this commit.
         if ($this->_queueObject->getExtensionId()!=0){
             $this->db->delete('instance_extension',array(
-                'instance_id' => $this->_queueObject->getInstanceId(),
-                'extension_id' => $this->_queueObject->getExtensionId()
+                'instance_id = ' . $this->_queueObject->getInstanceId(),
+                'extension_id  ='. $this->_queueObject->getExtensionId()
                 )
             );
         }
+        
+        //remove last entry from revision table
+        $revisionModel = new Application_Model_Revision();
+        $revisionModel->getLastForInstance($this->_instanceObject->getId());
+        
+        $this->db->delete('revision',
+            array('id = '.$revisionModel->getId())
+        );
                
     }
 

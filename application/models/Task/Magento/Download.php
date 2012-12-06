@@ -4,8 +4,7 @@ class Application_Model_Task_Magento_Download
 extends Application_Model_Task_Magento 
 implements Application_Model_Task_Interface {
 
-    /* In Bytes */
-    protected $_sqlFileLimit = '60000000';
+    
     
     protected $_customHost = '';
     protected $_customSql = '';
@@ -23,68 +22,56 @@ implements Application_Model_Task_Interface {
     }
     
     public function process(Application_Model_Queue &$queueElement = null) {
+        $startCwd = getcwd();  
+        $log = $this->_getLogger();
+        
+        $this->_updateStatus('installing');
+        $this->_createSystemAccount();  
+        $this->_updateStatus('installing-magento');
           
-        /* Instantiate Transport Model */
-        $filter = new Zend_Filter_Word_CamelCaseToUnderscore();
+	chdir($this->_instanceFolder);
+	$this->_setupFilesystem();
+	chdir($this->_domain);
+	
+	/* Instantiate Transport Model */
+        $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
         $classSuffix = $filter->filter($this->_instanceObject->getCustomProtocol());
         $className =  'Application_Model_Transport_' . $classSuffix; 
         $transportModel = new $className();   
         $transportModel->setup($this->_instanceObject);
-        
-        $this->_updateStatus('installing');
-        $this->_createSystemAccount();
-        
-        $this->_updateStatus('installing-magento');
 
-        $startCwd = getcwd();
-              
-        $log = $this->_getLogger();
-        
-        $message = 'domain: ' . $this->_domain;
-        $log->log($message, LOG_DEBUG);
-     
-        $storeurl = $this->config->magento->storeUrl . '/instance/' . $this->_domain; //fetch from zend config
-        $message = 'store url: ' . $storeurl;
-        $log->log($message, LOG_DEBUG);
-
-        chdir($this->_instanceFolder);
-
-        /* TODO:move logic to Application_Model_Transport class */
-        $transportModel->_prepareCustomVars();
-                
-        //do a sample connection to wget to check if protocol credentials are ok
-        /* TODO:move logic to Application_Model_Transport class */
-        if (!$transportModel->_checkProtocolCredentials()){
+	//do a sample connection to wget to check if protocol credentials are ok
+        if (!$transportModel->checkProtocolCredentials()){
             $message = 'Credentials are incorrect';
             $this->_updateStatus('error',$message);
            return;
         } 
         $this->_updateStatus('installing-data');  
 
-        //connect through wget
-        /* TODO:move logic to Application_Model_Transport class */
-        if (!$transportModel->_checkDatabaseDump()){
+        //connect through wget      
+        if (!$transportModel->checkDatabaseDump()){
             $message = $transportModel->getError();
             $this->_updateStatus('error',$message);
             return;
         }
         
-        $this->_setupFilesystem();
-
-        chdir($this->_domain);
-       
-        $this->_updateStatus('installing-files');
-        /* TODO:move logic to Application_Model_Transport class */
-        if(!$transportModel->_downloadInstanceFiles()){
+	$this->_updateStatus('installing-files');
+        if(!$transportModel->downloadInstanceFiles()){
             $message = 'Couldn\'t find app/Mage.php file data, will not install queue element';
             $this->_updateStatus('error', $message);
             return;
         }
         
-        $this->_updateStatus('installing-data');
-        /* TODO:move logic to Application_Model_Transport class */
-        $transportModel->_downloadDatabase();
-       
+        $this->_updateStatus('installing-data');     
+        $transportModel->downloadDatabase();
+        
+        //update custom variables using data from transport
+        $this->_customHost = $transportModel->getCustomHost();
+        $this->_customSql = $transportModel->getCustomSql();
+        $this->_customRemotePath = $transportModel->getCustomRemotePath();
+        
+        /* end of transport usage */
+               
         //let's load sql to mysql database
         $this->_importDatabaseDump();
 
