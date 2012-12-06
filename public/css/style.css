@@ -529,7 +529,7 @@ div.accordion div.accordion-group:first-child div.accordion-heading div.tab-stri
 }
 
 /* Edit Account */
-div.form-box form.edit-account{
+div.form-box form.box {
 	margin-top: 10px;
 	border: 1px solid 
 	#e5e5e5;
@@ -540,23 +540,23 @@ div.form-box form.edit-account{
 	-moz-box-shadow: 0 8px 6px -6px #888888;
 	box-shadow: 0 8px 6px -6px #888888;
 }
-div.form-box form.edit-account legend {
+div.form-box form.box legend {
     display: block;
     float: left;
 	padding: 10px 0;
 	border: 0;
 }
-div.form-box fieldset{
+div.form-box fieldset {
     padding: 0 20px;
     margin: 0;
     border-top: 1px solid #e5e5e5;
 }
-div.form-box .edit-account fieldset:first-of-type{
+div.form-box .box fieldset:first-of-type {
     border-top: none;
 }
-div.form-box div.tab-stripe:first-of-type{
+div.form-box div.tab-stripe:first-of-type {
     border-top-left-radius: 6px;
 }
-div.form-box div.form-actions{
+div.form-box div.form-actions {
     padding: 20px 20px 0 20px;
 }

@@ -48,7 +48,7 @@ class Application_Form_InstanceAddClean extends Integration_Form{
                 'validators' => array(
                     array('validator' => 'StringLength', 'options' => array('max' => 300))
                 ),
-                'class'      => 'span8'
+                'class'      => 'span4'
         ));
 
         $emptyVersion = array('' => 'Choose...');

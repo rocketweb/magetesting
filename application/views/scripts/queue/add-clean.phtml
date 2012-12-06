@@ -1,42 +1,45 @@
 <div class="row">
     <div class="span12">
-        <form action="<?php echo $this->form->getAction() ?>"
-            enctype="<?php echo $this->form->getEnctype() ?>"
-            method="<?php echo $this->form->getMethod() ?>"
-            id="<?php echo $this->form->getId() ?>"
-            class="<?php echo $this->form->getAttrib('class') ?>">
-            
-            <h1>Setup your environment</h1>
-            
-            <fieldset class="margins margins-first margin-small">
-                <div class="row">
-                	<div class="span4">
-                	    <?php echo $this->form->edition ?>
-                	</div>
-                	<div class="span4">
-                	    <?php echo $this->form->version ?>
-                	</div>
-                	<div class="span4">
-                	    <?php echo $this->form->sample_data ?>
-                	</div>
-                </div>
-            </fieldset>
-            
-            <fieldset class="margins margins-small">
-                <div class="row">
-                	<div class="span4">
-                	    <?php echo $this->form->instance_name ?>
-                	</div>
-                	<div class="span4">
-                	    <?php echo $this->form->description ?>
-                	</div>
-                </div>
-            </fieldset>
-            <div class="form-actions">
-                <button type="submit" name="<?php echo $this->form->instanceAdd->getName(); ?>" id="<?php echo $this->form->instanceAdd->getId() ?>" class="btn btn-inverse pull-right">
-                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->instanceAdd->getLabel() ?>
-                </button>
-            </div>
-        </form>
+        <h1>Setup your environment</h1>
+        <div class="form-box">
+	        <form action="<?php echo $this->form->getAction() ?>"
+	            enctype="<?php echo $this->form->getEnctype() ?>"
+	            method="<?php echo $this->form->getMethod() ?>"
+	            id="<?php echo $this->form->getId() ?>"
+	            class="<?php echo $this->form->getAttrib('class') ?> box">
+	            
+	            <div class="tab-stripe"></div>
+	            <fieldset class="margins">
+	            	<legend>Store details</legend>
+	            	<div class="row">
+	                	<div class="span4">
+	                	    <?php echo $this->form->instance_name ?>
+	                	</div>
+	                	<div class="span4">
+	                	    <?php echo $this->form->description ?>
+	                	</div>
+	                </div>
+	                <div class="row">
+	                	<div class="span4">
+	                	    <?php echo $this->form->edition ?>
+	                	</div>
+	                	<div class="span4">
+	                	    <?php echo $this->form->version ?>
+	                	</div>
+	                </div>
+	            	<div class="row">
+	            		<div class="span4">
+							<?php echo $this->form->sample_data ?>
+						</div>
+	            	</div>
+	            </fieldset>
+	            
+	            <div class="form-actions">
+	                <button type="submit" name="<?php echo $this->form->instanceAdd->getName(); ?>" id="<?php echo $this->form->instanceAdd->getId() ?>" class="btn btn-inverse pull-right">
+	                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->instanceAdd->getLabel() ?>
+	                </button>
+	            </div>
+	        </form>
+	    </div>
     </div>
 </div>
