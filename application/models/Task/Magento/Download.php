@@ -24,6 +24,13 @@ implements Application_Model_Task_Interface {
     
     public function process(Application_Model_Queue &$queueElement = null) {
           
+        /* Instantiate Transport Model */
+        $filter = new Zend_Filter_Word_CamelCaseToUnderscore();
+        $classSuffix = $filter->filter($this->_instanceObject->getCustomProtocol());
+        $className =  'Application_Model_Transport_' . $classSuffix; 
+        $transportModel = new $className();   
+        $transportModel->setup($this->_instanceObject);
+        
         $this->_updateStatus('installing');
         $this->_createSystemAccount();
         
@@ -42,23 +49,41 @@ implements Application_Model_Task_Interface {
 
         chdir($this->_instanceFolder);
 
-        $this->_prepareCustomVars();
+        /* TODO:move logic to Application_Model_Transport class */
+        $transportModel->_prepareCustomVars();
                 
         //do a sample connection to wget to check if protocol credentials are ok
-        $this->_checkProtocolCredentials();
+        /* TODO:move logic to Application_Model_Transport class */
+        if (!$transportModel->_checkProtocolCredentials()){
+            $message = 'Credentials are incorrect';
+            $this->_updateStatus('error',$message);
+           return;
+        } 
+        $this->_updateStatus('installing-data');  
 
         //connect through wget
-        $this->_checkDatabaseDump();
+        /* TODO:move logic to Application_Model_Transport class */
+        if (!$transportModel->_checkDatabaseDump()){
+            $message = $transportModel->getError();
+            $this->_updateStatus('error',$message);
+            return;
+        }
         
         $this->_setupFilesystem();
 
         chdir($this->_domain);
        
         $this->_updateStatus('installing-files');
-        $this->_downloadInstanceFiles(); 
+        /* TODO:move logic to Application_Model_Transport class */
+        if(!$transportModel->_downloadInstanceFiles()){
+            $message = 'Couldn\'t find app/Mage.php file data, will not install queue element';
+            $this->_updateStatus('error', $message);
+            return;
+        }
         
         $this->_updateStatus('installing-data');
-        $this->_downloadDatabase();
+        /* TODO:move logic to Application_Model_Transport class */
+        $transportModel->_downloadDatabase();
        
         //let's load sql to mysql database
         $this->_importDatabaseDump();
@@ -140,113 +165,8 @@ implements Application_Model_Task_Interface {
 
         }
 
-    protected function _prepareCustomVars() {
-        //HOST
-        $customHost = $this->_instanceObject->getCustomHost();
-        //make sure custom host have slash at the end
-        if(substr($customHost,-1)!="/"){
-            $customHost .= '/';
-        }
-        
-        //make sure remote path contains prefix:
-        if ($this->_instanceObject->getCustomProtocol()=='ftp'){
-            if(substr($customHost, 0, 6)!='ftp://'){
-                $customHost = 'ftp://'.$customHost;
-            }
-        }
-        $this->_customHost = $customHost;
-
-        //PATH
-        $customRemotePath = $this->_instanceObject->getCustomRemotePath();
-        //make sure remote path containts slash at the end
-        if(substr($customRemotePath,-1)!="/"){
-            $customRemotePath .= '/';
-        }
-
-        //make sure remote path does not contain slash at the beginning       
-        if(substr($customRemotePath,0,1)=="/"){
-            $customRemotePath = substr($customRemotePath,1);
-        }
-        $this->_customRemotePath = $customRemotePath;
-       
-        //FILE
-         //make sure sql file path does not contain slash at the beginning       
-        $customSql = $this->_instanceObject->getCustomSql();
-        if(substr($customSql,0,1)=="/"){
-            $customSql = substr($customSql,1);
-        }
-        
-        $this->_customSql = $customSql;
-
-    }
-
-    protected function _checkProtocolCredentials() {
-        exec("wget --spider ".$this->_customHost." ".
-             "--passive-ftp ".
-             "--user='".$this->_instanceObject->getCustomLogin()."' ".
-             "--password='".$this->_instanceObject->getCustomPass()."' ".
-             "".$this->_customHost." 2>&1 | grep 'Logged in!'",$output);
-
-        $this->_updateStatus('installing-data');
-                
-        if (!isset($output[0])){
-            $message = 'Protocol credentials does not match';
-            $this->_updateStatus('error',$message);          
-        }
-    }
-
-    /* check if database file exist and is not bigger than limit */
-
-    protected function _checkDatabaseDump() {
-        $log = $this->_getLogger();
-        exec("wget --spider ".$this->_customHost.$this->_customSql." 2>&1 ".
-            "--passive-ftp ".
-            "--user='".$this->_instanceObject->getCustomLogin()."' ".
-            "--password='".$this->_instanceObject->getCustomPass()."' ".
-            "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'",$output);
-
-        $message = var_export($output, true);
-        $log->log("wget --spider ".$this->_customHost.$this->_customSql." 2>&1 ".
-            "--passive-ftp ".
-            "--user='".$this->_instanceObject->getCustomLogin()."' ".
-            "--password='".$this->_instanceObject->getCustomPass()."' ".
-            "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'\n" . $message, LOG_DEBUG);
-
-        foreach ($output as $out) {
-            $log->log(substr($out, 0, 8), LOG_DEBUG);
-
-            if (substr($out, 0, 8) == '==> SIZE') {
-                $sqlSizeInfo = explode(' ... ', $out);
-            }
-        }
-
-        if(isset($sqlSizeInfo[1])){
-            $log->log($sqlSizeInfo[1], LOG_DEBUG);
-        }
-
-       //limit is in bytes!
-        if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){   
-            
-            $message = 'Couldn\'t find sql data file, will not install queue element';
-            $this->_updateStatus('error', $message);            
-            return false;
-        }
-        unset($output);
-
-        if ($sqlSizeInfo[1] > $this->_sqlFileLimit){
-            $message = 'Sql file is too big, aborting';
-            //echo $message;
-            $this->_updateStatus('error', $message);            
-            return false; //jump to next queue element
-        }
-    }
-
-    /* should check if you can find Mage/App.php there */
-
-    protected function _validateRemotePath() {
-        
-    }
-
+        /* move to transport class */
+    
     protected function _setupFilesystem() {
         $log = $this->_getLogger();
         echo "Preparing directory...\n";
@@ -263,63 +183,6 @@ implements Application_Model_Task_Interface {
         exec('sudo chmod +x ' . $this->_instanceFolder . '/' . $this->_domain, $output);
         $message = var_export($output, true);
         $log->log('chmodding domain: ' . $message, LOG_DEBUG);
-        unset($output);
-    }
-
-    protected function _downloadInstanceFiles() {
-        $log = $this->_getLogger();
-         echo "Copying package to target directory...\n";
-        //do a sample connection, and check for index.php, if it works, start fetching
-        $command = "wget --spider ".$this->_customHost.$this->_customRemotePath."app/Mage.php 2>&1 ".
-            "--passive-ftp ".
-            "--user='".$this->_instanceObject->getCustomLogin()."' ".
-            "--password='".$this->_instanceObject->getCustomPass()."' ".
-            "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'";
-        exec($command, $output);
-        $message = var_export($output, true);
-        $log->log($command."\n" . $message, LOG_DEBUG);
-
-        $sqlSizeInfo = explode(' ... ',$output[0]);
-
-       //limit is in bytes!
-        if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){
-            $message = 'Couldn\'t find app/Mage.php file data, will not install queue element';
-            $this->_updateStatus('error', $message);
-            return false; //jump to next queue element
-        }
-        unset($output);
-
-        $command = "wget ".
-             "--passive-ftp ".
-             "-nH ".
-             "-Q300m ".
-             "-m ".
-             "-np ".
-             "-R 'sql,tar,gz,zip,rar' ".
-             "-X '.htaccess' " .
-             "-N ".   
-             "-I '".$this->_customRemotePath."app,".$this->_customRemotePath."downloader,".$this->_customRemotePath."errors,".$this->_customRemotePath."includes,".$this->_customRemotePath."js,".$this->_customRemotePath."lib,".$this->_customRemotePath."pkginfo,".$this->_customRemotePath."shell,".$this->_customRemotePath."skin' " .
-             "--user='".$this->_instanceObject->getCustomLogin()."' ".
-             "--password='".$this->_instanceObject->getCustomPass()."' ".
-             "".$this->_customHost.$this->_customRemotePath."";
-        exec($command, $output);
-        $message = var_export($output, true);
-        $log->log($command."\n" . $message, LOG_DEBUG);
-        unset($output);
-    }
-
-    protected function _downloadDatabase() {
-        $log = $this->_getLogger();
-        
-        $command = "wget  ".$this->_customHost.$this->_customSql." ".
-            "--passive-ftp ".
-            "-N ".  
-            "--user='".$this->_instanceObject->getCustomLogin()."' ".
-            "--password='".$this->_instanceObject->getCustomPass()."' ".
-            "".$this->_customHost.$this->_customRemotePath." ";
-        exec($command,$output);
-        $message = var_export($output, true);
-        $log->log($command."\n" . $message, LOG_DEBUG);
         unset($output);
     }
 
@@ -462,6 +325,7 @@ implements Application_Model_Task_Interface {
     
     protected function _createAdminUser(){
                
+        /* add user */
         $password = $this->getHash($this->_adminpass,2);
         $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
         ' -p' . $this->_dbpass . 
@@ -470,9 +334,21 @@ implements Application_Model_Task_Interface {
         ' (firstname,lastname,email,username,password,created,is_active) VALUES'.
         ' (\''.$this->_userObject->getFirstName().'\',\''.$this->_userObject->getLastName().'\',\''.$this->_userObject->getEmail().'\',\''.$this->_userObject->getLogin().'\',\''.$password.'\',\''.date("Y-m-d H:i:s").'\',1)'.
         ' ON DUPLICATE KEY UPDATE password = \''.$password.'\', email = \''.$this->_userObject->getEmail().'\' "';
-        
         exec($command, $output);
         unset($output);
+        
+        /* add role for that user */
+        $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
+        ' -p' . $this->_dbpass . 
+        ' ' . $this->config->magento->instanceprefix . $this->_dbname . 
+        ' -e "INSERT INTO admin_role'. 
+' (parent_id,tree_level,sort_order,role_type,user_id,role_name)'. 
+' VALUES'.
+' (1,2,0,\'U\',(SELECT user_id FROM admin_user WHERE username=\''.$this->_userObject->getLogin().'\'),\''.$this->_userObject->getFirstName().'\')"';
+        exec($command, $output);
+        unset($output);
+        
+        
     }
     
     /* taken from Mage_Core_Helper_Data */

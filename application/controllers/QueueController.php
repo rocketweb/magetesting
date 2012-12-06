@@ -294,6 +294,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
+                    unset($queueModel);
                     
                     $queueModel = new Application_Model_Queue();                    
                     $queueModel->setInstanceId($newInstanceId);
@@ -310,9 +311,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
-                    
-                    //TODO: Add queue Item with MagentoInstall and parent id from above
-                    
+                                       
                     //magetesting user creates database
                     try {
                         $db = Zend_Db_Table::getDefaultAdapter();
