@@ -26,7 +26,7 @@ implements Application_Model_Task_Interface {
         
         $this->_deploy();
         $this->_updateFilename();
-        
+        $this->_updateStatus('ready');
     }
 
     protected function _deploy(){
