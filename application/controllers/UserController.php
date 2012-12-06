@@ -423,8 +423,30 @@ class UserController extends Integration_Controller_Action
         $form = new Application_Form_UserEdit();
         $form->server_id->setMultiOptions($servers);
         $form->populate($user->__toArray());
-
+        
         if ($this->_request->isPost()) {
+            $form->removeElement('login');
+            
+            if(!strlen($this->_request->getParam('street'))) {
+                $form->removeElement('street');
+            }
+            
+            if(!strlen($this->_request->getParam('postal_code'))) {
+                $form->removeElement('postal_code');
+            }
+            
+            if(!strlen($this->_request->getParam('state'))) {
+                $form->removeElement('state');
+            }
+            
+            if(!strlen($this->_request->getParam('city'))) {
+                $form->removeElement('city');
+            }
+            
+            if(!strlen($this->_request->getParam('country'))) {
+                $form->removeElement('country');
+            }
+            
             $formData = $this->_request->getPost();
             if(strlen($this->_request->getParam('password'))) {
                 $form->password->setRequired(true);
@@ -432,6 +454,7 @@ class UserController extends Integration_Controller_Action
             } else {
                 unset($formData['password'], $formData['password_repeat']);
             }
+            
             if($form->isValid($formData)) {
                 if($formData['server_id'] == '0') {
                     $formData['server_id'] = NULL;
@@ -441,7 +464,8 @@ class UserController extends Integration_Controller_Action
                     $formData['password'] = sha1($formData['password']);
                 }
                 $user->setOptions($formData);
-                $user->save(true);
+                
+                $user->save((is_null($user->getPassword())) ? false : true);
 
                 $this->_helper->FlashMessenger('User data has been changed successfully');
                 return $this->_helper->redirector->gotoRoute(array(
