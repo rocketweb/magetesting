@@ -1,5 +1,5 @@
-<? if (is_array($this->messages) && count($this->messages)): ?>
-    <?
+<?php if (is_array($this->messages) && count($this->messages)): ?>
+    <?php
         foreach ($this->messages as $msg):
         if(is_string($msg)) {
             $msg = array('message' => $msg);
@@ -25,5 +25,5 @@
                 <strong><?php echo $this->escape($this->translate($msg['message'])); ?></strong>
             <?php endif; ?>
         </div>
-    <? endforeach; ?>
-<? endif; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
