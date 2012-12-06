@@ -7,6 +7,11 @@
  */
 class MyAccountController extends Integration_Controller_Action
 {
+    public function init() {
+//        $this->_helper->sslSwitch();
+        parent::init();
+    }
+
     /**
      * My account dashboard with payment and plan data
      * @method indexAction
@@ -71,8 +76,9 @@ class MyAccountController extends Integration_Controller_Action
                     }
                     
                     $user->setOptions($form->getValues());
+
                     $user->setId($auth->id);
-                    $user->save();
+                    $user->save((is_null($user->getPassword())) ? false : true);
 
                     // refresh data in zend auth
                     foreach($user->__toArray() as $key => $val) {
