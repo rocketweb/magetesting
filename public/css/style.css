@@ -239,7 +239,7 @@ html,body{height:100%;font-family:Helvetica,Arial,sans-serif;}
 .navbar-global .nav>li>.dropdown-menu:after{border-bottom:0;}
 h1{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:300;font-size:28px;}
 h4,legend{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:300;font-size:21px;}
-fieldset.margins{margin:20px 0 40px 0;}fieldset.margins.margins-small{margin:20px 0 30px 0;}
+fieldset.margins{margin:20px 0 60px 0;}fieldset.margins.margins-small{margin:20px 0 30px 0;}
 fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-first.margin-small{margin:40px 0 20px 0;}
 .row.row-large{margin-top:10px;margin-bottom:30px;}
 .control-label.required:after{content:'*';}
@@ -264,7 +264,7 @@ fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-fi
 .alert-blue{padding:8px 35px 8px 14px;margin-bottom:20px;color:darker(#34aae5, 10%);text-shadow:0 1px 0 rgba(255, 255, 255, 0.5);background-color:#34aae5;border:1px solid darker(#34aae5, 5%);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}.alert-blue h4{margin:0;}
 .alert-blue .close{position:relative;top:-2px;right:-21px;line-height:20px;}
 .accordion-group .accordion-heading .accordion-toggle{outline:0;}
-footer{height:40px;position:absolute;}footer a{color:#f64135;}
+footer a{color:#f64135;}
 .mt-login{position:absolute;top:50%;left:50%;margin:-175px 0 0 -230px;width:420px;min-height:310px;padding:20px;border:1px solid #e5e5e5;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}.mt-login .alert-login{padding:8px 14px;}
 .mt-login form{margin:0;}
 .mt-login legend{padding-bottom:20px;}
@@ -559,4 +559,29 @@ div.form-box div.tab-stripe:first-of-type {
 }
 div.form-box div.form-actions {
     padding: 20px 20px 0 20px;
+}
+
+#wrap {
+    min-height: 100%;
+}
+
+#main {
+    overflow: auto;
+    padding-bottom: 60px;
+}
+
+#footer {
+    position: relative;
+    margin-top: -80px;
+    height: 80px;
+    clear: both;
+} 
+
+/*Opera Fix*/
+body:before {
+    content: "";
+    height: 100%;
+    float: left;
+    width: 0;
+    margin-top: -32767px;/
 }
