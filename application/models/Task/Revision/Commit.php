@@ -27,7 +27,8 @@ implements Application_Model_Task_Interface {
     }
     
     public function process(Application_Model_Queue &$queueElement = null) {
-        
+        $this->_updateStatus('installing');
+              
         $this->_createDbBackup();
         $this->_commit();
         $hash = $this->_revisionHash;
@@ -59,6 +60,7 @@ implements Application_Model_Task_Interface {
     
     /* For now just an alias */
     protected function _commitManual(){
+               
         exec('git add -A');
         
         $output = '';
