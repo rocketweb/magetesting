@@ -8,7 +8,7 @@ $(document).ready(function(){
 		"use strict";
 		var _thisClicked = $(this);
 		var _id = _thisClicked.attr('href');
-		if(_thisClicked.find('.statusHolder').text() == 'Closed') {
+		if($.trim(_thisClicked.find('.statusHolder').text()) == 'Closed') {
 		    return false;
 		}
 		if(_thisClicked.parent().parent().attr('data-active') == 0){
