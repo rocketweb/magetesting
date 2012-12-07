@@ -701,6 +701,19 @@ class QueueController extends Integration_Controller_Action {
             $revisionModel = new Application_Model_Revision;
             $revisionModel->find($this->_getParam('revision'));
 
+            /* Disallow requesting initial commits */
+            if ($revisionModel->getType()=='magento-init'){
+                
+                $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'There is no such revision.'));
+
+                return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+                ), 'default', true);
+            }
+            
+            
             $domain = $this->_getParam('domain');        
             $instanceModel=  new Application_Model_Instance();
             $instance = $instanceModel->findByDomain($domain);      
