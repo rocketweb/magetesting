@@ -81,7 +81,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'required'    => true,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html',
-                'class'      => 'span8'
+                'class'      => 'span7'
         ));
         
 //        $this->custom_remote_path->setValue('ie. /website/html');
@@ -91,7 +91,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'required'    => true,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/dump.sql',
-                'class'      => 'span8'
+                'class'      => 'span7'
         ));
 //        $this->custom_sql->setValue('ie. /website/html/dump.sql');
         
@@ -120,7 +120,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'required'    => false,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/store_backup.tar.gz',
-                'class'      => 'span8'
+                'class'      => 'span7'
         ));
         
 //        $this->custom_file->setValue('ie. /website/html/store_backup.tar.gz');
