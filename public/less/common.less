@@ -132,6 +132,14 @@ fieldset.margins {
     }
 }
 
+.input-radio {
+    .input-radio-button {
+        input {
+            margin-top: 42px;
+        }
+    }
+}
+
 .mt {
     margin-top: 40px;
 }
@@ -223,6 +231,28 @@ fieldset.margins {
 }
 .alert-blue {
     .customAlert(@Blue);
+}
+.alert-blank {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    color: #000;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #fff;
+    border: 1px solid #fff;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+
+    h4 {
+        margin: 0;
+    }
+    
+    .close {
+        position: relative;
+        top: -2px;
+        right: -21px;
+        line-height: 20px;
+    }
 }
 
 .accordion-group {
