@@ -2,72 +2,74 @@
     <div class="span12">
     	<h1>Edit Account</h1>
         <div class="form-box">
-	        <form
-	            enctype="<?php echo $this->form->getEnctype() ?>"
-	            method="<?php echo $this->form->getMethod() ?>"
-	            class="<?php echo $this->form->getAttrib('class') ?> box">
-	            
-	            <div class="tab-stripe"></div>
-	            <fieldset class="margins">
-	                <legend>Account details</legend>
-	                <div class="row">
-	                    <div class="span4">
-	                        <?php echo $this->form->login; ?>
-	                    </div>
-	                    <div class="span4">
-	                        <?php echo $this->form->email; ?>
-	                    </div>
-	                </div>
-	                <div class="row">
-	                    <div class="span4">
-	                        <?php echo $this->form->password; ?>
-	                    </div>
-	                    <div class="span4">
-	                        <?php echo $this->form->password_repeat; ?>
-	                    </div>
-	                </div>
-	            </fieldset>
-	            
-	            <div class="tab-stripe"></div>
-	            <fieldset>
-	                <legend>Personal details</legend>
-	                <div class="row">
-	                    <div class="span4">
-	                        <?php echo $this->form->firstname; ?>
-	                    </div>
-	                    <div class="span4">
-	                        <?php echo $this->form->lastname; ?>
-	                    </div>
-	                </div>
-	                <br />
-	                <h4>Address</h4>
-	                <div class="row">
-	                    <div class="span4">
-	                        <?php echo $this->form->street; ?>
-	                    </div>
-	                    <div class="span4">
-	                        <?php echo $this->form->postal_code; ?>
-	                    </div>
-	                    <div class="span4">
-	                        <?php echo $this->form->city; ?>
-	                    </div>
-	                </div>
-	                <div class="row">
-	                    <div class="span4">
-	                        <?php echo $this->form->state; ?>
-	                    </div>
-	                    <div class="span4">
-	                        <?php echo $this->form->country; ?>
-	                    </div>
-	                </div>
-	            </fieldset>
-	            <div class="form-actions">
-	                <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-inverse pull-right">
-	                    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
-	                </button>
-	                <a href="<?php echo $this->url(array('controller' => 'my-account'), 'default', true); ?>" class="btn">Back</a>
-	            </div>
-	        </form>
+	        <div class="box">
+	        	<form
+	        	    enctype="<?php echo $this->form->getEnctype() ?>"
+	        	    method="<?php echo $this->form->getMethod() ?>"
+	        	    class="<?php echo $this->form->getAttrib('class') ?>">
+	        	    
+	        	    <div class="tab-stripe"></div>
+	        	    <fieldset class="margins">
+	        	        <legend>Account details</legend>
+	        	        <div class="row">
+	        	            <div class="span4">
+	        	                <?php echo $this->form->login; ?>
+	        	            </div>
+	        	            <div class="span4">
+	        	                <?php echo $this->form->email; ?>
+	        	            </div>
+	        	        </div>
+	        	        <div class="row">
+	        	            <div class="span4">
+	        	                <?php echo $this->form->password; ?>
+	        	            </div>
+	        	            <div class="span4">
+	        	                <?php echo $this->form->password_repeat; ?>
+	        	            </div>
+	        	        </div>
+	        	    </fieldset>
+	        	    
+	        	    <div class="tab-stripe"></div>
+	        	    <fieldset>
+	        	        <legend>Personal details</legend>
+	        	        <div class="row">
+	        	            <div class="span4">
+	        	                <?php echo $this->form->firstname; ?>
+	        	            </div>
+	        	            <div class="span4">
+	        	                <?php echo $this->form->lastname; ?>
+	        	            </div>
+	        	        </div>
+	        	        <br />
+	        	        <h4>Address</h4>
+	        	        <div class="row">
+	        	            <div class="span4">
+	        	                <?php echo $this->form->street; ?>
+	        	            </div>
+	        	            <div class="span4">
+	        	                <?php echo $this->form->postal_code; ?>
+	        	            </div>
+	        	            <div class="span4">
+	        	                <?php echo $this->form->city; ?>
+	        	            </div>
+	        	        </div>
+	        	        <div class="row">
+	        	            <div class="span4">
+	        	                <?php echo $this->form->state; ?>
+	        	            </div>
+	        	            <div class="span4">
+	        	                <?php echo $this->form->country; ?>
+	        	            </div>
+	        	        </div>
+	        	    </fieldset>
+	        	    <div class="form-actions">
+	        	        <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-inverse pull-right">
+	        	            <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
+	        	        </button>
+	        	        <a href="<?php echo $this->url(array('controller' => 'my-account'), 'default', true); ?>" class="btn">Back</a>
+	        	    </div>
+	        	</form>
+	        </div>
 	    </div>
     </div>
 </div>

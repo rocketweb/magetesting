@@ -19,4 +19,9 @@ $(document).ready(function(){
         });
         
     });
+    
+    
+    $('div.input-radio .input-radio-option').click(function(){
+       console.log($(this));
+    });
 });
