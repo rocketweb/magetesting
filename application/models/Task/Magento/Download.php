@@ -217,6 +217,15 @@ implements Application_Model_Task_Interface {
         $message = var_export($output, true);
         $log->log("\n".$command."\n" . $message, LOG_DEBUG);
         unset($output);
+        
+        /* remove git files */
+        //git folder
+        exec('rm .git/ -R');
+        //gitignore
+        exec('rm .gitignore');        
+        
+        /* remove svn files/folders */
+        exec('rm -rf `find . -type d -name .svn`');
     }
 
     protected function _setupMagentoConnect() {
