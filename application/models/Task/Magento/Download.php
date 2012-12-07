@@ -119,7 +119,7 @@ implements Application_Model_Task_Interface {
         exec($command);
         $log->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
 
-        $this->_updateStatus('ready');
+        
 
         chdir($startCwd);
 
@@ -130,6 +130,10 @@ implements Application_Model_Task_Interface {
         /* update revision count */
         $this->db->update('instance', array('revision_count' => '0'), 'id=' . $this->_instanceObject->getId());
         $this->_instanceObject->setRevisionCount(0);
+        
+        
+        
+        $this->_updateStatus('ready');
     }
 
         /* move to transport class */
