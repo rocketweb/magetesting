@@ -21,7 +21,7 @@ $(document).ready(function(){
     });
     
     
-    var defaultRadioAlert = 'alert alert-info';
+    $('.input-radio-alert input').css('width', '511px');
     
     $('div.input-radio .input-radio-option, div.input-radio .input-radio-button').click(function(){
         var $this = $(this);
@@ -29,11 +29,13 @@ $(document).ready(function(){
         
         // Update alerts
         $radioGroup.find('.input-radio-alert')
-            .removeClass(defaultRadioAlert)
-            .find('input').css('width', '');
+            .removeClass('alert-info')
+            .addClass('alert-blank')
+            .find('input').css('width', '511px');
         
         $this.parent().find('.input-radio-alert')
-            .addClass(defaultRadioAlert)
+            .removeClass('alert-blank')
+            .addClass('alert-info')
             .find('input').css('width', '100%');
         
         // Update radio buttons
