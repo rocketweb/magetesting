@@ -81,14 +81,19 @@ implements Application_Model_Task_Interface {
         
         
         $startCwd = getcwd();
-        
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        $instanceDir = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain();
+        chdir($instanceDir);
         /* remove revision deployment file */
         
-        unlink('var/deployment/'.$revisionModel->getFilename());
+        
+        if (file_exists($instanceDir.'/var/deployment/'.$revisionModel->getFilename())){
+            unlink('var/deployment/'.$revisionModel->getFilename());
+        }
         
         /* remove database file */
-        unlink('var/db/'.$revisionModel->getDbBeforeRevision());
+        if (file_exists($instanceDir.'/var/db/'.$revisionModel->getDbBeforeRevision())){
+            unlink('var/db/'.$revisionModel->getDbBeforeRevision());
+        }
         
         /* remove database entry */
         $this->db->delete('revision',
