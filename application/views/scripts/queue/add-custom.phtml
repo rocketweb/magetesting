@@ -56,7 +56,7 @@
             	    <fieldset class="margins">
             	        <legend>Store files and database</legend>
             	        <div class="input-radio">
-            	        	<div class="row row-large">
+            	        	<div class="row">
             	        	    <div class="span1 input-radio-button">
             	        	        <input type="radio" name="input-radio" value="" class="span1 pull-right">
             	        	    </div>
@@ -66,17 +66,7 @@
             	        	        </div>
             	        	    </div>
             	        	</div>
-            	        	<div class="row row-large">
-            	        	    <div class="span1 input-radio-button">
-                                    <input type="radio" name="input-radio" value="" class="span1 pull-right">
-            	        	    </div>
-            	        	    <div class="span7 input-radio-option">
-            	        	        <div class="input-radio-alert">
-            	        	            <?php echo $this->form->custom_sql ?>
-            	        	        </div>
-            	        	    </div>
-            	        	</div>
-            	        	<div class="row row-large">
+            	        	<div class="row">
             	        	    <div class="span1 input-radio-button">
                                     <input type="radio" name="input-radio" value="" class="span1 pull-right">
             	        	    </div>
@@ -87,8 +77,12 @@
             	        	    </div>
             	        	</div>
             	        </div>
+            	        <div class="row row-large">
+                            <div class="span8">
+                                <?php echo $this->form->custom_sql ?>
+                            </div>
+                        </div>
             	    </fieldset>
-            	    
             	    
             	    <div class="form-actions">
             	        <button type="submit" name="<?php echo $this->form->instanceAdd->getName(); ?>" id="<?php echo $this->form->instanceAdd->getId() ?>" class="btn btn-inverse pull-right">
