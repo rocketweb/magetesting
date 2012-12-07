@@ -242,6 +242,7 @@ h4,legend{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font
 fieldset.margins{margin:20px 0 60px 0;}fieldset.margins.margins-small{margin:20px 0 30px 0;}
 fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-first.margin-small{margin:40px 0 20px 0;}
 .row.row-large{margin-top:10px;margin-bottom:30px;}
+.row.row-large:last-of-type{margin-bottom:0;}
 .control-label.required:after{content:'*';}
 .mt{margin-top:40px;}
 .mt_shadow{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}
@@ -548,7 +549,7 @@ div.form-box div.box legend {
 	border: 0;
 }
 div.form-box fieldset {
-    padding: 0 20px;
+    padding: 0 20px 20px 20px;
     margin: 0;
     border-top: 1px solid #e5e5e5;
 }
