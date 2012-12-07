@@ -7,7 +7,7 @@ class ExtensionController extends Integration_Controller_Action {
     public function init() {
         $this->_tempDir = rtrim(APPLICATION_PATH, '/').'/../public/assets/img/temp/';
         /* Initialize action controller here */
-        $this->_helper->noSslSwitch();
+//        $this->_helper->noSslSwitch();
     }
 
     public function indexAction() {
