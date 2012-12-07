@@ -113,7 +113,6 @@ implements Application_Model_Task_Interface {
         
         $this->_importAdminFrontname();
         
-        //TODO: add mail info about ready installation
         $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '.INSTANCE_PATH . $this->_domain;
         exec($command);
         $log->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
@@ -123,32 +122,12 @@ implements Application_Model_Task_Interface {
         chdir($startCwd);
 
         /* send email to instance owner start */
-        $html = new Zend_View();
-        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
-
-        // assign values
-        $html->assign('domain', $this->_domain);
-        $html->assign('storeUrl', $this->config->magento->storeUrl);
-        $html->assign('admin_login', $this->_adminuser);
-        $html->assign('admin_password', $this->_adminpass);
-        
-        // render view
-        $bodyText = $html->render('queue-item-ready.phtml');
-
-        // create mail object
-        $mail = new Zend_Mail('utf-8');
-    
-        // configure base stuff
-        $mail->addTo($this->_userObject->getEmail());
-        $mail->setSubject($this->config->cron->queueItemReady->subject);
-        $mail->setFrom($this->config->cron->queueItemReady->from->email, $this->config->cron->queueItemReady->from->desc);
-        $mail->setBodyHtml($bodyText);
-        try {
-            $mail->send();
-        } catch (Zend_Mail_Transport_Exception $e){
-            $log->log('Mail could not be sent', LOG_CRIT, $e->getTraceAsString());
-        }
+        $this->_sendInstanceReadyEmail();
         /* send email to instance owner stop */
+        
+        /* update revision count*/
+        $this->db->update('instance', array('revision_count' => '1'), 'id=' . $this->_instanceObject->getId());
+        $this->_instanceObject->setRevisionCount($nextRevision);
 
         }
 
