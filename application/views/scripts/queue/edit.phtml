@@ -2,61 +2,63 @@
     <div class="span12">
         <h1>Edit your store</h1>
         <div class="form-box">
-        	<form action="<?php echo $this->form->getAction() ?>"
-        	    enctype="<?php echo $this->form->getEnctype() ?>"
-        	    method="<?php echo $this->form->getMethod() ?>"
-        	    id="<?php echo $this->form->getId() ?>"
-        	    class="<?php echo $this->form->getAttrib('class') ?> box">
-        	
-				<div class="tab-stripe"></div>
-        	    <fieldset class="margins">
-        	        <legend>Store details</legend>
-        	        <div class="row">
-        	        	<div class="span4"><?php echo $this->form->instance_name ?></div>
-        	        	<div class="span4"><?php echo $this->form->description ?></div>
-        	        </div>
-        	    </fieldset>
-        	    
-        	    <div class="tab-stripe"></div>
-        	    <fieldset>
-        	        <legend>Administration</legend>
-        	        <div class="row">
-        	            <div class="span4"><?php echo $this->form->backend_login ?></div>
-        	            <div class="span4"><?php echo $this->form->backend_password ?></div>
-        	        </div>
-        	    </fieldset>
-        	    
-        	    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
-        	    <?php
-        	    /*
-        	    <div class="tab-stripe"></div>
-        	    <fieldset>
-        	        <legend>Remote details</legend>
-        	        <div class="row">
-        	            <div class="span4"><?php echo $this->form->custom_host; ?></div>
-        	            <div class="span4"><?php echo $this->form->custom_login; ?></div>
-        	        </div>
-        	        <div class="row">
-        	            <div class="span4"><?php echo $this->form->custom_pass; ?></div>
-        	            <div class="span4"><?php echo $this->form->custom_pass_confirm; ?></div>
-        	        </div>
-        	        <div class="row">
-        	            <div class="span4"><?php echo $this->form->custom_remote_path; ?></div>
-        	            <div class="span4"><?php echo $this->form->custom_sql; ?></div>
-        	        </div>
-        	    </fieldset>
-				 */
-        	    ?>
-        	    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
-        	    
-        	    <div class="form-actions">
-        	        <button 
-        	            type="submit"
-        	            name="<?php echo $this->form->instanceSave->getName(); ?>"
-        	            class="btn btn-inverse pull-right">
-        	        <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->instanceSave->getLabel() ?></button>
-        	    </div>
-        	</form>
+        	<div class="box">
+        		<form action="<?php echo $this->form->getAction() ?>"
+        		    enctype="<?php echo $this->form->getEnctype() ?>"
+        		    method="<?php echo $this->form->getMethod() ?>"
+        		    id="<?php echo $this->form->getId() ?>"
+        		    class="<?php echo $this->form->getAttrib('class') ?>">
+        		
+        			<div class="tab-stripe"></div>
+        		    <fieldset class="margins">
+        		        <legend>Store details</legend>
+        		        <div class="row">
+        		        	<div class="span4"><?php echo $this->form->instance_name ?></div>
+        		        	<div class="span4"><?php echo $this->form->description ?></div>
+        		        </div>
+        		    </fieldset>
+        		    
+        		    <div class="tab-stripe"></div>
+        		    <fieldset>
+        		        <legend>Administration</legend>
+        		        <div class="row">
+        		            <div class="span4"><?php echo $this->form->backend_login ?></div>
+        		            <div class="span4"><?php echo $this->form->backend_password ?></div>
+        		        </div>
+        		    </fieldset>
+        		    
+        		    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
+        		    <?php
+        		    /*
+        		    <div class="tab-stripe"></div>
+        		    <fieldset>
+        		        <legend>Remote details</legend>
+        		        <div class="row">
+        		            <div class="span4"><?php echo $this->form->custom_host; ?></div>
+        		            <div class="span4"><?php echo $this->form->custom_login; ?></div>
+        		        </div>
+        		        <div class="row">
+        		            <div class="span4"><?php echo $this->form->custom_pass; ?></div>
+        		            <div class="span4"><?php echo $this->form->custom_pass_confirm; ?></div>
+        		        </div>
+        		        <div class="row">
+        		            <div class="span4"><?php echo $this->form->custom_remote_path; ?></div>
+        		            <div class="span4"><?php echo $this->form->custom_sql; ?></div>
+        		        </div>
+        		    </fieldset>
+        						 */
+        		    ?>
+        		    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
+        		    
+        		    <div class="form-actions">
+        		        <button 
+        		            type="submit"
+        		            name="<?php echo $this->form->instanceSave->getName(); ?>"
+        		            class="btn btn-inverse pull-right">
+        		        <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->instanceSave->getLabel() ?></button>
+        		    </div>
+        		</form>
+        	</div>
         </div>
     </div>
 </div>

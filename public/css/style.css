@@ -529,8 +529,9 @@ div.accordion div.accordion-group:first-child div.accordion-heading div.tab-stri
 }
 
 /* Edit Account */
-div.form-box form.box {
+div.form-box div.box {
 	margin-top: 10px;
+	margin-bottom: 20px;
 	border: 1px solid 
 	#e5e5e5;
 	-webkit-border-radius: 6px;
@@ -540,7 +541,7 @@ div.form-box form.box {
 	-moz-box-shadow: 0 8px 6px -6px #888888;
 	box-shadow: 0 8px 6px -6px #888888;
 }
-div.form-box form.box legend {
+div.form-box div.box legend {
     display: block;
     float: left;
 	padding: 10px 0;
@@ -551,7 +552,7 @@ div.form-box fieldset {
     margin: 0;
     border-top: 1px solid #e5e5e5;
 }
-div.form-box .box fieldset:first-of-type {
+div.form-box div.box fieldset:first-of-type {
     border-top: none;
 }
 div.form-box div.tab-stripe:first-of-type {
