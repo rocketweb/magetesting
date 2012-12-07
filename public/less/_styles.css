@@ -25,6 +25,7 @@ fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-fi
 .secondary{line-height:28px;margin-right:5px;}
 .form-register .btn-primary{margin-left:5px;}
 .media-heading{font-family:"pragmatica-web",Helvetica,Arial,sans-serif;font-size:16px;font-weight:700;font-style:normal;}
+*[rel="popover"]{cursor:pointer;}
 .btn-mini .icon{margin-top:0px;}
 .btn-minimini{padding:0px 4px;}
 .btn-red{color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);background-color:#f7584d;*background-color:#ed190b;background-image:-moz-linear-gradient(top, #f86f66, #f64135);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#f86f66), to(#f64135));background-image:-webkit-linear-gradient(top, #f86f66, #f64135);background-image:-o-linear-gradient(top, #f86f66, #f64135);background-image:linear-gradient(to bottom, #f86f66, #f64135);background-repeat:repeat-x;border-color:#f64135 #f64135 #1f6377;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff2f96b4', GradientType=0);filter:progid:DXImageTransform.Microsoft.gradient(enabled=false);}.btn-red:hover,.btn-red:active,.btn-red.active,.btn-red.disabled,.btn-red[disabled]{color:#ffffff;background-color:#f64135;*background-color:#ed190b;}

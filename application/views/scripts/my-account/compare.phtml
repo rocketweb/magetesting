@@ -7,182 +7,204 @@
 </style>
 <![endif]-->
 
-<h1>Plans comparison</h1>
-<?php $user = $this->user; ?>
-<table class="compare-table" >
-    <thead>
-        <tr class="compare-table-title-row">
-            <th class="compare-table-title-row"><span class="compare-table-title">Featrues</span></th>
-            <?php foreach($this->plans as $plan): ?>
-                <th class="compare-table-data-name"><h3><span><?php echo $plan->getName(); ?></span></h3><h2><span class="compare-table-dollar">$</span><span><?php echo $plan->getPrice(); ?></span></h2></th>
-                <th class="compare-table-empty-first"><span class="compare-table-empty"></span></th>
-            <?php endforeach; ?>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="compare-table-row-title">
-            <td class="compare-table-row-title">Stores</td>
-            <?php foreach($this->plans as $plan): ?>
-                <td class="compare-table-data"><?php echo $plan->getInstances(); ?></td>
-                <td class="compare-table-empty"></td>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title">
-            <td class="compare-table-row-title">One-click extension install</td>
-            <?php foreach($this->plans as $plan): ?>
-                <?php if((int)$plan->getFtpAccess()): ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
-                    <td class="compare-table-empty"></td>
-                <?php else: ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty"></td>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title">
-            <td class="compare-table-row-title">Purchase extensions</td>
-            <?php foreach($this->plans as $plan): ?>
-                <?php if((int)$plan->getFtpAccess()): ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
-                    <td class="compare-table-empty"></td>
-                <?php else: ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty"></td>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title">
-            <td class="compare-table-row-title">Rollback & deployment</td>
-            <?php foreach($this->plans as $plan): ?>
-                <?php if((int)$plan->getFtpAccess()): ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
-                    <td class="compare-table-empty"></td>
-                <?php else: ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty"></td>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title">
-            <td class="compare-table-row-title">log management</td>
-            <?php foreach($this->plans as $plan): ?>
-                <?php if((int)$plan->getFtpAccess()): ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
-                    <td class="compare-table-empty"></td>
-                <?php else: ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty"></td>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title">
-            <td class="compare-table-row-title">FTP Access</td>
-            <?php foreach($this->plans as $plan): ?>
-                <?php if((int)$plan->getFtpAccess()): ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
-                    <td class="compare-table-empty"></td>
-                <?php else: ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty"></td>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title">
-            <td class="compare-table-row-title">phpMyAdmin Access</td>
-            <?php foreach($this->plans as $plan): ?>
-                <?php if((int)$plan->getPhpmyadminAccess()): ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
-                    <td class="compare-table-empty"></td>
-                <?php else: ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty"></td>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title">
-            <td class="compare-table-row-title">Custom Store Import</td>
-            <?php foreach($this->plans as $plan): ?>
-                <?php if((int)$plan->getCanAddCustomInstance()): ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
-                    <td class="compare-table-empty"></td>
-                <?php else: ?>
-                    <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
-                    <td class="compare-table-empty"></td>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title compare-table-row-title-last">
-            <td class="compare-table-row-title  compare-table-row-title-last">Billing Period</td>
-            <?php foreach($this->plans as $plan): ?>
-                <td class="compare-table-data last-data"><?php echo $plan->getBillingPeriod(); ?></td>
-                <td class="compare-table-empty"></td>
-            <?php endforeach; ?>
-        </tr>
-        <tr class="compare-table-row-title-empty">
-            <td class="compare-table-price-empty"></td>
-            <?php foreach($this->plans as $plan): ?>
-                <td class="compare-table-price-button"><a class="btn btn-large btn-inverse" href="#">Subscribe now</td>
-                <td class="compare-table-price-empty"></td>
-            <?php endforeach; ?>
-        </tr>
-        <?php /*
-        <tr>
-            <td><strong>Paypal</strong></td>
-            <?php foreach($this->plans as $plan): ?>
-                <td>
-                    <?php if(!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
-                        <?php if(!$this->renderPayPal): ?>
-                            <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
-                                Subscribe for $<?php echo $plan->getPrice(); ?>
-                            </a>
+<div class="row">
+    <div class="span12">
+        <h1>Plans comparison</h1>
+        <?php $user = $this->user; ?>
+        <table class="compare-table" style="margin-bottom: 20px">
+            <thead>
+                <tr class="compare-table-title-row">
+                    <th class="compare-table-title-row"><span class="compare-table-title">Featrues</span></th>
+                    <?php foreach($this->plans as $plan): ?>
+                        <th class="compare-table-data-name"><h3><span><?php echo $plan->getName(); ?></span></h3><h2><span class="compare-table-dollar">$</span><span><?php echo $plan->getPrice(); ?></span></h2></th>
+                        <th class="compare-table-empty-first"><span class="compare-table-empty"></span></th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> Stores</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <td class="compare-table-data"><?php echo $plan->getInstances(); ?></td>
+                        <td class="compare-table-empty"></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> One-click extension install</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <?php if((int)$plan->getFtpAccess()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
                         <?php else: ?>
-                            <form class="paypal form-inline" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                                <input type="hidden" name="cmd" value="_s-xclick">
-                                <input type="hidden" name="hosted_button_id" value="<?php echo $plan->getPaypalId(); ?>">
-                                <input type="hidden" name="address_override" value="1">
-                                <input type="hidden" name="no_shipping" value="2">
-                                <input type="hidden" name="custom" value="<?php echo $user->getId(); ?>:1">
-                                <input type="hidden" name="address1" value="<?php echo $user->getStreet(); ?>">
-                                <input type="hidden" name="city" value="<?php echo $user->getCity(); ?>">
-                                <input type="hidden" name="country" value="<?php echo $user->getCountry(); ?>">
-                                <input type="hidden" name="email" value="<?php echo $user->getEmail(); ?>">
-                                <input type="hidden" name="first_name" value="<?php echo $user->getFirstname(); ?>">
-                                <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
-                                <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
-                                <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
-                                <input class="btn btn-success" type="submit" name="submit" value="Subscribe for $<?php echo $plan->getprice(); ?>">
-                            </form>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
                         <?php endif; ?>
-                    <?php else: ?>
-                        <?php if ($this->user->getSubscrId()): ?>
-                            <a class="btn ctn-warning" href="#">Unsubscribe</a>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </td>
-            <?php endforeach; ?>
-        </tr>
-        <tr>
-            <td><strong>Credit Card</strong></td>
-            <?php foreach($this->plans as $plan): ?>
-                <td>
-                    <?php if (!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
-                        <?php if(!$this->renderBraintree): ?>
-                            <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
-                                Subscribe for $<?php echo $plan->getPrice(); ?>
-                            </a>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> Purchase extensions</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <?php if((int)$plan->getFtpAccess()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
                         <?php else: ?>
-                            <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment', 'plan' => $plan->getBraintreeId())); ?>">
-                                Subscribe for $<?php echo $plan->getPrice(); ?>
-                            </a>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
                         <?php endif; ?>
-                    <?php else: ?>
-                        <?php if ($this->user->getBraintreeSubscriptionId()): ?>
-                            <a class="btn btn-warning" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'unsubscribe')); ?>">Unsubscribe</a>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> Rollback &amp; deployment</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <?php if((int)$plan->getFtpAccess()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php else: ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
                         <?php endif; ?>
-                    <?php endif; ?>
-                </td>
-            <?php endforeach; ?>
-        </tr>
-        */ ?>
-    </tbody>
-</table>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> log management</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <?php if((int)$plan->getFtpAccess()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php else: ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> FTP Access</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <?php if((int)$plan->getFtpAccess()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php else: ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> phpMyAdmin Access</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <?php if((int)$plan->getPhpmyadminAccess()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php else: ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> Custom Store Import</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <?php if((int)$plan->getCanAddCustomInstance()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php else: ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title compare-table-row-title-last">
+                    <td class="compare-table-row-title  compare-table-row-title-last">
+                        <span rel="popover" data-trigger="hover" data-placement="right" data-original-title="Title ipsum" data-content="Lorem ipsum"><i class="icon icon-blue icon-info-sign"></i> Billing Period</span>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <td class="compare-table-data last-data"><?php echo $plan->getBillingPeriod(); ?></td>
+                        <td class="compare-table-empty"></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title-empty">
+                    <td class="compare-table-price-empty"></td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <td class="compare-table-price-button"><a class="btn btn-large btn-inverse" href="#">Subscribe now</a></td>
+                        <td class="compare-table-price-empty"></td>
+                    <?php endforeach; ?>
+                </tr>
+                <?php /*
+                <tr>
+                    <td><strong>Paypal</strong></td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <td>
+                            <?php if(!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
+                                <?php if(!$this->renderPayPal): ?>
+                                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                                        Subscribe for $<?php echo $plan->getPrice(); ?>
+                                    </a>
+                                <?php else: ?>
+                                    <form class="paypal form-inline" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                                        <input type="hidden" name="cmd" value="_s-xclick">
+                                        <input type="hidden" name="hosted_button_id" value="<?php echo $plan->getPaypalId(); ?>">
+                                        <input type="hidden" name="address_override" value="1">
+                                        <input type="hidden" name="no_shipping" value="2">
+                                        <input type="hidden" name="custom" value="<?php echo $user->getId(); ?>:1">
+                                        <input type="hidden" name="address1" value="<?php echo $user->getStreet(); ?>">
+                                        <input type="hidden" name="city" value="<?php echo $user->getCity(); ?>">
+                                        <input type="hidden" name="country" value="<?php echo $user->getCountry(); ?>">
+                                        <input type="hidden" name="email" value="<?php echo $user->getEmail(); ?>">
+                                        <input type="hidden" name="first_name" value="<?php echo $user->getFirstname(); ?>">
+                                        <input type="hidden" name="last_name" value="<?php echo $user->getLastname(); ?>">
+                                        <input type="hidden" name="state" value="<?php echo $user->getState(); ?>">
+                                        <input type="hidden" name="zip" value="<?php echo $user->getPostalCode(); ?>">
+                                        <input class="btn btn-success" type="submit" name="submit" value="Subscribe for $<?php echo $plan->getprice(); ?>">
+                                    </form>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <?php if ($this->user->getSubscrId()): ?>
+                                    <a class="btn ctn-warning" href="#">Unsubscribe</a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr>
+                    <td><strong>Credit Card</strong></td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <td>
+                            <?php if (!$this->user->getSubscrId() && !$this->user->getBraintreeSubscriptionId()): ?>
+                                <?php if(!$this->renderBraintree): ?>
+                                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account', 'inform' => '1')); ?>">
+                                        Subscribe for $<?php echo $plan->getPrice(); ?>
+                                    </a>
+                                <?php else: ?>
+                                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment', 'plan' => $plan->getBraintreeId())); ?>">
+                                        Subscribe for $<?php echo $plan->getPrice(); ?>
+                                    </a>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <?php if ($this->user->getBraintreeSubscriptionId()): ?>
+                                    <a class="btn btn-warning" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'unsubscribe')); ?>">Unsubscribe</a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    <?php endforeach; ?>
+                </tr>
+                */ ?>
+            </tbody>
+        </table>
+    </div>
+</div>
