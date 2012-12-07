@@ -399,34 +399,43 @@ th.compare-table-empty-first:last-child span.compare-table-empty{
 th.compare-table-empty-first{
 	padding: 0;
 }
+
 th.compare-table-data-name{
-	display: inline-block;
-	width: 270px;
-	height: 140px;
-	padding: 0;
-	padding-top: 15px;
-	background: #34aae5;
-	border-top-left-radius: 6px;
-	border-top-right-radius: 6px;
-	border-top-style: none;
-	border-top: none;
-	color: #fff;
+    display: inline-block;
+    width: 270px;
+    height: 140px;
+    padding: 0;
+    padding-top: 15px;
+    background: #34aae5;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-top-style: none;
+    border-top: none;
+    color: #fff;
 }
 .compare-table-data-name h3 span, .compare-table-data-name h2 span{
 	text-shadow: 1px 1px 1px #353535;
 }
 .compare-table-data-name h3 span{
+	font-family: "pragmatica-web",Helvetica,Arial,sans-serif;
+    font-style: normal;
+    font-weight: 700;
 	font-size: 24px;
 	display: block;
 	width: 268px;
 	text-align: center;
 }
 .compare-table-data-name h2{
+	font-family: "pragmatica-web",Helvetica,Arial,sans-serif;
+	font-style: normal;
+	font-weight: 700;
 	font-size: 70px;
+	
 	width: 100%;
 	text-align: center;
 	display: block;
 	margin-top: 10px;
+	
 }
 td.compare-table-row-title{
 	color: #ffffff;
