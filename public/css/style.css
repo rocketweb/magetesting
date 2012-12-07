@@ -188,7 +188,7 @@ margin-bottom: 20px;
 	border-top: 1px solid #eeeeee;
 	margin-top: 60px;
 }
-.account_page .user-name {
+p.user-name {
     font-family: "pragmatica-web-condensed", Helvetica, Arial, sans-serif;
     font-style: normal;
     font-weight: 300;
