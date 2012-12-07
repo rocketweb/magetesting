@@ -16,7 +16,7 @@ extends Application_Model_Task
     
     public function _updateRevisionCount($modifier){
         
-        $currentRevision = $this->_instanceObject->getRevisionCount();
+        $currentRevision = (int)$this->_instanceObject->getRevisionCount();
         
         $operation = substr($modifier,0,1);
         
