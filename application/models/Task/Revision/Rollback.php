@@ -79,10 +79,23 @@ implements Application_Model_Task_Interface {
         $revisionModel = new Application_Model_Revision();
         $revisionModel->getLastForInstance($this->_instanceObject->getId());
         
+        
+        $startCwd = getcwd();
+        
+        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        /* remove revision deployment file */
+        
+        unlink('var/deployment/'.$revisionModel->getFilename());
+        
+        /* remove database file */
+        unlink('var/db/'.$revisionModel->getDbBeforeRevision());
+        
+        /* remove database entry */
         $this->db->delete('revision',
             array('id = '.$revisionModel->getId())
         );
                
+        chdir($startCwd);       
     }
 
 }

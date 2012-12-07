@@ -37,7 +37,7 @@ implements Application_Model_Task_Interface {
         /* prepare dir for instance deply packages */
         
         $deployPath = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/'.
-        'var/data/deploys/';
+        'var/deployment/';
         
         if (!file_exists($deployPath) || !is_dir($deployPath)){
             exec('mkdir -p var/deployment/');
