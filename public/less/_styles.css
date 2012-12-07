@@ -15,8 +15,7 @@ h1{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:
 h4,legend{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:300;font-size:21px;}
 fieldset.margins{margin:20px 0 60px 0;}fieldset.margins.margins-small{margin:20px 0 30px 0;}
 fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-first.margin-small{margin:40px 0 20px 0;}
-.row.row-large{margin-top:10px;margin-bottom:30px;}
-.row.row-large:last-of-type{margin-bottom:0;}
+.row.row-large{margin-top:20px;}
 .control-label.required:after{content:'*';}
 .mt{margin-top:40px;}
 .mt_shadow{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}

@@ -91,7 +91,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'required'    => true,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/dump.sql',
-                'class'      => 'span7'
+                'class'      => 'span8'
         ));
 //        $this->custom_sql->setValue('ie. /website/html/dump.sql');
         
