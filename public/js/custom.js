@@ -7,7 +7,14 @@ $(document).ready(function () {
 
     /* prevent click event and init popover */
     $('[rel=popover]').click(function(){return false;}).popover();
-
+    $('[rel=popover]').mouseover(function(){
+        $(this).find('i.icon').removeClass('icon-blue').addClass('icon-white');
+    });
+    $('[rel=popover]').mouseout(function(){
+        $(this).find('i.icon').removeClass('icon-white').addClass('icon-blue');
+    });
+    
+    
     var $deployment_modal = $('#instance-deployment'),
         $deployment_form = $deployment_modal.find('form'),
         $rollback_name = $deployment_modal.find('.rollback-name'),
