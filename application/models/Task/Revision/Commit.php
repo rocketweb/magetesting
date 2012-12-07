@@ -69,6 +69,8 @@ implements Application_Model_Task_Interface {
 
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
         
+        var_dump($output);
+        
         if (!count($output)){
             $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
             return false;

@@ -22,56 +22,56 @@ implements Application_Model_Task_Interface {
     }
     
     public function process(Application_Model_Queue &$queueElement = null) {
-        $startCwd = getcwd();  
+        $startCwd = getcwd();
         $log = $this->_getLogger();
-        
+
         $this->_updateStatus('installing');
-        $this->_createSystemAccount();  
+        $this->_createSystemAccount();
         $this->_updateStatus('installing-magento');
-          
-	chdir($this->_instanceFolder);
-	$this->_setupFilesystem();
-	chdir($this->_domain);
-	
-	/* Instantiate Transport Model */
+
+        chdir($this->_instanceFolder);
+        $this->_setupFilesystem();
+        chdir($this->_domain);
+
+        /* Instantiate Transport Model */
         $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
         $classSuffix = $filter->filter($this->_instanceObject->getCustomProtocol());
-        $className =  'Application_Model_Transport_' . $classSuffix; 
-        $transportModel = new $className();   
+        $className = 'Application_Model_Transport_' . $classSuffix;
+        $transportModel = new $className();
         $transportModel->setup($this->_instanceObject);
 
-	//do a sample connection to wget to check if protocol credentials are ok
-        if (!$transportModel->checkProtocolCredentials()){
+        //do a sample connection to wget to check if protocol credentials are ok
+        if (!$transportModel->checkProtocolCredentials()) {
             $message = 'Credentials are incorrect';
-            $this->_updateStatus('error',$message);
-           return;
-        } 
-        $this->_updateStatus('installing-data');  
-
-        //connect through wget      
-        if (!$transportModel->checkDatabaseDump()){
-            $message = $transportModel->getError();
-            $this->_updateStatus('error',$message);
+            $this->_updateStatus('error', $message);
             return;
         }
-        
-	$this->_updateStatus('installing-files');
-        if(!$transportModel->downloadInstanceFiles()){
+        $this->_updateStatus('installing-data');
+
+        //connect through wget      
+        if (!$transportModel->checkDatabaseDump()) {
+            $message = $transportModel->getError();
+            $this->_updateStatus('error', $message);
+            return;
+        }
+
+        $this->_updateStatus('installing-files');
+        if (!$transportModel->downloadInstanceFiles()) {
             $message = 'Couldn\'t find app/Mage.php file data, will not install queue element';
             $this->_updateStatus('error', $message);
             return;
         }
-        
-        $this->_updateStatus('installing-data');     
+
+        $this->_updateStatus('installing-data');
         $transportModel->downloadDatabase();
-        
+
         //update custom variables using data from transport
         $this->_customHost = $transportModel->getCustomHost();
         $this->_customSql = $transportModel->getCustomSql();
         $this->_customRemotePath = $transportModel->getCustomRemotePath();
-        
+
         /* end of transport usage */
-               
+
         //let's load sql to mysql database
         $this->_importDatabaseDump();
 
@@ -83,8 +83,8 @@ implements Application_Model_Task_Interface {
 
         $this->_setupMagentoConnect();
         //remove main fetched folder
-        $parts = explode('/',$this->_customRemotePath);
-        exec('sudo rm '.$parts[0].' -R', $output);
+        $parts = explode('/', $this->_customRemotePath);
+        exec('sudo rm ' . $parts[0] . ' -R', $output);
         unset($parts);
 
         $this->_cleanupFilesystem();
@@ -100,38 +100,37 @@ implements Application_Model_Task_Interface {
 
         //applying patches for xml-rpc issue
         $this->_applyXmlRpcPatch();
-        
-        $command = 'sudo chown -R '.$this->config->magento->userprefix.$this->_dbuser.':'.$this->config->magento->userprefix.$this->_dbuser.' '.$this->_instanceFolder.'/'.$this->_domain;
+
+        $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_instanceFolder . '/' . $this->_domain;
         exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\n". $command."\n" . $message, LOG_DEBUG);
+        $log->log("\n" . $command . "\n" . $message, LOG_DEBUG);
         unset($output);
 
         $this->_updateCoreConfigData();
 
         $this->_createAdminUser();
-        
+
         $this->_importAdminFrontname();
-        
-        $instance_path = str_replace('/application/../instance/','/instance/',INSTANCE_PATH);
-        
-        $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '.$instance_path . $this->_domain;
+
+        $instance_path = str_replace('/application/../instance/', '/instance/', INSTANCE_PATH);
+
+        $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' ' . $instance_path . $this->_domain;
         exec($command);
         $log->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
-        
+
         $this->_updateStatus('ready');
-        
+
         chdir($startCwd);
 
         /* send email to instance owner start */
         $this->_sendInstanceReadyEmail();
         /* send email to instance owner stop */
-        
-        /* update revision count*/
+
+        /* update revision count */
         $this->db->update('instance', array('revision_count' => '1'), 'id=' . $this->_instanceObject->getId());
         $this->_instanceObject->setRevisionCount($nextRevision);
-
-        }
+    }
 
         /* move to transport class */
     
@@ -145,7 +144,7 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($this->_instanceFolder . '/' . $this->_domain) || !is_dir($this->_instanceFolder . '/' . $this->_domain)) {
             $message = 'Directory does not exist, aborting';
-            $this->_updateStatus('error',$message);
+            $this->_updateStatus('error', $message);
         }
 
         exec('sudo chmod +x ' . $this->_instanceFolder . '/' . $this->_domain, $output);
@@ -249,6 +248,7 @@ implements Application_Model_Task_Interface {
             'magento_root' => $this->_instanceFolder.'/'.$this->_domain,
             'remote_config' => $ftp_user_host.'/public_html/'.$this->_domain
         );
+        
         $free_user = $this->_userObject->getGroup() == 'free-user' ? true : false;
         if($free_user AND !stristr($this->_versionObject->getVersion(), '1.4')) {
             // index.php file
