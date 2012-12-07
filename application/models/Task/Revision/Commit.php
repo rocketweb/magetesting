@@ -95,26 +95,20 @@ implements Application_Model_Task_Interface {
         if (trim($params['commit_comment'])==''){
             $params['commit_comment']='No comment given for this commit';
         }
-        
+
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
-        
-        $this->logger->log('commit update',  Zend_Log::DEBUG,'');
-        $this->logger->log(var_export($output,true),Zend_Log::DEBUG,'');
-        
-        
+                
         if (!count($output)){
             $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
             return false;
         }
         //get revision committed
-        preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
-        
-                
+        preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0], $matches);
+               
         if (!isset($matches[2])){
             $this->_updateStatus('ready', 'Could not find revision information, aborting');
             return false;
         }
-        
         
         //insert revision entry
         $this->_revisionHash  = $matches[2];

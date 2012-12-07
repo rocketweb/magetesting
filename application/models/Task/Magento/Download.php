@@ -113,7 +113,9 @@ implements Application_Model_Task_Interface {
         
         $this->_importAdminFrontname();
         
-        $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '.INSTANCE_PATH . $this->_domain;
+        $instance_path = str_replace('/application/../instance/','/instance/',INSTANCE_PATH);
+        
+        $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' '.$instance_path . $this->_domain;
         exec($command);
         $log->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
         
