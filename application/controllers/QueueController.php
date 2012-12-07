@@ -748,6 +748,9 @@ class QueueController extends Integration_Controller_Action {
         ) {
             $model = new Application_Model_Revision();
             foreach($model->getAllForInstance($instance->id) as $revision) {
+                if($revision['type']=='magento-init'){
+                    continue;
+                }
                 $content .= '<tr>'.PHP_EOL;
                 $content .= '<td>'.$revision['comment'].'</td>'.PHP_EOL;
                 $content .= '<td>'.PHP_EOL;

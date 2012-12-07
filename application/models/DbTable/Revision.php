@@ -9,7 +9,7 @@ class Application_Model_DbTable_Revision extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
                        ->setIntegrityCheck(false)
-                       ->from(array('r' => $this->_name), array('r.id', 'r.comment', 'r.filename', 'r.db_before_revision'))
+                       ->from(array('r' => $this->_name), array('r.id', 'r.comment', 'r.filename', 'r.db_before_revision', 'r.type'))
                        ->where('r.instance_id = ?', $instance_id)
                        ->order('r.id DESC');
         return $this->fetchAll($select);
