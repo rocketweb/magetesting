@@ -10,89 +10,152 @@ $this->headScript()->appendFile($this->baseUrl('public/js/jquery_uploader/js/jqu
 $this->headScript()->appendFile($this->baseUrl('public/js/jquery_uploader/js/jquery.fileupload-ui.js'));
 $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/css/jquery.fileupload-ui.css'));
 ?>
-<?php if(!isset($this->add_form)): ?>
+
 <div class="row">
     <div class="span12">
-        <form class="form-horizontal" method="post" id="extension-form" enctype="multipart/form-data">
-            <fieldset>
-                <legend>Edit Extension</legend>
-<?php endif; ?>
-                <?php echo $this->form->directory_hash; ?>
-                <div class="control-group <?php echo $this->form->logo->hasErrors() ? 'error' : ''; ?>">
-                    <label for="logo" class="control-label required">Logo</label>
-                    <div class="controls logo-container">
-                    <?php if($this->logo): ?>
-                        <?php if(isset($this->old_logo) AND $this->old_logo): ?>
-                            <input type="hidden" name="old_logo" value="<?php echo $this->old_logo; ?>" />
-                            <img src="<?php echo $this->ImagePath($this->old_logo, 'extension/logo', false); ?>" />
-                        <?php else: ?>
-                            <img src="<?php echo $this->baseUrl('public/assets/img/temp/'.$this->directoryHash.'/'.$this->logo); ?>" />
-                        <?php endif; ?>
-                        <input type="hidden" name="logo" value="<?php echo $this->logo; ?>">
-                    <?php endif; ?>
-                    <?php if($this->form->logo->hasErrors()): ?>
-                        <ul class="errors">
-                            <li>You have to upload image first.</li>
-                        </ul>
-                    <?php endif; ?>
+        <h1><?php echo $this->form->getLegend(); ?></h1>
+        <div class="form-box">
+            <div class="box">
+                <form method="post" id="extension-form" enctype="multipart/form-data">
+                    <div class="tab-stripe"></div>
+                    <fieldset class="margins">
+                        <legend>Extension details</legend>
+                        <div class="row">
+                            <div class="span8">
+                                <?php echo $this->form->directory_hash; ?>
+                                <div class="control-group <?php echo $this->form->logo->hasErrors() ? 'error' : ''; ?>">
+                                    <label for="logo" class="control-label required">Logo</label>
+                                    <div class="controls logo-container">
+                                        <?php if ($this->logo): ?>
+                                            <?php if (isset($this->old_logo) AND $this->old_logo): ?>
+                                                <input type="hidden" name="old_logo" value="<?php echo $this->old_logo; ?>" />
+                                                <img src="<?php echo $this->ImagePath($this->old_logo, 'extension/logo', false); ?>" />
+                                            <?php else: ?>
+                                                <img src="<?php echo $this->baseUrl('public/assets/img/temp/' . $this->directoryHash . '/' . $this->logo); ?>" />
+                                            <?php endif; ?>
+                                            <input type="hidden" name="logo" value="<?php echo $this->logo; ?>">
+                                        <?php endif; ?>
+                                        <?php if ($this->form->logo->hasErrors()): ?>
+                                            <ul class="errors">
+                                                <li>You have to upload image first.</li>
+                                            </ul>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->title; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->price; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span8">
+                                <?php echo $this->form->description; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->category_id; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->author; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->extension_file; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->extension_encoded_file; ?>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="tab-stripe"></div>
+                    <fieldset class="margins">
+                        <legend>Versioning / Specific info</legend>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->version; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->edition; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->from_version; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->to_version; ?>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <div class="tab-stripe"></div>
+                <fieldset class="margins">
+                    <legend>Images</legend>
+                    <div class="row">
+                        <div class="span8">
+                            <div class="control-group <?php echo ($this->form->screenshots->hasErrors() ? 'error' : ''); ?>">
+                                <label class="control-label required">Screenshots</label>
+                                <div class="controls screenshots">
+                                    <?php if ($this->form->screenshots->hasErrors()): ?>
+                                        <ul class="errors">
+                                            <li>You have to upload at least one image.</li>
+                                        </ul>
+                                    <?php endif; ?>
+                                    <?php foreach ($this->screenshots as $key => $screenshot): ?>
+                                        <?php if (isset($this->screenshots_ids[$key]) AND $this->screenshots_ids[$key]): ?>
+                                            <input form="extension-form" type="hidden" name="screenshots_ids[]" value="<?php echo $this->screenshots_ids[$key]; ?>">
+                                            <img src="<?php echo $this->ImagePath($screenshot, 'extension/screenshots', false); ?>" />
+                                        <?php else: ?>
+                                            <img src="<?php echo $this->baseUrl('public/assets/img/temp/' . $this->directoryHash . '/' . $screenshot); ?>" />
+                                        <?php endif; ?>
+                                        <input form="extension-form" type="hidden" name="screenshots[]" value="<?php echo $screenshot; ?>">
+                                    <?php endforeach; ?>
+                                </div>
+                            </div><!-- /control-group -->
+                        </div>
                     </div>
+
+                    <div class="row">
+                        <div class="span11">
+                            <!-- The file upload form used as target for the file upload widget -->
+                            <form id="fileupload" action="<?php echo $this->baseUrl('extension/upload'); ?>" method="POST" enctype="multipart/form-data">
+                                <!-- Redirect browsers with JavaScript disabled to the origin page -->
+                                <noscript><input type="hidden" name="redirect" value="http://blueimp.github.com/jQuery-File-Upload/"></noscript>
+                                <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+                                <div class="row fileupload-buttonbar">
+                                    <div class="span7">
+                                        <!-- The fileinput-button span is used to style the file input field as button -->
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="icon-plus icon-white"></i>
+                                            <span>Add files...</span>
+                                            <input type="file" name="files[]" multiple>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- The loading indicator is shown during file processing -->
+                                <div class="fileupload-loading"></div>
+                                <br>
+                                <!-- The table listing the files available for upload/download -->
+                                <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+                            </form>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-actions">
+                    <?php echo $this->form->submit; ?>
+                    <a href="<?php echo $this->url(array('cancel' => 1), 'default', false); ?>" class="btn btn-danger">Cancel</a>
                 </div>
-                <?php echo $this->form->title; ?>
-                <?php echo $this->form->description; ?>
-                <?php echo $this->form->category_id; ?>
-                <?php echo $this->form->author; ?>
-                <?php echo $this->form->price; ?>
-                <?php echo $this->form->extension_file; ?>
-                <?php echo $this->form->extension_encoded_file; ?>
-                <legend>Versioning / Specific info</legend>
-                <?php echo $this->form->version; ?>
-                <?php echo $this->form->edition; ?>
-                <?php echo $this->form->from_version; ?>
-                <?php echo $this->form->to_version; ?>
-                <legend>Images</legend>
-                <div class="control-group <?php echo ($this->form->screenshots->hasErrors() ? 'error' : ''); ?>">
-                    <label class="control-label required">Screenshots</label>
-                    <div class="controls screenshots">
-                        <?php if($this->form->screenshots->hasErrors()): ?>
-                        <ul class="errors">
-                            <li>You have to upload at least one image.</li>
-                        </ul>
-                        <?php endif; ?>
-                        <?php foreach($this->screenshots as $key => $screenshot): ?>
-                            <?php if(isset($this->screenshots_ids[$key]) AND $this->screenshots_ids[$key]): ?>
-                               <input type="hidden" name="screenshots_ids[]" value="<?php echo $this->screenshots_ids[$key]; ?>">
-                               <img src="<?php echo $this->ImagePath($screenshot, 'extension/screenshots', false); ?>" />
-                            <?php else: ?>
-                                <img src="<?php echo $this->baseUrl('public/assets/img/temp/'.$this->directoryHash.'/'.$screenshot); ?>" />
-                            <?php endif; ?>
-                            <input type="hidden" name="screenshots[]" value="<?php echo $screenshot; ?>">
-                        <?php endforeach; ?>
-                    </div>
-                </div><!-- /control-group -->
-            </fieldset>
-        </form>
-        <fieldset>
-<!-- The file upload form used as target for the file upload widget -->
-<form id="fileupload" action="<?php echo $this->baseUrl('extension/upload'); ?>" method="POST" enctype="multipart/form-data">
-    <!-- Redirect browsers with JavaScript disabled to the origin page -->
-    <noscript><input type="hidden" name="redirect" value="http://blueimp.github.com/jQuery-File-Upload/"></noscript>
-    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-    <div class="row fileupload-buttonbar">
-        <div class="span7">
-            <!-- The fileinput-button span is used to style the file input field as button -->
-            <span class="btn btn-success fileinput-button">
-                <i class="icon-plus icon-white"></i>
-                <span>Add files...</span>
-                <input type="file" name="files[]" multiple>
-            </span>
-        </div>
-    </div>
-    <!-- The loading indicator is shown during file processing -->
-    <div class="fileupload-loading"></div>
-    <br>
-    <!-- The table listing the files available for upload/download -->
-    <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
-</form>
+            </div><!-- /box -->
+        </div><!-- /form-box -->
+    </div><!-- /span12 -->
+</div><!-- /row -->
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
@@ -163,19 +226,11 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
         </tr>
     {% } %}
 </script>
-        </fieldset>
-            <fieldset>
-                <div class="form-actions" style="padding-left: 160px;">
-                    <?php echo $this->form->submit; ?>
-                    <a href="<?php echo $this->url(array('cancel' => 1), 'default', false); ?>" class="btn btn-danger">Cancel</a>
-                </div>
-            </fieldset>
-    </div>
-</div>
+
 <script id="template-image-row" type="text/x-tmpl">
 <div class="image-row">
     <div class="control-group custom">
-        <input type="hidden" name="screenshots_ids[]" value="" />
+        <input type="hidden" name="screenshots_ids[]" value="" form="extension-form" />
         <label for="content_extra" class="control-label"><a href="#" class="btn btn-danger"><i class="icon-remove icon-white"></i></a> Image File</label>
         <div class="controls">
             <input type="hidden" name="files[]" value="{%=o.image_name%}">
