@@ -30,15 +30,12 @@ implements Application_Model_Task_Interface {
         $this->_updateStatus('installing');
               
         $this->_createDbBackup();
-        $this->_commit();
-        $hash = $this->_revisionHash;
-        
-        $this->_insertRevisionInfo();
-        
+        if ($this->_commit()){
+            $hash = $this->_revisionHash;
+            $this->_insertRevisionInfo();
+            $this->_updateRevisionCount('+1');
+        }
         $this->_updateStatus('ready');
-        
-        $this->_updateRevisionCount('+1');
-        
     }
 
     protected function _commit() {
@@ -48,9 +45,9 @@ implements Application_Model_Task_Interface {
         $startCwd = getcwd();
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         if ($params['commit_type']=='manual'){
-            $this->_commitManual(); 
+            return $this->_commitManual(); 
         } else {
-            $this->_commitAutomatic();
+            return $this->_commitAutomatic();
         }
        
         chdir($startCwd);
@@ -86,6 +83,7 @@ implements Application_Model_Task_Interface {
         
         //insert revision entry
         $this->_revisionHash  = $matches[2];
+        return true;
     }
     
     protected function _commitAutomatic(){
@@ -120,7 +118,7 @@ implements Application_Model_Task_Interface {
         
         //insert revision entry
         $this->_revisionHash  = $matches[2];
-        
+        return true;
     }
 
     /* Not used yet */
