@@ -10,5 +10,12 @@
  */
 class Application_Form_ExtensionAdd extends Application_Form_ExtensionEdit
 {
-    /* extend init if you want to change rules from edit form */
+    /**
+     * @author Marcin Kazimierczak <marcin@rocketweb.com>
+     */
+    public function init() {
+        parent::init();
+        
+        $this->setLegend('Add Extension');
+    }
 }

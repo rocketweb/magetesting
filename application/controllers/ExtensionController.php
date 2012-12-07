@@ -7,6 +7,7 @@ class ExtensionController extends Integration_Controller_Action {
     public function init() {
         $this->_tempDir = rtrim(APPLICATION_PATH, '/').'/../public/assets/img/temp/';
         /* Initialize action controller here */
+        $this->_helper->noSslSwitch();
     }
 
     public function indexAction() {
@@ -25,11 +26,17 @@ class ExtensionController extends Integration_Controller_Action {
 
     public function addAction()
     {
-        $this->view->add_form = true;
         /* add and edit actions should have the same logic */
-        $this->editAction();
+        $this->editAction('Add');
     }
-    public function editAction()
+    
+    /**
+     * Render extension form
+     * 
+     * @param string $action (Add or Edit)
+     * @return mixed
+     */
+    public function editAction($action = 'Edit')
     {
         $id = (int) $this->_getParam('id', 0);
 
@@ -55,7 +62,8 @@ class ExtensionController extends Integration_Controller_Action {
             'category_id'    => $this->_getParam('category_id', ''),
             'author'         => $this->_getParam('author', '')
         );
-        $form = new Application_Form_ExtensionAdd();
+        $name = 'Application_Form_Extension'.$action;
+        $form = new $name;
         $success_message = 'Extension has been added properly.';
 
         $extension = new Application_Model_Extension();
@@ -84,23 +92,23 @@ class ExtensionController extends Integration_Controller_Action {
                     $screenshots[] = $row->getImage();
                 }
                 $extension_entity_data = array(
-                    'title' => $extension->getName(),
-                    'description' => $extension->getDescription(),
-                    'version' => $extension->getVersion(),
-                    'edition' => $extension->getEdition(),
+                    'title'        => $extension->getName(),
+                    'description'  => $extension->getDescription(),
+                    'version'      => $extension->getVersion(),
+                    'edition'      => $extension->getEdition(),
                     'from_version' => $extension->getFromVersion(),
-                    'to_version' => $extension->getToVersion(),
-                    'price' => $extension->getPrice(),
-                    'logo' => $extension->getLogo(),
-                    'screenshots' => $screenshots,
-                    'author' => $extension->getAuthor(),
-                    'category_id' => $extension->getCategoryId()
+                    'to_version'   => $extension->getToVersion(),
+                    'price'        => $extension->getPrice(),
+                    'logo'         => $extension->getLogo(),
+                    'screenshots'  => $screenshots,
+                    'author'       => $extension->getAuthor(),
+                    'category_id'  => $extension->getCategoryId()
                 );
                 $success_message = 'Extension has benn changed properly.';
             } else {
                 $noExtension = true;
             }
-        } elseif(!isset($this->view->add_form)) {
+        } elseif(!$action == 'Add') {
             $noExtension = true;
         }
 

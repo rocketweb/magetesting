@@ -13,6 +13,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
 
     public function init()
     {
+        $this->setLegend('Edit Extension');
+
         // Add title element
         $this->addElement('text', 'title', array(
                 'label'      => 'Title',
@@ -21,7 +23,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 45))
                 ),
-                'allowEmpty' => false
+                'allowEmpty' => false,
+                'class'      => 'span4'
         ));
 
         // Add description element
@@ -32,7 +35,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 500))
                 ),
-                'allowEmpty' => false
+                'allowEmpty' => false,
+                'class'      => 'span4'
         ));
 
         // Add category element
@@ -40,7 +44,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'label'      => 'Extension Category',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
-                'allowEmpty' => false
+                'allowEmpty' => false,
+                'class'      => 'span4'
         ));
         $this->category_id->addMultiOptions(array('' => 'Select Category:'));
 
@@ -52,7 +57,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(1, 100))
                 ),
-                'allowEmpty' => false
+                'allowEmpty' => false,
+                'class'      => 'span4'
         ));
 
         // Add description element
@@ -77,7 +83,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                         array('validator' => 'StringLength', 'options' => array(1, 10)),
                         array('validator' => 'Float', 'options' => array('locale' => 'en')),
                 ),
-                'allowEmpty' => false
+                'allowEmpty' => false,
+                'class'      => 'span4'
         ));
 
         // Add extension file element
@@ -87,7 +94,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'allowEmpty' => true,
                 'validators' => array(
                         array('Extension', false, 'gz')
-                )
+                ),
+                'class'      => 'span4'
         ));
         // Add extension encoded file element
         $this->addElement('file', 'extension_encoded_file', array(
@@ -96,7 +104,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'allowEmpty' => true,
                 'validators' => array(
                         array('Extension', false, 'gz')
-                )
+                ),
+                'class'      => 'span4'
         ));
 
         // Add logo element
@@ -115,25 +124,29 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'label'      => 'Extension Version',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'class'      => 'span4'
         ));
         $this->addElement('text', 'edition', array(
                 'label'      => 'Edition',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'class'      => 'span4'
         ));
         $this->addElement('text', 'from_version', array(
                 'label'      => 'Supported from',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'class'      => 'span4'
         ));
         $this->addElement('text', 'to_version', array(
                 'label'      => 'Supported to',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'class'      => 'span4'
         ));
 
         // Add screenshots element
@@ -141,7 +154,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'label'      => 'Screenshot',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
-                'allowEmpty' => true
+                'allowEmpty' => true,
+                'form'       => 'extension-form',
         ));
 
         // Add the submit button
@@ -151,10 +165,10 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'label'    => 'Save changes',
         ));
 
-        $this->title->setAttrib('class', 'span9');
-        $this->description->setAttrib('class', 'span9');
+        $this->title->setAttrib('class', 'span4');
+        $this->description->setAttrib('class', 'span8');
         $this->description->setAttrib('rows', '5');
-        $this->price->setAttrib('class', 'span2');
+        $this->price->setAttrib('class', 'span4');
 
         // setters for class have to be before setdecorators method call which adds class and not overwrite them
         $this->_setDecorators();

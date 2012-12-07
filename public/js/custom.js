@@ -165,8 +165,8 @@ $(document).ready(function () {
                             );
                         } else {
                             $screenshots.append(
-                                $('<input type="hidden" name="screenshots_ids[]" value="" />')
-                                .add($('<input type="hidden" name="screenshots[]" value="'+file.name+'" />'))
+                                $('<input type="hidden" name="screenshots_ids[]" value="" form="extension-form" />')
+                                .add($('<input type="hidden" name="screenshots[]" value="'+file.name+'"  form="extension-form" />'))
                                 .add($('<img src="'+file.url+'" />'))
                             );
                         }
