@@ -45,7 +45,7 @@ class Application_Model_Task {
         
         /* only remove database row when no error was registered */
         if ($queueElement->getStatus()=='ready'){
-            $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $this->_queueObject->getId());
+            self::$db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
             
             self::$db->delete('queue', array('id=' . $queueElement->getId()));
         }
