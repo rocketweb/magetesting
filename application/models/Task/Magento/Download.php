@@ -129,7 +129,7 @@ implements Application_Model_Task_Interface {
 
         /* update revision count */
         $this->db->update('instance', array('revision_count' => '1'), 'id=' . $this->_instanceObject->getId());
-        $this->_instanceObject->setRevisionCount($nextRevision);
+        $this->_instanceObject->setRevisionCount(1);
     }
 
         /* move to transport class */

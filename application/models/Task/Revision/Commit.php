@@ -69,8 +69,6 @@ implements Application_Model_Task_Interface {
 
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
         
-        var_dump($output);
-        
         if (!count($output)){
             $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
             return false;
@@ -100,7 +98,7 @@ implements Application_Model_Task_Interface {
 
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
                 
-        if (!count($output)){
+        if (count($output) < 3 && trim($output[2])=='nothing to commit (working directory clean)'){
             $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
             return false;
         }
