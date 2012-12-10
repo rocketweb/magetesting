@@ -30,7 +30,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
 
         $editionModel = new Application_Model_Edition();
         $this->addElement('select', 'edition', array(
-                'label'      => 'Used Edition',
+                'label'      => 'Edition',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
@@ -45,7 +45,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
 
         $versionModel = new Application_Model_Version();
         $this->addElement('select', 'version', array(
-                'label'      => 'Used Version',
+                'label'      => 'Version',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
