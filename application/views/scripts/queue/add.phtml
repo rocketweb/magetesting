@@ -1,46 +1,73 @@
-
 <div class="row">
-    <div class="span2">
-        <strong>Choose</strong>
+    <h1>Add new store</h1>
+    
+    <?php /*<div class="hidden-desktop">
+    	<div class="span6">
+    	    <div class="form-box">
+    	        <div class="box">
+    	            <div class="tab-stripe"></div>
+    	            <fieldset class="margins">
+    	            	<legend>Test</legend>
+    	            </fieldset>
+    	        </div>
+    	    </div>
+    	</div>
+    	<div class="span6">
+    	    <div class="form-box">
+    	        <div class="box">
+    	            <div class="tab-stripe"></div>
+    	            <fieldset class="margins">
+    	            	<legend>Test</legend>
+    	            </fieldset>
+    	        </div>
+    	    </div>
+    	</div>
+    </div>*/
+    ?>
+    
+    <div class="visible-desktop">
+    	<div class="span12">
+    	    <div class="form-box">
+    	        <div class="box">
+    	            <div class="tab-stripe"></div>
+    	            <fieldset class="margins">
+    	                <legend>&nbsp;</legend>
+    	                <div class="row">
+    	                    <div class="span3">
+    	                        <strong>Choose</strong>
+    	                    </div>
+    	                    <div class="span4">
+    	                        <a href="<?php echo $this->url(array('controller' => 'queue', 'action' => 'add-clean')) ?>"
+    	                            class="btn btn-blue btn-large btn-block"><i class="icon-plus icon-white"></i>&nbsp;Clean Magento</a>
+    	                    </div>
+    	                    <?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
+    	                        <div class="span4">
+    	                            <a href="<?php echo $this->url(array('controller' => 'queue', 'action' => 'add-custom')) ?>"
+    	                               class="btn btn-red btn-large btn-block"><i class="icon-plus icon-white"></i>&nbsp;Import store</a>
+    	                        </div>
+    	                    <?php endif; ?>
+    	                </div>
+    	               
+    	                <hr />
+    	                <div class="row">
+    	                    <div class="span3"><strong>Difficulty</strong></div>
+    	                    <div class="span4">Easy</div>
+    	                    <?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
+    	                    <div class="span4">Medium</div>
+    	                    <?php endif; ?>
+    	                </div>
+    	                
+    	                <hr />
+    	                <div class="row">
+    	                	<div class="span3"><strong>Who is it for?</strong></div>
+    	                	<div class="span4">Anyone who wants to test extensions on any magento version, test themes or custom code.</div>
+    	                	<?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
+    	                    <div class="span4">Anyone who already own Magento store and wants to test how new extension will go along  with their current codebase.</div>
+    	                    <?php endif; ?>
+    	                </div>
+    	            </fieldset>
+    	        </div>
+    	    </div>
+    	</div>
     </div>
-    <div class="span5">
-        <a
-            href="<?php echo $this->url(array('controller' => 'queue', 'action' => 'add-clean')) ?>"
-            class="btn btn-success btn-large"><i class="icon-plus icon-white"></i>&nbsp;Clean Magento</a>
-    </div>
-    <?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
-        <div class="span5">
-            <a
-                href="<?php echo $this->url(array('controller' => 'queue', 'action' => 'add-custom')) ?>"
-                class="btn btn-warning btn-large"><i class="icon-plus icon-white"></i>&nbsp;Import store</a>
-        </div>
-    <?php endif; ?>
-</div>
-<hr />
-<div class="row">
-    <div class="span2">
-        <strong>Difficulty</strong>
-    </div>
-    <div class="span5">
-        Easy
-    </div>
-    <?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
-        <div class="span5">
-            Medium
-        </div>
-    <?php endif; ?>
-</div>
-<hr />
-<div class="row">
-    <div class="span2">
-        <strong>Who is it for?</strong>
-    </div>
-    <div class="span5">
-        Anyone who wants to test extensions on any magento version, test themes or custom code. 
-    </div>
-    <?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomInstance()==1): ?>
-        <div class="span5">
-            Anyone who already own Magento store and wants to test how new extension will go along  with their current codebase.
-        </div>
-    <?php endif; ?>
 </div>
