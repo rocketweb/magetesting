@@ -258,7 +258,6 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $output = array();
         $command = 'sudo mv '.$mageroot.'/* '.$mageroot.'/.??* .';
         exec($command,$output);
-        var_dump($output);
         unset($output);
         
         return true;
