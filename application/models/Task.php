@@ -71,10 +71,45 @@ class Application_Model_Task {
         $this->_versionObject = $versionModel;
         
         $this->_instanceFolder = self::$config->magento->systemHomeFolder . '/' . self::$config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';
-        
-        //setup log file
-        $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/logs/' . $this->_userObject->getLogin() . '_' . $this->_instanceObject->getDomain() . '.log');
-        self::$logger = new Zend_Log($writer);
+
+        //setup logggers
+        $logger = new Zend_Log();
+        $logger->setEventItem('store_id', $this->_instanceObject->getId());
+
+        // setup file writer
+        $writerFile = new Zend_Log_Writer_Stream(
+            APPLICATION_PATH . '/../data/logs/' . $this->_userObject->getLogin() . '_' . $this->_instanceObject->getDomain() . '.log'
+        );
+        $writerFile->addFilter(Zend_Log::DEBUG);
+
+        $logger->addWriter($writerFile);
+
+        // setup mail writer
+        $mail = new Zend_Mail();
+        $mail->setFrom(self::$config->admin->errorEmail->from->email)
+             ->addTo(self::$config->admin->errorEmail->to->email);
+
+        $writerMail = new Zend_Log_Writer_Mail($mail);
+        $writerMail->setSubjectPrependText(self::$config->admin->errorEmail->subject);
+        $writerMail->addFilter(Zend_Log::CRIT);
+
+        $logger->addWriter($writerMail);
+
+        // setup db writer
+        $columnMapping = array(
+            'lvl'  => 'priority',
+            'type' => 'priorityName',
+            'msg'  => 'message',
+            'time' => 'timestamp',
+            'store_id' => 'store_id'
+        );
+
+        $writerDb = new Zend_Log_Writer_Db(self::$db, 'store_log', $columnMapping);
+        $writerDb->addFilter(Zend_Log::ERR);
+
+        $logger->addWriter($writerDb);
+
+        self::$logger = $logger;
     }
       
     /**
