@@ -11,9 +11,7 @@ class Application_Model_Task {
     protected $_userObject = '';
     protected $_versionObject = '';
     protected $_instanceFolder = '';
-    
-    
-    
+       
     /* Needs to be private so tasks could use it */
     private static $config;
     private static $db;
@@ -139,29 +137,36 @@ class Application_Model_Task {
             'installing-files',
             'installing-data'
 
-            /*
-             * Use it later to create that array
-$sql = "SHOW COLUMNS FROM `table` LIKE 'column'";
-$result = $db->query($sql);
-$row = $result->fetchRow();
-$type = $row['Type'];
-preg_match('/enum\((.*)\)$/', $type, $matches);
-$vals = explode(',', $matches[1]);
-             */
         );
-        
+               
         if(!in_array($status,$statuses)){
             //TODO: maybe throw exception?
             var_dump('status "'.$status.'" not supported');
             return false;
         }
         try {
-            $this->_queueObject->setStatus($status);
-        $this->_instanceObject->setStatus($status);
-        
-        self::$db->update('queue', array('status' => $status), 'id=' . $this->_queueObject->getId());
-        self::$db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
-        
+            
+            /* workaround for status changes */
+            $queueStatuses = array(
+                'pending' => 'pending',
+                'installing' => 'processing',
+                'ready' => 'ready',
+                'closed' => 'pending',
+                'error' => 'processing',
+                'installing-extension' => 'processing',
+                'installing-magento' => 'processing',
+                'installing-samples' => 'processing',
+                'installing-user' => 'processing',
+                'installing-files' => 'processing',
+                'installing-data'=> 'processing'
+            );
+
+            $this->_queueObject->setStatus($queueStatuses[$status]);
+            $this->_instanceObject->setStatus($status);
+
+            self::$db->update('queue', array('status' => $queueStatuses[$status]), 'id=' . $this->_queueObject->getId());
+            self::$db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
+
         } catch (Exception $e){
             var_dump($e->getMessage());
         }
