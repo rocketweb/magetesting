@@ -48,7 +48,6 @@ implements Application_Model_Task_Interface {
         }
         $this->_updateStatus('installing-data');
 
-        //connect through wget      
         if (!$transportModel->checkDatabaseDump()) {
             $message = $transportModel->getError();
             $this->_updateStatus('error', $message);
@@ -56,7 +55,7 @@ implements Application_Model_Task_Interface {
         }
 
         $this->_updateStatus('installing-files');
-        if (!$transportModel->downloadInstanceFiles()) {
+        if (!$transportModel->downloadFilesystem()) {
             $message = 'Couldn\'t find app/Mage.php file data, will not install queue element';
             $this->_updateStatus('error', $message);
             return;
