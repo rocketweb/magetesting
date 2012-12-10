@@ -70,6 +70,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                             </div>
                         </div>
                     </fieldset>
+                    <?php echo $this->form->directory_hash; ?>
                 </form>
                 
                 <div class="tab-stripe tab-stripe-outside"></div>
@@ -77,7 +78,6 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                     <legend>Images</legend>
                     <div class="row">
                         <div class="span8">
-                            <?php echo $this->form->directory_hash; ?>
                             <div class="control-group <?php echo $this->form->logo->hasErrors() ? 'error' : ''; ?>">
                                 <label for="logo" class="control-label required">Logo</label>
                                 <div class="controls logo-container">
