@@ -74,7 +74,7 @@ class Application_Model_Transport {
         return true;
     }
    
-    public function setConnection(Application_Model_Instance $instance){
+    public function setConnection(Application_Model_Instance &$instance){
         
         if ($this->setProtocol($instance->getCustomProtocol())){
             if ($this->setHost($instance->getCustomHost())){
@@ -99,6 +99,20 @@ class Application_Model_Transport {
             $this->_errorMessage = 'Protocol not supported';
             return false;
         }
+    }
+    
+    /* return transport model for specified protocol */
+    public static function factory($protocol){
+        
+        $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
+        $classSuffix = $filter->filter($protocol);
+        $className = 'Application_Model_Transport_' . $classSuffix;
+        
+        if (class_exists($className)){
+            $customTransportModel = new $className();
+            return $customTransportModel;
+        }
+        return false;
     }
        
 }

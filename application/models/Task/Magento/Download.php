@@ -34,12 +34,13 @@ implements Application_Model_Task_Interface {
         chdir($this->_domain);
 
         /* Instantiate Transport Model */
-        $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
-        $classSuffix = $filter->filter($this->_instanceObject->getCustomProtocol());
-        $className = 'Application_Model_Transport_' . $classSuffix;
-        $transportModel = new $className();
-        $transportModel->setup($this->_instanceObject);
-
+        $transportModel = new Application_Model_Transport();
+        $transportModel = $transportModel->factory($this->_instanceObject);
+        if (!$transportModel){
+            $this->_updateStatus('error', 'No such protocol class');
+            return;
+        }
+        
         //do a sample connection to wget to check if protocol credentials are ok
         if (!$transportModel->checkProtocolCredentials()) {
             $message = 'Credentials are incorrect';
