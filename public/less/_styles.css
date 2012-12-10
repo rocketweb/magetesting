@@ -1,13 +1,15 @@
 .icon-blue{background-image:url("../img/glyphicons-halflings-blue.png");}
 .icon-red{background-image:url("../img/glyphicons-halflings-red.png");}
 html,body{height:100%;font-family:Helvetica,Arial,sans-serif;}
-.logo{margin:20px 0;}
+.logo{margin:20px 0 0 0;}
 .red-bar{height:5px;background:#f64135;}
 .navbar-global{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;border-bottom:1px solid #e5e5e5;}.navbar-global .nav>li>a{padding:4px 15px;background:#f64135;color:#fff;text-shadow:none;border-right:1px solid #fff;outline:0;}
 .navbar-global .nav>.active>a{background-color:#f64135;box-shadow:0 3px 8px rgba(0, 0, 0, 0.5) inset;color:#fff;text-decoration:none;}
 .navbar-global .nav>.active>a:hover,.navbar-global .nav>.active>a:focus,.navbar-global .nav>li>a:hover,.navbar-global .nav>li>a:focus{background-color:#34aae5;box-shadow:0 3px 8px rgba(0, 0, 0, 0.5) inset;color:#fff;text-decoration:none;outline:0;}
 .navbar-global .nav>.first>a,.navbar-global .nav>.first>a:hover,.navbar-global .nav>.first>a:focus{-webkit-border-bottom-left-radius:6px;-moz-border-radius-bottomleft:6px;border-bottom-left-radius:6px;}
 .navbar-global .nav>.last>a,.navbar-global .nav>.last>a:hover,.navbar-global .nav>.last>a:focus{-webkit-border-bottom-right-radius:6px;-moz-border-radius-bottomright:6px;border-bottom-right-radius:6px;}
+.navbar-global .nav.nav-subpages{position:relative;bottom:23px;}.navbar-global .nav.nav-subpages>li>a{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:300;font-size:18px;text-transform:uppercase;padding:0;margin-left:20px;background:none;color:#444;text-shadow:none;border:0;outline:0;}.navbar-global .nav.nav-subpages>li>a:hover,.navbar-global .nav.nav-subpages>li>a:focus{background:none;box-shadow:none;color:#444;border-bottom:1px dotted #666666;outline:0;}
+.navbar-global .nav.nav-subpages>.active>a,.navbar-global .nav.nav-subpages>.active>a:hover,.navbar-global .nav.nav-subpages>.active>a:focus{background:none;box-shadow:none;color:#444;border-bottom:1px dotted #666666;outline:0;}
 .navbar-global .dropdown.dropdown-mainmenu .caret-white{border-top:4px solid #ffffff;}
 .navbar-global .pull-right>li>.dropdown-menu{background:#34aae5;margin-right:94px;margin-top:0;-webkit-border-top-left-radius:0;-webkit-border-top-right-radius:0;-moz-border-radius-topleft:0;-moz-border-radius-topright:0;border-top-left-radius:0;border-top-right-radius:0;border:0;}.navbar-global .pull-right>li>.dropdown-menu a{color:white;}
 .navbar-global .nav>li>.dropdown-menu:after{border-bottom:0;}

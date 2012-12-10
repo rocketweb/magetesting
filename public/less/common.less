@@ -4,7 +4,7 @@ html, body {
 }
 
 .logo {
-    margin: 20px 0;
+    margin: 20px 0 0 0;
 }
 
 .red-bar {
@@ -57,6 +57,50 @@ html, body {
         -webkit-border-bottom-right-radius: 6px;
         -moz-border-radius-bottomright: 6px;
         border-bottom-right-radius: 6px;
+    }
+    
+    .nav {
+    	&.nav-subpages {
+    		position: relative;
+            bottom: 23px;
+            
+            & > li {
+                & > a {
+                	font-family: @TypeKitCondensed;
+                    font-style: normal;
+                    font-weight: 300;
+                    font-size: 18px;
+                    text-transform: uppercase;
+                    
+                    padding: 0;
+                    margin-left: 20px;
+                    background: none;
+                    color: #444;
+                    text-shadow: none;
+                    border: 0;
+                    outline: 0;
+                    
+                    &:hover, &:focus {
+                        background: none;
+                        box-shadow: none;
+                        color: #444;
+                        border-bottom: 1px dotted @DarkGrey;
+                        outline: 0;
+                    }
+                }
+            }
+            
+            & > .active {
+                & > a, & > a:hover, & > a:focus {
+                	background: none;
+                    box-shadow: none;
+                    color: #444;
+                    border-bottom: 1px dotted @DarkGrey;
+                    outline: 0;
+                }
+            }
+            
+        }
     }
     
     .dropdown {
