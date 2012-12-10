@@ -81,11 +81,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     public function downloadFilesystem(){
         
         if ($this->_instanceObject->getCustomFile()!=''){
-            $this->_downloadAndUnpack();
+            return $this->_downloadAndUnpack();
         } else {
-            $this->_downloadInstanceFiles();
+            return $this->_downloadInstanceFiles();
         }
-        
+
     }
     
     /* todo: make this protected */
