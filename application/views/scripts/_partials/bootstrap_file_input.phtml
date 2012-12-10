@@ -7,7 +7,7 @@ if ($this->element->hasErrors()) {
 <div class="control-group <?php echo $class; ?>">
     <label for="<?php echo $this->element->getFullyQualifiedName(); ?>" class="control-label required"><?php echo $this->element->getLabel(); ?></label>
     <div class="controls">
-        <input type="file" id="<?php echo $this->element->getFullyQualifiedName(); ?>" name="<?php echo $this->element->getFullyQualifiedName(); ?>" />
+        <input class="file-upload" type="file" id="<?php echo $this->element->getFullyQualifiedName(); ?>" name="<?php echo $this->element->getFullyQualifiedName(); ?>" />
         <?php if($class): ?>
             <?php echo $this->formErrors($this->element->getMessages()); ?>
         <?php endif; ?>

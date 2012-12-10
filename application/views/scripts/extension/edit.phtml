@@ -21,30 +21,6 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                     <fieldset class="margins">
                         <legend>Extension details</legend>
                         <div class="row">
-                            <div class="span8">
-                                <?php echo $this->form->directory_hash; ?>
-                                <div class="control-group <?php echo $this->form->logo->hasErrors() ? 'error' : ''; ?>">
-                                    <label for="logo" class="control-label required">Logo</label>
-                                    <div class="controls logo-container">
-                                        <?php if ($this->logo): ?>
-                                            <?php if (isset($this->old_logo) AND $this->old_logo): ?>
-                                                <input type="hidden" name="old_logo" value="<?php echo $this->old_logo; ?>" />
-                                                <img src="<?php echo $this->ImagePath($this->old_logo, 'extension/logo', false); ?>" />
-                                            <?php else: ?>
-                                                <img src="<?php echo $this->baseUrl('public/assets/img/temp/' . $this->directoryHash . '/' . $this->logo); ?>" />
-                                            <?php endif; ?>
-                                            <input type="hidden" name="logo" value="<?php echo $this->logo; ?>">
-                                        <?php endif; ?>
-                                        <?php if ($this->form->logo->hasErrors()): ?>
-                                            <ul class="errors">
-                                                <li>You have to upload image first.</li>
-                                            </ul>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="span4">
                                 <?php echo $this->form->title; ?>
                             </div>
@@ -95,9 +71,34 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                         </div>
                     </fieldset>
                 </form>
-                <div class="tab-stripe"></div>
-                <fieldset class="margins">
+                
+                <div class="tab-stripe tab-stripe-outside"></div>
+                <fieldset class="margins force-fieldset-style">
                     <legend>Images</legend>
+                    <div class="row">
+                        <div class="span8">
+                            <?php echo $this->form->directory_hash; ?>
+                            <div class="control-group <?php echo $this->form->logo->hasErrors() ? 'error' : ''; ?>">
+                                <label for="logo" class="control-label required">Logo</label>
+                                <div class="controls logo-container">
+                                    <?php if ($this->logo): ?>
+                                        <?php if (isset($this->old_logo) AND $this->old_logo): ?>
+                                            <input type="hidden" name="old_logo" value="<?php echo $this->old_logo; ?>" />
+                                            <img src="<?php echo $this->ImagePath($this->old_logo, 'extension/logo', false); ?>" />
+                                        <?php else: ?>
+                                            <img src="<?php echo $this->baseUrl('public/assets/img/temp/' . $this->directoryHash . '/' . $this->logo); ?>" />
+                                        <?php endif; ?>
+                                        <input type="hidden" name="logo" value="<?php echo $this->logo; ?>">
+                                    <?php endif; ?>
+                                    <?php if ($this->form->logo->hasErrors()): ?>
+                                        <ul class="errors">
+                                            <li>You have to upload image first.</li>
+                                        </ul>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="span8">
                             <div class="control-group <?php echo ($this->form->screenshots->hasErrors() ? 'error' : ''); ?>">
@@ -150,7 +151,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                 </fieldset>
                 <div class="form-actions">
                     <?php echo $this->form->submit; ?>
-                    <a href="<?php echo $this->url(array('cancel' => 1), 'default', false); ?>" class="btn btn-danger">Cancel</a>
+                    <a href="<?php echo $this->url(array('cancel' => 1), 'default', false); ?>" class="btn">Cancel</a>
                 </div>
             </div><!-- /box -->
         </div><!-- /form-box -->

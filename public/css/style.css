@@ -578,11 +578,19 @@ div.form-box fieldset {
     margin: 0;
     border-top: 1px solid #e5e5e5;
 }
+
 div.form-box div.box fieldset:first-of-type {
     border-top: none;
 }
+div.form-box div.box fieldset:first-of-type.force-fieldset-style {
+    border-top: 1px solid #e5e5e5;
+}
+
 div.form-box div.tab-stripe:first-of-type {
     border-top-left-radius: 6px;
+}
+div.form-box div.tab-stripe.tab-stripe-outside {
+    border-top-left-radius: 0;
 }
 div.form-box div.form-actions {
     padding: 20px 20px 0 20px;

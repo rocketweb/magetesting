@@ -162,7 +162,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
         $this->addElement('submit', 'submit', array(
                 'form'     => 'extension-form',
                 'ignore'   => true,
-                'label'    => 'Save changes',
+                'label'    => 'Save changes'
         ));
 
         $this->title->setAttrib('class', 'span4');
@@ -184,7 +184,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
         $this->directory_hash->removeDecorator('Errors');
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('Overall');
-
+        $this->submit->setAttrib('class', 'btn btn-inverse pull-right');
     }
 
     public function checkFileType($file) {
