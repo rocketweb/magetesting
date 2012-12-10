@@ -4,6 +4,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
           
     protected $_customHost = '';
     protected $_customRemotePath = '';
+    protected $_customFile = '';
     protected $_customSql = ''; 
     
     public function setup(Application_Model_Instance &$instance){
@@ -56,7 +57,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
         $this->_customRemotePath = $customRemotePath;
        
-        //FILE
+        //SQL
          //make sure sql file path does not contain slash at the beginning       
         $customSql = $this->_instanceObject->getCustomSql();
         if(substr($customSql,0,1)=="/"){
@@ -64,14 +65,31 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
         
         $this->_customSql = $customSql;
+        
+        //FILE
+         //make sure sql file path does not contain slash at the beginning       
+        $customFile = $this->_instanceObject->getCustomFile();
+        if(substr($customFile,0,1)=="/"){
+            $customFile = substr($customFile,1);
+        }
+        
+        $this->_customFile = $customFile;
+        
         return true;
     }
     
+    public function downloadFilesystem(){
+        
+        if ($this->_instanceObject->getCustomFile()!=''){
+            $this->_downloadAndUnpack();
+        } else {
+            $this->_downloadInstanceFiles();
+        }
+        
+    }
     
-    
-    public function downloadInstanceFiles(){
-        //$log = $this->_getLogger();
-         //echo "Copying package to target directory...\n";
+    /* todo: make this protected */
+    protected function _downloadInstanceFiles(){
         //do a sample connection, and check for index.php, if it works, start fetching
         $command = "wget --spider ".$this->_customHost.$this->_customRemotePath."app/Mage.php 2>&1 ".
             "--passive-ftp ".
@@ -79,7 +97,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "--password='".$this->_instanceObject->getCustomPass()."' ".
             "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'";
         exec($command, $output);
-        $message = var_export($output, true);
+        //$message = var_export($output, true);
         //$log->log($command."\n" . $message, LOG_DEBUG);
 
         $sqlSizeInfo = explode(' ... ',$output[0]);
@@ -113,8 +131,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
              "--password='".$this->_instanceObject->getCustomPass()."' ".
              "".$this->_customHost.$this->_customRemotePath."";
         exec($command, $output);
-        $message = var_export($output, true);
-        //$log->log($command."\n" . $message, LOG_DEBUG);
+        //$message = var_export($output, true);
+
         unset($output);
         
         /**
@@ -125,7 +143,6 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
 
     public function checkDatabaseDump(){
-        //$log = $this->_getLogger();
         $command = "wget --spider ".$this->_customHost.$this->_customSql." 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_instanceObject->getCustomLogin()."' ".
@@ -133,20 +150,17 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'";
         exec($command,$output);
 
-        $message = var_export($output, true);
-       // $log->log("\n".$message."\n" . $message, LOG_DEBUG);
+        //$message = var_export($output, true);
 
         foreach ($output as $out) {
-            //$log->log(substr($out, 0, 8), LOG_DEBUG);
-
             if (substr($out, 0, 8) == '==> SIZE') {
                 $sqlSizeInfo = explode(' ... ', $out);
             }
         }
 
-        if(isset($sqlSizeInfo[1])){
+        /*if(isset($sqlSizeInfo[1])){
             //$log->log($sqlSizeInfo[1], LOG_DEBUG);
-        }
+        }*/
 
        //limit is in bytes!
         if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){                       
@@ -164,7 +178,6 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     public function downloadDatabase(){
-        //$log = $this->_getLogger();
         
         $command = "wget  ".$this->_customHost.$this->_customSql." ".
             "--passive-ftp ".
@@ -173,8 +186,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "--password='".$this->_instanceObject->getCustomPass()."' ".
             "".$this->_customHost.$this->_customRemotePath." ";
         exec($command,$output);
-        $message = var_export($output, true);
-        //$log->log($command."\n" . $message, LOG_DEBUG);
+        //$message = var_export($output, true);
+        
         unset($output);
         
         /* TODO: validate if local and reomte size are correct */
@@ -195,5 +208,62 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     public function getCustomRemotePath(){
 	return $this->_customRemotePath;
     }
+    
+    protected function _downloadAndUnpack(){
+        
+        //download file
+        $command = "wget  ".$this->_customHost.$this->_customFile." ".
+            "--passive-ftp ".
+            "-N ".  
+            "--user='".$this->_instanceObject->getCustomLogin()."' ".
+            "--password='".$this->_instanceObject->getCustomPass()."' ".
+            "".$this->_customHost.$this->_customRemotePath." ";
+        exec($command,$output);
+        //$message = var_export($output, true);
+        unset($output);
+        
+        /*TODO: validate output, that file really existed */
+        
+        
+        //unpack to temp location
+        exec('mkdir -p temporaryinstancedir/');
+        
+        /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
+        exec('tar -zxf '.$this->_customFile .' -C temporaryinstancedir/');
+        
+        //locate mage file 
+        $output = array();
+        $mageroot = '';
+        exec('find -L -name Mage.php',$output);      
+        
+        /* no matchees found */
+        if ( count($output) == 0 ){
+            return false;
+        }
+        
+        foreach ($output as $line){
+          if(substr($line,-13) == '/app/Mage.php'){
+            $mageroot = substr($line,0,strpos($line,'/app/Mage.php'));
+            echo $mageroot;
+            break;
+          }
+        }
+        
+        /* no /app/Mage.php found */
+        if ($mageroot == ''){
+            return false;
+        }
+
+        /* move files from unpacked dir into our instance location */
+        $output = array();
+        $command = 'sudo mv '.$mageroot.'/* '.$mageroot.'/.??* .';
+        exec($command,$output);
+        var_dump($output);
+        unset($output);
+        
+        return true;
+    }
+    
+    /*TODO: maybe methods validateFileExist and validateFileSize ? */
     
 }
