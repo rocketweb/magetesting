@@ -84,13 +84,8 @@ class Application_Form_InstanceAddClean extends Integration_Form{
         $this->edition->removeDecorator('HtmlTag');
         $this->edition->removeDecorator('overall');
 
-        $this->edition->addDecorator('Overall', array('tag' => 'div', 'class' => 'control-group gray-menu'));
-
-
         $this->version->removeDecorator('HtmlTag');
         $this->version->removeDecorator('overall');
-
-        $this->version->addDecorator('Overall', array('tag' => 'div', 'class' => 'control-group gray-menu'));
     }
 
 }
