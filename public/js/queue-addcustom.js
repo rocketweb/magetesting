@@ -23,7 +23,7 @@ $(document).ready(function(){
     
     $('.input-radio-alert input').css('width', '511px');
     
-    $('div.input-radio .input-radio-option, div.input-radio .input-radio-button').click(function(){
+    $('div.input-radio .input-radio-option, div.input-radio .input-radio-button').bind('click focusin focusout', function(){
         var $this = $(this);
         var $radioGroup = $this.parent().parent();
         
@@ -43,4 +43,5 @@ $(document).ready(function(){
         $this.parent().find('.input-radio-button input').attr('checked', 'checked');
         
     });
+    
 });
