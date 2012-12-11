@@ -108,7 +108,6 @@ class Application_Model_Queue {
      * - MagentoDownload
      * - MagentoRemove
      * - ExtensionInstall
-     * - ExtensionRemove (FFU)
      * - ExtensionOpenSource
      * - RevisionRollback
      * - RevisionCommit
