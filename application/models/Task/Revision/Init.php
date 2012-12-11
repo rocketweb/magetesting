@@ -24,7 +24,7 @@ implements Application_Model_Task_Interface {
      */
      
     protected function _initRepo() {
-        //init git repository
+        $this->logger->log('Initing git repository.', Zend_Log::INFO);
         $startCwd = getcwd();
         
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
@@ -43,6 +43,7 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _createDeploymentDir(){
+        $this->logger->log('Creating directory for deployment packages.', Zend_Log::INFO);
         
         $deploymentPath = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().
                 '/var/deployment/';

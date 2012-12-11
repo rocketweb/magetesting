@@ -80,7 +80,10 @@ extends Application_Model_Task {
     
     protected function _createSymlink(){
         $domain = $this->_instanceObject->getDomain();
-        exec('ln -s ' . $this->_instanceFolder . '/' . $domain . ' ' . INSTANCE_PATH . $domain);
+        $this->logger->log('Added symbolic link for store directory.', Zend_Log::INFO);
+        $command = 'ln -s ' . $this->_instanceFolder . '/' . $domain . ' ' . INSTANCE_PATH . $domain;
+        exec($command);
+        $this->logger->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
     }
     
     /**

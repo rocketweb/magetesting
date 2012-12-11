@@ -72,7 +72,7 @@ implements Application_Model_Task_Interface {
             return false; //jump to next queue element
         }
 
-        $this->logger->log('Preparing directory.', Zend_Log::INFO);
+        $this->logger->log('Preparing store directory.', Zend_Log::INFO);
         exec('sudo mkdir ' . $this->_instanceFolder . '/' . $this->_domain, $output);
         $message = var_export($output, true);
                 
@@ -151,7 +151,6 @@ implements Application_Model_Task_Interface {
 
         if ($this->_instanceObject->getSampleData()) {
             $this->logger->log('Extracting sample data.', Zend_Log::INFO);
-
             $command = 'sudo tar -zxvf magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz';
             exec($command, $output);
             $message = var_export($output, true);
@@ -168,12 +167,13 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _installSampleData() {
-        //echo "Inserting sample data\n";
+        $this->logger->log('Inserting sample data.', Zend_Log::INFO);
+
         exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' < magento_sample_data_for_' . $this->_sampleDataVersion . '.sql');
     }
 
     protected function _setFilesystemPermissions() {
-        $this->logger->log('Setting permissions.', Zend_Log::INFO);
+        $this->logger->log('Setting store directory permissions.', Zend_Log::INFO);
         $command = 'sudo chmod 777 var/.htaccess app/etc';
         exec($command, $output);
         $message = var_export($output, true);
@@ -276,6 +276,8 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
     }
 
     protected function _disableAdminNotifications() {
+        $this->logger->log('Disabling admin notifications.', Zend_Log::INFO);
+
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e \'INSERT INTO core_config_data (`scope`,`scope_id`,`path`,`value`) VALUES ("default",0,"advanced/modules_disable_output/Mage_AdminNotification",1) ON DUPLICATE KEY UPDATE `value` = 1\'');
     }
 
@@ -311,6 +313,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' < keyset1.sql');
         unset($output);
 
+        $this->logger->log('Changing owner of store directory.', Zend_Log::INFO);
         $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_instanceFolder . '/' . $this->_domain;
         exec($command, $output);
         $message = var_export($output, true);
@@ -318,7 +321,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         unset($output);
 
         // update backend admin password
-        $this->logger->log('Chaning store backend password.', Zend_Log::INFO);
+        $this->logger->log('Changing store backend password.', Zend_Log::INFO);
         $set = array('backend_password' => $this->_adminpass);
         $where = array('domain = ?' => $this->_domain);
         $this->db->update('instance', $set, $where);

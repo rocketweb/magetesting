@@ -30,6 +30,8 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _revertFiles(){
+        $this->logger->log('Reverting files.', Zend_Log::INFO);
+
         $startCwd = getcwd();
         
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
@@ -43,6 +45,7 @@ implements Application_Model_Task_Interface {
     
     protected function _revertDatabase(){
 	$log = $this->_getLogger();
+	    $log->log('Unpacking database backup file. ',Zend_Log::INFO);
         $startCwd = getcwd();
         $params = $this->_queueObject->getTaskParams();
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
@@ -56,10 +59,12 @@ implements Application_Model_Task_Interface {
         $privilegeModel = new Application_Model_DbTable_Privilege($this->db,$this->config);
         $privilegeModel->dropDatabase($this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain());
         $privilegeModel->createDatabase($this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain());
-                
+
+        $log->log('Reverting database from backup file. ',Zend_Log::INFO);
         $command = 'sudo mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' < '.$unpackedName;
         exec($command,$output);
-        $log->log('mysql insert ',Zend_Log::DEBUG,var_export($output,true));
+        $message = var_export($output, true);
+        $log->log($message, Zend_Log::DEBUG);
        
         //finish process
         chdir($startCwd);       

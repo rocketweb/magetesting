@@ -132,13 +132,16 @@ class Application_Model_Task {
     }
     
     protected function _clearInstanceCache(){
+        $this->logger->log('Clearing store cache.', Zend_Log::INFO);
+
         exec('sudo rm -R '.self::$config->magento->systemHomeFolder . '/' . self::$config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain().'/var/cache/*');
     }
     
     
     //leaving it here because we might want to apply it even after extension install
     protected function _applyXmlRpcPatch(){
-        
+        $this->logger->log('Applying XML RPC patch.', Zend_Log::INFO);
+
         if ($this->_versionObject->getVersion() > '1.3.2.3' AND $this->_versionObject->getVersion() < '1.4.1.2'){
             //we're somewhere between 1.3.2.4 and 1.4.1.1
             exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1400_1411/Request.php ' . $this->_instanceFolder . '/' . $this->_instanceObject->getDomain() . '/lib/Zend/XmlRpc/Request.php');
@@ -223,9 +226,9 @@ class Application_Model_Task {
         if ($errorMessage!=null){
             self::$db->update('instance', array('error_message' => $errorMessage), 'id=' . $this->_instanceObject->getId());
         
-            //TODO: send email to admin?
+            self::$logger->log($errorMessage, Zend_Log::DEBUG);
         }
-        self::$logger->log($errorMessage, Zend_Log::DEBUG);
+        
                 
         return true;
     }

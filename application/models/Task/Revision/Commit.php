@@ -57,7 +57,8 @@ implements Application_Model_Task_Interface {
     
     /* For now just an alias */
     protected function _commitManual(){
-               
+        $this->logger->log('Making manual GIT commit.', Zend_Log::INFO);
+
         exec('git add -A');
         
         $output = '';
@@ -125,6 +126,7 @@ implements Application_Model_Task_Interface {
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         
         //export backup
+        $this->logger->log('Creating database backup.', Zend_Log::INFO);
         $dbDir = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/var/db/';
         exec('sudo mkdir -p '.$dbDir);
         chdir($dbDir);
@@ -135,12 +137,13 @@ implements Application_Model_Task_Interface {
         //pack it up
         $pathinfo = pathinfo($dbFileName);
         /* tar backup file */
+        $this->logger->log('Packing database backup.', Zend_Log::INFO);
         exec('sudo tar -zcf '.$pathinfo['filename'].'.tgz '.$dbFileName);
         
         /* copy packed sql file to target dir */
         //exec('sudo mv '.$pathinfo['filename'].'.tgz '.$dbDir.$pathinfo['filename'].'.tgz');
         
-        /* remove unpacked sqldump */
+        $this->logger->log('Removing not packed database backup.', Zend_Log::INFO);
         exec('sudo rm '.$dbFileName);
         
         chdir($startCwd);
@@ -150,13 +153,7 @@ implements Application_Model_Task_Interface {
     protected function _insertRevisionInfo(){
         $revisionModel = new Application_Model_Revision();
         $params = $this->_queueObject->getTaskParams();
-               
-	
-        $this->logger->log('queue_object',  Zend_Log::DEBUG,'');
-        $this->logger->log(var_export($this->_queueObject,true),Zend_Log::DEBUG);
-        $this->logger->log('extension_id',  Zend_Log::DEBUG,'');
-        $this->logger->log(var_export($this->_queueObject->getExtensionId(),true),Zend_Log::DEBUG);
-               
+
         $revisionModel->setUserId($this->_userObject->getId());
         $revisionModel->setInstanceId($this->_instanceObject->getId());
         $revisionModel->setExtensionId($this->_queueObject->getExtensionId());

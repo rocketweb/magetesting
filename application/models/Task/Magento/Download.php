@@ -88,7 +88,7 @@ implements Application_Model_Task_Interface {
         $this->_instanceObject->setBackendPassword($this->_adminpass)->save();
         //$set = array('backend_password' => $this->_adminpass);
         //$where = array('domain = ?' => $this->_domain);
-        $log->log('Chaning store backend password.', Zend_Log::INFO);
+        $log->log('Changing store backend password.', Zend_Log::INFO);
         $log->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
 
         //copy new htaccess over

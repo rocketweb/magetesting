@@ -31,7 +31,9 @@ implements Application_Model_Task_Interface {
 
     protected function _deploy(){
         $hash = $this->_revisionObject->getHash();
-        
+
+        $this->logger->log('Preparing deplyment package.', Zend_Log::INFO);
+
         $startdir  = getcwd();
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         /* prepare dir for instance deply packages */

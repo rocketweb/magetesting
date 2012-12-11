@@ -39,10 +39,12 @@ implements Application_Model_Task_Interface {
         $startCwd =  getcwd();
         chdir(INSTANCE_PATH);
 
+        $this->logger->log('Removing store directory recursively.', Zend_Log::INFO);
         exec('rm -R '.$this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         unlink($this->_instanceObject->getDomain());
         chdir($startCwd);
 
+        $this->logger->log('Removing store database.', Zend_Log::INFO);
         $this->db->getConnection()->exec("use ".$this->config->resources->db->params->dbname);
       
         //remove instance extensions
