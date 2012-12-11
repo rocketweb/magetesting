@@ -104,7 +104,7 @@ class QueueController extends Integration_Controller_Action {
                                             )
                                             , 0, 4)
                             )
-                            ->setStatus('pending')
+                            ->setStatus('installing-magento')
                             ->setType('clean');
                                        
                     $instanceId = $instanceModel->save();
@@ -262,7 +262,7 @@ class QueueController extends Integration_Controller_Action {
                                             )
                                             , 0, 4)
                             )
-                            ->setStatus('pending')
+                            ->setStatus('downloading-magento')
                             ->setCustomProtocol($form->custom_protocol->getValue())
                             ->setCustomHost($form->custom_host->getValue())
                             ->setCustomRemotePath($form->custom_remote_path->getValue())
