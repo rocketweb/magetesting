@@ -270,6 +270,7 @@ fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-fi
 .alert-blank{padding:8px 35px 8px 14px;margin-bottom:20px;color:#000;text-shadow:0 1px 0 rgba(255, 255, 255, 0.5);background-color:#fff;border:1px solid #fff;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}.alert-blank h4{margin:0;}
 .alert-blank .close{position:relative;top:-2px;right:-21px;line-height:20px;}
 .accordion-group .accordion-heading .accordion-toggle{outline:0;}
+.remove-typekit>*{font-family:Helvetica,Arial,sans-serif;}
 footer a{color:#f64135;}
 .mt-login{position:absolute;top:50%;left:50%;margin:-175px 0 0 -230px;width:420px;min-height:310px;padding:20px;border:1px solid #e5e5e5;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}.mt-login .alert-login{padding:8px 14px;}
 .mt-login form{margin:0;}
