@@ -21,8 +21,6 @@ $(document).ready(function(){
     });
     
     
-    $('.input-radio-alert input').css('width', '511px');
-    
     $('div.input-radio .input-radio-option, div.input-radio .input-radio-button').bind('click focusin focusout', function(){
         var $this = $(this);
         var $radioGroup = $this.parent().parent();
@@ -30,13 +28,11 @@ $(document).ready(function(){
         // Update alerts
         $radioGroup.find('.input-radio-alert')
             .removeClass('alert-info')
-            .addClass('alert-blank')
-            .find('input').css('width', '511px');
+            .addClass('alert-blank');
         
         $this.parent().find('.input-radio-alert')
             .removeClass('alert-blank')
-            .addClass('alert-info')
-            .find('input').css('width', '100%');
+            .addClass('alert-info');
         
         // Update radio buttons
         $radioGroup.find('.input-radio-button input').removeAttr('checked');

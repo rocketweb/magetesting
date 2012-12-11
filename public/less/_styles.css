@@ -43,6 +43,8 @@ fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-fi
 .alert-blue .close{position:relative;top:-2px;right:-21px;line-height:20px;}
 .alert-blank{padding:8px 35px 8px 14px;margin-bottom:20px;color:#000;text-shadow:0 1px 0 rgba(255, 255, 255, 0.5);background-color:#fff;border:1px solid #fff;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}.alert-blank h4{margin:0;}
 .alert-blank .close{position:relative;top:-2px;right:-21px;line-height:20px;}
+.input-radio .input-radio-alert input{width:511px;}
+.input-radio .input-radio-alert.alert-info input{width:100%;}
 .accordion-group .accordion-heading .accordion-toggle{outline:0;}
 .remove-typekit>*{font-family:Helvetica,Arial,sans-serif;}
 footer a{color:#f64135;}
