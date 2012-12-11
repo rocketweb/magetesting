@@ -141,7 +141,9 @@
                 <tr class="compare-table-row-title-empty">
                     <td class="compare-table-price-empty"></td>
                     <?php foreach($this->plans as $plan): ?>
-                        <td class="compare-table-price-button"><a class="btn btn-large btn-inverse" href="#">Subscribe now</a></td>
+                        <td class="compare-table-price-button">
+                            <a href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form', 'pay-for' => 'plan', 'id' => $plan->getId()), 'default', true); ?>" class="btn btn-large btn-inverse">Subscribe now</a>
+                        </td>
                         <td class="compare-table-price-empty"></td>
                     <?php endforeach; ?>
                 </tr>

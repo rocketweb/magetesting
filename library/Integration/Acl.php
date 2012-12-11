@@ -21,7 +21,6 @@ class Integration_Acl extends Zend_Acl
          * Set up resources
          */
         $this->add(new Zend_Acl_Resource('default_braintree'));
-        $this->add(new Zend_Acl_Resource('default_pay-pal'));
         $this->add(new Zend_Acl_Resource('default_error'));
         $this->add(new Zend_Acl_Resource('default_index'));
         $this->add(new Zend_Acl_Resource('default_user'));
@@ -50,8 +49,6 @@ class Integration_Acl extends Zend_Acl
         $this->allow('guest', 'default_user', array(
                 'login', 'password-recovery', 'register', 'activate', 'reset-password', 'set-new-password'
         ));
-        $this->allow('guest', 'default_braintree', array('webhook'));
-        $this->allow('guest', 'default_pay-pal');
 
         /**
          * Set up privileges for free-user
@@ -66,9 +63,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('free-user', 'default_my-account');
 
-        $this->allow('free-user', 'default_pay-pal', array('cancel', 'success'));
-        
-        $this->allow('free-user', 'default_braintree', array('payment','result','subscribe','unsubscribe'));
+        $this->allow('free-user', 'default_braintree', array('form','response'));
 
         /**
          * Set up privileges for commercial-user
@@ -84,8 +79,7 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('commercial-user', 'default_my-account');
-        $this->allow('commercial-user', 'default_pay-pal', array('cancel', 'success'));
-        $this->allow('commercial-user', 'default_braintree', array('payment','result','subscribe','unsubscribe'));
+        $this->allow('commercial-user', 'default_braintree', array('form','response'));
         
         /**
          * Set up privileges for awaiting-user
@@ -101,8 +95,7 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('awaiting-user', 'default_my-account');
-        $this->allow('awaiting-user', 'default_pay-pal', array('cancel', 'success'));
-        $this->allow('awaiting-user', 'default_braintree', array('payment','result','subscribe','unsubscribe'));
+        $this->allow('awaiting-user', 'default_braintree', array('form','response'));
         
     }
 

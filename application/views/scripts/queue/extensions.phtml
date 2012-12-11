@@ -89,7 +89,8 @@
 			                        <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
 			                    <?php endif; ?>
 			                <?php else: ?>
-			                    <a href="#" class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</a>
+			                    <a href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form', 'pay-for' => 'extension', 'id' => $extension['id'], 'domain' => $this->instance_name), 'default', true); ?>"
+			                       class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</a>
 			                <?php endif; ?>
 			                </div>
 			            </div>

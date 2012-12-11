@@ -1,0 +1,128 @@
+<div class="row">
+    <div class="span12">
+        <?php echo $this->specific_content; ?>
+        <div class="form-box">
+            <div class="box">
+                <form class="form-stacked" id="payment-form" method="POST" action="<?php echo Braintree_TransparentRedirect::url(); ?>">
+                    <input class="span4"  type="hidden" name="tr_data" value="<?php echo htmlentities($this->tr_data); ?>" />
+                    <?php if($this->show_billing_and_card): ?>
+                    <div class="tab-stripe"></div>
+                    <fieldset>
+                        <legend>Personal details</legend>
+                        <div class="row">
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="customer_first_name" class="control-label required">First Name</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[billing][first_name]" id="customer_first_name" value="<?php echo $this->address['first_name']; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="customer_last_name" class="control-label required">Last Name</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[billing][last_name]" id="customer_last_name" value="<?php echo $this->address['last_name']; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <h4>Billing Address</h4>
+                        <div class="row">
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="billing_street_address" class="control-label required">Street Address</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[billing][street_address]" id="billing_street_address" value="<?php echo $this->address['street']; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="billing_extended_address" class="control-label required">Extended Address</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[billing][extended_address]" id="billing_extended_address" value="<?php echo $this->address['state']; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="billing_locality" class="control-label required">Locality</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[billing][locality]" id="billing_locality" value="<?php echo $this->address['city']; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="billing_region" class="control-label required">Region</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[billing][region]" id="billing_region" value="<?php echo $this->address['state']; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="billing_postal_code" class="control-label required">Postal Code</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[billing][postal_code]" id="billing_postal_code" value="<?php echo $this->address['postal_code']; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="billing_country_name" class="control-label required">Country</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[billing][country_name]" id="billing_country_name" value="<?php echo $this->address['country']; ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="tab-stripe"></div>
+                    <fieldset>
+                        <legend>Credit Card Details</legend>
+                        <div class="row">
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="braintree_credit_card_number" class="control-label required">Credit Card Number</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[credit_card][number]" id="braintree_credit_card_number" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="braintree_credit_card_exp" class="control-label required">Credit Card Expiry (mm/yyyy)</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[credit_card][expiration_date]" id="braintree_credit_card_exp" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="braintree_credit_card_cvv" class="control-label">Credit Card Verification Number</label>
+                                    <div class="controls">
+                                        <input class="span4"  type="text" name="transaction[credit_card][cvv]" id="braintree_credit_card_cvv" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <?php endif; ?>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-inverse pull-right">
+                            <i class="icon-white icon-ok"></i>&nbsp;Do it!
+                        </button>
+                        <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>" class="btn">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
