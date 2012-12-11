@@ -127,9 +127,9 @@ class Application_Model_Version {
     }
 
     //TODO: prepare mapper for this
-    public function getKeys()
+    public function getKeys($with_edition = false)
     {
-        return $this->getMapper()->getKeys();
+        return $this->getMapper()->getKeys($with_edition);
     }
 
 }

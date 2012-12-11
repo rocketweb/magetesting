@@ -214,9 +214,23 @@ class QueueController extends Integration_Controller_Action {
         $form = new Application_Form_InstanceAddCustom();
         $form->populate($request->getParams());
 
+        $this->view->input_radio = 'remote_path';
         if ($request->isPost()) {
 
+            $path_type = $this->_getParam('input-radio');
+            if(!in_array($path_type, array('remote_path', 'file'))) {
+                $path_type = 'remote_path';
+            }
+            if($path_type == 'remote_path') {
+                $form->custom_remote_path->setRequired(true);
+                $form->custom_file->setRequired(false);
+            } elseif($path_type == 'file') {
+                $form->custom_remote_path->setRequired(false);
+                $form->custom_file->setRequired(true);
+            }
+            $this->view->input_radio = $path_type;
             if ($form->isValid($request->getParams())) {
+                $form->version->setValue(substr($form->version->getValue(),2));
                 //needs validation!
                 $instanceModel = new Application_Model_Instance();
                 $userId = $this->auth->getIdentity()->id;
@@ -343,12 +357,17 @@ class QueueController extends Integration_Controller_Action {
                     $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
                 }
             } else {
-                $this->_helper->FlashMessenger('Form invalid');
+                $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Form invalid'));
             }
         }
 
+        // Getting mesages from session namespace - because we don't redirect user after form-post request.
+        $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages() + $this->_helper->FlashMessenger->getMessages();
+        $this->_helper->FlashMessenger->clearMessages();
+        $this->_helper->FlashMessenger->clearCurrentMessages();
+
         $this->view->form = $form;
-        $this->view->headScript()->appendFile('/public/js/queue-addcustom.js', 'text/javascript');
+        $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-addcustom.js'), 'text/javascript');
     }
 
     public function closeAction() {

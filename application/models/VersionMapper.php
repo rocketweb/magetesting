@@ -85,11 +85,15 @@ class Application_Model_VersionMapper {
     // duplicate getting ( one in getAllForEdition, second using ajax )
     // best solustion 'select * version left join edition', prepare 3 <select> and hide them
 
-    public function getKeys() {
+    public function getKeys($with_edition = false) {
 
         $temp = array();
+        $authGroup = Zend_Auth::getInstance()->getIdentity()->group;
         foreach ($this->fetchAll() as $r) {
-            $temp[] = $r->getId();
+            if($r->getEdition() == 'CE' OR $authGroup == 'admin') {
+                $edition = $with_edition ? $r->getEdition() : '';
+                $temp[] = $edition.$r->getId();
+            }
         }
         return $temp;
 

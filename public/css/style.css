@@ -617,6 +617,10 @@ div.form-box div.form-actions {
     clear: both;
 } 
 
+.errors {
+    color: #B94A48;
+}
+
 /*Opera Fix*/
 body:before {
     content: "";

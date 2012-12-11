@@ -38,7 +38,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 ),
                 'class'      => 'span4'
         ));
-        $emptyVersion = array('' => 'Choose...');
+        $emptyVersion = array();
         $versions = array_merge($emptyVersion,$editionModel->getOptions());
 
         $this->edition->addMultiOptions($versions);
@@ -49,10 +49,18 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        new Zend_Validate_InArray($versionModel->getKeys())
+                        new Zend_Validate_InArray($versionModel->getKeys(true))
                 ),
                 'class'      => 'span4'
         ));
+        $versions = array();
+        $authGroup = Zend_Auth::getInstance()->getIdentity()->group;
+        foreach($versionModel->fetchAll() as $row) {
+            if($row->getEdition() == 'CE' OR $authGroup == 'admin') {
+                $versions[$row->getEdition().$row->getId()] = $row->getVersion();
+            }
+        }
+        $this->version->addMultiOptions($versions);
         
         $this->addElement('select', 'custom_protocol', array(
                 'label'      => 'Protocol',
@@ -131,24 +139,12 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
         $this->instanceAdd->removeDecorator('overall');
         $this->instanceAdd->setAttrib('class','btn btn-primary');
 
-        $this->custom_protocol->removeDecorator('HtmlTag');
-        $this->custom_protocol->removeDecorator('overall');
-
-        $this->custom_host->removeDecorator('HtmlTag');
-        $this->custom_host->removeDecorator('overall');
-        
         $this->custom_remote_path->removeDecorator('HtmlTag');
         $this->custom_remote_path->removeDecorator('overall');
         
         $this->custom_sql->removeDecorator('HtmlTag');
         $this->custom_sql->removeDecorator('overall');
-        
-        $this->custom_login->removeDecorator('HtmlTag');
-        $this->custom_login->removeDecorator('overall');
-        
-        $this->custom_pass->removeDecorator('HtmlTag');
-        $this->custom_pass->removeDecorator('overall');
-        
+
         $this->custom_file->removeDecorator('HtmlTag');
         $this->custom_file->removeDecorator('overall');
     }
