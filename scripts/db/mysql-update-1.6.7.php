@@ -8,7 +8,7 @@ $sql[]="ALTER TABLE `instance_extension` ADD CONSTRAINT `fk_store_extension_stor
 , ADD INDEX `fk_store_extension_store` (`instance_id` ASC) ;
 ";
 
-$sql[]="ALTER TABLE `instance_extension` ADD CONSTRAINT `fk_store_extension_user`
+$sql[]="ALTER TABLE `user_extension` ADD CONSTRAINT `fk_store_extension_user`
   FOREIGN KEY (`user_id` )
   REFERENCES `user` (`id` )
   ON DELETE CASCADE
