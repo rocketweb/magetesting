@@ -89,6 +89,7 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _commitAutomatic(){
+        $this->logger->log('Making automatic GIT commit.', Zend_Log::INFO);
         exec('git add -A');
         
         $output = '';
