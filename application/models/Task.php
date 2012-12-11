@@ -132,7 +132,7 @@ class Application_Model_Task {
     }
     
     protected function _clearInstanceCache(){
-        $this->logger->log('Clearing store cache.', Zend_Log::INFO);
+        self::$logger->log('Clearing store cache.', Zend_Log::INFO);
 
         exec('sudo rm -R '.self::$config->magento->systemHomeFolder . '/' . self::$config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain().'/var/cache/*');
     }
@@ -140,7 +140,7 @@ class Application_Model_Task {
     
     //leaving it here because we might want to apply it even after extension install
     protected function _applyXmlRpcPatch(){
-        $this->logger->log('Applying XML RPC patch.', Zend_Log::INFO);
+        self::$logger->log('Applying XML RPC patch.', Zend_Log::INFO);
 
         if ($this->_versionObject->getVersion() > '1.3.2.3' AND $this->_versionObject->getVersion() < '1.4.1.2'){
             //we're somewhere between 1.3.2.4 and 1.4.1.1
