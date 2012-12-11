@@ -9,6 +9,7 @@ implements Application_Model_Task_Interface {
     public function __construct(){        
         $this->db = $this->_getDb();
         $this->config = $this->_getConfig();
+        $this->logger = $this->_getLogger();
     }
     
     public function process(Application_Model_Queue &$queueElement = null) {
