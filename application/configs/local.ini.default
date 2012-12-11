@@ -43,7 +43,7 @@ cron.phpmyadminAccountCreated.from.desc = "Mage Testing Team"
 
 admin.errorEmail.subject = "Errors with Magetesting.com"
 admin.errorEmail.from.email = "support@magetesting.com"
-admin.errorEmail.to.email = "wojtek@rocktweb.com"
+admin.errorEmail.to.email = "wojtek@rocketweb.com"
 
 register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
 
