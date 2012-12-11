@@ -21,13 +21,15 @@
                                 $progressClass = 'progress-info';
                             break; case 'closed': 
                                 $progressClass = 'progress-danger';
-                            break; case 'installing': 
+                            break; case 'removing-magento': 
                                    case 'installing-extension':
                                    case 'installing-magento':
-                                   case 'installing-samples':
-                                   case 'installing-user': 
-                                   case 'installing-files':
-                                   case 'installing-date': 
+                                   case 'downloading-magento':
+                                   case 'committing-revision': 
+                                   case 'rolling-back-revision':
+                                   case 'deploying-revision': 
+                                   case 'creating-papertrail-user': 
+                                   case 'creating-papertrail-system': 
                                $progressClass = '';
                            break; case 'error': 
                                $progressClass = 'progress-danger';
@@ -40,11 +42,10 @@
                                 <span class="bar" style="width: 100%;"></span>
                             </span>
                             <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>">
-                            <?php if($item['status'] == 'pending'): ?>
+                            <?php /*if($item['status'] == 'pending'): ?>
                                 In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
-                            <?php else: ?>
+                            <?php else:*/ ?>
                                 <?php echo $this->escape(ucfirst($item['status'])); ?>
-                            <?php endif; ?>
                             </span>
                         </div>
                         <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">

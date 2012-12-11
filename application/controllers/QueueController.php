@@ -397,6 +397,9 @@ class QueueController extends Integration_Controller_Action {
                               
                 $currentInstance = $instanceModel->findByDomain($domain);
 
+                $instanceModel->find($currentInstance->id);
+                $instanceModel->setStatus('removing-magento')->save();
+                
                 //add remove task to queue
                 $queueModel = new Application_Model_Queue();
                 $queueModel->setTask('MagentoRemove')
@@ -634,6 +637,9 @@ class QueueController extends Integration_Controller_Action {
         $queueModel->setStatus('pending');
         $queueModel->setUserId($this->auth->getIdentity()->id);
         $queueModel->save();
+        
+        $instanceModel->find($instance->id);
+        $instanceModel->setStatus('committing-revision')->save();
         $this->_helper->FlashMessenger('Files has been scheduled to commit them into repository.');
         return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
@@ -648,6 +654,8 @@ class QueueController extends Integration_Controller_Action {
         // $this->_getParam('domain');
         // $this->_getParam('deploy'); - revision id
                 
+        $instanceModel->setStatus('deploying-revision')->save();
+        
         $this->_helper->FlashMessenger('Deployment action has been added to queue.');
         return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
@@ -686,6 +694,9 @@ class QueueController extends Integration_Controller_Action {
 
         );
         $queueModel->save();
+        
+        $instanceModel->find($instance->id);
+        $instanceModel->setStatus('rolling-back-revision')->save();
         
         $this->_helper->FlashMessenger('Rollback action has been added to queue.');
         return $this->_helper->redirector->gotoRoute(array(
@@ -748,6 +759,9 @@ class QueueController extends Integration_Controller_Action {
             $queueModel->setStatus('pending');
             $queueModel->setUserId($this->auth->getIdentity()->id);
             $queueModel->save();
+            
+            $instanceModel->find($instance->id);
+            $instanceModel->setStatus('deploying-revision')->save();
             
             $this->_helper->FlashMessenger('Requested.');
         }

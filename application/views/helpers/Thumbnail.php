@@ -45,7 +45,7 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
 
         //check that the image exists. 
         if (!is_file($this->_filesystem_path . $this->_full_image_path)) {
-            throw new Exception('The file does not exist!');
+            $this->_setPaths('magetesting_placeholder.png', '/public/img/extensions/');
         }
 
         //check the image is valid
@@ -80,6 +80,7 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
 
         umask(0);
         //make sure the thumbnail directory exists. 
+        
         if (!file_exists($this->_filesystem_path . $this->_thumb_dir_path)) {
             if (!mkdir($this->_filesystem_path . $this->_thumb_dir_path, 0777, true)) {
                 throw new Exception('Cannot create thumbnail directory!');
@@ -104,6 +105,7 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
     }
     
     protected function _checkImage() {
+        
         if (!$img_info = getimagesize($this->_filesystem_path . '/' . $this->_full_image_path)) {
             throw new Exception('Image is invalid!');
         }
