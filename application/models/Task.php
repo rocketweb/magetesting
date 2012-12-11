@@ -158,53 +158,69 @@ class Application_Model_Task {
     }
        
     protected function _updateStatus($status,$errorMessage=null){
-        $statuses = array(
-            
-            'pending',
-            'installing',
+        
+        /**
+         * There are three status groups: 
+         * - instance (store) statuses - used on user/dashboard
+         * - queue statuses - used by worker.php
+         * - instance_extension statuses (not yet implemented) - used on queue/extensions
+         */        
+        
+        /* INSTANCE */
+        $instanceStatuses = array(   
             'ready',
-            'closed',
+            'removing-magento',
             'error',
             'installing-extension',
             'installing-magento',
-            'installing-samples',
-            'installing-user',
-            'installing-files',
-            'installing-data'
-
+            'committing-revision',
+            'deploying-revision',
+            'rolling-back-revision',
+            'creating-papertrail-user',
+            'creating-papertrail-system',
         );
-               
-        if(!in_array($status,$statuses)){
-            //TODO: maybe throw exception?
-            var_dump('status "'.$status.'" not supported');
-            return false;
-        }
-        try {
+        
+        $queueStatuses = array(
+            'pending' => 'pending',
+            'processing' => 'processing',
+            'ready' => 'ready',
             
-            /* workaround for status changes */
-            $queueStatuses = array(
-                'pending' => 'pending',
-                'installing' => 'processing',
-                'ready' => 'ready',
-                'closed' => 'pending',
-                'error' => 'processing',
-                'installing-extension' => 'processing',
-                'installing-magento' => 'processing',
-                'installing-samples' => 'processing',
-                'installing-user' => 'processing',
-                'installing-files' => 'processing',
-                'installing-data'=> 'processing'
-            );
+            /* to support status update on items */
+            'removing-magento' => 'processing',
+            'installing-extension' => 'processing',
+            'installing-magento' => 'processing',
+            'committing-revision' => 'processing',
+            'deploying-revision' => 'processing',
+            'rolling-back-revision' => 'processing',
+            'creating-papertrail-user' => 'processing',
+            'creating-papertrail-system' => 'processing',
+        );
+                       
+        /* update instance if status is supported */
+        if(in_array($status,$instanceStatuses) ){
+            try {
+            
+                $this->_instanceObject->setStatus($status);
+                self::$db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
 
-            $this->_queueObject->setStatus($queueStatuses[$status]);
-            $this->_instanceObject->setStatus($status);
-
-            self::$db->update('queue', array('status' => $queueStatuses[$status]), 'id=' . $this->_queueObject->getId());
-            self::$db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
-
-        } catch (Exception $e){
-            var_dump($e->getMessage());
+            } catch (Exception $e){
+                var_dump($e->getMessage());
+            }
+            
         }
+        
+        /* update queue if status is supported */
+        if(in_array($status,$queueStatuses) ){
+            try {
+            
+                $this->_queueObject->setStatus($queueStatuses[$status]);
+                self::$db->update('queue', array('status' => $queueStatuses[$status]), 'id=' . $this->_queueObject->getId());
+                
+            } catch (Exception $e){
+                var_dump($e->getMessage());
+            }
+        }
+        
         
         if ($errorMessage!=null){
             self::$db->update('instance', array('error_message' => $errorMessage), 'id=' . $this->_instanceObject->getId());
@@ -237,8 +253,7 @@ class Application_Model_Task {
     }
     
     protected function _getInstanceFolder(){
-        if(isset($this->_instanceFolder))
-        {
+        if(isset($this->_instanceFolder)) {
             return $this->_instanceFolder;
         }
         return $this->_instanceFolder = self::$config->magento->systemHomeFolder . '/' . self::$config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';

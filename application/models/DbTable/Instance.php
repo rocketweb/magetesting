@@ -30,7 +30,7 @@ class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
                            array('r.comment')
                        )
                        ->where('user_id = ?', $user_id)
-                       ->group(array('instance_id'))
+                       ->group(array('instance.id'))
                        ->order(array('status asc', 'instance.id asc'));
         return $select;
     }

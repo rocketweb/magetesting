@@ -156,6 +156,8 @@ class QueueController extends Integration_Controller_Action {
 
                     //magetesting user creates database
                     try {
+                        $log = $this->getLog();
+                        $log->log($this->auth->getIdentity()->login . '_' . $instanceModel->getDomain(),LOG_DEBUG);
                         $db = Zend_Db_Table::getDefaultAdapter();
                         $DbManager = new Application_Model_DbTable_Privilege($db, $this->getInvokeArg('bootstrap')
                                                 ->getResource('config'));
@@ -495,18 +497,14 @@ class QueueController extends Integration_Controller_Action {
 
                 if ((int)$request->getParam('extension_id') > 0) {
                     $instanceRow = $instanceModel->find($instance->id);
-            if ($instanceRow->getStatus()=='ready'){
-                    $instanceRow->setStatus('installing-extension');
-                    $instanceRow->save();
-            }
+                    if ($instanceRow->getStatus() == 'ready') {
+                        $instanceRow->setStatus('installing-extension');
+                        $instanceRow->save();
+                    }
 
                     /* Adding extension to queue */
                     try {
                         $extensionId = $request->getParam('extension_id');
-                        var_dump($extensionId);
-                        var_dump($extension['id']);
-                        //exit;
-                        
                         $extensionQueueItem = new Application_Model_Queue();
                         $extensionQueueItem->setInstanceId($instance->id);
                         $extensionQueueItem->setStatus('pending');
@@ -516,13 +514,11 @@ class QueueController extends Integration_Controller_Action {
                         $extensionQueueItem->setServerId($instance->server_id);
                         $extensionQueueItem->setTask('ExtensionInstall');
                         $extensionQueueItem->save();
-                        
+
                         /* Get extension data and add commit task */
                         $extensionModel = new Application_Model_Extension();
                         $extensionModel->find($request->getParam('extension_id'));
-                        
 
-                        
                         $queueId = $extensionQueueItem->getId();
                         $queueModel = new Application_Model_Queue();
                         $queueModel->setInstanceId($instance->id);
@@ -533,14 +529,13 @@ class QueueController extends Integration_Controller_Action {
                         $queueModel->setServerId($instance->server_id);
                         $queueModel->setTask('RevisionCommit');
                         $queueModel->setTaskParams(
-                            array(
-                                'commit_comment' => 'Adding '.$extensionModel->getName().' ('.$extensionModel->getVersion().')',
-                                'commit_type' => 'extension-install'                               
+                                array(
+                                    'commit_comment' => 'Adding ' . $extensionModel->getName() . ' (' . $extensionModel->getVersion() . ')',
+                                    'commit_type' => 'extension-install'
                                 )
-                            
                         );
                         $queueModel->save();
-                        
+
                         //add row to instance_extension
                         $instanceExtensionModel = new Application_Model_InstanceExtension();
                         $instanceExtensionModel->setInstanceId($instance->id);
@@ -550,7 +545,7 @@ class QueueController extends Integration_Controller_Action {
                         echo 'done';
                     } catch (Exception $e) {
                         if ($log = $this->getLog()) {
-                            $log->log('Error while adding extension to queue - '.$e->getMessage(), LOG_ERR);
+                            $log->log('Error while adding extension to queue - ' . $e->getMessage(), LOG_ERR);
                         }
                         echo 'error';
                     }

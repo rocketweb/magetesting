@@ -13,7 +13,7 @@ implements Application_Model_Task_Interface {
     
     public function process(Application_Model_Queue &$queueElement = null) {
         
-        $this->_updateStatus('installing');
+        $this->_updateStatus('rolling-back-revision');
         
         $this->_revertFiles();
         

@@ -12,6 +12,7 @@ implements Application_Model_Task_Interface {
     }
     
     public function process(Application_Model_Queue &$queueElement = null) {        
+        $this->_updateStatus('committing-revision');
         $this->_prepareGitIgnore();
         $this->_createDeploymentDir();
         $this->_initRepo();

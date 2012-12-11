@@ -89,7 +89,6 @@ extends Application_Model_Task {
      */
     protected function _createSystemAccount() {
         if ($this->_userObject->getHasSystemAccount() == 0) {
-            $this->_updateStatus('installing-user');
             
             $this->db->update('user', array('system_account_name' => $this->config->magento->userprefix . $this->_dbuser), 'id=' . $this->_userObject->getId());
 

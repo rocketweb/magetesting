@@ -23,30 +23,24 @@ implements Application_Model_Task_Interface {
     }
     
     public function process(Application_Model_Queue &$queueElement = null) {
-               
-        $this->_updateStatus('installing');
-        $this->_createSystemAccount();
-        $this->_updateStatus('installing-magento');    
-      
+        
         $startCwd = getcwd();
         
-        $this->_updateStatus('installing-files');
-
+        $this->_updateStatus('installing-magento');
+        $this->_createSystemAccount();
+              
         $this->_prepareFilesystem();
         
         $this->_setFilesystemPermissions();
 
         if ($this->_instanceObject->getSampleData()) {
-            $this->_updateStatus('installing-samples');
             $this->_installSampleData();
         }
 
-        $this->_updateStatus('installing-magento');
-
         $this->_cleanupFilesystem();
 
-        $this->_updateStatus('installing-magento');
-
+        $this->_runXmlPatch();
+        
         $this->_runInstaller();
 
         $this->_setupMagentoConnect();
@@ -57,11 +51,11 @@ implements Application_Model_Task_Interface {
 
         $this->_createSymlink();
         
-        $this->_updateStatus('ready');
-
         chdir($startCwd);
 
         $this->_sendInstanceReadyEmail();
+        
+        $this->_updateStatus('ready');
     }
 
     protected function _prepareFileSystem() {
@@ -104,7 +98,6 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists(APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz')) {
             $message = 'Couldn\'t find package files, aborting';
-            echo $message;
             $this->_updateStatus('error',$message);
             $this->logger->log($message, LOG_DEBUG);
             return false; //jump to next queue element
@@ -120,7 +113,6 @@ implements Application_Model_Task_Interface {
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/keyset1.sql ' . $this->_instanceFolder . '/' . $this->_domain . '/');
 
         if ($this->_instanceObject->getSampleData()) {
-            $this->_updateStatus('installing-samples');
             //echo "Copying sample data package to target directory...\n";
             exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz ' . $this->_instanceFolder . '/' . $this->_domain . '/', $output);
             $message = var_export($output, true);
@@ -128,7 +120,6 @@ implements Application_Model_Task_Interface {
             unset($output);
         }
 
-        $this->_updateStatus('installing-files');
         //echo "Extracting data...\n";
         $this->_installFiles();
 
@@ -156,7 +147,6 @@ implements Application_Model_Task_Interface {
         unset($output);
 
         if ($this->_instanceObject->getSampleData()) {
-            $this->_updateStatus('installing-samples');
             //echo "Extracting sample data...\n";
             $command = 'sudo tar -zxvf magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz';
             exec($command, $output);
@@ -328,6 +318,20 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         $where = array('domain = ?' => $this->_domain);
         $this->logger->log(PHP_EOL . 'Updating queue backend password: ' . $this->db->update('instance', $set, $where), Zend_Log::DEBUG);
         // end
+    }
+    
+    /**
+     * It happens that in some library versions the installer may come up with error:
+     * ERROR: PHP Extensions "0" must be loaded.
+     * This code prevents it from happening
+     */
+    protected function _runXmlPatch(){
+        
+        $configXml = file_get_contents($this->_instanceFolder . '/' . $this->_domain.'/app/code/core/Mage/Install/etc/config.xml');
+        $configXml = str_replace('<pdo_mysql/>','<pdo_mysql>1</pdo_mysql>',$configXml);
+        file_put_contents($this->_instanceFolder .'/'. $this->_domain.'/app/code/core/Mage/Install/etc/config.xml',$configXml);
+        unset($configXml);
+        
     }
 
 }

@@ -14,8 +14,12 @@ implements Application_Model_Task_Interface {
         $this->config = $this->_getConfig();
     }
     
-    public function process(Application_Model_Queue $queueElement = null) {
+    public function process(Application_Model_Queue &$queueElement = null) {
         
+        $this->_updateStatus('installing-extension');
+        //process
+        
+        $this->_updateStatus('ready');
     }
 
     protected function _replaceFiles() {

@@ -102,14 +102,15 @@ class Application_Model_Transport {
     }
     
     /* return transport model for specified protocol */
-    public static function factory($protocol){
+    public static function factory(Application_Model_Instance &$instance){
         
         $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
-        $classSuffix = $filter->filter($protocol);
+        $classSuffix = $filter->filter($instance->getCustomProtocol());
         $className = 'Application_Model_Transport_' . $classSuffix;
         
         if (class_exists($className)){
             $customTransportModel = new $className();
+            $customTransportModel->setup($instance);
             return $customTransportModel;
         }
         return false;

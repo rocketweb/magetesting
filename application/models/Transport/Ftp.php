@@ -228,8 +228,15 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         //unpack to temp location
         exec('mkdir -p temporaryinstancedir/');
         
+        
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
-        exec('tar -zxf '.$this->_customFile .' -C temporaryinstancedir/');
+        
+        /**
+         * Get filename out of path, 
+         * becasue we have only downloaded file without filepath 
+         */
+        $pathinfo  = pathinfo($this->_customFile);
+        exec('tar -zxf '.$pathinfo['basename'].' -C temporaryinstancedir/');
         
         //locate mage file 
         $output = array();

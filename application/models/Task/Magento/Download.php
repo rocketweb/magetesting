@@ -25,9 +25,8 @@ implements Application_Model_Task_Interface {
         $startCwd = getcwd();
         $log = $this->_getLogger();
 
-        $this->_updateStatus('installing');
+        $this->_updateStatus('downloading-magento');
         $this->_createSystemAccount();
-        $this->_updateStatus('installing-magento');
 
         chdir($this->_instanceFolder);
         $this->_setupFilesystem();
@@ -47,7 +46,6 @@ implements Application_Model_Task_Interface {
             $this->_updateStatus('error', $message);
             return;
         }
-        $this->_updateStatus('installing-data');
 
         if (!$transportModel->checkDatabaseDump()) {
             $message = $transportModel->getError();
@@ -55,14 +53,12 @@ implements Application_Model_Task_Interface {
             return;
         }
 
-        $this->_updateStatus('installing-files');
         if (!$transportModel->downloadFilesystem()) {
             $message = 'Couldn\'t find app/Mage.php file data, will not install queue element';
             $this->_updateStatus('error', $message);
             return;
         }
 
-        $this->_updateStatus('installing-data');
         $transportModel->downloadDatabase();
 
         //update custom variables using data from transport
@@ -75,7 +71,6 @@ implements Application_Model_Task_Interface {
         //let's load sql to mysql database
         $this->_importDatabaseDump();
 
-        $this->_updateStatus('installing-magento');
         $this->_importFiles();
 
         //now lets configure our local xml file
@@ -130,8 +125,6 @@ implements Application_Model_Task_Interface {
         /* update revision count */
         $this->db->update('instance', array('revision_count' => '0'), 'id=' . $this->_instanceObject->getId());
         $this->_instanceObject->setRevisionCount(0);
-        
-        
         
         $this->_updateStatus('ready');
     }

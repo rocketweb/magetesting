@@ -23,7 +23,7 @@ implements Application_Model_Task_Interface {
     }
     
     public function process(Application_Model_Queue &$queueElement = null) {
-        
+        $this->_updateStatus('deploying-revision');
         $this->_deploy();
         $this->_updateFilename();
         $this->_updateStatus('ready');
