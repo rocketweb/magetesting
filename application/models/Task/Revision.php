@@ -12,6 +12,7 @@ extends Application_Model_Task
     
     public function setup(Application_Model_Queue &$queueElement){
         parent::setup($queueElement);
+        $this->logger = $this->_getLogger();
     }
     
     public function _updateRevisionCount($modifier){

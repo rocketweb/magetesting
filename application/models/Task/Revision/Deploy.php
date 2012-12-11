@@ -9,10 +9,10 @@ implements Application_Model_Task_Interface {
         
         $this->db = $this->_getDb();
         $this->config = $this->_getConfig();
-        $this->logger = $this->_getLogger();
     }
     
     public function setup(Application_Model_Queue &$queueElement) {
+        $this->logger = $this->_getLogger();
         
         parent::setup($queueElement);
         
