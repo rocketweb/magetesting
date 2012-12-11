@@ -25,16 +25,14 @@ implements Application_Model_Task_Interface {
                 //echo 'trying to drop '.$this->_dbname;
                 $DbManager->dropDatabase($this->_dbname);
             } catch(PDOException $e){
-                $message = 'Could not remove database for instance';
-                echo $message;
-                $log->log($message, LOG_ERR);
+                $message = 'Could not remove database for store.';
+                $this->logger->log($message, Zend_Log::CRIT);
                 flock($fp, LOCK_UN); // release the lock
                 exit;
             }
         } else {
-            $message = 'database does not exist, ignoring...';
-            echo $message;
-            $this->logger->log($message, LOG_ERR);
+            $message = 'Store database does not exist, ignoring.';
+            $this->logger->log($message, Zend_Log::NOTICE);
         }
 
         //remove folder recursively

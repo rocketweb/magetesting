@@ -179,7 +179,7 @@ class Application_Model_Task {
             'creating-papertrail-user',
             'creating-papertrail-system',
         );
-        
+
         $queueStatuses = array(
             'pending' => 'pending',
             'processing' => 'processing',
@@ -204,20 +204,18 @@ class Application_Model_Task {
                 self::$db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
 
             } catch (Exception $e){
-                var_dump($e->getMessage());
+                self::$logger->log('Saving store status failed: ' . $e->getMessage(), Zend_Log::EMERG);
             }
-            
         }
         
         /* update queue if status is supported */
         if(in_array($status,$queueStatuses) ){
             try {
-            
                 $this->_queueObject->setStatus($queueStatuses[$status]);
                 self::$db->update('queue', array('status' => $queueStatuses[$status]), 'id=' . $this->_queueObject->getId());
                 
             } catch (Exception $e){
-                var_dump($e->getMessage());
+                self::$logger->log('Saving queue status failed: ' . $e->getMessage(), Zend_Log::EMERG);
             }
         }
         
@@ -227,7 +225,7 @@ class Application_Model_Task {
         
             //TODO: send email to admin?
         }
-        self::$logger->log($errorMessage, LOG_DEBUG);
+        self::$logger->log($errorMessage, Zend_Log::DEBUG);
                 
         return true;
     }

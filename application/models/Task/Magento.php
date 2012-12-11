@@ -73,7 +73,7 @@ extends Application_Model_Task {
         try {
           $mail->send();
         } catch (Zend_Mail_Transport_Exception $e){
-	  $this->logger->log('Mail could not be sent', LOG_CRIT, $e->getTraceAsString());
+          $this->logger->log('Instance ready mail could not be sent.', Zend_Log::CRIT, $e->getTraceAsString());
         }
         
     }
@@ -98,9 +98,10 @@ extends Application_Model_Task {
               // * * * * * cd /var/www/magetesting/scripts/; php worker.php
              *
              */
+            $this->logger->log('Creating system user.', Zend_Log::INFO);
             exec('cd worker;sudo ./create_user.sh ' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_systempass . ' ' . $this->config->magento->usersalt . ' ' . $this->config->magento->systemHomeFolder.'; cd ..;', $output);
             $message = var_export($output, true);
-            $this->logger->log($message, LOG_DEBUG);
+            $this->logger->log($message, Zend_Log::DEBUG);
             unset($output);
 
             if ('free-user' != $this->_userObject->getGroup()) {

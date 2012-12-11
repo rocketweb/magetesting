@@ -69,6 +69,9 @@ implements Application_Model_Task_Interface {
 
     protected function _install() {
         $output='';
+
+        $this->logger->log('Unpacking and installing extension.', Zend_Log::INFO);
+
         if ($this->_extensionObject->getPrice() > 0 ){
             
             exec('tar -zxvf '.
@@ -86,7 +89,7 @@ implements Application_Model_Task_Interface {
         }
         
         //output contains unpacked files list, so it should never be empty if unpacking suceed
-        $this->logger->log(var_export($output,true),LOG_DEBUG);
+        $this->logger->log(var_export($output,true),Zend_Log::DEBUG);
         if (count($output)==0){
             
             $message = 'There was an error while installing extension '.$this->_extensionObject->getName();

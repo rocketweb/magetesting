@@ -153,9 +153,9 @@ implements Application_Model_Task_Interface {
                
 	
         $this->logger->log('queue_object',  Zend_Log::DEBUG,'');
-        $this->logger->log(var_export($this->_queueObject,true),LOG_DEBUG);
+        $this->logger->log(var_export($this->_queueObject,true),Zend_Log::DEBUG);
         $this->logger->log('extension_id',  Zend_Log::DEBUG,'');
-        $this->logger->log(var_export($this->_queueObject->getExtensionId(),true),LOG_DEBUG);
+        $this->logger->log(var_export($this->_queueObject->getExtensionId(),true),Zend_Log::DEBUG);
                
         $revisionModel->setUserId($this->_userObject->getId());
         $revisionModel->setInstanceId($this->_instanceObject->getId());

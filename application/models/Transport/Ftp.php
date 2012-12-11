@@ -251,7 +251,6 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         foreach ($output as $line){
           if(substr($line,-13) == '/app/Mage.php'){
             $mageroot = substr($line,0,strpos($line,'/app/Mage.php'));
-            echo $mageroot;
             break;
           }
         }
