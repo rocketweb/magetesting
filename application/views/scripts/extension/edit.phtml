@@ -71,8 +71,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                         </div>
                     </fieldset>
                     <?php echo $this->form->directory_hash; ?>
-                </form>
-                
+                <?php /* form end was moved below, near 'screenshots[]' field */ ?>
                 <div class="tab-stripe tab-stripe-outside"></div>
                 <fieldset class="force-fieldset-style">
                     <legend>Images</legend>
@@ -122,7 +121,8 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                             </div><!-- /control-group -->
                         </div>
                     </div>
-
+                    <?php /* form needs to end here due tu loaded screenshots by jquery uploader */ ?>
+                    </form>
                     <div class="row">
                         <div class="span11">
                             <!-- The file upload form used as target for the file upload widget -->
