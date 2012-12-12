@@ -204,11 +204,11 @@ class ExtensionController extends Integration_Controller_Action {
                 $extension->save();
 
                 $this->_helper->FlashMessenger($success_message);
-                return $this->_helper->redirector->gotoRoute(array(
-                        'module'     => 'default',
-                        'controller' => 'extension',
-                        'action'     => 'index',
-                ), 'default', true);
+//                 return $this->_helper->redirector->gotoRoute(array(
+//                         'module'     => 'default',
+//                         'controller' => 'extension',
+//                         'action'     => 'index',
+//                 ), 'default', true);
             }
         } else {
             $extension_data = array_merge($extension_data, $extension_entity_data);
@@ -352,9 +352,15 @@ class ExtensionController extends Integration_Controller_Action {
         $this->_deleteRemovedImages($extension_id);
 
         $directory = $this->_getParam('directory_hash');
-        $ids = $this->_getParam('screenshots_ids', array());
-
-        foreach($this->_getParam('screenshots') as $key => $image) {
+        $ids = $this->_getParam('screenshots_ids');
+        $screenshots = $this->_getParam('screenshots');
+        if(!$ids OR !is_array($ids)) {
+            $ids = array();
+        }
+        if(!$screenshots OR !is_array($screenshots)) {
+            $screenshots = array();
+        }
+        foreach($screenshots as $key => $image) {
             if(!isset($ids[$key]) OR !(int)$ids[$key]) {
                 $old_path = $this->_tempDir.$directory.'/'.$image;
                 $new_file_name = $this->view->NiceString(substr_replace($image, '-'.$extension_id, strrpos($image, '.'), 0));
