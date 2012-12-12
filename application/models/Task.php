@@ -63,6 +63,10 @@ class Application_Model_Task {
 
         $logger->addWriter($writerFile);
 
+        // setup formatter to add custom field in mail writer
+        $format = '%timestamp% %priorityName% (Store #%store_id%): %message%' . PHP_EOL;
+        $formatter = new Zend_Log_Formatter_Simple($format);
+
         // setup mail writer
         $mail = new Zend_Mail();
         $mail->setFrom($this->config->admin->errorEmail->from->email)
@@ -71,6 +75,7 @@ class Application_Model_Task {
         $writerMail = new Zend_Log_Writer_Mail($mail);
         $writerMail->setSubjectPrependText($this->config->admin->errorEmail->subject);
         $writerMail->addFilter(Zend_Log::CRIT);
+        $writerMail->setFormatter($formatter);
 
         $logger->addWriter($writerMail);
 
