@@ -425,7 +425,7 @@ class QueueController extends Integration_Controller_Action {
                         ->setStatus('pending')
                         ->save();
 
-                $this->_helper->FlashMessenger('Store added to close queue.');
+                $this->_helper->FlashMessenger('Store has been removed.');
             }
         }
         $redirect_to = array(
