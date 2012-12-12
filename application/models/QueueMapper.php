@@ -42,6 +42,7 @@ class Application_Model_QueueMapper {
         
         if (null === ($id = $queue->getId())) {
             unset($data['id']);
+            unset($data['retry_count']);
             $queue->setId($this->getDbTable()->insert($data));
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
