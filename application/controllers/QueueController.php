@@ -152,6 +152,20 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
                     
+                    unset($queueModel);
+                    //Add queue create user in Papertrail
+                    if(!$this->auth->getIdentity()->has_papertrail_account) {
+                        $queueModel = new Application_Model_Queue();                    
+                        $queueModel->setInstanceId($instanceId);
+                        $queueModel->setTask('PapertrailUserCreate');
+                        $queueModel->setStatus('pending');
+                        $queueModel->setUserId($this->auth->getIdentity()->id);
+                        $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                        $queueModel->setExtensionId(0);  
+                        $queueModel->setParentId($installId);  
+                        $queueModel->save();
+                    }
+                    
                     $this->_helper->FlashMessenger('New installation added to queue');
 
                     //magetesting user creates database

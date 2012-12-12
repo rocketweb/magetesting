@@ -80,7 +80,9 @@ class Application_Model_UserMapper {
              ->setDowngraded($row->downgraded)
              ->setBraintreeVaultId($row->braintree_vault_id)
              ->setBraintreeSubscriptionId($row->braintree_subscription_id)
-             ->setServerId($row->server_id);
+             ->setServerId($row->server_id)
+             ->setHasPapertrialAccount($row->has_papertrail_account)
+             ->setPapertrailApiToken($row->papertrail_api_token);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -120,7 +122,9 @@ class Application_Model_UserMapper {
                   ->setSystemAccountName($row->system_account_name)
                   ->setDowngraded($row->downgraded)
                   ->setBraintreeVaultId($row->braintree_vault_id)
-                  ->setBraintreeSubscriptionId($row->braintree_subscription_id);
+                  ->setBraintreeSubscriptionId($row->braintree_subscription_id)
+                  ->setHasPapertrialAccount($row->has_papertrail_account)
+                  ->setPapertrailApiToken($row->papertrail_api_token);
 
             $entries[] = $entry;
         }

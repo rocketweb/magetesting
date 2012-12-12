@@ -49,6 +49,10 @@ class Application_Model_User {
     protected $_server_id;
 
     protected $_mapper;
+    
+    protected $_has_papertrail_account;
+    
+    protected $_papertrail_api_token;
 
     public function __construct(array $options = null)
     {
@@ -355,6 +359,27 @@ class Application_Model_User {
         return $this->_server_id;
     }
     
+    public function getHasPapertrialAccount()
+    {
+        return $this->_has_papertrial_account;
+    }
+    
+    public function setHasPapertrialAccount($hasPapertrialAccount){
+        $this->_has_papertrial_account = (int)$hasPapertrialAccount;
+        return $this;
+    }
+    
+    public function setPapertrailApiToken($value)
+    {
+        $this->_papertrail_api_token = $value;
+        return $this;
+    }
+    
+    public function getPapertrailApiToken()
+    {
+        return $this->_papertrail_api_token;
+    }
+    
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -438,7 +463,9 @@ class Application_Model_User {
             'server_id' => $this->getServerId(),
             'braintree_vault_id' => $this->getBraintreeVaultId(),
             'braintree_subscription_id' => $this->getBraintreeSubscriptionId(),
-            'server_id' => $this->getServerId()
+            'server_id' => $this->getServerId(),
+            'has_papertrail_account' =>$this->getHasPapertrailAccount(),
+            'papertrail_api_token' => $this->getPapertrailApiToken(),
         );
     }
     

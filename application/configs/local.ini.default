@@ -61,6 +61,13 @@ braintree.merchantId =
 braintree.publicKey = 
 braintree.privateKey = 
 
+;Papertrail
+papertrail.username = "magetesting";
+papertrail.password = "d41d8cFd98f00b2v4e980b998ecf8427e";
+papertrail.ssoSalt = "46431e2e_5131a6e193-5167beb983";
+papertrail.distributorName = "Mage Testing";
+papertrail.url = "https://papertrailapp.com/api/v1/"
+
 [staging : production]
 
 [testing : production]
