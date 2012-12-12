@@ -204,11 +204,11 @@ class ExtensionController extends Integration_Controller_Action {
                 $extension->save();
 
                 $this->_helper->FlashMessenger($success_message);
-//                 return $this->_helper->redirector->gotoRoute(array(
-//                         'module'     => 'default',
-//                         'controller' => 'extension',
-//                         'action'     => 'index',
-//                 ), 'default', true);
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'extension',
+                        'action'     => 'index',
+                ), 'default', true);
             }
         } else {
             $extension_data = array_merge($extension_data, $extension_entity_data);
