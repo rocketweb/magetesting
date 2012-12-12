@@ -34,6 +34,7 @@ class Application_Model_QueueMapper {
             'extension_id' => $queue->getExtensionId(),
             'task' => $queue->getTask(),
             'task_params' => $queue->getTaskParams(false),
+            'retry_count' => $queue->getRetryCount(),
             'server_id' => $queue->getServerId(),
             'parent_id' => $queue->getParentId(),
             'added_date' => $queue->getAddedDate(),
@@ -64,6 +65,7 @@ class Application_Model_QueueMapper {
         ->setExtensionId($row->extension_id)
         ->setTask($row->task)
         ->setTaskParams($row->task_params,false)
+        ->setRetryCount($row->retry_count)
         ->setServerId($row->server_id)
         ->setParentId($row->parent_id)
         ->setAddedDate($row->added_date);
@@ -88,6 +90,7 @@ class Application_Model_QueueMapper {
             ->setExtensionId($row->extension_id)
             ->setTask($row->task)
             ->setTaskParams($row->task_params,false)
+            ->setRetryCount($row->retry_count)
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
             ->setAddedDate($row->added_date);
@@ -108,6 +111,7 @@ class Application_Model_QueueMapper {
             ->setExtensionId($row->extension_id)
             ->setTask($row->task)
             ->setTaskParams($row->task_params,false)
+            ->setRetryCount($row->retry_count)
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
             ->setAddedDate($row->added_date);

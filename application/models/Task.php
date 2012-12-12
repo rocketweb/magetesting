@@ -37,21 +37,31 @@ class Application_Model_Task {
         $classSuffix = $filter->filter($queueElement->getTask());
         
         $className = __CLASS__ . '_'.$classSuffix; 
+ 
+        $newRetryCount = $queueElement->getRetryCount() + 1;
+        $this->db->update('queue', array('retry_count' => $newRetryCount), 'id = ' . $queueElement->getId());
+        $queueElement->setRetryCount($newRetryCount)->save();
         
-        $customTaskModel = new $className($this->config,$this->db);       
-        $customTaskModel->setup($queueElement);
-        $customTaskModel->process();
+        try {
+            $customTaskModel = new $className($this->config,$this->db);       
+            $customTaskModel->setup($queueElement);
+            $customTaskModel->process();
+
+            /* TODO: remove this if after all exceptions are implemented on errors */
+            if ($queueElement->getStatus()=='ready'){
+                $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
+                $this->db->delete('queue', array('id=' . $queueElement->getId()));
+                
+                $this->db->update('instance', array('status' => 'ready'), 'id = ' . $queueElement->getInstanceId());
+            }
         
-        /* only remove database row when no error was registered */
-        if ($queueElement->getStatus()=='ready'){
-            $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
-            $this->db->delete('queue', array('id=' . $queueElement->getId()));
+        } catch (Exception $e){
+            $this->db->update('instance', array('error_message' => $e->getMessage()), 'id = ' . $queueElement->getInstanceId());
         }
 
     }
     /**
-     * Sets class's object we'll be working on
-     * TODO: if possible, create method to get all info with one sql
+     * Sets class's objects we'll be working on
      */
     public function setup(Application_Model_Queue &$queueElement) {
         $this->_queueObject = $queueElement;

@@ -12,16 +12,16 @@ class Application_Model_Queue {
     
     protected $_extension_id;
     
+    protected $_parent_id;
+    
+    protected $_server_id;
+    
     protected $_task;
     
     protected $_task_params;
     
-    protected $_server_id;
-    
-    protected $_parent_id;
-    
-    protected $_version_id;
-    
+    protected $_retry_count;
+
     protected $_added_date;
     
     protected $_mapper;
@@ -156,6 +156,17 @@ class Application_Model_Queue {
         
     }
     
+    public function getRetryCount()
+    {
+        return $this->_retry_count;
+    }
+    
+    public function setRetryCount($value)
+    {
+        $this->_retry_count = (int)$value;
+        return $this;
+    }
+    
     public function setServerId($value)
     {
         $this->_server_id = $value;
@@ -232,6 +243,7 @@ class Application_Model_Queue {
                 'extension_id' => $this->getExtensionId(),
                 'task' => $this->getTask(),
                 'task_params' => $this->getTaskParams(),
+                'retry_count' => $this->getRetryCount(),
                 'parent_id' => $this->getParentId(),
                 'server_id' => $this->getServerId(),
         );
