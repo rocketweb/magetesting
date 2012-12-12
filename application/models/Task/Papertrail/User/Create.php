@@ -4,7 +4,9 @@
  *
  * @author Marcin Kazimierczak <marcin@rocketweb.com>
  */
-class Application_Model_Task_Papertrail_User_Create extends Application_Model_Task_Papertrail implements Application_Model_Task_Interface {
+class Application_Model_Task_Papertrail_User_Create 
+extends Application_Model_Task_Papertrail 
+implements Application_Model_Task_Interface {
     
     CONST NAME = 'distributors/accounts';
     CONST METHOD = 'POST';

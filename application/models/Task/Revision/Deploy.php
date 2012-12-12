@@ -5,8 +5,6 @@ extends Application_Model_Task_Revision
 implements Application_Model_Task_Interface {
 
     public function setup(Application_Model_Queue &$queueElement) {
-        $this->logger = $this->_getLogger();
-        
         parent::setup($queueElement);
         
         $params = $this->_queueObject->getTaskParams();

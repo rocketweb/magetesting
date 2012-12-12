@@ -10,9 +10,8 @@ class Application_Model_Task {
     protected $_instanceObject = '';
     protected $_userObject = '';
     protected $_versionObject = '';
+    
     protected $_instanceFolder = '';
-       
-    /* Needs to be private so tasks could use it */
     protected $config;
     protected $db;
     protected $filePrefix;
@@ -30,10 +29,6 @@ class Application_Model_Task {
         );
     }
      
-    /* Runs specific method depending on task type */
-    public function process(Application_Model_Queue $queueElement){       
-
-    }
     /**
      * Sets class's objects we'll be working on
      */

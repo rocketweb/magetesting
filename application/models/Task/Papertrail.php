@@ -93,7 +93,9 @@ class Application_Model_Task_Papertrail extends Application_Model_Task {
             $name = '';
             
             if(in_array('Application_Model_Task_Papertrail', class_parents($this))) {
-                $name = self::NAME;
+                //$name = self::NAME;
+                /*TODO: marcin please fix this*/
+                $name = 'self::NAME';
             }
             
             if(!is_null($extra)){

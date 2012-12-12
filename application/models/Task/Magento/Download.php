@@ -14,7 +14,6 @@ implements Application_Model_Task_Interface {
     
     public function process(Application_Model_Queue &$queueElement = null) {
         $startCwd = getcwd();
-        $log = $this->_getLogger();
 
         $this->_updateStatus('downloading-magento');
         $this->_createSystemAccount();
@@ -79,8 +78,8 @@ implements Application_Model_Task_Interface {
         $this->_instanceObject->setBackendPassword($this->_adminpass)->save();
         //$set = array('backend_password' => $this->_adminpass);
         //$where = array('domain = ?' => $this->_domain);
-        $log->log('Changing store backend password.', Zend_Log::INFO);
-        $log->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
+        $this->logger->log('Changing store backend password.', Zend_Log::INFO);
+        $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
 
         //copy new htaccess over
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/Custom/.htaccess ' . $this->_instanceFolder . '/' . $this->_domain . '/.htaccess');
@@ -88,11 +87,11 @@ implements Application_Model_Task_Interface {
         //applying patches for xml-rpc issue
         $this->_applyXmlRpcPatch();
 
-        $log->log('Changed owner of store directory tree.', Zend_Log::INFO);
+        $this->logger->log('Changed owner of store directory tree.', Zend_Log::INFO);
         $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_instanceFolder . '/' . $this->_domain;
         exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         $this->_updateCoreConfigData();
@@ -103,10 +102,10 @@ implements Application_Model_Task_Interface {
 
         $instance_path = str_replace('/application/../instance/', '/instance/', INSTANCE_PATH);
 
-        $log->log('Added symbolic link for store directory.', Zend_Log::INFO);
+        $this->logger->log('Added symbolic link for store directory.', Zend_Log::INFO);
         $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' ' . $instance_path . $this->_domain;
         exec($command);
-        $log->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
+        $this->logger->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
 
         
 
@@ -126,12 +125,11 @@ implements Application_Model_Task_Interface {
         /* move to transport class */
     
     protected function _setupFilesystem() {
-        $log = $this->_getLogger();
 
-        $log->log('Preparing store directory.', Zend_Log::INFO);
+        $this->logger->log('Preparing store directory.', Zend_Log::INFO);
         exec('sudo mkdir ' . $this->_instanceFolder . '/' . $this->_domain, $output);
         $message = var_export($output, true);
-        $log->log($message, Zend_Log::DEBUG);
+        $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
 
         if (!file_exists($this->_instanceFolder . '/' . $this->_domain) || !is_dir($this->_instanceFolder . '/' . $this->_domain)) {
@@ -139,10 +137,10 @@ implements Application_Model_Task_Interface {
             $this->_updateStatus('error', $message);
         }
 
-        $log->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
+        $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
         exec('sudo chmod +x ' . $this->_instanceFolder . '/' . $this->_domain, $output);
         $message = var_export($output, true);
-        $log->log($message, Zend_Log::DEBUG);
+        $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
     }
 
@@ -153,12 +151,10 @@ implements Application_Model_Task_Interface {
     
     protected function _importFiles(){
         
-        $log = $this->_getLogger();
-
-        $log->log('Moving downloaded sources to main folder.', Zend_Log::INFO);
+        $this->logger->log('Moving downloaded sources to main folder.', Zend_Log::INFO);
         exec('sudo mv '.$this->_customRemotePath.'* .', $output);
         $message = var_export($output, true);
-        $log->log("\nsudo mv ".$this->_customRemotePath."* .\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\nsudo mv ".$this->_customRemotePath."* .\n" . $message, Zend_Log::DEBUG);
         unset($output);
     }
 
@@ -178,8 +174,8 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _cleanupFilesystem() {
-        $log = $this->_getLogger();
-        $log->log('Setting store directory permissions.', Zend_Log::INFO);
+        
+        $this->logger->log('Setting store directory permissions.', Zend_Log::INFO);
         
         exec('sudo mkdir var');
         exec('sudo mkdir downloader');
@@ -189,26 +185,26 @@ implements Application_Model_Task_Interface {
         $command = 'sudo chmod 777 var/.htaccess app/etc';
         exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         $command = 'sudo chmod 777 var -R';
         exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
 
         $command = 'sudo chmod 777 downloader';
         exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         $command = 'sudo chmod 777 media -R';
         exec($command, $output);
         $message = var_export($output, true);
-        $log->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
         
         /* remove git files */

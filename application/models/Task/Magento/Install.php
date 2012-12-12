@@ -8,9 +8,9 @@ implements Application_Model_Task_Interface {
 
     public function setup(Application_Model_Queue &$queueElement) {
         parent::setup($queueElement);
+        
+        /*TODO: check if we inherit this from parent */
         $this->_adminemail = $this->config->magento->adminEmail; //fetch from zend config       
-        $this->logger = $this->_getLogger();
-        $this->_instanceFolder = $this->_getInstanceFolder();
     }
     
     public function process(Application_Model_Queue &$queueElement = null) {

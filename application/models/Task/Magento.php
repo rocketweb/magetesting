@@ -12,9 +12,7 @@ extends Application_Model_Task {
     public function setup(Application_Model_Queue &$queueElement){
         
         parent::setup($queueElement);
-        
-        $this->logger = $this->_getLogger();
-        
+                
         if(in_array($queueElement->getTask(),array('MagentoInstall','MagentoDownload'))){
                        
             $this->_dbhost = $this->config->resources->db->params->host; //fetch from zend config

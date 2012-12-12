@@ -14,7 +14,6 @@ implements Application_Model_Task_Interface {
         $extensionModel = new Application_Model_Extension();
         $extensionModel->find($queueElement->getExtensionId());
         $this->_extensionObject = $extensionModel;
-        $this->logger = $this->_getLogger();
                 
     }
     
