@@ -123,7 +123,7 @@ class Application_Model_UserMapper {
                   ->setDowngraded($row->downgraded)
                   ->setBraintreeVaultId($row->braintree_vault_id)
                   ->setBraintreeSubscriptionId($row->braintree_subscription_id)
-                  ->setHasPapertraillAccount($row->has_papertrail_account)
+                  ->setHasPapertrailAccount($row->has_papertrail_account)
                   ->setPapertrailApiToken($row->papertrail_api_token);
 
             $entries[] = $entry;
