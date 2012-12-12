@@ -30,6 +30,7 @@ class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
                            array('r.comment')
                        )
                        ->where('user_id = ?', $user_id)
+                       ->where('status != ?', 'removing-magento')
                        ->group(array('instance.id'))
                        ->order(array('status asc', 'instance.id asc'));
         return $select;
