@@ -43,14 +43,14 @@ implements Application_Model_Task_Interface {
         if ($this->_extensionObject->getPrice() > 0 ){
             if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded())){
                 $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
-                $this->_updateStatus('error',$message);
-                return false;
+                $this->logger->log($message, Zend_Log::EMERG);
+                throw new Exception($message); 
             } 
         } else {
             if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension())){
                 $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
-                $this->_updateStatus('error',$message);
-                return false;
+                $this->logger->log($message, Zend_Log::EMERG);
+                throw new Exception($message);
             } 
         }
         
