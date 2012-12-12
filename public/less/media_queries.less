@@ -1,60 +1,186 @@
-/* Smartphones (portrait and landscape) ----------- */
+.visible-smallphone {
+    display: none !important;
+}
+
+.hidden-smallphone {
+    display: none !important;
+}
+
 @media only screen
+and (max-width : 979px) {
+	.visible-smallphone {
+        display: none !important;
+    }
+    
+    .hidden-smallphone {
+        display: inherit !important;
+    }
+    
+    .logo {
+        margin: 20px 0;
+    }
+    
+    .navbar-global {
+        .navbar-inner {
+            .nav {
+            	&.nav-mainmenu {
+            	   background-color: @Red;
+            	   
+            	   li {
+            	       &.open {
+            	           background-color: @Blue;
+            	           
+            	           .dropdown-menu {
+            	               margin-right: 15px;
+            	           }
+            	       }
+            	   }
+                }
+                
+                & > li > a {
+                    border-right: 0;
+                }
+                        
+                & > .first > a,
+                & > .first > a:hover, 
+                & > .first > a:focus {
+                    -webkit-border-bottom-left-radius: 0;
+                    -moz-border-radius-bottomleft: 0;
+                    border-bottom-left-radius: 0;
+                }
+                
+                & > .last > a,
+                & > .last > a:hover, 
+                & > .last > a:focus {
+                    -webkit-border-bottom-right-radius: 0;
+                    -moz-border-radius-bottomright: 0;
+                    border-bottom-right-radius: 0;
+                }
+                
+                &.nav-subpages {
+                	bottom: 0;
+                    padding: 12px 0 24px 0;
+                    
+                    & > li {
+                    	float: left;
+                        
+                        & > a {
+                        	margin-left: 0;
+                            margin-right: 24px;
+                        }
+                        
+                        &:last-of-type {
+                            & > a {
+                                margin-right: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        .btn {
+            margin-top: 33px;
+        }
+        
+        .btn-navbar {
+            background-color: @Red;
+            background-image: none;
+            border-color: darken(@Red, 15%);
+            
+            &:hover {
+                background-color: @Blue;
+                border-color: darken(@Blue, 15%);
+            }
+        }
+    }
+}
+
+
+/* Smartphones (portrait and landscape) ----------- */
+/*@media only screen
 and (min-device-width : 320px)
 and (max-device-width : 480px) {
 	
-}
+}*/
 
 /* Smartphones (landscape) ----------- */
-@media only screen
+/* @media only screen
 and (min-width : 321px) {
 	
-}
+} */
 
 /* Smartphones (portrait) ----------- */
 @media only screen
-and (max-width : 320px) {
+and (max-width : 348px) {
 	
+    .visible-smallphone {
+        display: inherit !important;
+    }
+    
+    .hidden-smallphone {
+        display: none !important;
+    }
+
+	.navbar-global {
+        .btn-navbar {
+            margin: 0 43% 20px 0;
+        }
+        
+        .navbar-inner {
+            .nav {
+                &.nav-subpages {
+                    & > li {
+                        & > a {
+                            font-size: 13px;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* iPads (portrait and landscape) ----------- */
-@media only screen
+/* @media only screen
 and (min-device-width : 768px)
 and (max-device-width : 1024px) {
 	
-}
+} */
 
 /* iPads (landscape) ----------- */
+/*
 @media only screen
 and (min-device-width : 768px)
 and (max-device-width : 1024px)
 and (orientation : landscape) {
 
-}
+}*/
+
 
 /* iPads (portrait) ----------- */
-@media only screen
+/* @media only screen
 and (min-device-width : 768px)
 and (max-device-width : 1024px)
 and (orientation : portrait) {
 	
-}
+} */
 
 /* Desktops and laptops ----------- */
-@media only screen
+/* @media only screen
 and (min-width : 1224px) {
 
-}
+} */
 
 /* Large screens ----------- */
-@media only screen
+/* @media only screen
 and (min-width : 1824px) {
 
-}
+} */
 
 /* iPhone 4 ----------- */
-@media
+/* @media
 only screen and (-webkit-min-device-pixel-ratio : 1.5),
 only screen and (min-device-pixel-ratio : 1.5) {
 
-}
+} */

@@ -41,28 +41,7 @@
 
 <body>
     <div id="wrap">
-
-    <!-- START GLOBAL NAVBAR -->
-    <div class="red-bar"></div>
-    <div class="navbar navbar-static-top navbar-global">
-        <div class="container">
-            <a class="logo pull-left"
-                href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">
-                <img src="<?php echo $this->baseUrl(); ?>/public/img/logo_magetesting.jpg" alt="Mage Testing" />
-            </a>
-            <?php echo $this->navigation()->menu()->setPartial(array('_partials/extendedTopMenu.phtml','default')); ?>
-        </div>
-        
-        <div class="container">
-        	<ul class="nav nav-subpages pull-right">
-        	    <li class="active"><a href="#">About Us</a></li>
-        	    <li><a href="#">Contact Us</a></li>
-        	    <li><a href="#">Partners</a></li>
-        	</ul>
-        </div>
-    </div>
-    <!-- END GLOBAL NAVBAR -->
-    
+        <?php echo $this->render('_partials/globalHeader.phtml'); ?>
     
         <div id="main">
             <div class="container mt">
@@ -72,7 +51,6 @@
             </div>
         </div>
     </div>
-    <!-- /container -->
     
     <div id="footer">
         <div class="container">

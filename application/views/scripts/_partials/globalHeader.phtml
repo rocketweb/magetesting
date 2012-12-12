@@ -1,0 +1,36 @@
+<div class="navbar navbar-static-top navbar-global">
+    <div class="red-bar"></div>
+    <div class="navbar-inner">
+        <div class="container">
+            
+            <a class="logo pull-left"
+                href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), 'default', true); ?>">
+                <img src="<?php echo $this->baseUrl(); ?>/public/img/logo_magetesting.jpg" alt="Mage Testing" />
+            </a>
+            
+            <a class="btn btn-navbar hidden-smallphone" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            
+            <div class="nav-collapse collapse">
+                <div class="container">
+                    <?php echo $this->navigation()->menu()->setPartial(array('_partials/extendedTopMenu.phtml','default')); ?>
+                </div>
+                <div class="container">
+                    <ul class="nav nav-subpages pull-right">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Partners</a></li>
+                    </ul>
+                </div>
+            </div>
+            <a class="btn btn-navbar visible-smallphone" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+        </div>
+    </div>
+</div>
