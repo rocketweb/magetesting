@@ -359,13 +359,13 @@ class Application_Model_User {
         return $this->_server_id;
     }
     
-    public function getHasPapertrialAccount()
+    public function getHasPapertrailAccount()
     {
-        return $this->_has_papertrial_account;
+        return $this->_has_papertrail_account;
     }
     
-    public function setHasPapertrialAccount($hasPapertrialAccount){
-        $this->_has_papertrial_account = (int)$hasPapertrialAccount;
+    public function setHasPapertrailAccount($hasPapertrailAccount){
+        $this->_has_papertrail_account = (int)$hasPapertrailAccount;
         return $this;
     }
     
