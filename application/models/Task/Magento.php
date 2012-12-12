@@ -8,13 +8,6 @@ extends Application_Model_Task {
     protected $_dbhost = '';
     protected $_dbname = '';
     protected $_systempass = '';
-
-    /* Prevents from running contructor of Application_Model_Task */
-    public function __construct(){
-        
-        $this->db = $this->_getDb();
-        $this->config = $this->_getConfig();
-    }   
     
     public function setup(Application_Model_Queue &$queueElement){
         

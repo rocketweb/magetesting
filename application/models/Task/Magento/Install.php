@@ -6,15 +6,6 @@ implements Application_Model_Task_Interface {
 
     protected $_adminemail = '';
 
-    
-    /* Prevents from running constructor of Application_Model_Task */
-    public function __construct(){
-        
-        $this->db = $this->_getDb();
-        $this->config = $this->_getConfig();
-        $this->filePrefix = $this->_getFilePrefix();
-    }
-    
     public function setup(Application_Model_Queue &$queueElement) {
         parent::setup($queueElement);
         $this->_adminemail = $this->config->magento->adminEmail; //fetch from zend config       
@@ -30,6 +21,8 @@ implements Application_Model_Task_Interface {
         $this->_createSystemAccount();
               
         $this->_prepareFilesystem();
+        
+        $this->_installFiles();
         
         $this->_setFilesystemPermissions();
 
@@ -105,9 +98,10 @@ implements Application_Model_Task_Interface {
         }
 
         $this->logger->log('Copying Magento package to store directory.', Zend_Log::INFO);
-        exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz ' . $this->_instanceFolder . '/' . $this->_domain . '/', $output);
+        $command = 'sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz ' . $this->_instanceFolder . '/' . $this->_domain . '/';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo cp " . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz ' . $this->_instanceFolder . '/' . $this->_domain . "/\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/keyset0.sql ' . $this->_instanceFolder . '/' . $this->_domain . '/');
@@ -116,24 +110,16 @@ implements Application_Model_Task_Interface {
 
         if ($this->_instanceObject->getSampleData()) {
             $this->logger->log('Copying sample data package to target directory.', Zend_Log::INFO);
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz ' . $this->_instanceFolder . '/' . $this->_domain . '/', $output);
+            $command = 'sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz ' . $this->_instanceFolder . '/' . $this->_domain . '/';
+            exec($command, $output);
             $message = var_export($output, true);
-            $this->logger->log("\nsudo cp " . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz ' . $this->_instanceFolder . '/' . $this->_domain . "/\n" . $message, Zend_Log::DEBUG);
+            $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             unset($output);
         }
 
         //echo "Extracting data...\n";
-        $this->_installFiles();
+        
 
-        $this->logger->log('Moving magento files.', Zend_Log::INFO);
-        $command = 'sudo mv magento/* magento/.??* .';
-        exec($command,$output);
-        $message = var_export($output, true);
-        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-        unset($output);
-
-        exec('rm -R ' . $this->_instanceFolder . '/' . $this->_instanceObject->getDomain() . '/magento');
-       
     }
 
     protected function _installFiles() {
@@ -157,11 +143,19 @@ implements Application_Model_Task_Interface {
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             unset($output);
 
-            $this->logger->log('Moving sample data files.', Zend_Log::INFO);
-            $command = 'sudo mv magento-sample-data-' . $this->_sampleDataVersion . '/* .';
+            /* Note: we cannot move (mv) here, because media already exists */
+            $this->logger->log('Copying sample data files to root.', Zend_Log::INFO);
+            $command = 'sudo cp -R magento-sample-data-' . $this->_sampleDataVersion . '/* .';
             exec($command, $output);
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+            
+            $this->logger->log('removing sample data files.', Zend_Log::INFO);
+            $command = 'rm -R magento-sample-data-' . $this->_sampleDataVersion . '';
+            exec($command, $output);
+            $message = var_export($output, true);
+            $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+            
             unset($output);
         }
     }
@@ -227,6 +221,8 @@ implements Application_Model_Task_Interface {
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             unset($output);
         }
+        
+        
     }
 
     protected function _setupMagentoConnect() {
@@ -327,6 +323,8 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         $this->db->update('instance', $set, $where);
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
         // end
+        
+        exec('sudo rm keyset0.sql keyset1.sql');
     }
     
     /**

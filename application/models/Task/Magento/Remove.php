@@ -4,14 +4,6 @@ class Application_Model_Task_Magento_Remove
 extends Application_Model_Task_Magento 
 implements Application_Model_Task_Interface {
    
-    /* Prevents from running constructor of Application_Model_Task */
-    public function __construct(){
-        
-        $this->db = $this->_getDb();
-        $this->config = $this->_getConfig();
-        $this->logger = $this->_getLogger();
-    }
-    
     public function setup(Application_Model_Queue &$queueElement){
         parent::setup($queueElement);
         $this->_instanceFolder = $this->_getInstanceFolder();
@@ -42,7 +34,7 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Removing store directory recursively.', Zend_Log::INFO);
         exec('rm -R '.$this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
         unlink($this->_instanceObject->getDomain());
-        chdir($startCwd);
+        chdir($this->_instanceFolder);
 
         $this->logger->log('Removing store database.', Zend_Log::INFO);
         $this->db->getConnection()->exec("use ".$this->config->resources->db->params->dbname);

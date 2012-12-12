@@ -13,16 +13,17 @@ class Application_Model_Task {
     protected $_instanceFolder = '';
        
     /* Needs to be private so tasks could use it */
-    private static $config;
-    private static $db;
-    private static $filePrefix;
-    private static $logger;
+    protected $config;
+    protected $db;
+    protected $filePrefix;
+    protected $logger;
     
-    public function __construct($config,$db) {
-        self::$config = $config;
-        self::$db = $db;
+    public function __construct(&$config,&$db) {
         
-        self::$filePrefix = array(
+        $this->config = $config;
+        $this->db = $db;
+        
+        $this->filePrefix = array(
             'CE' => 'magento',
             'EE' => 'enterprise',
             'PE' => 'professional',
@@ -37,15 +38,14 @@ class Application_Model_Task {
         
         $className = __CLASS__ . '_'.$classSuffix; 
         
-        $customTaskModel = new $className();       
+        $customTaskModel = new $className($this->config,$this->db);       
         $customTaskModel->setup($queueElement);
         $customTaskModel->process();
         
         /* only remove database row when no error was registered */
         if ($queueElement->getStatus()=='ready'){
-            self::$db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
-            
-            self::$db->delete('queue', array('id=' . $queueElement->getId()));
+            $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
+            $this->db->delete('queue', array('id=' . $queueElement->getId()));
         }
 
     }
@@ -70,7 +70,7 @@ class Application_Model_Task {
         $this->_userObject = $userModel;
         $this->_versionObject = $versionModel;
         
-        $this->_instanceFolder = self::$config->magento->systemHomeFolder . '/' . self::$config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';
+        $this->_instanceFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';
 
         //setup logggers
         $logger = new Zend_Log();
@@ -86,11 +86,11 @@ class Application_Model_Task {
 
         // setup mail writer
         $mail = new Zend_Mail();
-        $mail->setFrom(self::$config->admin->errorEmail->from->email)
-             ->addTo(self::$config->admin->errorEmail->to->email);
+        $mail->setFrom($this->config->admin->errorEmail->from->email)
+             ->addTo($this->config->admin->errorEmail->to->email);
 
         $writerMail = new Zend_Log_Writer_Mail($mail);
-        $writerMail->setSubjectPrependText(self::$config->admin->errorEmail->subject);
+        $writerMail->setSubjectPrependText($this->config->admin->errorEmail->subject);
         $writerMail->addFilter(Zend_Log::CRIT);
 
         $logger->addWriter($writerMail);
@@ -104,12 +104,12 @@ class Application_Model_Task {
             'store_id' => 'store_id'
         );
 
-        $writerDb = new Zend_Log_Writer_Db(self::$db, 'store_log', $columnMapping);
+        $writerDb = new Zend_Log_Writer_Db($this->db, 'store_log', $columnMapping);
         $writerDb->addFilter(Zend_Log::ERR);
 
         $logger->addWriter($writerDb);
 
-        self::$logger = $logger;
+        $this->logger = $logger;
     }
       
     /**
@@ -132,15 +132,15 @@ class Application_Model_Task {
     }
     
     protected function _clearInstanceCache(){
-        self::$logger->log('Clearing store cache.', Zend_Log::INFO);
+        $this->logger->log('Clearing store cache.', Zend_Log::INFO);
 
-        exec('sudo rm -R '.self::$config->magento->systemHomeFolder . '/' . self::$config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain().'/var/cache/*');
+        exec('sudo rm -R '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain().'/var/cache/*');
     }
     
     
     //leaving it here because we might want to apply it even after extension install
     protected function _applyXmlRpcPatch(){
-        self::$logger->log('Applying XML RPC patch.', Zend_Log::INFO);
+        $this->logger->log('Applying XML RPC patch.', Zend_Log::INFO);
 
         if ($this->_versionObject->getVersion() > '1.3.2.3' AND $this->_versionObject->getVersion() < '1.4.1.2'){
             //we're somewhere between 1.3.2.4 and 1.4.1.1
@@ -204,10 +204,10 @@ class Application_Model_Task {
             try {
             
                 $this->_instanceObject->setStatus($status);
-                self::$db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
+                $this->db->update('instance', array('status' => $status), 'id=' . $this->_instanceObject->getId());
 
             } catch (Exception $e){
-                self::$logger->log('Saving store status failed: ' . $e->getMessage(), Zend_Log::EMERG);
+                $this->logger->log('Saving store status failed: ' . $e->getMessage(), Zend_Log::EMERG);
             }
         }
         
@@ -215,18 +215,18 @@ class Application_Model_Task {
         if(in_array($status,$queueStatuses) ){
             try {
                 $this->_queueObject->setStatus($queueStatuses[$status]);
-                self::$db->update('queue', array('status' => $queueStatuses[$status]), 'id=' . $this->_queueObject->getId());
+                $this->db->update('queue', array('status' => $queueStatuses[$status]), 'id=' . $this->_queueObject->getId());
                 
             } catch (Exception $e){
-                self::$logger->log('Saving queue status failed: ' . $e->getMessage(), Zend_Log::EMERG);
+                $this->logger->log('Saving queue status failed: ' . $e->getMessage(), Zend_Log::EMERG);
             }
         }
         
         
         if ($errorMessage!=null){
-            self::$db->update('instance', array('error_message' => $errorMessage), 'id=' . $this->_instanceObject->getId());
+            $this->db->update('instance', array('error_message' => $errorMessage), 'id=' . $this->_instanceObject->getId());
         
-            self::$logger->log($errorMessage, Zend_Log::DEBUG);
+            $this->logger->log($errorMessage, Zend_Log::DEBUG);
         }
         
                 
@@ -238,26 +238,26 @@ class Application_Model_Task {
      * @return Zend_Config
      */
     protected function _getConfig(){
-        return self::$config;
+        return $this->config;
     }
     
     protected function _getDb(){
-        return self::$db;
+        return $this->db;
     }
     
     protected function _getFilePrefix(){
-        return self::$filePrefix;
+        return $this->filePrefix;
     }
     
     protected function _getLogger(){
-        return self::$logger;
+        return $this->logger;
     }
     
     protected function _getInstanceFolder(){
         if(isset($this->_instanceFolder)) {
             return $this->_instanceFolder;
         }
-        return $this->_instanceFolder = self::$config->magento->systemHomeFolder . '/' . self::$config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';
+        return $this->_instanceFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';
     }
 
 //move clearinstancecache here
