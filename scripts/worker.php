@@ -74,12 +74,11 @@ if(isset($opts->help)) {
 }
 
 if(!empty($queueElements)){
-    
-    /*TODO: rewrite this to not pass arguments */
-    $taskModel = new Application_Model_Task($config,$db);
+      
+    $worker = new Application_Model_Worker($config,$db);
     
     foreach ($queueElements as $queueElement){
-        $taskModel->process($queueElement);
+        $worker->work($queueElement);
     }
     
 } else {

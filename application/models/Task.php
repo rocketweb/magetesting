@@ -31,35 +31,7 @@ class Application_Model_Task {
     }
      
     /* Runs specific method depending on task type */
-    public function process(Application_Model_Queue &$queueElement){
-               
-        $filter = new Zend_Filter_Word_CamelCaseToUnderscore();
-        $classSuffix = $filter->filter($queueElement->getTask());
-        
-        $className = __CLASS__ . '_'.$classSuffix; 
- 
-        $newRetryCount = $queueElement->getRetryCount() + 1;
-        $this->db->update('queue', array('retry_count' => $newRetryCount), 'id = ' . $queueElement->getId());
-        $queueElement->setRetryCount($newRetryCount)->save();
-        
-        try {
-            $customTaskModel = new $className($this->config,$this->db);       
-            $customTaskModel->setup($queueElement);
-            $this->db->update('queue', array('status' => 'processing'), 'id = ' . $queueElement->getId());
-            $customTaskModel->process();
-
-            /* TODO: remove this if after all exceptions are implemented on errors */
-            if ($queueElement->getStatus()=='ready'){
-                $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
-                $this->db->delete('queue', array('id=' . $queueElement->getId()));
-                
-                $this->db->update('instance', array('status' => 'ready'), 'id = ' . $queueElement->getInstanceId());
-            }
-        
-        } catch (Exception $e){
-            $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
-            $this->db->update('instance', array('error_message' => $e->getMessage()), 'id = ' . $queueElement->getInstanceId());
-        }
+    public function process(Application_Model_Queue $queueElement){       
 
     }
     /**
@@ -237,7 +209,6 @@ class Application_Model_Task {
         
         if ($errorMessage!=null){
             $this->db->update('instance', array('error_message' => $errorMessage), 'id=' . $this->_instanceObject->getId());
-        
             $this->logger->log($errorMessage, Zend_Log::DEBUG);
         }
         
@@ -246,6 +217,7 @@ class Application_Model_Task {
     }
     
     /**
+     * @deprecated: use $this->config
      * Returns config Object
      * @return Zend_Config
      */
@@ -253,18 +225,34 @@ class Application_Model_Task {
         return $this->config;
     }
     
+    /**
+     * @deprecated: use $this->db
+     * @return type
+     */
     protected function _getDb(){
         return $this->db;
     }
     
+    /**
+     * @deprecated: use $this->filePrefix 
+     * @return type
+     */
     protected function _getFilePrefix(){
         return $this->filePrefix;
     }
     
+    /**
+     * @deprecated: use $this->logger
+     * @return type
+     */
     protected function _getLogger(){
         return $this->logger;
     }
     
+    /**
+     * @deprecated: use $this->_instanceFolder
+     * @return type
+     */
     protected function _getInstanceFolder(){
         if(isset($this->_instanceFolder)) {
             return $this->_instanceFolder;
@@ -272,5 +260,4 @@ class Application_Model_Task {
         return $this->_instanceFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';
     }
 
-//move clearinstancecache here
 }
