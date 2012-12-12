@@ -81,7 +81,7 @@ class Application_Model_UserMapper {
              ->setBraintreeVaultId($row->braintree_vault_id)
              ->setBraintreeSubscriptionId($row->braintree_subscription_id)
              ->setServerId($row->server_id)
-             ->setHasPapertrialAccount($row->has_papertrail_account)
+             ->setHasPapertrailAccount($row->has_papertrail_account)
              ->setPapertrailApiToken($row->papertrail_api_token);
 
         if($returnPassword) {
@@ -123,7 +123,7 @@ class Application_Model_UserMapper {
                   ->setDowngraded($row->downgraded)
                   ->setBraintreeVaultId($row->braintree_vault_id)
                   ->setBraintreeSubscriptionId($row->braintree_subscription_id)
-                  ->setHasPapertrialAccount($row->has_papertrail_account)
+                  ->setHasPapertraillAccount($row->has_papertrail_account)
                   ->setPapertrailApiToken($row->papertrail_api_token);
 
             $entries[] = $entry;
