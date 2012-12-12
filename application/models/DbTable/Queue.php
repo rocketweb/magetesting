@@ -19,6 +19,7 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->where('queue.server_id = ?',$server_id)
                     ->where('task <> ?','MagentoDownload')
                     ->where('queue.status = ?','pending')
+                    ->where('retry_count <=','3')
                     ->where('parent_id = ?',0)
                     ->order(array('queue.id ASC', 'parent_id asc'));
             break;
@@ -33,6 +34,7 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->where('queue.server_id = ?',$server_id)
                     ->where('task = ?','MagentoDownload')
                     ->where('queue.status = ?','pending')
+                    ->where('retry_count <=','3')
                     ->where('parent_id = ?',0)
                     ->order(array('queue.id ASC', 'parent_id asc'));
             break;
@@ -47,6 +49,7 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->join('version', 'instance.version_id = version.id', 'version')
                     ->where('queue.server_id = ?',$server_id)
                     ->where('queue.status = ?','pending')
+                    ->where('retry_count <=','3')
                     ->where('parent_id = ?',0)
                     ->order(array('queue.id ASC', 'parent_id asc'));
             break;

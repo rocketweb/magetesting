@@ -45,6 +45,7 @@ class Application_Model_Task {
         try {
             $customTaskModel = new $className($this->config,$this->db);       
             $customTaskModel->setup($queueElement);
+            $this->db->update('queue', array('status' => 'processing'), 'id = ' . $queueElement->getId());
             $customTaskModel->process();
 
             /* TODO: remove this if after all exceptions are implemented on errors */
@@ -56,6 +57,7 @@ class Application_Model_Task {
             }
         
         } catch (Exception $e){
+            $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
             $this->db->update('instance', array('error_message' => $e->getMessage()), 'id = ' . $queueElement->getInstanceId());
         }
 
