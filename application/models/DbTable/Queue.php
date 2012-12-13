@@ -21,7 +21,8 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->where('queue.status = ?','pending')
                     ->where('retry_count <= ?','3')
                     ->where('parent_id = ?',0)
-                    ->order(array('queue.id ASC', 'parent_id asc'));
+                    ->order(array('queue.id ASC', 'parent_id asc'))
+                    ->limit(1);
             break;
             
             case 'download':
@@ -36,7 +37,8 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->where('queue.status = ?','pending')
                     ->where('retry_count <= ?','3')
                     ->where('parent_id = ?',0)
-                    ->order(array('queue.id ASC', 'parent_id asc'));
+                    ->order(array('queue.id ASC', 'parent_id asc'))
+                    ->limit(1);
             break;
             
             case 'all':
@@ -51,13 +53,18 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->where('queue.status = ?','pending')
                     ->where('retry_count <= ?','3')
                     ->where('parent_id = ?',0)
-                    ->order(array('queue.id ASC', 'parent_id asc'));
+                    ->order(array('queue.id ASC', 'parent_id asc'))
+                    ->limit(1);
             break;
             
                 
         }       
-        
-        return $this->fetchAll($select);
+        $result = $this->fetchRow($select);
+        if (count($result)){
+            return $result;
+        } else {
+            return false;
+        }
     }
     
     /**

@@ -28,7 +28,7 @@ try {
     $sql = $select
         ->from('queue')
         ->joinLeft('user', 'queue.user_id = user.id', array('email'))
-        ->where('queue.status =?', 'installing');        
+        ->where('queue.status =?', 'processing');        
 
 $query = $sql->query();
 $queueElement = $query->fetch();
@@ -48,47 +48,38 @@ if(isset($opts->help)) {
     /* process only downloads */
     $fp = fopen(APPLICATION_PATH . '/../data/locks/worker_downloadonly.lock', "c");
 
-    if (flock($fp, LOCK_EX | LOCK_NB)) { 
-        $queueModel = new Application_Model_Queue();
-        $queueElements  = $queueModel->getForServer($current_server_id,'download');
+    if (flock($fp, LOCK_EX | LOCK_NB)) {
+        $mode = 'download';  
     }
 } elseif(isset($opts->disabledownload)) {
     /* process everything but downloads */
     $fp = fopen(APPLICATION_PATH . '/../data/locks/worker_disabledownload.lock', "c");
 
-    if (flock($fp, LOCK_EX | LOCK_NB)) { 
-               
-        $queueModel = new Application_Model_Queue();
-        $queueElements  = $queueModel->getForServer($current_server_id,'allbutdownload');
-
+    if (flock($fp, LOCK_EX | LOCK_NB)) {
+        $mode = 'allbutdownload';
     }
 } else {
     /* process all queue tasks */ 
     $fp = fopen(APPLICATION_PATH . '/../data/locks/worker_all.lock', "c");
-        if (flock($fp, LOCK_EX | LOCK_NB)) { 
-
-        $queueModel = new Application_Model_Queue();
-        $queueElements  = $queueModel->getForServer($current_server_id,'all');
-
+    if (flock($fp, LOCK_EX | LOCK_NB)) {
+        $mode = 'all';
     }
 }
 
-if(!empty($queueElements)){
-      
+$queueModel = new Application_Model_Queue();
+
     $worker = new Application_Model_Worker($config,$db);
-    
-    foreach ($queueElements as $queueElement){
+    while ($queueElement = $queueModel->getForServer($current_server_id,$mode)){
         $worker->work($queueElement);
     }
     
-} else {
+/*} else {
     
     $message = 'Nothing in pending queue';
     echo $message.PHP_EOL;
     $log->log($message, LOG_INFO, ' ');
-    
         
-}
+}*/
 /* release the lock */
 flock($fp, LOCK_UN);
 

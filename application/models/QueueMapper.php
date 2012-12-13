@@ -101,9 +101,8 @@ class Application_Model_QueueMapper {
     }
     
     public function getForServer($worker_id,$type){
-        $resultSet = $this->getDbTable()->getForServer($worker_id,$type);
-        $entries   = array();
-        foreach ($resultSet as $row) {
+        $row = $this->getDbTable()->getForServer($worker_id,$type);
+       if ($row){ 
             $entry = new Application_Model_Queue();
             $entry->setId($row->id)
             ->setInstanceId($row->instance_id)
@@ -116,9 +115,10 @@ class Application_Model_QueueMapper {
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
             ->setAddedDate($row->added_date);
-            $entries[] = $entry;
-        }
-        return $entries;
+            return $entry;
+       } else {
+           return false;
+       }
     }
     
     public function getParentIdForExtensionInstall($instance_id){
