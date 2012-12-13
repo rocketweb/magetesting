@@ -86,8 +86,6 @@ implements Application_Model_Task_Interface {
 
         chdir($this->_domain);
 
-        //echo "Copying package to target directory...\n";
-
         if (!file_exists(APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz')) {
             $message = 'Magento package ' . $this->_magentoEdition . ' ' . $this->_magentoVersion . ' does not exist';
             $this->logger->log($message, Zend_Log::EMERG);
@@ -113,10 +111,6 @@ implements Application_Model_Task_Interface {
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             unset($output);
         }
-
-        //echo "Extracting data...\n";
-        
-
     }
 
     protected function _installFiles() {

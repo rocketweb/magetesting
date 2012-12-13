@@ -36,7 +36,6 @@ $queueElement = $query->fetch();
 if ($queueElement) {
     //something is currently installed, abort
     $message = 'Another installation in progress, aborting';
-    echo $message;
     $log->log($message, LOG_INFO);
     exit;
 }
@@ -76,7 +75,6 @@ $queueModel = new Application_Model_Queue();
 /*} else {
     
     $message = 'Nothing in pending queue';
-    echo $message.PHP_EOL;
     $log->log($message, LOG_INFO, ' ');
         
 }*/

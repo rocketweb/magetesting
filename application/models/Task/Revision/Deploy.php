@@ -97,8 +97,7 @@ implements Application_Model_Task_Interface {
             if (isset($pathinfo['dirname']) &&  (!file_exists($hash.'/mageroot/'.$pathinfo['dirname']) || !is_dir($hash.'/mageroot/'.$pathinfo['dirname']))){
                 exec('mkdir -p '.$hash.'/mageroot/'.$pathinfo['dirname']);
             }
-            
-            //echo 'sudo cp ' . $hash . '/' . $this->_instanceObject->getDomain().'/'.$file. ' '.$hash.'/mageroot/'.$file.PHP_EOL;
+
             exec('sudo cp ' . $hash . '/' . $this->_instanceObject->getDomain().'/'.$file . ' '.$hash.'/mageroot/'.$file);
         }
        

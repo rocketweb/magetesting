@@ -74,7 +74,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         } else {
             $select->where('e.is_dev  = ? ',0);
         }
-        #echo $select->__toString();die;
+
         return $this->fetchAll($select);
     }
 

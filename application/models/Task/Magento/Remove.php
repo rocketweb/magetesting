@@ -13,13 +13,13 @@ implements Application_Model_Task_Interface {
         $DbManager = new Application_Model_DbTable_Privilege($this->db,$this->config);
         if ($DbManager->checkIfDatabaseExists($this->_dbname)){
             try {
-                //echo 'trying to drop '.$this->_dbname;
+                $this->logger->log('Dropping ' . $this->_dbname . ' database.', Zend_Log::INFO);
                 $DbManager->dropDatabase($this->_dbname);
             } catch(PDOException $e){
                 $message = 'Could not remove database for store.';
                 $this->logger->log($message, Zend_Log::CRIT);
                 flock($fp, LOCK_UN); // release the lock
-                exit;
+                throw new Exception($message);
             }
         } else {
             $message = 'Store database does not exist, ignoring.';
@@ -35,7 +35,7 @@ implements Application_Model_Task_Interface {
         unlink($this->_instanceObject->getDomain());
         chdir($this->_instanceFolder);
 
-        $this->logger->log('Removing store database.', Zend_Log::INFO);
+        $this->logger->log('Removing store entries from Mage Testing database.', Zend_Log::INFO);
         $this->db->getConnection()->exec("use ".$this->config->resources->db->params->dbname);
       
         //remove instance extensions
