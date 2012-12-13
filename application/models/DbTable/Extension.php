@@ -43,33 +43,39 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
     
     public function fetchInstanceExtensions($instance) {
         $select = $this->select()
-                        ->from($this->_name)
+                        ->from(array('e' => $this->_name))
                         ->setIntegrityCheck(false)
-                        ->where('extension.edition = ?', $instance['edition'])
+                        ->where('ie.instance_id = ? OR ie.instance_id IS NULL', $instance->id)
+                        ->where('e.edition = ?', $instance['edition'])
                         ->where(' ? 
-                                 BETWEEN REPLACE(from_version,\'.\',\'\')
-                                 AND REPLACE(to_version,\'.\',\'\')',
+                                 BETWEEN REPLACE(e.from_version,\'.\',\'\')
+                                 AND REPLACE(e.to_version,\'.\',\'\')',
                             (int)str_replace('.','',$instance['version'])
                         );
         $select->joinLeft(
-                'instance_extension',
-                'extension.id = instance_extension.extension_id AND (instance_id IS NULL OR instance_id = '.$this->_db->quote($instance->id).')',
-                'instance_id'
+            array('ie' => 'instance_extension'),
+            'e.id = ie.extension_id',
+            'ie.instance_id'
         );
         $select->joinLeft(
-            'queue',
-            'queue.instance_id = instance_extension.instance_id AND queue.extension_id = extension.id',
-            'status'
+            array('q' => 'queue'),
+            'q.instance_id = ie.instance_id AND q.extension_id = e.id',
+            'q.id as q_id'
         );
-        $select->joinLeft('extension_category', 'extension_category.id = extension.category_id', 'extension_category.class as category_class');
-        $select->order(array('instance_id DESC', 'price DESC'));
+        $select->joinLeft(
+            array('ec' => 'extension_category'),
+            'ec.id = e.category_id',
+            'ec.class as category_class'
+        );
+        $select->order(array('ie.instance_id DESC', 'q_id ASC', 'price DESC'));
+        $select->group(new Zend_Db_Expr('e.id DESC'));
         //get also developr extensions for admins
         if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
-            $select->where('is_dev IN (?)',array(0,1));
+            $select->where('e.is_dev IN (?)',array(0,1));
         } else {
-            $select->where('is_dev  = ? ',0);
+            $select->where('e.is_dev  = ? ',0);
         }
-        //echo $select->__toString();die;
+        #echo $select->__toString();die;
         return $this->fetchAll($select);
     }
 
