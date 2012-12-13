@@ -26,27 +26,28 @@ implements Application_Model_Task_Interface {
         $transportModel = new Application_Model_Transport();
         $transportModel = $transportModel->factory($this->_instanceObject);
         if (!$transportModel){
-            $this->_updateStatus('error', 'No such protocol class');
-            return;
+            $message = 'Protocol "' . $this->_instanceObject->getCustomProtocol() . '" is not supported.';
+            $this->logger->log($message, Zend_Log::EMERG);
+            throw Exception($message);
         }
         
         //do a sample connection to wget to check if protocol credentials are ok
         if (!$transportModel->checkProtocolCredentials()) {
-            $message = 'Credentials are incorrect';
-            $this->_updateStatus('error', $message);
-            return;
+            $message = 'Credentials to external server are incorrect.';
+            $this->logger->log($message, Zend_Log::ERR);
+            throw new Exception($message);
         }
 
         if (!$transportModel->checkDatabaseDump()) {
             $message = $transportModel->getError();
-            $this->_updateStatus('error', $message);
-            return;
+            $this->logger->log($message, Zend_Log::ERR);
+            throw new Exception($message);
         }
 
         if (!$transportModel->downloadFilesystem()) {
-            $message = 'Couldn\'t find app/Mage.php file data, will not install queue element';
-            $this->_updateStatus('error', $message);
-            return;
+            $message = 'Couldn\'t find app/Mage.php file data.';
+            $this->logger->log($message, Zend_Log::ERR);
+            throw new Exception($message);
         }
 
         $transportModel->downloadDatabase();
@@ -133,8 +134,9 @@ implements Application_Model_Task_Interface {
         unset($output);
 
         if (!file_exists($this->_instanceFolder . '/' . $this->_domain) || !is_dir($this->_instanceFolder . '/' . $this->_domain)) {
-            $message = 'Directory does not exist, aborting';
-            $this->_updateStatus('error', $message);
+            $message = 'Store directory does not exist, aborting.';
+            $this->logger->log($message, Zend_Log::EMERG);
+            throw new Exception($message);
         }
 
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);

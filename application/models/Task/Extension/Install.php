@@ -82,9 +82,8 @@ implements Application_Model_Task_Interface {
         if (count($output)==0){
             
             $message = 'There was an error while installing extension '.$this->_extensionObject->getName();
-            $this->_updateStatus('error',$message);
-            unset($output);
-            return false;
+            $this->logger->log($message, Zend_Log::EMERG);
+            throw new Exception($message);
         }      
         
     }    

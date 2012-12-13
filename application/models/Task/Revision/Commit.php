@@ -62,15 +62,19 @@ implements Application_Model_Task_Interface {
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
         
         if (!count($output)){
-            $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
+            $message = 'No changes have been made, manual commit aborted';
+            $this->logger->log($message, Zend_Log::NOTICE);
+            // return false to avoid proceeding with this task processing
+            // but to avoid setting store status as error
             return false;
         }
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
                
         if (!isset($matches[2])){
-            $this->_updateStatus('ready', 'Could not find revision information, aborting');
-            return false;
+            $message = 'Could not find revision information, aborting';
+            $this->logger->log($message, Zend_Log::CRIT);
+            throw new Exception($message);
         }
         
         //insert revision entry
@@ -92,15 +96,17 @@ implements Application_Model_Task_Interface {
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
                 
         if (count($output) < 3 && trim($output[2])=='nothing to commit (working directory clean)'){
-            $this->_updateStatus('ready', 'No changes have been made, manual commit aborted');
-            return false;
+            $message = 'No changes have been made, automatic commit aborted';
+            $this->logger->log($message, Zend_Log::CRIT);
+            throw new Exception($message);
         }
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0], $matches);
                
         if (!isset($matches[2])){
-            $this->_updateStatus('ready', 'Could not find revision information, aborting');
-            return false;
+            $message = 'Could not find revision information, aborting';
+            $this->logger->log($message, Zend_Log::CRIT);
+            throw new Exception($message);
         }
         
         //insert revision entry

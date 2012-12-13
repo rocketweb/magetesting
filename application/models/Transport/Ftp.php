@@ -164,13 +164,13 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
 
        //limit is in bytes!
         if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){                       
-            $this->_errorMessage = 'Couldn\'t find sql data file, will not install queue element';
+            $this->_errorMessage = 'Couldn\'t find sql data file.';
             return false;        
         }
         unset($output);
 
         if ($sqlSizeInfo[1] > $this->_sqlFileLimit){
-            $this->_errorMessage = 'Sql file is too big';
+            $this->_errorMessage = 'Sql file is too big.';
             return false;  
         }
         
