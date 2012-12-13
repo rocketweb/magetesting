@@ -23,6 +23,8 @@ class Application_Model_Task_Papertrail extends Application_Model_Task {
      * @var string|null 
      */
     protected $_uri = null;
+    
+    protected $_url_suffix;
 
     public function setup(\Application_Model_Queue &$queueElement) {
         parent::setup($queueElement);
@@ -91,11 +93,9 @@ class Application_Model_Task_Papertrail extends Application_Model_Task {
     public function getUri($extra = null) {
         if(is_null($this->_uri)) {
             $name = '';
-            
-            if(in_array('Application_Model_Task_Papertrail', class_parents($this))) {
-                //$name = self::NAME;
-                /*TODO: marcin please fix this*/
-                $name = 'self::NAME';
+
+            if($this->_url_suffix) {
+                $name = $this->_url_suffix;
             }
             
             if(!is_null($extra)){

@@ -10,6 +10,12 @@ implements Application_Model_Task_Interface {
     
     CONST NAME = 'distributors/accounts';
     CONST METHOD = 'POST';
+    
+    public function setup(\Application_Model_Queue &$queueElement) {
+        parent::setup($queueElement);
+        
+        $this->_url_suffix = self::NAME;
+    }
 
     public function process() {
         $this->_updateStatus('creating-papertrail-user');

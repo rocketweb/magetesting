@@ -8,6 +8,12 @@ class Application_Model_Task_Papertrail_User_Remove extends Application_Model_Ta
     
     CONST NAME = 'distributors/accounts';
     CONST METHOD = 'DELETE';
+    
+    public function setup(\Application_Model_Queue &$queueElement) {
+        parent::setup($queueElement);
+        
+        $this->_url_suffix = self::NAME;
+    }
 
     public function process() {
         $this->_updateStatus('removing-papertrail-user');
