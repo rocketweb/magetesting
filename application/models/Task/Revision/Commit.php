@@ -84,8 +84,11 @@ implements Application_Model_Task_Interface {
     
     protected function _commitAutomatic(){
         $this->logger->log('Making automatic GIT commit.', Zend_Log::INFO);
-        exec('git add -A');
-        
+        exec('git add -A', $output);
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+        unset($output);
+
         $output = '';
         $params = $this->_queueObject->getTaskParams(); 
         
@@ -94,7 +97,10 @@ implements Application_Model_Task_Interface {
         }
 
         exec('git commit -m "'.$params['commit_comment'].'"',$output);
-                
+
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+
         if (count($output) < 3 && trim($output[2])=='nothing to commit (working directory clean)'){
             $message = 'No changes have been made, automatic commit aborted';
             $this->logger->log($message, Zend_Log::CRIT);
