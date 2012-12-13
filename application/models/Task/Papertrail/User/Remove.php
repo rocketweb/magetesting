@@ -17,12 +17,15 @@ class Application_Model_Task_Papertrail_User_Remove extends Application_Model_Ta
 
     public function process() {
         $this->_updateStatus('removing-papertrail-user');
-        
+
+        $this->logger->log('Removing papertrail user.', Zend_Log::INFO);
+
         $data = $this->_init($this->getUri((string)$this->_userObject->getId()), self::METHOD)
                      ->_getDataResponse();
         
         if(isset($data->message)) {
             //log the message with problem
+            $this->logger->log($data->message, Zend_Log::CRIT);
             throw new Application_Model_Task_Exception($data->message);
         }
         

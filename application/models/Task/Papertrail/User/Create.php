@@ -19,13 +19,16 @@ implements Application_Model_Task_Interface {
 
     public function process() {
         $this->_updateStatus('creating-papertrail-user');
-        
+
+        $this->logger->log('Creating papertrail user.', Zend_Log::INFO);
+
         $data = $this->_init($this->getUri(), self::METHOD)
                      ->_setParameterPost()
                      ->_getDataResponse();
         
         if(isset($data->message)) {
             //log the message with problem
+            $this->logger->log($data->message, Zend_Log::CRIT);
             throw new Application_Model_Task_Exception($data->message);
         }
         
