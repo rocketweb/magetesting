@@ -45,7 +45,6 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $select = $this->select()
                         ->from(array('e' => $this->_name))
                         ->setIntegrityCheck(false)
-                        ->where('ie.instance_id = ? OR ie.instance_id IS NULL', $instance->id)
                         ->where('e.edition = ?', $instance['edition'])
                         ->where(' ? 
                                  BETWEEN REPLACE(e.from_version,\'.\',\'\')
@@ -54,7 +53,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                         );
         $select->joinLeft(
             array('ie' => 'instance_extension'),
-            'e.id = ie.extension_id',
+            new Zend_Db_Expr('e.id = ie.extension_id AND ( ie.instance_id =  '.$this->getDefaultAdapter()->quote($instance->id).' OR ie.instance_id IS NULL )'),
             'ie.instance_id'
         );
         $select->joinLeft(
@@ -75,7 +74,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         } else {
             $select->where('e.is_dev  = ? ',0);
         }
-        #echo $select->__toString();die;
+        echo $select->__toString();die;
         return $this->fetchAll($select);
     }
 
