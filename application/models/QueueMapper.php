@@ -120,4 +120,9 @@ class Application_Model_QueueMapper {
         }
         return $entries;
     }
+    
+    public function getParentIdForExtensionInstall($instance_id){
+        return $this->getDbTable()->getParentIdForExtensionInstall($instance_id);
+    }
+    
 }

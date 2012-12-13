@@ -134,6 +134,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
+                    $initId = $queueModel->getId();
                     
                     //Add queue item with RevisionCommit
                     $queueModel = new Application_Model_Queue();                    
@@ -149,7 +150,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setUserId($this->auth->getIdentity()->id);
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setExtensionId(0);  
-                    $queueModel->setParentId($installId);  
+                    $queueModel->setParentId($initId);  
                     $queueModel->save();
                     
                     unset($queueModel);
@@ -540,13 +541,20 @@ class QueueController extends Integration_Controller_Action {
 
                     /* Adding extension to queue */
                     try {
-                        $extensionId = $request->getParam('extension_id');
+                        
+                        /** 
+                         * Find if we have any other ExtensionInstall tasks 
+                         * for this instance 
+                         */
                         $extensionQueueItem = new Application_Model_Queue();
+                        $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($instance->id);
+                        
+                        $extensionId = $request->getParam('extension_id');
                         $extensionQueueItem->setInstanceId($instance->id);
                         $extensionQueueItem->setStatus('pending');
                         $extensionQueueItem->setUserId($instance->user_id);
                         $extensionQueueItem->setExtensionId($extensionId);
-                        $extensionQueueItem->setParentId(0);
+                        $extensionQueueItem->setParentId($extensionParent);
                         $extensionQueueItem->setServerId($instance->server_id);
                         $extensionQueueItem->setTask('ExtensionInstall');
                         $extensionQueueItem->save();

@@ -253,4 +253,8 @@ class Application_Model_Queue {
         return $this->getMapper()->getForServer($worker_id,$type);
     }
     
+    public function getParentIdForExtensionInstall($instance_id){
+        return $this->getMapper()->getParentIdForExtensionInstall($instance_id);
+    }
+    
 }

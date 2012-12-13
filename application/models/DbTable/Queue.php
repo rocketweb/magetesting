@@ -59,4 +59,27 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
         
         return $this->fetchAll($select);
     }
+    
+    /**
+     * every etension install has to wait for all other install+commit tasks
+     * @param type $instanceId
+     * @return int
+     */
+     
+    public function getParentIdForExtensionInstall($instanceId){
+        $select = $this->select()
+                    ->setIntegrityCheck(false)
+                    ->from($this->_name)
+                    ->where('queue.instance_id = ?',$instanceId)
+                    ->where('task = ?','RevisionCommit')
+                    ->order(array('queue.id DESC'))
+                    ->limit(1);
+        $row = $this->fetchRow($select);
+        
+        if($row && isset($row['id'])){
+            return $row['id'];
+        } else {
+            return 0;
+        }
+    }
 }
