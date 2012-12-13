@@ -74,7 +74,7 @@ implements Application_Model_Task_Interface {
         if (!isset($matches[2])){
             $message = 'Could not find revision information, aborting';
             $this->logger->log($message, Zend_Log::CRIT);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
         
         //insert revision entry
@@ -98,7 +98,7 @@ implements Application_Model_Task_Interface {
         if (count($output) < 3 && trim($output[2])=='nothing to commit (working directory clean)'){
             $message = 'No changes have been made, automatic commit aborted';
             $this->logger->log($message, Zend_Log::CRIT);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0], $matches);
@@ -106,7 +106,7 @@ implements Application_Model_Task_Interface {
         if (!isset($matches[2])){
             $message = 'Could not find revision information, aborting';
             $this->logger->log($message, Zend_Log::CRIT);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
         
         //insert revision entry

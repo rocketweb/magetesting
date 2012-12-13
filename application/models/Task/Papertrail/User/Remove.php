@@ -23,7 +23,7 @@ class Application_Model_Task_Papertrail_User_Remove extends Application_Model_Ta
         
         if(isset($data->message)) {
             //log the message with problem
-            throw new Exception($data->message);
+            throw new Application_Model_Task_Exception($data->message);
         }
         
         if(isset($data->status) && $data->status == 'ok') {

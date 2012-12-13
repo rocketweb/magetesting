@@ -28,26 +28,26 @@ implements Application_Model_Task_Interface {
         if (!$transportModel){
             $message = 'Protocol "' . $this->_instanceObject->getCustomProtocol() . '" is not supported.';
             $this->logger->log($message, Zend_Log::EMERG);
-            throw Exception($message);
+            throw Application_Model_Task_Exception($message);
         }
         
         //do a sample connection to wget to check if protocol credentials are ok
         if (!$transportModel->checkProtocolCredentials()) {
             $message = 'Credentials to external server are incorrect.';
             $this->logger->log($message, Zend_Log::ERR);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
 
         if (!$transportModel->checkDatabaseDump()) {
             $message = $transportModel->getError();
             $this->logger->log($message, Zend_Log::ERR);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
 
         if (!$transportModel->downloadFilesystem()) {
             $message = 'Couldn\'t find app/Mage.php file data.';
             $this->logger->log($message, Zend_Log::ERR);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
 
         $transportModel->downloadDatabase();
@@ -136,7 +136,7 @@ implements Application_Model_Task_Interface {
         if (!file_exists($this->_instanceFolder . '/' . $this->_domain) || !is_dir($this->_instanceFolder . '/' . $this->_domain)) {
             $message = 'Store directory does not exist, aborting.';
             $this->logger->log($message, Zend_Log::EMERG);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
 
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);

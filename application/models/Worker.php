@@ -32,7 +32,7 @@ class Application_Model_Worker {
                 $this->db->update('instance', array('status' => 'ready'), 'id = ' . $queueElement->getInstanceId());
             }
         
-        } catch (Exception $e){
+        } catch (Application_Model_Task_Exception $e){
             $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
             $this->db->update('instance', array('error_message' => $e->getMessage()), 'id = ' . $queueElement->getInstanceId());
         }

@@ -43,13 +43,13 @@ implements Application_Model_Task_Interface {
             if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded())){
                 $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
                 $this->logger->log($message, Zend_Log::EMERG);
-                throw new Exception($message); 
+                throw new Application_Model_Task_Exception($message); 
             } 
         } else {
             if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension())){
                 $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
                 $this->logger->log($message, Zend_Log::EMERG);
-                throw new Exception($message);
+                throw new Application_Model_Task_Exception($message);
             } 
         }
         
@@ -83,7 +83,7 @@ implements Application_Model_Task_Interface {
             
             $message = 'There was an error while installing extension '.$this->_extensionObject->getName();
             $this->logger->log($message, Zend_Log::EMERG);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }      
         
     }    

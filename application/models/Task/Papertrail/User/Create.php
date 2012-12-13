@@ -26,7 +26,7 @@ implements Application_Model_Task_Interface {
         
         if(isset($data->message)) {
             //log the message with problem
-            throw new Exception($data->message);
+            throw new Application_Model_Task_Exception($data->message);
         }
         
         if(isset($data->api_token)) {
