@@ -27,27 +27,29 @@ class Application_Model_InstanceMapper {
     public function save(Application_Model_Instance $instance)
     {
         $data = array(
-                'id' => $instance->getId(),
-                'edition'          => $instance->getEdition(),
-                'status'           => $instance->getStatus(),
-                'version_id'       => $instance->getVersionId(),
-                'user_id'          => $instance->getUserId(),
-                'server_id'        => $instance->getServerId(),
-                'domain'           => $instance->getDomain(),
-                'instance_name'    => $instance->getInstanceName(),
-                'description'      => $instance->getDescription(),
-                'sample_data'      => $instance->getSampleData(),
-                'backend_password' => $instance->getBackendPassword(),
-                'custom_protocol'  => $instance->getCustomProtocol(),
-                'custom_host'      => $instance->getCustomHost(),
-                'custom_remote_path' => $instance->getCustomRemotePath(),
-                'custom_login'     =>  $instance->getCustomLogin(),
-                'custom_pass'      => $instance->getCustomPass(),
-                'custom_sql'       => $instance->getCustomSql(),
-                'error_message'       => $instance->getErrorMessage(),
-                'revision_count'       => $instance->getRevisionCount(),
-                'type'       => $instance->getType(),
-                'custom_file'      => $instance->getCustomFile(),
+            'id'                         => $instance->getId(),
+            'edition'                    => $instance->getEdition(),
+            'status'                     => $instance->getStatus(),
+            'version_id'                 => $instance->getVersionId(),
+            'user_id'                    => $instance->getUserId(),
+            'server_id'                  => $instance->getServerId(),
+            'domain'                     => $instance->getDomain(),
+            'instance_name'              => $instance->getInstanceName(),
+            'description'                => $instance->getDescription(),
+            'sample_data'                => $instance->getSampleData(),
+            'backend_password'           => $instance->getBackendPassword(),
+            'custom_protocol'            => $instance->getCustomProtocol(),
+            'custom_host'                => $instance->getCustomHost(),
+            'custom_remote_path'         => $instance->getCustomRemotePath(),
+            'custom_login'               =>  $instance->getCustomLogin(),
+            'custom_pass'                => $instance->getCustomPass(),
+            'custom_sql'                 => $instance->getCustomSql(),
+            'error_message'              => $instance->getErrorMessage(),
+            'revision_count'             => $instance->getRevisionCount(),
+            'type'                       => $instance->getType(),
+            'custom_file'                => $instance->getCustomFile(),
+            'papertrail_syslog_hostname' => $this->getPapertrailSyslogHostname(),
+            'papertrail_syslog_port'     => $this->getPapertrailSyslogPort(),
                 
         );
 
@@ -89,7 +91,8 @@ class Application_Model_InstanceMapper {
                 ->setRevisionCount($row->revision_count)
                 ->setType($row->type)
                 ->setCustomFile($row->custom_file)
-                ;
+                ->setPapertrailSyslogPort($row->papertrail_syslog_port)
+                ->setPapertrailSyslogHostname($row->papertrail_syslog_hostname);
         return $instance;
     }
 
@@ -125,7 +128,8 @@ class Application_Model_InstanceMapper {
                     ->setRevisionCount($row->revision_count)
                     ->setType($row->type)
                     ->setCustomFile($row->custom_file)
-                    ;
+                    ->setPapertrailSyslogPort($row->papertrail_syslog_port)
+                    ->setPapertrailSyslogHostname($row->papertrail_syslog_hostname);
             $entries[] = $entry;
         }
         return $entries;

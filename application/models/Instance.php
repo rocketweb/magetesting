@@ -39,6 +39,10 @@ class Application_Model_Instance {
     protected $_mapper;
     
     protected $_custom_file;
+    
+    protected $_papertrail_syslog_hostname;
+    
+    protected $_papertrail_syslog_port;
 
     public function __construct(array $options = null)
     {
@@ -239,6 +243,8 @@ class Application_Model_Instance {
                 'revision_count'       => $this->getRevisionCount(),
                 'type'       => $this->getType(),
                 'custom_file'      => $this->getCustomFile(),
+                'papertrail_syslog_hostname' => $this->getPapertrailSyslogHostname(),
+                'papertrail_syslog_port' => $this->getPapertrailSyslogPort(),
         );
     }
 
@@ -351,6 +357,24 @@ class Application_Model_Instance {
     
     public function setRevisionCount($value){
       $this->_revision_count = $value;
+      return $this;
+    }
+    
+    public function getPapertrailSyslogHostname(){
+      return $this->_papertrail_syslog_hostname;
+    }
+    
+    public function setPapertrailSyslogHostname($value){
+      $this->_papertrail_syslog_hostname = $value;
+      return $this;
+    }
+    
+    public function getPapertrailSyslogPort(){
+      return $this->_papertrail_syslog_port;
+    }
+    
+    public function setPapertrailSyslogPort($value){
+      $this->_papertrail_syslog_port = $value;
       return $this;
     }
     
