@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_InstanceExtensionMapper{
+class Application_Model_StoreExtensionMapper{
     
     protected $_dbTable;
 
@@ -19,41 +19,41 @@ class Application_Model_InstanceExtensionMapper{
     public function getDbTable()
     {
         if (null === $this->_dbTable) {
-            $this->setDbTable('Application_Model_DbTable_InstanceExtension');
+            $this->setDbTable('Application_Model_DbTable_StoreExtension');
         }
         return $this->_dbTable;
     }
 
-    public function save(Application_Model_InstanceExtension $instanceExtension)
+    public function save(Application_Model_StoreExtension $storeExtension)
     {
-        $data = $instanceExtension->__toArray();
+        $data = $storeExtension->__toArray();
 
-        if (null === ($id = $instanceExtension->getId())) {
+        if (null === ($id = $storeExtension->getId())) {
             unset($data['id']);
             $data['added_date'] = date('Y-m-d H:i:s');
-            $instanceExtension->setAddedDate($data['added_date']);  
-            $instanceExtension->setId($this->getDbTable()->insert($data));
+            $storeExtension->setAddedDate($data['added_date']);  
+            $storeExtension->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
         
-        return $instanceExtension;
+        return $storeExtension;
     }
 
-    public function find($id, Application_Model_InstanceExtension $instanceExtension)
+    public function find($id, Application_Model_StoreExtension $storeExtension)
     {
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
             return;
         }
         $row = $result->current();
-        $instanceExtension->setId($row->id)
-            ->setInstanceId($row->instance_id)
+        $storeExtension->setId($row->id)
+            ->setStoreId($row->store_id)
             ->setExtensionId($row->extension_id)
             ->setAddedDate($row->added_date);
 
-        return $instanceExtension;
+        return $storeExtension;
     }
 
     public function fetchAll()
@@ -62,9 +62,9 @@ class Application_Model_InstanceExtensionMapper{
 
         $entries   = array();
         foreach ($resultSet as $row) {
-            $entry = new Application_Model_InstanceExtension();
+            $entry = new Application_Model_StoreExtension();
             $entry->setId($row->id)
-                  ->setInstanceId($row->instance_id)
+                  ->setStoreId($row->store_id)
                   ->setExtensionId($row->extension_id)
                   ->setAddedDate($row->added_date);
 

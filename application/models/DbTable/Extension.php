@@ -7,13 +7,13 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
 
     /**
      * 
-     * @param array $instance
+     * @param array $store
      * @return array
      */
-    public function findMatching($instance)
+    public function findMatching($store)
     {
 	  //get already installed extensions
-	  $installed = $this->findInstalled($instance);
+	  $installed = $this->findInstalled($store);
 	  
 	  $exclude = array();
 	  foreach($installed as $ins){
@@ -22,8 +22,8 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
     
         $select = $this->select()
                 ->from($this->_name)
-                ->where('edition = ?', $instance['edition'])
-                ->where(' ? BETWEEN REPLACE(from_version,\'.\',\'\') AND REPLACE(to_version,\'.\',\'\')',(int)str_replace('.','',$instance['version']));
+                ->where('edition = ?', $store['edition'])
+                ->where(' ? BETWEEN REPLACE(from_version,\'.\',\'\') AND REPLACE(to_version,\'.\',\'\')',(int)str_replace('.','',$store['version']));
                 
                 if (count($exclude)>0){
                     $select->where('id NOT IN (?) ',$exclude);
@@ -41,24 +41,24 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
     
-    public function fetchInstanceExtensions($instance) {
+    public function fetchStoreExtensions($store) {
         $select = $this->select()
                         ->from(array('e' => $this->_name))
                         ->setIntegrityCheck(false)
-                        ->where('e.edition = ?', $instance['edition'])
+                        ->where('e.edition = ?', $store['edition'])
                         ->where(' ? 
                                  BETWEEN REPLACE(e.from_version,\'.\',\'\')
                                  AND REPLACE(e.to_version,\'.\',\'\')',
-                            (int)str_replace('.','',$instance['version'])
+                            (int)str_replace('.','',$store['version'])
                         );
         $select->joinLeft(
-            array('ie' => 'instance_extension'),
-            new Zend_Db_Expr('e.id = ie.extension_id AND ( ie.instance_id =  '.$this->getDefaultAdapter()->quote($instance->id).' OR ie.instance_id IS NULL )'),
-            'ie.instance_id'
+            array('ie' => 'store_extension'),
+            new Zend_Db_Expr('e.id = ie.extension_id AND ( ie.store_id =  '.$this->getDefaultAdapter()->quote($store->id).' OR ie.store_id IS NULL )'),
+            'ie.store_id'
         );
         $select->joinLeft(
             array('q' => 'queue'),
-            'q.instance_id = ie.instance_id AND q.extension_id = e.id',
+            'q.store_id = ie.store_id AND q.extension_id = e.id',
             'q.id as q_id'
         );
         $select->joinLeft(
@@ -66,7 +66,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             'ec.id = e.category_id',
             'ec.class as category_class'
         );
-        $select->order(array('ie.instance_id DESC', 'q_id ASC', 'price DESC'));
+        $select->order(array('ie.store_id DESC', 'q_id ASC', 'price DESC'));
         $select->group(new Zend_Db_Expr('e.id DESC'));
         //get also developr extensions for admins
         if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
@@ -78,13 +78,13 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    public function findInstalled($instance)
+    public function findInstalled($store)
     {
         $select = $this->select()
         ->setIntegrityCheck(false)
                 ->from($this->_name)
-                ->join('instance_extension', $this->_name.'.id = instance_extension.extension_id')
-                ->where('instance_id = ?', $instance['id'])
+                ->join('store_extension', $this->_name.'.id = store_extension.extension_id')
+                ->where('store_id = ?', $store['id'])
                 ;
                
                //var_dump($select->__toString());

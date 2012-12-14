@@ -27,10 +27,10 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Preparing deplyment package.', Zend_Log::INFO);
 
         $startdir  = getcwd();
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain());
         /* prepare dir for store deploy packages */
         
-        $deployPath = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/'.
+        $deployPath = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/'.
         'var/deployment/';
         
         if (!file_exists($deployPath) || !is_dir($deployPath)){
@@ -59,7 +59,7 @@ implements Application_Model_Task_Interface {
         $hash = $this->_revisionObject->getHash();
         $startdir  = getcwd();
         $output = '';
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain());
         
         /* fetch changed files */
         exec('git show --pretty="format:" --name-only '.$hash,$output);
@@ -76,10 +76,10 @@ implements Application_Model_Task_Interface {
         chdir($tempdir.'/'.$hash);      
         /* clone repository into temporary directory */
         $output = array();
-        //var_dump('sudo git clone '.$this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
-        exec('sudo git clone '.$this->_instanceFolder.'/'.$this->_instanceObject->getDomain(),$output);
+        //var_dump('sudo git clone '.$this->_storeFolder.'/'.$this->_storeObject->getDomain());
+        exec('sudo git clone '.$this->_storeFolder.'/'.$this->_storeObject->getDomain(),$output);
         //var_dump($output);
-        chdir($tempdir.'/'.$hash.'/'.$this->_instanceObject->getDomain());
+        chdir($tempdir.'/'.$hash.'/'.$this->_storeObject->getDomain());
         unset($output);
         
         exec('git checkout '.$hash,$output);
@@ -98,7 +98,7 @@ implements Application_Model_Task_Interface {
                 exec('mkdir -p '.$hash.'/mageroot/'.$pathinfo['dirname']);
             }
 
-            exec('sudo cp ' . $hash . '/' . $this->_instanceObject->getDomain().'/'.$file . ' '.$hash.'/mageroot/'.$file);
+            exec('sudo cp ' . $hash . '/' . $this->_storeObject->getDomain().'/'.$file . ' '.$hash.'/mageroot/'.$file);
         }
        
         /*TODO: decide if move to user revision/ folder next to public_html ? */

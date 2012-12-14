@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_InstanceEdit extends Integration_Form{
+class Application_Form_StoreEdit extends Integration_Form{
 
     protected $add_custom_field;
     public function __construct($custom_fields = false)
@@ -15,7 +15,7 @@ class Application_Form_InstanceEdit extends Integration_Form{
         $this->setMethod('post');
         $this->setAttrib('class', 'form-stacked');
 
-        $this->addElement('text', 'instance_name', array(
+        $this->addElement('text', 'store_name', array(
                 'label'      => 'Name',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
@@ -43,7 +43,7 @@ class Application_Form_InstanceEdit extends Integration_Form{
         ));
 
         // Add the submit button
-        $this->addElement('submit', 'instanceSave', array(
+        $this->addElement('submit', 'storeSave', array(
                 'ignore'   => true,
                 'label'    => 'Save',
         ));
@@ -92,10 +92,10 @@ class Application_Form_InstanceEdit extends Integration_Form{
 
         $this->_setDecorators();
 
-        $this->instanceSave->removeDecorator('HtmlTag');
-        $this->instanceSave->removeDecorator('overall');
-        $this->instanceSave->setAttrib('class','btn btn-primary');
-        $this->instanceSave->removeDecorator('Label');
+        $this->storeSave->removeDecorator('HtmlTag');
+        $this->storeSave->removeDecorator('overall');
+        $this->storeSave->setAttrib('class','btn btn-primary');
+        $this->storeSave->removeDecorator('Label');
 
     }
 

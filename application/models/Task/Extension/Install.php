@@ -29,7 +29,7 @@ implements Application_Model_Task_Interface {
         $this->_install();
         
         //clear store cache
-        $this->_clearInstanceCache();
+        $this->_clearStoreCache();
         
         //set extension as installed
         $this->_updateStatus('ready');        
@@ -65,14 +65,14 @@ implements Application_Model_Task_Interface {
             
             exec('tar -zxvf '.
                 $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded().
-                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain()
+                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain()
             ,$output);
             
         } else {
         
             exec('tar -zxvf '.
                 $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension().
-                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain()
+                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain()
             ,$output);
 
         }

@@ -20,7 +20,7 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Initing git repository.', Zend_Log::INFO);
         $startCwd = getcwd();
         
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain());
         exec('git init');
         
         chdir($startCwd);
@@ -32,17 +32,17 @@ implements Application_Model_Task_Interface {
         "media/".PHP_EOL.
         "";
         
-        if (!file_exists($this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/.gitignore')){
-            exec('touch '.$this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/.gitignore');
+        if (!file_exists($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/.gitignore')){
+            exec('touch '.$this->_storeFolder.'/'.$this->_storeObject->getDomain().'/.gitignore');
         }
         
-        file_put_contents($this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/.gitignore', $data);
+        file_put_contents($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/.gitignore', $data);
     }
     
     protected function _createDeploymentDir(){
         $this->logger->log('Creating directory for deployment packages.', Zend_Log::INFO);
         
-        $deploymentPath = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().
+        $deploymentPath = $this->_storeFolder.'/'.$this->_storeObject->getDomain().
                 '/var/deployment/';
         
         

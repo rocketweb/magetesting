@@ -3,7 +3,7 @@
 ?>
 <div class="row">
     <div class="span12">
-		<h1>Store '<?php echo $this->instance_name; ?>' Extensions</h1>
+		<h1>Store '<?php echo $this->store_name; ?>' Extensions</h1>
 		<div id="extensions">
 			<div class="tab-stripe"></div>
 			<div class="mt_filters">
@@ -31,19 +31,19 @@
 			<div class="extensions_well">
 				<div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
 			    <?php foreach($this->extensions as $extension): ?>
-			        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['instance_id'] ? ' installed' : ' notInstalled'); ?>">
+			        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['store_id'] ? ' installed' : ' notInstalled'); ?>">
 			            <div class="wrapper">
                             <!-- removing this one for now until some workaround is found -->
 			                	<!--<div class="hover_inner_shadow"></div>-->
                                 
 			                <?php if((float)$extension['price']): ?>
-			                	<?php if((int)$extension['instance_id'] AND !(int)$extension['q_id']): ?>
+			                	<?php if((int)$extension['store_id'] AND !(int)$extension['q_id']): ?>
 			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium_installed.png'); ?>" alt="premium" /></div>
 			                	<?php else: ?>
 			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium.png'); ?>" alt="premium" /></div>
 			                	<?php endif; ?>
 			                <?php else: ?>
-			                	<?php if((int)$extension['instance_id'] AND !(int)$extension['q_id']): ?>
+			                	<?php if((int)$extension['store_id'] AND !(int)$extension['q_id']): ?>
 			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free_installed.png'); ?>" alt="free" /></div>
 			                	<?php else: ?>
 			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free.png'); ?>" alt="free" /></div>
@@ -81,15 +81,15 @@
 		                        </ul>
 		                        <!-- END EXTENSION'S SCREENSHOTS -->
 		                    <?php endif; ?>
-		                    <?php if(!(int)$extension['instance_id'] OR (int)$extension['q_id']): ?>
-    		                    <div class="progress progress-striped progress-danger pull-right <?php echo (!(int)$extension['instance_id'] ? 'hidden' : ''); ?> active" style="width: 100px;height:10px;">
+		                    <?php if(!(int)$extension['store_id'] OR (int)$extension['q_id']): ?>
+    		                    <div class="progress progress-striped progress-danger pull-right <?php echo (!(int)$extension['store_id'] ? 'hidden' : ''); ?> active" style="width: 100px;height:10px;">
     		                        <div class="bar" style="width: 100%;"></div>
     		                    </div>
 		                    <?php endif; ?>
-			                <?php if(!(int)$extension['instance_id']): ?>
+			                <?php if(!(int)$extension['store_id']): ?>
 			                    <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
 			                <?php elseif((float)$extension['price'] AND !(int)$extension['q_id']): ?>
-			                    <a href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form', 'pay-for' => 'extension', 'id' => $extension['id'], 'domain' => $this->instance_name), 'default', true); ?>"
+			                    <a href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form', 'pay-for' => 'extension', 'id' => $extension['id'], 'domain' => $this->store_name), 'default', true); ?>"
 			                       class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</a>
 			                <?php endif; ?>
 			                </div>

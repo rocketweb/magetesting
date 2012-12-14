@@ -15,16 +15,16 @@ class UserController extends Integration_Controller_Action
 
     public function dashboardAction()
     {
-        $instanceModel = new Application_Model_Instance();
+        $storeModel = new Application_Model_Store();
 
         $timeExecution = $this->getInvokeArg('bootstrap')
                               ->getResource('config')
                               ->magento
-                              ->instanceTimeExecution;
-        $instanceCounter = $instanceModel->getPendingItems($timeExecution);
+                              ->storeTimeExecution;
+        $storeCounter = $storeModel->getPendingItems($timeExecution);
 
         $page = (int) $this->_getParam('page', 0);
-        $paginator = $instanceModel->getAllForUser(
+        $paginator = $storeModel->getAllForUser(
             $this->auth->getIdentity()->id
         );
         $paginator->setCurrentPageNumber($page);
@@ -33,7 +33,7 @@ class UserController extends Integration_Controller_Action
         $this->view->user = $this->auth->getIdentity();
         $this->view->userGroup = $this->view->user->group;
         $this->view->queue = $paginator;
-        $this->view->queueCounter = $instanceCounter;
+        $this->view->queueCounter = $storeCounter;
         $this->view->timeExecution = $timeExecution;
         $this->view->response = $this->getResponse();
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/user-dashboard.js'), 'text/javascript');

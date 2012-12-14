@@ -11,8 +11,8 @@ class Application_Model_Transport {
     protected $_pass = '';
     protected $_errorMessage = '';
     
-    public function setup(Application_Model_Instance &$instance){
-        $this->setConnection($instance);
+    public function setup(Application_Model_Store &$store){
+        $this->setConnection($store);
     } 
     
     /**
@@ -74,12 +74,12 @@ class Application_Model_Transport {
         return true;
     }
    
-    public function setConnection(Application_Model_Instance &$instance){
+    public function setConnection(Application_Model_Store &$store){
         
-        if ($this->setProtocol($instance->getCustomProtocol())){
-            if ($this->setHost($instance->getCustomHost())){
-                if ($this->setUser($instance->getCustomLogin())){
-                    if ($this->setPass($instance->getCustomPass())){
+        if ($this->setProtocol($store->getCustomProtocol())){
+            if ($this->setHost($store->getCustomHost())){
+                if ($this->setUser($store->getCustomLogin())){
+                    if ($this->setPass($store->getCustomPass())){
                         
                         return true;
                         
@@ -102,15 +102,15 @@ class Application_Model_Transport {
     }
     
     /* return transport model for specified protocol */
-    public static function factory(Application_Model_Instance &$instance){
+    public static function factory(Application_Model_Store &$store){
         
         $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
-        $classSuffix = $filter->filter($instance->getCustomProtocol());
+        $classSuffix = $filter->filter($store->getCustomProtocol());
         $className = 'Application_Model_Transport_' . $classSuffix;
         
         if (class_exists($className)){
             $customTransportModel = new $className();
-            $customTransportModel->setup($instance);
+            $customTransportModel->setup($store);
             return $customTransportModel;
         }
         return false;

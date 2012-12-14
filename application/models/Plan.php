@@ -10,7 +10,7 @@ class Application_Model_Plan {
 
     protected $_name;
 
-    protected $_instances;
+    protected $_stores;
 
     protected $_price;
     
@@ -18,7 +18,7 @@ class Application_Model_Plan {
     
     protected $_phpmyadmin_access;
     
-    protected $_can_add_custom_instance;
+    protected $_can_add_custom_store;
     
     protected $_billing_period;
     
@@ -72,15 +72,15 @@ class Application_Model_Plan {
         return $this->_name;
     }
 
-    public function setInstances($instances)
+    public function setStores($stores)
     {
-        $this->_instances = (int)$instances;
+        $this->_stores = (int)$stores;
         return $this;
     }
 
-    public function getInstances()
+    public function getStores()
     {
-        return $this->_instances;
+        return $this->_stores;
     }
 
     
@@ -117,15 +117,15 @@ class Application_Model_Plan {
         return $this->_phpmyadmin_access;
     }
     
-    public function setCanAddCustomInstance($value)
+    public function setCanAddCustomStore($value)
     {
-        $this->_can_add_custom_instance = $value;
+        $this->_can_add_custom_store = $value;
         return $this;
     }
     
-    public function getCanAddCustomInstance()
+    public function getCanAddCustomStore()
     {
-        return $this->_can_add_custom_instance;
+        return $this->_can_add_custom_store;
     }
     
     public function setBillingPeriod($value)
@@ -215,10 +215,10 @@ class Application_Model_Plan {
         return array(
                 'id'        => $this->getId(),
                 'name'      => $this->getName(),
-                'instances' => $this->getInstances(),
+                'stores' => $this->getStores(),
                 'ftp_access' => $this->getFtpAccess(),
                 'phpmyadmin_access' => $this->getPhpmyadminAccess(),
-                'can_add_custom_instance' => $this->getCanAddCustomInstance(),
+                'can_add_custom_store' => $this->getCanAddCustomStore(),
                 'billing_period' => $this->getBillingPeriod(),
                 'price'     => $this->getPrice(),
                 'paypal_id' => $this->getPaypalId(),

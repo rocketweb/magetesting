@@ -49,7 +49,7 @@
                             </span>
                         </div>
                         <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
-                            <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store"><i class="icon icon-home"></i> View Store</a>
+                            <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store"><i class="icon icon-home"></i> View Store</a>
                             <a 
                                 href="#"
                                 class="btn btn-mini admin-panel"
@@ -61,7 +61,7 @@
                             <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store"><i class="icon icon-white icon-remove"></i></a>
                         </div>
                         <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
-                        <span class="title"><?php echo $this->escape($item['instance_name']) ?></span>
+                        <span class="title"><?php echo $this->escape($item['store_name']) ?></span>
                         <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                                    	<?php if(in_array($item['status'], array('closed'))): ?>
                                         <a href="#" class="btn btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php else: ?>
-                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'instance' => $item['domain']), 'default', true); ?>" 
+                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'store' => $item['domain']), 'default', true); ?>" 
                                            class="btn btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php endif; ?>
                                     <?php if($item['status']=='closed'): ?>
@@ -129,7 +129,7 @@
                                 <div class="control-group">
                                     <div class="controls">
                                         <a href="#" class="btn disabled"><i class="icon icon-info-sign"></i> Show Logs</a>
-                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'instance', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn "><i class="icon icon-question-sign"></i> Get Help</a>
+                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn "><i class="icon icon-question-sign"></i> Get Help</a>
                                     </div>
                                 </div>
                             </div>

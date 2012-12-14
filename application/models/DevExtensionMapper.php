@@ -122,14 +122,14 @@ class Application_Model_DevExtensionMapper {
 
     }
     
-    public function getAllForInstance($instance_name){
+    public function getAllForStore($store_name){
         
-        //find instance by name 
-        $instanceModel = new Application_Model_Queue();
-        $instance = $instanceModel->findByName($instance_name);
+        //find store by name 
+        $storeModel = new Application_Model_Queue();
+        $store = $storeModel->findByName($store_name);
         
         //find extensions that match version and edition
-        $matchingExtensions = $this->getDbTable()->findMatching($instance);
+        $matchingExtensions = $this->getDbTable()->findMatching($store);
         
         //return them 
         $returnedArray = array();

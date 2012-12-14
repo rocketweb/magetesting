@@ -13,9 +13,9 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                 $select = $this->select()
                     ->setIntegrityCheck(false)
                     ->from($this->_name)
-                    ->join('instance', 'instance.id = queue.instance_id',array('edition','domain','instance_name'))
-                    ->join('user', 'user.id = instance.user_id', 'login')
-                    ->join('version', 'instance.version_id = version.id', 'version')
+                    ->join('store', 'store.id = queue.store_id',array('edition','domain','store_name'))
+                    ->join('user', 'user.id = store.user_id', 'login')
+                    ->join('version', 'store.version_id = version.id', 'version')
                     ->where('queue.server_id = ?',$server_id)
                     ->where('task <> ?','MagentoDownload')
                     ->where('queue.status = ?','pending')
@@ -29,9 +29,9 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                 $select = $this->select()
                     ->setIntegrityCheck(false)
                     ->from($this->_name)
-                    ->join('instance', 'instance.id = queue.instance_id',array('edition','domain','instance_name'))
-                    ->join('user', 'user.id = instance.user_id', 'login')
-                    ->join('version', 'instance.version_id = version.id', 'version')
+                    ->join('store', 'store.id = queue.store_id',array('edition','domain','store_name'))
+                    ->join('user', 'user.id = store.user_id', 'login')
+                    ->join('version', 'store.version_id = version.id', 'version')
                     ->where('queue.server_id = ?',$server_id)
                     ->where('task = ?','MagentoDownload')
                     ->where('queue.status = ?','pending')
@@ -46,9 +46,9 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                 $select = $this->select()
                     ->setIntegrityCheck(false)
                     ->from($this->_name)
-                    ->join('instance', 'instance.id = queue.instance_id',array('edition','domain','instance_name'))
-                    ->join('user', 'user.id = instance.user_id', 'login')
-                    ->join('version', 'instance.version_id = version.id', 'version')
+                    ->join('store', 'store.id = queue.store_id',array('edition','domain','store_name'))
+                    ->join('user', 'user.id = store.user_id', 'login')
+                    ->join('version', 'store.version_id = version.id', 'version')
                     ->where('queue.server_id = ?',$server_id)
                     ->where('queue.status = ?','pending')
                     ->where('retry_count <= ?','3')
@@ -69,15 +69,15 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
     
     /**
      * every etension install has to wait for all other install+commit tasks
-     * @param type $instanceId
+     * @param type $storeId
      * @return int
      */
      
-    public function getParentIdForExtensionInstall($instanceId){
+    public function getParentIdForExtensionInstall($storeId){
         $select = $this->select()
                     ->setIntegrityCheck(false)
                     ->from($this->_name)
-                    ->where('queue.instance_id = ?',$instanceId)
+                    ->where('queue.store_id = ?',$storeId)
                     ->where('task = ?','RevisionCommit')
                     ->order(array('queue.id DESC'))
                     ->limit(1);

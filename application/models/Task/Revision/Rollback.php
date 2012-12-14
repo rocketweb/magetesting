@@ -17,7 +17,7 @@ implements Application_Model_Task_Interface {
         
         $this->_updateRevisionCount('-1');
         
-        $this->_clearInstanceCache();
+        $this->_clearStoreCache();
                 
         $this->_updateStatus('ready');
         
@@ -28,7 +28,7 @@ implements Application_Model_Task_Interface {
 
         $startCwd = getcwd();
         
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain());
         
         $params = $this->_queueObject->getTaskParams();
        
@@ -41,18 +41,18 @@ implements Application_Model_Task_Interface {
 	    $this->logger->log('Unpacking database backup file. ',Zend_Log::INFO);
         $startCwd = getcwd();
         $params = $this->_queueObject->getTaskParams();
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/var/db');
+        chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/var/db');
         
         exec('sudo tar -zxf '.$params['rollback_db_to'].'');
 
         $unpackedName = str_replace('.tgz','',$params['rollback_db_to']);
 
         $privilegeModel = new Application_Model_DbTable_Privilege($this->db,$this->config);
-        $privilegeModel->dropDatabase($this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain());
-        $privilegeModel->createDatabase($this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain());
+        $privilegeModel->dropDatabase($this->_userObject->getLogin().'_'.$this->_storeObject->getDomain());
+        $privilegeModel->createDatabase($this->_userObject->getLogin().'_'.$this->_storeObject->getDomain());
 
         $this->logger->log('Reverting database from backup file. ',Zend_Log::INFO);
-        $command = 'sudo mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' < '.$unpackedName;
+        $command = 'sudo mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().' < '.$unpackedName;
         exec($command,$output);
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
@@ -62,10 +62,10 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _cleanup(){
-        //remove extension id from instance_extension if there was extension in this commit.
+        //remove extension id from store_extension if there was extension in this commit.
         if ($this->_queueObject->getExtensionId()!=0){
-            $this->db->delete('instance_extension',array(
-                'instance_id = ' . $this->_queueObject->getInstanceId(),
+            $this->db->delete('store_extension',array(
+                'store_id = ' . $this->_queueObject->getStoreId(),
                 'extension_id  ='. $this->_queueObject->getExtensionId()
                 )
             );
@@ -73,22 +73,22 @@ implements Application_Model_Task_Interface {
 
         //remove last entry from revision table
         $revisionModel = new Application_Model_Revision();
-        $revisionModel->getLastForInstance($this->_instanceObject->getId());
+        $revisionModel->getLastForStore($this->_storeObject->getId());
         
         $startCwd = getcwd();
-        $instanceDir = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain();
-        chdir($instanceDir);
+        $storeDir = $this->_storeFolder.'/'.$this->_storeObject->getDomain();
+        chdir($storeDir);
         
         if ($revisionModel->getFilename()){
             /* remove revision deployment file */
-            if (file_exists($instanceDir.'/var/deployment/'.$revisionModel->getFilename())){
-                unlink($instanceDir.'/var/deployment/'.$revisionModel->getFilename());
+            if (file_exists($storeDir.'/var/deployment/'.$revisionModel->getFilename())){
+                unlink($storeDir.'/var/deployment/'.$revisionModel->getFilename());
             }
         }
 
         /* remove database file */
-        if (file_exists($instanceDir.'/var/db/'.$revisionModel->getDbBeforeRevision())){
-            unlink($instanceDir.'/var/db/'.$revisionModel->getDbBeforeRevision());
+        if (file_exists($storeDir.'/var/db/'.$revisionModel->getDbBeforeRevision())){
+            unlink($storeDir.'/var/db/'.$revisionModel->getDbBeforeRevision());
         }
 
         /* remove database entry */

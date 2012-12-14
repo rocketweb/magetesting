@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_InstanceMapper {
+class Application_Model_StoreMapper {
 
     protected $_dbTable;
 
@@ -19,41 +19,41 @@ class Application_Model_InstanceMapper {
     public function getDbTable()
     {
         if (null === $this->_dbTable) {
-            $this->setDbTable('Application_Model_DbTable_Instance');
+            $this->setDbTable('Application_Model_DbTable_Store');
         }
         return $this->_dbTable;
     }
 
-    public function save(Application_Model_Instance $instance)
+    public function save(Application_Model_Store $store)
     {
         $data = array(
-            'id'                         => $instance->getId(),
-            'edition'                    => $instance->getEdition(),
-            'status'                     => $instance->getStatus(),
-            'version_id'                 => $instance->getVersionId(),
-            'user_id'                    => $instance->getUserId(),
-            'server_id'                  => $instance->getServerId(),
-            'domain'                     => $instance->getDomain(),
-            'instance_name'              => $instance->getInstanceName(),
-            'description'                => $instance->getDescription(),
-            'sample_data'                => $instance->getSampleData(),
-            'backend_password'           => $instance->getBackendPassword(),
-            'custom_protocol'            => $instance->getCustomProtocol(),
-            'custom_host'                => $instance->getCustomHost(),
-            'custom_remote_path'         => $instance->getCustomRemotePath(),
-            'custom_login'               => $instance->getCustomLogin(),
-            'custom_pass'                => $instance->getCustomPass(),
-            'custom_sql'                 => $instance->getCustomSql(),
-            'error_message'              => $instance->getErrorMessage(),
-            'revision_count'             => $instance->getRevisionCount(),
-            'type'                       => $instance->getType(),
-            'custom_file'                => $instance->getCustomFile(),
-            'papertrail_syslog_hostname' => $instance->getPapertrailSyslogHostname(),
-            'papertrail_syslog_port'     => $instance->getPapertrailSyslogPort(),
+            'id'                         => $store->getId(),
+            'edition'                    => $store->getEdition(),
+            'status'                     => $store->getStatus(),
+            'version_id'                 => $store->getVersionId(),
+            'user_id'                    => $store->getUserId(),
+            'server_id'                  => $store->getServerId(),
+            'domain'                     => $store->getDomain(),
+            'store_name'              => $store->getStoreName(),
+            'description'                => $store->getDescription(),
+            'sample_data'                => $store->getSampleData(),
+            'backend_password'           => $store->getBackendPassword(),
+            'custom_protocol'            => $store->getCustomProtocol(),
+            'custom_host'                => $store->getCustomHost(),
+            'custom_remote_path'         => $store->getCustomRemotePath(),
+            'custom_login'               => $store->getCustomLogin(),
+            'custom_pass'                => $store->getCustomPass(),
+            'custom_sql'                 => $store->getCustomSql(),
+            'error_message'              => $store->getErrorMessage(),
+            'revision_count'             => $store->getRevisionCount(),
+            'type'                       => $store->getType(),
+            'custom_file'                => $store->getCustomFile(),
+            'papertrail_syslog_hostname' => $store->getPapertrailSyslogHostname(),
+            'papertrail_syslog_port'     => $store->getPapertrailSyslogPort(),
                 
         );
 
-        if (null === ($id = $instance->getId())) {
+        if (null === ($id = $store->getId())) {
             unset($data['id']);
             $data['backend_password'] = '';
             return $this->getDbTable()->insert($data);
@@ -63,21 +63,21 @@ class Application_Model_InstanceMapper {
 
     }
 
-    public function find($id, Application_Model_Instance $instance)
+    public function find($id, Application_Model_Store $store)
     {
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
             return;
         }
         $row = $result->current();
-        $instance->setId($row->id)
+        $store->setId($row->id)
                 ->setEdition($row->edition)
                 ->setStatus($row->status)
                 ->setVersionId($row->version_id)
                 ->setUserId($row->user_id)
                 ->setServerId($row->server_id)
                 ->setDomain($row->domain)
-                ->setInstanceName($row->instance_name)
+                ->setStoreName($row->store_name)
                 ->setDescription($row->description)
                 ->setSampleData($row->sample_data)
                 ->setBackendPassword($row->backend_password)
@@ -93,7 +93,7 @@ class Application_Model_InstanceMapper {
                 ->setCustomFile($row->custom_file)
                 ->setPapertrailSyslogPort($row->papertrail_syslog_port)
                 ->setPapertrailSyslogHostname($row->papertrail_syslog_hostname);
-        return $instance;
+        return $store;
     }
 
     public function delete($id)
@@ -106,7 +106,7 @@ class Application_Model_InstanceMapper {
         $resultSet = $this->getDbTable()->fetchAll();
         $entries   = array();
         foreach ($resultSet as $row) {
-            $entry = new Application_Model_Instance();
+            $entry = new Application_Model_Store();
             $entry->setId($row->id)
                     ->setEdition($row->edition)
                     ->setStatus($row->status)
@@ -114,7 +114,7 @@ class Application_Model_InstanceMapper {
                     ->setUserId($row->user_id)
                     ->setServerId($row->server_id)
                     ->setDomain($row->domain)
-                    ->setInstanceName($row->instance_name)
+                    ->setStoreName($row->store_name)
                     ->setDescription($row->description)
                     ->setSampleData($row->sample_data)
                     ->setBackendPassword($row->backend_password)
@@ -140,19 +140,19 @@ class Application_Model_InstanceMapper {
         return $this->getDbTable()->getAllJoinedWithVersions();
     }
 
-    public function changeStatusToClose($instance, $byAdmin)
+    public function changeStatusToClose($store, $byAdmin)
     {
-        if($instance->getUserId() AND $instance->getDomain()) {
+        if($store->getUserId() AND $store->getDomain()) {
             if($byAdmin) {
                 
                 $this->getDbTable()->update(
                         array('status' => 'closed'),
-                        array('domain = ?' => $instance->getDomain())
+                        array('domain = ?' => $store->getDomain())
                 );
             } else {
                 $this->getDbTable()->changeStatusToClose(
-                        $instance->getUserId(),
-                        $instance->getDomain()
+                        $store->getUserId(),
+                        $store->getDomain()
                 );
             }
         }
@@ -167,13 +167,13 @@ class Application_Model_InstanceMapper {
         return new Zend_Paginator($adapter);
     }
 
-    public function countUserInstances( $user_id )
+    public function countUserStores( $user_id )
     {
         $data = $this->getDbTable()
-                     ->countUserInstances( $user_id )
+                     ->countUserStores( $user_id )
                      ->current();
 
-        return (int)$data->instances;
+        return (int)$data->stores;
     }
     
     public function getWholeQueue()
@@ -199,10 +199,10 @@ class Application_Model_InstanceMapper {
                     ->findByDomain($domain);
     }
     
-    public function findPositionByName($instance_name)
+    public function findPositionByName($store_name)
     {
         return $this->getDbTable()
-                    ->findPositionByName($instance_name);
+                    ->findPositionByName($store_name);
         
     }
 }

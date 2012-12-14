@@ -10,7 +10,7 @@ extends Application_Model_Task
     
     public function _updateRevisionCount($modifier){
         
-        $currentRevision = (int)$this->_instanceObject->getRevisionCount();
+        $currentRevision = (int)$this->_storeObject->getRevisionCount();
         
         $operation = substr($modifier,0,1);
         
@@ -20,8 +20,8 @@ extends Application_Model_Task
             $nextRevision = $currentRevision - substr($modifier,1);
         }
         
-        $this->db->update('instance', array('revision_count' => $nextRevision), 'id=' . $this->_instanceObject->getId());
-        $this->_instanceObject->setRevisionCount($nextRevision);
+        $this->db->update('store', array('revision_count' => $nextRevision), 'id=' . $this->_storeObject->getId());
+        $this->_storeObject->setRevisionCount($nextRevision);
         
     }
     

@@ -29,12 +29,12 @@ class Application_Model_Worker {
                 $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
                 $this->db->delete('queue', array('id=' . $queueElement->getId()));
                 
-                $this->db->update('instance', array('status' => 'ready'), 'id = ' . $queueElement->getInstanceId());
+                $this->db->update('store', array('status' => 'ready'), 'id = ' . $queueElement->getStoreId());
             }
         
         } catch (Application_Model_Task_Exception $e){
             $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
-            $this->db->update('instance', array('error_message' => $e->getMessage(),'status' => 'error'), 'id = ' . $queueElement->getInstanceId());
+            $this->db->update('store', array('error_message' => $e->getMessage(),'status' => 'error'), 'id = ' . $queueElement->getStoreId());
         }
     }
 }

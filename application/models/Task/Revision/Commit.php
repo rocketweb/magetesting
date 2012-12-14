@@ -34,7 +34,7 @@ implements Application_Model_Task_Interface {
         $params = $this->_queueObject->getTaskParams();      
         
         $startCwd = getcwd();
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain());
         if ($params['commit_type']=='manual'){
             return $this->_commitManual(); 
         } else {
@@ -131,15 +131,15 @@ implements Application_Model_Task_Interface {
     
     protected function _createDbBackup(){
         $startCwd = getcwd();
-        chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
+        chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain());
         
         //export backup
         $this->logger->log('Creating database backup.', Zend_Log::INFO);
-        $dbDir = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/var/db/';
+        $dbDir = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/var/db/';
         exec('sudo mkdir -p '.$dbDir);
         chdir($dbDir);
         $dbFileName = 'db_backup_'.date("Y_m_d_H_i_s");
-        $command = 'sudo mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->instanceprefix.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().' > '.$dbFileName;
+        $command = 'sudo mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().' > '.$dbFileName;
         exec($command);
         
         //pack it up
@@ -163,7 +163,7 @@ implements Application_Model_Task_Interface {
         $params = $this->_queueObject->getTaskParams();
 
         $revisionModel->setUserId($this->_userObject->getId());
-        $revisionModel->setInstanceId($this->_instanceObject->getId());
+        $revisionModel->setStoreId($this->_storeObject->getId());
         $revisionModel->setExtensionId($this->_queueObject->getExtensionId());
         $revisionModel->setHash($this->_revisionHash);
         $revisionModel->setType($params['commit_type']);

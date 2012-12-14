@@ -4,7 +4,7 @@ class Application_Model_Queue {
 
     protected $_id;
 
-    protected $_instance_id;
+    protected $_store_id;
     
     protected $_status;
     
@@ -57,15 +57,15 @@ class Application_Model_Queue {
         return $this->_id;
     }
 
-    public function setInstanceId($value)
+    public function setStoreId($value)
     {
-        $this->_instance_id = $value;
+        $this->_store_id = $value;
         return $this;
     }
 
-    public function getInstanceId()
+    public function getStoreId()
     {
-        return $this->_instance_id;
+        return $this->_store_id;
     }
 
     public function setStatus($value)
@@ -237,7 +237,7 @@ class Application_Model_Queue {
     {
         return array(
                 'id' => $this->getId(),
-                'instance_id' => $this->getInstanceId(),
+                'store_id' => $this->getStoreId(),
                 'status' => $this->getStatus(),
                 'user_id' => $this->getUserId(),
                 'extension_id' => $this->getExtensionId(),
@@ -253,8 +253,8 @@ class Application_Model_Queue {
         return $this->getMapper()->getForServer($worker_id,$type);
     }
     
-    public function getParentIdForExtensionInstall($instance_id){
-        return $this->getMapper()->getParentIdForExtensionInstall($instance_id);
+    public function getParentIdForExtensionInstall($store_id){
+        return $this->getMapper()->getParentIdForExtensionInstall($store_id);
     }
     
 }

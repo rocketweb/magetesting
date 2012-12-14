@@ -292,16 +292,16 @@ class Application_Model_Extension {
         return $this->getMapper()->getOptions();
     }
     
-    public function getAllForInstance($instance_name){
-        return $this->getMapper()->getAllForInstance($instance_name);
+    public function getAllForStore($store_name){
+        return $this->getMapper()->getAllForStore($store_name);
     }
     
     /**
      * fetches available and installed extensions for given store
-     * @param string $instance_name
+     * @param string $store_name
      */
-    public function fetchInstanceExtensions($instance_name){
-        $extensions = $this->getMapper()->fetchInstanceExtensions($instance_name)->toArray();
+    public function fetchStoreExtensions($store_name){
+        $extensions = $this->getMapper()->fetchStoreExtensions($store_name)->toArray();
         foreach($extensions as $key => $extension) {
             $extensions[$key]['screenshots'] = array();
             $screenshots = $this->fetchScreenshots($extension['id']);
@@ -314,8 +314,8 @@ class Application_Model_Extension {
         return $extensions;
     }
     
-    public function getInstalledForInstance($instance_name){
-        return $this->getMapper()->getInstalledForInstance($instance_name);
+    public function getInstalledForStore($store_name){
+        return $this->getMapper()->getInstalledForStore($store_name);
     }
     
     public function findByFilters($filters){

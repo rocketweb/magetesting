@@ -146,7 +146,7 @@ class Application_Model_UserMapper {
                     'server_id' => 'server_id'
                     )
                 )
-                ->joinLeft('instance','instance.user_id = u.id',array('instances'=>'COUNT(instance.id)'))
+                ->joinLeft('store','store.user_id = u.id',array('stores'=>'COUNT(store.id)'))
                 ->joinLeft('server', 'server.id = u.server_id', array('server_label' => 'server.name'))
                 ->group('u.id')
                 ->query();

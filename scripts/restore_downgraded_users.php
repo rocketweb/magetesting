@@ -5,21 +5,21 @@ include 'init.console.php';
 $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('user')
-    ->joinLeft('instance','user.id = instance.user_id', 'domain')
-    ->where('instance.status = ?', 'ready')
+    ->joinLeft('store','user.id = store.user_id', 'domain')
+    ->where('store.status = ?', 'ready')
     ->where('TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP, user.plan_active_to) > ?', 0)
     ->where('user.downgraded = ?', 1);
 
 $result = $db->fetchAll($sql);
 if($result) {
     $restore_by_id = array();
-    foreach($result as $instance) {
-        if(!isset($restore_by_id[$instance['id']])) {
-            $restore_by_id[$instance['id']] = null;
+    foreach($result as $store) {
+        if(!isset($restore_by_id[$store['id']])) {
+            $restore_by_id[$store['id']] = null;
         }
-        if(!is_link(INSTANCE_PATH.$instance['domain'])) {
-            $instanceFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$instance['login'].'/public_html';
-            exec('ln -s '.$instanceFolder.'/'.$instance['domain'].' '.INSTANCE_PATH.$instance['domain']);
+        if(!is_link(STORE_PATH.$store['domain'])) {
+            $storeFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$store['login'].'/public_html';
+            exec('ln -s '.$storeFolder.'/'.$store['domain'].' '.STORE_PATH.$store['domain']);
         }
     }
     if($restore_by_id) {

@@ -28,7 +28,7 @@ class Application_Model_QueueMapper {
     {
         $data = array(
             'id' => $queue->getId(),
-            'instance_id' => $queue->getInstanceId(),
+            'store_id' => $queue->getStoreId(),
             'status' => $queue->getStatus(),
             'user_id' => $queue->getUserId(),
             'extension_id' => $queue->getExtensionId(),
@@ -60,7 +60,7 @@ class Application_Model_QueueMapper {
         }
         $row = $result->current();
         $queue->setId($row->id)
-        ->setInstanceId($row->instance_id)
+        ->setStoreId($row->store_id)
         ->setStatus($row->status)
         ->setUserId($row->user_id)
         ->setExtensionId($row->extension_id)
@@ -85,7 +85,7 @@ class Application_Model_QueueMapper {
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Queue();
             $entry->setId($row->id)
-            ->setInstanceId($row->instance_id)
+            ->setStoreId($row->store_id)
             ->setStatus($row->status)
             ->setUserId($row->user_id)
             ->setExtensionId($row->extension_id)
@@ -105,7 +105,7 @@ class Application_Model_QueueMapper {
        if ($row){ 
             $entry = new Application_Model_Queue();
             $entry->setId($row->id)
-            ->setInstanceId($row->instance_id)
+            ->setStoreId($row->store_id)
             ->setStatus($row->status)
             ->setUserId($row->user_id)
             ->setExtensionId($row->extension_id)
@@ -121,8 +121,8 @@ class Application_Model_QueueMapper {
        }
     }
     
-    public function getParentIdForExtensionInstall($instance_id){
-        return $this->getDbTable()->getParentIdForExtensionInstall($instance_id);
+    public function getParentIdForExtensionInstall($store_id){
+        return $this->getDbTable()->getParentIdForExtensionInstall($store_id);
     }
     
 }

@@ -47,7 +47,7 @@ class Application_Model_RevisionMapper {
         $row = $result->current();
         $revision->setId($row->id)
               ->setUserId($row->user_id)
-                ->setInstanceId($row->instance_id)
+                ->setStoreId($row->store_id)
                 ->setExtensionId($row->extension_id)
                 ->setType($row->type)
                 ->setHash($row->hash)
@@ -75,7 +75,7 @@ class Application_Model_RevisionMapper {
             $entry = new Application_Model_Revision();
             $entry->setId($row->id)
                 ->setUserId($row->user_id)
-                ->setInstanceId($row->instance_id)
+                ->setStoreId($row->store_id)
                 ->setExtensionId($row->extension_id)
                 ->setType($row->type)
                 ->setHash($row->hash)
@@ -87,11 +87,11 @@ class Application_Model_RevisionMapper {
         return $entries;
     }
 
-    public function getAllForInstance($instance_id)
+    public function getAllForStore($store_id)
     {
         $result = array();
-        if((int)$instance_id) {
-            $tmp = $this->getDbTable()->getAllForInstance($instance_id);
+        if((int)$store_id) {
+            $tmp = $this->getDbTable()->getAllForStore($store_id);
             if($tmp) {
                 $result = $tmp;
             }
@@ -99,14 +99,14 @@ class Application_Model_RevisionMapper {
         return $result;
     }
     
-    public function getPreLastForInstance($instance_id, Application_Model_Revision $revision)
+    public function getPreLastForStore($store_id, Application_Model_Revision $revision)
     {
-        if((int)$instance_id) {
-            $row = $this->getDbTable()->getPreLastForInstance($instance_id);
+        if((int)$store_id) {
+            $row = $this->getDbTable()->getPreLastForStore($store_id);
             if($row) {
                 $revision->setId($row->id)
                 ->setUserId($row->user_id)
-                ->setInstanceId($row->instance_id)
+                ->setStoreId($row->store_id)
                 ->setExtensionId($row->extension_id)
                 ->setType($row->type)
                 ->setHash($row->hash)
@@ -118,14 +118,14 @@ class Application_Model_RevisionMapper {
         return $revision;
     }
     
-    public function getLastForInstance($instance_id, Application_Model_Revision $revision)
+    public function getLastForStore($store_id, Application_Model_Revision $revision)
     {
-        if((int)$instance_id) {
-            $row = $this->getDbTable()->getLastForInstance($instance_id);
+        if((int)$store_id) {
+            $row = $this->getDbTable()->getLastForStore($store_id);
             if($row) {
                 $revision->setId($row->id)
                 ->setUserId($row->user_id)
-                ->setInstanceId($row->instance_id)
+                ->setStoreId($row->store_id)
                 ->setExtensionId($row->extension_id)
                 ->setType($row->type)
                 ->setHash($row->hash)

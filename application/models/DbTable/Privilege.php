@@ -33,7 +33,7 @@ class Application_Model_DbTable_Privilege {
     public function checkIfDatabaseExists($dbname)
     {
         try {
-            $this->adapter->getConnection()->exec("use `".$this->config->magento->instanceprefix.$dbname."`");
+            $this->adapter->getConnection()->exec("use `".$this->config->magento->storeprefix.$dbname."`");
         } catch (PDOException $e){
             return false;
         }
@@ -59,7 +59,7 @@ class Application_Model_DbTable_Privilege {
         //add user 
         $this->adapter->getConnection()->exec("create user '".$this->config->magento->userprefix.$login."'@'localhost' identified by '". substr(sha1($this->config->magento->usersalt.$this->config->magento->userprefix.$login),0,10)."'");
         
-        $this->adapter->getConnection()->exec("GRANT ALL ON `".$this->config->magento->instanceprefix.$login."_%`.* TO '".$this->config->magento->userprefix.$login."'@'localhost'");
+        $this->adapter->getConnection()->exec("GRANT ALL ON `".$this->config->magento->storeprefix.$login."_%`.* TO '".$this->config->magento->userprefix.$login."'@'localhost'");
 
         $this->adapter->getConnection()->exec("FLUSH TABLES");
         $this->adapter->getConnection()->exec("FLUSH PRIVILEGES");                
@@ -88,7 +88,7 @@ class Application_Model_DbTable_Privilege {
      */
     public function createDatabase($dbname)
     {
-        $this->adapter->getConnection()->exec("CREATE DATABASE `".$this->config->magento->instanceprefix.$dbname."`");  
+        $this->adapter->getConnection()->exec("CREATE DATABASE `".$this->config->magento->storeprefix.$dbname."`");  
     }
     
     /**
@@ -96,7 +96,7 @@ class Application_Model_DbTable_Privilege {
      */
     public function dropDatabase($dbname)
     {
-        $this->adapter->getConnection()->exec("DROP DATABASE `".$this->config->magento->instanceprefix.$dbname."`");   
+        $this->adapter->getConnection()->exec("DROP DATABASE `".$this->config->magento->storeprefix.$dbname."`");   
     }
     
 }

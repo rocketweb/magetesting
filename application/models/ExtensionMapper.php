@@ -115,38 +115,38 @@ class Application_Model_ExtensionMapper {
 
     }
     
-    public function getAllForInstance($instance_name){
+    public function getAllForStore($store_name){
         
         //find store by name 
-        $instanceModel = new Application_Model_Instance();
-        $instance = $instanceModel->findByDomain($instance_name);
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->findByDomain($store_name);
         
         //find extensions that match version and edition
-        $matchingExtensions = $this->getDbTable()->findMatching($instance);
+        $matchingExtensions = $this->getDbTable()->findMatching($store);
 
         return $matchingExtensions;
         
     }
     
-    public function getInstalledForInstance($instance_name){
+    public function getInstalledForStore($store_name){
         
         //find store by name 
-        $instanceModel = new Application_Model_Instance();
-        $instance = $instanceModel->findByDomain($instance_name);
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->findByDomain($store_name);
         
         //find extensions that match version and edition
-        $installedExtensions = $this->getDbTable()->findInstalled($instance);
+        $installedExtensions = $this->getDbTable()->findInstalled($store);
 
         return $installedExtensions;
         
     }
     
-    public function fetchInstanceExtensions($instance_name) {
+    public function fetchStoreExtensions($store_name) {
         //find store by name
-        $instanceModel = new Application_Model_Instance();
-        $instance = $instanceModel->findByDomain($instance_name);
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->findByDomain($store_name);
 
-        return $this->getDbTable()->fetchInstanceExtensions($instance);
+        return $this->getDbTable()->fetchStoreExtensions($store);
     }
     
     public function findByFilters(array $filters, Application_Model_Extension $extension){    

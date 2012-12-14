@@ -196,17 +196,17 @@ class BraintreeController extends Integration_Controller_Action
                     } else {
                         // pay for extension
                         $domain = $this->_getParam('domain');
-                        $instance = new Application_Model_Instance();
-                        $instance = $instance->findByDomain($domain);
-                        if(is_object($instance) AND (int)$instance->getId()) {
+                        $store = new Application_Model_Store();
+                        $store = $store->findByDomain($domain);
+                        if(is_object($store) AND (int)$store->getId()) {
                             // add task with extension installation
                             $extensionQueueItem = new Application_Model_Queue();
-                            $extensionQueueItem->setInstanceId($instance->id);
+                            $extensionQueueItem->setStoreId($store->id);
                             $extensionQueueItem->setStatus('pending');
-                            $extensionQueueItem->setUserId($instance->user_id);
+                            $extensionQueueItem->setUserId($store->user_id);
                             $extensionQueueItem->setExtensionId($id);
                             $extensionQueueItem->setParentId(0);
-                            $extensionQueueItem->setServerId($instance->server_id);
+                            $extensionQueueItem->setServerId($store->server_id);
                             $extensionQueueItem->setTask('ExtensionOpensource');
                             $extensionQueueItem->save();
                         } else {

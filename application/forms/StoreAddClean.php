@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_InstanceAddClean extends Integration_Form{
+class Application_Form_StoreAddClean extends Integration_Form{
 
     public function init()
     {
@@ -33,7 +33,7 @@ class Application_Form_InstanceAddClean extends Integration_Form{
         $this->sample_data->setValue(0)
         ->setSeparator(' ');
 
-        $this->addElement('text', 'instance_name', array(
+        $this->addElement('text', 'store_name', array(
                 'label'      => 'Name',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
@@ -69,17 +69,17 @@ class Application_Form_InstanceAddClean extends Integration_Form{
 
          
         // Add the submit button
-        $this->addElement('submit', 'instanceAdd', array(
+        $this->addElement('submit', 'storeAdd', array(
                 'ignore'   => true,
                 'label'    => 'Install',
         ));
 
         $this->_setDecorators();
 
-        $this->instanceAdd->removeDecorator('HtmlTag');
-        $this->instanceAdd->removeDecorator('overall');
-        $this->instanceAdd->setAttrib('class','btn btn-primary');
-        $this->instanceAdd->removeDecorator('Label');
+        $this->storeAdd->removeDecorator('HtmlTag');
+        $this->storeAdd->removeDecorator('overall');
+        $this->storeAdd->setAttrib('class','btn btn-primary');
+        $this->storeAdd->removeDecorator('Label');
 
         $this->edition->removeDecorator('HtmlTag');
         $this->edition->removeDecorator('overall');

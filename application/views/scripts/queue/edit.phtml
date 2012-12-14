@@ -13,7 +13,7 @@
         		    <fieldset>
         		        <legend>Store details</legend>
         		        <div class="row">
-        		        	<div class="span4"><?php echo $this->form->instance_name ?></div>
+        		        	<div class="span4"><?php echo $this->form->store_name ?></div>
         		        	<div class="span4"><?php echo $this->form->description ?></div>
         		        </div>
         		    </fieldset>
@@ -53,9 +53,9 @@
         		    <div class="form-actions">
         		        <button 
         		            type="submit"
-        		            name="<?php echo $this->form->instanceSave->getName(); ?>"
+        		            name="<?php echo $this->form->storeSave->getName(); ?>"
         		            class="btn btn-inverse pull-right">
-        		        <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->instanceSave->getLabel() ?></button>
+        		        <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->storeSave->getLabel() ?></button>
         		    </div>
         		</form>
         	</div>

@@ -28,29 +28,29 @@ implements Application_Model_Task_Interface {
 
         //remove folder recursively
         $startCwd =  getcwd();
-        chdir(INSTANCE_PATH);
+        chdir(STORE_PATH);
 
         $this->logger->log('Removing store directory recursively.', Zend_Log::INFO);
-        exec('rm -R '.$this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
-        unlink($this->_instanceObject->getDomain());
-        chdir($this->_instanceFolder);
+        exec('rm -R '.$this->_storeFolder.'/'.$this->_storeObject->getDomain());
+        unlink($this->_storeObject->getDomain());
+        chdir($this->_storeFolder);
 
         $this->logger->log('Removing store entries from Mage Testing database.', Zend_Log::INFO);
         $this->db->getConnection()->exec("use ".$this->config->resources->db->params->dbname);
       
         //remove store extensions
-        $this->db->delete('instance_extension','instance_id='.$this->_instanceObject->getId());
+        $this->db->delete('store_extension','store_id='.$this->_storeObject->getId());
         
         //remove this queue element
         $this->db->delete('queue','id='.$this->_queueObject->getId());
         
         //remove any other queue elements related to this store
-        $this->db->delete('queue','instance_id='.$this->_instanceObject->getId());
+        $this->db->delete('queue','store_id='.$this->_storeObject->getId());
         
         //remove store
-        $this->db->delete('instance','id='.$this->_instanceObject->getId());
+        $this->db->delete('store','id='.$this->_storeObject->getId());
         
-        unlink(APPLICATION_PATH . '/../data/logs/'.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().'.log');
+        unlink(APPLICATION_PATH . '/../data/logs/'.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.log');
     
     }
 
@@ -58,7 +58,7 @@ implements Application_Model_Task_Interface {
         
     }
 
-    protected function _removeInstanceFilesystem() {
+    protected function _removeStoreFilesystem() {
         
     }
 

@@ -16,7 +16,7 @@ class Application_Form_ExtensionInstall extends Integration_Form {
         $this->setAttrib('class', 'form-stacked');
         $this->setAttrib('id', 'extension-install-form');
         
-        $this->addElement('hidden', 'instance_name', array(
+        $this->addElement('hidden', 'store_name', array(
                 'label'      => '',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),                

@@ -7,16 +7,16 @@ class Application_Model_DbTable_DevExtension extends Zend_Db_Table_Abstract
 
     /**
      * 
-     * @param array $instance
+     * @param array $store
      * @return array
      */
-    public function findMatching($instance)
+    public function findMatching($store)
     {
         $select = $this->select()
                 ->from($this->_name)
-                ->where('edition = ?', $instance['edition'])
-                ->where('from_version <= ?', $instance['version'])
-                ->where('to_version >= ?', $instance['version']);
+                ->where('edition = ?', $store['edition'])
+                ->where('from_version <= ?', $store['version'])
+                ->where('to_version >= ?', $store['version']);
                 
         return $this->fetchAll($select);
     }

@@ -5,8 +5,8 @@ include 'init.console.php';
 $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('user')
-    ->joinLeft('instance','user.id = instance.user_id', 'domain')
-    ->where('instance.status = ?', 'ready')
+    ->joinLeft('store','user.id = store.user_id', 'domain')
+    ->where('store.status = ?', 'ready')
     ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, CURRENT_TIMESTAMP) > ?', 3*60*60*24)
     ->where('(user.group IN (?)', array('awaiting-user', 'commercial-user'))
     ->orwhere('user.downgraded = ?)', 2);
@@ -14,12 +14,12 @@ $sql = $select
 $result = $db->fetchAll($sql);
 if($result) {
     $downgrade_by_id = array();
-    foreach($result as $instance) {
-        if(!isset($downgrade_by_id[$instance['id']])) {
-            $downgrade_by_id[$instance['id']] = null;
+    foreach($result as $store) {
+        if(!isset($downgrade_by_id[$store['id']])) {
+            $downgrade_by_id[$store['id']] = null;
         }
-        if(is_link(INSTANCE_PATH.$instance['domain'])) {
-            exec('sudo rm '.INSTANCE_PATH.$instance['domain']);
+        if(is_link(STORE_PATH.$store['domain'])) {
+            exec('sudo rm '.STORE_PATH.$store['domain']);
         }
     }
     if($downgrade_by_id) {

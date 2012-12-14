@@ -18,15 +18,15 @@ implements Application_Model_Task_Interface {
         $this->_updateStatus('downloading-magento');
         $this->_createSystemAccount();
 
-        chdir($this->_instanceFolder);
+        chdir($this->_storeFolder);
         $this->_setupFilesystem();
         chdir($this->_domain);
 
         /* Instantiate Transport Model */
         $transportModel = new Application_Model_Transport();
-        $transportModel = $transportModel->factory($this->_instanceObject);
+        $transportModel = $transportModel->factory($this->_storeObject);
         if (!$transportModel){
-            $message = 'Protocol "' . $this->_instanceObject->getCustomProtocol() . '" is not supported.';
+            $message = 'Protocol "' . $this->_storeObject->getCustomProtocol() . '" is not supported.';
             $this->logger->log($message, Zend_Log::EMERG);
             throw Application_Model_Task_Exception($message);
         }
@@ -76,20 +76,20 @@ implements Application_Model_Task_Interface {
         $this->_cleanupFilesystem();
 
         // update backend admin password
-        $this->_instanceObject->setBackendPassword($this->_adminpass)->save();
+        $this->_storeObject->setBackendPassword($this->_adminpass)->save();
         //$set = array('backend_password' => $this->_adminpass);
         //$where = array('domain = ?' => $this->_domain);
         $this->logger->log('Changing store backend password.', Zend_Log::INFO);
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
 
         //copy new htaccess over
-        exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/Custom/.htaccess ' . $this->_instanceFolder . '/' . $this->_domain . '/.htaccess');
+        exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/Custom/.htaccess ' . $this->_storeFolder . '/' . $this->_domain . '/.htaccess');
 
         //applying patches for xml-rpc issue
         $this->_applyXmlRpcPatch();
 
         $this->logger->log('Changed owner of store directory tree.', Zend_Log::INFO);
-        $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_instanceFolder . '/' . $this->_domain;
+        $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain;
         exec($command, $output);
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
@@ -101,10 +101,10 @@ implements Application_Model_Task_Interface {
 
         $this->_importAdminFrontname();
 
-        $instance_path = str_replace('/application/../instance/', '/instance/', INSTANCE_PATH);
+        $store_path = str_replace('/application/../store/', '/store/', STORE_PATH);
 
         $this->logger->log('Added symbolic link for store directory.', Zend_Log::INFO);
-        $command = 'ln -s ' . $this->_instanceFolder . '/' . $this->_domain . ' ' . $instance_path . $this->_domain;
+        $command = 'ln -s ' . $this->_storeFolder . '/' . $this->_domain . ' ' . $store_path . $this->_domain;
         exec($command);
         $this->logger->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
 
@@ -113,12 +113,12 @@ implements Application_Model_Task_Interface {
         chdir($startCwd);
 
         /* send email to store owner start */
-        $this->_sendInstanceReadyEmail();
+        $this->_sendStoreReadyEmail();
         /* send email to store owner stop */
 
         /* update revision count */
-        $this->db->update('instance', array('revision_count' => '0'), 'id=' . $this->_instanceObject->getId());
-        $this->_instanceObject->setRevisionCount(0);
+        $this->db->update('store', array('revision_count' => '0'), 'id=' . $this->_storeObject->getId());
+        $this->_storeObject->setRevisionCount(0);
         
         $this->_updateStatus('ready');
     }
@@ -128,19 +128,19 @@ implements Application_Model_Task_Interface {
     protected function _setupFilesystem() {
 
         $this->logger->log('Preparing store directory.', Zend_Log::INFO);
-        exec('sudo mkdir ' . $this->_instanceFolder . '/' . $this->_domain, $output);
+        exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
 
-        if (!file_exists($this->_instanceFolder . '/' . $this->_domain) || !is_dir($this->_instanceFolder . '/' . $this->_domain)) {
+        if (!file_exists($this->_storeFolder . '/' . $this->_domain) || !is_dir($this->_storeFolder . '/' . $this->_domain)) {
             $message = 'Store directory does not exist, aborting.';
             $this->logger->log($message, Zend_Log::EMERG);
             throw new Application_Model_Task_Exception($message);
         }
 
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
-        exec('sudo chmod +x ' . $this->_instanceFolder . '/' . $this->_domain, $output);
+        exec('sudo chmod +x ' . $this->_storeFolder . '/' . $this->_domain, $output);
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
@@ -148,7 +148,7 @@ implements Application_Model_Task_Interface {
 
     protected function _importDatabaseDump() {
         $path_parts = pathinfo($this->_customSql);
-        exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' < '.$path_parts['basename'].'');
+        exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < '.$path_parts['basename'].'');
     }
     
     protected function _importFiles(){
@@ -165,13 +165,13 @@ implements Application_Model_Task_Interface {
                     <host><![CDATA[localhost]]></host>
                     <username><![CDATA['.$this->config->magento->userprefix . $this->_dbuser.']]></username>
                     <password><![CDATA['.$this->_dbpass.']]></password>
-                    <dbname><![CDATA['.$this->config->magento->instanceprefix . $this->_dbname.']]></dbname>
+                    <dbname><![CDATA['.$this->config->magento->storeprefix . $this->_dbname.']]></dbname>
                     <active>1</active>
                 </connection>';
 
-        $localXml = file_get_contents($this->_instanceFolder . '/' . $this->_domain.'/app/etc/local.xml');
+        $localXml = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/app/etc/local.xml');
         $localXml = preg_replace("#<connection>(.*?)</connection>#is",$connectionString,$localXml);
-        file_put_contents($this->_instanceFolder .'/'. $this->_domain.'/app/etc/local.xml',$localXml);
+        file_put_contents($this->_storeFolder .'/'. $this->_domain.'/app/etc/local.xml',$localXml);
         unset($localXml);
     }
 
@@ -237,14 +237,14 @@ implements Application_Model_Task_Interface {
             'root_channel' => 'community',
             'sync_pear' => false,
             'downloader_path' => 'downloader',
-            'magento_root' => $this->_instanceFolder.'/'.$this->_domain,
+            'magento_root' => $this->_storeFolder.'/'.$this->_domain,
             'remote_config' => $ftp_user_host.'/public_html/'.$this->_domain
         );
         
         $free_user = $this->_userObject->getGroup() == 'free-user' ? true : false;
         if($free_user AND !stristr($this->_versionObject->getVersion(), '1.4')) {
             // index.php file
-            $index_file = file_get_contents($this->_instanceFolder.'/'.$this->_domain.'/downloader/index.php');
+            $index_file = file_get_contents($this->_storeFolder.'/'.$this->_domain.'/downloader/index.php');
             $new_index_file = str_replace(
                             '<?php',
                             '<?php'.PHP_EOL.'
@@ -255,40 +255,40 @@ implements Application_Model_Task_Interface {
                             $index_file
             );
             file_put_contents(
-                $this->_instanceFolder.'/'.$this->_domain.'/downloader/index.php',
+                $this->_storeFolder.'/'.$this->_domain.'/downloader/index.php',
                 $new_index_file
             );
             // header.phtml navigation file
-            $nav_file = file_get_contents($this->_instanceFolder.'/'.$this->_domain.'/downloader/template/header.phtml');
+            $nav_file = file_get_contents($this->_storeFolder.'/'.$this->_domain.'/downloader/template/header.phtml');
             file_put_contents(
-                $this->_instanceFolder.'/'.$this->_domain.'/downloader/template/header.phtml',
+                $this->_storeFolder.'/'.$this->_domain.'/downloader/template/header.phtml',
                     preg_replace('/<li.*setting.*li>/i', '', $nav_file)
             );
         }
         
-        file_put_contents($this->_instanceFolder.'/'.$this->_domain.'/downloader/connect.cfg', $header.serialize($connect_cfg));
+        file_put_contents($this->_storeFolder.'/'.$this->_domain.'/downloader/connect.cfg', $header.serialize($connect_cfg));
     }
 
     protected function _updateCoreConfigData() {
         //update core_config_data with new url
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE \`core_config_data\` SET \`value\` = \''.$this->config->magento->storeUrl.'/instance/'.$this->_domain.'/\' WHERE \`path\`=\'web/unsecure/base_url\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE \`core_config_data\` SET \`value\` = \''.$this->config->magento->storeUrl.'/instance/'.$this->_domain.'/\' WHERE \`path\`=\'web/secure/base_url\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_config_data\` SET \`value\` = \''.$this->config->magento->storeUrl.'/store/'.$this->_domain.'/\' WHERE \`path\`=\'web/unsecure/base_url\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_config_data\` SET \`value\` = \''.$this->config->magento->storeUrl.'/store/'.$this->_domain.'/\' WHERE \`path\`=\'web/secure/base_url\'"');
 
         //update contact emails
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'contacts/email/recipient_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'catalog/productalert_cron/error_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sitemap/generate/error_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sales_email/order/copy_to\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sales_email/shipment/copy_to\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'contacts/email/recipient_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'catalog/productalert_cron/error_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sitemap/generate/error_email\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sales_email/order/copy_to\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sales_email/shipment/copy_to\';"');
         
         /* Disable Google Analytics */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \'0\' WHERE  \`path\` = \'google/analytics/active\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \'\' WHERE  \`path\` = \'google/analytics/account\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \'0\' WHERE  \`path\` = \'google/analytics/active\';"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \'\' WHERE  \`path\` = \'google/analytics/account\';"');
         
         /* update cache setting - disable all */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->instanceprefix . $this->_dbname . ' -e "UPDATE \`core_cache_option\` SET \`value\`=\'0\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_cache_option\` SET \`value\`=\'0\'"');
         /* clear cache to apply new cache settings  */
-        $this->_clearInstanceCache();
+        $this->_clearStoreCache();
         
     }
     
@@ -298,7 +298,7 @@ implements Application_Model_Task_Interface {
         $password = $this->getHash($this->_adminpass,2);
         $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
         ' -p' . $this->_dbpass . 
-        ' ' . $this->config->magento->instanceprefix . $this->_dbname . 
+        ' ' . $this->config->magento->storeprefix . $this->_dbname . 
         ' -e "INSERT INTO admin_user'.
         ' (firstname,lastname,email,username,password,created,is_active) VALUES'.
         ' (\''.$this->_userObject->getFirstName().'\',\''.$this->_userObject->getLastName().'\',\''.$this->_userObject->getEmail().'\',\''.$this->_userObject->getLogin().'\',\''.$password.'\',\''.date("Y-m-d H:i:s").'\',1)'.
@@ -309,7 +309,7 @@ implements Application_Model_Task_Interface {
         /* add role for that user */
         $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
         ' -p' . $this->_dbpass . 
-        ' ' . $this->config->magento->instanceprefix . $this->_dbname . 
+        ' ' . $this->config->magento->storeprefix . $this->_dbname . 
         ' -e "INSERT INTO admin_role'. 
 ' (parent_id,tree_level,sort_order,role_type,user_id,role_name)'. 
 ' VALUES'.
@@ -367,7 +367,7 @@ implements Application_Model_Task_Interface {
     
     protected function _importAdminFrontname(){
         
-        $localXml = file_get_contents($this->_instanceFolder . '/' . $this->_domain.'/app/etc/local.xml');
+        $localXml = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/app/etc/local.xml');
         preg_match("#<frontName>(.*?)</frontName>#is",$localXml,$matches);
         
         if (isset($matches[1])){
@@ -382,8 +382,8 @@ implements Application_Model_Task_Interface {
             $set = array('backend_name' => 'admin');
         }
      
-        $where = array('id = ?' => $this->_instanceObject->getId());
-        $this->db->update('instance', $set, $where);
+        $where = array('id = ?' => $this->_storeObject->getId());
+        $this->db->update('store', $set, $where);
     }
     
 }

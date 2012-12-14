@@ -231,8 +231,8 @@ class Application_Model_DevExtension {
         return $this->getMapper()->getOptions();
     }
     
-    public function getAllForInstance($instance_name){
-        return $this->getMapper()->getAllForInstance($instance_name);
+    public function getAllForStore($store_name){
+        return $this->getMapper()->getAllForStore($store_name);
     }
     
     public function findByFilters(array $filters){

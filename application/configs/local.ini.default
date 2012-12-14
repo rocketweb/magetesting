@@ -7,11 +7,11 @@ magento.storeUrl = "http://magetesting.dev"
 magento.ftphost = "ftp://magetesting.com"
 magento.dbhost = "db.magetesting.com"
 
-magento.standardUser.instances = 3
+magento.standardUser.stores = 3
 
-magento.instanceTimeExecution = 1
+magento.storeTimeExecution = 1
 
-magento.instanceprefix = "INST_"
+magento.storeprefix = "INST_"
 
 ;IMPORTANT - check Application_Form_UserRegister::init(); for setting up length
 magento.userprefix = "mi_"

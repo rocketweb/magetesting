@@ -1,9 +1,9 @@
 <?php
 
-class Application_Model_InstanceExtension {
+class Application_Model_StoreExtension {
     
     protected $_id;
-    protected $_instance_id;
+    protected $_store_id;
     protected $_extension_id;
     protected $_added_date;
     
@@ -51,15 +51,15 @@ class Application_Model_InstanceExtension {
         return $this->_extension_id;
     }
     
-    public function setInstanceId($value)
+    public function setStoreId($value)
     {
-        $this->_instance_id = $value;
+        $this->_store_id = $value;
         return $this;
     }
 
-    public function getInstanceId()
+    public function getStoreId()
     {
-        return $this->_instance_id;
+        return $this->_store_id;
     }
     
     public function setAddedDate($value){
@@ -80,7 +80,7 @@ class Application_Model_InstanceExtension {
     public function getMapper()
     {
         if (null === $this->_mapper) {
-            $this->setMapper(new Application_Model_InstanceExtensionMapper());
+            $this->setMapper(new Application_Model_StoreExtensionMapper());
         }
         return $this->_mapper;
     }
@@ -110,7 +110,7 @@ class Application_Model_InstanceExtension {
     {
         return array(
             'id'          => $this->getId(),
-            'instance_id'   => $this->getInstanceId(),
+            'store_id'   => $this->getStoreId(),
             'extension_id'    => $this->getExtensionId(),
             'added_date'       => $this->getAddedDate()
         );

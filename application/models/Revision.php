@@ -4,7 +4,7 @@ class Application_Model_Revision {
 
     protected $_id;
 
-    protected $_instance_id;
+    protected $_store_id;
 
     protected $_user_id;
     
@@ -53,14 +53,14 @@ class Application_Model_Revision {
         return $this;
     }
 
-        public function getInstanceId()
+        public function getStoreId()
     {
-        return $this->_instance_id;
+        return $this->_store_id;
     }
     
-    public function setInstanceId($value)
+    public function setStoreId($value)
     {
-        $this->_instance_id = (int)$value;
+        $this->_store_id = (int)$value;
         return $this;
     }
     
@@ -183,7 +183,7 @@ class Application_Model_Revision {
     {
         return array(
                 'id'        => $this->getId(),
-                'instance_id'      => $this->getInstanceId(),
+                'store_id'      => $this->getStoreId(),
                 'user_id' => $this->getUserId(),
                 'extension_id' => $this->getExtensionId(),
                 'type' => $this->getType(),
@@ -195,21 +195,21 @@ class Application_Model_Revision {
     }
 
     /**
-     * fetches array of all revisions for instance<br />
+     * fetches array of all revisions for store<br />
      * joined with extension table to get extension name
-     * @param int $instance_id
+     * @param int $store_id
      */
-    public function getAllForInstance($instance_id)
+    public function getAllForStore($store_id)
     {
-        return $this->getMapper()->getAllForInstance($instance_id);
+        return $this->getMapper()->getAllForStore($store_id);
     }
     
-    public function getPreLastForInstance($instance_id){
-        return $this->getMapper()->getPreLastForInstance($instance_id, $this);
+    public function getPreLastForStore($store_id){
+        return $this->getMapper()->getPreLastForStore($store_id, $this);
     }
     
-    public function getLastForInstance($instance_id){
-        return $this->getMapper()->getLastForInstance($instance_id, $this);
+    public function getLastForStore($store_id){
+        return $this->getMapper()->getLastForStore($store_id, $this);
     }
     
 }

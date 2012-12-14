@@ -1,16 +1,16 @@
 <?php
 
-class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
+class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'instance';
+    protected $_name = 'store';
 
     public function getAllJoinedWithVersions()
     {
         $select = $this->select()
                         ->from($this->_name)
                         ->setIntegrityCheck(false)
-                        ->join('version', 'instance.version_id = version.id',array('version'));
+                        ->join('version', 'store.version_id = version.id',array('version'));
         return $this->fetchAll($select);
     }
 
@@ -19,27 +19,27 @@ class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
         $select = $this->select()
                        ->from($this->_name)
                        ->setIntegrityCheck(false)
-                       ->join('version', 'instance.version_id = version.id',array('version'))
+                       ->join('version', 'store.version_id = version.id',array('version'))
                        ->joinLeft(array('r' => new Zend_Db_Expr(
-                                   '(SELECT r.comment, r.instance_id 
+                                   '(SELECT r.comment, r.store_id 
                                    FROM revision r 
                                    WHERE user_id = '.$this->_db->quote($user_id).' ORDER BY ID DESC)'
                                )
                            ),
-                           'r.instance_id = '.$this->_name.'.id', 
+                           'r.store_id = '.$this->_name.'.id', 
                            array('r.comment')
                        )
                        ->where('user_id = ?', $user_id)
                        ->where('status != ?', 'removing-magento')
-                       ->group(array('instance.id'))
-                       ->order(array('status asc', 'instance.id asc'));
+                       ->group(array('store.id'))
+                       ->order(array('status asc', 'store.id asc'));
         return $select;
     }
 
-    public function countUserInstances($user_id)
+    public function countUserStores($user_id)
     {
         $select = $this->select()
-                       ->from($this->_name, 'count(user_id) as instances')
+                       ->from($this->_name, 'count(user_id) as stores')
                        ->where('user_id = ?', $user_id);
 
         return $this->fetchAll($select);
@@ -61,9 +61,9 @@ class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
         return $this->select()
                     ->setIntegrityCheck(false)
                     ->from($this->_name)
-                    ->join('user', 'user.id = instance.user_id', 'login')
-                    ->join('version', 'instance.version_id = version.id', 'version')
-                    ->order(array('status asc', 'instance.id asc'));
+                    ->join('user', 'user.id = store.user_id', 'login')
+                    ->join('version', 'store.version_id = version.id', 'version')
+                    ->order(array('status asc', 'store.id asc'));
     }
 
     public function getPendingItems()
@@ -78,13 +78,13 @@ class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
         $select = $this->select()
                         ->setIntegrityCheck(false)
                        ->from($this->_name)
-                       ->join('version', 'instance.version_id = version.id', 'version')
+                       ->join('version', 'store.version_id = version.id', 'version')
                        ->where('domain = ?', $domain);
                        
         return $this->fetchRow($select);
     }
     
-    public function findPositionByName($instance_name)
+    public function findPositionByName($store_name)
     {
 	/**
 	SELECT COUNT( q.id )
@@ -92,14 +92,14 @@ class Application_Model_DbTable_Instance extends Zend_Db_Table_Abstract
 	WHERE `q`.`id` <= (
 	SELECT id
 	FROM queue
-	WHERE domain = '$instance_name' )
+	WHERE domain = '$store_name' )
 	AND `status` = 'ready'
 	*/
     
         $select = $this->select()
                         ->setIntegrityCheck(false)
-                       ->from($this->_name, array('num' => 'count(instance.id)'))
-                       ->where("instance.id <= (SELECT id FROM instance WHERE domain = '".$instance_name."')")
+                       ->from($this->_name, array('num' => 'count(store.id)'))
+                       ->where("store.id <= (SELECT id FROM store WHERE domain = '".$store_name."')")
                 ->where('status = ?','pending');
                        
 	//Zend_Debug::Dump($select->assemble());

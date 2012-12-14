@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Instance {
+class Application_Model_Store {
 
     protected $_id;
 
@@ -18,7 +18,7 @@ class Application_Model_Instance {
 
     protected $_domain;
 
-    protected $_instance_name;
+    protected $_store_name;
 
     protected $_description;
 
@@ -152,15 +152,15 @@ class Application_Model_Instance {
         return $this->_domain;
     }
 
-    public function setInstanceName($name)
+    public function setStoreName($name)
     {
-        $this->_instance_name = $name;
+        $this->_store_name = $name;
         return $this;
     }
 
-    public function getInstanceName()
+    public function getStoreName()
     {
-        return $this->_instance_name;
+        return $this->_store_name;
     }
 
     public function setDescription($name)
@@ -194,7 +194,7 @@ class Application_Model_Instance {
     public function getMapper()
     {
         if (null === $this->_mapper) {
-            $this->setMapper(new Application_Model_InstanceMapper());
+            $this->setMapper(new Application_Model_StoreMapper());
         }
         return $this->_mapper;
     }
@@ -229,7 +229,7 @@ class Application_Model_Instance {
                 'version_id'       => $this->getVersionId(),
                 'user_id'          => $this->getUserId(),
                 'domain'           => $this->getDomain(),
-                'instance_name'    => $this->getInstanceName(),
+                'store_name'    => $this->getStoreName(),
                 'description'      => $this->getDescription(),
                 'backend_password' => $this->getBackendPassword(),
                 'sample_data'      => $this->getSampleData(),
@@ -258,9 +258,9 @@ class Application_Model_Instance {
         return $this->getMapper()->getAllForUser( $user_id );
     }
 
-    public function countUserInstances( $user_id )
+    public function countUserStores( $user_id )
     {
-        return $this->getMapper()->countUserInstances( $user_id );
+        return $this->getMapper()->countUserStores( $user_id );
     }
 
     public function changeStatusToClose($byAdmin = false)
@@ -383,9 +383,9 @@ class Application_Model_Instance {
         return $this->getMapper()->findByDomain( $domain );
     }
     
-    public function findPositionByName( $instance_name )
+    public function findPositionByName( $store_name )
     {
-        return $this->getMapper()->findPositionByName( $instance_name );
+        return $this->getMapper()->findPositionByName( $store_name );
     }
     
     public function getCustomFile(){

@@ -27,10 +27,10 @@ extends Application_Model_Task {
             $this->_adminlname = $this->_userObject->getLastname();
                         
             $this->_systempass = substr(sha1($this->config->magento->usersalt . $this->config->magento->userprefix . $this->_userObject->getLogin()), 10, 10);
-            $this->_domain = $this->_instanceObject->getDomain();
+            $this->_domain = $this->_storeObject->getDomain();
         }
         
-        $this->_dbname = $this->_userObject->getLogin() . '_' . $this->_instanceObject->getDomain();
+        $this->_dbname = $this->_userObject->getLogin() . '_' . $this->_storeObject->getDomain();
         
         
     }
@@ -39,13 +39,13 @@ extends Application_Model_Task {
      * Sends email about successful install to store owner
      * used by MagentoInstall and MagentoDownload Tasks
      */
-    protected function _sendInstanceReadyEmail(){
+    protected function _sendStoreReadyEmail(){
         
         $html = new Zend_View();
         $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
     
         // assign values
-        $html->assign('domain', $this->_instanceObject->getDomain());
+        $html->assign('domain', $this->_storeObject->getDomain());
         $html->assign('storeUrl', $this->config->magento->storeUrl);
         $html->assign('admin_login', $this->_adminuser);
         $html->assign('admin_password', $this->_adminpass);
@@ -64,15 +64,15 @@ extends Application_Model_Task {
         try {
           $mail->send();
         } catch (Zend_Mail_Transport_Exception $e){
-          $this->logger->log('Instance ready mail could not be sent.', Zend_Log::CRIT, $e->getTraceAsString());
+          $this->logger->log('Store ready mail could not be sent.', Zend_Log::CRIT, $e->getTraceAsString());
         }
         
     }
     
     protected function _createSymlink(){
-        $domain = $this->_instanceObject->getDomain();
+        $domain = $this->_storeObject->getDomain();
         $this->logger->log('Added symbolic link for store directory.', Zend_Log::INFO);
-        $command = 'ln -s ' . $this->_instanceFolder . '/' . $domain . ' ' . INSTANCE_PATH . $domain;
+        $command = 'ln -s ' . $this->_storeFolder . '/' . $domain . ' ' . STORE_PATH . $domain;
         exec($command);
         $this->logger->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
     }
