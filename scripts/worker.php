@@ -72,15 +72,6 @@ $queueModel = new Application_Model_Queue();
         $worker->work($queueElement);
     }
     
-<<<<<<< Updated upstream
-/*} else {
-    
-    $message = 'Nothing in pending queue';
-    $log->log($message, LOG_INFO, ' ');
-        
-}*/
-=======
->>>>>>> Stashed changes
 /* release the lock */
 flock($fp, LOCK_UN);
 
