@@ -14,9 +14,9 @@ class Application_Model_DbTable_Server extends Zend_Db_Table_Abstract
         $select = $this->select()
                        ->from(array('s' => $this->_name), array('s.id'))
                        ->setIntegrityCheck(false)
-                       ->joinLeft(array('i' => 'store'), 'i.server_id = s.id', array(new Zend_Db_Expr('IF(i.id IS NULL, 0, count(s.id) ) stores')))
-                       ->where('i.status = ?', 'ready')
-                       ->orWhere('i.status IS NULL')
+                       ->joinLeft(array('st' => 'store'), 'st.server_id = s.id', array(new Zend_Db_Expr('IF(st.id IS NULL, 0, count(s.id) ) stores')))
+                       ->where('st.status = ?', 'ready')
+                       ->orWhere('st.status IS NULL')
                        ->group('s.id')
                        ->order('stores asc')
                        ->limit(1);

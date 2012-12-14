@@ -10,7 +10,7 @@ class Application_Model_DbTable_Revision extends Zend_Db_Table_Abstract
         $select = $this->select()
                        ->setIntegrityCheck(false)
                        ->from(array('r' => $this->_name), array('r.id', 'r.comment', 'r.filename', 'r.db_before_revision', 'r.type'))
-                       ->joinLeft(array('ie' => 'store_extension'), 'r.extension_id = ie.extension_id', array('ie.braintree_transaction_id', 'ie.extension_id'))
+                       ->joinLeft(array('se' => 'store_extension'), 'r.extension_id = se.extension_id', array('se.braintree_transaction_id', 'se.extension_id'))
                        ->where('r.store_id = ?', $store_id)
                        ->order('r.id DESC')
                        ->group('r.id');

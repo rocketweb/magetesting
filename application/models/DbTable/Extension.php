@@ -52,13 +52,13 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                             (int)str_replace('.','',$store['version'])
                         );
         $select->joinLeft(
-            array('ie' => 'store_extension'),
-            new Zend_Db_Expr('e.id = ie.extension_id AND ( ie.store_id =  '.$this->getDefaultAdapter()->quote($store->id).' OR ie.store_id IS NULL )'),
-            array('ie.store_id', 'ie.braintree_transaction_id')
+            array('se' => 'store_extension'),
+            new Zend_Db_Expr('e.id = se.extension_id AND ( se.store_id =  '.$this->getDefaultAdapter()->quote($store->id).' OR se.store_id IS NULL )'),
+            array('se.store_id', 'se.braintree_transaction_id')
         );
         $select->joinLeft(
             array('q' => 'queue'),
-            'q.store_id = ie.store_id AND q.extension_id = e.id',
+            'q.store_id = se.store_id AND q.extension_id = e.id',
             'q.id as q_id'
         );
         $select->joinLeft(
@@ -66,7 +66,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             'ec.id = e.category_id',
             'ec.class as category_class'
         );
-        $select->order(array('ie.store_id DESC', 'q_id ASC', 'price DESC'));
+        $select->order(array('se.store_id DESC', 'q_id ASC', 'price DESC'));
         $select->group(new Zend_Db_Expr('e.id DESC'));
         //get also developr extensions for admins
         if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
