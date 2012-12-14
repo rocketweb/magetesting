@@ -21,6 +21,17 @@ $(document).ready(function () {
         $commit_comment = $deployment_modal.find('#commit_comment'),
         $deploy_table_body = $deployment_modal.find('.table tbody'),
         $base_url = $('#base-url').val();
+
+    $deploy_table_body.on('click', '.request-deployment.request-buy', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var $this = $(this);
+        form_string = '<form id="buy_request" method="post" action="/braintree/form">';
+        form_string += '<input type="hidden" name="domain" value="'+$this.data('store-domain')+'" />';
+        form_string += '<input type="hidden" name="pay-for" value="extension" /><input type="hidden" name="id" value="'+$this.val()+'" /></form>';
+        $('body').append(form_string);
+        $('#buy_request').submit();
+    });
     // deployment modals
     $('.panel.deployment .btn').click(function() {
         var $this = $(this);

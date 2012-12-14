@@ -56,8 +56,6 @@ class Application_Model_PlanMapper {
               ->setPhpmyadminAccess($row->phpmyadmin_access)
               ->setCanAddCustomStore($row->can_add_custom_store)
               ->setBillingPeriod($row->billing_period)
-              ->setPaypalId($row->paypal_id)
-              ->setBraintreeId($row->braintree_id)
               ->setIsHidden($row->is_hidden);
         
         return $plan;
@@ -86,8 +84,6 @@ class Application_Model_PlanMapper {
                   ->setPhpmyadminAccess($row->phpmyadmin_access)
                     ->setCanAddCustomStore($row->can_add_custom_store)
                   ->setBillingPeriod($row->billing_period)
-                  ->setPaypalId($row->paypal_id)
-                  ->setBraintreeId($row->braintree_id)
                   ->setIsHidden($row->is_hidden);
             $entries[] = $entry;
         }
@@ -108,8 +104,6 @@ class Application_Model_PlanMapper {
                   ->setPhpmyadminAccess($row->phpmyadmin_access)
                     ->setCanAddCustomStore($row->can_add_custom_store)
                   ->setBillingPeriod($row->billing_period)
-                  ->setPaypalId($row->paypal_id)
-                  ->setBraintreeId($row->braintree_id)
                   ->setIsHidden($row->is_hidden);
             $entries[] = $entry;
         }
@@ -133,8 +127,6 @@ class Application_Model_PlanMapper {
               ->setPhpmyadminAccess($row->phpmyadmin_access)
                 ->setCanAddCustomStore($row->can_add_custom_store)
               ->setBillingPeriod($row->billing_period)
-              ->setPaypalId($row->paypal_id)
-              ->setBraintreeId($row->braintree_id)
               ->setIsHidden($row->is_hidden);
         return $entry;
 

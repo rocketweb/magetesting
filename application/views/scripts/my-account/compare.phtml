@@ -142,7 +142,11 @@
                     <td class="compare-table-price-empty"></td>
                     <?php foreach($this->plans as $plan): ?>
                         <td class="compare-table-price-button">
-                            <a href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form', 'pay-for' => 'plan', 'id' => $plan->getId()), 'default', true); ?>" class="btn btn-large btn-inverse">Subscribe now</a>
+                            <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => ($this->user->hasPlanActive() ? 'change-plan' : 'form')), 'default', true); ?>">
+                                <input type="hidden" name="pay-for" value="plan" />
+                                <input type="hidden" name="id" value="<?php echo $plan->getId(); ?>" />
+                                <button type="submit" class="btn btn-large btn-inverse">Subscribe now</button>
+                            </form>
                         </td>
                         <td class="compare-table-price-empty"></td>
                     <?php endforeach; ?>

@@ -57,9 +57,10 @@ class Application_Model_PaymentMapper {
                 ->setState($row->state)
                 ->setCountry($row->country)
                 ->setDate($row->date)
-                ->setPlanName($row->plan_name)
+                ->setTransactionName($row->transaction_name)
+                ->setTransactionType($row->transaction_type)
                 ->setUserId($row->user_id)
-                ->setSubscrId($row->subscr_id);
+                ->setBraintreeTransactionId($row->braintree_transaction_id);
         return $payment;
     }
 
@@ -80,9 +81,10 @@ class Application_Model_PaymentMapper {
                   ->setState($row->state)
                   ->setCountry($row->country)
                   ->setDate($row->date)
-                  ->setPlanName($row->plan_name)
+                  ->setTransactionName($row->transaction_name)
+                  ->setTransactionType($row->transaction_type)
                   ->setUserId($row->user_id)
-                  ->setSubscrId($row->subscr_id);
+                  ->setBraintreeTransactionId($row->braintree_transaction_id);
             $entries[] = $entry;
         }
         return $entries;
@@ -109,9 +111,10 @@ class Application_Model_PaymentMapper {
                   ->setState($row->state)
                   ->setCountry($row->country)
                   ->setDate($row->date)
-                  ->setPlanName($row->plan_name)
+                  ->setTransactionName($row->transaction_name)
+                  ->setTransactionType($row->transaction_type)
                   ->setUserId($row->user_id)
-                  ->setSubscrId($row->subscr_id);
+                  ->setBraintreeTransactionId($row->braintree_transaction_id);
             $entries[] = $entry;
         }
         return $entries;

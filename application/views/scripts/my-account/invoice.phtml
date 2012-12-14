@@ -49,13 +49,19 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Subscribed plan</th>
+                        <th>
+                        <?php if($payment->getTransactionType() == 'subscription'): ?>
+                            Subscribed plan
+                        <?php else: ?>
+                            Bought Extension
+                        <?php endif; ?>
+                        </th>
                         <th>Price</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><?php echo $payment->getPlanName(); ?></td>
+                        <td><?php echo $payment->getTransactionName(); ?></td>
                         <td>$<?php echo $payment->getPrice(); ?></td>
                     </tr>
                 </tbody>

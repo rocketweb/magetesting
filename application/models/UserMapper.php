@@ -35,6 +35,7 @@ class Application_Model_UserMapper {
             unset($data['plan_id']);
             unset($data['group']);
             unset($data['downgraded']);
+            unset($data['braintree_transaction_confirmed']);
             $data['added_date'] = date('Y-m-d H:i:s');
             $user->setAddedDate($data['added_date']);
             $data['password'] = sha1($user->getPassword());
@@ -72,14 +73,14 @@ class Application_Model_UserMapper {
              ->setGroup($row->group)
              ->setAddedDate($row->added_date)
              ->setStatus($row->status)
-             ->setSubscrId($row->subscr_id)
              ->setPlanId($row->plan_id)
              ->setPlanActiveTo($row->plan_active_to)
              ->setHasSystemAccount($row->has_system_account)
              ->setSystemAccountName($row->system_account_name)
              ->setDowngraded($row->downgraded)
              ->setBraintreeVaultId($row->braintree_vault_id)
-             ->setBraintreeSubscriptionId($row->braintree_subscription_id)
+             ->setBraintreeTransactionId($row->braintree_transaction_id)
+             ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
              ->setServerId($row->server_id)
              ->setHasPapertrailAccount($row->has_papertrail_account)
              ->setPapertrailApiToken($row->papertrail_api_token);
@@ -115,14 +116,14 @@ class Application_Model_UserMapper {
                   ->setGroup($row->group)
                   ->setAddedDate($row->added_date)
                   ->setStatus($row->status)
-                  ->setSubscrId($row->subscr_id)
                   ->setPlanId($row->plan_id)
                   ->setPlanActiveTo($row->plan_active_to)
                   ->setHasSystemAccount($row->has_system_account)
                   ->setSystemAccountName($row->system_account_name)
                   ->setDowngraded($row->downgraded)
                   ->setBraintreeVaultId($row->braintree_vault_id)
-                  ->setBraintreeSubscriptionId($row->braintree_subscription_id)
+                  ->setBraintreeTransactionId($row->braintree_transaction_id)
+                  ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
                   ->setHasPapertrailAccount($row->has_papertrail_account)
                   ->setPapertrailApiToken($row->papertrail_api_token);
 
@@ -199,9 +200,9 @@ class Application_Model_UserMapper {
         return $newPassword;
     }
     
-    public function findByBraintreeSubscriptionId($subscription_id, Application_Model_User $userObject){
+    public function findByBraintreeSubscriptionId($transaction_id, Application_Model_User $userObject){
         
-        $row = $this->getDbTable()->findByBraintreeSubscriptionId($subscription_id);
+        $row = $this->getDbTable()->findByBraintreeTransactionId($transaction_id);
          if($row) {
              $userObject->setOptions($row->toArray());
          }

@@ -1,10 +1,14 @@
 <div class="row">
     <div class="span12">
-        <?php echo $this->specific_content; ?>
         <div class="form-box">
             <div class="box">
                 <form class="form-stacked" id="payment-form" method="POST" action="<?php echo Braintree_TransparentRedirect::url(); ?>">
                     <input class="span4"  type="hidden" name="tr_data" value="<?php echo htmlentities($this->tr_data); ?>" />
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Payment Details</legend>
+                        <?php echo $this->specific_content; ?>
+                    </fieldset>
                     <?php if($this->show_billing_and_card): ?>
                     <div class="tab-stripe"></div>
                     <fieldset>

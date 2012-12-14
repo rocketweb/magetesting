@@ -21,11 +21,7 @@ class Application_Model_Plan {
     protected $_can_add_custom_store;
     
     protected $_billing_period;
-    
-    protected $_paypal_id;
-    
-    protected $_braintree_id;
-    
+
     protected $_is_hidden;
 
     protected $_mapper;
@@ -138,29 +134,7 @@ class Application_Model_Plan {
     {
         return $this->_billing_period;
     }
-    
-    public function setPaypalId($value)
-    {
-        $this->_paypal_id = $value;
-        return $this;
-    }
-    
-    public function getPaypalId()
-    {
-        return $this->_paypal_id;
-    }
-    
-    public function setBraintreeId($value)
-    {
-        $this->_braintree_id = $value;
-        return $this;
-    }
-    
-    public function getBraintreeId()
-    {
-        return $this->_braintree_id;
-    }
-    
+
     public function setIsHidden($value)
     {
         $this->_is_hidden = ((int)$value ? 1 : 0);
@@ -213,17 +187,15 @@ class Application_Model_Plan {
     public function __toArray()
     {
         return array(
-                'id'        => $this->getId(),
-                'name'      => $this->getName(),
-                'stores' => $this->getStores(),
-                'ftp_access' => $this->getFtpAccess(),
-                'phpmyadmin_access' => $this->getPhpmyadminAccess(),
-                'can_add_custom_store' => $this->getCanAddCustomStore(),
-                'billing_period' => $this->getBillingPeriod(),
-                'price'     => $this->getPrice(),
-                'paypal_id' => $this->getPaypalId(),
-                'braintree_id' => $this->getBraintreeId(),
-                'is_hidden' => $this->getIsHidden()
+            'id'        => $this->getId(),
+            'name'      => $this->getName(),
+            'stores' => $this->getStores(),
+            'ftp_access' => $this->getFtpAccess(),
+            'phpmyadmin_access' => $this->getPhpmyadminAccess(),
+            'can_add_custom_instance' => $this->getCanAddCustomInstance(),
+            'billing_period' => $this->getBillingPeriod(),
+            'price'     => $this->getPrice(),
+            'is_hidden' => $this->getIsHidden()
         );
     }
     

@@ -15,6 +15,7 @@ class UserController extends Integration_Controller_Action
 
     public function dashboardAction()
     {
+        //var_dump($this->auth->getIdentity());die;
         $storeModel = new Application_Model_Store();
 
         $timeExecution = $this->getInvokeArg('bootstrap')
@@ -162,26 +163,6 @@ class UserController extends Integration_Controller_Action
 
                     $userData = $adapter->getResultRowObject();
 
-                    // if user has subscription or waiting for confirmation
-                    if(in_array($userData->group, array('awaiting-user', 'commercial-user'))) {
-                        $timeAfterLastPayment = time()-strtotime($userData->plan_active_to);
-                        // if between active to date and active to date+3days
-                        // notify user about payment
-                        if( $timeAfterLastPayment < 3*60*60*24 AND $timeAfterLastPayment > 0) {
-                            $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'We have not received payment for your subscription yet.'));
-                        } elseif($timeAfterLastPayment > 3*60*60*24) {
-                            // if date is farther than 3 days
-                            // inform that we downgraded user account
-                            $user = new Application_Model_User();
-                            $user->find($userData->id)
-                                 ->setGroup('free-user')
-                                 ->setDowngraded(2)
-                                 ->save();
-                            $this->_helper->FlashMessenger(array('type'=> 'error', 'message' => 'We downgraded your account to free user.'));
-                            $userData->group = 'free-user';
-                        }
-                    }
-
                     unset($userData->password);
                     if ($userData->status == 'inactive') {
                         $this->_helper->FlashMessenger('Your account is inactive');
@@ -191,10 +172,38 @@ class UserController extends Integration_Controller_Action
                                 'action' => 'login',
                         ), 'default', true);
                     } else {
+                        $user = new Application_Model_User();
+                        $user->find($userData->id);
 
                         $auth->getStorage()->write(
                                 $userData
                         );
+
+                        if(!$user->getPlanId() OR !$user->hasPlanActive()) {
+                            $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'You don\'t have any plan, please feel free to choose one.'));
+                            return $this->_helper->redirector->gotoRoute(array(
+                                    'module' => 'default',
+                                    'controller' => 'my-account',
+                                    'action' => 'compare',
+                            ), 'default', true);
+                        }
+                        // if user has subscription or waiting for confirmation
+                        if(in_array($userData->group, array('awaiting-user', 'commercial-user'))) {
+                            $timeAfterLastPayment = time()-strtotime($userData->plan_active_to);
+                            // if between active to date and active to date+3days
+                            // notify user about payment
+                            if( $timeAfterLastPayment < 3*60*60*24 AND $timeAfterLastPayment > 0) {
+                                $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'We have not received payment for your subscription yet.'));
+                            } elseif($timeAfterLastPayment > 3*60*60*24) {
+                                // if date is farther than 3 days
+                                // inform that we downgraded user account
+                                $user->setGroup('free-user')
+                                ->setDowngraded(2)
+                                ->save();
+                                $this->_helper->FlashMessenger(array('type'=> 'error', 'message' => 'We downgraded your account to free user.'));
+                                $userData->group = 'free-user';
+                            }
+                        }
 
                         $this->_helper->FlashMessenger('You have been logged in successfully');
 

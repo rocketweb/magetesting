@@ -116,8 +116,8 @@ class BraintreeController extends Integration_Controller_Action
                 );
                 // should we display inputs for billing address and credit card
                 $this->view->show_billing_and_card = true;
-                if(false){//if($user->getCreditCardToken()) {
-                    $transaction['paymentMethodToken'] = 'card_id';
+                if($user->getBraintreeVaultId()) {
+                    $transaction['customerId'] = 'card_id';
                     $transaction['options']['storeInVaultOnSuccess'] = false;
                     $this->view->show_billing_and_card = false;
                 }
@@ -187,8 +187,8 @@ class BraintreeController extends Integration_Controller_Action
                             }
                         }
                         if(!$errors) {
-                            $user->setSubscrId($result->transaction['id']);
-                            $user->setCreditCardToken($result->transaction['creditCard']['token']);
+                            $user->setBraintreeTransactionId($result->transaction['id']);
+                            $user->setBraintreeVaultId($result->transaction['customer']['id']);
                             $user->setPlanId($id);
                             $user->setPlanActiveTo(date('Y-m-d', strtotime('last day of next month')));
                             $user->save();
@@ -254,6 +254,90 @@ class BraintreeController extends Integration_Controller_Action
         }
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    public function changePlanAction() {
+        $redirect = false;
+        $flash_message = false;
+        if($this->getRequest()->isPost()) {
+            $id = (int)$this->_getParam('id', 0);
+            $plan = new Application_Model_Plan();
+            $plan = $plan->find($id);
+            $user = new Application_Model_User();
+            $user = $user->find($this->auth->getIdentity()->id);
+            if($user->hasPlanActive()) {
+                if($id AND $plan->getId()) {
+                    if($id != $user->getPlanId()) {
+                        if(!$this->_getParam('confirm')) {
+                            // show form
+                            $this->view->id = $id;
+                        } else {
+                            // @todo: remember to split date - we dont need exact time
+                            $subscription_end = strtotime($user->getPlanActiveTo());//strtotime('15-12-2012');
+                            $subscription_start = strtotime('-7 days', $subscription_end);
+                            $today = strtotime(date('Y-m-d'));
+                            $plan_range_days = ($subscription_end-$subscription_start)/3600/24;
+                            $not_used_days = $plan_range_days-(($today-$subscription_start)/3600/24);
+                            $refund = number_format(($not_used_days*(float)$plan->getPrice())/($plan_range_days), 2);
+                            $result = null;
+                            if($amount < 0) {
+                                $result = Braintree_Transaction::refund($user->getBraintreeTransactionId(), (float)$amount);
+                            } else {
+                                $result = Braintree_Transaction::sale(array(
+                                    'amount' => $amount,
+                                    'customerId' => $user->getBraintreeVaultId()
+                                ));
+                            }
+                            $redirect = array(
+                                    'controller' => 'my-account',
+                                    'action' => 'index'
+                            );
+                            if(is_object($result) AND $result->success) {
+                                $payment = new Application_Model_Payment();
+                                $payment = $payment->fetchByBraintreeTransactionId($user->getBraintreeTransactionId());
+                                $payment->setPrice((float)$payment->getPrice()+(float)$amount);
+                                $payment->save();
+                                $flash_message = 'Your plan has been successfully changed.';
+                            } else {
+                                $flash_message = 'We couldn\'t change your plan.';
+                            }
+                        }
+                    } else {
+                        $redirect = array(
+                                'controller' => 'my-account',
+                                'action' => 'compare'
+                        );
+                        $flash_message = array('type' => 'notice', 'message' => 'You already have this plan.');
+                    }
+                } else {
+                    $redirect = array(
+                        'controller' => 'my-account',
+                        'action' => 'compare'
+                    );
+                    $flash_message = array('type' => 'error', 'message' => 'Wrong plan.');
+                }
+            } else {
+                $redirect = array(
+                    'controller' => 'my-account',
+                    'action' => 'compare'
+                );
+                $flash_message = array('type' => 'notice', 'message' => 'Subscribe any plan first.');
+            }
+        } else {
+            $redirect = array(
+                    'controller' => 'my-account'
+            );
+        }
+        
+        if($redirect) {
+            if($flash_message) {
+                $this->_helper->FlashMessenger($flash_message);
+            }
+            return $this->_helper->redirector->gotoRoute(
+                    array_merge(array('module' => 'default'), $redirect)
+                    , 'default', true
+            );
+        }
     }
 
     // emulate subscription feature

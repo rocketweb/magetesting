@@ -1,0 +1,6 @@
+<form method="post">
+    <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
+    <p>Do you really want to change plan?</p>
+    <button class="btn btn-primary" type="submit" name="confirm" value="1">Yes</button>
+    <a class="btn" href="<?php echo $this->url(array('controller' => 'my-account'), 'default', true); ?>" name="confirm" value="1">No</a>
+</form>

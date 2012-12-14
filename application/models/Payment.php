@@ -26,11 +26,13 @@ class Application_Model_Payment {
 
     protected $_date;
 
-    protected $_plan_name;
+    protected $_transaction_name;
+
+    protected $_transaction_type;
 
     protected $_user_id;
 
-    protected $_subscr_id;
+    protected $_braintree_transaction_id;
 
     protected $_mapper;
 
@@ -164,15 +166,26 @@ class Application_Model_Payment {
         return $this->_date;
     }
 
-    public function setPlanName($value)
+    public function setTransactionName($value)
     {
-        $this->_plan_name = $value;
+        $this->_transaction_name = $value;
         return $this;
     }
 
-    public function getPlanName()
+    public function getTransactionName()
     {
-        return $this->_plan_name;
+        return $this->_transaction_name;
+    }
+
+    public function setTransactionType($value)
+    {
+        $this->_transaction_type = $value;
+        return $this;
+    }
+
+    public function getTransactionType()
+    {
+        return $this->_transaction_type;
     }
 
     public function setUserId($user_id)
@@ -186,15 +199,15 @@ class Application_Model_Payment {
         return $this->_user_id;
     }
 
-    public function setSubscrId($subscr_id)
+    public function setBraintreeTransactionId($value)
     {
-        $this->_subscr_id = $subscr_id;
+        $this->_braintree_transaction_id = $value;
         return $this;
     }
 
-    public function getSubscrId()
+    public function getBraintreeTransactionId()
     {
-        return $this->_subscr_id;
+        return $this->_braintree_transaction_id;
     }
 
     public function setMapper($mapper)
@@ -245,9 +258,10 @@ class Application_Model_Payment {
             'state'       => $this->getState(),
             'country'     => $this->getCountry(),
             'date'        => $this->getDate(),
-            'plan_name'     => $this->getPlanName(),
+            'transaction_name' => $this->getTransactionName(),
+            'transaction_type' => $this->getTransactionType(),
             'user_id'     => $this->getUserId(),
-            'subscr_id'   => $this->getSubscrId()
+            'braintree_transaction_id'   => $this->getBraintreeTransactionId()
         );
     }
 

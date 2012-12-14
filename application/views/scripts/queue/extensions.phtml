@@ -88,9 +88,13 @@
 		                    <?php endif; ?>
 			                <?php if(!(int)$extension['store_id']): ?>
 			                    <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
-			                <?php elseif((float)$extension['price'] AND !(int)$extension['q_id']): ?>
-			                    <a href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form', 'pay-for' => 'extension', 'id' => $extension['id'], 'domain' => $this->store_name), 'default', true); ?>"
-			                       class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</a>
+			                <?php elseif((float)$extension['price'] AND !(int)$extension['q_id'] AND !$extension['braintree_transaction_id']): ?>
+    			                <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form'), 'default', true); ?>">
+                                    <input type="hidden" name="pay-for" value="extension" />
+                                    <input type="hidden" name="id" value="<?php echo $extension['id']; ?>" />
+                                    <input type="hidden" name="domain" value="<?php echo $this->store_name; ?>" />
+                                    <button type="submit" class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</button>
+                                </form>
 			                <?php endif; ?>
 			                </div>
 			            </div>

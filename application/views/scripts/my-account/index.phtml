@@ -35,7 +35,14 @@
         		        		?>
         		        	</div>
         	                <div class="span4">
-        	                	<a class="btn btn-large btn-inverse" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">Plans comparison <i class="icon icon-white icon-share-alt"></i></a>
+        	                	<a class="btn btn-large btn-inverse" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">
+        	                	    <?php if($this->user->hasPlanActive()): ?>
+        	                	        Change Plan
+        	                	    <?php else: ?>
+        	                	        Select Plan
+        	                	    <?php endif; ?>
+        	                	    <i class="icon icon-white icon-share-alt"></i>
+    	                	    </a>
         	                </div>
         		        </div>
         		    	

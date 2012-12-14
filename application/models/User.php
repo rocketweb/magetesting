@@ -29,29 +29,29 @@ class Application_Model_User {
     protected $_addedDate;
 
     protected $_status;
-     
+
     protected $_has_system_account;
-     
+ 
     protected $_system_account_name;
-     
+ 
     protected $_plan_id;
-     
-    protected $_subscr_id;
-    
+ 
+    protected $_braintree_transaction_id;
+
+    protected $_braintree_transaction_confirmed;
+
     protected $_plan_active_to;
 
     protected $_downgraded;
-    
+
     protected $_braintree_vault_id;
-    
-    protected $_braintree_subscription_id;
-    
+
     protected $_server_id;
 
     protected $_mapper;
-    
+
     protected $_has_papertrail_account;
-    
+
     protected $_papertrail_api_token;
 
     public function __construct(array $options = null)
@@ -277,25 +277,18 @@ class Application_Model_User {
         $this->_plan_id = $planId;
         return $this;
     }
-    
-    public function getSubscrId()
-    {
-        return $this->_subscr_id;
-    }
-    
-    /**
-     *
-     * @param int $subscrId
-     * @return \Application_Model_User 
-     */
-    public function setSubscrId($subscrId){
-        $this->_subscr_id = $subscrId;
-        return $this;
-    }
-    
+
     public function getPlanActiveTo()
     {
         return $this->_plan_active_to;
+    }
+    
+    public function hasPlanActive() {
+        $active_to = strtotime($this->getPlanActiveTo());
+        if(!(int)$active_to) {
+            return false;
+        }
+        return (time()-$active_to < 0 ? true : false);
     }
     
     /**
@@ -334,18 +327,29 @@ class Application_Model_User {
     
     public function getBraintreeVaultId()
     {
-        return $this->_braintree_vault_id;        
+        return $this->_braintree_vault_id;
     }
     
-    public function setBraintreeSubscriptionId($value)
+    public function setBraintreeTransactionId($value)
     {
-        $this->_braintree_subscription_id = $value;
+        $this->_braintree_transaction_id = $value;
         return $this;
     }
     
-    public function getBraintreeSubscriptionId()
+    public function getBraintreeTransactionId()
     {
-        return $this->_braintree_subscription_id;        
+        return $this->_braintree_transaction_id;
+    }
+    
+    public function setBraintreeTransactionConfirmed($value)
+    {
+        $this->_braintree_transaction_confirmed = $value;
+        return $this;
+    }
+    
+    public function getBraintreeTransactionConfirmed()
+    {
+        return $this->_braintree_transaction_confirmed;
     }
     
     public function setServerId($value)
@@ -454,7 +458,6 @@ class Application_Model_User {
             'group'       => $this->getGroup(),
             'added_date'  => $this->getAddedDate(),
             'status'      => $this->getStatus(),
-            'subscr_id'   => $this->getSubscrId(),
             'plan_id'     => $this->getPlanId(),
             'plan_active_to' => $this->getPlanActiveTo(),
             'has_system_account' =>$this->getHasSystemAccount(),
@@ -462,15 +465,16 @@ class Application_Model_User {
             'downgraded' => $this->getDowngraded(),
             'server_id' => $this->getServerId(),
             'braintree_vault_id' => $this->getBraintreeVaultId(),
-            'braintree_subscription_id' => $this->getBraintreeSubscriptionId(),
+            'braintree_transaction_id' => $this->getBraintreeTransactionId(),
+            'braintree_transaction_confirmed' => $this->getBraintreeTransactionConfirmed(),
             'server_id' => $this->getServerId(),
             'has_papertrail_account' =>$this->getHasPapertrailAccount(),
             'papertrail_api_token' => $this->getPapertrailApiToken(),
         );
     }
     
-    public function findByBraintreeSubscriptionId($subscription_id){
-        return $this->getMapper()->findByBraintreeSubscriptionId($subscription_id,$this);
+    public function findByBraintreeTransactionId($transaction_id){
+        return $this->getMapper()->findByBraintreeTransactionId($transaction_id,$this);
     }
     
     /**

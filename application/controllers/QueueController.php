@@ -844,7 +844,11 @@ class QueueController extends Integration_Controller_Action {
                 $download_button = '<a class="btn btn-primary download-deployment" href="'.
                     $this->view->url(array('module' => 'default', 'controller' => 'store', 'action' => $domain), 'default', true).'/var/deployment/'.$revision['filename']
                 .'">Download</a>'.PHP_EOL;
-                $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
+                if((int)$revision['extension_id'] AND !$revision['braintree_transaction_id']) {
+                    $request_button = '<button type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
+                } else {
+                    $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
+                }
                 $content .= (!$revision['filename'] ? $request_button : $download_button).PHP_EOL;
                 $content .= '</td>'.PHP_EOL;
                 $content .= '</tr>'.PHP_EOL;
