@@ -12,8 +12,8 @@ if (!file_exists($lockDir) || !is_dir($lockDir)){
 try {
     $opts = new Zend_Console_Getopt(
         array(
-            'downloadonly'      => 'for fetching external instances',
-            'disabledownload' => 'for installing local instances',
+            'downloadonly'      => 'for fetching external stores',
+            'disabledownload' => 'for installing local stores',
             'help'       => 'this list',
         )
     );

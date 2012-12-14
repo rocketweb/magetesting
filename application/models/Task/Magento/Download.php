@@ -112,9 +112,9 @@ implements Application_Model_Task_Interface {
 
         chdir($startCwd);
 
-        /* send email to instance owner start */
+        /* send email to store owner start */
         $this->_sendInstanceReadyEmail();
-        /* send email to instance owner stop */
+        /* send email to store owner stop */
 
         /* update revision count */
         $this->db->update('instance', array('revision_count' => '0'), 'id=' . $this->_instanceObject->getId());

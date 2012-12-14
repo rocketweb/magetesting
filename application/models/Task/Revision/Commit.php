@@ -1,6 +1,6 @@
 <?php
 
-/* revision classes might need abstract clas for overall repository handling (like creating one within instance */
+/* revision classes might need abstract clas for overall repository handling (like creating one within store */
 
 class Application_Model_Task_Revision_Commit 
 extends Application_Model_Task_Revision 

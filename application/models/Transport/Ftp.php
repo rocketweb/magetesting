@@ -260,7 +260,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             return false;
         }
 
-        /* move files from unpacked dir into our instance location */
+        /* move files from unpacked dir into our store location */
         $output = array();
         $command = 'sudo mv '.$mageroot.'/* '.$mageroot.'/.??* .';
         exec($command,$output);

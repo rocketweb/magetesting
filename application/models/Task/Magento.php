@@ -36,7 +36,7 @@ extends Application_Model_Task {
     }
     
     /**
-     * Sends email about successful install to instance owner
+     * Sends email about successful install to store owner
      * used by MagentoInstall and MagentoDownload Tasks
      */
     protected function _sendInstanceReadyEmail(){
@@ -78,7 +78,7 @@ extends Application_Model_Task {
     }
     
     /**
-     * Creates system account for user during instance installation (in worker.php)
+     * Creates system account for user during store installation (in worker.php)
      * TODO: Same Method exists in MgentoInstall And MagentoDownload, 
      */
     protected function _createSystemAccount() {

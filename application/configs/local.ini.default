@@ -17,7 +17,7 @@ magento.instanceprefix = "INST_"
 magento.userprefix = "mi_"
 
 magento.usersalt = "a63hd93u" ;used for mysql user password creation
-magento.systemHomeFolder = "/home" ;where should instance user folders land in
+magento.systemHomeFolder = "/home" ;where should user store folders land in
 
 google.analyticsId = ""
 
@@ -29,7 +29,7 @@ user.resetPassword.subject = "Reset Password"
 user.resetPassword.from.email = "support@magetesting.com"
 user.resetPassword.from.desc = "Magento Testing Team"
 
-cron.queueItemReady.subject = "Your Instance is Ready!"
+cron.queueItemReady.subject = "Your Store is Ready!"
 cron.queueItemReady.from.email = "support@magetesting.com"
 cron.queueItemReady.from.desc = "Mage Testing Team"
 

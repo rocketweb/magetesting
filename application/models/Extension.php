@@ -297,7 +297,7 @@ class Application_Model_Extension {
     }
     
     /**
-     * fetches available and installed extensions for given instance
+     * fetches available and installed extensions for given store
      * @param string $instance_name
      */
     public function fetchInstanceExtensions($instance_name){

@@ -231,7 +231,7 @@ $(document).ready(function () {
         });
     }
 
-    /* INSTANCE EXTENSIONS ISOTOPE */
+    /* STORE EXTENSIONS ISOTOPE */
     var $extensions_isotope = $('.extensions_well > #container'),
         $extensions_filter_container = $('#options'),
         $extensions_filter_options = $extensions_filter_container.find('button')
@@ -385,5 +385,5 @@ $(document).ready(function () {
         $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
         $extensions_isotope.isotope('reLayout');
     });
-    /* INSTANCE EXTENSIONS ISOTOPE */
+    /* STORE EXTENSIONS ISOTOPE */
 });

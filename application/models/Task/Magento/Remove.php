@@ -38,16 +38,16 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Removing store entries from Mage Testing database.', Zend_Log::INFO);
         $this->db->getConnection()->exec("use ".$this->config->resources->db->params->dbname);
       
-        //remove instance extensions
+        //remove store extensions
         $this->db->delete('instance_extension','instance_id='.$this->_instanceObject->getId());
         
         //remove this queue element
         $this->db->delete('queue','id='.$this->_queueObject->getId());
         
-        //remove any other queue elements related to this instance              
+        //remove any other queue elements related to this store
         $this->db->delete('queue','instance_id='.$this->_instanceObject->getId());
         
-        //remove instance
+        //remove store
         $this->db->delete('instance','id='.$this->_instanceObject->getId());
         
         unlink(APPLICATION_PATH . '/../data/logs/'.$this->_userObject->getLogin().'_'.$this->_instanceObject->getDomain().'.log');

@@ -117,7 +117,7 @@ class Application_Model_ExtensionMapper {
     
     public function getAllForInstance($instance_name){
         
-        //find instance by name 
+        //find store by name 
         $instanceModel = new Application_Model_Instance();
         $instance = $instanceModel->findByDomain($instance_name);
         
@@ -130,7 +130,7 @@ class Application_Model_ExtensionMapper {
     
     public function getInstalledForInstance($instance_name){
         
-        //find instance by name 
+        //find store by name 
         $instanceModel = new Application_Model_Instance();
         $instance = $instanceModel->findByDomain($instance_name);
         
@@ -142,7 +142,7 @@ class Application_Model_ExtensionMapper {
     }
     
     public function fetchInstanceExtensions($instance_name) {
-        //find instance by name
+        //find store by name
         $instanceModel = new Application_Model_Instance();
         $instance = $instanceModel->findByDomain($instance_name);
 

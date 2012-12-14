@@ -28,7 +28,7 @@ implements Application_Model_Task_Interface {
 
         $startdir  = getcwd();
         chdir($this->_instanceFolder.'/'.$this->_instanceObject->getDomain());
-        /* prepare dir for instance deply packages */
+        /* prepare dir for store deploy packages */
         
         $deployPath = $this->_instanceFolder.'/'.$this->_instanceObject->getDomain().'/'.
         'var/deployment/';
@@ -44,7 +44,7 @@ implements Application_Model_Task_Interface {
          * 
          * git archive --format zip --output var/data/deploys/'.$hash.'.zip '.$hash.'
          * - packs files listed with the command above into zip 
-         *  within instance /var/data/deploys folder
+         *  within store /var/data/deploys folder
          */
         
         exec('git archive --format zip --output var/deployment/'.$hash.'.zip '.$hash.' `git diff '.$hash.' '.$hash.'~1 --name-only`');

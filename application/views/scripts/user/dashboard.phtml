@@ -1,4 +1,4 @@
-<!-- START INSTANCES PAGE -->
+<!-- START STORES PAGE -->
 <div class="row">
     <div class="span12">
         <input id="base-url" type="hidden" value="<?php echo $this->baseUrl(); ?>" />
@@ -7,7 +7,7 @@
         <!-- START ACCORDION -->
         <div class="accordion" id="accordion">
         <?php foreach ($this->queue as $key => $item): ?>
-            <!-- START INSTANCE -->
+            <!-- START STORE -->
             <div class="accordion-group" data-active="0">
                 <div class="accordion-heading">
                     <div class="tab-stripe"></div>
@@ -140,14 +140,14 @@
                 </div>
                 <?php endif; // end div#collapse ?>
             </div>
-            <!-- END INSTANCE -->
+            <!-- END STORE -->
             <?php endforeach; ?>
         </div>
         <!-- END ACCORDION -->
         
     </div>
 </div>
-<!-- START INSTANCES PAGE -->
+<!-- START STORES PAGE -->
 
 <div id="commitModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">

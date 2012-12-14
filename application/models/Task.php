@@ -148,12 +148,12 @@ class Application_Model_Task {
         
         /**
          * There are three status groups: 
-         * - instance (store) statuses - used on user/dashboard
+         * - store statuses - used on user/dashboard
          * - queue statuses - used by worker.php
          * - instance_extension statuses (not yet implemented) - used on queue/extensions
          */        
         
-        /* INSTANCE */
+        /* store */
         $instanceStatuses = array(   
             'ready',
             'removing-magento',
@@ -183,7 +183,7 @@ class Application_Model_Task {
             'creating-papertrail-system' => 'processing',
         );
                        
-        /* update instance if status is supported */
+        /* update store if status is supported */
         if(in_array($status,$instanceStatuses) ){
             try {
             

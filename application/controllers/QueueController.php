@@ -544,7 +544,7 @@ class QueueController extends Integration_Controller_Action {
                         
                         /** 
                          * Find if we have any other ExtensionInstall tasks 
-                         * for this instance 
+                         * for this store 
                          */
                         $extensionQueueItem = new Application_Model_Queue();
                         $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($instance->id);

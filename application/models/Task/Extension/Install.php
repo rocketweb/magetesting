@@ -18,17 +18,17 @@ implements Application_Model_Task_Interface {
                
         $this->_updateStatus('installing-extension');
         
-        //get instance data
+        //get store data
         $magentoVersion = $this->_versionObject->getVersion();
         $sampleDataVersion = $this->_versionObject->getSampleDataVersion();
         
         //first check if we have that file
         $this->_checkPackage();
         
-        //untar extension to instance folder
+        //untar extension to store folder
         $this->_install();
         
-        //clear instance cache
+        //clear store cache
         $this->_clearInstanceCache();
         
         //set extension as installed
