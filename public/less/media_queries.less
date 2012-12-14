@@ -1,21 +1,6 @@
-.visible-smallphone {
-    display: none !important;
-}
-
-.hidden-smallphone {
-    display: none !important;
-}
-
 @media only screen
 and (max-width : 979px) {
-	.visible-smallphone {
-        display: none !important;
-    }
-    
-    .hidden-smallphone {
-        display: inherit !important;
-    }
-    
+	    
     .logo {
         margin: 20px 0;
     }
@@ -113,30 +98,13 @@ and (min-width : 321px) {
 /* Smartphones (portrait) ----------- */
 @media only screen
 and (max-width : 348px) {
-	
-    .visible-smallphone {
-        display: inherit !important;
+	.logo {
+        width: 71%;
     }
     
-    .hidden-smallphone {
-        display: none !important;
-    }
-
-	.navbar-global {
-        .btn-navbar {
-            margin: 0 43% 20px 0;
-        }
-        
-        .navbar-inner {
-            .nav {
-                &.nav-subpages {
-                    & > li {
-                        & > a {
-                            font-size: 13px;
-                        }
-                    }
-                }
-            }
+    .navbar-global {
+        .btn {
+            margin-top: 27px;
         }
     }
 }
