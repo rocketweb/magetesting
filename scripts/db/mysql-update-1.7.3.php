@@ -3,7 +3,7 @@
 // drop indexes
 $sql[]="ALTER TABLE `dev_extension_queue` 
     DROP INDEX `fk_dev_extension_queue_instance1`,
-    DROP FOREIGN KEY `fk_dev_extension_queue_instance1`;";
+    DROP FOREIGN KEY `fk_dev_extension_queue_queue1`;";
 
 $sql[]="ALTER TABLE `instance`
     DROP INDEX `instance_to_version`,
