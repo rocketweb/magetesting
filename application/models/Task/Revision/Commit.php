@@ -84,8 +84,10 @@ implements Application_Model_Task_Interface {
     
     protected function _commitAutomatic(){
         $this->logger->log('Making automatic GIT commit.', Zend_Log::INFO);
-        exec('git add -A', $output);
+        $command = 'git add -A';
+        exec($command, $output);
         $message = var_export($output, true);
+        $this->logger->log($command, Zend_Log::DEBUG);
         $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
 
@@ -95,13 +97,15 @@ implements Application_Model_Task_Interface {
         if (trim($params['commit_comment'])==''){
             $params['commit_comment']='No comment given for this commit';
         }
-
-        exec('git commit -m "'.$params['commit_comment'].'"',$output);
+        
+        $command = 'git commit -m "'.$params['commit_comment'].'"';
+        exec($command,$output);
 
         $message = var_export($output, true);
+        $this->logger->log($command, Zend_Log::DEBUG);
         $this->logger->log($message, Zend_Log::DEBUG);
 
-        if (count($output) < 3 && trim($output[2])=='nothing to commit (working directory clean)'){
+        if (count($output) < 3 && isset($output[2]) && trim($output[2])=='nothing to commit (working directory clean)'){
             $message = 'No changes have been made, automatic commit aborted';
             $this->logger->log($message, Zend_Log::CRIT);
             throw new Application_Model_Task_Exception($message);

@@ -117,8 +117,12 @@ class Application_Model_Task {
     
     protected function _clearInstanceCache(){
         $this->logger->log('Clearing store cache.', Zend_Log::INFO);
-
-        exec('sudo rm -R '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain().'/var/cache/*');
+        $cacheFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_instanceObject->getDomain().'/var/cache';
+        if(file_exists($cacheFolder) && is_dir($cacheFolder)){
+            exec('sudo rm -R '.$cacheFolder);
+            mkdir($cacheFolder);
+        }
+              
     }
     
     

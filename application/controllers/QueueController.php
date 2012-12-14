@@ -428,7 +428,7 @@ class QueueController extends Integration_Controller_Action {
                 
                 //removing system from Papertrail
                 $queueModel = new Application_Model_Queue();                    
-                $queueModel->setInstanceId($instanceId);
+                $queueModel->setInstanceId($currentInstance->id);
                 $queueModel->setTask('PapertrailSystemRemove');
                 $queueModel->setStatus('pending');
                 $queueModel->setUserId($this->auth->getIdentity()->id);
