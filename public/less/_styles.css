@@ -1,6 +1,7 @@
 .icon-blue{background-image:url("../img/glyphicons-halflings-blue.png");}
 .icon-red{background-image:url("../img/glyphicons-halflings-red.png");}
 html,body{height:100%;font-family:Helvetica,Arial,sans-serif;}
+.form-actions{background-color:#fff;}
 .logo{margin:20px 0 0 0;}
 .red-bar{height:5px;background:#f64135;}
 .navbar-global{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}.navbar-global .navbar-inner{box-shadow:none;background-color:#fff;background-image:none;border-bottom:1px solid #e5e5e5;}.navbar-global .navbar-inner .nav>li>a{padding:4px 15px;background:#f64135;color:#fff;text-shadow:none;border-right:1px solid #fff;outline:0;}.navbar-global .navbar-inner .nav>li>a:hover,.navbar-global .navbar-inner .nav>li>a:focus{background-color:#34aae5;box-shadow:0 3px 8px rgba(0, 0, 0, 0.5) inset;color:#fff;text-decoration:none;}
