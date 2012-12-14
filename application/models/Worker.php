@@ -34,7 +34,7 @@ class Application_Model_Worker {
         
         } catch (Application_Model_Task_Exception $e){
             $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
-            $this->db->update('instance', array('error_message' => $e->getMessage()), 'id = ' . $queueElement->getInstanceId());
+            $this->db->update('instance', array('error_message' => $e->getMessage(),'status' => 'error'), 'id = ' . $queueElement->getInstanceId());
         }
     }
 }
