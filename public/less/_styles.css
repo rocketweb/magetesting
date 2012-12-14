@@ -48,14 +48,14 @@ fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-fi
 .accordion-group .accordion-heading .accordion-toggle{outline:0;}
 .remove-typekit>*{font-family:Helvetica,Arial,sans-serif;}
 footer a{color:#f64135;}
-.mt-login{position:absolute;top:50%;left:50%;margin:-175px 0 0 -230px;width:420px;min-height:310px;padding:20px;border:1px solid #e5e5e5;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}.mt-login .alert-login{padding:8px 14px;}
+.mt-login{position:absolute;top:50%;left:50%;margin:-175px 0 0 -230px;width:420px;padding:20px;border:1px solid #e5e5e5;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}.mt-login .alert-login{padding:8px 14px;}
 .mt-login form{margin:0;}
-.mt-login legend{padding-bottom:20px;}
+.mt-login legend{padding-bottom:20px;}.mt-login legend h1{display:inherit !important;}
 .mt-login .mt-login-input input{width:407px;}
 .mt-login .mt-pad{margin:20px 0;}
-.store-edit .control-group{width:50%;}.store-edit .control-group:first-child{width:100%;}
+@media only screen and (max-width:479px){.mt-login{position:relative;top:10%;left:inherit;margin:20px 0 0 0;width:auto;}.mt-login legend h1{display:none !important;} .mt-login .mt-login-input input{width:100%;}}.store-edit .control-group{width:50%;}.store-edit .control-group:first-child{width:100%;}
 .store-edit .control-group input{width:96%;}
-.store-edit .control-group #instance_name{width:98%;}
+.store-edit .control-group #store_name{width:98%;}
 .accordion-group{margin-bottom:-1px;border-radius:0px;}.accordion-group .accordion-heading{height:60px;font-size:18px;}.accordion-group .accordion-heading.active-accordion-header{background:#f7f7f7;}
 .accordion-group .accordion-heading .tab-stripe-active{background:#e5e5e5;}
 .accordion-group .accordion-heading .accordion-toggle{padding:15px;color:#6d6d6d;outline:0;text-decoration:none;}.accordion-group .accordion-heading .accordion-toggle .arrow{width:60px;margin-right:10px;text-align:center;}.accordion-group .accordion-heading .accordion-toggle .arrow i{margin-top:8px;}

@@ -40,48 +40,39 @@
 
 <body>
 
-    <div class="container">
-
-        <div class="row">
-            <div class="span6 offset3">
-            	<div class="mt-login">
-            		<form action="<?php echo $this->form->getAction() ?>"
-            		    enctype="<?php echo $this->form->getEnctype() ?>"
-            		    method="<?php echo $this->form->getMethod() ?>"
-            		    id="<?php echo $this->form->getId() ?>"
-            		    class="<?php echo $this->form->getAttrib('class') ?>">
-            		    <legend>
-            		        <a href="/"><img src="/public/img/logo_magetesting.jpg" class="pull-left" /></a>
-							<h1 class="pull-right">Login</h1>
-							<div class="clearfix"></div>
-            		    </legend>
-            		    
-            		    <?php echo $this->render('_partials/messages.phtml'); ?>
-            		    
-            		    <fieldset>
-            		        <div class="row">
-            		            <div class="span6 mt-login-input">
-            		                <?php echo $this->form->login; ?>
-            		            </div>
-            		            <div class="span6 mt-login-input">
-            		                <?php echo $this->form->password; ?>
-            		            </div>
-            		        </div>
-            		    </fieldset>
-        		        <div class="mt-pad">
-        		        	<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'reset-password'), 'default', true); ?>" class="secondary pull-left">Forgot password?</a>
-        		        	<button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-inverse pull-right">
-        		        	    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
-        		        	</button>
-        		        </div>
-        		        <div class="clearfix"></div>
-            		</form>
-                </div>
-            </div>
-        </div>
-
+	<div class="mt-login">
+		<form action="<?php echo $this->form->getAction() ?>"
+		    enctype="<?php echo $this->form->getEnctype() ?>"
+		    method="<?php echo $this->form->getMethod() ?>"
+		    id="<?php echo $this->form->getId() ?>"
+		    class="<?php echo $this->form->getAttrib('class') ?>">
+		    <legend>
+		        <a href="/"><img src="/public/img/logo_magetesting.jpg" class="pull-left" /></a>
+				<h1 class="pull-right">Login</h1>
+				<div class="clearfix"></div>
+		    </legend>
+		    
+		    <?php echo $this->render('_partials/messages.phtml'); ?>
+		    
+		    <fieldset>
+		        <div class="row">
+		            <div class="span6 mt-login-input">
+		                <?php echo $this->form->login; ?>
+		            </div>
+		            <div class="span6 mt-login-input">
+		                <?php echo $this->form->password; ?>
+		            </div>
+		        </div>
+		    </fieldset>
+	        <div class="mt-pad">
+	        	<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'reset-password'), 'default', true); ?>" class="secondary pull-left">Forgot password?</a>
+	        	<button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-inverse pull-right">
+	        	    <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
+	        	</button>
+	        </div>
+	        <div class="clearfix"></div>
+		</form>
     </div>
-    <!-- /container -->
     
     <script type="text/javascript" src="//use.typekit.net/qva5ffr.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
