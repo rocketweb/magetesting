@@ -1,57 +1,37 @@
 <?php
 /**
- * Create system in Papertrail
- *
- * @author Marcin Kazimierczak <marcin@rocketweb.com>
+ * Responsible for create system in Papertrail
+ * 
+ * @category   Application
+ * @package    Model_Task
+ * @subpackage Papertrail_System
+ * @copyright  Copyright (c) 2012 RocketWeb USA Inc. (http://www.rocketweb.com)
+ * @author     Marcin Kazimierczak <marcin@rocketweb.com>
  */
 class Application_Model_Task_Papertrail_System_Create extends Application_Model_Task_Papertrail implements Application_Model_Task_Interface {
-    
-    CONST NAME = 'distributors/systems';
-    CONST METHOD = 'POST';
-    
-    public function setup(\Application_Model_Queue &$queueElement) {
-        parent::setup($queueElement);
-        
-        $this->_url_suffix = self::NAME;
-    }
 
     public function process() {
         $this->_updateStatus('creating-papertrail-system');
         
-        $data = $this->_init($this->getUri(), self::METHOD)
-                     ->_setParameterPost()
-                     ->_getDataResponse();
-        
-        if(isset($data->message)) {
-            //log the message with problem
-            throw new Exception($data->message);
+        try { 
+            $response = $this->_service->createSystem(
+                (string)$this->_instanceObject->getDomain(), 
+                (string)$this->_instanceObject->getInstanceName(), 
+                (string)$this->_userObject->getId()
+            );
+        } catch(Zend_Service_Exception $e) {
+            $this->logger->log($e->getMessage(), Zend_Log::CRIT);
+            throw new Application_Model_Task_Exception($e->getMessage());
         }
         
-        if(isset($data->id)) {
+        if(isset($response->id)) {
             //success
-            $this->_instanceObject->setPapertrailSyslogHostname($data->syslog_hostname)
-                                  ->setPapertrailSyslogPort($data->syslog_port)
+            $this->_instanceObject->setPapertrailSyslogHostname($response->syslog_hostname)
+                                  ->setPapertrailSyslogPort($response->syslog_port)
                                   ->save();
         }
         
         $this->_updateStatus('ready');
     }
-    
-    /**
-     * Set the parameters for POST method
-     * 
-     * @return Application_Model_Task_Papertrail_System_Create
-     */
-    protected function _setParameterPost() {
-        $data = array(
-            'id'         => (string)$this->_instanceObject->getDomain(),
-            'name'       => $this->_instanceObject->getInstanceName(),
-            'account_id' => (string)$this->_userObject->getId()
-        );
-        
-        $this->_client->setParameterPost($data);
-        
-        return $this;
-    }
-    
+
 }

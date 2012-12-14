@@ -167,6 +167,17 @@ class QueueController extends Integration_Controller_Action {
                         $queueModel->save();
                     }
                     
+                    unset($queueModel);
+                    $queueModel = new Application_Model_Queue();                    
+                    $queueModel->setInstanceId($instanceId);
+                    $queueModel->setTask('PapertrailSystemCreate');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId($installId);  
+                    $queueModel->save();
+                    
                     $this->_helper->FlashMessenger('New installation added to queue');
 
                     //magetesting user creates database
@@ -415,6 +426,18 @@ class QueueController extends Integration_Controller_Action {
                 $instanceModel->find($currentInstance->id);
                 $instanceModel->setStatus('removing-magento')->save();
                 
+                //removing system from Papertrail
+                $queueModel = new Application_Model_Queue();                    
+                $queueModel->setInstanceId($instanceId);
+                $queueModel->setTask('PapertrailSystemRemove');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setExtensionId(0);  
+                $queueModel->setParentId($installId);  
+                $queueModel->save();
+                
+                unset($queueModel);
                 //add remove task to queue
                 $queueModel = new Application_Model_Queue();
                 $queueModel->setTask('MagentoRemove')

@@ -41,15 +41,15 @@ class Application_Model_InstanceMapper {
             'custom_protocol'            => $instance->getCustomProtocol(),
             'custom_host'                => $instance->getCustomHost(),
             'custom_remote_path'         => $instance->getCustomRemotePath(),
-            'custom_login'               =>  $instance->getCustomLogin(),
+            'custom_login'               => $instance->getCustomLogin(),
             'custom_pass'                => $instance->getCustomPass(),
             'custom_sql'                 => $instance->getCustomSql(),
             'error_message'              => $instance->getErrorMessage(),
             'revision_count'             => $instance->getRevisionCount(),
             'type'                       => $instance->getType(),
             'custom_file'                => $instance->getCustomFile(),
-            'papertrail_syslog_hostname' => $this->getPapertrailSyslogHostname(),
-            'papertrail_syslog_port'     => $this->getPapertrailSyslogPort(),
+            'papertrail_syslog_hostname' => $instance->getPapertrailSyslogHostname(),
+            'papertrail_syslog_port'     => $instance->getPapertrailSyslogPort(),
                 
         );
 
