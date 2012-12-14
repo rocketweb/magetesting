@@ -15,7 +15,7 @@ $(document).ready(function () {
     });
     
     
-    var $deployment_modal = $('#instance-deployment'),
+    var $deployment_modal = $('#store-deployment'),
         $deployment_form = $deployment_modal.find('form'),
         $rollback_name = $deployment_modal.find('.rollback-name'),
         $commit_comment = $deployment_modal.find('#commit_comment'),
@@ -25,7 +25,7 @@ $(document).ready(function () {
     $('.panel.deployment .btn').click(function() {
         var $this = $(this);
         if(!$this.hasClass('disabled')) {
-            var $domain = $this.nextAll('.instancedomain').val(),
+            var $domain = $this.nextAll('.storedomain').val(),
                 $form_action = $base_url+'/queue/[replace]/domain/'+$domain,
                 $remove_class = '',
                 $add_class = '';
@@ -81,14 +81,14 @@ $(document).ready(function () {
         return false;
     });
 
-    var $modal_close_instance = $('#close-instance'),
-        $modal_close_instance_form = $modal_close_instance.find('form');
-    $modal_close_instance.find('form .btn-danger').click(function() {
+    var $modal_close_store = $('#close-store'),
+        $modal_close_store_form = $modal_close_store.find('form');
+    $modal_close_store.find('form .btn-danger').click(function() {
         var $this = $(this);
         // do not allow for multiple clicks
         if(!$this.hasClass('disabled')) {
             $this.addClass('disabled');
-            $modal_close_instance_form.submit();
+            $modal_close_store_form.submit();
         }
         return false;
     });
@@ -97,25 +97,25 @@ $(document).ready(function () {
     $('.delete-store').click(function(event){
         event.stopPropagation();
         var $this = $(this),
-            $instance_name,
-            $modal_instance_name_container = $modal_close_instance.find('.close-instance-name');
+            $store_name,
+            $modal_store_name_container = $modal_close_store.find('.close-store-name');
         if($this.hasClass('admin')) {
-            $instance_name = $this.parent().parent().children('td:eq(1)').text();
+            $store_name = $this.parent().parent().children('td:eq(1)').text();
         } else {
-            $instance_name = $this.parent().nextAll('.title').text();
+            $store_name = $this.parent().nextAll('.title').text();
         }
-        $modal_close_instance_form.attr('action', $this.attr('href'));
-        if($instance_name.length) {
-            $modal_instance_name_container.text(' "'+$instance_name+'"');
+        $modal_close_store_form.attr('action', $this.attr('href'));
+        if($store_name.length) {
+            $modal_store_name_container.text(' "'+$store_name+'"');
         } else {
-            $modal_instance_name_container.text('');
+            $modal_store_name_container.text('');
         }
-        $modal_close_instance.modal('show');
+        $modal_close_store.modal('show');
         return false;
     });
     
-    var $extension_button = $('.new-instance-extension-installer'),
-        $extension_id = $('#new-instance-extension-id');
+    var $extension_button = $('.new-store-extension-installer'),
+        $extension_id = $('#new-store-extension-id');
     $extension_button.click(function(e) {
         e.preventDefault();
         $extension_id.val($(this).data('extension-id')).parent('form').submit();

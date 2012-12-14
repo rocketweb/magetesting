@@ -11,7 +11,7 @@
             <div class="accordion-group" data-active="0">
                 <div class="accordion-heading">
                     <div class="tab-stripe"></div>
-                    <div class="accordion-toggle instance-toggle <?php echo (substr($item['status'],0,10)=='installing' || $item['status']=='pending')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>">
+                    <div class="accordion-toggle store-toggle <?php echo (substr($item['status'],0,10)=='installing' || $item['status']=='pending')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>">
                     <?php 
                         $progressClass = '';
                         switch($item['status']): 
@@ -62,11 +62,11 @@
                         </div>
                         <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
                         <span class="title"><?php echo $this->escape($item['instance_name']) ?></span>
-                        <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
+                        <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                     </div>
                 </div>
                 <?php if($item['status'] != 'closed'): ?>
-                <div id="collapse<?php echo $key; ?>" class="accordion-body collapse mt_instance">
+                <div id="collapse<?php echo $key; ?>" class="accordion-body collapse mt_store">
                     <div class="accordion-inner">
                         <div class="row version-info">
                             <div class="span2 first"><strong>Edition:</strong> <?php echo $this->escape($item['edition']); ?></div>
@@ -117,7 +117,7 @@
                                         </a>
                                         <a href="#" class="btn commit-button<?php echo ((int)$item['revision_count'] > 0 ? '' : ' disabled'); ?>" ><i class="icon icon-ok-sign"></i> Commit</a>
                                         <a href="#" class="btn deploy-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
-                                        <input type="hidden" class="instancedomain" value="<?php echo $this->escape($item['domain']) ?>" />
+                                        <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -169,13 +169,13 @@
     </div>
 </div>
 
-<div id="close-instance" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="close-store" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>Delete Store</h3>
     </div>
     <div class="modal-body">
-        <p>Do you really want to delete store<span class="close-instance-name"></span>? There is no undo!</p>
+        <p>Do you really want to delete store<span class="close-store-name"></span>? There is no undo!</p>
     </div>
     <div class="modal-footer">
         <form method="post">
@@ -186,7 +186,7 @@
     </div>
 </div>
 
-<div id="instance-deployment" class="modal hide fade modal-deploy" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="store-deployment" class="modal hide fade modal-deploy" tabindex="-1" role="dialog" aria-hidden="true">
     <form method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

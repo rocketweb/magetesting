@@ -1,10 +1,10 @@
 $(document).ready(function(){
 	"use strict";
 	
-	var _instances = $('.instance-toggle');
+	var _stores = $('.store-toggle');
 	
 	// On click accordion row
-	_instances.click(function(){
+	_stores.click(function(){
 		"use strict";
 		var _thisClicked = $(this);
 		var _id = _thisClicked.attr('href');
@@ -12,11 +12,11 @@ $(document).ready(function(){
 		    return false;
 		}
 		if(_thisClicked.parent().parent().attr('data-active') == 0){
-			_instances.each(function(e){
-				var _instance = $(this);
-				var _parent = _instance.parent().parent();
+			_stores.each(function(e){
+				var _store = $(this);
+				var _parent = _store.parent().parent();
 				
-				if(!_thisClicked.is(_instance)){
+				if(!_thisClicked.is(_store)){
 					_parent.attr('data-active', '0');
 					_parent.animate(
 						{
@@ -26,10 +26,10 @@ $(document).ready(function(){
 						}
 					);
 					_parent.removeClass('mt_shadow');
-					//_instance.parent().removeClass('active-accordion-header');
+					//_store.parent().removeClass('active-accordion-header');
 				} else {
 					_parent.addClass('mt_shadow');
-					//_instance.parent().addClass('active-accordion-header');
+					//_store.parent().addClass('active-accordion-header');
 				}
 			});
 			
@@ -43,9 +43,9 @@ $(document).ready(function(){
 					}
 				);
 		} else {
-			_instances.each(function(){
-				var _instance = $(this);
-				var _parent = _instance.parent().parent();
+			_stores.each(function(){
+				var _store = $(this);
+				var _parent = _store.parent().parent();
 				_parent.attr('data-active', '0');
 				_parent.animate(
 					{
@@ -55,7 +55,7 @@ $(document).ready(function(){
 					}
 				);
 				_parent.removeClass('mt_shadow');
-				//_instance.parent().parent().removeClass('active-accordion-header');
+				//_store.parent().parent().removeClass('active-accordion-header');
 			});
 		}
 		
@@ -80,7 +80,7 @@ function updateStatuses(){
       var row = $(this);
               
       //create 
-      domain = $(this).find(".instancedomain").val();
+      domain = $(this).find(".storedomain").val();
       requests[domain];
 
       //abort last request if it is still in queue
@@ -92,7 +92,7 @@ function updateStatuses(){
       requests[domain] = $.ajax({
             type: "POST",
             url: "/queue/getstatus",
-            data: "domain=" + $(this).find(".instancedomain").val(),
+            data: "domain=" + $(this).find(".storedomain").val(),
             dataType: "json",
             success: function(json){
                 updateLabel(row,json);
@@ -128,7 +128,7 @@ function updateLabel(row,new_status){
         $.ajax({
             type: "POST",
             url: "/queue/getminutesleft",
-            data: "domain=" + row.find(".instancedomain").val(),
+            data: "domain=" + row.find(".storedomain").val(),
             dataType: "json",
             success: function(json){
                 row.find("span.statusHolder").html("In Queue - " + json + " minutes left");
@@ -147,18 +147,18 @@ function updateLabel(row,new_status){
 /* commit modal handle  start */
 $(document).ready(function(){
     $('.commit-button').click(function(){
-       $('#commit-domain').val($(this).parentsUntil('.accordion-group').parent().find('.instancedomain').val());        
+       $('#commit-domain').val($(this).parentsUntil('.accordion-group').parent().find('.storedomain').val());        
     });
 
     $('.commit-confirm').click(function(){      
 
-        instance = $(this).parentsUntil('commitModal').parent().find(".instancedomain").val();
+        store = $(this).parentsUntil('commitModal').parent().find(".storedomain").val();
 
             $.ajax({
 
                 type: "POST",
                 url: "/queue/commit",
-                data: "domain=" + instance + "&commit_comment=" + $('#commit_comment').val(),
+                data: "domain=" + store + "&commit_comment=" + $('#commit_comment').val(),
                 dataType: "json",
                 success: function(json){
                     $('#commitModal').hide();

@@ -7,7 +7,7 @@ class Application_Form_InstanceAddCustom extends Integration_Form{
         // Set the method for the display form to POST
         $this->setMethod('post');
         $this->setAttrib('class', 'form-stacked');
-        $this->setAttrib('id', 'custom-instance-form');
+        $this->setAttrib('id', 'custom-store-form');
         //TODO: move model usage to controller
 
         

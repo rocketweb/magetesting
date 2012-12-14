@@ -139,12 +139,12 @@ font-weight: 300;
 
 .number-money { background: url(../img/32x32/money_bag.png) no-repeat 0 5px; margin-bottom: 20px; }
 .number-date { background: url(../img/32x32/calendar_view_day.png ) no-repeat 0 5px; margin-bottom: 20px; }
-.number-instances { background: url(../img/32x32/application_cascade.png ) no-repeat 0 5px;  margin-bottom: 20px; }
+.number-stores { background: url(../img/32x32/application_cascade.png ) no-repeat 0 5px;  margin-bottom: 20px; }
 .number-people { background: url(../img/32x32/user_astronaut.png ) no-repeat 0 5px; margin-bottom: 20px; }
 
 .number-money h2, .number-money p { padding-left: 45px; }
 .number-date h2, .number-date p { padding-left: 45px; }
-.number-instances h2, .number-instances p { padding-left: 45px; }
+.number-stores h2, .number-stores p { padding-left: 45px; }
 .number-people h2, .number-people p { padding-left: 45px; }
 
 .no-max-h {
@@ -279,9 +279,9 @@ footer a{color:#f64135;}
 .mt-login legend{padding-bottom:20px;}
 .mt-login .mt-login-input input{width:407px;}
 .mt-login .mt-pad{margin:20px 0;}
-.instance-edit .control-group{width:50%;}.instance-edit .control-group:first-child{width:100%;}
-.instance-edit .control-group input{width:96%;}
-.instance-edit .control-group #instance_name{width:98%;}
+.store-edit .control-group{width:50%;}.store-edit .control-group:first-child{width:100%;}
+.store-edit .control-group input{width:96%;}
+.store-edit .control-group #instance_name{width:98%;}
 .accordion-group{margin-bottom:-1px;border-radius:0px;}.accordion-group .accordion-heading{height:60px;font-size:18px;}.accordion-group .accordion-heading.active-accordion-header{background:#f7f7f7;}
 .accordion-group .accordion-heading .tab-stripe-active{background:#e5e5e5;}
 .accordion-group .accordion-heading .accordion-toggle{padding:15px;color:#6d6d6d;outline:0;text-decoration:none;}.accordion-group .accordion-heading .accordion-toggle .arrow{width:60px;margin-right:10px;text-align:center;}.accordion-group .accordion-heading .accordion-toggle .arrow i{margin-top:8px;}
@@ -293,7 +293,7 @@ footer a{color:#f64135;}
 .accordion-group .accordion-inner .panel .table{margin-bottom:0px;}
 .accordion-group .accordion-inner .panel.details{border-right:1px solid #ddd;}.accordion-group .accordion-inner .panel.details table{font-size:12px;}
 .accordion-group .accordion-inner .panel.deployment{border-right:1px solid #ddd;}.accordion-group .accordion-inner .panel.deployment h5 span.version{float:right;margin-right:10px;font-size:11px;font-weight:normal;color:#666666;}
-.accordion-group .mt_instance{background:#fff;}
+.accordion-group .mt_store{background:#fff;}
 .isotope-item{z-index:2;}
 .isotope-hidden.isotope-item{pointer-events:none;z-index:1;}
 .isotope,.isotope .isotope-item{-webkit-transition-duration:0.8s;-moz-transition-duration:0.8s;-ms-transition-duration:0.8s;-o-transition-duration:0.8s;transition-duration:0.8s;}
@@ -332,29 +332,29 @@ html,body{height:100%;}
 /** LESS - END COMPILED CSS **/
 
 
-#instance-deployment .rollback, #instance-deployment .commit, #instance-deployment .deploy {
+#store-deployment .rollback, #store-deployment .commit, #store-deployment .deploy {
     display: none;
 }
-#instance-deployment.modal-rollback .rollback, #instance-deployment.modal-commit .commit, #instance-deployment.modal-deploy .deploy {
+#store-deployment.modal-rollback .rollback, #store-deployment.modal-commit .commit, #store-deployment.modal-deploy .deploy {
     display: inline;
 }
-#instance-deployment.modal-rollback .rollback.alert {
+#store-deployment.modal-rollback .rollback.alert {
     display: block;
     margin-top: 10px;
 }
-#instance-deployment form {
+#store-deployment form {
     margin: 0px;
 }
-#instance-deployment textarea {
+#store-deployment textarea {
     width: 97%;
 }
-#instance-deployment label {
+#store-deployment label {
     margin-top: 10px;
 }
-.instance-edit .control-group:nth-child(2) {
+.store-edit .control-group:nth-child(2) {
     width: 100%;
 }
-.instance-edit .control-group #description {
+.store-edit .control-group #description {
     width: 98%;
 }
 
