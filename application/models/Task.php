@@ -120,12 +120,11 @@ class Application_Model_Task {
 
         $cacheFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/var/cache';
         if(file_exists($cacheFolder) && is_dir($cacheFolder)){
-            $command = 'sudo rm -R ' . $cacheFolder;
+            $command = 'sudo rm -rf ' . $cacheFolder . '/*';
             exec($command, $output);
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             unset($output);
-            mkdir($cacheFolder);
         }
     }
     
