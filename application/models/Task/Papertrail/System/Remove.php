@@ -19,7 +19,7 @@ implements Application_Model_Task_Interface {
         
         try { 
             $response = $this->_service->removeSystem(
-                (string)$this->_instanceObject->getDomain()
+                (string)$this->_storeObject->getDomain()
             );
         } catch(Zend_Service_Exception $e) {
             $this->logger->log($e->getMessage(), Zend_Log::CRIT);
@@ -28,9 +28,9 @@ implements Application_Model_Task_Interface {
 
         if(isset($response->status) && $response->status == 'ok') {
             //success
-            $this->_instanceObject->setPapertrailSyslogHostname(null);
-            $this->_instanceObject->setPapertrailSyslogPort(null);
-            $this->_instanceObject->save();
+            $this->_storeObject->setPapertrailSyslogHostname(null);
+            $this->_storeObject->setPapertrailSyslogPort(null);
+            $this->_storeObject->save();
         }
 
         $this->_updateStatus('ready');

@@ -192,7 +192,7 @@ class Application_Model_Plan {
             'stores' => $this->getStores(),
             'ftp_access' => $this->getFtpAccess(),
             'phpmyadmin_access' => $this->getPhpmyadminAccess(),
-            'can_add_custom_instance' => $this->getCanAddCustomStore(),
+            'can_add_custom_store' => $this->getCanAddCustomStore(),
             'billing_period' => $this->getBillingPeriod(),
             'price'     => $this->getPrice(),
             'is_hidden' => $this->getIsHidden()

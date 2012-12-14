@@ -15,8 +15,8 @@ class Application_Model_Task_Papertrail_System_Create extends Application_Model_
         
         try { 
             $response = $this->_service->createSystem(
-                (string)$this->_instanceObject->getDomain(), 
-                (string)$this->_instanceObject->getInstanceName(), 
+                (string)$this->_storeObject->getDomain(), 
+                (string)$this->_storeObject->getStoreName(), 
                 (string)$this->_userObject->getId()
             );
         } catch(Zend_Service_Exception $e) {
@@ -26,7 +26,7 @@ class Application_Model_Task_Papertrail_System_Create extends Application_Model_
         
         if(isset($response->id)) {
             //success
-            $this->_instanceObject->setPapertrailSyslogHostname($response->syslog_hostname)
+            $this->_storeObject->setPapertrailSyslogHostname($response->syslog_hostname)
                                   ->setPapertrailSyslogPort($response->syslog_port)
                                   ->save();
         }
