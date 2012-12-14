@@ -180,7 +180,7 @@ class UserController extends Integration_Controller_Action
                         );
 
                         if($user->getGroup() != 'admin' AND (!$user->getPlanId() OR !$user->hasPlanActive())) {
-                            $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'You don\'t have any plan, please feel free to choose one.'));
+                            $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'You haven\'t choosed any plan yet, feel free to choose one now.'));
                             return $this->_helper->redirector->gotoRoute(array(
                                     'module' => 'default',
                                     'controller' => 'my-account',
