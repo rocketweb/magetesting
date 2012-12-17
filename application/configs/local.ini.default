@@ -7,7 +7,7 @@ magento.storeUrl = "http://magetesting.dev"
 magento.ftphost = "ftp://magetesting.com"
 magento.dbhost = "db.magetesting.com"
 
-magento.standardUser.stores = 3
+magento.standardUser.stores = 0
 
 magento.storeTimeExecution = 1
 
