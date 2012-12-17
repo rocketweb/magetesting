@@ -16,8 +16,9 @@ extends Application_Model_Transport {
         
         parent::setup($instance);
         
-        $this->_connection = ssh2_connect('127.0.0.1', 22);
-        ssh2_auth_password($this->_connection, 'jan', 'dellpass132');
+	/*TODO: replace 22 with given port*/
+        $this->_connection = ssh2_connect($instance->getCustomHost(), 22);
+        ssh2_auth_password($this->_connection, $instance->getCustomLogin(), $instance->getCustomPassword());
         
         /*TODO: execute this somewhere, closeConnection() function? */
         //fclose($stream);
