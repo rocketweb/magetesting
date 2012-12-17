@@ -76,7 +76,7 @@ class Integration_Acl extends Zend_Acl
                 'commit', 'deploy','getminutesleft', 'request-deployment'
         ));
         $this->allow('commercial-user', 'default_user', array(
-                'index', 'logout', 'dashboard', 'edit'
+                'index', 'logout', 'dashboard', 'edit', 'papertrail'
         ));
         $this->allow('commercial-user', 'default_my-account');
         $this->allow('commercial-user', 'default_braintree', array('form','response'));
