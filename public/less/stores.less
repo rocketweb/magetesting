@@ -21,6 +21,34 @@
     margin-bottom: -1px;
     border-radius: 0px;
     
+    &.accordion-add-new {
+        border-width: 3px;
+        border-style: dashed;
+        cursor: pointer;
+        
+        &:hover, &:focus {
+            border-color: @Red;
+        }
+        
+        .accordion-inner {
+            .version-info {
+            	color: @Grey;
+            }
+            
+            .panel {
+                h5 {
+                    color: @Grey;
+                }
+                
+                &.deployment {
+                    h5 span.version {
+                        color: @Grey;
+                    }
+                }
+            }
+        }
+    }
+    
     .accordion-heading {
         height: @ElementSize;
         font-size: 18px;

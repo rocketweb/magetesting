@@ -9,9 +9,9 @@
 }
 
 @defaultDarker : 10%;
-@defaultLighter: 10%;
+@defaultLighter: 2%;
 
-.customButton(@color: #bbb, @text: #fff) {
+.customButton(@color: #bbb, @color2: #bbb, @text: #fff) {
 	color: @text;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 	background-color: lighten(@color, (@defaultLighter / 2));
@@ -37,7 +37,34 @@
 		*background-color: darken(@color, @defaultDarker);
 	}
 }
-
+/*
+.customButton(@color: #bbb, @color2: NULL, @text: #fff) when (@color2 != NULL){
+	color: @text;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: @color2;
+    *background-color: @color;
+    background-image: -moz-linear-gradient(top, @color2, @color);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, @color2, to(@color));
+    background-image: -webkit-linear-gradient(top, @color2, @color);
+    background-image: -o-linear-gradient(top, @color2, @color);
+    background-image: linear-gradient(to bottom, @color2, @color);
+    background-repeat: repeat-x;
+    border-color: @color @color #1f6377;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff2f96b4', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    
+    &:hover,
+    &:active,
+    &.active,
+    &.disabled,
+    &[disabled] {
+        color: @text;
+        background-color: @color2;
+        *background-color: @color;
+    }
+}
+*/
 .customBadge(@color: #bbb, @text: #fff) {
 	color: @text;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);

@@ -1,3 +1,4 @@
+<?php $storeCount = $this->queue->getTotalItemCount(); ?>
 <!-- START STORES PAGE -->
 <div class="row">
     <div class="span12">
@@ -6,6 +7,76 @@
         <h1>Your stores</h1>
         <!-- START ACCORDION -->
         <div class="accordion" id="accordion">
+        
+        <?php /* IF USER HAS NO STORES */ ?>
+        <?php if($storeCount === 0): ?>
+            <!-- START STORE -->
+            <div class="accordion-group accordion-add-new" data-active="0">
+                <div class="accordion-heading">
+                    <div class="accordion-toggle">
+                        <div class="for-use ready pull-right">
+                            <a target="_blank" href="#" class="btn btn-faded btn-mini view-store disabled"><i class="icon icon-white icon-home"></i> View Store</a>
+                            <a href="#" class="btn btn-mini btn-faded admin-panel disabled"><i class="icon icon-white icon-wrench"></i> Admin Panel</a>
+                        </div>
+                        <span class="arrow"><i class="icon-chevron-right icon-blue"></i></span>
+                        <span class="title"><a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a></span>
+                    </div>
+                </div>
+                <div class="accordion-body collapse in mt_store">
+                    <div class="accordion-inner">
+                        <div class="row version-info">
+                            <div class="span2 first"><strong>Edition:</strong></div>
+                            <div class="span2"><strong>Version:</strong></div>
+                            <div class="span2"><strong>Sample data:</strong></div>
+                        </div>
+                        <p class="description"></p>
+                        <div class="row">
+                            <!-- START DETAILS BOX -->
+                            <div class="span4 panel details">
+                                <h5>Details</h5>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <a href="#" class="btn btn-inverse btn-faded disabled"><i class="icon icon-cog"></i> Extensions</a>
+                                        <a href="#" class="btn btn-faded disabled"><i class="icon icon-white icon-pencil"></i> Edit Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END DETAILS BOX -->
+
+                            <!-- START DEPLOYMENT BOX -->
+                            <div class="span4 panel deployment">
+                                <h5>Deployment</h5>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <a href="#" class="btn btn-faded rollback-button disabled"><i class="icon icon-white icon-circle-arrow-left"></i> Roll Back</a>
+                                        <a href="#" class="btn btn-faded commit-button disabled" ><i class="icon icon-white icon-ok-sign"></i> Commit</a>
+                                        <a href="#" class="btn btn-faded deploy-button disabled">Deploy <i class="icon icon-white icon-circle-arrow-right"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END DEPLOYMENT BOX -->
+
+                            <!-- START PROBLEMS BOX -->
+                            <div class="span3 panel">
+                                <h5>Problems</h5>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <a href="#" class="btn btn-faded disabled"><i class="icon icon-white icon-info-sign"></i> Show Logs</a>
+                                        <a target="_blank" href="#" class="btn btn-faded disabled"><i class="icon icon-white icon-question-sign"></i> Get Help</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END PROBLEMS BOX -->
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- END STORE -->
+        <?php endif; ?>
+        
+        <?php /* IF USER HAS STORES */ ?>
+        <?php if($storeCount > 0): ?>
         <?php foreach ($this->queue as $key => $item): ?>
             <!-- START STORE -->
             <div class="accordion-group" data-active="0">
@@ -142,6 +213,7 @@
             </div>
             <!-- END STORE -->
             <?php endforeach; ?>
+            <?php endif; ?>
         </div>
         <!-- END ACCORDION -->
         

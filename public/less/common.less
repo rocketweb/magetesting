@@ -237,7 +237,30 @@ fieldset.margins {
     padding: 0px 4px;
 }
 .btn-red {
-    .customButton(@Red);
+	color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #F0554A;
+    *background-color: @Red;
+    background-image: -moz-linear-gradient(top, #F0554A, @Red);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, #F0554A, to(@Red));
+    background-image: -webkit-linear-gradient(top, #F0554A, @Red);
+    background-image: -o-linear-gradient(top, #F0554A, @Red);
+    background-image: linear-gradient(to bottom, #F0554A, @Red);
+    background-repeat: repeat-x;
+    border-color: @Red @Red #1f6377;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffF0554A', endColorstr='#fff64135', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    
+    &:hover,
+    &:active,
+    &.active,
+    &.disabled,
+    &[disabled] {
+        color: #fff;
+        background-color: #F0554A;
+        *background-color: @Red;
+    }
 }
 .btn-blue {
     .customButton(@Blue);
@@ -267,6 +290,14 @@ fieldset.margins {
 	color: #333333;
 	background-color: #e5c200;
 	*background-color:#e5c200;
+}
+.btn-faded {
+    .customButton(#eee, #eee, #bbb);
+    text-shadow: none;
+    
+    &.btn-inverse {
+        .customButton(#444, #444, #888);
+    }
 }
 
 .btn-deploy {

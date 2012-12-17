@@ -61,6 +61,15 @@ $(document).ready(function(){
 		
 	});
 
+    if(_stores.length === 1){
+        $(_stores[0]).trigger('click');
+    }
+    
+    $('.accordion-add-new').click(function(event){
+        window.location.pathname = $(this).find('.accordion-heading .accordion-toggle .title a').attr('href');
+        event.preventDefault();
+        event.stopPropagation(); 
+    });
 });
 
 
