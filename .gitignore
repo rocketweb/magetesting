@@ -2,7 +2,7 @@
 .project
 .zfproject.xml
 .settings*
-data/cache/
+data/cache/*
 data/extensions/
 data/pkg/
 data/logs/
