@@ -30,24 +30,28 @@ CREATE  TABLE IF NOT EXISTS `extension_queue` (
   `status` ENUM(\'pending\',\'installing\',\'ready\',\'closed\',\'error\') NULL DEFAULT \'pending\' ,
   `user_id` INT(11) NOT NULL ,
   `extension_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_extension_queue_queue1` (`queue_id` ASC) ,
-  INDEX `fk_extension_queue_user1` (`user_id` ASC) ,
-  INDEX `fk_extension_queue_extension1` (`extension_id` ASC) ,
-  CONSTRAINT `fk_extension_queue_queue1`
+  PRIMARY KEY (`id`)
+  ) ENGINE = InnoDB';
+
+$sql[]=  'ALTER TABLE `extension_queue` 
+ADD CONSTRAINT `fk_extension_queue_queue1`
     FOREIGN KEY (`queue_id` )
     REFERENCES `queue` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_extension_queue_user1`
+ADD INDEX `fk_extension_queue_queue1` (`queue_id` ASC)';
+
+$sql[]=  'ALTER TABLE `extension_queue` ADD CONSTRAINT `fk_extension_queue_user1`
     FOREIGN KEY (`user_id` )
     REFERENCES `user` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_extension_queue_extension1`
+ADD INDEX `fk_extension_queue_user1` (`user_id` ASC)';
+
+$sql[]=  'ALTER TABLE `extension_queue` ADD CONSTRAINT `fk_extension_queue_extension1`
     FOREIGN KEY (`extension_id` )
     REFERENCES `extension` (`id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION   
-) ENGINE = InnoDB;
+    ON UPDATE NO ACTION,
+ADD INDEX `fk_extension_queue_extension1` (`extension_id` ASC);
 ';

@@ -1,9 +1,10 @@
 <?php
 
 // drop indexes
+
 $sql[]="ALTER TABLE `dev_extension_queue` 
     DROP INDEX `fk_dev_extension_queue_instance1`,
-    DROP FOREIGN KEY `fk_dev_extension_queue_queue1`;";
+    DROP FOREIGN KEY `fk_dev_extension_queue_instance1`;";
 
 $sql[]="ALTER TABLE `instance`
     DROP INDEX `instance_to_version`,
@@ -58,7 +59,7 @@ $sql[]="ALTER TABLE `dev_extension_queue`
     ADD CONSTRAINT `fk_dev_extension_queue_store`
   FOREIGN KEY (`store_id` )
   REFERENCES `store` (`id` )
-  ON DELETE NO ACTION
+  ON DELETE CASCADE
   ON UPDATE NO ACTION;";
 
 $sql[]="ALTER TABLE `store_extension`
