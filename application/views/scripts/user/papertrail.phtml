@@ -1,0 +1,15 @@
+<form id="autosubmit" action="<?php echo $this->form->getAction() ?>" method="<?php echo $this->form->getMethod() ?>">
+    <?php echo $this->form->account_id; ?>
+    <?php echo $this->form->user_id; ?>
+    <?php echo $this->form->system_id; ?>
+    <?php echo $this->form->timestamp; ?>
+    <?php echo $this->form->token; ?>
+    <?php echo $this->form->distributor; ?>
+    <?php echo $this->form->email; ?>
+</form>
+
+<script type='text/javascript'>
+  //<![CDATA[
+   document.forms['autosubmit'].submit();
+  //]]>
+</script>

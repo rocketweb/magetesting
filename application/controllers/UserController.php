@@ -503,4 +503,81 @@ class UserController extends Integration_Controller_Action
         // here account removal or deactivating is made        ?
     }
     
+    public function papertrailAction()
+    {
+        $domain = $this->_getParam('domain', null);
+        
+//        $paper = new RocketWeb_Service_Papertrail('magetesting', 'd41d8cFd98f00b2v4e980b998ecf8427e');
+//        $response = $paper->getSystemData('2');
+//        Zend_Debug::dump($response);
+//        
+//        $response = $paper->getAccountUsage('MarcinRocketWeb');
+//        Zend_Debug::dump($response);die;
+        
+        if(is_null($domain)) {
+            return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
+        }
+        
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->findByDomain($domain);
+
+        if((int)$store->user_id !== (int)$this->auth->getIdentity()->id) {
+            //this is not YOUR store!
+            return $this->_helper->redirector->gotoRoute(array(
+                        'module'     => 'default',
+                        'controller' => 'user',
+                        'action'     => 'dashboard',
+                ), 'default', true);
+        }
+        
+        $config = $this->getInvokeArg('bootstrap')->getResource('config')->papertrail;
+        $timestamp = time();
+        
+        /**
+         * Token deserves the most explanation. It is a SHA-1 hash of a string 
+         * containing these 4 values in order, separated by colons: 
+         * - account_id (from account provisioning request; see "Create Account")
+         * - user_id
+         * - SSO salt (a shared secret provided by Papertrail)
+         * - timestamp (is the current time in UTC (Unix time))
+         */
+        $token = sha1( 
+            implode(':', array(
+                'MarcinRocketWeb', 
+                'MarcinRocketWeb', 
+                $config->ssoSalt, 
+                $timestamp
+             )
+        ));
+        
+        $form = new Application_Form_PapertrailSession();
+//        $form->populate(array(
+//            'user_id'     => $store->user_id,
+//            'account_id'  => $store->user_id,
+//            'system_id'   => $domain,
+//            'token'       => $token,
+//            'distributor' => $config->distributorName,
+//            'timestamp'   => $timestamp,
+//            'email'       => $this->auth->getIdentity()->email
+//        ));
+        
+        $form->populate(array(
+            'user_id'     => 'MarcinRocketWeb',
+            'account_id'  => 'MarcinRocketWeb',
+            'system_id'   => '2',
+            'token'       => $token,
+            'distributor' => $config->distributorName,
+            'timestamp'   => $timestamp,
+            'email'       => 'marcin@rocketweb.com'
+        ));
+        
+//        Zend_Debug::dump($form->getValues());
+        
+        $this->view->form = $form;
+    }
+    
 }

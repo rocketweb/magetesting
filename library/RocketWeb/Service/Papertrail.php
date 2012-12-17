@@ -190,6 +190,33 @@ class RocketWeb_Service_Papertrail {
     }
     
     /**
+     * Get account usage from Papertrail
+     * 
+     * @param  string|int $id
+     * @return object Std_Object
+     * @throws Zend_Service_Exception
+     */
+    public function getAccountUsage($id) {
+        $this->getRestClient()->getHttpClient()->resetParameters();
+        
+        $response = $this->getRestClient()->restGet(self::API_PATH_USER . '/' . $id);
+        
+        $data = $this->_getDataResponse($response->getBody());
+        
+        if ($response->isError()) {
+            /**
+             * @see Zend_Service_Exception
+             */
+            require_once 'Zend/Service/Exception.php';
+            throw new Zend_Service_Exception(
+                !isset($data->message) ?: $data->message . ' (' .$response->getMessage() . '. Status code: ' . $response->getStatus() . ')'
+            );
+        }
+        
+        return $data;
+    }
+    
+    /**
      * Create system in Papertrail service
      * 
      * @param string|int $id
@@ -249,6 +276,33 @@ class RocketWeb_Service_Papertrail {
         }
         
         return $data->status;
+    }
+    
+    /**
+     * Get system data from Papertrail
+     * 
+     * @param  string|int $id
+     * @return object Data
+     * @throws Zend_Service_Exception
+     */
+    public function getSystemData($id) {
+        $this->getRestClient()->getHttpClient()->resetParameters();
+        
+        $response = $this->getRestClient()->restGet(self::API_PATH_SYSTEM . '/' . $id);
+        
+        $data = $this->_getDataResponse($response->getBody());
+        
+        if ($response->isError()) {
+            /**
+             * @see Zend_Service_Exception
+             */
+            require_once 'Zend/Service/Exception.php';
+            throw new Zend_Service_Exception(
+                !isset($data->message) ?: $data->message . ' (' .$response->getMessage() . '. Status code: ' . $response->getStatus() . ')'
+            );
+        }
+        
+        return $data;
     }
 
     /**

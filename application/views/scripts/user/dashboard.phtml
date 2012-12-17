@@ -128,7 +128,7 @@
                                 <h5>Problems</h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <a href="#" class="btn disabled"><i class="icon icon-info-sign"></i> Show Logs</a>
+                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
                                         <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn "><i class="icon icon-question-sign"></i> Get Help</a>
                                     </div>
                                 </div>
