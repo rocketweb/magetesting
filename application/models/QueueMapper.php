@@ -125,4 +125,8 @@ class Application_Model_QueueMapper {
         return $this->getDbTable()->getParentIdForExtensionInstall($store_id);
     }
     
+    public function countForStore($storeId){
+        return $this->getDbTable()->countForStore($storeId);
+    }
+    
 }

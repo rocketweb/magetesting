@@ -194,8 +194,8 @@ class Application_Model_Task {
         if(in_array($status,$storeStatuses) ){
             try {
             
-                $this->_storeObject->setStatus($status);
-                $this->db->update('store', array('status' => $status), 'id=' . $this->_storeObject->getId());
+                //$this->_storeObject->setStatus($status);
+                //$this->db->update('store', array('status' => $status), 'id=' . $this->_storeObject->getId());
 
             } catch (Exception $e){
                 $this->logger->log('Saving store status failed: ' . $e->getMessage(), Zend_Log::EMERG);

@@ -257,4 +257,8 @@ class Application_Model_Queue {
         return $this->getMapper()->getParentIdForExtensionInstall($store_id);
     }
     
+    public function countForStore($storeId){
+        return $this->getMapper()->countForStore($storeId);
+    }
+    
 }

@@ -10,20 +10,20 @@ extends Application_Model_Transport {
     
     private $_connection;
     
-    public function setup(Application_Model_Store &$instance){
+    public function setup(Application_Model_Store &$store){
         
-        $this->_instanceObject = $instance;
+        $this->_storeObject = $store;
         
-        parent::setup($instance);
+        parent::setup($store);
         
 	/*TODO: replace 22 with given port*/
-        $this->_connection = ssh2_connect($instance->getCustomHost(), 22);
-        ssh2_auth_password($this->_connection, $instance->getCustomLogin(), $instance->getCustomPassword());
+        $this->_connection = ssh2_connect($store->getCustomHost(), 22);
+        ssh2_auth_password($this->_connection, $store->getCustomLogin(), $store->getCustomPassword());
         
         /*TODO: execute this somewhere, closeConnection() function? */
         //fclose($stream);
         
-        $this->_prepareCustomVars($instance);
+        $this->_prepareCustomVars($store);
     }
     
     public function checkProtocolCredentials(){
@@ -35,9 +35,9 @@ extends Application_Model_Transport {
     }
     
     /* TODO: move to parent and rewrite if necessary ? */
-    protected function _prepareCustomVars(Application_Model_Store $instanceObject){
+    protected function _prepareCustomVars(Application_Model_Store $storeObject){
         //HOST
-        $customHost = $this->_instanceObject->getCustomHost();
+        $customHost = $this->_storeObject->getCustomHost();
         //make sure custom host have slash at the end
         if(substr($customHost,-1)!="/"){
             $customHost .= '/';
@@ -52,7 +52,7 @@ extends Application_Model_Transport {
         $this->_customHost = $customHost;
 
         //PATH
-        $customRemotePath = $this->_instanceObject->getCustomRemotePath();
+        $customRemotePath = $this->_storeObject->getCustomRemotePath();
         //make sure remote path containts slash at the end
         if(substr($customRemotePath,-1)!="/"){
             $customRemotePath .= '/';
@@ -66,7 +66,7 @@ extends Application_Model_Transport {
        
         //SQL
          //make sure sql file path does not contain slash at the beginning       
-        $customSql = $this->_instanceObject->getCustomSql();
+        $customSql = $this->_storeObject->getCustomSql();
         if(substr($customSql,0,1)=="/"){
             $customSql = substr($customSql,1);
         }
@@ -75,7 +75,7 @@ extends Application_Model_Transport {
         
         //FILE
          //make sure sql file path does not contain slash at the beginning       
-        $customFile = $this->_instanceObject->getCustomFile();
+        $customFile = $this->_storeObject->getCustomFile();
         if(substr($customFile,0,1)=="/"){
             $customFile = substr($customFile,1);
         }
@@ -87,7 +87,7 @@ extends Application_Model_Transport {
     
     public function downloadFilesystem(){
         
-        if ($this->_instanceObject->getCustomFile()!=''){
+        if ($this->_storeObject->getCustomFile()!=''){
             echo 'downandunpack';
             return $this->_downloadAndUnpack();
         } else {
@@ -105,9 +105,9 @@ extends Application_Model_Transport {
          * the switch is used to not ask for /yes/no about adding host to known hosts
          */
         exec('set -xv');
-        $command = 'sshpass -p'.$this->_instanceObject->getCustomPass()
+        $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$this->_instanceObject->getCustomLogin().'@'.trim($this->_customHost,'/')
+                .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
                 .' "tar -zcf - '.$this->_customRemotePath.' --exclude='.$this->_customRemotePath.'var --exclude='.$this->_customRemotePath.'media"'
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
@@ -148,9 +148,9 @@ extends Application_Model_Transport {
         $components = count(explode('/',$this->_customSql))-1;
         
         exec('set -xv');
-        $command = 'sshpass -p'.$this->_instanceObject->getCustomPass()
+        $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$this->_instanceObject->getCustomLogin().'@'.trim($this->_customHost,'/')
+                .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
                 .' "tar -zcf - '.$this->_customSql.'"'
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
@@ -194,9 +194,9 @@ extends Application_Model_Transport {
         
         /* Download file*/
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
-        $command = 'sshpass -p'.$this->_instanceObject->getCustomPass()
+        $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$this->_instanceObject->getCustomLogin().'@'.trim($this->_customHost,'/')
+                .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
                 .' "cat '.$this->_customFile.'"'
                 .' | sudo tar -xzvf - -C .';
         exec($command,$output);

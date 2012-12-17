@@ -77,9 +77,9 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
         $select = $this->select()
                     ->setIntegrityCheck(false)
                     ->from($this->_name)
-                    ->where('queue.store_id = ?',$storeId)
+                    ->where($this->_name.'.store_id = ?',$storeId)
                     ->where('task = ?','RevisionCommit')
-                    ->order(array('queue.id DESC'))
+                    ->order(array($this->_name.'.id DESC'))
                     ->limit(1);
         $row = $this->fetchRow($select);
         
@@ -87,6 +87,26 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
             return $row['id'];
         } else {
             return 0;
+        }
+    }
+    
+    /**
+     * Counts tasks for specified $storeId 
+     * Used to determine if we can set store status to ready
+     * @param integer $storeId
+     * @return boolean
+     */
+    public function countForStore($storeId){
+
+        /* TODO: replace this with count to prevent performance issues later */
+        $select = $this->select()
+                       ->from($this->_name)
+                       ->where($this->_name.'.store_id = ?',$storeId);
+
+        if(count($this->fetchAll($select)) > 0){
+            return true;
+        } else {
+            return false;
         }
     }
 }

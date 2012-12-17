@@ -26,10 +26,19 @@ class Application_Model_Worker {
 
             /* TODO: remove this if after all exceptions are implemented on errors */
             if ($queueElement->getStatus()=='ready'){
+                
                 $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
                 $this->db->delete('queue', array('id=' . $queueElement->getId()));
                 
-                $this->db->update('store', array('status' => 'ready'), 'id = ' . $queueElement->getStoreId());
+                /** 
+                 * if no other tasks are present for this store, 
+                 * update store status to ready
+                 * Otherwise, leave current status until we jump to next task
+                 */
+                $queueModel = new Application_Model_Queue();
+                if(!$queueModel->countForStore($queueElement->getStoreId())){
+                    $this->db->update('store', array('status' => 'ready'), 'id = ' . $queueElement->getStoreId());
+                }
             }
         
         } catch (Application_Model_Task_Exception $e){
