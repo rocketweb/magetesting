@@ -93,10 +93,18 @@ extends Application_Model_Task {
              *
              */
             $this->logger->log('Creating system user.', Zend_Log::INFO);
-            exec('cd worker;sudo ./create_user.sh ' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_systempass . ' ' . $this->config->magento->usersalt . ' ' . $this->config->magento->systemHomeFolder.'; cd ..;', $output);
+            
+            $startDir = getcwd();
+            chdir('worker');
+            unset($output);
+
+            $command = 'sudo ./create_user.sh ' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_systempass . ' ' . $this->config->magento->usersalt . ' ' . $this->config->magento->systemHomeFolder.'';
+            exec($command, $output);
+            chdir($startDir);
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
             unset($output);
+
 
             if ('free-user' != $this->_userObject->getGroup()) {
                 /* send email with account details start */

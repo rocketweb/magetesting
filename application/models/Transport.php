@@ -22,7 +22,8 @@ class Application_Model_Transport {
      */
     protected function setProtocol($value){
         $supportedProtocols = array(
-            'ftp'
+            'ftp',
+            'ssh'
         );
         
         if (!in_array($value, $supportedProtocols)){
@@ -39,7 +40,8 @@ class Application_Model_Transport {
     protected function setHost($value){
         
         $hostname = new Zend_Validate_Hostname();
-        if(!$hostname->isValid($value)){
+        $ip = new Zend_Validate_Ip();
+        if(!$hostname->isValid($value) && !$ip->isValid($value)){
             return false;
         }
         
@@ -89,14 +91,17 @@ class Application_Model_Transport {
                     }
                 } else {
                     $this->_errorMessage = 'Username has to be alphanumeric';
+                    var_dump($this->_errorMessage);
                     return false;
                 }
             } else {
                 $this->_errorMessage = 'Hostname is invalid';
+                var_dump($this->_errorMessage);
                 return false;
             }
         } else {
             $this->_errorMessage = 'Protocol not supported';
+            var_dump($this->_errorMessage);
             return false;
         }
     }
@@ -113,6 +118,7 @@ class Application_Model_Transport {
             $customTransportModel->setup($store);
             return $customTransportModel;
         }
+        var_dump('model transport '.$className.' doesnt exist');
         return false;
     }
        

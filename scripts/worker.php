@@ -56,4 +56,4 @@ if (flock($fp, LOCK_EX | LOCK_NB)) {
 flock($fp, LOCK_UN);
 
 /* close file handle */
-fclose($fp); 
+fclose($fp);

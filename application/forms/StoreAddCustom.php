@@ -67,12 +67,13 @@ class Application_Form_StoreAddCustom extends Integration_Form{
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        new Zend_Validate_InArray(array('ftp'))
+                        new Zend_Validate_InArray(array('ftp','ssh'))
                 ),
                 'class'      => 'span4'
         ));
         $this->custom_protocol->addMultiOptions(array(
                 'ftp' => 'FTP',
+                'ssh' => 'SSH',
         ));
 
         $this->addElement('text', 'custom_host', array(
