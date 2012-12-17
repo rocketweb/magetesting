@@ -64,8 +64,10 @@ footer a{color:#f64135;}
 .accordion-group.accordion-add-new .accordion-inner .panel.deployment h5 span.version{color:#e5e5e5;}
 .accordion-group .accordion-heading{height:60px;font-size:18px;}.accordion-group .accordion-heading.active-accordion-header{background:#f7f7f7;}
 .accordion-group .accordion-heading .tab-stripe-active{background:#e5e5e5;}
-.accordion-group .accordion-heading .accordion-toggle{padding:15px;color:#6d6d6d;outline:0;text-decoration:none;}.accordion-group .accordion-heading .accordion-toggle .arrow{width:60px;margin-right:10px;text-align:center;}.accordion-group .accordion-heading .accordion-toggle .arrow i{margin-top:8px;}
-.accordion-group .accordion-heading .accordion-toggle .title{position:relative;top:5px;font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-weight:300;font-size:19px;}.accordion-group .accordion-heading .accordion-toggle .title:hover{text-decoration:underline;}
+.accordion-group .accordion-heading .accordion-toggle{height:30px;padding:15px;color:#6d6d6d;outline:0;text-decoration:none;}
+.accordion-group .accordion-heading .accordion-toggle .right-content{margin-left:0px;}.accordion-group .accordion-heading .accordion-toggle .right-content .btn{margin-left:6px;}
+.accordion-group .accordion-heading .accordion-toggle .arrow{text-align:center;}.accordion-group .accordion-heading .accordion-toggle .arrow i{margin-top:8px;}
+.accordion-group .accordion-heading .accordion-toggle .title{margin-top:5px;display:block;width:100%;white-space:nowrap;text-overflow:ellipsis;font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-weight:300;font-size:19px;}.accordion-group .accordion-heading .accordion-toggle .title:hover{text-decoration:underline;}
 .accordion-group .accordion-heading .accordion-toggle .pending{clear:right;color:#f64135;font-size:11px;text-transform:none;}
 .accordion-group .accordion-heading .accordion-toggle .in-use .popover{font-size:14px;}
 .accordion-group .accordion-inner{border-top:none;}.accordion-group .accordion-inner .version-info{margin:6px 0 12px 0;padding-bottom:12px;border-bottom:1px solid #e5e5e5;}.accordion-group .accordion-inner .version-info .first{margin-left:0;}

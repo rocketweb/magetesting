@@ -62,14 +62,24 @@
         }
         
         .accordion-toggle {
+            height: 30px;
             padding: 15px;
             color: #6d6d6d;
             outline: 0;
             text-decoration: none;
             
+            .left-content, .right-content {
+            }
+            
+            .right-content {
+                margin-left: 0px;
+                .btn {
+                    margin-left: 6px;
+                }
+            }
             .arrow {
-                width: @ElementSize;
-                margin-right: ((@ElementSize / 4) - @ElementPad);
+                //width: @ElementSize;
+                //margin-right: ((@ElementSize / 4) - @ElementPad);
                 text-align: center;
                 
                 i {
@@ -78,8 +88,11 @@
             }
             
             .title {
-                position: relative;
-                top: 5px;
+                margin-top: 5px;
+                display: block;
+                width: 100%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
                 font-family: @TypeKitCondensed;
                 font-weight: 300;
                 font-size: 19px;

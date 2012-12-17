@@ -108,31 +108,34 @@
                                $progressClass = 'progress-info';
                         endswitch;
                     ?>
-                        <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''); ?>">
-                            <span class="span2 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px">
-                                <span class="bar" style="width: 100%;"></span>
-                            </span>
-                            <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>">
-                            <?php /*if($item['status'] == 'pending'): ?>
-                                In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
-                            <?php else:*/ ?>
-                                <?php echo $this->escape(ucfirst($item['status'])); ?>
-                            </span>
+                        <div class="span4 right-content pull-right">
+                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''); ?>">
+                                <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px">
+                                    <span class="bar" style="width: 100%;"></span>
+                                </span>
+                                <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>">
+                                <?php /*if($item['status'] == 'pending'): ?>
+                                    In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
+                                <?php else:*/ ?>
+                                    <?php echo $this->escape(ucfirst($item['status'])); ?>
+                                </span>
+                            </div>
+                            <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?>">
+                            	<a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
+                        	    <a 
+                                    href="#"
+                                    class="btn btn-mini admin-panel pull-right"
+                                    data-backend-name="<?php echo $item['backend_name']; ?>"
+                                    data-admin-login="<?php echo $this->user->login; ?>"
+                                    data-admin-password="<?php echo $item['backend_password']; ?>"
+                                ><i class="icon icon-wrench"></i> Admin Panel</a>
+                            	<a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
+                        	</div>
                         </div>
-                        <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?> pull-right">
-                            <a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store"><i class="icon icon-home"></i> View Store</a>
-                            <a 
-                                href="#"
-                                class="btn btn-mini admin-panel"
-                                data-backend-name="<?php echo $item['backend_name']; ?>"
-                                data-admin-login="<?php echo $this->user->login; ?>"
-                                data-admin-password="<?php echo $item['backend_password']; ?>"
-                            >
-                            <i class="icon icon-wrench"></i> Admin Panel</a>
-                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store"><i class="icon icon-white icon-remove"></i></a>
+                        <div class="span6 left-content">
+                            <div class="arrow pull-left"><i class="icon-chevron-down icon-blue"></i></div>
+                            <div class="span5"><?php echo $this->escape($item['store_name']) ?></div>
                         </div>
-                        <span class="arrow"><i class="icon-chevron-down icon-blue"></i></span>
-                        <span class="title"><?php echo $this->escape($item['store_name']) ?></span>
                         <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                     </div>
                 </div>
