@@ -12,7 +12,17 @@ class Application_Model_Task_Papertrail_System_Create extends Application_Model_
 
     public function process() {
         $this->_updateStatus('creating-papertrail-system');
-        
+
+        $this->logger->log('Creating papertrail system.', Zend_Log::INFO);
+
+        $output = array(
+            (string) $this->_storeObject->getDomain(),
+            (string) $this->_storeObject->getStoreName(),
+            (string) $this->_userObject->getId()
+        );
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+
         try { 
             $response = $this->_service->createSystem(
                 (string)$this->_storeObject->getDomain(), 

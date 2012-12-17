@@ -17,6 +17,14 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log('Creating papertrail user.', Zend_Log::INFO);
 
+        $output = array(
+            (string) $this->_userObject->getId(),
+            (string) $this->_userObject->getLogin(),
+            (string) $this->_userObject->getEmail()
+        );
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+
         try { 
             $response = $this->_service->createUser(
                 (string)$this->_userObject->getId(), 
