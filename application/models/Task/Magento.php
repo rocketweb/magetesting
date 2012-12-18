@@ -195,11 +195,12 @@ extends Application_Model_Task {
     
     protected function _prepareDatabase(){
         try {
+            
             $DbManager = new Application_Model_DbTable_Privilege($this->db, $this->config);
-            $DbManager->createDatabase($this->_userObject()->getLogin() . '_' . $this->_storeObject->getDomain());
+            $DbManager->createDatabase($this->_userObject->getLogin() . '_' . $this->_storeObject->getDomain());
 
-            if (!$DbManager->checkIfUserExists($this->_userObject()->getLogin())) {
-                $DbManager->createUser($this->_userObject()->getLogin());
+            if (!$DbManager->checkIfUserExists($this->_userObject->getLogin())) {
+                $DbManager->createUser($this->_userObject->getLogin());
             }
         } catch (PDOException $e) {
             $message = 'Could not create database for store';
