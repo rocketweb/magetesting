@@ -18,6 +18,9 @@ implements Application_Model_Task_Interface {
         $startCwd = getcwd();
         
         $this->_updateStoreStatus('installing-magento');
+        
+        $this->_prepareDatabase();
+        
         $this->_createSystemAccount();
               
         $this->_prepareFilesystem();
@@ -330,5 +333,5 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         unset($configXml);
         
     }
-
+    
 }

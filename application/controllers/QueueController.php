@@ -180,26 +180,6 @@ class QueueController extends Integration_Controller_Action {
                     
                     $this->_helper->FlashMessenger('New installation added to queue');
 
-                    //magetesting user creates database
-                    try {
-                        $log = $this->getLog();
-                        $log->log($this->auth->getIdentity()->login . '_' . $storeModel->getDomain(),LOG_DEBUG);
-                        $db = Zend_Db_Table::getDefaultAdapter();
-                        $DbManager = new Application_Model_DbTable_Privilege($db, $this->getInvokeArg('bootstrap')
-                                                ->getResource('config'));
-                        $DbManager->createDatabase($this->auth->getIdentity()->login . '_' . $storeModel->getDomain());
-
-                        if (!$DbManager->checkIfUserExists($this->auth->getIdentity()->login)) {
-                            $DbManager->createUser($this->auth->getIdentity()->login);
-                        }
-                    } catch (PDOException $e) {
-                        $message = 'Could not create database for store, aborting';
-                        echo $message;
-                        if ($log = $this->getLog()) {
-                            $log->log($message, LOG_ERR);
-                        }
-                        throw $e;
-                    }
                 } else {
                     $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
                 }

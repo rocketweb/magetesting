@@ -16,6 +16,7 @@ implements Application_Model_Task_Interface {
         $startCwd = getcwd();
 
         $this->_updateStoreStatus('downloading-magento');
+        $this->_prepareDatabase();
         $this->_createSystemAccount();
 
         chdir($this->_storeFolder);

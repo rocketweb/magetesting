@@ -192,6 +192,21 @@ extends Application_Model_Task {
         $mail->send();
         /* send email with account details stop */
     }
+    
+    protected function _prepareDatabase(){
+        try {
+            $DbManager = new Application_Model_DbTable_Privilege($this->db, $this->config);
+            $DbManager->createDatabase($this->_userObject()->getLogin() . '_' . $this->_storeObject->getDomain());
+
+            if (!$DbManager->checkIfUserExists($this->_userObject()->getLogin())) {
+                $DbManager->createUser($this->_userObject()->getLogin());
+            }
+        } catch (PDOException $e) {
+            $message = 'Could not create database for store';
+            $this->logger->log($message, Zend_Log::CRIT);
+            throw new Application_Model_Task_Exception($message);
+        }
+    }
            
 }
         
