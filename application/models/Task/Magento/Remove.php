@@ -10,7 +10,7 @@ implements Application_Model_Task_Interface {
     
     public function process(Application_Model_Queue $queueElement = null) {
         
-        $this->_updateStatus('removing-magento');
+        $this->_updateStoreStatus('removing-magento');
         
         $DbManager = new Application_Model_DbTable_Privilege($this->db,$this->config);
         if ($DbManager->checkIfDatabaseExists($this->_dbname)){
