@@ -59,9 +59,12 @@ footer a{color:#f64135;}
 .store-edit .control-group input{width:96%;}
 .store-edit .control-group #store_name{width:98%;}
 .accordion-group{margin-bottom:-1px;border-radius:0px;}.accordion-group.accordion-add-new{border-width:3px;border-style:dashed;cursor:pointer;}.accordion-group.accordion-add-new:hover,.accordion-group.accordion-add-new:focus{border-color:#f64135;}
+.accordion-group.accordion-add-new .btn-faded:hover,.accordion-group.accordion-add-new .btn-faded:focus{cursor:pointer;}
 .accordion-group.accordion-add-new .accordion-inner .version-info{color:#e5e5e5;}
 .accordion-group.accordion-add-new .accordion-inner .panel h5{color:#e5e5e5;}
 .accordion-group.accordion-add-new .accordion-inner .panel.deployment h5 span.version{color:#e5e5e5;}
+.accordion-group.accordion-add-new .accordion-inner .btn-add-store{position:absolute;width:220px;height:30px;top:25px;left:50%;margin-left:-132px;font-size:20px;padding:8px 20px 2px 20px;}.accordion-group.accordion-add-new .accordion-inner .btn-add-store [class^="icon-"],.accordion-group.accordion-add-new .accordion-inner .btn-add-store [class*=" icon-"]{margin-top:5px;}
+.accordion-group.accordion-add-new .accordion-inner .btn-add-store:hover{background-position:0 -50px;}
 .accordion-group .accordion-heading{height:60px;font-size:18px;}.accordion-group .accordion-heading.active-accordion-header{background:#f7f7f7;}
 .accordion-group .accordion-heading .tab-stripe-active{background:#e5e5e5;}
 .accordion-group .accordion-heading .accordion-toggle{height:30px;padding:15px;color:#6d6d6d;outline:0;text-decoration:none;}

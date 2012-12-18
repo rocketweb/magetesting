@@ -3,11 +3,15 @@
 <div class="row">
     <div class="span12">
         <input id="base-url" type="hidden" value="<?php echo $this->baseUrl(); ?>" />
+
+        <?php if($storeCount > 0): ?>
         <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a>
+        <?php endif; ?>
+
         <h1>Your stores</h1>
         <!-- START ACCORDION -->
         <div class="accordion" id="accordion">
-        
+
         <?php /* IF USER HAS NO STORES */ ?>
         <?php if($storeCount === 0): ?>
             <!-- START STORE -->
@@ -18,12 +22,11 @@
                             <a target="_blank" href="#" class="btn btn-faded btn-mini view-store disabled"><i class="icon icon-white icon-home"></i> View Store</a>
                             <a href="#" class="btn btn-mini btn-faded admin-panel disabled"><i class="icon icon-white icon-wrench"></i> Admin Panel</a>
                         </div>
-                        <span class="arrow"><i class="icon-chevron-right icon-blue"></i></span>
-                        <span class="title"><a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a></span>
                     </div>
                 </div>
                 <div class="accordion-body collapse in mt_store">
                     <div class="accordion-inner">
+                        <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red btn-add-store"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a>
                         <div class="row version-info">
                             <div class="span2 first"><strong>Edition:</strong></div>
                             <div class="span2"><strong>Version:</strong></div>
@@ -68,13 +71,13 @@
                             </div>
                             <!-- END PROBLEMS BOX -->
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
             <!-- END STORE -->
         <?php endif; ?>
-        
+
         <?php /* IF USER HAS STORES */ ?>
         <?php if($storeCount > 0): ?>
         <?php foreach ($this->queue as $key => $item): ?>
@@ -83,13 +86,13 @@
                 <div class="accordion-heading">
                     <div class="tab-stripe"></div>
                     <div class="accordion-toggle store-toggle <?php echo ($item['status'] != 'ready' && $item['status'] != 'error')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>" data-status="<?php echo ($item['status']) ?>">
-                    <?php 
+                    <?php
                         $progressClass = '';
-                        switch($item['status']): 
-                           case 'error': 
+                        switch($item['status']):
+                           case 'error':
                                $progressClass = 'progress-danger';
-                               break; 
-                           default: 
+                               break;
+                           default:
                                $progressClass = 'progress-info';
                         endswitch;
                     ?>
@@ -102,7 +105,7 @@
                                 <?php /*if($item['status'] == 'pending'): ?>
                                     In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
                                 <?php else:*/ ?>
-                                    <?php echo $this->niceStatus($item['status']); ?> 
+                                    <?php echo $this->niceStatus($item['status']); ?>
                                     <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
                                         - <?php echo $this->leftTime($this->queueCounter[$item['id']]); ?>
                                     <?php endif; ?>
@@ -110,7 +113,7 @@
                             </div>
                             <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?>">
                             	<a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
-                        	    <a 
+                        	    <a
                                     href="#"
                                     class="btn btn-mini admin-panel pull-right"
                                     data-backend-name="<?php echo $item['backend_name']; ?>"
@@ -134,7 +137,7 @@
                             <div class="span2 first"><strong>Edition:</strong> <?php echo $this->escape($item['edition']); ?></div>
                             <div class="span2"><strong>Version:</strong> <?php echo $this->escape($item['version']); ?> </div>
                             <div class="span2">
-                                <strong>Sample data:</strong> 
+                                <strong>Sample data:</strong>
                             <?php if($item['sample_data']): ?>
                                 Yes
                             <?php else: ?>
@@ -153,7 +156,7 @@
                                    	<?php if(in_array($item['status'], array('closed'))): ?>
                                         <a href="#" class="btn btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php else: ?>
-                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'store' => $item['domain']), 'default', true); ?>" 
+                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'store' => $item['domain']), 'default', true); ?>"
                                            class="btn btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php endif; ?>
                                     <?php if($item['status']=='closed'): ?>
@@ -198,7 +201,7 @@
                             </div>
                             <!-- END PROBLEMS BOX -->
                         </div>
-                        
+
                     </div>
                 </div>
                 <?php endif; // end div#collapse ?>
@@ -208,7 +211,7 @@
             <?php endif; ?>
         </div>
         <!-- END ACCORDION -->
-        
+
     </div>
 </div>
 <!-- START STORES PAGE -->
