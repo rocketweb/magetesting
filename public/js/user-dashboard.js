@@ -128,11 +128,6 @@ function updateLabel(row, new_status) {
             }
         });
     }
-
-    //remove installing label now when everything is updated
-    if (new_status != "ready" && new_status != "error") {
-        row.removeClass("installing");
-    }
 }
 /* status auto-update end*/
 
