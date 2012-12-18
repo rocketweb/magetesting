@@ -6,6 +6,8 @@ class Application_Model_StoreExtension {
     protected $_store_id;
     protected $_extension_id;
     protected $_added_date;
+    protected $_braintree_transaction_id;
+    protected $_braintree_transaction_confirmed;
     
     protected $_mapper;
     
@@ -70,7 +72,31 @@ class Application_Model_StoreExtension {
     public function getAddedDate(){
         return $this->_added_date;
     }
+
+    public function setBraintreeTransactionId($value)
+    {
+        $this->_braintree_transaction_id = $value;
+        return $this;
+    }
+
+    public function getBraintreeTransactionId()
+    {
+        return $this->_braintree_transaction_id;
+    }
+
     
+    public function setBraintreeTransactionConfirmed($value)
+    {
+        $this->_braintree_transaction_confirmed = $value;
+        return $this;
+    }
+
+    public function getBraintreeTransactionConfirmed()
+    {
+        return $this->_braintree_transaction_confirmed;
+    }
+    
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -105,6 +131,10 @@ class Application_Model_StoreExtension {
     {
         return $this->getMapper()->fetchAll();
     }
+
+    public function fetchStoreExtension($store_id, $extension_id) {
+        return $this->getMapper()->fetchStoreExtension($store_id, $extension_id);
+    }
     
     public function __toArray()
     {
@@ -112,7 +142,9 @@ class Application_Model_StoreExtension {
             'id'          => $this->getId(),
             'store_id'   => $this->getStoreId(),
             'extension_id'    => $this->getExtensionId(),
-            'added_date'       => $this->getAddedDate()
+            'added_date'       => $this->getAddedDate(),
+            'braintree_transaction_id' => $this->getBraintreeTransactionId(),
+            'braintree_transaction_confirmed' => $this->getBraintreeTransactionConfirmed(),
         );
     }
 }

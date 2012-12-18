@@ -244,7 +244,12 @@ class Application_Model_Payment {
     {
         return $this->getMapper()->fetchAll();
     }
-    
+
+    public function findLastForUser($id)
+    {
+        return $this->getMapper()->findLastForUser($id, $this);
+    }
+
     public function __toArray()
     {
         return array(

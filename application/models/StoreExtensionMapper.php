@@ -51,7 +51,9 @@ class Application_Model_StoreExtensionMapper{
         $storeExtension->setId($row->id)
             ->setStoreId($row->store_id)
             ->setExtensionId($row->extension_id)
-            ->setAddedDate($row->added_date);
+            ->setAddedDate($row->added_date)
+            ->setBraintreeTransactionId($row->braintree_transaction_id)
+            ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed);
 
         return $storeExtension;
     }
@@ -66,13 +68,31 @@ class Application_Model_StoreExtensionMapper{
             $entry->setId($row->id)
                   ->setStoreId($row->store_id)
                   ->setExtensionId($row->extension_id)
-                  ->setAddedDate($row->added_date);
+                  ->setAddedDate($row->added_date)
+                  ->setBraintreeTransactionId($row->braintree_transaction_id)
+                  ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed);
 
             $entries[] = $entry;
         }
         return $entries;
     }
-    
+
+    public function fetchStoreExtension($store_id, $extension_id) {
+        $result = $this->getDbTable()->fetchStoreExtension($store_id, $extension_id);
+        if (0 == count($result)) {
+            return;
+        }
+        $row = $result->current();
+        $storeExtension = new Application_Model_StoreExtension();
+        $storeExtension->setId($row->id)
+            ->setStoreId($row->store_id)
+            ->setExtensionId($row->extension_id)
+            ->setAddedDate($row->added_date)
+            ->setBraintreeTransactionId($row->braintree_transaction_id)
+            ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed);
+
+        return $storeExtension;
+    }
 }
 /*
  * To change this template, choose Tools | Templates
