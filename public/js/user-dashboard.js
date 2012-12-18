@@ -124,7 +124,7 @@ function updateLabel(row, new_status) {
             data: "domain=" + row.find(".storedomain").val(),
             dataType: "json",
             success: function(json) {
-                row.find("span.statusHolder").html(niceStatus(new_status) + " " + leftTime(json));
+                row.find("span.statusHolder").html(niceStatus(new_status) + " - " + leftTime(json));
             }
         });
     }
