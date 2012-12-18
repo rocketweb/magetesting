@@ -17,7 +17,7 @@ class Application_Model_Task_Papertrail_System_Create extends Application_Model_
 
         $output = array(
             (string) $this->_storeObject->getDomain(),
-            (string) $this->_storeObject->getStoreName(),
+            (string) $this->_storeObject->getDomain(),
             (string) $this->_userObject->getId()
         );
         $message = var_export($output, true);
@@ -25,9 +25,9 @@ class Application_Model_Task_Papertrail_System_Create extends Application_Model_
 
         try { 
             $response = $this->_service->createSystem(
-                (string)$this->_storeObject->getDomain(), 
-                (string)$this->_storeObject->getStoreName(), 
-                (string)$this->_userObject->getId()
+                (string) $this->_storeObject->getDomain(), 
+                (string) $this->_storeObject->getDomain(), 
+                (string) $this->_userObject->getId()
             );
         } catch(Zend_Service_Exception $e) {
             $this->logger->log($e->getMessage(), Zend_Log::CRIT);
