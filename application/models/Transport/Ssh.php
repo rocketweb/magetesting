@@ -142,7 +142,6 @@ extends Application_Model_Transport {
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
 
-        var_dump($output);
         /* TODO:validate if file existss */
         unset($output);
         return true; 

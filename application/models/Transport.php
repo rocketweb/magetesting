@@ -86,22 +86,24 @@ class Application_Model_Transport {
                         return true;
                         
                     } else {
-                        
+                        $this->_errorMessage = 'Password is incorrect';
+                        throw new Application_Model_Transport_Exception($this->_errorMessage);
                         return false;
                     }
                 } else {
                     $this->_errorMessage = 'Username has to be alphanumeric';
-                    var_dump($this->_errorMessage);
+                    throw new Application_Model_Transport_Exception($this->_errorMessage);
                     return false;
                 }
             } else {
                 $this->_errorMessage = 'Hostname is invalid';
-                var_dump($this->_errorMessage);
+                throw new Application_Model_Transport_Exception($this->_errorMessage);
                 return false;
             }
         } else {
             $this->_errorMessage = 'Protocol not supported';
-            var_dump($this->_errorMessage);
+            throw new Application_Model_Transport_Exception($this->_errorMessage);
+            //var_dump($this->_errorMessage);
             return false;
         }
     }
@@ -117,8 +119,8 @@ class Application_Model_Transport {
             $customTransportModel = new $className();
             $customTransportModel->setup($store);
             return $customTransportModel;
-        }
-        var_dump('model transport '.$className.' doesnt exist');
+        }      
+        throw new Application_Model_Transport_Exception('model transport '.$className.' doesnt exist');
         return false;
     }
        
