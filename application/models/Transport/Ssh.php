@@ -10,13 +10,15 @@ extends Application_Model_Transport {
     
     private $_connection;
     
+    
+    
     public function setup(Application_Model_Store &$store){
         
         $this->_storeObject = $store;
         
         parent::setup($store);
         
-	/*TODO: replace 22 with given port*/
+        /*TODO: replace 22 with given port*/
         $this->_connection = ssh2_connect($store->getCustomHost(), 22);
         ssh2_auth_password($this->_connection, $store->getCustomLogin(), $store->getCustomPassword());
         
@@ -29,7 +31,7 @@ extends Application_Model_Transport {
     public function checkProtocolCredentials(){
         
         if (!$this->_connection){
-            return false;
+            throw new Application_Model_Task_Exception('Checking ssh credentials failed');
         }
         else return true;
     }
@@ -43,12 +45,6 @@ extends Application_Model_Transport {
             $customHost .= '/';
         }
         
-        //make sure remote path contains prefix:
-        
-        /*if(substr($customHost, 0, 6)!='ftp://'){
-            $customHost = 'ftp://'.$customHost;
-        }*/
-        
         $this->_customHost = $customHost;
 
         //PATH
@@ -59,26 +55,21 @@ extends Application_Model_Transport {
         }
 
         //make sure remote path does not contain slash at the beginning       
-        if(substr($customRemotePath,0,1)=="/"){
-            $customRemotePath = substr($customRemotePath,1);
-        }
+        $customRemotePath = ltrim($customRemotePath,'/');
+        
         $this->_customRemotePath = $customRemotePath;
        
         //SQL
          //make sure sql file path does not contain slash at the beginning       
         $customSql = $this->_storeObject->getCustomSql();
-        if(substr($customSql,0,1)=="/"){
-            $customSql = substr($customSql,1);
-        }
+        $customSql = ltrim($customSql,'/');
         
         $this->_customSql = $customSql;
         
         //FILE
          //make sure sql file path does not contain slash at the beginning       
         $customFile = $this->_storeObject->getCustomFile();
-        if(substr($customFile,0,1)=="/"){
-            $customFile = substr($customFile,1);
-        }
+        $customFile = ltrim($customFile,'/');
         
         $this->_customFile = $customFile;
         
@@ -87,11 +78,9 @@ extends Application_Model_Transport {
     
     public function downloadFilesystem(){
         
-        if ($this->_storeObject->getCustomFile()!=''){
-            echo 'downandunpack';
+        if ($this->_storeObject->getCustomFile()!=''){          
             return $this->_downloadAndUnpack();
         } else {
-            echo 'downloadinstance';
             return $this->_downloadInstanceFiles();
         }
 
@@ -133,12 +122,12 @@ extends Application_Model_Transport {
        //limit is in bytes!
         if ($duParts[0] == 'du:' && $duParts[1] == 'cannot' && $duParts[1]=='access'){                       
             $this->_errorMessage = 'Couldn\'t find sql data file, will not install queue element';
-            return false;        
+            throw new Application_Model_Task_Exception($this->_errorMessage);
         }
 
         if ($sqlSizeInfo > $this->_sqlFileLimit){
             $this->_errorMessage = 'Sql file is too big';
-            return false;  
+            throw new Application_Model_Task_Exception($this->_errorMessage);
         }
         
         return true;
@@ -189,7 +178,7 @@ extends Application_Model_Transport {
         
         if ($duParts[0] == 'du:' && $duParts[1] == 'cannot' && $duParts[2]=='access'){                       
             $this->_errorMessage = 'Couldn\'t find data file, will not install queue element';
-            return false;        
+            throw new Application_Model_Task_Exception($this->_errorMessage);     
         }
         
         /* Download file*/
@@ -209,7 +198,7 @@ extends Application_Model_Transport {
         var_dump($output);
         /* no matchees found */
         if ( count($output) == 0 ){
-            return false;
+            throw new Application_Model_Task_Exception('app/Mage has not been found');
         }
         
         foreach ($output as $line){
@@ -221,7 +210,7 @@ extends Application_Model_Transport {
         
         /* no /app/Mage.php found */
         if ($mageroot == ''){
-            return false;
+            throw new Application_Model_Task_Exception('/app/Mage has not been found');
         }
 
         /* move files from unpacked dir into our instance location */

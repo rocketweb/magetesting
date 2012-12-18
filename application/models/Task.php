@@ -189,19 +189,7 @@ class Application_Model_Task {
             'creating-papertrail-user' => 'processing',
             'creating-papertrail-system' => 'processing',
         );
-                       
-        /* update store if status is supported */
-        if(in_array($status,$storeStatuses) ){
-            try {
-            
-                //$this->_storeObject->setStatus($status);
-                //$this->db->update('store', array('status' => $status), 'id=' . $this->_storeObject->getId());
-
-            } catch (Exception $e){
-                $this->logger->log('Saving store status failed: ' . $e->getMessage(), Zend_Log::EMERG);
-            }
-        }
-        
+                              
         /* update queue if status is supported */
         if(in_array($status,$queueStatuses) ){
             try {
@@ -222,49 +210,4 @@ class Application_Model_Task {
                 
         return true;
     }
-    
-    /**
-     * @deprecated: use $this->config
-     * Returns config Object
-     * @return Zend_Config
-     */
-    protected function _getConfig(){
-        return $this->config;
-    }
-    
-    /**
-     * @deprecated: use $this->db
-     * @return type
-     */
-    protected function _getDb(){
-        return $this->db;
-    }
-    
-    /**
-     * @deprecated: use $this->filePrefix 
-     * @return type
-     */
-    protected function _getFilePrefix(){
-        return $this->filePrefix;
-    }
-    
-    /**
-     * @deprecated: use $this->logger
-     * @return type
-     */
-    protected function _getLogger(){
-        return $this->logger;
-    }
-    
-    /**
-     * @deprecated: use $this->_storeFolder
-     * @return type
-     */
-    protected function _getStoreFolder(){
-        if(isset($this->_storeFolder)) {
-            return $this->_storeFolder;
-        }
-        return $this->_storeFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';
-    }
-
 }

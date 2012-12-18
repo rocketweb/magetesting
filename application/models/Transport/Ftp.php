@@ -23,7 +23,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
              "".$this->_customHost." 2>&1 | grep 'Logged in!'",$output);
                
         if (!isset($output[0])){
-            return false;
+            throw new Application_Model_Task_Exception('Couldn\'t log in with given ftp credentials');
         }
         return true;
     }
@@ -51,27 +51,21 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             $customRemotePath .= '/';
         }
 
-        //make sure remote path does not contain slash at the beginning       
-        if(substr($customRemotePath,0,1)=="/"){
-            $customRemotePath = substr($customRemotePath,1);
-        }
+        //make sure remote path does not contain slash at the beginning
+        $customRemotePath = ltrim($customRemotePath, '/');
         $this->_customRemotePath = $customRemotePath;
        
         //SQL
          //make sure sql file path does not contain slash at the beginning       
         $customSql = $this->_storeObject->getCustomSql();
-        if(substr($customSql,0,1)=="/"){
-            $customSql = substr($customSql,1);
-        }
+        $customSql = ltrim($customSql, '/');
         
         $this->_customSql = $customSql;
         
         //FILE
          //make sure sql file path does not contain slash at the beginning       
         $customFile = $this->_storeObject->getCustomFile();
-        if(substr($customFile,0,1)=="/"){
-            $customFile = substr($customFile,1);
-        }
+        $customFile = ltrim($customFile,'/');
         
         $this->_customFile = $customFile;
         
@@ -105,7 +99,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
        //limit is in bytes!
         if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){
             
-            return false; //jump to next queue element
+            throw new Application_Model_Task_Exception('/app/Mage has not been found');
         }
         unset($output);
 
@@ -165,13 +159,13 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
        //limit is in bytes!
         if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){                       
             $this->_errorMessage = 'Couldn\'t find sql data file.';
-            return false;        
+            throw new Application_Model_Task_Exception($this->_errorMessage);
         }
         unset($output);
 
         if ($sqlSizeInfo[1] > $this->_sqlFileLimit){
             $this->_errorMessage = 'Sql file is too big.';
-            return false;  
+            throw new Application_Model_Task_Exception($this->_errorMessage);
         }
         
         return true;
@@ -245,7 +239,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         
         /* no matchees found */
         if ( count($output) == 0 ){
-            return false;
+            throw new Application_Model_Task_Exception('/app/Mage has not been found');
         }
         
         foreach ($output as $line){
@@ -257,7 +251,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         
         /* no /app/Mage.php found */
         if ($mageroot == ''){
-            return false;
+            throw new Application_Model_Task_Exception('/app/Mage has not been found');
         }
 
         /* move files from unpacked dir into our store location */
