@@ -4,104 +4,106 @@
 <div class="row">
     <div class="span12">
 		<h1>Store '<?php echo $this->store_name; ?>' Extensions</h1>
-		<div id="extensions">
-			<div class="tab-stripe"></div>
-			<div class="mt_filters">
-				<section id="options" class="clearfix">
-					<div class="btn-toolbar">
-						<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
-			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
-			                <button class="btn btn-small btn-gold" data-option-value=".premium"><i class="icon-star"></i> Premium</button>
-			                <button class="btn btn-small btn-inverse" data-option-value=".free">Free</button>
-						</div>
-						<div class="btn-group option-set option-center" data-toggle="buttons-radio" data-option-key="filter">
-							<button class="btn btn-small btn-all" data-option-value="*">All</button>
-			            	<?php foreach($this->categories as $category): ?>
-			                <button class="btn btn-small" data-option-value=".<?php echo $category->getClass(); ?>"><?php echo $category->getName(); ?></button>
-			            	<?php endforeach; ?>
-						</div>
-						<div class="btn-group option-set pull-right" data-toggle="buttons-radio" data-option-key="filter">
-			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
-			                <button class="btn btn-small" data-option-value=".installed">Installed</button>
-			                <button class="btn btn-small" data-option-value=".notInstalled">Not installed</button>
-						</div>
-					</div>
-			    </section>
-			</div>
-			<div class="extensions_well">
-				<div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
-			    <?php foreach($this->extensions as $extension): ?>
-			        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['store_id'] ? ' installed' : ' notInstalled'); ?>">
-			            <div class="wrapper">
-                            <!-- removing this one for now until some workaround is found -->
-			                	<!--<div class="hover_inner_shadow"></div>-->
-                                
-			                <?php if((float)$extension['price']): ?>
-			                	<?php if((int)$extension['store_id'] AND !(int)$extension['q_id']): ?>
-			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium_installed.png'); ?>" alt="premium" /></div>
-			                	<?php else: ?>
-			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium.png'); ?>" alt="premium" /></div>
-			                	<?php endif; ?>
-			                <?php else: ?>
-			                	<?php if((int)$extension['store_id'] AND !(int)$extension['q_id']): ?>
-			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free_installed.png'); ?>" alt="free" /></div>
-			                	<?php else: ?>
-			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free.png'); ?>" alt="free" /></div>
-			                	<?php endif; ?>
-			                <?php endif; ?>
-			                
-			                <?php if($extension['logo']): ?>
-			                <div class="icon big">
-                                <?php echo $this->Thumbnail($extension['logo'], null, 110, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
-			                </div>
-			                <div class="icon small">
-                                <?php echo $this->Thumbnail($extension['logo'], null, 38, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
-			                </div>
-			                <?php else: ?>
-			                <div class="icon">
-			                    <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
-			                </div>
-			                <?php endif; ?>
-			                
-			                <div class="info">
-			                    <h5><?php echo $extension['name']; ?></h5>
-			                    <p>by <?php echo $extension['author']; ?></p>
-			                </div>
-			                
-			                <div class="extras hidden">
-			                    <p class="description"><?php echo $extension['description']; ?></p>
-		                    <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
-		                        <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View screens</a>
-		                        <!-- START EXTENSION'S SCREENSHOTS -->
-		                        <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions --> 
-		                        <ul class="screenshots hidden">
-		                        <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
-		                            <li data-id="<?php echo $extension['name'].' #'.++$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
-		                        <?php endforeach; ?>
-		                        </ul>
-		                        <!-- END EXTENSION'S SCREENSHOTS -->
-		                    <?php endif; ?>
-		                    <?php if(!(int)$extension['store_id'] OR (int)$extension['q_id']): ?>
-    		                    <div class="progress progress-striped progress-danger pull-right <?php echo (!(int)$extension['store_id'] ? 'hidden' : ''); ?> active" style="width: 100px;height:10px;">
-    		                        <div class="bar" style="width: 100%;"></div>
-    		                    </div>
-		                    <?php endif; ?>
-			                <?php if(!(int)$extension['store_id']): ?>
-			                    <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
-			                <?php elseif((float)$extension['price'] AND !(int)$extension['q_id'] AND !$extension['braintree_transaction_id']): ?>
-    			                <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form'), 'default', true); ?>">
-                                    <input type="hidden" name="pay-for" value="extension" />
-                                    <input type="hidden" name="id" value="<?php echo $extension['id']; ?>" />
-                                    <input type="hidden" name="domain" value="<?php echo $this->store_name; ?>" />
-                                    <button type="submit" class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</button>
-                                </form>
-			                <?php endif; ?>
-			                </div>
-			            </div>
-			        </div>
-			    <?php endforeach; ?>
-			    </div>
-			</div>
+		<div class="form-box">
+    		<div id="extensions" class="box">
+    			<div class="tab-stripe"></div>
+    			<div class="mt_filters">
+    				<section id="options" class="clearfix">
+    					<div class="btn-toolbar">
+    						<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
+    			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
+    			                <button class="btn btn-small btn-gold" data-option-value=".premium"><i class="icon-star"></i> Premium</button>
+    			                <button class="btn btn-small btn-inverse" data-option-value=".free">Free</button>
+    						</div>
+    						<div class="btn-group option-set option-center" data-toggle="buttons-radio" data-option-key="filter">
+    							<button class="btn btn-small btn-all" data-option-value="*">All</button>
+    			            	<?php foreach($this->categories as $category): ?>
+    			                <button class="btn btn-small" data-option-value=".<?php echo $category->getClass(); ?>"><?php echo $category->getName(); ?></button>
+    			            	<?php endforeach; ?>
+    						</div>
+    						<div class="btn-group option-set pull-right" data-toggle="buttons-radio" data-option-key="filter">
+    			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
+    			                <button class="btn btn-small" data-option-value=".installed">Installed</button>
+    			                <button class="btn btn-small" data-option-value=".notInstalled">Not installed</button>
+    						</div>
+    					</div>
+    			    </section>
+    			</div>
+    			<div class="extensions_well">
+    				<div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
+    			    <?php foreach($this->extensions as $extension): ?>
+    			        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['store_id'] ? ' installed' : ' notInstalled'); ?>">
+    			            <div class="wrapper">
+                                <!-- removing this one for now until some workaround is found -->
+    			                	<!--<div class="hover_inner_shadow"></div>-->
+                                    
+    			                <?php if((float)$extension['price']): ?>
+    			                	<?php if((int)$extension['store_id'] AND !(int)$extension['q_id']): ?>
+    			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium_installed.png'); ?>" alt="premium" /></div>
+    			                	<?php else: ?>
+    			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium.png'); ?>" alt="premium" /></div>
+    			                	<?php endif; ?>
+    			                <?php else: ?>
+    			                	<?php if((int)$extension['store_id'] AND !(int)$extension['q_id']): ?>
+    			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free_installed.png'); ?>" alt="free" /></div>
+    			                	<?php else: ?>
+    			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free.png'); ?>" alt="free" /></div>
+    			                	<?php endif; ?>
+    			                <?php endif; ?>
+    			                
+    			                <?php if($extension['logo']): ?>
+    			                <div class="icon big">
+                                    <?php echo $this->Thumbnail($extension['logo'], null, 110, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
+    			                </div>
+    			                <div class="icon small">
+                                    <?php echo $this->Thumbnail($extension['logo'], null, 38, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
+    			                </div>
+    			                <?php else: ?>
+    			                <div class="icon">
+    			                    <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
+    			                </div>
+    			                <?php endif; ?>
+    			                
+    			                <div class="info">
+    			                    <h5><?php echo $extension['name']; ?></h5>
+    			                    <p>by <?php echo $extension['author']; ?></p>
+    			                </div>
+    			                
+    			                <div class="extras hidden">
+    			                    <p class="description"><?php echo $extension['description']; ?></p>
+    		                    <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
+    		                        <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View screens</a>
+    		                        <!-- START EXTENSION'S SCREENSHOTS -->
+    		                        <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions --> 
+    		                        <ul class="screenshots hidden">
+    		                        <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
+    		                            <li data-id="<?php echo $extension['name'].' #'.++$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
+    		                        <?php endforeach; ?>
+    		                        </ul>
+    		                        <!-- END EXTENSION'S SCREENSHOTS -->
+    		                    <?php endif; ?>
+    		                    <?php if(!(int)$extension['store_id'] OR (int)$extension['q_id']): ?>
+        		                    <div class="progress progress-striped progress-danger pull-right <?php echo (!(int)$extension['store_id'] ? 'hidden' : ''); ?> active" style="width: 100px;height:10px;">
+        		                        <div class="bar" style="width: 100%;"></div>
+        		                    </div>
+    		                    <?php endif; ?>
+    			                <?php if(!(int)$extension['store_id']): ?>
+    			                    <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
+    			                <?php elseif((float)$extension['price'] AND !(int)$extension['q_id'] AND !$extension['braintree_transaction_id']): ?>
+        			                <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form'), 'default', true); ?>">
+                                        <input type="hidden" name="pay-for" value="extension" />
+                                        <input type="hidden" name="id" value="<?php echo $extension['id']; ?>" />
+                                        <input type="hidden" name="domain" value="<?php echo $this->store_name; ?>" />
+                                        <button type="submit" class="btn btn-success btn-mini pull-right buy"><i class="icon icon-white icon-shopping-cart"></i> Buy</button>
+                                    </form>
+    			                <?php endif; ?>
+    			                </div>
+    			            </div>
+    			        </div>
+    			    <?php endforeach; ?>
+    			    </div>
+    			</div>
+    		</div>
 		</div>
 	</div>
 </div>
