@@ -82,29 +82,14 @@
             <div class="accordion-group" data-active="0">
                 <div class="accordion-heading">
                     <div class="tab-stripe"></div>
-                    <div class="accordion-toggle store-toggle <?php echo (substr($item['status'],0,10)=='installing' || $item['status']=='pending')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>">
+                    <div class="accordion-toggle store-toggle <?php echo ($item['status'] != 'ready' && $item['status'] != 'error')? 'installing' : ''; ?>" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $key; ?>" data-status="<?php echo ($item['status']) ?>">
                     <?php 
                         $progressClass = '';
                         switch($item['status']): 
-                            case 'ready':
-                                $progressClass = 'progress-success';
-                            break; case 'pending':
-                                $progressClass = 'progress-info';
-                            break; case 'closed': 
-                                $progressClass = 'progress-danger';
-                            break; case 'removing-magento': 
-                                   case 'installing-extension':
-                                   case 'installing-magento':
-                                   case 'downloading-magento':
-                                   case 'committing-revision': 
-                                   case 'rolling-back-revision':
-                                   case 'deploying-revision': 
-                                   case 'creating-papertrail-user': 
-                                   case 'creating-papertrail-system': 
-                               $progressClass = '';
-                           break; case 'error': 
+                           case 'error': 
                                $progressClass = 'progress-danger';
-                           break; default: 
+                               break; 
+                           default: 
                                $progressClass = 'progress-info';
                         endswitch;
                     ?>
@@ -117,7 +102,8 @@
                                 <?php /*if($item['status'] == 'pending'): ?>
                                     In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
                                 <?php else:*/ ?>
-                                    <?php echo $this->escape(ucfirst($item['status'])); ?>
+                                    <?php echo $this->niceStatus($item['status']); ?>
+                                    <?php echo $this->leftTime($this->queueCounter[$item['id']]); ?>
                                 </span>
                             </div>
                             <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?>">
@@ -130,7 +116,7 @@
                                     data-admin-password="<?php echo $item['backend_password']; ?>"
                                 ><i class="icon icon-wrench"></i> Admin Panel</a>
                             	<a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
-                        	</div>
+                            </div>
                         </div>
                         <div class="span6 left-content">
                             <div class="arrow pull-left"><i class="icon-chevron-down icon-blue"></i></div>

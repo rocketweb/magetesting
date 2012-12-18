@@ -69,8 +69,9 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
     public function getPendingItems()
     {
         $select = $this->select()
-        ->where('status = ?', 'pending');
-    
+                        ->where('status != ?', 'ready')
+                        ->where('status != ?', 'error');
+
         return $this->fetchAll($select);
     }
        
@@ -98,11 +99,12 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
     
         $select = $this->select()
                         ->setIntegrityCheck(false)
-                       ->from($this->_name, array('num' => 'count(store.id)'))
-                       ->where("store.id <= (SELECT id FROM store WHERE domain = '".$store_name."')")
-                ->where('status = ?','pending');
+                        ->from($this->_name, array('num' => 'count(store.id)'))
+                        ->where("store.id <= (SELECT id FROM store WHERE domain = '".$store_name."')")
+                        ->where('status != ?', 'ready')
+                        ->where('status != ?', 'error');
                        
-	//Zend_Debug::Dump($select->assemble());
+//	Zend_Debug::Dump($select->assemble());
         return $this->fetchRow($select);
     }
 }

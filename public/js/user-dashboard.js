@@ -82,73 +82,57 @@ $(document).ready(function(){
     //refresh statuses
     setInterval(updateStatuses,5000);
 
-function updateStatuses(){
+function updateStatuses() {
  
-  $("div.accordion-toggle.installing").each(function(){
-  
+  $("div.accordion-toggle.installing").each(function() {
       var row = $(this);
-              
+
       //create 
       domain = $(this).find(".storedomain").val();
       requests[domain];
 
       //abort last request if it is still in queue
       if(typeof requests[domain] !== "undefined"){
-      requests[domain].abort();
+        requests[domain].abort();
       }
-      
+
       //make new request
       requests[domain] = $.ajax({
             type: "POST",
             url: "/queue/getstatus",
             data: "domain=" + $(this).find(".storedomain").val(),
             dataType: "json",
-            success: function(json){
-                updateLabel(row,json);
+            success: function(json) {
+                updateLabel(row, json);
             }
       });
   });
 }
 
-function updateLabel(row,new_status){
-    var labels = {
-        "pending": "Pending", /* shouldn\'t update to this status anyway */
-        "installing": "Installing",
-        "ready": "Ready",
-        "closed" : "Closed",
-        "error": "Error",
-        "installing-extension": "Installing Extension",
-        "installing-magento": "Installing Magento",
-        "installing-samples" : "Installing Sample Data",
-        "installing-user" : "Installing User",
-        "installing-files" : "Installing Files",
-        "installing-data" : "Installing Data/Database"
+function updateLabel(row, new_status) {
+    if(new_status != row.data('status')) {
+        location.reload();
     }
-    
-        if (new_status=="ready"){
-            //remove progress bar and just insert label
-            row.find("span.bar").parent().parent().html("<span class=\"span2 progress progress-success progress-striped pull-right\" style=\"height:12px; margin-bottom: 0px\"><span class=\"bar\" style=\"width: 100%;\"></span></span><span class=\"pending pull-right statusHolder\" rel=\"popover\" data-placement=\"bottom\" data-original-title=\"A Title\" data-content=\"\">" + labels[new_status] + "</span>");
-            location.reload();
-        } else if(new_status != "pending") {
-            //update progress bar status
-            row.find("span.statusHolder").html("" + labels[new_status] + "");
-        } else {
-            //update pending time counter
+
+    if (new_status == "ready" || new_status == "error") {
+        location.reload();
+    } else {
+        //update pending time counter
         $.ajax({
             type: "POST",
-            url: "/queue/getminutesleft",
+            url: "/queue/gettimeleft",
             data: "domain=" + row.find(".storedomain").val(),
             dataType: "json",
-            success: function(json){
-                row.find("span.statusHolder").html("In Queue - " + json + " minutes left");
+            success: function(json) {
+                row.find("span.statusHolder").html(niceStatus(new_status) + " - " + leftTime(json) + " left");
             }
-      });
-        }
-        
-        //remove installing label now when everything is updated
-        if (new_status.substr(0,10) != "installing" && new_status != "pending"){
-            row.removeClass("installing");
-        }
+        });
+    }
+
+    //remove installing label now when everything is updated
+    if (new_status != "ready" && new_status != "error") {
+        row.removeClass("installing");
+    }
 }
 /* status auto-update end*/
 
@@ -178,3 +162,32 @@ $(document).ready(function(){
     });
 });
 /* commit modal handle end */
+
+function niceStatus(status) {
+    return (status.replace(/-/g, ' ') + '').replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function ($1) {
+        return $1.toUpperCase();
+  });
+}
+
+function leftTime(seconds) {
+    string = '';
+    denominator = 60;
+    
+    if(seconds > denominator) {
+        sec = seconds % denominator;
+        min = Math.floor(seconds/denominator);
+                    
+        string = min + ' minute';
+                    
+        if(min > 1) {
+            string += 's';
+        }
+                    
+        string += ' ' + sec + ' seconds';
+                    
+    } else {
+        string = seconds + ' seconds';
+    }
+    
+    return string;
+}

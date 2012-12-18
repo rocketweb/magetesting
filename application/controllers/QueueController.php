@@ -639,23 +639,23 @@ class QueueController extends Integration_Controller_Action {
         } 
     }
     
-    public function getminutesleftAction() {
+    public function gettimeleftAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $request = Zend_Controller_Front::getStore()->getRequest();
+        $request = Zend_Controller_Front::getInstance()->getRequest();
         $domain = $request->getParam('domain', null);
         if ($request->isPost() && $domain!=null) {
             
             $timeExecution = $this->getInvokeArg('bootstrap')
-                        ->getResource('config')
-                ->magento
-                ->storeTimeExecution;
+                                  ->getResource('config')
+                                  ->magento
+                                  ->storeTimeExecution;
             
             $storeModel = new Application_Model_Store();
             $storeItem = $storeModel->findPositionByName($domain);
             
-            echo Zend_Json_Encoder::encode($storeItem->num*$timeExecution);
+            echo Zend_Json_Encoder::encode($storeItem->num * $timeExecution);
         } 
     }
     
