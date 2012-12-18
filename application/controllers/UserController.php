@@ -547,35 +547,24 @@ class UserController extends Integration_Controller_Action
          */
         $token = sha1( 
             implode(':', array(
-                'MarcinRocketWeb', 
-                'MarcinRocketWeb', 
+                $store->user_id, 
+                $store->user_id, 
                 $config->ssoSalt, 
                 $timestamp
              )
         ));
         
         $form = new Application_Form_PapertrailSession();
-//        $form->populate(array(
-//            'user_id'     => $store->user_id,
-//            'account_id'  => $store->user_id,
-//            'system_id'   => $domain,
-//            'token'       => $token,
-//            'distributor' => $config->distributorName,
-//            'timestamp'   => $timestamp,
-//            'email'       => $this->auth->getIdentity()->email
-//        ));
-        
         $form->populate(array(
-            'user_id'     => 'MarcinRocketWeb',
-            'account_id'  => 'MarcinRocketWeb',
-            'system_id'   => '2',
+            'user_id'     => $store->user_id,
+            'account_id'  => $store->user_id,
+            'system_id'   => $domain,
             'token'       => $token,
             'distributor' => $config->distributorName,
             'timestamp'   => $timestamp,
-            'email'       => 'marcin@rocketweb.com'
+            'email'       => $this->auth->getIdentity()->email
         ));
-        
-//        Zend_Debug::dump($form->getValues());
+
         
         $this->view->form = $form;
     }
