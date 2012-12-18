@@ -351,8 +351,14 @@ class UserController extends Integration_Controller_Action
                 $user = new Application_Model_User();
                 switch($user->activateUser($id, $hash)) {
                     case 0:
-                        $flashMessage = 'Activation completed. You can now log in into your account.';
-                        $redirect['action'] = 'login';
+                        $user = new Application_Model_User();
+                        $user->find($id);
+                        
+                        $auth = Zend_Auth::getInstance();
+                        $auth->getStorage()->write((object)$user->__toArray());
+                        
+                        $flashMessage = 'Activation completed. You have been logged in successfully.';
+                        $redirect['action'] = 'dashboard';
                         break;
                     case 1:
                         // already set in initial variables
