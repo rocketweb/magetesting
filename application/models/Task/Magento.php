@@ -197,7 +197,9 @@ extends Application_Model_Task {
         try {
             
             $DbManager = new Application_Model_DbTable_Privilege($this->db, $this->config);
-            $DbManager->createDatabase($this->_userObject->getLogin() . '_' . $this->_storeObject->getDomain());
+            if (!$DbManager->checkIfDatabaseExists()){
+                $DbManager->createDatabase($this->_userObject->getLogin() . '_' . $this->_storeObject->getDomain());
+            }
 
             if (!$DbManager->checkIfUserExists($this->_userObject->getLogin())) {
                 $DbManager->createUser($this->_userObject->getLogin());

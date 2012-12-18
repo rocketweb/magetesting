@@ -334,24 +334,6 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
                                        
-                    //magetesting user creates database
-                    try {
-                        $db = Zend_Db_Table::getDefaultAdapter();
-                        $DbManager = new Application_Model_DbTable_Privilege($db, $this->getInvokeArg('bootstrap')
-                                                ->getResource('config'));
-                        $DbManager->createDatabase($this->auth->getIdentity()->login . '_' . $storeModel->getDomain());
-
-                        if (!$DbManager->checkIfUserExists($this->auth->getIdentity()->login)) {
-                            $DbManager->createUser($this->auth->getIdentity()->login);
-                        }
-                    } catch (PDOException $e) {
-                        $message = 'Could not create database for store, aborting';
-                        echo $message;
-                        if ($log = $this->getLog()) {
-                            $log->log($message, LOG_ERR);
-                        }
-                        throw $e;
-                    }
                     //stop adding store
                     $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'You have successfully added your custom store to queue.'));
                     return $this->_helper->redirector->gotoRoute(array(
