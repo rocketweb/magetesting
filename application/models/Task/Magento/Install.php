@@ -6,18 +6,18 @@ implements Application_Model_Task_Interface {
 
     protected $_adminemail = '';
 
-    public function setup(Application_Model_Queue &$queueElement) {
+    public function setup(Application_Model_Queue $queueElement) {
         parent::setup($queueElement);
         
         /*TODO: check if we inherit this from parent */
         $this->_adminemail = $this->config->magento->adminEmail; //fetch from zend config       
     }
     
-    public function process(Application_Model_Queue &$queueElement = null) {
+    public function process(Application_Model_Queue $queueElement = null) {
         
         $startCwd = getcwd();
         
-        $this->_updateStatus('installing-magento');
+        $this->_updateStoreStatus('installing-magento');
         $this->_createSystemAccount();
               
         $this->_prepareFilesystem();
@@ -47,8 +47,7 @@ implements Application_Model_Task_Interface {
         chdir($startCwd);
 
         $this->_sendStoreReadyEmail();
-        
-        $this->_updateStatus('ready');
+              
     }
 
     protected function _prepareFileSystem() {

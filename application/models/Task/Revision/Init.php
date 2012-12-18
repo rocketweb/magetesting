@@ -4,12 +4,11 @@ class Application_Model_Task_Revision_Init
 extends Application_Model_Task_Revision 
 implements Application_Model_Task_Interface {
    
-    public function process(Application_Model_Queue &$queueElement = null) {        
-        $this->_updateStatus('committing-revision');
+    public function process(Application_Model_Queue $queueElement = null) {        
+        $this->_updateStoreStatus('committing-revision');
         $this->_prepareGitIgnore();
         $this->_createDeploymentDir();
         $this->_initRepo();
-        $this->_updateStatus('ready');
     }
 
     /**

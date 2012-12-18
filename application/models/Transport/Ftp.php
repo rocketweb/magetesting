@@ -23,7 +23,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
              "".$this->_customHost." 2>&1 | grep 'Logged in!'",$output);
                
         if (!isset($output[0])){
-            throw new Application_Model_Task_Exception('Couldn\'t log in with given ftp credentials');
+            throw new Application_Model_Transport_Exception('Couldn\'t log in with given ftp credentials');
         }
         return true;
     }
@@ -98,8 +98,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
 
        //limit is in bytes!
         if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){
-            
-            throw new Application_Model_Task_Exception('/app/Mage has not been found');
+            throw new Application_Model_Transport_Exception('/app/Mage has not been found');
         }
         unset($output);
 
@@ -159,13 +158,13 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
        //limit is in bytes!
         if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){                       
             $this->_errorMessage = 'Couldn\'t find sql data file.';
-            throw new Application_Model_Task_Exception($this->_errorMessage);
+            throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
         unset($output);
 
         if ($sqlSizeInfo[1] > $this->_sqlFileLimit){
             $this->_errorMessage = 'Sql file is too big.';
-            throw new Application_Model_Task_Exception($this->_errorMessage);
+            throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
         
         return true;
@@ -239,7 +238,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         
         /* no matchees found */
         if ( count($output) == 0 ){
-            throw new Application_Model_Task_Exception('/app/Mage has not been found');
+            throw new Application_Model_Transport_Exception('/app/Mage has not been found');
         }
         
         foreach ($output as $line){
@@ -251,7 +250,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         
         /* no /app/Mage.php found */
         if ($mageroot == ''){
-            throw new Application_Model_Task_Exception('/app/Mage has not been found');
+            throw new Application_Model_Transport_Exception('/app/Mage has not been found');
         }
 
         /* move files from unpacked dir into our store location */

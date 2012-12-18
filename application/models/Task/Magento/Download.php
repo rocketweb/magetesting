@@ -8,14 +8,14 @@ implements Application_Model_Task_Interface {
     protected $_customSql = '';
     protected $_customRemotePath = ''; 
     
-    public function setup(Application_Model_Queue &$queueElement){
+    public function setup(Application_Model_Queue $queueElement){
         parent::setup($queueElement);
     }
     
-    public function process(Application_Model_Queue &$queueElement = null) {
+    public function process(Application_Model_Queue $queueElement = null) {
         $startCwd = getcwd();
 
-        $this->_updateStatus('downloading-magento');
+        $this->_updateStoreStatus('downloading-magento');
         $this->_createSystemAccount();
 
         chdir($this->_storeFolder);
@@ -23,6 +23,7 @@ implements Application_Model_Task_Interface {
         chdir($this->_domain);
 
         /* Instantiate Transport Model */
+        
         $transportModel = new Application_Model_Transport();
         $transportModel = $transportModel->factory($this->_storeObject);
         if (!$transportModel){
@@ -31,27 +32,37 @@ implements Application_Model_Task_Interface {
             throw Application_Model_Task_Exception($message);
         }
         
-        //do a sample connection to wget to check if protocol credentials are ok
-        if (!$transportModel->checkProtocolCredentials()) {
-            $message = 'Credentials to external server are incorrect.';
-            $this->logger->log($message, Zend_Log::ERR);
-            throw new Application_Model_Task_Exception($message);
+        //do a sample connection to check if protocol credentials are ok
+        try {
+            $transportModel->checkProtocolCredentials();
+        } catch (Application_Model_Transport_Exception $e) {
+            $this->logger->log($e->getMessage(),Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($e->getMessage());
         }
-
-        if (!$transportModel->checkDatabaseDump()) {
-            $message = $transportModel->getError();
-            $this->logger->log($message, Zend_Log::ERR);
-            throw new Application_Model_Task_Exception($message);
+        
+        
+        try {
+            $transportModel->checkDatabaseDump();
+        } catch (Application_Model_Transport_Exception $e) {
+            $this->logger->log($e->getMessage(),Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($e->getMessage());
         }
-
-        if (!$transportModel->downloadFilesystem()) {
-            $message = 'Couldn\'t find app/Mage.php file data.';
-            $this->logger->log($message, Zend_Log::ERR);
-            throw new Application_Model_Task_Exception($message);
+        
+        
+        try {
+            $transportModel->downloadFilesystem();
+        } catch (Application_Model_Transport_Exception $e) {
+            $this->logger->log($e->getMessage(),Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($e->getMessage());
         }
-
-        $transportModel->downloadDatabase();
-
+        
+        try {
+            $transportModel->downloadDatabase();
+        } catch (Application_Model_Transport_Exception $e) {
+            $this->logger->log($e->getMessage(),Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($e->getMessage());
+        }
+        
         //update custom variables using data from transport
         $this->_customHost = $transportModel->getCustomHost();
         $this->_customSql = $transportModel->getCustomSql();
@@ -120,7 +131,6 @@ implements Application_Model_Task_Interface {
         $this->db->update('store', array('revision_count' => '0'), 'id=' . $this->_storeObject->getId());
         $this->_storeObject->setRevisionCount(0);
         
-        $this->_updateStatus('ready');
     }
 
         /* move to transport class */

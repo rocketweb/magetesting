@@ -4,7 +4,7 @@ class Application_Model_Task_Revision_Deploy
 extends Application_Model_Task_Revision 
 implements Application_Model_Task_Interface {
 
-    public function setup(Application_Model_Queue &$queueElement) {
+    public function setup(Application_Model_Queue $queueElement) {
         parent::setup($queueElement);
         
         $params = $this->_queueObject->getTaskParams();
@@ -14,11 +14,10 @@ implements Application_Model_Task_Interface {
         $this->_revisionObject  = $revisionModel;
     }
     
-    public function process(Application_Model_Queue &$queueElement = null) {
-        $this->_updateStatus('deploying-revision');
+    public function process(Application_Model_Queue $queueElement = null) {
+        $this->_updateStoreStatus('deploying-revision');
         $this->_deploy();
         $this->_updateFilename();
-        $this->_updateStatus('ready');
     }
 
     protected function _deploy(){

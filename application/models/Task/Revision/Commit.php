@@ -8,7 +8,7 @@ implements Application_Model_Task_Interface {
    
     protected $_dbBackupPath = '';
 
-    public function setup(Application_Model_Queue &$queueElement){
+    public function setup(Application_Model_Queue $queueElement){
         parent::setup($queueElement);
         
         $extensionModel = new Application_Model_Extension();
@@ -17,8 +17,8 @@ implements Application_Model_Task_Interface {
                 
     }
     
-    public function process(Application_Model_Queue &$queueElement = null) {
-        $this->_updateStatus('commiting-revision');
+    public function process(Application_Model_Queue $queueElement = null) {
+        $this->_updateStoreStatus('commiting-revision');
               
         $this->_createDbBackup();
         if ($this->_commit()){
@@ -26,7 +26,6 @@ implements Application_Model_Task_Interface {
             $this->_insertRevisionInfo();
             $this->_updateRevisionCount('+1');
         }
-        $this->_updateStatus('ready');
     }
 
     protected function _commit() {

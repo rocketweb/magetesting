@@ -151,63 +151,31 @@ class Application_Model_Task {
         
     }
        
-    protected function _updateStatus($status,$errorMessage=null){
-        
-        /**
-         * There are three status groups: 
-         * - store statuses - used on user/dashboard
-         * - queue statuses - used by worker.php
-         * - store_extension statuses (not yet implemented) - used on queue/extensions
-         */        
-        
+    protected function _updateStoreStatus($status){
         /* store */
-        $storeStatuses = array(   
+        $storeStatuses = array(
             'ready',
             'removing-magento',
             'error',
             'installing-extension',
             'installing-magento',
+            'downloading-magento',
             'committing-revision',
             'deploying-revision',
             'rolling-back-revision',
             'creating-papertrail-user',
             'creating-papertrail-system',
+            'removing-papertrail-user',
+            'removing-papertrail-system'
         );
-
-        $queueStatuses = array(
-            'pending' => 'pending',
-            'processing' => 'processing',
-            'ready' => 'ready',
-            
-            /* to support status update on items */
-            'removing-magento' => 'processing',
-            'installing-extension' => 'processing',
-            'installing-magento' => 'processing',
-            'committing-revision' => 'processing',
-            'deploying-revision' => 'processing',
-            'rolling-back-revision' => 'processing',
-            'creating-papertrail-user' => 'processing',
-            'creating-papertrail-system' => 'processing',
-        );
-                              
-        /* update queue if status is supported */
-        if(in_array($status,$queueStatuses) ){
+        
+        if(in_array($status,$storeStatuses) ){
             try {
-                $this->_queueObject->setStatus($queueStatuses[$status]);
-                $this->db->update('queue', array('status' => $queueStatuses[$status]), 'id=' . $this->_queueObject->getId());
-                
+                $this->_storeObject->setStatus($status);
+                $this->db->update('store', array('status' => $status), 'id=' . $this->_queueObject->getId());
             } catch (Exception $e){
-                $this->logger->log('Saving queue status failed: ' . $e->getMessage(), Zend_Log::EMERG);
+                $this->logger->log('Saving store status failed: ' . $e->getMessage(), Zend_Log::EMERG);
             }
         }
-        
-        
-        if ($errorMessage!=null){
-            $this->db->update('store', array('error_message' => $errorMessage), 'id=' . $this->_storeObject->getId());
-            $this->logger->log($errorMessage, Zend_Log::DEBUG);
-        }
-        
-                
-        return true;
     }
 }

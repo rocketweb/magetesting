@@ -9,7 +9,7 @@ extends Application_Model_Task {
     protected $_dbname = '';
     protected $_systempass = '';
     
-    public function setup(Application_Model_Queue &$queueElement){
+    public function setup(Application_Model_Queue $queueElement){
         
         parent::setup($queueElement);
                 

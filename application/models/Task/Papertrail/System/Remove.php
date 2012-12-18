@@ -12,8 +12,8 @@ class Application_Model_Task_Papertrail_User_Remove
 extends Application_Model_Task_Papertrail 
 implements Application_Model_Task_Interface {
 
-    public function process() {
-        $this->_updateStatus('removing-papertrail-system');
+    public function process(Application_Model_Queue $queueElement = null) {
+        $this->_updateStoreStatus('removing-papertrail-system');
 
         $this->logger->log('Removing papertrail system.', Zend_Log::INFO);
 
@@ -39,7 +39,6 @@ implements Application_Model_Task_Interface {
             $this->_storeObject->save();
         }
 
-        $this->_updateStatus('ready');
     }
 
 }

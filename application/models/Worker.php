@@ -22,6 +22,7 @@ class Application_Model_Worker {
             $customTaskModel = new $className($this->config,$this->db);       
             $customTaskModel->setup($queueElement);
             $this->db->update('queue', array('status' => 'processing'), 'id = ' . $queueElement->getId());
+            $queueElement->setStatus('processing');
             $customTaskModel->process();
 
             /* TODO: remove this if after all exceptions are implemented on errors */

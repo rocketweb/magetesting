@@ -8,10 +8,12 @@
  * @copyright  Copyright (c) 2012 RocketWeb USA Inc. (http://www.rocketweb.com)
  * @author     Marcin Kazimierczak <marcin@rocketweb.com>
  */
-class Application_Model_Task_Papertrail_System_Create extends Application_Model_Task_Papertrail implements Application_Model_Task_Interface {
+class Application_Model_Task_Papertrail_System_Create 
+extends Application_Model_Task_Papertrail 
+implements Application_Model_Task_Interface {
 
-    public function process() {
-        $this->_updateStatus('creating-papertrail-system');
+    public function process(Application_Model_Queue $queueElement = null) {
+        $this->_updateStoreStatus('creating-papertrail-system');
 
         $this->logger->log('Creating papertrail system.', Zend_Log::INFO);
 
@@ -41,7 +43,6 @@ class Application_Model_Task_Papertrail_System_Create extends Application_Model_
                                   ->save();
         }
         
-        $this->_updateStatus('ready');
     }
 
 }

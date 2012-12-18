@@ -12,8 +12,8 @@ class Application_Model_Task_Papertrail_User_Create
 extends Application_Model_Task_Papertrail 
 implements Application_Model_Task_Interface {
 
-    public function process() {
-        $this->_updateStatus('creating-papertrail-user');
+    public function process(Application_Model_Queue $queueElement = null) {
+        $this->_updateStoreStatus('creating-papertrail-user');
 
         $this->logger->log('Creating papertrail user.', Zend_Log::INFO);
 
@@ -45,7 +45,6 @@ implements Application_Model_Task_Interface {
                               ->save();
         }
         
-        $this->_updateStatus('ready');
     }
     
 }

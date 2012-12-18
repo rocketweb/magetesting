@@ -6,7 +6,7 @@ implements Application_Model_Task_Interface {
 
     protected $_extensionObject=  '';
     
-    public function setup(Application_Model_Queue &$queueElement){
+    public function setup(Application_Model_Queue $queueElement){
         parent::setup($queueElement);
         
         $extensionModel = new Application_Model_Extension();
@@ -16,7 +16,7 @@ implements Application_Model_Task_Interface {
     
     public function process(Application_Model_Queue $queueElement = null) {
                
-        $this->_updateStatus('installing-extension');
+        $this->_updateStoreStatus('installing-extension');
         
         //get store data
         $magentoVersion = $this->_versionObject->getVersion();
@@ -30,10 +30,7 @@ implements Application_Model_Task_Interface {
         
         //clear store cache
         $this->_clearStoreCache();
-        
-        //set extension as installed
-        $this->_updateStatus('ready');        
-                
+                        
     }
 
     protected function _checkPackage() {
