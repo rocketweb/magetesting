@@ -62,7 +62,7 @@ implements Application_Model_Task_Interface {
         if ($this->_storeObject->getSampleData() && !file_exists(APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz')) {
             $message = 'Couldn\'t find sample data file, will not install queue element';
             $this->logger->log($message, Zend_Log::CRIT);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
 
         $this->logger->log('Preparing store directory.', Zend_Log::INFO);
@@ -75,7 +75,7 @@ implements Application_Model_Task_Interface {
         if (!file_exists($this->_storeFolder . '/' . $this->_domain) || !is_dir($this->_storeFolder . '/' . $this->_domain)) {
             $message = 'Store directory does not exist, aborting.';
             $this->logger->log($message, Zend_Log::CRIT);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
 
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
@@ -89,7 +89,7 @@ implements Application_Model_Task_Interface {
         if (!file_exists(APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz')) {
             $message = 'Magento package ' . $this->_magentoEdition . ' ' . $this->_magentoVersion . ' does not exist';
             $this->logger->log($message, Zend_Log::EMERG);
-            throw new Exception($message);
+            throw new Application_Model_Task_Exception($message);
         }
 
         $this->logger->log('Copying Magento package to store directory.', Zend_Log::INFO);
