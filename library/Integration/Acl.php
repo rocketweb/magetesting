@@ -26,6 +26,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_user'));
         $this->add(new Zend_Acl_Resource('default_queue'));
         $this->add(new Zend_Acl_Resource('default_extension'));
+        $this->add(new Zend_Acl_Resource('default_extensions'));
         $this->add(new Zend_Acl_Resource('default_my-account'));
         /**
          * Deny for all (we use white list)
@@ -46,6 +47,7 @@ class Integration_Acl extends Zend_Acl
          */
         $this->allow('guest', 'default_error', array('error'));
         $this->allow('guest', 'default_index', array('index'));
+        $this->allow('guest', 'default_extensions', array('index'));
         $this->allow('guest', 'default_user', array(
                 'login', 'password-recovery', 'register', 'activate', 'reset-password', 'set-new-password'
         ));
@@ -55,6 +57,7 @@ class Integration_Acl extends Zend_Acl
          */
         $this->allow('free-user', 'default_error', array('error'));
         $this->allow('free-user', 'default_index', array('index'));
+        $this->allow('guest', 'default_extensions', array('index'));
         $this->allow('free-user', 'default_queue', array(
                 'add','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus'
         ));
@@ -63,13 +66,14 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('free-user', 'default_my-account');
 
-        $this->allow('free-user', 'default_braintree', array('form','response'));
+        $this->allow('free-user', 'default_braintree', array('form','response','change-plan'));
 
         /**
          * Set up privileges for commercial-user
          */
         $this->allow('commercial-user', 'default_error', array('error'));
         $this->allow('commercial-user', 'default_index', array('index'));
+        $this->allow('guest', 'default_extensions', array('index'));
         $this->allow('commercial-user', 'default_queue', array(
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
@@ -79,13 +83,14 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit', 'papertrail'
         ));
         $this->allow('commercial-user', 'default_my-account');
-        $this->allow('commercial-user', 'default_braintree', array('form','response'));
+        $this->allow('commercial-user', 'default_braintree', array('form','response','change-plan'));
         
         /**
          * Set up privileges for awaiting-user
          */
         $this->allow('awaiting-user', 'default_error', array('error'));
         $this->allow('awaiting-user', 'default_index', array('index'));
+        $this->allow('guest', 'default_extensions', array('index'));
         $this->allow('awaiting-user', 'default_queue', array(
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
@@ -95,7 +100,7 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('awaiting-user', 'default_my-account');
-        $this->allow('awaiting-user', 'default_braintree', array('form','response'));
+        $this->allow('awaiting-user', 'default_braintree', array('form','response','change-plan'));
         
     }
 

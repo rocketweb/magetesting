@@ -78,6 +78,17 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
+    public function fetchFullListOfExtensions()
+    {
+        $select = 
+            $this->select()
+                 ->from(array('e' => $this->_name))
+                 ->setIntegrityCheck(false)
+                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e.category_id', array('ec.class as category_class'));
+        //var_dump($select->__toString());die;
+        return $this->fetchAll($select);
+    }
+
     public function findInstalled($store)
     {
         $select = $this->select()

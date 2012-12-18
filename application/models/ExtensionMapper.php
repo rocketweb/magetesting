@@ -148,8 +148,12 @@ class Application_Model_ExtensionMapper {
 
         return $this->getDbTable()->fetchStoreExtensions($store);
     }
-    
-    public function findByFilters(array $filters, Application_Model_Extension $extension){    
+
+    public function fetchFullListOfExtensions() {
+        return $this->getDbTable()->fetchFullListOfExtensions();
+    }
+
+    public function findByFilters(array $filters, Application_Model_Extension $extension){
         $row = $this->getDbTable()->findByFilters($filters);
         if (empty($row)) {
             return;

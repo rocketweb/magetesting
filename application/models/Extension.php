@@ -313,7 +313,20 @@ class Application_Model_Extension {
         }
         return $extensions;
     }
-    
+
+    public function fetchFullListOfExtensions(){
+        $extensions = $this->getMapper()->fetchFullListOfExtensions()->toArray();
+        foreach($extensions as $key => $extension) {
+            $extensions[$key]['screenshots'] = array();
+            $screenshots = $this->fetchScreenshots($extension['id']);
+            if($screenshots) {
+                foreach($screenshots as $screenshot) {
+                    $extensions[$key]['screenshots'][] = $screenshot->getImage();
+                }
+            }
+        }
+        return $extensions;
+    }
     public function getInstalledForStore($store_name){
         return $this->getMapper()->getInstalledForStore($store_name);
     }
