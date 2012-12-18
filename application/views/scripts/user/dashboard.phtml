@@ -102,8 +102,10 @@
                                 <?php /*if($item['status'] == 'pending'): ?>
                                     In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
                                 <?php else:*/ ?>
-                                    <?php echo $this->niceStatus($item['status']); ?> - 
-                                    <?php echo $this->leftTime($this->queueCounter[$item['id']]); ?>
+                                    <?php echo $this->niceStatus($item['status']); ?> 
+                                    <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
+                                        - <?php echo $this->leftTime($this->queueCounter[$item['id']]); ?>
+                                    <?php endif; ?>
                                 </span>
                             </div>
                             <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?>">
