@@ -141,6 +141,7 @@
                                 No
                             <?php endif; ?>
                             </div>
+                            <div class="span3"><strong>Added:</strong> <?php echo date("M n, Y H:i A",strtotime($item['created_at'])); ?></div>
                         </div>
                         <p class="description"><?php echo $item['description']; ?></p>
                         <div class="row">
