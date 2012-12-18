@@ -22,9 +22,10 @@ class BraintreeController extends Integration_Controller_Action
         Braintree_Configuration::privateKey('e87aea495ca0f8dfab7137f52b9adf26');
     }
 
-    // @todo: I think we should concat form and response due to error reporting
-    // @todo: We should refactor the code to remove so many redirections
-    // @todo: maybe by throwing Exceptions with some message or special variable
+    // @todo: I think we should concat form and response due to error reporting.
+    // @todo: We should refactor the code to remove so many redirections,
+    // @todo: maybe by throwing Exceptions with some message or special variables
+    // @todo: we check whether extension exist in store in response but we should do that also for form etc
     public function formAction() {
         $message = '';
         $form = $this->_getParam('pay-for');
@@ -73,7 +74,7 @@ class BraintreeController extends Integration_Controller_Action
                     ), 'default', true
                 );
             }
-            // display choosen form
+            // display chosen form
             $address = array();
             if((int)$this->auth->getIdentity()->id) {
                 $user = new Application_Model_User();
@@ -88,6 +89,22 @@ class BraintreeController extends Integration_Controller_Action
                         'state'       => $user->getState(),
                         'country'     => $user->getCountry()
                     );
+
+                    // Do not allow user to change his plan before braintree settle last transaction
+                    if($user->hasPlanActive() AND !(int)$user->getBraintreeTransactionConfirmed()) {
+                        $this->_helper->flashMessenger(
+                            array(
+                                'type' => 'error', 
+                                'message' => 'You can\'t change plan before your last transaction will not be settled.'
+                            )
+                        );
+                        return $this->_helper->redirector->gotoRoute(
+                            array(
+                                'controller' => 'my-account',
+                                'action' => 'index'
+                            ), 'default', true
+                        );
+                    }
                 }
             }
             // user needs to have filled billing address
@@ -111,20 +128,26 @@ class BraintreeController extends Integration_Controller_Action
                     'amount' => $row->getPrice(),
                     'options' => array(
                         'storeInVaultOnSuccess' => true,
+                        'addBillingAddressToPaymentMethod' => true,
                         'submitForSettlement' => true
                     )
                 );
                 // should we display inputs for billing address and credit card
                 $this->view->show_billing_and_card = true;
                 if($user->getBraintreeVaultId()) {
-                    $transaction['customerId'] = 'card_id';
+                    $transaction['customerId'] = $user->getBraintreeVaultId();
                     $transaction['options']['storeInVaultOnSuccess'] = false;
+                    $transaction['options']['addBillingAddressToPaymentMethod'] = false;
                     $this->view->show_billing_and_card = false;
                 }
+                $url_segments = array('controller' => 'braintree', 'action' => 'response', 'pay-for' => $form, 'id' => $id);
+                if($form == 'extension') {
+                    $url_segments['domain'] = $domain;
+                }
                 $this->view->tr_data = Braintree_TransparentRedirect::transactionData(array(
-                    'redirectUrl' => 'http://localhost'.
-                        $this->view->url(array('controller' => 'braintree', 'action' => 'response', 'pay-for' => $form, 'id' => $id)),
-                    'transaction' => $transaction
+                    'redirectUrl' => $this->view->serverUrl() . $this->view->url($url_segments)
+                    ,
+                    'transaction' => $transaction,
                 ));
 
                 $this->view->specific_content = $this->view->partial(
@@ -148,108 +171,162 @@ class BraintreeController extends Integration_Controller_Action
         $user = new Application_Model_User();
         $user->find($this->auth->getIdentity()->id);
 
-        $result = Braintree_TransparentRedirect::confirm($_SERVER['QUERY_STRING']);
-        if($result->success) {
-            if($result->transaction['status'] == 'submitted_for_settlement') {
-                $pay_for = $this->_getParam('pay-for');
-                $id = $this->_getParam('id');
-                // check whether GET params are ok
-                if(!in_array($pay_for, array('plan', 'extension'))) {
-                    $pay_for = null;
-                }
-                if(!is_numeric($id) OR (int)$id < 1) {
-                    $id = null;
-                }
-                if($pay_for AND $id) {
-                    if($pay_for == 'plan') {
-                        $errors = false;
-                        if($user->getPlanId() != $id) {
-                            /*
-                             $a = strtotime('15-12-2012');
-                            $b = strtotime('11-12-2012'); // 11-12-2012
-                            $c = strtotime('-7 days', $a); // 09-12-2012
-                            echo ($b-$c)/3600/24;
-                            */
+        if($_SERVER['QUERY_STRING']) {
+            $result = Braintree_TransparentRedirect::confirm($_SERVER['QUERY_STRING']);
+            if($result->success) {
+                if($result->transaction->status == 'submitted_for_settlement') {
+                    $pay_for = $this->_getParam('pay-for');
+                    $id = $this->_getParam('id');
+                    // check whether GET params are ok
+                    if(!in_array($pay_for, array('plan', 'extension'))) {
+                        $pay_for = null;
+                    }
+                    if(!is_numeric($id) OR (int)$id < 1) {
+                        $id = null;
+                    }
+                    if($pay_for AND $id) {
+                        if($pay_for == 'plan') {
                             $plan = new Application_Model_Plan();
                             $plan = $plan->find($id);
-                            $subscription_end = strtotime($user->getPlanActiveTo());//strtotime('15-12-2012');
-                            $subscription_start = strtotime('-7 days', $subscription_end);
-                            $today = strtotime(date('Y-m-d'));
-                            $plan_range_days = ($subscription_end-$subscription_start)/3600/24;
-                            $not_used_days = $plan_range_days-(($today-$subscription_start)/3600/24);
-                            $refund = ($not_used_days*(float)$plan->getPrice())/($plan_range_days);
-                            // number_format($refund, 2);
-                            if($refund > 0) {
-                                $refund_result = Braintree_Transaction::refund($user->getSubscrId(), number_format($refund, 2));
-                                if(!$refund_result->success) {
-                                    $errors = true;
+                            if($plan->getId()) {
+                                $user->setBraintreeTransactionId($result->transaction->id);
+                                $user->setPlanId($id);
+                                $user->setPlanActiveTo(
+                                    date('Y-m-d', strtotime('+' . $plan->getBillingPeriod()))
+                                );
+                                $user->save();
+
+                                $transaction_name = $plan->getName();
+                                $transaction_type = 'subscription';
+                            }
+                        } else {
+                            // pay for extension
+                            $domain = $this->_getParam('domain');
+                            $store = new Application_Model_Store();
+                            $store = $store->findByDomain($domain); 
+                            if(is_object($store) AND (int)$store->id) {
+                                $store_extension = new Application_Model_StoreExtension();
+                                $store_extension = $store_extension->fetchStoreExtension($store->id, $id);
+                                // add task only if bought extension exist in store and is not opened
+                                if(
+                                    is_object($store_extension) AND
+                                    $store_extension->getExtensionId() == $id AND
+                                    !$store_extension->getBraintreeTransactionId() AND
+                                    !(int)$store_extension->getBraintreeTransactionConfirmed()
+                                ) {
+                                    // set transaction confirmed
+                                    $store_extension->setBraintreeTransactionId($result->transaction->id);
+                                    $store_extension->setBraintreeTransactionConfirmed(0);
+                                    $store_extension->save();
+
+                                    // add task with extension installation
+                                    $extensionQueueItem = new Application_Model_Queue();
+                                    $extensionQueueItem->setStoreId($store->id);
+                                    $extensionQueueItem->setStatus('pending');
+                                    $extensionQueueItem->setUserId($user->getId());
+                                    $extensionQueueItem->setExtensionId($id);
+                                    $extensionQueueItem->setParentId(0);
+                                    $extensionQueueItem->setServerId($store->server_id);
+                                    $extensionQueueItem->setTask('ExtensionOpensource');
+                                    $extensionQueueItem->save();
+
+                                    $extension = new Application_Model_Extension();
+                                    $extension->find($id);
+                                    $transaction_name = $extension->getName();
+                                    $transaction_type = 'extension';
+                                }
+                            } else {
+                                if ($log = $this->getLog()) {
+                                    $log->log('Braintree', Zend_Log::ERR, $this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - errors: '.'Domain('.$domain.')');
                                 }
                             }
                         }
-                        if(!$errors) {
-                            $user->setBraintreeTransactionId($result->transaction['id']);
-                            $user->setBraintreeVaultId($result->transaction['customer']['id']);
-                            $user->setPlanId($id);
-                            $user->setPlanActiveTo(date('Y-m-d', strtotime('last day of next month')));
+
+                        if(isset($transaction_type)) {
+                            // add invoice to payment table
+                            $payment = new Application_Model_Payment();
+                            $payment_data = $user->__toArray();
+                            $billing = $result->transaction->billingDetails;
+                            if(!$billing->firstName) {
+                                $last_payment = new Application_Model_Payment();
+                                $last_payment->findLastForUser($user->getId());
+                                // set payment data from last payment record
+                                if(!$last_payment->getFirstName()) {
+                                    $payment_data = $last_payment->__toArray();
+                                    var_dump($payment_data);
+                                    unset($payment_data['id']);
+                                } else {
+                                    // set payment data from user record
+                                    $payment_data = array(
+                                        'city' => $user->getCity(),
+                                        'country' => $user->getCountry(),
+                                        'state' => $user->getState(),
+                                        'street' => $user->getStreet(),
+                                        'postal_code' => $user->getPostalCode(),
+                                        'first_name' => $user->getFirstname(),
+                                        'last_name' => $user->getLastname(),
+                                    );
+                                }
+                            } else {
+                                // set payment data from braintree result
+                                $payment_data = array(
+                                    'city' => $billing->locality,
+                                    'country' => $billing->countryName,
+                                    'state' => $billing->region,
+                                    'street' => $billing->streetAddress,
+                                    'postal_code' => $billing->postalCode,
+                                    'first_name' => $billing->firstName,
+                                    'last_name' => $billing->lastName
+                                );
+                            }
+                            $payment_data['user_id'] = $user->getId();
+                            $payment_data['price'] = $result->transaction->amount;
+                            $payment_data['date'] = date('Y-m-d H:i:s');
+                            $payment_data['braintree_transaction_id'] = $result->transaction->id;
+                            $payment_data['transaction_name'] = $transaction_name;
+                            $payment_data['transaction_type'] = $transaction_type;
+                            $payment->setOptions($payment_data);
+                            $payment->save();
+                        }
+
+                        if(!$user->getBraintreeVaultId()) {
+                            $user->setBraintreeVaultId($result->transaction->customerDetails->id);
                             $user->save();
                         }
-                    } else {
-                        // pay for extension
-                        $domain = $this->_getParam('domain');
-                        $store = new Application_Model_Store();
-                        $store = $store->findByDomain($domain);
-                        if(is_object($store) AND (int)$store->getId()) {
-                            // add task with extension installation
-                            $extensionQueueItem = new Application_Model_Queue();
-                            $extensionQueueItem->setStoreId($store->id);
-                            $extensionQueueItem->setStatus('pending');
-                            $extensionQueueItem->setUserId($store->user_id);
-                            $extensionQueueItem->setExtensionId($id);
-                            $extensionQueueItem->setParentId(0);
-                            $extensionQueueItem->setServerId($store->server_id);
-                            $extensionQueueItem->setTask('ExtensionOpensource');
-                            $extensionQueueItem->save();
-                        } else {
-                            if ($log = $this->getLog()) {
-                                $log->log('Braintree', Zend_Log::ERR, $this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - errors: '.'Domain('.$domain.')');
-                            }
-                        }
+
+                        $this->_helper->flashMessenger(
+                            array(
+                                'type' => 'success',
+                                'message' => 'You have been succefully charged for '.$pay_for.'.'
+                            )
+                        );
                     }
-                    if(!$user->getBraintreeVaultId()) {
-                        $user->setBraintreeVaultId($result->transaction['transaction']['creditCard']['token']);
-                        $user->save();
-                    }
-                    $this->_helper->flashMessenger(
+                    return $this->_helper->redirector->gotoRoute(
                         array(
-                            'type' => 'success',
-                            'message' => 'You have been succefully charged for '.$pay_for.'.'
-                        )
+                            'controller' => 'my-account',
+                            'action' => 'compare'
+                        ), 'default', true
+                    );
+                } else {
+                    // transaction had wrong status
+                    return $this->_helper->redirector->gotoRoute(
+                        array(
+                            'controller' => 'my-account',
+                            'action' => 'compare'
+                        ), 'default', true
                     );
                 }
-                return $this->_helper->redirector->gotoRoute(
-                    array(
-                        'controller' => 'my-account',
-                        'action' => 'compare'
-                    ), 'default', true
-                );
             } else {
-                // transaction had wrong status
-                return $this->_helper->redirector->gotoRoute(
-                    array(
-                        'controller' => 'my-account',
-                        'action' => 'compare'
-                    ), 'default', true
-                );
-            }
-        } else {
-            if ($log = $this->getLog()) {
-                $errors = '';
-                $errors .= $this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - errors:';
-                foreach($result->errors->deepAll() as $error) {
-                    $errors .= ' "'.$error->attribute.'('.$error->code.') '.$error->message.'",';
+                if ($log = $this->getLog()) {
+                    $errors = '';
+                    $errors .= $this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - errors:'.PHP_EOL;
+                    foreach($result->errors->deepAll() as $error) {
+                        $errors .= $error->code . ": " . $error->message . "\n";
+                    }
+                    $errors = rtrim($errors);
+                    echo '<pre>', $errors;
+                    $log->log('Braintree', Zend_Log::ERR, $errors);
                 }
-                $errors = rtrim($errors, ',');
-                $log->log('Braintree', Zend_Log::ERR, $errors);
             }
         }
         $this->_helper->layout->disableLayout();
@@ -265,7 +342,23 @@ class BraintreeController extends Integration_Controller_Action
             $plan = $plan->find($id);
             $user = new Application_Model_User();
             $user = $user->find($this->auth->getIdentity()->id);
+            
             if($user->hasPlanActive()) {
+                // Do not allow user to change his plan before braintree settle last transaction
+                if(!(int)$user->getBraintreeTransactionConfirmed()) {
+                    $this->_helper->flashMessenger(
+                            array(
+                                    'type' => 'error',
+                                    'message' => 'You can\'t change plan before your last transaction will not be settled.'
+                            )
+                    );
+                    return $this->_helper->redirector->gotoRoute(
+                            array(
+                                    'controller' => 'my-account',
+                                    'action' => 'index'
+                            ), 'default', true
+                    );
+                }
                 if($id AND $plan->getId()) {
                     if($id != $user->getPlanId()) {
                         if(!$this->_getParam('confirm')) {
@@ -282,11 +375,13 @@ class BraintreeController extends Integration_Controller_Action
                             $result = null;
                             if($amount < 0) {
                                 $result = Braintree_Transaction::refund($user->getBraintreeTransactionId(), (float)$amount);
+                                // lower the payment
                             } else {
                                 $result = Braintree_Transaction::sale(array(
                                     'amount' => $amount,
                                     'customerId' => $user->getBraintreeVaultId()
                                 ));
+                                // @todo: add extra payment with new transaction id
                             }
                             $redirect = array(
                                     'controller' => 'my-account',
@@ -342,11 +437,18 @@ class BraintreeController extends Integration_Controller_Action
 
     // emulate subscription feature
     public function chargeSubscriptionsAction() {
-        
+        // @todo: find users with plan active to time() and do Transaction::sale
+        // strtotime('last day of next month')
     }
 
     // check whether transactions with status 'submitted for settlement' are already settled
     public function validateSettlementsAction() {
-        
+        // @todo: find users with active transaction but not settled
+        /*
+         * SELECT * FROM `user` WHERE plan_active_to >= CURRENT_TIME() AND (braintree_transaction_confirmed = 0 OR braintree_transaction_confirmed IS NULL)
+         * SELECT * FROM `store_extension` WHERE LENGTH(braintree_transaction_id) > 0 AND (braintree_transaction_confirmed = 0 OR braintree_transaction_confirmed IS NULL)
+         */
+        // @todo: find extensions with transaction id and not settled
+        // @todo: find out should we join store and extension table
     }
 }
