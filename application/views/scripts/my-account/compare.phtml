@@ -142,11 +142,15 @@
                     <td class="compare-table-price-empty"></td>
                     <?php foreach($this->plans as $plan): ?>
                         <td class="compare-table-price-button">
+                        <?php if($this->user->hasPlanActive() AND (int)$this->user->getBraintreeTransactionConfirmed()): ?>
                             <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => ($this->user->hasPlanActive() ? 'change-plan' : 'form')), 'default', true); ?>">
                                 <input type="hidden" name="pay-for" value="plan" />
                                 <input type="hidden" name="id" value="<?php echo $plan->getId(); ?>" />
                                 <button type="submit" class="btn btn-large btn-inverse">Subscribe now</button>
                             </form>
+                        <?php else: ?>
+                            <button type="button" class="btn btn-large btn-inverse disabled">Subscribe now</button>
+                        <?php endif; ?>
                         </td>
                         <td class="compare-table-price-empty"></td>
                     <?php endforeach; ?>

@@ -123,7 +123,7 @@
                         <button type="submit" class="btn btn-inverse pull-right">
                             <i class="icon-white icon-ok"></i>&nbsp;Pay
                         </button>
-                        <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>" class="btn">Back</a>
+                        <a href="<?php echo ($_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true)); ?>" class="btn">Back</a>
                     </div>
                 </form>
             </div>

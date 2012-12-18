@@ -57,7 +57,7 @@ class Integration_Acl extends Zend_Acl
          */
         $this->allow('free-user', 'default_error', array('error'));
         $this->allow('free-user', 'default_index', array('index'));
-        $this->allow('guest', 'default_extensions', array('index'));
+        $this->allow('free-user', 'default_extensions', array('index'));
         $this->allow('free-user', 'default_queue', array(
                 'add','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus'
         ));
@@ -73,7 +73,7 @@ class Integration_Acl extends Zend_Acl
          */
         $this->allow('commercial-user', 'default_error', array('error'));
         $this->allow('commercial-user', 'default_index', array('index'));
-        $this->allow('guest', 'default_extensions', array('index'));
+        $this->allow('commercial-user', 'default_extensions', array('index'));
         $this->allow('commercial-user', 'default_queue', array(
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 

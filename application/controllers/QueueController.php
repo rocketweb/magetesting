@@ -745,7 +745,20 @@ class QueueController extends Integration_Controller_Action {
                 ), 'default', true);
             }
             
-            
+            // disallow deploying not paid extension
+            if($revisionModel->getExtensionId()) {
+                $extension = new Application_Model_StoreExtension();
+                $extension->fetchStoreExtension($revisionModel->getStoreId(), $revisionModel->getExtensionId());
+                if(!(int)$extension->getBraintreeTransactionConfirmed()) {
+                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'Deploying not paid extension is forbidden.'));
+                    
+                    return $this->_helper->redirector->gotoRoute(array(
+                            'module' => 'default',
+                            'controller' => 'user',
+                            'action' => 'dashboard',
+                    ), 'default', true);
+                }
+            } 
             $domain = $this->_getParam('domain');        
             $storeModel=  new Application_Model_Store();
             $store = $storeModel->findByDomain($domain);      

@@ -35,6 +35,7 @@
         		        		?>
         		        	</div>
         	                <div class="span4">
+        	                <?php if($this->user->hasPlanActive() AND (int)$this->user->getBraintreeTransactionConfirmed()): ?>
         	                	<a class="btn btn-large btn-inverse" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">
         	                	    <?php if($this->user->hasPlanActive()): ?>
         	                	        Change Plan
@@ -43,6 +44,9 @@
         	                	    <?php endif; ?>
         	                	    <i class="icon icon-white icon-share-alt"></i>
     	                	    </a>
+	                	    <?php else: ?>
+	                	        <button type="button" class="btn btn-large btn-inverse disabled">Change Plan <i class="icon icon-white icon-share-alt"></i></button>
+	                	    <?php endif; ?>
         	                </div>
         		        </div>
         		    	
