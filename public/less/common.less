@@ -8,6 +8,8 @@ html, body {
 }
 
 .logo {
+    position:relative;
+    z-index: 999999;
     margin: 20px 0 0 0;
 }
 
@@ -23,15 +25,15 @@ html, body {
         color: #fff;
         text-decoration: none;
     }
-    
+
     .shadow;
-    
+
     .navbar-inner {
         box-shadow: none;
         background-color: #fff;
         background-image: none;
         border-bottom: 1px solid @Grey;
-    
+
         .nav {
         	& > li > a {
                 padding: 4px 15px;
@@ -40,40 +42,40 @@ html, body {
                 text-shadow: none;
                 border-right: 1px solid #fff;
                 outline: 0;
-                
+
                 &:hover, &:focus {
                     .defaultMainMenuAnchor(@Blue);
                 }
             }
-            
+
             & > .active > a {
                 .defaultMainMenuAnchor;
-                
+
                 &:hover, &:focus {
                     .defaultMainMenuAnchor(@Blue);
                 }
             }
-                    
+
             & > .first > a,
-            & > .first > a:hover, 
+            & > .first > a:hover,
             & > .first > a:focus {
                 -webkit-border-bottom-left-radius: 6px;
                 -moz-border-radius-bottomleft: 6px;
                 border-bottom-left-radius: 6px;
             }
-            
+
             & > .last > a,
-            & > .last > a:hover, 
+            & > .last > a:hover,
             & > .last > a:focus {
                 -webkit-border-bottom-right-radius: 6px;
                 -moz-border-radius-bottomright: 6px;
                 border-bottom-right-radius: 6px;
             }
-        	
+
         	&.nav-subpages {
         		position: relative;
                 bottom: 23px;
-                
+
                 .defaultSubmenuAnchor(@Border: @DarkGrey){
                     background: none;
                     box-shadow: none;
@@ -81,7 +83,7 @@ html, body {
                     border-bottom: 1px dotted @Border;
                     outline: 0;
                 }
-                
+
                 & > li {
                     & > a {
                     	font-family: @TypeKitCondensed;
@@ -92,25 +94,25 @@ html, body {
                         padding: 0;
                         margin-left: 20px;
                         text-shadow: none;
-                        
+
                         .defaultSubmenuAnchor(#fff);
-                        
+
                         &:hover, &:focus {
                             .defaultSubmenuAnchor;
                         }
                     }
                 }
-                
+
                 & > .active {
                     & > a, & > a:hover, & > a:focus {
                     	.defaultSubmenuAnchor;
                     }
                 }
-                
+
             }
         }
     }
-    
+
     .dropdown {
         &.dropdown-mainmenu {
             .caret-white {
@@ -118,7 +120,7 @@ html, body {
             }
         }
     }
-    
+
     .pull-right > li > .dropdown-menu {
         background: @Blue;
         margin-right: 94px;
@@ -130,7 +132,7 @@ html, body {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         border: 0;
-        
+
         a {
             color: white;
         }
@@ -156,14 +158,14 @@ h4, legend {
 
 fieldset.margins {
     margin: 20px 0 60px 0;
-    
+
     &.margins-small {
         margin: 20px 0 30px 0;
     }
-    
+
     &.margins-first {
         margin: 60px 0 30px 0;
-        
+
         &.margin-small {
             margin: 40px 0 20px 0;
         }
@@ -251,7 +253,7 @@ fieldset.margins {
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffF0554A', endColorstr='#fff64135', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-    
+
     &:hover,
     &:active,
     &.active,
@@ -294,7 +296,7 @@ fieldset.margins {
 .btn-faded {
     .customButton(#eee, #eee, #bbb);
     text-shadow: none;
-    
+
     &.btn-inverse {
         .customButton(#444, #444, #888);
     }
@@ -333,7 +335,7 @@ fieldset.margins {
     h4 {
         margin: 0;
     }
-    
+
     .close {
         position: relative;
         top: -2px;
@@ -347,7 +349,7 @@ fieldset.margins {
         input {
             width: 511px;
         }
-        
+
         &.alert-info {
             input {
                 width: 100%;
