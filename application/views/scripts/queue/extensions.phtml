@@ -76,7 +76,7 @@
 		                        <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions --> 
 		                        <ul class="screenshots hidden">
 		                        <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
-		                            <li data-id="<?php echo $extension['name'].' #'.$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
+		                            <li data-id="<?php echo $extension['name'].' #'.++$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
 		                        <?php endforeach; ?>
 		                        </ul>
 		                        <!-- END EXTENSION'S SCREENSHOTS -->
