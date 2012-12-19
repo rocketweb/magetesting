@@ -27,6 +27,9 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function addAction() {
+        
+        $this->checkStoreLimit();
+        
         $this->view->userGroup = $this->auth->getIdentity()->group;
         
         $userModel = new Application_Model_User();
@@ -40,6 +43,8 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function addCleanAction() {
+        $this->checkStoreLimit();
+        
         $form = new Application_Form_StoreAddClean();
         $form->populate($this->getRequest()->getParams());
 
@@ -202,7 +207,7 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function addCustomAction() {
-
+        $this->checkStoreLimit();
         $userGroup = $this->auth->getIdentity()->group;
 
         //deny this action for demo users
@@ -832,4 +837,45 @@ class QueueController extends Integration_Controller_Action {
         }
         $this->_response->setBody($content);
     }
+    
+    /**
+     * Prevent from going forward if max stores have been reached - start 
+     * @return boolean
+     */
+    protected function checkStoreLimit(){
+        
+        $userId = $this->auth->getIdentity()->id;
+        $userGroup = $this->auth->getIdentity()->group;
+
+        $storeModel = new Application_Model_Store();
+        $userStores = $storeModel->countUserStores($userId);
+
+        if ($userGroup == 'free-user') {
+            $maxStores = (int) $this->getInvokeArg('bootstrap')
+                            ->getResource('config')
+                    ->magento
+                    ->standardUser
+                    ->stores;
+        } else {
+            $modelUser = new Application_Model_User();
+            $user = $modelUser->find($this->auth->getIdentity()->id);
+
+            $modelPlan = new Application_Model_Plan();
+            $plan = $modelPlan->find($user->getPlanId());
+
+            $maxStores = $plan->getStores();
+        }
+
+        if ($userStores >= $maxStores && $userGroup != 'admin') {
+
+            $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+            ), 'default', true);
+        }
+        /* Prevent from going forward if max stores have been reached - stop */
+    }
+    
 }
