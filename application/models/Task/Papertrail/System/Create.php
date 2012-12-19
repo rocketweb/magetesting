@@ -16,20 +16,23 @@ implements Application_Model_Task_Interface {
         $this->_updateStoreStatus('creating-papertrail-system');
 
         $this->logger->log('Creating papertrail system.', Zend_Log::INFO);
-
+        
+        $id = $this->config->papertrail->prefix . $this->_storeObject->getDomain();
+        $accountId = $this->config->papertrail->prefix . (string) $this->_userObject->getId();
+        
         $output = array(
+            (string) $id,
             (string) $this->_storeObject->getDomain(),
-            (string) $this->_storeObject->getDomain(),
-            (string) $this->_userObject->getId()
+            (string) $accountId
         );
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
 
         try { 
             $response = $this->_service->createSystem(
+                (string) $id, 
                 (string) $this->_storeObject->getDomain(), 
-                (string) $this->_storeObject->getDomain(), 
-                (string) $this->_userObject->getId()
+                (string) $accountId
             );
         } catch(Zend_Service_Exception $e) {
             $this->logger->log($e->getMessage(), Zend_Log::CRIT);

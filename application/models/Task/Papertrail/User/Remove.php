@@ -17,16 +17,14 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log('Removing papertrail user.', Zend_Log::INFO);
 
-        $output = array(
-                (string) $this->_userObject->getId()
-        );
+        $id = $this->config->papertrail->prefix . (string) $this->_userObject->getId();
+        
+        $output = array((string)$id);
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
 
         try { 
-            $response = $this->_service->removeUser(
-                (string)$this->_userObject->getId()
-            );
+            $response = $this->_service->removeUser((string)$id);
         } catch(Zend_Service_Exception $e) {
             $this->logger->log($e->getMessage(), Zend_Log::CRIT);
             throw new Application_Model_Task_Exception($e->getMessage());

@@ -17,16 +17,14 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log('Removing papertrail system.', Zend_Log::INFO);
 
-        $output = array(
-            (string) $this->_storeObject->getDomain()
-        );
+        $id = $this->config->papertrail->prefix . $this->_storeObject->getDomain();
+        
+        $output = array((string)$id);
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
 
         try { 
-            $response = $this->_service->removeSystem(
-                (string)$this->_storeObject->getDomain()
-            );
+            $response = $this->_service->removeSystem((string)$id);
         } catch(Zend_Service_Exception $e) {
             $this->logger->log($e->getMessage(), Zend_Log::CRIT);
             throw new Application_Model_Task_Exception($e->getMessage());

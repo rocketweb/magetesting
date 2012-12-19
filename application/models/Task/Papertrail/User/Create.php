@@ -17,8 +17,10 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log('Creating papertrail user.', Zend_Log::INFO);
 
+        $id = $this->config->papertrail->prefix . (string) $this->_userObject->getId();
+        
         $output = array(
-            (string) $this->_userObject->getId(),
+            (string) $id,
             (string) $this->_userObject->getLogin(),
             (string) $this->_userObject->getEmail()
         );
@@ -27,8 +29,8 @@ implements Application_Model_Task_Interface {
 
         try { 
             $response = $this->_service->createUser(
-                (string)$this->_userObject->getId(), 
-                (string)$this->_userObject->getLogin(), 
+                (string) $id, 
+                (string) $this->_userObject->getLogin(), 
                 array(
                     'id'    => $this->_userObject->getId(),
                     'email' => $this->_userObject->getEmail()
