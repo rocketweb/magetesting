@@ -6,6 +6,7 @@ class UserController extends Integration_Controller_Action
     public function init()
     {
         $this->_modelUser = new Application_Model_User();
+        $this->_helper->sslSwitch();
     }
 
     public function indexAction()

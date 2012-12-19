@@ -8,7 +8,7 @@
 class MyAccountController extends Integration_Controller_Action
 {
     public function init() {
-//        $this->_helper->sslSwitch();
+        $this->_helper->sslSwitch();
         parent::init();
     }
 

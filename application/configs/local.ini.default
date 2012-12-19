@@ -69,6 +69,9 @@ papertrail.distributorName = "Mage Testing";
 papertrail.url = "https://papertrailapp.com/api/v1/";
 papertrail.prefix = "dev-";
 
+;SSL
+ssl.active = 0
+
 [staging : production]
 
 [testing : production]

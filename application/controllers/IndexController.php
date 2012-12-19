@@ -5,7 +5,7 @@ class IndexController extends Integration_Controller_Action
 
     public function init()
     {
-
+        $this->_helper->sslSwitch(false);
     }
 
     public function indexAction()

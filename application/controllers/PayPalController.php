@@ -10,6 +10,11 @@
  */
 class PayPalController extends Integration_Controller_Action
 {
+    public function init() {
+        $this->_helper->sslSwitch();
+        parent::init();
+    }
+    
     /**
      * called when user canceled billing agreement
      * @method cancelAction

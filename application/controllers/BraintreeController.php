@@ -11,7 +11,7 @@ class BraintreeController extends Integration_Controller_Action
         Braintree_Configuration::merchantId('hwwzbybn8tvfrhjz');
         Braintree_Configuration::publicKey('rpxf8q436zfmp78r');
         Braintree_Configuration::privateKey('e87aea495ca0f8dfab7137f52b9adf26');
-//        $this->_helper->sslSwitch();
+        $this->_helper->sslSwitch();
 //        parent::init();
 //        require_once 'Braintree.php';
 //        $config = $this->getInvokeArg('bootstrap')
