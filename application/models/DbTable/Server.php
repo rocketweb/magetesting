@@ -7,19 +7,21 @@ class Application_Model_DbTable_Server extends Zend_Db_Table_Abstract
 
     public function fetchMostEmptyServer()
     {
-        /*
-         * SELECT IF(q.store_id IS NULL, 0, count(s.id) ) stores, s.id FROM server s 
-         * LEFT JOIN queue q ON q.server_id = s.id WHERE q.status = 'ready' OR q.status IS NULL GROUP BY s.id ORDER BY stores ASC LIMIT 1
+        /**
+          SELECT s.id,s.name,count(u.id) as users 
+            FROM server AS s 
+            LEFT JOIN user u ON u.server_id = s.id 
+            GROUP by s.id
+            ORDER by users
          */
         $select = $this->select()
                        ->from(array('s' => $this->_name), array('s.id'))
                        ->setIntegrityCheck(false)
-                       ->joinLeft(array('st' => 'store'), 'st.server_id = s.id', array(new Zend_Db_Expr('IF(st.id IS NULL, 0, count(s.id) ) stores')))
-                       ->where('st.status = ?', 'ready')
-                       ->orWhere('st.status IS NULL')
+                       ->joinLeft(array('u' => 'user'), 'u.server_id = s.id', array(new Zend_Db_Expr('IF(u.id IS NULL, 0, count(u.id) ) users')))
                        ->group('s.id')
-                       ->order('stores asc')
+                       ->order('users asc')
                        ->limit(1);
+               
         return $this->fetchRow($select);
     }
 }

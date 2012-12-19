@@ -40,7 +40,7 @@ class Application_Model_UserMapper {
             $user->setAddedDate($data['added_date']);
             $data['password'] = sha1($user->getPassword());
             $server = new Application_Model_Server();
-            $data['server_id'] = $server->fetchMostEmptyServerId();
+            $data['server_id'] = $server->fetchMostEmptyServerId();           
             $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);

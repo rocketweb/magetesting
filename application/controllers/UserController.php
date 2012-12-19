@@ -286,7 +286,6 @@ class UserController extends Integration_Controller_Action
                 $serverModel = new Application_Model_Server();
                 
                 $user->setOptions($form->getValues());
-                $user->setServerId($serverModel->fetchMostEmptyServerId());
                 $user = $user->save();
 
                 if ($useCoupons && $coupon) {
