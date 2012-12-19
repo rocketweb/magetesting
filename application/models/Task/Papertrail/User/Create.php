@@ -32,7 +32,7 @@ implements Application_Model_Task_Interface {
                 (string) $id, 
                 (string) $this->_userObject->getLogin(), 
                 array(
-                    'id'    => $this->_userObject->getId(),
+                    'id'    => $id,
                     'email' => $this->_userObject->getEmail()
             ));
         } catch(Zend_Service_Exception $e) {

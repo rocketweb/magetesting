@@ -170,7 +170,10 @@ class QueueController extends Integration_Controller_Action {
                         $queueModel->setExtensionId(0);  
                         $queueModel->setParentId($installId);  
                         $queueModel->save();
+                        
+                        $installId = $queueModel->getId();
                     }
+                    
                     
                     unset($queueModel);
                     $queueModel = new Application_Model_Queue();                    
