@@ -5,21 +5,22 @@ class BraintreeController extends Integration_Controller_Action
 {
        
     public function init(){
-        /*parent::init();
-        require_once 'Braintree.php';
-        $config = $this->getInvokeArg('bootstrap')
-                       ->getResource('config');
-        
-        Braintree_Configuration::environment($config->braintree->environment);
-        Braintree_Configuration::merchantId($config->braintree->merchantId);
-        Braintree_Configuration::publicKey($config->braintree->publicKey);
-        Braintree_Configuration::privateKey($config->braintree->privateKey);*/
         parent::init();
         require_once 'Braintree.php';
         Braintree_Configuration::environment('sandbox');
         Braintree_Configuration::merchantId('hwwzbybn8tvfrhjz');
         Braintree_Configuration::publicKey('rpxf8q436zfmp78r');
         Braintree_Configuration::privateKey('e87aea495ca0f8dfab7137f52b9adf26');
+//        $this->_helper->sslSwitch();
+//        parent::init();
+//        require_once 'Braintree.php';
+//        $config = $this->getInvokeArg('bootstrap')
+//                       ->getResource('config');
+//        
+//        Braintree_Configuration::environment($config->braintree->environment);
+//        Braintree_Configuration::merchantId($config->braintree->merchantId);
+//        Braintree_Configuration::publicKey($config->braintree->publicKey);
+//        Braintree_Configuration::privateKey($config->braintree->privateKey)
     }
 
     // @todo: I think we should concat form and response due to error reporting.
@@ -324,7 +325,7 @@ class BraintreeController extends Integration_Controller_Action
                         $errors .= $error->code . ": " . $error->message . "\n";
                     }
                     $errors = rtrim($errors);
-                    echo '<pre>', $errors;
+                    $this->_response->setBody('<pre>', $errors);
                     $log->log('Braintree', Zend_Log::ERR, $errors);
                 }
             }

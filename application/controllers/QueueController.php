@@ -180,6 +180,28 @@ class QueueController extends Integration_Controller_Action {
                     
                     $this->_helper->FlashMessenger('New installation added to queue');
 
+                    //magetesting user creates database
+                    try {
+                        $log = $this->getLog();
+                        $log->log($this->auth->getIdentity()->login . '_' . $storeModel->getDomain(),LOG_DEBUG);
+                        $db = Zend_Db_Table::getDefaultAdapter();
+                        $DbManager = new Application_Model_DbTable_Privilege($db, $this->getInvokeArg('bootstrap')
+                                                ->getResource('config'));
+                        $DbManager->createDatabase($this->auth->getIdentity()->login . '_' . $storeModel->getDomain());
+
+                        if (!$DbManager->checkIfUserExists($this->auth->getIdentity()->login)) {
+                            $DbManager->createUser($this->auth->getIdentity()->login);
+                        }
+                    } catch (PDOException $e) {
+                        $message = 'Could not create database for store, aborting';
+//                        echo $message;
+                        $this->_response->setBody($message);
+                        if ($log = $this->getLog()) {
+                            $log->log($message, LOG_ERR);
+                        }
+                        throw $e;
+                    }
+
                 } else {
                     $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
                 }
@@ -333,7 +355,27 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
-                                       
+
+                    //magetesting user creates database
+                    try {
+                        $db = Zend_Db_Table::getDefaultAdapter();
+                        $DbManager = new Application_Model_DbTable_Privilege($db, $this->getInvokeArg('bootstrap')
+                                                ->getResource('config'));
+                        $DbManager->createDatabase($this->auth->getIdentity()->login . '_' . $storeModel->getDomain());
+
+                        if (!$DbManager->checkIfUserExists($this->auth->getIdentity()->login)) {
+                            $DbManager->createUser($this->auth->getIdentity()->login);
+                        }
+                    } catch (PDOException $e) {
+                        $message = 'Could not create database for store, aborting';
+//                        echo $message;
+                        $this->_response->setBody($message);
+                        if ($log = $this->getLog()) {
+                            $log->log($message, LOG_ERR);
+                        }
+                        throw $e;
+                    }
+
                     //stop adding store
                     $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'You have successfully added your custom store to queue.'));
                     return $this->_helper->redirector->gotoRoute(array(
@@ -442,7 +484,8 @@ class QueueController extends Integration_Controller_Action {
                         'version' => 'no version found')
                 );
             }
-            echo Zend_Json_Encoder::encode($versions);
+//            echo Zend_Json_Encoder::encode($versions);
+            $this->_response->setBody(Zend_Json_Encoder::encode($versions));
         }
     }
 
@@ -571,16 +614,19 @@ class QueueController extends Integration_Controller_Action {
                         $storeExtensionModel->setExtensionId($extensionId);
                         $storeExtensionModel->save();
 
-                        echo 'done';
+//                        echo 'done';
+                        $this->_response->setBody('done');
                     } catch (Exception $e) {
                         if ($log = $this->getLog()) {
                             $log->log('Error while adding extension to queue - ' . $e->getMessage(), LOG_ERR);
                         }
-                        echo 'error';
+                        $this->_response->setBody('error');
+//                        echo 'error';
                     }
                 }
             } else {
-                echo 'already_installed';
+//                echo 'already_installed';
+                $this->_response->setBody('already_installed');
             }
             $this->_helper->layout()->disableLayout(); 
             $this->_helper->viewRenderer->setNoRender(true);
@@ -597,7 +643,8 @@ class QueueController extends Integration_Controller_Action {
             $storeModel = new Application_Model_Store();
             $storeItem = $storeModel->findByDomain($domain);
             
-            echo Zend_Json_Encoder::encode($storeItem->status);
+//            echo Zend_Json_Encoder::encode($storeItem->status);
+            $this->_response->setBody(Zend_Json_Encoder::encode($storeItem->status));
         } 
     }
     
@@ -617,7 +664,8 @@ class QueueController extends Integration_Controller_Action {
             $storeModel = new Application_Model_Store();
             $storeItem = $storeModel->findPositionByName($domain);
             
-            echo Zend_Json_Encoder::encode($storeItem->num * $timeExecution);
+//            echo Zend_Json_Encoder::encode($storeItem->num * $timeExecution);
+            $this->_response->setBody(Zend_Json_Encoder::encode($storeItem->num * $timeExecution));
         } 
     }
     
@@ -829,6 +877,7 @@ class QueueController extends Integration_Controller_Action {
                 $content .= '</tr>'.PHP_EOL;
             }
         }
-        echo $content;
+//        echo $content;
+        $this->_response->setBody($content);
     }
 }

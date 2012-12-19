@@ -339,10 +339,11 @@ class ExtensionController extends Integration_Controller_Action {
             if(isset($result[0]) AND is_object($result[0])) {
                 $result[0]->as_logo = $as_logo;
             }
-            echo json_encode($result);
+            
+            $this->_response->setBody(json_encode($result));
         } else {
             // empty response
-            echo '{}';
+            $this->_response->setBody('{}');
         }
     }
 
