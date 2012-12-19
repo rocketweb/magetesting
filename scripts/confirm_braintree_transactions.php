@@ -68,6 +68,18 @@ if($result) {
             $queueModel->setExtensionId($row['extension_id']);
             $queueModel->setParentId(0);
             $queueModel->save();
+            $opensourceId = $queueModel->getId();
+            unset($queueModel);
+            
+            $queueModel = new Application_Model_Queue();
+            $queueModel->setStoreId($storeModel->getId());
+            $queueModel->setTask('RevisionCommit');
+            $queueModel->setStatus('pending');
+            $queueModel->setUserId($storeModel->getUserId());
+            $queueModel->setServerId($storeModel->getServerId());
+            $queueModel->setExtensionId($row['extension_id']);
+            $queueModel->setParentId($opensourceId);
+            $queueModel->save();
             
         } else {
             echo 'Not confirmed for extension: ' . $row['extension_id']. ' store: '. $row['store_id'].PHP_EOL;
