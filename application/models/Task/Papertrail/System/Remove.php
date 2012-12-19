@@ -4,11 +4,11 @@
  * 
  * @category   Application
  * @package    Model_Task
- * @subpackage Papertrail_User
+ * @subpackage Papertrail_System
  * @copyright  Copyright (c) 2012 RocketWeb USA Inc. (http://www.rocketweb.com)
  * @author     Marcin Kazimierczak <marcin@rocketweb.com>
  */
-class Application_Model_Task_Papertrail_User_Remove 
+class Application_Model_Task_Papertrail_System_Remove 
 extends Application_Model_Task_Papertrail 
 implements Application_Model_Task_Interface {
 
