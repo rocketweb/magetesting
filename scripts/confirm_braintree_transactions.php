@@ -54,6 +54,21 @@ if($result) {
                     array('braintree_transaction_confirmed' => 1), // set
                     array('extension_id = ?' => $row['extension_id'], 'store_id = ?' => $row['store_id']) // where
             );
+            
+            //get store
+            $storeModel = new Application_Model_Store();
+            $storeModel->find($row['store_id']);
+                       
+            $queueModel = new Application_Model_Queue();
+            $queueModel->setStoreId($storeModel->getId());
+            $queueModel->setTask('ExtensionOpensource');
+            $queueModel->setStatus('pending');
+            $queueModel->setUserId($storeModel->getUserId());
+            $queueModel->setServerId($storeModel->getServerId());
+            $queueModel->setExtensionId($row['extension_id']);
+            $queueModel->setParentId(0);
+            $queueModel->save();
+            
         } else {
             echo 'Not confirmed for extension: ' . $row['extension_id']. ' store: '. $row['store_id'].PHP_EOL;
         }
