@@ -1,25 +1,25 @@
 <?php
 
 class Application_Model_Worker {
-    
+
     public function __construct(&$config, &$db) {
         $this->config = $config;
         $this->db = $db;
     }
-    
+
     public function work(Application_Model_Queue $queueElement){
-        
+
         $filter = new Zend_Filter_Word_CamelCaseToUnderscore();
         $classSuffix = $filter->filter($queueElement->getTask());
-        
+
         $className = 'Application_Model_Task_'.$classSuffix; 
- 
+
         $newRetryCount = $queueElement->getRetryCount() + 1;
         $this->db->update('queue', array('retry_count' => $newRetryCount), 'id = ' . $queueElement->getId());
         $queueElement->setRetryCount($newRetryCount)->save();
-        
+        $customTaskModel = new $className($this->config,$this->db);
+
         try {
-            $customTaskModel = new $className($this->config,$this->db);       
             $customTaskModel->setup($queueElement);
             $this->db->update('queue', array('status' => 'processing'), 'id = ' . $queueElement->getId());
             $queueElement->setStatus('processing');
@@ -37,8 +37,6 @@ class Application_Model_Worker {
             if(!$queueModel->countForStore($queueElement->getStoreId())){
                 $this->db->update('store', array('status' => 'ready'), 'id = ' . $queueElement->getStoreId());
             }
-            
-        
         } catch (Application_Model_Task_Exception $e){
             $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
             $this->db->update('store', array('error_message' => $e->getMessage(),'status' => 'error'), 'id = ' . $queueElement->getStoreId());
