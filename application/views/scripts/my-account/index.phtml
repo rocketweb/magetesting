@@ -22,8 +22,8 @@
                         <div class="row">
                             <div class="span4">
                                 <strong>Current plan:</strong>
-                                <?php if($this->plan->getId()==0): ?>
-                                None
+                                <?php if($this->plan->getId()==0 OR !$this->user->hasPlanActive()): ?>
+                                    None
                                 <?php else:
                                 if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()){ 
                                 
@@ -35,11 +35,11 @@
                                 ?>
                             </div>
                             <div class="span4">
-                            <?php if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
+                            <?php if((int)$this->user->getPlanId() AND $this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                                 <button type="button" class="btn btn-large btn-inverse disabled">Change Plan <i class="icon icon-white icon-share-alt"></i></button>
                             <?php else: ?>
                                 <a class="btn btn-large btn-inverse" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">
-                                <?php if($this->user->hasPlanActive()): ?>
+                                <?php if($this->user->hasPlanActive() AND (int)$this->user->getPlanId()): ?>
                                     Change Plan
                                 <?php else: ?>
                                     Select Plan
@@ -52,11 +52,13 @@
                         
                         <div class="row">
                             <div class="span4">
-                            <?php if($this->plan->getId()!=0 && $this->user->getGroup()=='free-user'){ ?>
-                                Your account has been queued for the update. Please wait few minutes while we process your payment and update your account.
-                            <?php } else if($this->plan->getId()!=0): ?>
+                            <?php if($this->user->hasPlanActive()): ?>
+                                <?php if(!(int)$this->user->getBraintreeTransactionConfirmed()): ?>
+                                Your account is pending payment. It should take up to 24 hours to finish processing your payment. You can use site in that time normally.
+                                <?php elseif((int)$this->user->getPlanId()): ?>
                                 Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
                                 <?php endif; ?>
+                            <?php endif; ?>
                             </div>
                         </div>
                         <br />
