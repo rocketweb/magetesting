@@ -58,6 +58,9 @@ if($result) {
             //get store
             $storeModel = new Application_Model_Store();
             $storeModel->find($row['store_id']);
+            
+            $extensionModel = new Application_Model_Extension();
+            $extensionModel->find($row['extension_id']);
                        
             $queueModel = new Application_Model_Queue();
             $queueModel->setStoreId($storeModel->getId());
@@ -74,6 +77,12 @@ if($result) {
             $queueModel = new Application_Model_Queue();
             $queueModel->setStoreId($storeModel->getId());
             $queueModel->setTask('RevisionCommit');
+            $queueModel->setTaskParams(
+                                array(
+                                    'commit_comment' => 'Decoding ' . $extensionModel->getName() . ' (' . $extensionModel->getVersion() . ')',
+                                    'commit_type' => 'extension-decode'
+                                )
+                        );
             $queueModel->setStatus('pending');
             $queueModel->setUserId($storeModel->getUserId());
             $queueModel->setServerId($storeModel->getServerId());
