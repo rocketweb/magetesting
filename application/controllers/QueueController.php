@@ -404,8 +404,10 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setUserId($this->auth->getIdentity()->id);
                 $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                 $queueModel->setExtensionId(0);  
-                $queueModel->setParentId($installId);  
+                $queueModel->setParentId(0);  
                 $queueModel->save();
+                
+                $removingId = $queueModel->getId();
                 
                 unset($queueModel);
                 //add remove task to queue
@@ -413,7 +415,7 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setTask('MagentoRemove')
                         ->setStoreId($currentStore->id)
                         ->setUserId($this->auth->getIdentity()->id)
-                        ->setParentId(0)
+                        ->setParentId($removingId)
                         ->setExtensionId(0)
                         ->setServerId($this->auth->getIdentity()->server_id)
                         ->setStatus('pending')
