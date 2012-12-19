@@ -25,7 +25,7 @@
                                 <?php if($this->plan->getId()==0): ?>
                                 None
                                 <?php else:
-                                if($this->plan->getId()!=0 && $this->user->getGroup()=='free-user'){ 
+                                if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()){ 
                                 
                                     echo '<div class="label label-warning">Pending</div>&nbsp;';
                                 

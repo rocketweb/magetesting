@@ -1,0 +1,41 @@
+<form id="payment-form" method="POST" action="<?php echo Braintree_TransparentRedirect::url(); ?>">
+    <input type="hidden" name="tr_data" value="<?php echo htmlentities($this->tr_data); ?>" />
+    <h1>Braintree Credit Card Transaction Form</h1>
+      <div>
+        <!-- <h2>Customer Information</h2>
+        <label for='customer_first_name'>First Name</label>
+        <input type='text' name='transaction[customer][first_name]' id='customer_first_name'></input>
+        <label for='customer_last_name'>Last Name</label>
+        <input type='text' name='transaction[customer][last_name]' id='customer_last_name'></input>
+        <label for='customer_email'>Email</label>
+        <input type='text' name='transaction[customer][email]' id='customer_email'></input>
+        <!-- Copy transaction[customer] also to [billing] -->
+        <!-- <h2>Billing Address</h2>
+        <label for='billing_street_address'>Street Address</label>
+        <input type='text' name='transaction[billing][street_address]' id='billing_street_address'></input>
+        <label for='billing_extended_address'>Extended Address</label>
+        <input type='text' name='transaction[billing][extended_address]' id='billing_extended_address'></input>
+        <label for='billing_locality'>Locality</label>
+        <input type='text' name='transaction[billing][locality]' id='billing_locality'></input>
+        <label for='billing_region'>Region</label>
+        <input type='text' name='transaction[billing][region]' id='billing_region'></input>
+        <label for='billing_postal_code'>Postal Code</label>
+        <input type='text' name='transaction[billing][postal_code]' id='billing_postal_code'></input>
+        <label for='billing_postal_code'>Country</label>
+        <input type='text' name='transaction[billing][country_name]' id='billing_country_name'></input>
+        <input type='text' name='transaction[credit_card][billing_address_id]' id='' value="c3">
+      </div>
+      <div>
+        <h2>Credit Card</h2>
+        <label for='braintree_credit_card_number'>Credit Card Number</label>
+        <input type='text' name='transaction[credit_card][number]' id='braintree_credit_card_number' value='4111111111111111'></input>
+        <label for='braintree_credit_card_cvv'>Credit Card Verification Number</label>
+        <input type='text' name='transaction[credit_card][cvv]' id='braintree_credit_card_cvv' value="123"></input>
+        <label for='braintree_credit_card_exp'>Credit Card Expiry (mm/yyyy)</label>
+        <input type='text' name='transaction[credit_card][expiration_date]' id='braintree_credit_card_exp' value='12/2015'></input>
+      </div>
+       -->
+      Do it
+        <input class='submit-button' type='submit' />
+    </form>
+</form>
