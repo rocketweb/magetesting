@@ -186,7 +186,7 @@ class QueueController extends Integration_Controller_Action {
                     $this->_helper->FlashMessenger('New installation added to queue');
 
                 } else {
-                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
+                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You can not add more stores.'));
                 }
 
                 return $this->_helper->redirector->gotoRoute(array(
