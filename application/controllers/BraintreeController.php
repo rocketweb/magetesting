@@ -92,7 +92,7 @@ class BraintreeController extends Integration_Controller_Action
                     );
 
                     // Do not allow user to change his plan before braintree settle last transaction
-                    if($user->hasPlanActive() AND !(int)$user->getBraintreeTransactionConfirmed()) {
+                    if($form == 'plan' AND $user->hasPlanActive() AND !(int)$user->getBraintreeTransactionConfirmed()) {
                         $this->_helper->flashMessenger(
                             array(
                                 'type' => 'error', 

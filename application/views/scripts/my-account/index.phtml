@@ -1,122 +1,122 @@
 <div class="row">
     <div class="span12">
-    	<h1>Your account details</h1>
-    	<div class="form-box">
-    	    <div class="box">
-    	        
-        		<div class="tab-stripe"></div>
-        		<fieldset>
-        		    <legend>Basic information</legend>
-    		        <div class="row">
-    		        	<div class="span4">
-    		        	    <p class="user-name"><?php echo $this->escape($this->user->getFirstname()).' '.$this->escape($this->user->getLastname()); ?></p>
-    	                    <p>Member since <?php echo date('F j,Y', strtotime($this->user->getAddedDate())); ?></p>
-    		        	</div>
-    		        	<div class="span4"><a class="btn btn-blue"href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account'), 'default', true); ?>">Edit account</a></div>
-    		        </div>
-        		</fieldset>
-        		
-        		<div class="tab-stripe"></div>
-        		<fieldset>
-        		    <legend>Subscription</legend>
-        		        <div class="row">
-        		        	<div class="span4">
-        		        	    <strong>Current plan:</strong>
-        		        		<?php if($this->plan->getId()==0): ?>
-        		        		None
-        		        		<?php else:
-        		        		if($this->plan->getId()!=0 && $this->user->getGroup()=='free-user'){ 
-        		        		
-        		        		    echo '<div class="label label-warning">Pending</div>&nbsp;';
-        		        		
-        		        		}
-        		        		echo $this->escape($this->plan->getName());  
-        		        		endif;
-        		        		?>
-        		        	</div>
-        	                <div class="span4">
-        	                <?php if($this->user->hasPlanActive() AND (int)$this->user->getBraintreeTransactionConfirmed()): ?>
-        	                	<a class="btn btn-large btn-inverse" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">
-        	                	    <?php if($this->user->hasPlanActive()): ?>
-        	                	        Change Plan
-        	                	    <?php else: ?>
-        	                	        Select Plan
-        	                	    <?php endif; ?>
-        	                	    <i class="icon icon-white icon-share-alt"></i>
-    	                	    </a>
-	                	    <?php else: ?>
-	                	        <button type="button" class="btn btn-large btn-inverse disabled">Change Plan <i class="icon icon-white icon-share-alt"></i></button>
-	                	    <?php endif; ?>
-        	                </div>
-        		        </div>
-        		    	
-        		    	<div class="row">
-        		    	    <div class="span4">
-        		    	    <?php if($this->plan->getId()!=0 && $this->user->getGroup()=='free-user'){ ?>
-        		    	        Your account has been queued for the update. Please wait few minutes while we process your payment and update your account.
-        		    	    <?php } else if($this->plan->getId()!=0): ?>
-        		    	        Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
-        		    	        <?php endif; ?>
-        		    	    </div>
-        		    	</div>
-        		    	<br />
-        		    	
-        		    	<?php if ($this->user->getGroup()=='free-user'): ?>
-        		    	<br />
-        		    	<div class="row">
-        		    	  <div class="span4">Have a coupon code?</div> 
-        		    	  <div class="span8"><a class="btn btn-blue" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'coupon')); ?>">Redeem your bonus!</a></div>
-        		    	</div>
-        		    	<?php endif; ?>
-        		    
-        		    
-        		    <?php /*
-        		    <div class="row">
-        		        <div class="span3">
-        		            <h3>Credit card</h3>
-        		        </div>
-        		    </div>
-        		    <div class="row">
-        		        <div class="span4">
-        		            Your credit card on file is xxxx-xxxx-xxxx-4837
-        		        </div>
-        		    </div>
-        		    <div class="row">
-        		        <div class="span4">
-        		            Note: You have 1 other account on this card
-        		        </div>
-        		    </div>
-        		    <br />
-        		    <div class="row">
-        		        <div class="span4">
-        		            <a href="#">Change your credit card and billing information</a>
-        		        </div>
-        		    </div>
-        		    <hr />
-        		    */ ?>
-        		</fieldset>
-        		
-        		<div class="tab-stripe"></div>
-        		<fieldset>
-        		    <legend>Invoices</legend>
-        		    <?php if($this->payments): ?>
-        		        <?php foreach($this->payments as $payment): ?>
-        		        <div class="row">
-        		            <div class="span4">
-        		                <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId()), 'default', true); ?>">
-        		                    <?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?>
-        		                </a>
-        		                 - <?php echo date('m/d/Y', strtotime($payment->getDate())); ?>
-        		                 - $<?php echo $payment->getPrice(); ?>
-        		            </div>
-        		        </div>
-        		        <?php endforeach; ?>
-        		    <?php else: ?>
-        		        <div class="row"><div class="span4">You don't have any invoices</div></div>
-        		    <?php endif; ?>
-        	    </fieldset>
-        	    
-        	</div>
+        <h1>Your account details</h1>
+        <div class="form-box">
+            <div class="box">
+                
+                <div class="tab-stripe"></div>
+                <fieldset>
+                    <legend>Basic information</legend>
+                    <div class="row">
+                        <div class="span4">
+                            <p class="user-name"><?php echo $this->escape($this->user->getFirstname()).' '.$this->escape($this->user->getLastname()); ?></p>
+                            <p>Member since <?php echo date('F j,Y', strtotime($this->user->getAddedDate())); ?></p>
+                        </div>
+                        <div class="span4"><a class="btn btn-blue"href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account'), 'default', true); ?>">Edit account</a></div>
+                    </div>
+                </fieldset>
+                
+                <div class="tab-stripe"></div>
+                <fieldset>
+                    <legend>Subscription</legend>
+                        <div class="row">
+                            <div class="span4">
+                                <strong>Current plan:</strong>
+                                <?php if($this->plan->getId()==0): ?>
+                                None
+                                <?php else:
+                                if($this->plan->getId()!=0 && $this->user->getGroup()=='free-user'){ 
+                                
+                                    echo '<div class="label label-warning">Pending</div>&nbsp;';
+                                
+                                }
+                                echo $this->escape($this->plan->getName());  
+                                endif;
+                                ?>
+                            </div>
+                            <div class="span4">
+                            <?php if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
+                                <button type="button" class="btn btn-large btn-inverse disabled">Change Plan <i class="icon icon-white icon-share-alt"></i></button>
+                            <?php else: ?>
+                                <a class="btn btn-large btn-inverse" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">
+                                <?php if($this->user->hasPlanActive()): ?>
+                                    Change Plan
+                                <?php else: ?>
+                                    Select Plan
+                                <?php endif; ?>
+                                    <i class="icon icon-white icon-share-alt"></i>
+                                </a>
+                            <?php endif; ?>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="span4">
+                            <?php if($this->plan->getId()!=0 && $this->user->getGroup()=='free-user'){ ?>
+                                Your account has been queued for the update. Please wait few minutes while we process your payment and update your account.
+                            <?php } else if($this->plan->getId()!=0): ?>
+                                Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <br />
+                        
+                        <?php if ($this->user->getGroup()=='free-user'): ?>
+                        <br />
+                        <div class="row">
+                          <div class="span4">Have a coupon code?</div> 
+                          <div class="span8"><a class="btn btn-blue" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'coupon')); ?>">Redeem your bonus!</a></div>
+                        </div>
+                        <?php endif; ?>
+                    
+                    
+                    <?php /*
+                    <div class="row">
+                        <div class="span3">
+                            <h3>Credit card</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            Your credit card on file is xxxx-xxxx-xxxx-4837
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            Note: You have 1 other account on this card
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="span4">
+                            <a href="#">Change your credit card and billing information</a>
+                        </div>
+                    </div>
+                    <hr />
+                    */ ?>
+                </fieldset>
+                
+                <div class="tab-stripe"></div>
+                <fieldset>
+                    <legend>Invoices</legend>
+                    <?php if($this->payments): ?>
+                        <?php foreach($this->payments as $payment): ?>
+                        <div class="row">
+                            <div class="span4">
+                                <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId()), 'default', true); ?>">
+                                    <?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?>
+                                </a>
+                                 - <?php echo date('m/d/Y', strtotime($payment->getDate())); ?>
+                                 - $<?php echo $payment->getPrice(); ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="row"><div class="span4">You don't have any invoices</div></div>
+                    <?php endif; ?>
+                </fieldset>
+                
+            </div>
         </div>
     </div>
 </div>
