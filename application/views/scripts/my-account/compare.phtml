@@ -143,7 +143,13 @@
                     <?php foreach($this->plans as $plan): ?>
                         <td class="compare-table-price-button">
                         <?php if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
-                            <button type="button" class="btn btn-large btn-inverse disabled">Subscribe now</button>
+                            <button
+                                type="button" 
+                                title="Your payment for plan is being processed now. You will be able to change plan just after payment is settled."
+                                class="btn btn-large btn-inverse disabled subscribe-now"
+                            >
+                                Subscribe now
+                            </button>
                         <?php else: ?>
                             <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => ($this->user->hasPlanActive() ? 'change-plan' : 'form')), 'default', true); ?>">
                                 <input type="hidden" name="pay-for" value="plan" />

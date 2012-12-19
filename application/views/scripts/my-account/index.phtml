@@ -36,7 +36,13 @@
                             </div>
                             <div class="span4">
                             <?php if((int)$this->user->getPlanId() AND $this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
-                                <button type="button" class="btn btn-large btn-inverse disabled">Change Plan <i class="icon icon-white icon-share-alt"></i></button>
+                                <button
+                                    type="button"
+                                    title="Your payment for plan is being processed now. You will be able to change plan just after payment is settled."
+                                    class="btn btn-large btn-inverse change-plan disabled"
+                                >
+                                    Change Plan <i class="icon icon-white icon-share-alt"></i>
+                                </button>
                             <?php else: ?>
                                 <a class="btn btn-large btn-inverse" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); ?>">
                                 <?php if($this->user->hasPlanActive() AND (int)$this->user->getPlanId()): ?>

@@ -4,6 +4,7 @@ $(document).ready(function () {
     $("a[rel=tooltip]").tooltip({
         placement: 'bottom'
     });
+    $(".subscribe-now, .btn.disabled.change-plan").tooltip({});
 
     /* prevent click event and init popover */
     $('[rel=popover]').click(function(){return false;}).popover();
