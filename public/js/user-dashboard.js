@@ -66,7 +66,7 @@ $(document).ready(function(){
     }
     
     $('.accordion-add-new').click(function(event){
-        window.location.pathname = $(this).find('.accordion-heading .accordion-toggle .title a').attr('href');
+        window.location.pathname = $(this).find('.accordion-inner .btn-add-store').attr('href');
         event.preventDefault();
         event.stopPropagation(); 
     });
