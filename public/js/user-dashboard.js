@@ -66,13 +66,17 @@ $(document).ready(function(){
     }
     
     $('.accordion-add-new').click(function(event){
-        window.location.pathname = $(this).find('.accordion-inner .btn-add-store').attr('href');
-        event.preventDefault();
-        event.stopPropagation(); 
-        
-        window.location.pathname = $(this).find('.accordion-inner .btn-select-plan-to-add').attr('href');
-        event.preventDefault();
-        event.stopPropagation(); 
+
+        if ($(this).find('.accordion-inner .btn-add-store').attr('href')){
+            window.location.pathname = $(this).find('.accordion-inner .btn-add-store').attr('href');
+            event.preventDefault();
+            event.stopPropagation(); 
+        } else if ($(this).find('.accordion-inner .btn-select-plan-to-add').attr('href')) {
+            window.location.pathname = $(this).find('.accordion-inner .btn-select-plan-to-add').attr('href');
+            event.preventDefault();
+            event.stopPropagation(); 
+        }
+
     });
 
     $(".btn.disabled.request-buy").tooltip({});
