@@ -69,6 +69,10 @@ $(document).ready(function(){
         window.location.pathname = $(this).find('.accordion-inner .btn-add-store').attr('href');
         event.preventDefault();
         event.stopPropagation(); 
+        
+        window.location.pathname = $(this).find('.accordion-inner .btn-select-plan-to-add').attr('href');
+        event.preventDefault();
+        event.stopPropagation(); 
     });
 
     $(".btn.disabled.request-buy").tooltip({});
