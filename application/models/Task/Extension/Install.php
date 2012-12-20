@@ -37,12 +37,25 @@ implements Application_Model_Task_Interface {
         
         //if extension is commercial, check existence of encoded file, 
         if ($this->_extensionObject->getPrice() > 0 ){
+            if (trim($this->_extensionObject->getExtensionEncoded())==''){
+                $message = 'Extension price has been set to greater than 0 but no encoded package has been set for selected extension';
+                $this->logger->log($message, Zend_Log::EMERG);
+                throw new Application_Model_Task_Exception($message);
+            }
+            
             if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded())){
                 $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
                 $this->logger->log($message, Zend_Log::EMERG);
                 throw new Application_Model_Task_Exception($message); 
             } 
         } else {
+            
+            if (trim($this->_extensionObject->getExtension())==''){
+                $message = 'No package has been set for selected extension';
+                $this->logger->log($message, Zend_Log::EMERG);
+                throw new Application_Model_Task_Exception($message);
+            }
+            
             if (!file_exists($this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension())){
                 $message = 'Extension file for '.$this->_extensionObject->getName().' could not be found';
                 $this->logger->log($message, Zend_Log::EMERG);
