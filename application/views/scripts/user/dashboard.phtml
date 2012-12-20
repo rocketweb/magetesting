@@ -26,7 +26,11 @@
                 </div>
                 <div class="accordion-body collapse in mt_store">
                     <div class="accordion-inner">
-                        <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red btn-add-store"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a>
+                        <?php if ($this->user->plan_id == 0 ): ?>
+                            <a href="<?php echo $this->url(array('controller'=>'my-account', 'action' => 'compare'))?>" class="btn btn-red btn-select-plan-to-add"><i class="icon icon-white icon-plus-sign"></i> Select plan to add your first store</a>
+                        <?php else: ?>
+                            <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red btn-add-store"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a>
+                        <?php endif; ?>
                         <div class="row version-info">
                             <div class="span2 first"><strong>Edition:</strong></div>
                             <div class="span2"><strong>Version:</strong></div>
