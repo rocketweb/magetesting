@@ -308,7 +308,7 @@ class UserController extends Integration_Controller_Action
                 $mail = new Integration_Mail_UserRegisterActivation($mailData, $user);
                 try {
                     $mail->send();
-                    $this->_helper->FlashMessenger('You have been registered successfully');
+                    $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');
                     $log->log('User Register - Unable to send email', Zend_Log::CRIT, json_encode($e->getTraceAsString()));
