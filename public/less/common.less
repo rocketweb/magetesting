@@ -9,8 +9,21 @@ html, body {
 
 .logo {
     position:relative;
-    z-index: 999999;
+    z-index: 1;
     margin: 20px 0 0 0;
+}
+
+.magetesting {
+    font-famiy: @TypeKit;
+    font-weight: 700;
+    
+    .mage {
+        color: @Red;
+    }
+    
+    .testing {
+        color: @DarkFont;
+    }
 }
 
 .red-bar {
@@ -370,8 +383,17 @@ fieldset.margins {
     font-family: @MainFamily;
 }
 
+.img-resize {
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
 footer {
     a {
         color: @Red;
     }
 }
+
+@import 'responsive-video';

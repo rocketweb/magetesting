@@ -1,3 +1,39 @@
+<?php $NEW = FALSE; ?>
+
+<?php if($NEW):?>
+
+<div class="row">
+    <div class="span12">
+        <div class="content">
+        	<h1>The best Magento tool. Simple testing.</h1>
+        	<h2>The fastest way to test your Magento community store extensions.</h2>
+            <img class="img-resize cubes" src="<?php echo $this->baseUrl('/public/img/header-cubes.jpg'); ?>" alt="" />
+        	<div class="inner">
+        	    <a href="#" class="btn btn-large btn-tour">See available plans</a>
+        	    <section class="watch-video">
+        	        <div class="span6 pull-right">
+        	            <h3>Why <span class="magetesting"><span class="mage">mage<span class="testing">testing</span></span></span>?</h3>
+        	        </div>
+        	        <div class="span6 pull-left" style="float: left">
+        	            <div class="mac-book-air">
+        	            	<div class="js-video [vimeo]">
+        	            	    <img class="img-resize" src="<?php echo $this->baseUrl('/public/img/mac-book-air.png'); ?>" alt="" />
+        	            	    <iframe src="http://player.vimeo.com/video/54763818?badge=0" width="315" height"197" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+        	            	</div>
+        	            </div>
+        	        </div>
+        	    </section>
+        	    <section class="simple"></section>
+        	    <section class="safe"></section>
+        	    <section class="flexible"></section>
+        	    <section class="extensions"></section>
+        	</div>
+    	    <a href="#" class="btn btn-large btn-tour">Discover now</a>
+        </div>
+    </div>
+</div>
+
+<?php else: ?>
 <div class="hero-unit">
     <h1>Create magento sandboxes in minutes.</h1>
     <p>The fastest way to test your site, extension or theme with multiple magento editions.</p>
@@ -100,3 +136,4 @@
         </blockquote>
     </div>
 </div>
+<?php endif; ?>

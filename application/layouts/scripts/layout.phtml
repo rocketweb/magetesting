@@ -40,7 +40,14 @@
     
   </head>
 
-<body>
+<?php
+    $uri = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
+    $bodyClass = '';
+    if($uri === "/"){
+        //$bodyClass = ' class="index"';
+    }
+?>
+<body<?php echo $bodyClass;?>>
     <div id="wrap">
         <?php echo $this->render('_partials/globalHeader.phtml'); ?>
     

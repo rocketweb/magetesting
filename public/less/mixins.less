@@ -4,8 +4,12 @@
             box-shadow: 0 @strength 6px -6px #888;
 }
 
-.roundedBox(@color: #ddd) {
-	background: @color;
+.roundedBox(@radius:6px, @borderColor: @Grey, @backColor: #fff) {
+	background-color: @backColor;
+    border: 1px solid @borderColor;
+    -webkit-border-radius: @radius;
+       -moz-border-radius: @radius;
+            border-radius: @radius;
 }
 
 @defaultDarker : 10%;
