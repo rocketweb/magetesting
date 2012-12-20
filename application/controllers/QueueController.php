@@ -850,6 +850,10 @@ class QueueController extends Integration_Controller_Action {
                     && $revision['price']>0
                 ) {
                     $request_button = '<button type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
+                } elseif($revision['braintree_transaction_id'] && !$revision['braintree_transaction_confirmed']) {
+                    $request_button = '<button 
+                        title="Your payment for extension is being processed now. You will be able to request deployment just after payment is settled."
+                        type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy disabled" name="revision">Buy To Request Deployment</a>'.PHP_EOL;
                 } else {
                     $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                 }

@@ -70,6 +70,9 @@ $(document).ready(function(){
         event.preventDefault();
         event.stopPropagation(); 
     });
+
+    $(".btn.disabled.request-buy").tooltip({});
+
 });
 
 
