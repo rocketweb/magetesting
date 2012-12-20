@@ -20,4 +20,12 @@ class Application_Model_DbTable_Payment extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($select);
     }
+
+    public function fetchPaymentByTransactionId($id)
+    {
+        $select = $this->select()
+                       ->where('braintree_transaction_id = ?', $id)
+                       ->limit(1);
+        return $this->fetchRow($select);
+    }
 }

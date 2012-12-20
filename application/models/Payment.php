@@ -250,6 +250,11 @@ class Application_Model_Payment {
         return $this->getMapper()->findLastForUser($id, $this);
     }
 
+    public function findByTransactionId($id)
+    {
+        return $this->getMapper()->findByTransactionId($id, $this);
+    }
+
     public function __toArray()
     {
         return array(

@@ -122,7 +122,7 @@ class Application_Model_PaymentMapper {
 
     public function findLastForUser($id, $payment)
     {
-        $resultSet = $this->getDbTable()->fetchPaymentsByUser($id);
+        $resultSet = $this->getDbTable()->fetchPaymentsByUser($id, true);
         if (0 == count($resultSet)) {
             return $payment;
         }
@@ -141,6 +141,30 @@ class Application_Model_PaymentMapper {
                 ->setTransactionType($row->transaction_type)
                 ->setUserId($row->user_id)
                 ->setBraintreeTransactionId($row->braintree_transaction_id);
+        return $payment;
+    }
+
+    public function findByTransactionId($id, $payment)
+    {
+        $resultSet = $this->getDbTable()->fetchPaymentByTransactionId($id);
+        if (0 == count($resultSet)) {
+            return $payment;
+        }
+        $row = $resultSet->current();
+        $payment->setId($row->id)
+        ->setPrice($row->price)
+        ->setFirstName($row->first_name)
+        ->setLastName($row->last_name)
+        ->setStreet($row->street)
+        ->setPostalCode($row->postal_code)
+        ->setCity($row->city)
+        ->setState($row->state)
+        ->setCountry($row->country)
+        ->setDate($row->date)
+        ->setTransactionName($row->transaction_name)
+        ->setTransactionType($row->transaction_type)
+        ->setUserId($row->user_id)
+        ->setBraintreeTransactionId($row->braintree_transaction_id);
         return $payment;
     }
 }

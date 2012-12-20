@@ -220,17 +220,6 @@ class BraintreeController extends Integration_Controller_Action
                                     $store_extension->setBraintreeTransactionConfirmed(0);
                                     $store_extension->save();
 
-                                    // add task with extension installation
-                                    $extensionQueueItem = new Application_Model_Queue();
-                                    $extensionQueueItem->setStoreId($store->id);
-                                    $extensionQueueItem->setStatus('pending');
-                                    $extensionQueueItem->setUserId($user->getId());
-                                    $extensionQueueItem->setExtensionId($id);
-                                    $extensionQueueItem->setParentId(0);
-                                    $extensionQueueItem->setServerId($store->server_id);
-                                    $extensionQueueItem->setTask('ExtensionOpensource');
-                                    $extensionQueueItem->save();
-
                                     $extension = new Application_Model_Extension();
                                     $extension->find($id);
                                     $transaction_name = $extension->getName();
@@ -302,12 +291,22 @@ class BraintreeController extends Integration_Controller_Action
                             )
                         );
                     }
-                    return $this->_helper->redirector->gotoRoute(
-                        array(
-                            'controller' => 'my-account',
-                            'action' => 'compare'
-                        ), 'default', true
-                    );
+                    if($form == 'extension') {
+                        return $this->_helper->redirector->gotoRoute(
+                            array(
+                                'controller' => 'queue',
+                                'action' => 'extensions',
+                                'store' => $domain
+                            ), 'default', true
+                        );
+                    } else {
+                        return $this->_helper->redirector->gotoRoute(
+                            array(
+                                'controller' => 'my-account',
+                                'action' => 'compare'
+                            ), 'default', true
+                        );
+                    }
                 } else {
                     // transaction had wrong status
                     return $this->_helper->redirector->gotoRoute(
@@ -366,20 +365,39 @@ class BraintreeController extends Integration_Controller_Action
                             // show form
                             $this->view->id = $id;
                         } else {
+                            $old_plan = new Application_Model_Plan();
+                            $old_plan = $old_plan->find($user->getPlanId());
                             // @todo: remember to split date - we dont need exact time
-                            $subscription_end = strtotime($user->getPlanActiveTo());//strtotime('15-12-2012');
-                            $subscription_start = strtotime('-7 days', $subscription_end);
+                            $subscription_end = explode(' ', $user->getPlanActiveTo());
+                            $subscription_end = strtotime($subscription_end[0]);//strtotime('15-12-2012');
+                            $subscription_start = strtotime('-' . $old_plan->getBillingPeriod(), $subscription_end);
                             $today = strtotime(date('Y-m-d'));
-                            $plan_range_days = ($subscription_end-$subscription_start)/3600/24;
-                            $not_used_days = $plan_range_days-(($today-$subscription_start)/3600/24);
-                            $refund = number_format(($not_used_days*(float)$plan->getPrice())/($plan_range_days), 2);
+                            $subscription_range_days = ($subscription_end-$subscription_start)/3600/24;
+                            $subscription_used_days = (($today-$subscription_start)/3600/24)+1;
+                            $subscription_not_used_days = $subscription_range_days-$subscription_used_days;
+                            $refund = round($subscription_not_used_days/$subscription_range_days*(float)$old_plan->getPrice(), 2);
+                            
+                            $new_plan_start = $subscription_start;
+                            $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
+                            $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
+
+                            if($today >= $new_plan_end-(3600*24) AND $new_plan_range_days < $subscription_range_days) {
+                                $new_plan_start = $today;
+                                $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
+                                $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
+                            }
+                            $new_plan_used_days = (($today-$new_plan_start)/3600/24)+1;
+                            $new_plan_not_used_days = $new_plan_range_days-$new_plan_used_days;
+                            $extra_charge = round($new_plan_not_used_days/$new_plan_range_days*(float)$plan->getPrice(), 2);
+                            // if new plan ends earlier than the old one, move payment day to today
                             $result = null;
+                            $amount = (float)$extra_charge-$refund;
                             if($amount < 0) {
-                                $result = Braintree_Transaction::refund($user->getBraintreeTransactionId(), (float)$amount);
+                                $result = Braintree_Transaction::refund($user->getBraintreeTransactionId(), round(-1*$amount, 2));
                                 // lower the payment
                             } else {
                                 $result = Braintree_Transaction::sale(array(
-                                    'amount' => $amount,
+                                    'amount' => round($amount, 2),
                                     'customerId' => $user->getBraintreeVaultId()
                                 ));
                                 // @todo: add extra payment with new transaction id
@@ -388,11 +406,18 @@ class BraintreeController extends Integration_Controller_Action
                                     'controller' => 'my-account',
                                     'action' => 'index'
                             );
-                            if(is_object($result) AND $result->success) {
-                                $payment = new Application_Model_Payment();
-                                $payment = $payment->fetchByBraintreeTransactionId($user->getBraintreeTransactionId());
-                                $payment->setPrice((float)$payment->getPrice()+(float)$amount);
+                            $payment = new Application_Model_Payment();
+                            $payment->findByTransactionId($user->getBraintreeTransactionId());
+                            if(is_object($result) AND $result->success AND $payment->getId()) {
+                                if($amount > 0) {
+                                    $payment->setId(NULL);
+                                    $payment = $payment->fetchByBraintreeTransactionId($user->getBraintreeTransactionId());
+                                    $user->setBraintreeTransactionId($result->transaction->id);
+                                    $user->setBraintreeTransactionConfirmed(0);
+                                }
+                                $payment->setPrice((float)$payment->getPrice()+$amount);
                                 $payment->save();
+                                $user->save();
                                 $flash_message = 'Your plan has been successfully changed.';
                             } else {
                                 $flash_message = 'We couldn\'t change your plan.';

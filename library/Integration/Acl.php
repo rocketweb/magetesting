@@ -90,7 +90,7 @@ class Integration_Acl extends Zend_Acl
          */
         $this->allow('awaiting-user', 'default_error', array('error'));
         $this->allow('awaiting-user', 'default_index', array('index'));
-        $this->allow('guest', 'default_extensions', array('index'));
+        $this->allow('awaiting-user', 'default_extensions', array('index'));
         $this->allow('awaiting-user', 'default_queue', array(
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
