@@ -83,6 +83,14 @@ class Application_Form_StoreAddCustom extends Integration_Form{
                 'placeholder' => 'ie. ftp.my-company.com',
                 'class'      => 'span4'
         ));
+        
+        $this->addElement('text', 'custom_port', array(
+                'label'       => 'Port',
+                'required'    => false,
+                'label_class' => 'radio inline',
+                'placeholder' => 'leave blank for default',
+                'class'      => 'span4'
+        ));
 //        $this->custom_host->setValue('ie. ftp.my-company.com');
         
         $this->addElement('text', 'custom_remote_path', array(

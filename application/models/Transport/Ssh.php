@@ -4,6 +4,7 @@ class Application_Model_Transport_Ssh
 extends Application_Model_Transport {
 
     protected $_customHost = '';
+    protected $_customPort = '';
     protected $_customRemotePath = '';
     protected $_customFile = '';
     protected $_customSql = ''; 
@@ -15,15 +16,13 @@ extends Application_Model_Transport {
         $this->_storeObject = $store;
 
         parent::setup($store);
-
-        /*TODO: replace 22 with given port*/
-        $this->_connection = ssh2_connect($store->getCustomHost(), 22);
-        ssh2_auth_password($this->_connection, $store->getCustomLogin(), $store->getCustomPassword());
-
+        
+        $this->_prepareCustomVars($store);
+        $this->_connection = ssh2_connect($store->getCustomHost(), $store->getCustomPort());
+        ssh2_auth_password($this->_connection, $store->getCustomLogin(), $store->getCustomPass());
+        
         /*TODO: execute this somewhere, closeConnection() function? */
         //fclose($stream);
-
-        $this->_prepareCustomVars($store);
     }
 
     public function checkProtocolCredentials(){
@@ -44,6 +43,14 @@ extends Application_Model_Transport {
         }
         
         $this->_customHost = $customHost;
+        
+        //PORT
+        $customPort = $this->_storeObject->getCustomPort();
+        if (trim($customPort)==''){
+            $customPort = 22;
+        }
+        
+        $this->_customPort = $customPort;
 
         //PATH
         $customRemotePath = $this->_storeObject->getCustomRemotePath();
@@ -95,7 +102,7 @@ extends Application_Model_Transport {
         $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
-                .' "tar -zcf - '.$this->_customRemotePath.' --exclude='.$this->_customRemotePath.'var --exclude='.$this->_customRemotePath.'media"'
+                .' -p'.$this->_customPort.' "tar -zcf - '.$this->_customRemotePath.' --exclude='.$this->_customRemotePath.'var --exclude='.$this->_customRemotePath.'media"'
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
         
@@ -138,7 +145,7 @@ extends Application_Model_Transport {
         $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
-                .' "tar -zcf - '.$this->_customSql.'"'
+                .' -p'.$this->_customPort.' "tar -zcf - '.$this->_customSql.'"'
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
 
@@ -151,17 +158,17 @@ extends Application_Model_Transport {
     public function getError(){
         return $this->_errorMessage;
     }
-
+    
     public function getCustomSql(){
-	return $this->_customSql;
+       return $this->_customSql;
     }
 
     public function getCustomHost(){
-	return $this->_customHost;
+       return $this->_customHost;
     }
 
     public function getCustomRemotePath(){
-	return $this->_customRemotePath;
+       return $this->_customRemotePath;
     }
 
     protected function _downloadAndUnpack(){
@@ -183,7 +190,7 @@ extends Application_Model_Transport {
         $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
-                .' "cat '.$this->_customFile.'"'
+                .' -p'.$this->_customPort.' "cat '.$this->_customFile.'"'
                 .' | sudo tar -xzvf - -C .';
         exec($command,$output);
                      

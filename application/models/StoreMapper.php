@@ -40,6 +40,7 @@ class Application_Model_StoreMapper {
             'backend_password'           => $store->getBackendPassword(),
             'custom_protocol'            => $store->getCustomProtocol(),
             'custom_host'                => $store->getCustomHost(),
+            'custom_port'                => $store->getCustomPort(),
             'custom_remote_path'         => $store->getCustomRemotePath(),
             'custom_login'               => $store->getCustomLogin(),
             'custom_pass'                => $store->getCustomPass(),
@@ -83,6 +84,7 @@ class Application_Model_StoreMapper {
                 ->setBackendPassword($row->backend_password)
                 ->setCustomProtocol($row->custom_protocol)
                 ->setCustomHost($row->custom_host)
+                ->setCustomPort($row->custom_port)
                 ->setCustomRemotePath($row->custom_remote_path)
                 ->setCustomLogin($row->custom_login)
                 ->setCustomPass($row->custom_pass)
@@ -120,6 +122,7 @@ class Application_Model_StoreMapper {
                     ->setBackendPassword($row->backend_password)
                     ->setCustomProtocol($row->custom_protocol)
                     ->setCustomHost($row->custom_host)
+                    ->setCustomPort($row->custom_port)
                     ->setCustomRemotePath($row->custom_remote_path)
                     ->setCustomLogin($row->custom_login)
                     ->setCustomPass($row->custom_pass)

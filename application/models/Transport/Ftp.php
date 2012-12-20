@@ -3,6 +3,7 @@
 class Application_Model_Transport_Ftp extends Application_Model_Transport {
           
     protected $_customHost = '';
+    protected $_customPort = '';
     protected $_customRemotePath = '';
     protected $_customFile = '';
     protected $_customSql = ''; 
@@ -16,11 +17,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     public function checkProtocolCredentials(){
-        exec("wget --spider ".$this->_customHost." ".
+        exec("wget --spider ".$this->_customHost.":".$this->_customPort." ".
              "--passive-ftp ".
              "--user='".$this->_storeObject->getCustomLogin()."' ".
              "--password='".$this->_storeObject->getCustomPass()."' ".
-             "".$this->_customHost." 2>&1 | grep 'Logged in!'",$output);
+             "".$this->_customHost.":".$this->_customPort." 2>&1 | grep 'Logged in!'",$output);
                
         if (!isset($output[0])){
             throw new Application_Model_Transport_Exception('Couldn\'t log in with given ftp credentials');
@@ -29,21 +30,28 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     protected function _prepareCustomVars(Application_Model_Store $storeObject){
-        //HOST
+        //HOST - remove ending slash because we need it after port number
         $customHost = $this->_storeObject->getCustomHost();
-        //make sure custom host have slash at the end
-        if(substr($customHost,-1)!="/"){
-            $customHost .= '/';
+        $customHost = rtrim($customHost, '/');
+        $this->_customHost = $customHost;
+         
+        ///PORT
+        $customPort = $this->_storeObject->getCustomPort();
+        if (trim($customPort)==''){
+            $customPort = 21;
         }
         
-        //make sure remote path contains prefix:
+        //make sure custom port have slash at the end
+        if(substr($customPort,-1)!="/"){
+            $customPort .= '/';
+        }
+        $this->_customPort = $customPort;
         
+        //make sure remote path contains prefix:
         if(substr($customHost, 0, 6)!='ftp://'){
             $customHost = 'ftp://'.$customHost;
         }
         
-        $this->_customHost = $customHost;
-
         //PATH
         $customRemotePath = $this->_storeObject->getCustomRemotePath();
         //make sure remote path containts slash at the end
@@ -54,21 +62,20 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         //make sure remote path does not contain slash at the beginning
         $customRemotePath = ltrim($customRemotePath, '/');
         $this->_customRemotePath = $customRemotePath;
-       
+
         //SQL
          //make sure sql file path does not contain slash at the beginning       
         $customSql = $this->_storeObject->getCustomSql();
         $customSql = ltrim($customSql, '/');
-        
         $this->_customSql = $customSql;
-        
+
         //FILE
          //make sure sql file path does not contain slash at the beginning       
         $customFile = $this->_storeObject->getCustomFile();
         $customFile = ltrim($customFile,'/');
-        
+
         $this->_customFile = $customFile;
-        
+
         return true;
     }
     
@@ -85,11 +92,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     /* todo: make this protected */
     protected function _downloadStoreFiles(){
         //do a sample connection, and check for index.php, if it works, start fetching
-        $command = "wget --spider ".$this->_customHost.$this->_customRemotePath."app/Mage.php 2>&1 ".
+        $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."app/Mage.php 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_storeObject->getCustomLogin()."' ".
             "--password='".$this->_storeObject->getCustomPass()."' ".
-            "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'";
+            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command, $output);
         //$message = var_export($output, true);
         //$log->log($command."\n" . $message, LOG_DEBUG);
@@ -122,7 +129,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
                     $this->_customRemotePath."skin' " .
              "--user='".$this->_storeObject->getCustomLogin()."' ".
              "--password='".$this->_storeObject->getCustomPass()."' ".
-             "".$this->_customHost.$this->_customRemotePath."";
+             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."";
         exec($command, $output);
         //$message = var_export($output, true);
 
@@ -136,11 +143,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
 
     public function checkDatabaseDump(){
-        $command = "wget --spider ".$this->_customHost.$this->_customSql." 2>&1 ".
+        $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customSql." 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_storeObject->getCustomLogin()."' ".
             "--password='".$this->_storeObject->getCustomPass()."' ".
-            "".$this->_customHost.$this->_customRemotePath." | grep 'SIZE'";
+            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command,$output);
 
         //$message = var_export($output, true);
@@ -172,12 +179,12 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     
     public function downloadDatabase(){
         
-        $command = "wget  ".$this->_customHost.$this->_customSql." ".
+        $command = "wget  ".$this->_customHost.":".$this->_customPort."".$this->_customSql." ".
             "--passive-ftp ".
             "-N ".  
             "--user='".$this->_storeObject->getCustomLogin()."' ".
             "--password='".$this->_storeObject->getCustomPass()."' ".
-            "".$this->_customHost.$this->_customRemotePath." ";
+            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
         //$message = var_export($output, true);
         
@@ -191,26 +198,26 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     public function getCustomSql(){
-	return $this->_customSql;
+       return $this->_customSql;
     }
-    
+
     public function getCustomHost(){
-	return $this->_customHost;
+       return $this->_customHost;
     }
-    
+
     public function getCustomRemotePath(){
-	return $this->_customRemotePath;
+       return $this->_customRemotePath;
     }
     
     protected function _downloadAndUnpack(){
         
         //download file
-        $command = "wget  ".$this->_customHost.$this->_customFile." ".
+        $command = "wget  ".$this->_customHost.":".$this->_customPort."".$this->_customFile." ".
             "--passive-ftp ".
             "-N ".  
             "--user='".$this->_storeObject->getCustomLogin()."' ".
             "--password='".$this->_storeObject->getCustomPass()."' ".
-            "".$this->_customHost.$this->_customRemotePath." ";
+            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
         //$message = var_export($output, true);
         unset($output);

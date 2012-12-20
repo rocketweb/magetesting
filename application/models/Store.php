@@ -27,6 +27,7 @@ class Application_Model_Store {
     protected $_type;
     protected $_custom_protocol;
     protected $_custom_host;
+    protected $_custom_port;
     protected $_custom_remote_path;
     protected $_custom_login;
     protected $_custom_pass;
@@ -235,6 +236,7 @@ class Application_Model_Store {
                 'sample_data'      => $this->getSampleData(),
                 'custom_protocol'  => $this->getCustomProtocol(),
                 'custom_host'      => $this->getCustomHost(),
+                'custom_port'      => $this->getCustomPort(),
                 'custom_remote_path' => $this->getCustomRemotePath(),
                 'custom_login'     =>  $this->getCustomLogin(),
                 'custom_pass'      => $this->getCustomPass(),
@@ -294,6 +296,15 @@ class Application_Model_Store {
     
     public function setCustomHost($value){
       $this->_custom_host = $value;
+      return $this;
+    }
+    
+    public function getCustomPort(){
+      return $this->_custom_port;
+    }
+    
+    public function setCustomPort($value){
+      $this->_custom_port = $value;
       return $this;
     }
     
