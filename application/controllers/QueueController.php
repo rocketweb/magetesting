@@ -805,7 +805,7 @@ class QueueController extends Integration_Controller_Action {
             $storeModel->find($store->id);
             $storeModel->setStatus('deploying-revision')->save();
             
-            $this->_helper->FlashMessenger('Requested.');
+            $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'Deployment package will be created soon and will be available to download on Deployment list.'));
         }
         return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
