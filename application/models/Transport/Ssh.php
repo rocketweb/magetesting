@@ -59,7 +59,7 @@ extends Application_Model_Transport {
             $customRemotePath .= '/';
         }
 
-        //make sure remote path does not contain slash at the beginning       
+        //make sure remote path does contain slash at the beginning       
         $customRemotePath = ltrim($customRemotePath,'/');
         
         $this->_customRemotePath = $customRemotePath;

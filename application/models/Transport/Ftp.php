@@ -22,7 +22,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
              "--user='".$this->_storeObject->getCustomLogin()."' ".
              "--password='".$this->_storeObject->getCustomPass()."' ".
              "".$this->_customHost.":".$this->_customPort." 2>&1 | grep 'Logged in!'",$output);
-               
+
         if (!isset($output[0])){
             throw new Application_Model_Transport_Exception('Couldn\'t log in with given ftp credentials');
         }
@@ -33,8 +33,13 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         //HOST - remove ending slash because we need it after port number
         $customHost = $this->_storeObject->getCustomHost();
         $customHost = rtrim($customHost, '/');
+        
+        //make sure remote path contains prefix:
+        if(substr($customHost, 0, 6)!='ftp://'){
+            $customHost = 'ftp://'.$customHost;
+        }
         $this->_customHost = $customHost;
-         
+        
         ///PORT
         $customPort = $this->_storeObject->getCustomPort();
         if (trim($customPort)==''){
@@ -42,15 +47,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
         
         //make sure custom port have slash at the end
-        if(substr($customPort,-1)!="/"){
-            $customPort .= '/';
-        }
+        //if(substr($customPort,-1)!="/"){
+//            $customPort .= '/';
+//        }
         $this->_customPort = $customPort;
         
-        //make sure remote path contains prefix:
-        if(substr($customHost, 0, 6)!='ftp://'){
-            $customHost = 'ftp://'.$customHost;
-        }
         
         //PATH
         $customRemotePath = $this->_storeObject->getCustomRemotePath();
@@ -58,15 +59,23 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         if(substr($customRemotePath,-1)!="/"){
             $customRemotePath .= '/';
         }
+        
+        //make sure remote path containts slash at the beginning
+        if (substr($customRemotePath, 0, 1)!='/'){
+            $customRemotePath = '/'.$customRemotePath;
+        }
 
         //make sure remote path does not contain slash at the beginning
-        $customRemotePath = ltrim($customRemotePath, '/');
+        //$customRemotePath = ltrim($customRemotePath, '/');
         $this->_customRemotePath = $customRemotePath;
 
         //SQL
          //make sure sql file path does not contain slash at the beginning       
         $customSql = $this->_storeObject->getCustomSql();
-        $customSql = ltrim($customSql, '/');
+        //make sure remote path containts slash at the beginning
+        if (substr($customSql, 0, 1)!='/'){
+            $customSql = '/'.$customSql;
+        }
         $this->_customSql = $customSql;
 
         //FILE
