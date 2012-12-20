@@ -77,13 +77,13 @@ class Application_Model_StoreExtensionMapper{
         return $entries;
     }
 
-    public function fetchStoreExtension($store_id, $extension_id) {
+    public function fetchStoreExtension($store_id, $extension_id, Application_Model_StoreExtension $storeExtension) {
         $result = $this->getDbTable()->fetchStoreExtension($store_id, $extension_id);
         if (0 == count($result)) {
             return;
         }
-        $row = $result->current();
-        $storeExtension = new Application_Model_StoreExtension();
+        $row = $result->current();       
+        
         $storeExtension->setId($row->id)
             ->setStoreId($row->store_id)
             ->setExtensionId($row->extension_id)

@@ -133,7 +133,7 @@ class Application_Model_StoreExtension {
     }
 
     public function fetchStoreExtension($store_id, $extension_id) {
-        return $this->getMapper()->fetchStoreExtension($store_id, $extension_id);
+        return $this->getMapper()->fetchStoreExtension($store_id, $extension_id, $this);
     }
     
     public function __toArray()
