@@ -19,7 +19,7 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
         $select = $this->select()
                        ->from($this->_name)
                        ->setIntegrityCheck(false)
-                       ->join('version', 'store.version_id = version.id',array('version'))
+                       ->join('version', 'store.version_id = version.id', array('version'))
                        ->joinLeft(array('r' => new Zend_Db_Expr(
                                    '(SELECT r.comment, r.store_id 
                                    FROM revision r 
@@ -29,10 +29,20 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
                            'r.store_id = '.$this->_name.'.id', 
                            array('r.comment')
                        )
+                       ->joinLeft(array('l' => new Zend_Db_Expr(
+                                   '(SELECT l.msg, l.store_id
+                                   FROM store_log l 
+                                   WHERE l.lvl = 3 ORDER BY l.time DESC LIMIT 1)'
+                               )
+                           ),
+                           'l.store_id = '.$this->_name.'.id', 
+                           array('l.msg')
+                       )
                        ->where('user_id = ?', $user_id)
                        ->where('status != ?', 'removing-magento')
                        ->group(array('store.id'))
                        ->order(array('status asc', 'store.id asc'));
+
         return $select;
     }
 

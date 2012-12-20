@@ -101,7 +101,7 @@
                                 <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px">
                                     <span class="bar" style="width: 100%;"></span>
                                 </span>
-                                <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="A Title" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : ''  ?>">
+                                <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="<?php echo $this->escape($item['store_name']) ?>" data-content="<?php echo ($item['msg']) ? $item['msg'] : ''  ?>">
                                 <?php /*if($item['status'] == 'pending'): ?>
                                     In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
                                 <?php else:*/ ?>
