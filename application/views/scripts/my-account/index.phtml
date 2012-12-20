@@ -110,10 +110,11 @@
                     <?php if($this->payments): ?>
                         <?php foreach($this->payments as $payment): ?>
                         <div class="row">
-                            <div class="span4">
+                            <div class="span5">
                                 <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId()), 'default', true); ?>">
                                     <?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?>
                                 </a>
+                                 - <?php echo $payment->getTransactionName(); ?>
                                  - <?php echo date('m/d/Y', strtotime($payment->getDate())); ?>
                                  - $<?php echo $payment->getPrice(); ?>
                             </div>
