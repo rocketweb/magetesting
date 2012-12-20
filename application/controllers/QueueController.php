@@ -3,7 +3,7 @@
 class QueueController extends Integration_Controller_Action {
 
     public function init() {
-        $this->_helper->sslSwitch(false);
+        $this->_helper->sslSwitch();
         parent::init();
     }
 
