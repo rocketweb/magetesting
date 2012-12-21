@@ -100,20 +100,26 @@
                                $progressClass = 'progress-info';
                         endswitch;
                     ?>
-                        <div class="span4 right-content pull-right">
+                        <div class="span3 right-content pull-right">
                             <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''); ?>">
-                                <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px">
-                                    <span class="bar" style="width: 100%;"></span>
+                                <?php if($item['status'] == 'error'): ?>
+                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : ''  ?>" data-trigger="hover">
+                                <?php endif; ?>
+                                    <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px" >
+                                        <span class="bar" style="width: 100%;"></span>
+                                    </span>
+                                    <span class="pending pull-right statusHolder">
+                                    <?php /*if($item['status'] == 'pending'): ?>
+                                        In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
+                                    <?php else:*/ ?>
+                                        <?php echo $this->niceStatus($item['status']); ?>
+                                        <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
+                                            - <?php echo $this->leftTime($this->queueCounter[$item['id']]); ?>
+                                        <?php endif; ?>
+                                    </span>
+                                <?php if($item['status'] == 'error'): ?>
                                 </span>
-                                <span class="pending pull-right statusHolder" rel="popover" data-placement="bottom" data-original-title="<?php echo $this->escape($item['store_name']) ?>" data-content="<?php echo ($item['msg']) ? $item['msg'] : ''  ?>">
-                                <?php /*if($item['status'] == 'pending'): ?>
-                                    In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
-                                <?php else:*/ ?>
-                                    <?php echo $this->niceStatus($item['status']); ?>
-                                    <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
-                                        - <?php echo $this->leftTime($this->queueCounter[$item['id']]); ?>
-                                    <?php endif; ?>
-                                </span>
+                                <?php endif; ?>
                             </div>
                             <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?>">
                             	<a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
