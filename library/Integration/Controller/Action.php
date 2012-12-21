@@ -71,6 +71,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
             $user = new Application_Model_User();
             $user->find($auth->getIdentity()->id);
             $this->view->loggedUser = $user;
+            $auth->getStorage()->write((object)$user->__toArray());
         }
 
         $this->acl = $acl;
