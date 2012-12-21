@@ -40,12 +40,12 @@ ADD CONSTRAINT `fk_store_version`
     ON UPDATE NO ACTION,
 ADD INDEX `fk_store_version` (`version_id` ASC)';
 
-/* if user is removed remove all user stores */
+/* if user is removed leave stores */
 $sql[]=  'ALTER TABLE `store` 
 ADD CONSTRAINT `fk_store_user`
     FOREIGN KEY (`user_id` )
     REFERENCES `user` (`id` )
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
 ADD INDEX `fk_store_user` (`user_id` ASC)';
 
@@ -88,5 +88,5 @@ $sql[]="INSERT INTO `version` (`id`, `edition`, `version`, `sample_data_version`
 (12, 'CE', '1.7.0.1', '1.6.1.0'),
 (13, 'CE', '1.7.0.2', '1.6.1.0');";
 
-/*update alpha to stable*/
+/* update alpha to stable */
 $sql[]="UPDATE `version` SET `version`='1.7.0.0' WHERE id=7;";
