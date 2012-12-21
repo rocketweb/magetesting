@@ -65,11 +65,6 @@ class Application_Form_EditAccount extends Integration_Form
         ));
 
         $states = RocketWeb_List::getStatesOfAmerica();
-        $multi = array('None' => 'None');
-        foreach ($states as $state) {
-            $multi[$state] = $state;
-        }
-
         // Add a state element
         $this->addElement('select', 'state', array(
                 'label'      => 'State',
@@ -79,7 +74,7 @@ class Application_Form_EditAccount extends Integration_Form
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                 ),
                 'class'      => 'span4',
-                'multiOptions' => $multi
+                'multiOptions' => array_combine($states, $states)
         ));
         
         // Add a city element
@@ -94,10 +89,6 @@ class Application_Form_EditAccount extends Integration_Form
         ));
 
         $countries = RocketWeb_List::getCountries();
-        $multi = array();
-        foreach ($countries as $country) {
-            $multi[$country] = $country;
-        }
         // Add a city element
         $this->addElement('select', 'country', array(
                 'label'      => 'Country',
@@ -107,7 +98,7 @@ class Application_Form_EditAccount extends Integration_Form
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                 ),
                 'class'      => 'span4',
-                'multiOptions' => $multi
+                'multiOptions' => array_combine($countries, $countries)
         ));
 
         // Add the submit button
