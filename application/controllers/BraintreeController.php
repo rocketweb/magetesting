@@ -302,10 +302,16 @@ class BraintreeController extends Integration_Controller_Action
                             $user->save();
                         }
 
+                        if ('extension' === $pay_for) {
+                            $message = 'You have successfully bought extension. It will be uploaded in open source version into your store just after transaction is confirmed.';
+                        } else {
+                            $message = 'You have successfully paid for your plan.';
+                        }
+
                         $this->_helper->flashMessenger(
                             array(
                                 'type' => 'success',
-                                'message' =>  'You have successfully bought '.$pay_for.' extension. It will be uploaded in open source version into your store just after transaction is confirmed.'
+                                'message' =>  $message
                             )
                         );
                     }
