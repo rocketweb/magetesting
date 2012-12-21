@@ -104,7 +104,7 @@ class MyAccountController extends Integration_Controller_Action
             }
 
             if($informPayPal) {
-                $this->view->messages[] = array('type' => 'notice', 'message' => 'You have to fill your details before any subscription.');                
+                $this->view->messages[] = array('type' => 'notice', 'message' => 'Please fill your billing details before you choose plan.');
             }
 
             $this->view->form = $form;

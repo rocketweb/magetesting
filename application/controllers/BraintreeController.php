@@ -305,7 +305,7 @@ class BraintreeController extends Integration_Controller_Action
                         $this->_helper->flashMessenger(
                             array(
                                 'type' => 'success',
-                                'message' => 'You have been succefully charged for '.$pay_for.'.'
+                                'message' =>  'You have successfully bought '.$pay_for.' extension. It will be uploaded in open source version into your store just after transaction is confirmed.'
                             )
                         );
                     }
