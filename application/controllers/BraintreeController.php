@@ -170,7 +170,7 @@ class BraintreeController extends Integration_Controller_Action
             /**
              * 
              */
-            $this->view->source = $form;
+            $this->view->source = $this->_getParam('source',null);
         }
     }
 

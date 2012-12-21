@@ -141,6 +141,9 @@
                         <a href="<?php
                         switch($this->source){
                             case 'extension':
+                                echo $this->url(array('controller' => 'queue', 'action' => 'extension','domain' => $this->domain), 'default', true);
+                                break;
+                            case 'deployment-request':
                                 echo $this->url(array('controller' => 'user', 'action' => 'dashboard'), 'default', true);
                                 break;
                             case 'plan':
