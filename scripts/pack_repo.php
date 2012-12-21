@@ -1,4 +1,12 @@
 <?php
+
+/**
+ *  WARNING: this script has to be changed before it is ready to use again, 
+ *  due to removal of DevExtension classes, it is no longer working
+ */
+
+die ('Sorry, this script is currently under mainteance');
+
 error_reporting(0);
 ini_set('display_errors',0);
 include 'init.console.php';
