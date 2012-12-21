@@ -16,7 +16,6 @@ class RocketWeb_List {
      */
     public static function getCountries() {
         return array(
-            'US' => 'United States',
             'AF' => 'Afghanistan',
             'AL' => 'Albania',
             'DZ' => 'Algeria',
@@ -243,6 +242,7 @@ class RocketWeb_List {
             'GB' => 'United Kingdom',
             'UM' => 'United States Minor Outlying Islands',
             'UY' => 'Uruguay',
+            'US' => 'United States',
             'UZ' => 'Uzbekistan',
             'VU' => 'Vanuatu',
             'VE' => 'Venezuela',
