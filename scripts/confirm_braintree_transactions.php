@@ -3,10 +3,10 @@
 include 'init.console.php';
 require_once 'Braintree.php';
 
-Braintree_Configuration::environment('sandbox');
-Braintree_Configuration::merchantId('hwwzbybn8tvfrhjz');
-Braintree_Configuration::publicKey('rpxf8q436zfmp78r');
-Braintree_Configuration::privateKey('e87aea495ca0f8dfab7137f52b9adf26');
+Braintree_Configuration::environment($config->braintree->environment);
+Braintree_Configuration::merchantId($config->braintree->merchantId);
+Braintree_Configuration::publicKey($config->braintree->publicKey);
+Braintree_Configuration::privateKey($config->braintree->privateKey);
 
 $select = new Zend_Db_Select($db);
 $sql = $select
