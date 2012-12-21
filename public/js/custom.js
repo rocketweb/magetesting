@@ -24,6 +24,9 @@ $(document).ready(function () {
         $base_url = $('#base-url').val();
 
     $deploy_table_body.on('click', '.request-deployment.request-buy', function(e) {
+        if ($(this).is('.disabled')){
+            return false;
+        }
         e.stopPropagation();
         e.preventDefault();
         var $this = $(this);
