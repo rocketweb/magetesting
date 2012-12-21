@@ -46,7 +46,7 @@ class Integration_Acl extends Zend_Acl
          * Set up privileges for guest
          */
         $this->allow('guest', 'default_error', array('error'));
-        $this->allow('guest', 'default_index', array('index'));
+        $this->allow('guest', 'default_index', array('index', 'about-us', 'contact-us', 'partners', 'privacy', 'terms-of-service'));
         $this->allow('guest', 'default_extensions', array('index'));
         $this->allow('guest', 'default_user', array(
                 'login', 'password-recovery', 'register', 'activate', 'reset-password', 'set-new-password'
@@ -56,7 +56,7 @@ class Integration_Acl extends Zend_Acl
          * Set up privileges for free-user
          */
         $this->allow('free-user', 'default_error', array('error'));
-        $this->allow('free-user', 'default_index', array('index'));
+        $this->allow('free-user', 'default_index', array('index', 'about-us', 'contact-us', 'partners', 'privacy', 'terms-of-service'));
         $this->allow('free-user', 'default_extensions', array('index'));
         $this->allow('free-user', 'default_queue', array(
                 'add','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus'
@@ -72,7 +72,7 @@ class Integration_Acl extends Zend_Acl
          * Set up privileges for commercial-user
          */
         $this->allow('commercial-user', 'default_error', array('error'));
-        $this->allow('commercial-user', 'default_index', array('index'));
+        $this->allow('commercial-user', 'default_index', array('index', 'about-us', 'contact-us', 'partners', 'privacy', 'terms-of-service'));
         $this->allow('commercial-user', 'default_extensions', array('index'));
         $this->allow('commercial-user', 'default_queue', array(
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
@@ -89,7 +89,7 @@ class Integration_Acl extends Zend_Acl
          * Set up privileges for awaiting-user
          */
         $this->allow('awaiting-user', 'default_error', array('error'));
-        $this->allow('awaiting-user', 'default_index', array('index'));
+        $this->allow('awaiting-user', 'default_index', array('index', 'about-us', 'contact-us', 'partners', 'privacy', 'terms-of-service'));
         $this->allow('awaiting-user', 'default_extensions', array('index'));
         $this->allow('awaiting-user', 'default_queue', array(
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
