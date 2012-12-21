@@ -439,6 +439,14 @@ class UserController extends Integration_Controller_Action
         $form->server_id->setMultiOptions($servers);
         $form->populate($user->__toArray());
         
+        if(!$user->getState()) {
+            $form->state->setValue('Select State');
+        }
+        
+        if(!$user->getCountry()) {
+            $form->country->setValue('United States');
+        }
+        
         if ($this->_request->isPost()) {
             $form->removeElement('login');
             

@@ -55,7 +55,13 @@ class MyAccountController extends Integration_Controller_Action
 
             $form = new Application_Form_EditAccount();
             $form->populate($user->__toArray());
-            
+            if(!$user->getState()) {
+                $form->state->setValue('Select State');
+            }
+
+            if(!$user->getCountry()) {
+                $form->country->setValue('United States');
+            }
             $informPayPal = (int)$this->getRequest()->getParam('inform', 0);
 
             if ($this->_request->isPost()) {
