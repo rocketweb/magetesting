@@ -54,11 +54,25 @@ if($result) {
                     array('braintree_transaction_confirmed' => 1), // set
                     array('extension_id = ?' => $row['extension_id'], 'store_id = ?' => $row['store_id']) // where
             );
-            
+
             //get store
             $storeModel = new Application_Model_Store();
             $storeModel->find($row['store_id']);
-            
+
+            // raise plan for user with 7 days plan
+            $user = new Application_Model_User();
+            $user->find($storeModel->getUserId());
+
+            $plan = new Application_Model_Plan();
+            $plan->find($user->getPlanId());
+            if(stristr($plan->getBillingPeriod(), 'days')) {
+                $user->setPlanActiveTo(date('Y-m-d', strtotime('+7 days', strtotime($user->getPlanActiveTo()))));
+                $user->setPlanRaisedToDate(date('Y-m-d', strtotime('+7 days')));
+                $user->setPlanIdBeforeRaising($user->getPlanId());
+                $user->setPlanId(2);
+                $user->save();
+            }
+
             $extensionModel = new Application_Model_Extension();
             $extensionModel->find($row['extension_id']);
                        

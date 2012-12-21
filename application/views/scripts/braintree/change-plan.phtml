@@ -1,6 +1,47 @@
-<form method="post">
-    <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
-    <p>Do you really want to change plan?</p>
-    <button class="btn btn-primary" type="submit" name="confirm" value="1">Yes</button>
-    <a class="btn" href="<?php echo $this->url(array('controller' => 'my-account'), 'default', true); ?>" name="confirm" value="1">No</a>
-</form>
+<div class="row">
+    <div class="span12">
+        <div class="form-box">
+            <div class="box">
+                <form class="form-stacked" id="payment-form" method="POST" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'change-plan'), 'default', true); ?>">
+                    <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
+                    <input type="hidden" name="confirm" value="1" />
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Changing Plan</legend>
+                        <p>We will use your credit card stored in Braintree Vault to extra charge/refund you.</p>
+                    </fieldset>
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Payment Details</legend>
+                        <?php echo $this->specific_content; ?>
+                    </fieldset>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-inverse pull-right">
+                            <i class="icon-white icon-ok"></i>&nbsp;Pay
+                        </button>
+                    <?php if(!$this->show_billing_and_card): ?>
+                        <p class="pull-right braintree-vault-note">
+                            Your Credit Card saved in secure Braintree Vault will be used for payment.
+                        </p>
+                    <?php endif; ?>
+
+                        <a href="<?php
+                        switch($this->source){
+                            case 'extension':
+                                echo $this->url(array('controller' => 'queue', 'action' => 'extensions','store'=> $this->domain), 'default', true);
+                                break;
+                            case 'deployment-request':
+                                echo $this->url(array('controller' => 'user', 'action' => 'dashboard'), 'default', true);
+                                break;
+                            case 'plan':
+                            default:
+                                echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); 
+                                break;
+                        }
+                        ?>" class="btn">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

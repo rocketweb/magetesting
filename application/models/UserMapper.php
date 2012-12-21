@@ -82,6 +82,8 @@ class Application_Model_UserMapper {
              ->setBraintreeTransactionId($row->braintree_transaction_id)
              ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
              ->setServerId($row->server_id)
+             ->setPlanRaisedToDate($row->plan_raised_to_date)
+             ->setPlanIdBeforeRaising($row->plan_id_before_raising)
              ->setHasPapertrailAccount($row->has_papertrail_account)
              ->setPapertrailApiToken($row->papertrail_api_token);
 
@@ -121,6 +123,8 @@ class Application_Model_UserMapper {
                   ->setHasSystemAccount($row->has_system_account)
                   ->setSystemAccountName($row->system_account_name)
                   ->setDowngraded($row->downgraded)
+                  ->setPlanRaisedToDate($row->plan_raised_to_date)
+                  ->setPlanIdBeforeRaising($row->plan_id_before_raising)
                   ->setBraintreeVaultId($row->braintree_vault_id)
                   ->setBraintreeTransactionId($row->braintree_transaction_id)
                   ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)

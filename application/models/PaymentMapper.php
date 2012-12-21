@@ -32,7 +32,7 @@ class Application_Model_PaymentMapper {
     {
         $data = $payment->__toArray();
 
-        if (null === ($id = $payment->getId())) {
+        if (!(int)$id = $payment->getId()) {
             unset($data['id']);
             $this->getDbTable()->insert($data);
         } else {
@@ -150,7 +150,7 @@ class Application_Model_PaymentMapper {
         if (0 == count($resultSet)) {
             return $payment;
         }
-        $row = $resultSet->current();
+        $row = $resultSet;
         $payment->setId($row->id)
         ->setPrice($row->price)
         ->setFirstName($row->first_name)

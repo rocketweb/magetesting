@@ -15,8 +15,7 @@ $sql = $select
     ->where(new Zend_Db_Expr('plan_active_to <= CURRENT_TIMESTAMP'))
     ->where(new Zend_Db_Expr('LENGTH(braintree_transaction_id) > 0'))
     ->where('braintree_transaction_confirmed = 1')
-    ->where('billing_period != ?', '7 days')
-    ->where('downgraded != 2');
+    ->where('billing_period NOT LIKE ?', '%days');
 
 $result = $db->fetchAll($sql);
 
@@ -36,7 +35,7 @@ if($result) {
                 $db->update(
                     'user', // table
                     array(
-                        'braintree_transaction_confirmed' => 1,
+                        'braintree_transaction_confirmed' => 0,
                         'braintree_transaction_id' => $braintree->transaction->id,
                         'plan_active_to' => date('Y-m-d', 
                             // increase saved plan_active_to by plan billing period

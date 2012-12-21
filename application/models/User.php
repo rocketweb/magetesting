@@ -48,6 +48,10 @@ class Application_Model_User {
 
     protected $_server_id;
 
+    protected $_plan_raised_to_date;
+
+    protected $_plan_id_before_raising;
+
     protected $_mapper;
 
     protected $_has_papertrail_account;
@@ -363,6 +367,28 @@ class Application_Model_User {
         return $this->_server_id;
     }
     
+    public function setPlanRaisedToDate($value)
+    {
+        $this->_plan_raised_to_date = $value;
+        return $this;
+    }
+    
+    public function getPlanRaisedToDate()
+    {
+        return $this->_plan_raised_to_date;
+    }
+    
+    public function setPlanIdBeforeRaising($value)
+    {
+        $this->_plan_id_before_raising = $value;
+        return $this;
+    }
+    
+    public function getPlanIdBeforeRaising()
+    {
+        return $this->_plan_id_before_raising;
+    }
+    
     public function getHasPapertrailAccount()
     {
         return $this->_has_papertrail_account;
@@ -468,6 +494,8 @@ class Application_Model_User {
             'braintree_transaction_id' => $this->getBraintreeTransactionId(),
             'braintree_transaction_confirmed' => $this->getBraintreeTransactionConfirmed(),
             'server_id' => $this->getServerId(),
+            'plan_raised_to_date' => $this->getPlanRaisedToDate(),
+            'plan_id_before_raising' => $this->getPlanIdBeforeRaising(),
             'has_papertrail_account' =>$this->getHasPapertrailAccount(),
             'papertrail_api_token' => $this->getPapertrailApiToken(),
         );

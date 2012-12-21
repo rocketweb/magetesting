@@ -123,12 +123,57 @@
                             </div>
                             <div class="for-use <?php echo ($item['status'] == 'ready' ? '' : 'hidden'); ?>">
                             	<a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
+<?php
+/* For now, admin autologin feature will be disabled due to no secure content policy ( SSL )
+   I removed JS content from custom.js $admin_panel
+if($admin_panel.length) {
+    $admin_panel.click(function(e) {
+        // stop bootstrap collapsing
+        e.stopPropagation();
+
+        // create fake link to avoid popup closing
+        $('body').append('<a class="hidden" id="open_admin_panel">Fake click</a>');
+        var $this = $(this),
+        $created_link = $('#open_admin_panel');
+        $created_link.click(function(){
+            var $opened_window = window.open('http://'+window.location.host+$this.siblings('.view-store').attr('href')+'/'+$this.data('backend-name')),
+            $attempts = 0,
+            $fill_window_form = function() {
+                var $window_context = $($opened_window.document).contents();
+                var $login = $window_context.find('input:text'),
+                $password = $login.end().find('input:password');
+                if($login.length) {
+                    $login.val($this.data('admin-login'))
+                    .end().find('input:password').val($this.data('admin-password'))
+                    .parents('form:first').submit();
+                    $opened_window.focus();
+                } else if(!$window_context.find('body > *').length && $attempts < 100) {
+                    $attempts++;
+                    setTimeout($fill_window_form, 100);
+                }
+            }
+            setTimeout($fill_window_form, 100);
+            $created_link.remove();
+            return false;
+        });
+        $created_link.click();
+        e.preventDefault();
+    });
+}
+
+And this is button from autologin feature
+<a
+    href="#"
+    class="btn btn-mini admin-panel pull-right"
+    data-backend-name="<?php echo $item['backend_name']; ?>"
+    data-admin-login="<?php echo $this->user->login; ?>"
+    data-admin-password="<?php echo $item['backend_password']; ?>"
+><i class="icon icon-wrench"></i> Admin Panel</a>
+*/
+?>
                         	    <a
-                                    href="#"
+                                    href="<?php echo str_replace('https', 'http', $this->serverUrl()).$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true).'/'.$item['backend_name']; ?>"
                                     class="btn btn-mini admin-panel pull-right"
-                                    data-backend-name="<?php echo $item['backend_name']; ?>"
-                                    data-admin-login="<?php echo $this->user->login; ?>"
-                                    data-admin-password="<?php echo $item['backend_password']; ?>"
                                 ><i class="icon icon-wrench"></i> Admin Panel</a>
                             	<a target="_blank" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
                             </div>

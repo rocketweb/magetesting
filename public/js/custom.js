@@ -212,40 +212,6 @@ $(document).ready(function () {
             e.stopPropagation();
         })
     }
-    if($admin_panel.length) {
-        $admin_panel.click(function(e) {
-            // stop bootstrap collapsing
-            e.stopPropagation();
-
-            // create fake link to avoid popup closing
-            $('body').append('<a class="hidden" id="open_admin_panel">Fake click</a>');
-            var $this = $(this),
-                $created_link = $('#open_admin_panel');
-            $created_link.click(function(){
-                var $opened_window = window.open($this.siblings('.view-store').attr('href')+'/'+$this.data('backend-name')),
-                    $attempts = 0,
-                    $fill_window_form = function() {
-                    var $window_context = $($opened_window.document).contents();
-                    var $login = $window_context.find('input:text'),
-                        $password = $login.end().find('input:password');
-                    if($login.length) {
-                        $login.val($this.data('admin-login'))
-                        .end().find('input:password').val($this.data('admin-password'))
-                        .parents('form:first').submit();
-                        $opened_window.focus();
-                    } else if(!$window_context.find('body > *').length && $attempts < 100) {
-                        $attempts++;
-                        setTimeout($fill_window_form, 100);
-                    }
-                }
-                setTimeout($fill_window_form, 100);
-                $created_link.remove();
-                return false;
-            });
-            $created_link.click();
-            e.preventDefault();
-        });
-    }
 
     /* STORE EXTENSIONS ISOTOPE */
     var $extensions_isotope = $('.extensions_well > #container'),

@@ -33,7 +33,7 @@ class BraintreeController extends Integration_Controller_Action
         $id = $this->_getParam('id');
 
         // check whether GET params are ok
-        if(!in_array($form, array('plan', 'extension'))) {
+        if(!in_array($form, array('plan', 'extension', 'change-plan'))) {
             $form = null;
             $message = 'Wrong form type.';
         }
@@ -59,7 +59,7 @@ class BraintreeController extends Integration_Controller_Action
                 ), 'default', true
             );
         } else {
-            $domain = $this->_getParam('domain');
+            $this->view->domain = $domain = $this->_getParam('domain');
             // we need domain name when someone buys an extension
             if($form == 'extension' AND !$domain) {
                 $this->_helper->flashMessenger(
@@ -92,11 +92,26 @@ class BraintreeController extends Integration_Controller_Action
                     );
 
                     // Do not allow user to change his plan before braintree settle last transaction
-                    if($form == 'plan' AND $user->hasPlanActive() AND !(int)$user->getBraintreeTransactionConfirmed()) {
+                    if(($form == 'plan' OR $form == 'change-plan') AND $user->hasPlanActive() AND !(int)$user->getBraintreeTransactionConfirmed()) {
                         $this->_helper->flashMessenger(
                             array(
                                 'type' => 'error', 
                                 'message' => 'You can\'t change plan before your last transaction will not be settled.'
+                            )
+                        );
+                        return $this->_helper->redirector->gotoRoute(
+                            array(
+                                'controller' => 'my-account',
+                                'action' => 'index'
+                            ), 'default', true
+                        );
+                    }
+                    // Do not allow users to change plan if they don't have active plan
+                    if($form == 'change-plan' AND !$user->hasPlanActive()) {
+                        $this->_helper->flashMessenger(
+                            array(
+                                'type' => 'notice', 
+                                'message' => 'Subscribe any plan first.'
                             )
                         );
                         return $this->_helper->redirector->gotoRoute(
@@ -112,7 +127,7 @@ class BraintreeController extends Integration_Controller_Action
             if(isset($address['street']) AND $address['street']) {
                 // fetch additional data for specific_content
                 $model = null;
-                if($form == 'plan') {
+                if($form == 'plan' OR $form == 'change-plan') {
                     $model = new Application_Model_Plan();
                 } else {
                     $model = new Application_Model_Extension();
@@ -133,27 +148,33 @@ class BraintreeController extends Integration_Controller_Action
                         'submitForSettlement' => true
                     )
                 );
-                // should we display inputs for billing address and credit card
-                $this->view->show_billing_and_card = true;
-                if($user->getBraintreeVaultId()) {
-                    $transaction['customerId'] = $user->getBraintreeVaultId();
-                    $transaction['options']['storeInVaultOnSuccess'] = false;
-                    $transaction['options']['addBillingAddressToPaymentMethod'] = false;
-                    $this->view->show_billing_and_card = false;
+                if($form == 'change-plan') {
+                    // change plan form has his own view
+                    $this->_helper->viewRenderer->setRender('change-plan');
+                    $this->view->id = $id;
+                    $form = 'plan';
+                } else {
+                    // should we display inputs for billing address and credit card
+                    $this->view->show_billing_and_card = true;
+                    if($user->getBraintreeVaultId()) {
+                        $transaction['customerId'] = $user->getBraintreeVaultId();
+                        $transaction['options']['storeInVaultOnSuccess'] = false;
+                        $transaction['options']['addBillingAddressToPaymentMethod'] = false;
+                        $this->view->show_billing_and_card = false;
+                    }
+                    $url_segments = array('controller' => 'braintree', 'action' => 'response', 'pay-for' => $form, 'id' => $id);
+                    if($form == 'extension') {
+                        $url_segments['domain'] = $domain;
+                    }
+                    $this->view->tr_data = Braintree_TransparentRedirect::transactionData(array(
+                        'redirectUrl' => $this->view->serverUrl() . $this->view->url($url_segments)
+                        ,
+                        'transaction' => $transaction,
+                    ));
                 }
-                $url_segments = array('controller' => 'braintree', 'action' => 'response', 'pay-for' => $form, 'id' => $id);
-                if($form == 'extension') {
-                    $url_segments['domain'] = $domain;
-                }
-                $this->view->tr_data = Braintree_TransparentRedirect::transactionData(array(
-                    'redirectUrl' => $this->view->serverUrl() . $this->view->url($url_segments)
-                    ,
-                    'transaction' => $transaction,
-                ));
-
                 $this->view->specific_content = $this->view->partial(
-                    'braintree/'.$form.'.phtml',
-                    $data
+                        'braintree/'.$form.'.phtml',
+                        $data
                 );
                 $this->view->address = $address;
             } else {
@@ -165,11 +186,7 @@ class BraintreeController extends Integration_Controller_Action
                     ), 'default', true
                 );
             }
-            
-            
-            /**
-             * 
-             */
+
             $this->view->source = $this->_getParam('source',null);
         }
     }
@@ -198,6 +215,7 @@ class BraintreeController extends Integration_Controller_Action
                             if($plan->getId()) {
                                 $user->setBraintreeTransactionId($result->transaction->id);
                                 $user->setPlanId($id);
+                                $user->setGroup('commercial-user');
                                 $user->setPlanActiveTo(
                                     date('Y-m-d', strtotime('+' . $plan->getBillingPeriod()))
                                 );
@@ -249,7 +267,6 @@ class BraintreeController extends Integration_Controller_Action
                                 // set payment data from last payment record
                                 if(!$last_payment->getFirstName()) {
                                     $payment_data = $last_payment->__toArray();
-                                    var_dump($payment_data);
                                     unset($payment_data['id']);
                                 } else {
                                     // set payment data from user record
@@ -368,12 +385,14 @@ class BraintreeController extends Integration_Controller_Action
                 if($id AND $plan->getId()) {
                     if($id != $user->getPlanId()) {
                         if(!$this->_getParam('confirm')) {
-                            // show form
-                            $this->view->id = $id;
+                            $redirect = array(
+                                'controller' => 'user',
+                                'action'     => 'dashboard'
+                            );
                         } else {
                             $old_plan = new Application_Model_Plan();
                             $old_plan = $old_plan->find($user->getPlanId());
-                            // @todo: remember to split date - we dont need exact time
+
                             $subscription_end = explode(' ', $user->getPlanActiveTo());
                             $subscription_end = strtotime($subscription_end[0]);//strtotime('15-12-2012');
                             $subscription_start = strtotime('-' . $old_plan->getBillingPeriod(), $subscription_end);
@@ -399,30 +418,35 @@ class BraintreeController extends Integration_Controller_Action
                             $result = null;
                             $amount = (float)$extra_charge-$refund;
                             if($amount < 0) {
-                                $result = Braintree_Transaction::refund($user->getBraintreeTransactionId(), round(-1*$amount, 2));
                                 // lower the payment
+                                $result = Braintree_Transaction::refund($user->getBraintreeTransactionId(), round(-1*$amount, 2));
                             } else {
+                                // add extra payment with new transaction id
                                 $result = Braintree_Transaction::sale(array(
                                     'amount' => round($amount, 2),
                                     'customerId' => $user->getBraintreeVaultId()
                                 ));
-                                // @todo: add extra payment with new transaction id
                             }
                             $redirect = array(
                                     'controller' => 'my-account',
                                     'action' => 'index'
                             );
+
                             $payment = new Application_Model_Payment();
                             $payment->findByTransactionId($user->getBraintreeTransactionId());
                             if(is_object($result) AND $result->success AND $payment->getId()) {
                                 if($amount > 0) {
                                     $payment->setId(NULL);
-                                    $payment = $payment->fetchByBraintreeTransactionId($user->getBraintreeTransactionId());
+                                    $payment->setBraintreeTransactionId($result->transaction->id);
+                                    $payment->setPrice(0);
                                     $user->setBraintreeTransactionId($result->transaction->id);
                                     $user->setBraintreeTransactionConfirmed(0);
                                 }
                                 $payment->setPrice((float)$payment->getPrice()+$amount);
                                 $payment->save();
+
+                                $user->setPlanId($id);
+                                $user->setPlanActiveTo(date('Y-m-d H:i:s', $new_plan_end));
                                 $user->save();
                                 $flash_message = 'Your plan has been successfully changed.';
                             } else {
@@ -465,22 +489,5 @@ class BraintreeController extends Integration_Controller_Action
                     , 'default', true
             );
         }
-    }
-
-    // emulate subscription feature
-    public function chargeSubscriptionsAction() {
-        // @todo: find users with plan active to time() and do Transaction::sale
-        // strtotime('last day of next month')
-    }
-
-    // check whether transactions with status 'submitted for settlement' are already settled
-    public function validateSettlementsAction() {
-        // @todo: find users with active transaction but not settled
-        /*
-         * SELECT * FROM `user` WHERE plan_active_to >= CURRENT_TIME() AND (braintree_transaction_confirmed = 0 OR braintree_transaction_confirmed IS NULL)
-         * SELECT * FROM `store_extension` WHERE LENGTH(braintree_transaction_id) > 0 AND (braintree_transaction_confirmed = 0 OR braintree_transaction_confirmed IS NULL)
-         */
-        // @todo: find extensions with transaction id and not settled
-        // @todo: find out should we join store and extension table
     }
 }
