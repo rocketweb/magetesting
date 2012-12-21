@@ -165,6 +165,12 @@ class BraintreeController extends Integration_Controller_Action
                     ), 'default', true
                 );
             }
+            
+            
+            /**
+             * 
+             */
+            $this->view->source = $form;
         }
     }
 
@@ -291,7 +297,7 @@ class BraintreeController extends Integration_Controller_Action
                             )
                         );
                     }
-                    if($form == 'extension') {
+                    if($pay_for == 'extension') {
                         return $this->_helper->redirector->gotoRoute(
                             array(
                                 'controller' => 'queue',

@@ -137,7 +137,18 @@
                             Your Credit Card saved in secure Braintree Vault will be used for payment.
                         </p>
                     <?php endif; ?>
-                        <a href="<?php echo ($_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true)); ?>" class="btn">Back</a>
+
+                        <a href="<?php
+                        switch($this->source){
+                            case 'extension':
+                                echo $this->url(array('controller' => 'user', 'action' => 'dashboard'), 'default', true);
+                                break;
+                            case 'plan':
+                            default:
+                                echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); 
+                                break;
+                        }
+                        ?>" class="btn">Back</a>
                     </div>
                 </form>
             </div>
