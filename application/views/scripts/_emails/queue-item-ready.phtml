@@ -1,18 +1,24 @@
-<p>
-    <b>Hello! Your Magento store is ready to use!</b>
-</p>
+<p>Hi,</p>
 
-<p>You can check it under:</p>
+<p>Your Magento store on Mage Testing is ready to use!</p>
+
+<p>You can view the customer side of the site here:</p>
+
+<p><a href="<?php echo $this->storeUrl.'/store/'.$this->domain; ?>">
+    <?php echo $this->storeUrl.'/store/'.$this->domain; ?>
+</a></p>
+
+<p>Or checkout the administrator here:</p>
 
 <p><a href="<?php echo $this->storeUrl.'/store/'.$this->domain; ?>">
     <?php echo $this->storeUrl.'/store/'.$this->domain; ?>
 </a></p>
 
 <p>
-Your store login: <?php echo $this->admin_login ?><br>
-Your store password: <?php echo $this->admin_password ?>
+Your admin store login: <?php echo $this->admin_login ?><br>
+Your admin store password: <?php echo $this->admin_password ?>
 </p>
 
 <p>
-    -- <br /> <a href="<?php echo $this->storeUrl ?>">Magetesting.com</a>
+    -- <br /> <a href="<?php echo $this->storeUrl ?>">magetesting.com</a>
 </p>

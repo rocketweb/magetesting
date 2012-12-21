@@ -21,25 +21,25 @@ magento.systemHomeFolder = "/home" ;where should user store folders land in
 
 google.analyticsId = ""
 
-user.activationEmail.subject = "Activation"
+user.activationEmail.subject = "Activate your account for magetesting.com"
 user.activationEmail.from.email = "support@magetesting.com"
-user.activationEmail.from.desc = "Magento Testing Team"
+user.activationEmail.from.desc = "Mage Testing"
 
-user.resetPassword.subject = "Reset Password"
+user.resetPassword.subject = "Password reset for magetesting.com"
 user.resetPassword.from.email = "support@magetesting.com"
-user.resetPassword.from.desc = "Magento Testing Team"
+user.resetPassword.from.desc = "Mage Testing"
 
-cron.queueItemReady.subject = "Your Store is Ready!"
+cron.queueItemReady.subject = "Your Magento store is ready at magetesting.com"
 cron.queueItemReady.from.email = "support@magetesting.com"
-cron.queueItemReady.from.desc = "Mage Testing Team"
+cron.queueItemReady.from.desc = "Mage Testing"
 
-cron.ftpAccountCreated.subject = "Mage Testing FTP Account!"
+cron.ftpAccountCreated.subject = "FTP account created for magetesting.com"
 cron.ftpAccountCreated.from.email = "support@magetesting.com"
-cron.ftpAccountCreated.from.desc = "Mage Testing Team"
+cron.ftpAccountCreated.from.desc = "Mage Testing"
 
-cron.phpmyadminAccountCreated.subject = "Mage Testing Database Account!"
+cron.phpmyadminAccountCreated.subject = "Database account created for magetesting.com"
 cron.phpmyadminAccountCreated.from.email = "support@magetesting.com"
-cron.phpmyadminAccountCreated.from.desc = "Mage Testing Team"
+cron.phpmyadminAccountCreated.from.desc = "Mage Testing"
 
 admin.errorEmail.subject = "Errors with Magetesting.com"
 admin.errorEmail.from.email = "support@magetesting.com"
