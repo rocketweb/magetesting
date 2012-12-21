@@ -27,6 +27,9 @@ KEY="lets br1ng magent0 t0 the m00n"
 
 BASEDIR=$(dirname $1)
 
+# directory where script is placed
+DIR=$(cd "$(dirname "$0")"; pwd)
+
 if [ -z $FILE ]; then
     # return error message if filename is not provided
     echo "You need to provide directory name containing extension to encode."
@@ -38,7 +41,7 @@ else
     tar -xzf $FILE -C ${BASEDIR}/temp
 
     # encode temp directory into temp-encoded
-    $IONCUBE --allowed-server *.magetesting.com --obfuscate all --obfuscation-key "$KEY" --ignore .svn/ --ignore .DS_Store  --encode "*.php" --encode "*.phtml" ${BASEDIR}/temp -o ${BASEDIR}/temp-encoded
+    $IONCUBE --allowed-server *.magetesting.com --obfuscate functions,locals --obfuscation-key "$KEY" --obfuscation-ex ${DIR}/ioncube.blist --ignore .svn/ --ignore .DS_Store  --encode "*.php" --encode "*.phtml" ${BASEDIR}/temp -o ${BASEDIR}/temp-encoded
 
     # pack temp-encoded as our encoded extension
     tar -czf ${BASEDIR}/../encoded/${FILENAME}-encoded.tar.gz -C ${BASEDIR}/temp-encoded .
