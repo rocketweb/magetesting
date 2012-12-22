@@ -84,7 +84,14 @@ extends Application_Model_Task {
     protected function _createSystemAccount() {
         if ($this->_userObject->getHasSystemAccount() == 0) {
             
-            $this->db->update('user', array('system_account_name' => $this->config->magento->userprefix . $this->_dbuser), 'id=' . $this->_userObject->getId());
+            try{ 
+                $this->_userObject->setSystemAccountName($this->config->magento->userprefix . $this->_dbuser)->save();
+            } catch (PDOException $e) {
+                $message = 'Could not update system_account_name for id: '.$this->_userObject->getId();
+                $this->logger->log($message, Zend_Log::CRIT);
+                $this->logger->log($e->getMessage(), Zend_Log::DEBUG);
+                throw new Application_Model_Task_Exception($message);
+            }
 
             /** WARNING!
              * in order for this to work, when you run this (worker.php) file,
