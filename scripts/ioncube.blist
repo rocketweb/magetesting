@@ -1,5 +1,14 @@
-is_empty_date
+mageUndoMagicQuotes
+destruct
 uc_words
 now
+is_empty_date
+mageFindClassFile
+mageCoreErrorHandler
+mageDebugBacktrace
+mageSendErrorHeader
+mageSendErrorFooter
+mageDelTree
+mageParseCsv
 is_dir_writeable
 sys_get_temp_dir
