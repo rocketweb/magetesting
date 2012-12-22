@@ -65,7 +65,7 @@ class Application_Form_EditAccount extends Integration_Form
         ));
 
         $states = RocketWeb_List::getStatesOfAmerica();
-        $states = array_merge($states, array('Select State'));
+        $states = array_merge(array('Select State'), $states);
         // Add a state element
         $this->addElement('select', 'state', array(
                 'label'      => 'State',
