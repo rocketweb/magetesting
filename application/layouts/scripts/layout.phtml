@@ -12,7 +12,7 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <?php 
+    <?php
     $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->baseUrl('favicon.ico')));
     $this->headLink()->prependStylesheet($this->baseUrl('public/css/style.css'));
     $this->headLink()->prependStylesheet($this->baseUrl('public/css/bootstrap-responsive.min.css'));
@@ -20,9 +20,9 @@
     $this->headScript()->prependFile($this->baseUrl('public/js/custom.js'));
     $this->headScript()->prependFile($this->baseUrl('public/js/bootstrap.min.js'));
     $this->headScript()->prependFile($this->baseUrl('public/js/jquery-1.7.1.min.js'));
-    
+
     ?>
-    
+
     <?php  ?>
 
     <script type="text/javascript" src="//use.typekit.net/qva5ffr.js"></script>
@@ -31,58 +31,60 @@
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-    
+
     <?php echo $this->headTitle() . "\n"; ?>
     <?php echo $this->headMeta() . "\n"; ?>
     <?php echo $this->headLink() . "\n"; ?>
     <?php echo $this->headScript() . "\n"; ?>
     <?php echo $this->headStyle(); ?>
-    
+
   </head>
 
 <?php
     $uri = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
     $bodyClass = '';
     if($uri === "/"){
-        //$bodyClass = ' class="index"';
+        $bodyClass = ' class="index"';
     }
 ?>
 <body<?php echo $bodyClass;?>>
     <div id="wrap">
         <?php echo $this->render('_partials/globalHeader.phtml'); ?>
-    
+
         <div id="main">
             <div class="container mt">
             <?php echo $this->render('_partials/messages.phtml'); ?>
-    
+
             <?php echo $this->layout()->content; ?>
             </div>
         </div>
     </div>
-    
+
     <div id="footer">
         <div class="container">
             <footer>
                 <hr />
                 <div class="row">
                     <div class="span6">
-                       <p>Copyright ©2011-2012 Rocket Web Inc. All rights reserved.</p>
+                       <p>Copyright ©2011-2013 Rocket Web Inc. All rights reserved.</p>
                     </div>
                     <div class="span6">
                         <p class="pull-right">
-                          <a href="#">Terms</a> |
-                          <a href="#">Guided Tour</a> |
-                          <a href="#">Contact</a>
+                            <a href="/about-us">About Us</a> |
+                            <a href="/contact-us">Contact Us</a> |
+                            <a href="/partners">Partners</a> |
+                            <a href="/terms-of-service">Terms of Service</a> |
+                            <a href="/privacy">Privacy</a>
                         </p>
                     </div>
                 </div>
             </footer>
         </div>
     </div>
-    
+
     <script type="text/javascript" src="//use.typekit.net/qva5ffr.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-    
+
     <?php echo $this->render('_partials/googleAnalytics.phtml'); ?>
 
 </body>

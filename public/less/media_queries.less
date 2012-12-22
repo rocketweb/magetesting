@@ -1,59 +1,59 @@
 @media only screen
 and (max-width : 979px) {
-	    
+
     .logo {
         margin: 20px 0;
     }
-    
+
     .navbar-global {
         .navbar-inner {
             .nav {
             	&.nav-mainmenu {
             	   background-color: @Red;
-            	   
+
             	   li {
             	       &.open {
             	           background-color: @Blue;
-            	           
+
             	           .dropdown-menu {
             	               margin-right: 15px;
             	           }
             	       }
             	   }
                 }
-                
+
                 & > li > a {
                     border-right: 0;
                 }
-                        
+
                 & > .first > a,
-                & > .first > a:hover, 
+                & > .first > a:hover,
                 & > .first > a:focus {
                     -webkit-border-bottom-left-radius: 0;
                     -moz-border-radius-bottomleft: 0;
                     border-bottom-left-radius: 0;
                 }
-                
+
                 & > .last > a,
-                & > .last > a:hover, 
+                & > .last > a:hover,
                 & > .last > a:focus {
                     -webkit-border-bottom-right-radius: 0;
                     -moz-border-radius-bottomright: 0;
                     border-bottom-right-radius: 0;
                 }
-                
+
                 &.nav-subpages {
                 	bottom: 0;
                     padding: 12px 0 24px 0;
-                    
+
                     & > li {
                     	float: left;
-                        
+
                         & > a {
                         	margin-left: 0;
                             margin-right: 24px;
                         }
-                        
+
                         &:last-of-type {
                             & > a {
                                 margin-right: 0;
@@ -63,35 +63,127 @@ and (max-width : 979px) {
                 }
             }
         }
-        
+
         .btn {
             margin-top: 33px;
         }
-        
+
         .btn-navbar {
             background-color: @Red;
             background-image: none;
             border-color: darken(@Red, 15%);
-            
+
             &:hover {
                 background-color: @Blue;
                 border-color: darken(@Blue, 15%);
             }
         }
     }
+
+    body {
+        &.index {
+            .content {
+                div.inner {
+                    section {
+                        &.watch-video {
+                            div.mac-book-air {
+                                .js-video {
+                                    iframe {
+                                        height: 60%;
+                                        left: 18%;
+                                        top: 6%;
+                                        width: 64%;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
+// Bootstrap standard medium screen
+@media (min-width: 768px) and (max-width: 979px) {
+    body {
+        &.index {
+            .content {
+                div.inner {
+                    section {
+                        &.watch-video {
+                            div.mac-book-air {
+                                .js-video {
+                                    iframe {
+                                        height: 138px;
+                                        left: 62px;
+                                        top: 40px;
+                                        width: 219px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Bootstrap standard small screen
+@media (max-width: 767px) {
+    body {
+        &.index {
+            .content {
+                div.inner {
+                    section {
+                        padding: 10px 0;
+
+                        h3, h4 {
+                            text-align: center;
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 /* Smartphones (portrait and landscape) ----------- */
-/*@media only screen
+@media only screen
 and (min-device-width : 320px)
 and (max-width : 480px) {
-}*/
+  body {
+      &.index {
+        //background-color:@Red;
+          .content {
+              div.inner {
+                  section {
+                      &.watch-video {
+                          div.mac-book-air {
+                              .js-video {
+                                  iframe {
+                                    //top: 40px;
+                                      /*height: 142px;
+                                      left: 63px;
+                                      top: 40px;
+                                      width: 227px;*/
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 /* Smartphones (landscape) ----------- */
 /* @media only screen
 and (min-width : 321px) {
-	
+
 } */
 
 /* Smartphones (portrait) ----------- */
@@ -100,37 +192,37 @@ and (max-width : 348px) {
 	.logo {
         width: 71%;
     }
-    
+
     .navbar-global {
         .btn {
             margin-top: 27px;
         }
     }
-    
+
     body {
         &.index {
         	.mt {
                 margin-top: 20px;
             }
-            
+
             .content {
                 h1 {
                     margin-bottom: 20px;
                     font-size: 21.5px;
                     line-height: 30px;
                 }
-                
+
                 h2 {
                 	width: 100%;
                     font-size: 13.5px;
                     line-height: 20px;
                 }
-                
+
                 img.cubes {
                     z-index: -1;
                     margin-top: 0px;
                 }
-                
+
                 div.inner {
                     margin-top: 20px;
                 }
@@ -144,34 +236,46 @@ and (min-width : 349px)
 and (max-width : 481px) {
     body {
         &.index {
+          background-color:#fff;
         	.mt {
                 margin-top: 20px;
             }
-            
+
             .content {
                 h1 {
                     margin-bottom: 4px;
                     font-size: 21.5px;
                     line-height: 30px;
                 }
-                
+
                 h2 {
                 	width: 60%;
                     margin-bottom: 0;
                     font-size: 15.5px;
                     line-height: 20px;
                 }
-                
+
                 img.cubes {
                     z-index: -1;
                     margin-top: 0px;
                 }
-                
+
                 div.inner {
                     margin-top: 20px;
-                    
+
                     section {
-                        //min-height: 400px;
+                        &.watch-video {
+                          div.mac-book-air {
+                              .js-video {
+                                  iframe {
+                                      height: 60%;
+                                      left: 18%;
+                                      top: 6%;
+                                      width: 64%;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -183,7 +287,7 @@ and (max-width : 481px) {
 /* @media only screen
 and (min-device-width : 768px)
 and (max-device-width : 1024px) {
-	
+
 } */
 
 /* iPads (landscape) ----------- */
@@ -201,7 +305,7 @@ and (orientation : landscape) {
 and (min-device-width : 768px)
 and (max-device-width : 1024px)
 and (orientation : portrait) {
-	
+
 } */
 
 /* Desktops and laptops ----------- */

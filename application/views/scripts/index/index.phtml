@@ -1,4 +1,4 @@
-<?php $NEW = FALSE; ?>
+<?php $NEW = TRUE; ?>
 
 <?php if($NEW):?>
 
@@ -9,26 +9,71 @@
         	<h2>The fastest way to test your Magento community store extensions.</h2>
             <img class="img-resize cubes" src="<?php echo $this->baseUrl('/public/img/header-cubes.jpg'); ?>" alt="" />
         	<div class="inner">
-        	    <a href="#" class="btn btn-large btn-tour">See available plans</a>
+        	    <a href="#" class="btn btn-large btn-tour btn-success">See available plans</a>
+
+
         	    <section class="watch-video">
-        	        <div class="span6 pull-right">
+        	        <div class="span5 pull-right">
         	            <h3>Why <span class="magetesting"><span class="mage">mage<span class="testing">testing</span></span></span>?</h3>
+        	            <h4>Watch the video.</h4>
         	        </div>
         	        <div class="span6 pull-left" style="float: left">
         	            <div class="mac-book-air">
         	            	<div class="js-video [vimeo]">
         	            	    <img class="img-resize" src="<?php echo $this->baseUrl('/public/img/mac-book-air.png'); ?>" alt="" />
-        	            	    <iframe src="http://player.vimeo.com/video/54763818?badge=0" width="315" height"197" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+        	            	    <iframe src="http://player.vimeo.com/video/54763818?portrait=0&color=f64135&title=0&byline=0" width="315" height"197" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
         	            	</div>
         	            </div>
         	        </div>
         	    </section>
-        	    <section class="simple"></section>
-        	    <section class="safe"></section>
-        	    <section class="flexible"></section>
-        	    <section class="extensions"></section>
+
+
+        	    <section class="simple">
+                    <div class="span6 pull-right">
+                        <img src="<?php echo $this->baseUrl('/public/img/screen_simple.png'); ?>" alt="" />
+                    </div>
+        	        <div class="span5 pull-left" style="float: left">
+                        <h3>Simple</h3>
+                        <p>Quickly create a Magento development store in just a few clicks.  Optionally copy your live store with a few more clicks for a true development environment.  Browse through popular Magento extensions and install them with 1 click, including the ability to roll back changes if you decide an extension is not right for you.</p>
+                    </div>
+                </section>
+
+
+        	    <section class="safe">
+                    <div class="span5 pull-right">
+                        <h3>Safe</h3>
+                        <p>Use your Mage Testing store to test out new extensions and custom features before ever touching your live store. When you are unhappy that everything is working as it should, follow easy steps to get changes on your live site.</p>
+                    </div>
+        	        <div class="span6 pull-left"  style="float: left">
+                        <img src="<?php echo $this->baseUrl('/public/img/screen_safe.png'); ?>" alt="" />
+                    </div>
+        	    </section>
+
+
+        	    <section class="flexible">
+        	        <div class="span6 pull-right">
+                        <img src="<?php echo $this->baseUrl('/public/img/screen_flexible.png'); ?>" alt="" />
+                    </div>
+                    <div class="span5 pull-left" style="float: left">
+                        <h3>Flexible</h3>
+                        <p>Use your Mage Testing development site as an ongoing sandbox for all future changes to your site. Withi ntegrated ftp, database access, version control and Papertrail log analysis, Mage Testing is the perfect platform to grow and test your Magento site.</p>
+                    </div>
+        	    </section>
+
+
+        	    <section class="extensions">
+        	        <div class="span5 pull-right">
+                        <h3>Browser Extensions</h3>
+                        <p>Browse select free and premium Magento  extensions to install, test purchase and deploy to live site. Install multimple extensions to test drive before comiting to buy or test multiple extensions in your store to evaluate compatibility.</p>
+                	    <p><a href="/extensions" class="btn btn-large btn-success">Discover now</a></p>
+                    </div>
+                    <div class="span6 pull-left"  style="float: left">
+                        <img src="<?php echo $this->baseUrl('/public/img/screen_extensions.jpg'); ?>" alt="" />
+                    </div>
+        	    </section>
+
+
         	</div>
-    	    <a href="#" class="btn btn-large btn-tour">Discover now</a>
         </div>
     </div>
 </div>
@@ -44,14 +89,14 @@
 
         <p>
           Mage Testing is a tool which allow you to run multple Magento sandboxes in minutes.
-          
+
         </p>
 
         <ul>
           <li>run one magento store <strong>absolutely free!</strong></li>
           <li>get an ftp access to upload your modules, themes or language packs</li>
           <li>fill your Magento store with <strong>sample data</strong> to have full-blown store in minutes</li>
-          <li>and even more in just <strong>one-click installer!</strong></li> 
+          <li>and even more in just <strong>one-click installer!</strong></li>
         </ul>
 
         <div class="page-header">

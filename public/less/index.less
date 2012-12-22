@@ -1,65 +1,147 @@
 body {
-	&.index {
+    &.index {
         background-color: #f1f1f1;
-        
+
         .content {
-        	text-align: center;
-            
+            text-align: center;
+
+            h1, h2, h3, h4 {
+                font-family: @TypeKit;
+                color: @DarkFont;
+            }
+
             h1 {
                 margin-bottom: 0;
-                font-family: @TypeKit;
                 font-size: 31.5px;
                 font-weight: 700;
                 letter-spacing: -1px;
-                color: @DarkFont;
             }
-            
+
             h2 {
                 margin: 0 auto;
                 font-family: @TypeKit;
                 font-size: 21.5px;
                 font-weight: 300;
-                color: @DarkFont;
             }
-            
+
             img.cubes {
                 z-index: -1;
                 margin-top: 0px;
                 width: 85%;
             }
-            
+
             a.btn-tour, div.inner a.btn-tour {
-            	margin-top: -24px;
-            	.shadow(6px);
+                margin-top: -24px;
+                .shadow(6px);
             }
-            
+
             div.inner {
                 margin-top: -30px;
                 .roundedBox;
                 .shadow(6px);
-                
+
                 section {
-                    min-height: 400px;
+                    min-height: 300px;
                     box-shadow: 0 -6px 12px -10px #888;
-                    
+                    padding: 40px 0;
+
                     h3 {
-                    	font-family: @TypeKit;
                         font-weight: 700;
                         color: @Red;
+
+                        &:first-of-type {
+                          margin: 100px 0 0;
+                        }
                     }
-                    
+
+                    h4 {
+                        font-size: 22.5px;
+                        font-weight: 700;
+                        margin: 0;
+                    }
+
+                    p {
+                        width: 320px;
+                    }
+
+                    div.pull-left {
+                        h3, h4, p {
+                            text-align: right;
+                        }
+                        p {
+                            float: right;
+                        }
+                    }
+
+                    div.pull-right {
+                        h3, h4, p {
+                            text-align: left;
+                        }
+                    }
+
                     &.watch-video {
                         box-shadow: none;
                         background: #fff url('../img/watch-video-back.jpg') no-repeat top right;
-                        
+
                         div.mac-book-air {
+                            margin-left: 10px;
+
                             .js-video {
                                 iframe {
-                                    height: 186px;
-                                    left: 82px;
+                                    height: 182px;
+                                    left: 81px;
                                     top: 44px;
-                                    width: 297px;
+                                    width: 289px;
+
+                                    @media only screen and (max-width : 979px) {
+
+                                    }
                                 }
+                            }
+                        }
+                    }
+
+                    &.simple {
+                        h3 {
+                            &:first-of-type {
+                              margin: 60px 0 0;
+                            }
+                        }
+                    }
+
+                    &.safe {
+                        h3 {
+                            &:first-of-type {
+                              margin: 60px 0 0;
+                            }
+                        }
+
+                        img {
+                            margin-top: 50px;
+                        }
+                    }
+
+                    &.flexible {
+                        h3 {
+                            &:first-of-type {
+                              margin: 70px 0 0;
+                            }
+                        }
+
+                        p {
+                            width: 340px;
+                        }
+
+                        img {
+                            margin-top: 40px;
+                            margin-right: 70px;
+                        }
+                    }
+
+                    &.extensions {
+                        h3 {
+                            &:first-of-type {
+                              margin: 60px 0 0;
                             }
                         }
                     }
