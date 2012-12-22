@@ -561,8 +561,8 @@ class UserController extends Integration_Controller_Action
          */
         $token = sha1( 
             implode(':', array(
-                $store->user_id, 
-                $store->user_id, 
+                $config->prefix . $store->user_id, 
+                $config->prefix . $store->user_id, 
                 $config->ssoSalt, 
                 $timestamp
              )
@@ -570,9 +570,9 @@ class UserController extends Integration_Controller_Action
         
         $form = new Application_Form_PapertrailSession();
         $form->populate(array(
-            'user_id'     => $store->user_id,
-            'account_id'  => $store->user_id,
-            'system_id'   => $domain,
+            'user_id'     => $config->prefix . $store->user_id,
+            'account_id'  => $config->prefix . $store->user_id,
+            'system_id'   => $config->prefix . $domain,
             'token'       => $token,
             'distributor' => $config->distributorName,
             'timestamp'   => $timestamp,
