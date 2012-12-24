@@ -12,7 +12,7 @@ $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('user')
     ->joinLeft('plan','user.plan_id = plan.id', array('plan.billing_period', 'plan.price'))
-    ->where(new Zend_Db_Expr('plan_active_to <= CURRENT_TIMESTAMP'))
+    ->where('plan_active_to <= ?', date("Y-m-d H:i:s"))
     ->where(new Zend_Db_Expr('LENGTH(braintree_transaction_id) > 0'))
     ->where('braintree_transaction_confirmed = 1')
     ->where('billing_period NOT LIKE ?', '%days');

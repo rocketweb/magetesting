@@ -7,7 +7,7 @@ $sql = $select
     ->from('user')
     ->joinLeft('store','user.id = store.user_id', 'domain')
     ->where('store.status = ?', 'ready')
-    ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, CURRENT_TIMESTAMP) > ?', 3*60*60*24)
+    ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, \''.date("Y-m-d H:i:s").'\') > ?', 3*60*60*24)
     ->where('(user.group IN (?)', array('awaiting-user', 'commercial-user'))
     ->orwhere('user.downgraded = ?)', 2);
 

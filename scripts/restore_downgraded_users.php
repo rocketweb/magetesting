@@ -7,7 +7,7 @@ $sql = $select
     ->from('user')
     ->joinLeft('store','user.id = store.user_id', 'domain')
     ->where('store.status = ?', 'ready')
-    ->where('TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP, user.plan_active_to) > ?', 0)
+    ->where('TIMESTAMPDIFF(SECOND, \''.date("Y-m-d H:i:s").'\', user.plan_active_to) > ?', 0)
     ->where('user.downgraded = ?', 1);
 
 $result = $db->fetchAll($sql);
