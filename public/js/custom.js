@@ -214,6 +214,13 @@ $(document).ready(function () {
         })
     }
 
+    if($admin_panel.length) { 
+        $admin_panel.click(function(e) { 
+        // stop bootstrap collapsing 
+        e.stopPropagation();
+        })
+    }
+
     /* STORE EXTENSIONS ISOTOPE */
     var $extensions_isotope = $('.extensions_well > #container'),
         $extensions_filter_container = $('#options'),
