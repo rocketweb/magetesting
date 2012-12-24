@@ -27,6 +27,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $writerDb = new Zend_Log_Writer_Db($db, 'log', $columnMapping);
         $log->addWriter($writerDb);
+        $log->setEventItem('info', '');
 
         return $log;
     }
