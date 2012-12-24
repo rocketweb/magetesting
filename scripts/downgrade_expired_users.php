@@ -31,7 +31,7 @@ if($result) {
         $user_ids = array_keys($downgrade_by_id);
         
         $where = array('id IN (?)' => $user_ids);
-        echo 'Update: '.$db->update('user', $set, $where).PHP_EOL;
+        //echo 'Update: '.$db->update('user', $set, $where).PHP_EOL;
         
         foreach ($user_ids as $user_id){
             $modelUser = new Application_Model_User();
@@ -42,7 +42,7 @@ if($result) {
         }
         
     }
-    echo 'Downgraded '.count($downgrade_by_id).' users'.PHP_EOL;
+    $log->log('Downgraded '.count($downgrade_by_id).' users', Zend_Log::INFO);
 } else {
-    echo 'Nothing to downgrade'.PHP_EOL;
+    $log->log('There is no user to downgrade.', Zend_Log::INFO);
 }

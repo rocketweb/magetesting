@@ -31,8 +31,8 @@ if($result) {
         $user_ids = array_keys($restore_by_id);
         
         $where = array('id IN (?)' => $user_ids);
-        echo 'Update: '.$db->update('user', $set, $where).PHP_EOL;
-        echo 'Restored '.count($restore_by_id).' users'.PHP_EOL;
+        //echo 'Update: '.$db->update('user', $set, $where).PHP_EOL;
+        $log->log('Restored '.count($restore_by_id).' users', Zend_Log::INFO);
         
         foreach($user_ids as $user_id){
             //get users plan id
@@ -53,5 +53,5 @@ if($result) {
         }       
     }
 } else {
-    echo 'Nothing to restore from downgrade'.PHP_EOL;
+    $log->log('There is no downgraded user to restore.', Zend_Log::INFO);
 }

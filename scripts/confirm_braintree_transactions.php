@@ -19,21 +19,22 @@ $result = $db->fetchAll($sql);
 
 if($result) {
     foreach($result as $row) {
-        $braintree = Braintree_Transaction::find($row['braintree_transaction_id']);
-        if($braintree->success AND isset($braintree->transaction->status) AND $braintree->transaction->status == 'settled') {
-            echo 'Confirmed for user: ' . $row['id'].PHP_EOL;
+        $transaction = Braintree_Transaction::find($row['braintree_transaction_id']);
+
+        if(isset($transaction->status) AND $transaction->status == 'settled') {
+            $log->log('Plan payment confirmed for user: ' . $row['id'], Zend_Log::INFO);
             $db->update(
                 'user', // table
                 array('braintree_transaction_confirmed' => 1), // set
                 array('id = ?' => $row['id']) // where
             );
         } else {
-            echo 'Not confirmed for user: ' . $row['id'].PHP_EOL;
+            $log->log('Plan payment not confirmed for user: ' . $row['id'], Zend_Log::INFO);
         }
     }
-    echo 'All subscriptions checked.'.PHP_EOL;
+    $log->log('All plan payments processed.', Zend_Log::INFO);
 } else {
-    echo 'No subscriptions to check'.PHP_EOL;
+    $log->log('There is no plan payment to process.', Zend_Log::INFO);
 }
 
 $select = new Zend_Db_Select($db);
@@ -46,9 +47,9 @@ $result = $db->fetchAll($sql);
 
 if($result) {
     foreach($result as $row) {
-        $braintree = Braintree_Transaction::find($row['braintree_transaction_id']);
-        if($braintree->success AND isset($braintree->transaction->status) AND $braintree->transaction->status == 'settled') {
-            echo 'Confirmed for extension: ' . $row['extension_id']. ' store: '. $row['store_id'].PHP_EOL;
+        $transaction = Braintree_Transaction::find($row['braintree_transaction_id']);
+        if(isset($transaction->status) AND $transaction->status == 'settled') {
+            $log->log('Payment confirmed for extension: ' . $row['extension_id']. ' store: '. $row['store_id'], Zend_Log::INFO);
             $db->update(
                     'store_extension', // table
                     array('braintree_transaction_confirmed' => 1), // set
@@ -105,11 +106,11 @@ if($result) {
             $queueModel->save();
             
         } else {
-            echo 'Not confirmed for extension: ' . $row['extension_id']. ' store: '. $row['store_id'].PHP_EOL;
+            $log->log('Payment not confirmed for extension: ' . $row['extension_id']. ' store: '. $row['store_id'], Zend_Log::INFO);
         }
     }
-    echo 'All extensions checked.'.PHP_EOL;
+    $log->log('All extension payments processed.', Zend_Log::INFO);
 } else {
-    echo 'No extensions to check'.PHP_EOL;
+    $log->log('There is no extension payment to process.', Zend_Log::INFO);
 }
 

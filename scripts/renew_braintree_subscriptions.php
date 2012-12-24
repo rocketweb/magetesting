@@ -31,7 +31,7 @@ if($result) {
             ));
 
             if($braintree->success AND isset($braintree->transaction->status) AND $braintree->transaction->status == 'submitted_for_settlement') {
-                echo 'Renewed for user: ' . $row['id'].PHP_EOL;
+                $log->log('Plan renewed for user: ' . $row['id'], Zend_Log::INFO);
                 $db->update(
                     'user', // table
                     array(
@@ -45,11 +45,11 @@ if($result) {
                     array('id = ?' => $row['id']) // where
                 );
             } else {
-                echo 'Problem for user: ' . $row['id'].PHP_EOL;
+                $log->log('Plan has not been renewed for user: ' . $row['id'], Zend_Log::INFO);
             }
         }
     }
-    echo 'All subscriptions renewed.'.PHP_EOL;
+    $log->log('All plan renewals has been processed.', Zend_Log::INFO);
 } else {
-    echo 'No subscriptions to renew'.PHP_EOL;
+    $log->log('There is no plan to renewal.', Zend_Log::INFO);
 }
