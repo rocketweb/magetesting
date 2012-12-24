@@ -94,7 +94,7 @@ if($result) {
             $queueModel->setTask('RevisionCommit');
             $queueModel->setTaskParams(
                                 array(
-                                    'commit_comment' => 'Decoding ' . $extensionModel->getName() . ' (' . $extensionModel->getVersion() . ')',
+                                    'commit_comment' => $extensionModel->getName() . ' (Open Source)',
                                     'commit_type' => 'extension-decode'
                                 )
                         );
