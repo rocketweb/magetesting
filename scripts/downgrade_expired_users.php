@@ -44,5 +44,5 @@ if($result) {
     }
     $log->log('Downgraded '.count($downgrade_by_id).' users', Zend_Log::INFO);
 } else {
-    $log->log('There is no user to downgrade.', Zend_Log::INFO);
+    //$log->log('There is no user to downgrade.', Zend_Log::INFO);
 }

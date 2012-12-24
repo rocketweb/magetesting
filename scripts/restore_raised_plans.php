@@ -13,7 +13,7 @@ $result = $db->fetchAll($sql);
 
 if($result) {
     foreach($result as $row) {
-        echo 'Restored plan for user: ' . $row['id'].PHP_EOL;
+        $log->log('Restored plan for user: ' . $row['id'], Zend_Log::INFO);
         $db->update(
             'user', // table
             array(
@@ -24,7 +24,6 @@ if($result) {
             array('id = ?' => $row['id']) // where
         );
     }
-    echo 'All plans restored.'.PHP_EOL;
 } else {
-    echo 'No plans to restore'.PHP_EOL;
+    //$log->log('No plans to restore', Zend_Log::INFO);
 }

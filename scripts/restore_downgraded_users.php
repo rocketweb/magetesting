@@ -53,5 +53,5 @@ if($result) {
         }       
     }
 } else {
-    $log->log('There is no downgraded user to restore.', Zend_Log::INFO);
+    //$log->log('There is no downgraded user to restore.', Zend_Log::INFO);
 }
