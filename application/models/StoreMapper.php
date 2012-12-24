@@ -37,6 +37,7 @@ class Application_Model_StoreMapper {
             'store_name'              => $store->getStoreName(),
             'description'                => $store->getDescription(),
             'sample_data'                => $store->getSampleData(),
+            'backend_name'               => $store->getBackendName(),
             'backend_password'           => $store->getBackendPassword(),
             'custom_protocol'            => $store->getCustomProtocol(),
             'custom_host'                => $store->getCustomHost(),
@@ -81,6 +82,7 @@ class Application_Model_StoreMapper {
                 ->setStoreName($row->store_name)
                 ->setDescription($row->description)
                 ->setSampleData($row->sample_data)
+                ->setBackendName($row->backend_name)
                 ->setBackendPassword($row->backend_password)
                 ->setCustomProtocol($row->custom_protocol)
                 ->setCustomHost($row->custom_host)
@@ -119,6 +121,7 @@ class Application_Model_StoreMapper {
                     ->setStoreName($row->store_name)
                     ->setDescription($row->description)
                     ->setSampleData($row->sample_data)
+                    ->setBackendName($row->backend_name)
                     ->setBackendPassword($row->backend_password)
                     ->setCustomProtocol($row->custom_protocol)
                     ->setCustomHost($row->custom_host)

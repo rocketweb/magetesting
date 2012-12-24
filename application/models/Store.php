@@ -22,6 +22,7 @@ class Application_Model_Store {
 
     protected $_description;
 
+    protected $_backend_name;
     protected $_backend_password;
     
     protected $_type;
@@ -175,6 +176,17 @@ class Application_Model_Store {
         return $this->_description;
     }
 
+    public function setBackendName($backendName)
+    {
+        $this->_backend_name = $backendName;
+        return $this;
+    }
+    
+    public function getBackendName()
+    {
+        return $this->_backend_name;
+    }
+
     public function setBackendPassword($password)
     {
         $this->_backend_password = $password;
@@ -232,6 +244,7 @@ class Application_Model_Store {
                 'domain'           => $this->getDomain(),
                 'store_name'    => $this->getStoreName(),
                 'description'      => $this->getDescription(),
+                'backend_name' => $this->getBackendName(),
                 'backend_password' => $this->getBackendPassword(),
                 'sample_data'      => $this->getSampleData(),
                 'custom_protocol'  => $this->getCustomProtocol(),

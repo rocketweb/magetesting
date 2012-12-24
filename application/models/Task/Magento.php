@@ -47,6 +47,7 @@ extends Application_Model_Task {
         // assign values
         $html->assign('domain', $this->_storeObject->getDomain());
         $html->assign('storeUrl', $this->config->magento->storeUrl);
+        $html->assign('backend_name', $this->_storeObject->getBackendName());
         $html->assign('admin_login', $this->_adminuser);
         $html->assign('admin_password', $this->_adminpass);
 
