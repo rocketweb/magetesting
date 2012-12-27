@@ -293,6 +293,7 @@ class QueueController extends Integration_Controller_Action {
                             ->setStatus('downloading-magento')
                             ->setCustomProtocol($form->custom_protocol->getValue())
                             ->setCustomHost($form->custom_host->getValue())
+                            ->setCustomPort($form->custom_port->getValue())
                             ->setCustomRemotePath($form->custom_remote_path->getValue())
                             ->setCustomLogin($form->custom_login->getValue())
                             ->setCustomPass($form->custom_pass->getValue())
