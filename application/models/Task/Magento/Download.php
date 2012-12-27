@@ -24,9 +24,14 @@ implements Application_Model_Task_Interface {
         chdir($this->_domain);
 
         /* Instantiate Transport Model */
-        
-        $transportModel = new Application_Model_Transport();
-        $transportModel = $transportModel->factory($this->_storeObject);
+        try {
+            $transportModel = new Application_Model_Transport();
+            $transportModel = $transportModel->factory($this->_storeObject, $this->logger);
+        } catch (Application_Model_Transport_Exception $e) {
+            $this->logger->log($e->getMessage(),Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($e->getMessage());
+        }
+
         if (!$transportModel){
             $message = 'Protocol "' . $this->_storeObject->getCustomProtocol() . '" is not supported.';
             $this->logger->log($message, Zend_Log::EMERG);
@@ -139,10 +144,14 @@ implements Application_Model_Task_Interface {
     protected function _setupFilesystem() {
 
         $this->logger->log('Preparing store directory.', Zend_Log::INFO);
-        exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
-        $message = var_export($output, true);
-        $this->logger->log($message, Zend_Log::DEBUG);
-        unset($output);
+        if (!file_exists($this->_storeFolder . '/' . $this->_domain)) {
+            exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
+            $message = var_export($output, true);
+            $this->logger->log($message, Zend_Log::DEBUG);
+            unset($output);
+        } else {
+            $this->logger->log('Store directory already exists, continuing.', Zend_Log::INFO);
+        }
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain) || !is_dir($this->_storeFolder . '/' . $this->_domain)) {
             $message = 'Store directory does not exist, aborting.';
@@ -158,16 +167,21 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _importDatabaseDump() {
+        $this->logger->log('Importing custom db dump.', Zend_Log::INFO);
         $path_parts = pathinfo($this->_customSql);
-        exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < '.$path_parts['basename'].'');
+        $command = 'sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < '.$path_parts['basename'].'';
+        exec($command, $output);
+        $message = var_export($output, true);
+        $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
+        unset($output);
     }
     
     protected function _importFiles(){
         
         $this->logger->log('Moving downloaded sources to main folder.', Zend_Log::INFO);
-        exec('sudo mv '.$this->_customRemotePath.'* .', $output);
+        exec('sudo mv '.ltrim($this->_customRemotePath,'/').'* .', $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo mv ".$this->_customRemotePath."* .\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\nsudo mv ".ltrim($this->_customRemotePath, '/')."* .\n" . $message, Zend_Log::DEBUG);
         unset($output);
     }
 
@@ -197,12 +211,19 @@ implements Application_Model_Task_Interface {
     protected function _cleanupFilesystem() {
         
         $this->logger->log('Setting store directory permissions.', Zend_Log::INFO);
-        
-        exec('sudo mkdir var');
-        exec('sudo mkdir downloader');
-        exec('sudo mkdir media');
 
-        
+        if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/var/')) {
+            exec('sudo mkdir var');
+        }
+
+        if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/downloader/')) {
+            exec('sudo mkdir downloader');
+        }
+
+        if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/media/')) {
+            exec('sudo mkdir media');
+        }
+
         $command = 'sudo chmod 777 var/.htaccess app/etc';
         exec($command, $output);
         $message = var_export($output, true);
@@ -227,13 +248,16 @@ implements Application_Model_Task_Interface {
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
-        
+
         /* remove git files */
-        //git folder
-        exec('rm .git/ -R');
-        //gitignore
-        exec('rm .gitignore');        
-        
+        if (file_exists($this->_storeFolder . '/' . $this->_domain . '/.git/')) {
+            exec('rm .git/ -R');
+        }
+
+        if (file_exists($this->_storeFolder . '/' . $this->_domain . '/.gitignore')) {
+            exec('rm .gitignore');
+        }
+
         /* remove svn files/folders */
         exec('rm -rf `find . -type d -name .svn`');
     }

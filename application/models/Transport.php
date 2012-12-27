@@ -11,8 +11,14 @@ class Application_Model_Transport {
     protected $_pass = '';
     protected $_errorMessage = '';
     
-    public function setup(Application_Model_Store &$store){
+    protected $logger = NULL;
+    
+    public function setup(Application_Model_Store &$store, $logger = NULL){
         $this->setConnection($store);
+
+        if ($logger instanceof Zend_Log) {
+            $this->logger = $logger;
+        }
     } 
     
     /**
@@ -109,7 +115,7 @@ class Application_Model_Transport {
     }
     
     /* return transport model for specified protocol */
-    public static function factory(Application_Model_Store &$store){
+    public static function factory(Application_Model_Store &$store, $logger = NULL){
         
         $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
         $classSuffix = $filter->filter($store->getCustomProtocol());
@@ -117,7 +123,7 @@ class Application_Model_Transport {
         
         if (class_exists($className)){
             $customTransportModel = new $className();
-            $customTransportModel->setup($store);
+            $customTransportModel->setup($store, $logger);
             return $customTransportModel;
         }      
         throw new Application_Model_Transport_Exception('model transport '.$className.' doesnt exist');

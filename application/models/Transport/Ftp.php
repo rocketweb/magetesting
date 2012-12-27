@@ -8,11 +8,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     protected $_customFile = '';
     protected $_customSql = ''; 
     
-    public function setup(Application_Model_Store &$store){
+    public function setup(Application_Model_Store &$store, $logger = NULL){
         
         $this->_storeObject = $store;
         
-        parent::setup($store);
+        parent::setup($store, $logger);
         $this->_prepareCustomVars($store);
     }
     

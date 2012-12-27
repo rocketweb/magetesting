@@ -11,14 +11,22 @@ extends Application_Model_Transport {
 
     private $_connection;
 
-    public function setup(Application_Model_Store &$store){
+    public function setup(Application_Model_Store &$store, $logger = NULL){
 
         $this->_storeObject = $store;
 
-        parent::setup($store);
+        parent::setup($store, $logger);
         
         $this->_prepareCustomVars($store);
-        $this->_connection = ssh2_connect($store->getCustomHost(), $store->getCustomPort());
+
+        // error suppression added here intentionally as this function
+        // throws warning if it can't connect using given host and port (wojtek)
+        $this->_connection = @ssh2_connect($store->getCustomHost(), $store->getCustomPort());
+
+        if ($this->_connection === FALSE) {
+            throw new Application_Model_Transport_Exception('Can not connect with ssh server.');
+        }
+
         ssh2_auth_password($this->_connection, $store->getCustomLogin(), $store->getCustomPass());
         
         /*TODO: execute this somewhere, closeConnection() function? */
@@ -55,26 +63,24 @@ extends Application_Model_Transport {
         //PATH
         $customRemotePath = $this->_storeObject->getCustomRemotePath();
         //make sure remote path containts slash at the end
-        if(substr($customRemotePath,-1)!="/"){
-            $customRemotePath .= '/';
-        }
+        $customRemotePath = rtrim($customRemotePath,'/') . '/';
 
         //make sure remote path does contain slash at the beginning       
-        $customRemotePath = ltrim($customRemotePath,'/');
+        $customRemotePath = '/' . ltrim($customRemotePath,'/');
         
         $this->_customRemotePath = $customRemotePath;
 
         //SQL
-         //make sure sql file path does not contain slash at the beginning       
+         //make sure sql file path does contain slash at the beginning       
         $customSql = $this->_storeObject->getCustomSql();
-        $customSql = ltrim($customSql,'/');
+        $customSql = '/' . ltrim($customSql,'/');
 
         $this->_customSql = $customSql;
 
         //FILE
-         //make sure sql file path does not contain slash at the beginning       
+         //make sure sql file path does contain slash at the beginning       
         $customFile = $this->_storeObject->getCustomFile();
-        $customFile = ltrim($customFile,'/');
+        $customFile = '/' . ltrim($customFile,'/');
 
         $this->_customFile = $customFile;
 
@@ -93,7 +99,7 @@ extends Application_Model_Transport {
 
     protected function _downloadInstanceFiles(){
 
-        $components = count(explode('/',$this->_customRemotePath))-1;
+        $components = count(explode('/',trim($this->_customRemotePath, '/')));
 
         /**
          * the switch is used to not ask for /yes/no about adding host to known hosts
@@ -105,10 +111,17 @@ extends Application_Model_Transport {
                 .' -p'.$this->_customPort.' "tar -zcf - '.$this->_customRemotePath.' --exclude='.$this->_customRemotePath.'var --exclude='.$this->_customRemotePath.'media"'
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
-        
+
+        if ($this->logger instanceof Zend_Log) {
+            $message = var_export($output, true);
+            $this->logger->log('Downloading store files.', Zend_Log::INFO);
+            $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
+        }
         /**
          * TODO: validate output
          */
+
+        unset($output);
 
         return true;
     }
@@ -120,8 +133,13 @@ extends Application_Model_Transport {
             $content = stream_get_contents($output);
         }
 
+        if ($this->logger instanceof Zend_Log) {
+            $this->logger->log('Checking database file size.', Zend_Log::INFO);
+            $this->logger->log("\n" . $content . "\n", Zend_Log::DEBUG);
+        }
+
         // Since du should return something like '12345   filename.ext'
-        $duParts = explode(' ',$content);
+        $duParts = explode("\t",$content);
         $sqlSizeInfo = $duParts[0];
 
        //limit is in bytes!
@@ -139,7 +157,7 @@ extends Application_Model_Transport {
     }
 
     public function downloadDatabase(){
-        $components = count(explode('/',$this->_customSql))-1;
+        $components = count(explode('/',trim($this->_customSql, '/')))-1;
 
         exec('set -xv');
         $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
@@ -148,6 +166,12 @@ extends Application_Model_Transport {
                 .' -p'.$this->_customPort.' "tar -zcf - '.$this->_customSql.'"'
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
+
+        if ($this->logger instanceof Zend_Log) {
+            $message = var_export($output, true);
+            $this->logger->log('Downloading store database.', Zend_Log::INFO);
+            $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
+        }
 
         /* TODO:validate if file existss */
         unset($output);
