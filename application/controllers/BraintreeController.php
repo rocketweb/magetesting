@@ -441,6 +441,7 @@ class BraintreeController extends Integration_Controller_Action
                                     $payment->setBraintreeTransactionId($result->transaction->id);
                                     $payment->setPrice(0);
                                     $payment->setDate(date('Y-m-d H:i:s'));
+                                    $payment->setTransactionName($plan->getName());
                                     $user->setBraintreeTransactionId($result->transaction->id);
                                     $user->setBraintreeTransactionConfirmed(0);
                                 }
