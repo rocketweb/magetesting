@@ -56,7 +56,8 @@ class Application_Model_PlanMapper {
               ->setPhpmyadminAccess($row->phpmyadmin_access)
               ->setCanAddCustomStore($row->can_add_custom_store)
               ->setBillingPeriod($row->billing_period)
-              ->setIsHidden($row->is_hidden);
+              ->setIsHidden($row->is_hidden)
+              ->setAutoRenew($row->auto_renew);
         
         return $plan;
     }
@@ -84,7 +85,8 @@ class Application_Model_PlanMapper {
                   ->setPhpmyadminAccess($row->phpmyadmin_access)
                     ->setCanAddCustomStore($row->can_add_custom_store)
                   ->setBillingPeriod($row->billing_period)
-                  ->setIsHidden($row->is_hidden);
+                  ->setIsHidden($row->is_hidden)
+                  ->setAutoRenew($row->auto_renew);
             $entries[] = $entry;
         }
         return $entries;
@@ -104,7 +106,8 @@ class Application_Model_PlanMapper {
                   ->setPhpmyadminAccess($row->phpmyadmin_access)
                     ->setCanAddCustomStore($row->can_add_custom_store)
                   ->setBillingPeriod($row->billing_period)
-                  ->setIsHidden($row->is_hidden);
+                  ->setIsHidden($row->is_hidden)
+                  ->setAutoRenew($row->auto_renew);
             $entries[] = $entry;
         }
         return $entries;
@@ -127,7 +130,8 @@ class Application_Model_PlanMapper {
               ->setPhpmyadminAccess($row->phpmyadmin_access)
                 ->setCanAddCustomStore($row->can_add_custom_store)
               ->setBillingPeriod($row->billing_period)
-              ->setIsHidden($row->is_hidden);
+              ->setIsHidden($row->is_hidden)
+              ->setAutoRenew($row->auto_renew);
         return $entry;
 
     }

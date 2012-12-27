@@ -24,6 +24,8 @@ class Application_Model_Plan {
 
     protected $_is_hidden;
 
+    protected $_auto_renew;
+
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -145,6 +147,17 @@ class Application_Model_Plan {
     {
         return $this->_is_hidden;
     }
+
+    public function setAutoRenew($value)
+    {
+        $this->_auto_renew = ((int)$value ? 1 : 0);
+        return $this;
+    }
+    
+    public function getAutoRenew()
+    {
+        return $this->_auto_renew;
+    }
     
     public function setMapper($mapper)
     {
@@ -195,7 +208,8 @@ class Application_Model_Plan {
             'can_add_custom_store' => $this->getCanAddCustomStore(),
             'billing_period' => $this->getBillingPeriod(),
             'price'     => $this->getPrice(),
-            'is_hidden' => $this->getIsHidden()
+            'is_hidden' => $this->getIsHidden(),
+            'auto_renew' => $this->getAutoRenew()
         );
     }
     

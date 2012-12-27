@@ -15,7 +15,7 @@ $sql = $select
     ->where('plan_active_to <= ?', date("Y-m-d H:i:s"))
     ->where(new Zend_Db_Expr('LENGTH(braintree_transaction_id) > 0'))
     ->where('braintree_transaction_confirmed = 1')
-    ->where('billing_period NOT LIKE ?', '%days');
+    ->where('auto_renew = 1');
 
 $result = $db->fetchAll($sql);
 
