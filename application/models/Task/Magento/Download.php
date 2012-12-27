@@ -172,6 +172,14 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _updateLocalXml() {
+        $localXmlPath = $this->_storeFolder . '/' . $this->_domain.'/app/etc/local.xml';
+
+        if (!file_exists($localXmlPath)) {
+            $message = 'Store local.xml config file does not exist.';
+            $this->logger->log($message, Zend_Log::EMERG);
+            throw new Application_Model_Task_Exception($message);
+        }
+
         $connectionString = '<connection>
                     <host><![CDATA[localhost]]></host>
                     <username><![CDATA['.$this->config->magento->userprefix . $this->_dbuser.']]></username>
@@ -180,7 +188,7 @@ implements Application_Model_Task_Interface {
                     <active>1</active>
                 </connection>';
 
-        $localXml = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/app/etc/local.xml');
+        $localXml = file_get_contents($localXmlPath);
         $localXml = preg_replace("#<connection>(.*?)</connection>#is",$connectionString,$localXml);
         file_put_contents($this->_storeFolder .'/'. $this->_domain.'/app/etc/local.xml',$localXml);
         unset($localXml);
