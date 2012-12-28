@@ -425,18 +425,22 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel->setStatus('removing-magento')->save();
                 
                 //removing system from Papertrail
-                $queueModel = new Application_Model_Queue();
-                $queueModel->setStoreId($currentStore->id);
-                $queueModel->setTask('PapertrailSystemRemove');
-                $queueModel->setStatus('pending');
-                $queueModel->setUserId($this->auth->getIdentity()->id);
-                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
-                $queueModel->setExtensionId(0);  
-                $queueModel->setParentId(0);  
-                $queueModel->save();
-                
-                $removingId = $queueModel->getId();
-                
+                $removingId = 0;
+
+                if (strlen($storeModel->getPapertrailSyslogHostname())) {
+                    $queueModel = new Application_Model_Queue();
+                    $queueModel->setStoreId($currentStore->id);
+                    $queueModel->setTask('PapertrailSystemRemove');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setExtensionId(0);  
+                    $queueModel->setParentId(0);  
+                    $queueModel->save();
+
+                    $removingId = $queueModel->getId();
+                }
+
                 unset($queueModel);
                 //add remove task to queue
                 $queueModel = new Application_Model_Queue();
