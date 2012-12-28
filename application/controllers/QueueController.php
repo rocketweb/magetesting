@@ -300,11 +300,11 @@ class QueueController extends Integration_Controller_Action {
                             ->setCustomSql($form->custom_sql->getValue())
                             ->setType('custom')
                             ->setCustomFile($form->custom_file->getValue());
-                    $newStoreId = $storeModel->save();
+                    $storeId = $storeModel->save();
                     
                     $queueModel = new Application_Model_Queue();
                     //TODO: Add queue item with MagentoDownload
-                    $queueModel->setStoreId($newStoreId);
+                    $queueModel->setStoreId($storeId);
                     $queueModel->setTask('MagentoDownload');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
@@ -317,7 +317,7 @@ class QueueController extends Integration_Controller_Action {
                     unset($queueModel);
                     
                     $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setStoreId($newStoreId);
+                    $queueModel->setStoreId($storeId);
                     $queueModel->setTask('RevisionInit');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
@@ -328,7 +328,7 @@ class QueueController extends Integration_Controller_Action {
                     unset($queueModel);
                     
                     $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setStoreId($newStoreId);
+                    $queueModel->setStoreId($storeId);
                     $queueModel->setTask('RevisionCommit');
                     $queueModel->setTaskParams(
                             array(
@@ -341,6 +341,33 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
+                    $queueModel->save();
+
+                    unset($queueModel);
+                    //Add queue create user in Papertrail
+                    if(!$this->auth->getIdentity()->has_papertrail_account) {
+                        $queueModel = new Application_Model_Queue();
+                        $queueModel->setStoreId($storeId);
+                        $queueModel->setTask('PapertrailUserCreate');
+                        $queueModel->setStatus('pending');
+                        $queueModel->setUserId($this->auth->getIdentity()->id);
+                        $queueModel->setServerId($this->auth->getIdentity()->server_id);
+                        $queueModel->setExtensionId(0);
+                        $queueModel->setParentId($installId);
+                        $queueModel->save();
+
+                        $installId = $queueModel->getId();
+                    }
+
+                    unset($queueModel);
+                    $queueModel = new Application_Model_Queue();
+                    $queueModel->setStoreId($storeId);
+                    $queueModel->setTask('PapertrailSystemCreate');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($this->auth->getIdentity()->id);
+                    $queueModel->setServerId($this->auth->getIdentity()->server_id);
+                    $queueModel->setExtensionId(0);
+                    $queueModel->setParentId($installId);
                     $queueModel->save();
 
                     //stop adding store
