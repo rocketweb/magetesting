@@ -55,20 +55,39 @@
                             <?php endif; ?>
                             </div>
                         </div>
-                        
+
+                        <?php if($this->user->hasPlanActive()): ?>
+                        <br />
+
                         <div class="row">
-                            <div class="span4">
-                            <?php if($this->user->hasPlanActive()): ?>
+                            <div class="span8">
+                                <div class="alert alert-info">
                                 <?php if(!(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                                 Your account is pending payment. It should take up to 24 hours to finish processing your payment. You can use site in that time normally.
-                                <?php elseif((int)$this->user->getPlanId()): ?>
+                                <?php elseif((int)$this->user->getPlanId() && $this->plan->getAutoRenew()): ?>
                                 Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
+                                <?php elseif((int)$this->user->getPlanId()): ?>
+                                Your plan ends on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
                                 <?php endif; ?>
-                            <?php endif; ?>
+                                </div>
                             </div>
                         </div>
+                        <?php endif; ?>
+
+                        <?php if($this->raisedPlan instanceof Application_Model_Plan): ?>
                         <br />
-                        
+
+                        <div class="row">
+                            <div class="span8">
+                                <div class="alert alert-success">
+                                  <p><strong>Good news!</strong></p>
+                                  <p>As you bought a Magento extension on our site, we have given you access to "<?php echo $this->raisedPlan->getName(); ?>" plan for 7 days for free.</p>
+                                  <p>You can continue using that new plan to <?php echo date("F j, Y",strtotime($this->user->getPlanRaisedToDate())) ?>. After that your plan will be changed back to "<?php echo $this->escape($this->plan->getName()); ?>".</p> 
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
                         <?php if ($this->user->getGroup()=='free-user'): ?>
                         <br />
                         <div class="row">

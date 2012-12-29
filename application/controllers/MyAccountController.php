@@ -23,8 +23,18 @@ class MyAccountController extends Integration_Controller_Action
 
         $modelUser = new Application_Model_User();
         $user = $modelUser->find($this->auth->getIdentity()->id);
-               
-        $this->view->plan = $modelPlan->find($user->getPlanId());
+
+        if ($user->getPlanIdBeforeRaising()) {
+            $planData = $modelPlan->find($user->getPlanIdBeforeRaising());
+            $modelRaisedPlan = new Application_Model_Plan();
+            $raisedPlanData = $modelRaisedPlan->find($user->getPlanId());
+        } else {
+            $planData = $modelPlan->find($user->getPlanId());
+            $raisedPlanData = false;
+        }
+
+        $this->view->plan = $planData;
+        $this->view->raisedPlan = $raisedPlanData;
         $this->view->payments = $payments->fetchUserPayments($user->getId());
         $this->view->user = $user;
     }
