@@ -72,6 +72,29 @@ class Integration_Controller_Action extends Zend_Controller_Action
             $user->find($auth->getIdentity()->id);
             $this->view->loggedUser = $user;
             $auth->getStorage()->write((object)$user->__toArray());
+
+            /* if user:
+             * - haven't choosed plan yet or
+             * - his 7 days plan expired
+             * redirect his to compare plan page.
+             */
+            if ($user->getGroup() != 'admin' AND !$user->hasPlanActive()
+                AND ($controller != 'my-account' || $action != 'compare')
+                AND ($controller != 'my-account' || $action != 'edit-account')
+                AND ($controller != 'braintree' || $action != 'form')
+                AND ($controller != 'braintree' || $action != 'response')
+                AND ($controller != 'user' || $action != 'logout')
+                ) {
+                $this->_helper->FlashMessenger(array(
+                    'from_scratch' => true,
+                    'type'=> 'notice', 
+                    'message' => '<strong>You don\'t have any active plan. </strong> Either your 7 days plan expired or you haven\'t choosed plan yet. Please choose plan now.'));
+                return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'my-account',
+                        'action' => 'compare',
+                ), 'default', true);
+            }
         }
 
         $this->acl = $acl;

@@ -180,14 +180,6 @@ class UserController extends Integration_Controller_Action
                                 $userData
                         );
 
-                        if($user->getGroup() != 'admin' AND (!$user->getPlanId() OR !$user->hasPlanActive())) {
-                            $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'You haven\'t choosed any plan yet, feel free to choose one now.'));
-                            return $this->_helper->redirector->gotoRoute(array(
-                                    'module' => 'default',
-                                    'controller' => 'my-account',
-                                    'action' => 'compare',
-                            ), 'default', true);
-                        }
                         // if user has subscription or waiting for confirmation
                         if(in_array($userData->group, array('awaiting-user', 'commercial-user'))) {
                             $timeAfterLastPayment = time()-strtotime($userData->plan_active_to);
