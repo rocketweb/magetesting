@@ -1,7 +1,3 @@
-<?php $NEW = TRUE; ?>
-
-<?php if($NEW):?>
-
 <div class="row">
     <div class="span12">
         <div class="content">
@@ -11,13 +7,12 @@
         	<div class="inner">
         	    <a href="#" class="btn btn-large btn-tour btn-success">See available plans</a>
 
-
-        	    <section class="watch-video">
-        	        <div class="span5 pull-right">
+        	    <section class="watch-video clearfix">
+        	        <div class="span4 pull-right headings">
         	            <h3>Why <span class="magetesting"><span class="mage">mage<span class="testing">testing</span></span></span>?</h3>
         	            <h4>Watch the video.</h4>
         	        </div>
-        	        <div class="span6 pull-left" style="float: left">
+        	        <div class="span7 pull-left" style="float: left">
         	            <div class="mac-book-air">
         	            	<div class="js-video [vimeo]">
         	            	    <img class="img-resize" src="<?php echo $this->baseUrl('/public/img/mac-book-air.png'); ?>" alt="" />
@@ -28,7 +23,7 @@
         	    </section>
 
 
-        	    <section class="simple">
+        	    <section class="simple clearfix">
                     <div class="span6 pull-right">
                         <img src="<?php echo $this->baseUrl('/public/img/screen_simple.png'); ?>" alt="" />
                     </div>
@@ -39,7 +34,7 @@
                 </section>
 
 
-        	    <section class="safe">
+        	    <section class="safe clearfix">
                     <div class="span5 pull-right">
                         <h3>Safe</h3>
                         <p>Use your Mage Testing store to test out new extensions and custom features before ever touching your live store. When you are unhappy that everything is working as it should, follow easy steps to get changes on your live site.</p>
@@ -50,7 +45,7 @@
         	    </section>
 
 
-        	    <section class="flexible">
+        	    <section class="flexible clearfix">
         	        <div class="span6 pull-right">
                         <img src="<?php echo $this->baseUrl('/public/img/screen_flexible.png'); ?>" alt="" />
                     </div>
@@ -61,7 +56,7 @@
         	    </section>
 
 
-        	    <section class="extensions">
+        	    <section class="extensions clearfix">
         	        <div class="span5 pull-right">
                         <h3>Browser Extensions</h3>
                         <p>Browse select free and premium Magento  extensions to install, test purchase and deploy to live site. Install multimple extensions to test drive before comiting to buy or test multiple extensions in your store to evaluate compatibility.</p>
@@ -77,108 +72,3 @@
         </div>
     </div>
 </div>
-
-<?php else: ?>
-<div class="hero-unit">
-    <h1>Create magento sandboxes in minutes.</h1>
-    <p>The fastest way to test your site, extension or theme with multiple magento editions.</p>
-</div>
-
-<div class="row">
-    <div class="span8">
-
-        <p>
-          Mage Testing is a tool which allow you to run multple Magento sandboxes in minutes.
-
-        </p>
-
-        <ul>
-          <li>run one magento store <strong>absolutely free!</strong></li>
-          <li>get an ftp access to upload your modules, themes or language packs</li>
-          <li>fill your Magento store with <strong>sample data</strong> to have full-blown store in minutes</li>
-          <li>and even more in just <strong>one-click installer!</strong></li>
-        </ul>
-
-        <div class="page-header">
-            <h2>Our Numbers</h2>
-        </div>
-
-        <div class="row">
-            <div class="span12">
-                <div class="row">
-                    <div class="span4 number-money">
-                        <h2>$10 Per Month</h2>
-                        <p>Service is starting from $10 a month.</p>
-                    </div>
-                    <div class="span4 number-stores">
-                        <h2>Up to 10 stores</h2>
-                        <p>You can run up to 10 stores at once.</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span4 number-date">
-                        <h2>Started at 2012</h2>
-                        <p>Service is brand new, with a lot of ideas!</p>
-                    </div>
-                    <div class="span4 number-people">
-                        <h2>345</h2>
-                        <p>People who use it</p>
-                    </div>
-                </div>
-             </div>
-         </div>
-
-    </div>
-    <div class="span3 offset1">
-        <img src="http://placehold.it/240x340" alt="" style="height: 330px; margin-bottom: 10px;" />
-    </div>
-
-</div>
-<?php if(!$this->user_logged): ?>
-<form method="post" action="<?php echo $this->url(array('controller' => 'user', 'action' => 'register'), 'default', true); ?>" class="well form-inline">
-    <p>Create free trial account for Mage Testing service or <a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'login'), 'default', true); ?>">log in</a> if you already have an account</p>
-
-    <div class="row">
-        <div class="span12">
-            <input type="text" name="login" placeholder="Username">
-            <input type="password" name="password" placeholder="Password">
-            <input type="password" name="password_repeat" placeholder="Repeat password">
-            <input type="text" name="coupon" placeholder="Coupon code">
-        </div>
-        <br /><br />
-        <div class="span9">
-            <input type="text" name="email" placeholder="E-mail">
-            <input type="text" name="firstname" placeholder="First name">
-            <input type="text" name="lastname" placeholder="Last name">
-        </div>
-
-        <div class="span2 pull-right align-right">
-            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Sign in</button>
-        </div>
-    </div>
-
-</form>
-<?php endif; ?>
-<h2>Feedback</h2>
-
-<div class="row">
-    <div class="span4">
-        <blockquote>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis.</p>
-            <small>Someone famous</small>
-        </blockquote>
-    </div>
-    <div class="span4">
-        <blockquote>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis.</p>
-            <small>Someone famous</small>
-        </blockquote>
-    </div>
-    <div class="span4">
-        <blockquote>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis.</p>
-            <small>Someone famous</small>
-        </blockquote>
-    </div>
-</div>
-<?php endif; ?>
