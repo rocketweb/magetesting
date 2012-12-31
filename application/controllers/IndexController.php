@@ -38,8 +38,7 @@ class IndexController extends Integration_Controller_Action
                     $mail->send();
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');
-                    var_dump($log->log('Contact - Unable to send email', Zend_Log::CRIT, json_encode($e->getTraceAsString())));
-                    die;
+                    $log->log('Contact - Unable to send email', Zend_Log::CRIT, json_encode($e->getTraceAsString()));
                 }
                 
                 $this->_helper->FlashMessenger(array(
