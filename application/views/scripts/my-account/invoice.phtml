@@ -1,79 +1,83 @@
 <?php $this->headLink()->appendStylesheet($this->baseUrl('public/css/print.css'), 'print'); ?>
+<?php //$this->headLink()->appendStylesheet($this->baseUrl('public/css/bootstrap-responsive.min.css'), 'print'); ?>
+<?php //$this->headLink()->appendStylesheet($this->baseUrl('public/css/bootstrap.min.css'), 'print');?>
 <?php $payment = $this->payment; ?>
-<div class="row">
-    <div class="row">
-        <div class="offset1 span2 well company-details">
-            <h3>Rocket Web Inc.</h3>
-            <p>475 River Bend Rd</p>
-            <p>Ste 200C</p>
-            <p>Naperville, IL 60540</p> 
-            <p>USA</p>
-        </div>
-        <div class="offset5 span2 date-invoice well">
-            <div class="row">
-                <div class="span1"><strong>DATE</strong>:</div><?php echo date('F d, Y', strtotime($payment->getDate()))?>
-            </div>
-            <div class="row">
-                <div class="span1"><strong>INVOICE</strong> #</div><?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="offset2 span4 well">
-            <div class="span1">
-                Bill to:
-            </div>
-            <div class="span2">
-                <p>
-                    <?php echo $payment->getFirstName(); ?>
-                    <?php echo $payment->getLastName(); ?>
-                </p>
-                <p><?php echo $payment->getStreet(); ?></p>
-                <p><?php echo $payment->getCity().', '.$payment->getPostalCode(); ?></p>
-                <p><?php echo $payment->getCountry().', '.$payment->getState(); ?></p>
-            </div>
-        </div>
-        <div class="span4 well">
-            <div class="span1">
-                Ship to:
-            </div>
-            <div class="span2">
-                <p><?php echo $payment->getStreet(); ?></p>
-                <p><?php echo $payment->getCity().', '.$payment->getPostalCode(); ?></p>
-                <p><?php echo $payment->getCountry().', '.$payment->getState(); ?></p>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="offset2 span9">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                        <?php if($payment->getTransactionType() == 'subscription'): ?>
+
+<div class="row invoice">
+    <div class="span12">
+        <h1>Invoice #<?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?></h1>
+        <div class="form-box">
+            <div class="box">
+                
+                <div class="tab-stripe"></div>
+                <fieldset class="invoice-details">
+                    <legend>Invoice details</legend>
+                    <div class="row">
+                        <div class="span4 invoice-info invoice-address invoice-address-to">
+                            <address>
+                                <strong>Rocket Web Inc.</strong><br>
+                                475 River Bend Rd<br>
+                                Ste 200C<br>
+                                Naperville, IL 60540<br>
+                                USA<br>
+                            </address>
+                        </div>
+                        <div class="span4 invoice-info-minor">
+                            <div class="row in">
+                            	<div class="span1"><h5>DATE:</h5></div>
+                            	<div class="span2"><?php echo date('F d, Y', strtotime($payment->getDate()))?></div>
+                            </div>
+                            <div class="row">
+                            	<div class="span1"><h5>INVOICE:</h5></div>
+                            	<div class="span2">#<?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?></div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                	<div class="row">
+        		    	<div class="span4 invoice-address invoice-address-billto">
+        		    		<h5>BILL TO:</h5>
+        		    		<address>
+        		    			<strong>
+        		    			    <?php echo $payment->getFirstName(); ?>
+        		    			    <?php echo $payment->getLastName(); ?>
+        		    			</strong><br>
+        		    			<?php echo $payment->getStreet(); ?><br />
+        		    			<?php echo $payment->getCity().', '.$payment->getPostalCode(); ?><br />
+        		    			<?php echo $payment->getCountry().', '.$payment->getState(); ?>
+        		    		</address>
+        		    	</div>
+        		    	<div class="span4 invoice-address invoice-address-shipto">
+        		    		<h5>SHIP TO:</h5>
+        		    		<address>
+        		    			<strong></strong><br>
+        		    			<?php echo $payment->getStreet(); ?><br />
+        		    			<?php echo $payment->getCity().', '.$payment->getPostalCode(); ?><br />
+        		    			<?php echo $payment->getCountry().', '.$payment->getState(); ?>
+        		    		</address>
+            		    </div>
+                	</div>
+                </fieldset>
+                
+                <div class="tab-stripe"></div>
+                <fieldset class="invoice-purchase">
+                	<legend>
+                	    <?php if($payment->getTransactionType() == 'subscription'): ?>
                             Subscribed plan
                         <?php else: ?>
                             Bought Extension
                         <?php endif; ?>
-                        </th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><?php echo $payment->getTransactionName(); ?></td>
-                        <td>$<?php echo $payment->getPrice(); ?></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span1 offset9">
-            TOTAL:
-        </div>
-        <div class="span1 total-align">
-            $<?php echo $payment->getPrice(); ?>
+                	</legend>
+                	<div class="row">
+                		<div class="span4 invoice-purchase-item"><?php echo $payment->getTransactionName(); ?></div>
+                		<div class="span4 currency">$<?php echo $payment->getPrice(); ?></div>
+                	</div>
+                	<div class="row invoice-total">
+                		<div class="span4 invoice-purchase-total"><strong>TOTAL:</strong></div>
+                		<div class="span4 currency">$<?php echo $payment->getPrice(); ?></div>
+                	</div>
+                </fieldset>
+            </div>
         </div>
     </div>
 </div>

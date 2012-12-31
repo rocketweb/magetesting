@@ -1,5 +1,3 @@
-.icon-blue{background-image:url("../img/glyphicons-halflings-blue.png");}
-.icon-red{background-image:url("../img/glyphicons-halflings-red.png");}
 html,body{height:100%;font-family:Helvetica,Arial,sans-serif;}
 .form-actions{background-color:#fff;}
 .logo{position:relative;z-index:1;margin:20px 0;}
@@ -33,6 +31,8 @@ fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-fi
 .partner{margin-top:20px;}
 .partner .partner-logo{margin-top:40px;}
 *[rel="popover"]{cursor:pointer;}
+.icon-blue{background-image:url("../img/glyphicons-halflings-blue.png");}
+.icon-red{background-image:url("../img/glyphicons-halflings-red.png");}
 .btn-mini .icon{margin-top:0px;}
 .btn-minimini{padding:0px 4px;}
 .btn-red{color:#fff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);background-color:#F0554A;*background-color:#f64135;background-image:-moz-linear-gradient(top, #f0554a, #f64135);background-image:-webkit-gradient(linear, 0 0, 0 100%, #f0554a, to(#f64135));background-image:-webkit-linear-gradient(top, #f0554a, #f64135);background-image:-o-linear-gradient(top, #f0554a, #f64135);background-image:linear-gradient(to bottom, #f0554a, #f64135);background-repeat:repeat-x;border-color:#f64135 #f64135 #1f6377;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffF0554A', endColorstr='#fff64135', GradientType=0);filter:progid:DXImageTransform.Microsoft.gradient(enabled=false);}.btn-red:hover,.btn-red:active,.btn-red.active,.btn-red.disabled,.btn-red[disabled]{color:#fff;background-color:#F0554A;*background-color:#f64135;}
@@ -53,6 +53,9 @@ fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-fi
 .input-radio .input-radio-alert input{width:511px;}
 .input-radio .input-radio-alert.alert-info input{width:100%;}
 .accordion-group .accordion-heading .accordion-toggle{outline:0;}
+.currency{text-align:left;}
+.invoice .invoice-details h5{margin:0;}
+.invoice .invoice-purchase .invoice-total{margin-top:30px;}.invoice .invoice-purchase .invoice-total div{border-top:1px dotted #ccc;}.invoice .invoice-purchase .invoice-total div.currency{font-weight:700;}
 .remove-typekit>*{font-family:Helvetica,Arial,sans-serif;}
 .img-resize{width:100%;position:relative;top:0;left:0;}
 footer .links,footer .links a{color:#bbb;}

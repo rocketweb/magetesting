@@ -32,3 +32,6 @@ company-details p {
     text-align: right;
     margin-right: 10px;
 }
+
+div.invoice{padding:40px;}div.invoice h1{margin-bottom:40px;font-size:28px;}
+
