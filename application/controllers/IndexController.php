@@ -20,7 +20,38 @@ class IndexController extends Integration_Controller_Action
     }
 
     public function contactUsAction() {
-        // action body
+        $form = new Application_Form_Contact();
+        
+        if ($this->_request->isPost()) {
+            $formData = $this->_request->getPost();
+
+            if ($form->isValid($formData)) {
+
+                $mailData = $this->getInvokeArg('bootstrap')
+                                 ->getResource('config')
+                                 ->contact
+                                 ->message;
+                
+                $mail = new Integration_Mail_Contact($mailData, (object)$formData);
+
+                try {
+                    $mail->send();
+                } catch (Zend_Mail_Transport_Exception $e){
+                    $log = $this->getInvokeArg('bootstrap')->getResource('log');
+                    var_dump($log->log('Contact - Unable to send email', Zend_Log::CRIT, json_encode($e->getTraceAsString())));
+                    die;
+                }
+                
+                $this->_helper->FlashMessenger(array(
+                    'message' => 'You succeffully sent your message.',
+                    'type'    => 'success',
+                ));
+                
+                return $this->_helper->redirector->gotoRoute(array('action' => 'contact-us'), 'default', true);
+            }
+        }
+        
+        $this->view->form = $form;
     }
     
     public function partnersAction() {

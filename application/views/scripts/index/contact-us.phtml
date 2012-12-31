@@ -1,13 +1,10 @@
 <div class="row">
     <div class="span12">
+        <?php echo $this->render('_partials/messages.phtml'); ?>
         <h1>Contact Us</h1>
         <div class="form-box">
             <div class="box">
-                <form
-                    enctype="<?php //echo $this->form->getEnctype() ?>"
-                    method="<?php //echo $this->form->getMethod() ?>"
-                    class="<?php //echo $this->form->getAttrib('class') ?>">
-
+                <form method="<?php echo $this->form->getMethod() ?>">
                     <div class="tab-stripe"></div>
                     <fieldset>
                         <legend>Message details</legend>
@@ -15,14 +12,14 @@
                             <div class="span4">
                                 <div class="control-group"><label class="control-label required" for="sender_name">Your name</label>
                                     <div class="controls">
-                                        <input class="span4" type="text" value="" id="" name="sender_name">
+                                        <?php echo $this->form->getElement('sender_name') ?>
                                     </div>
                                 </div>
                            </div>
                            <div class="span4">
                                <div class="control-group"><label class="control-label required" for="sender_email">Your email address</label>
                                     <div class="controls">
-                                        <input class="span4" type="text" value="" id="" name="sender_email">
+                                        <?php echo $this->form->getElement('sender_email') ?>
                                     </div>
                                 </div>
                            </div>
@@ -32,7 +29,7 @@
                             <div class="span8">
                                 <div class="control-group"><label class="control-label required" for="subject">Subject</label>
                                     <div class="controls">
-                                        <input class="span8" type="text" value="" id="" name="subject">
+                                        <?php echo $this->form->getElement('subject') ?>
                                     </div>
                                 </div>
                            </div>
@@ -41,7 +38,7 @@
                             <div class="span8">
                                 <div class="control-group"><label class="control-label required" for="message">Message</label>
                                     <div class="controls">
-                                        <textarea class="span8" rows="5"></textarea>
+                                        <?php echo $this->form->getElement('message') ?>
                                     </div>
                                 </div>
                            </div>
