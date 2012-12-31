@@ -46,7 +46,7 @@ class IndexController extends Integration_Controller_Action
                     'type'    => 'success',
                 ));
                 
-                return $this->_helper->redirector->gotoRoute(array('action' => 'contact-us'), 'default', true);
+                return $this->_helper->redirector->gotoRoute(array(), 'contact', true);
             }
         }
         

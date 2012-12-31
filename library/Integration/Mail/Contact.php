@@ -2,7 +2,6 @@
 
 class Integration_Mail_Contact
 {
-
     protected $data;
     protected $view;
     protected $mail;
@@ -12,11 +11,12 @@ class Integration_Mail_Contact
         $this->data = $data;
 
         $from = $config->from;
+
         //headers set up here
-        $mail = $this->mail = new Zend_Mail('utf-8');
-        $mail->setFrom( $from->email, $from->desc );
-        $mail->addTo($config->email);
-        $mail->setSubject($config->subject);
+        $this->mail = new Zend_Mail('utf-8');
+        $this->mail->setFrom($from->email, $from->desc);
+        $this->mail->addTo($config->email);
+        $this->mail->setSubject($config->subject);
         
         $this->view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
     }
@@ -34,7 +34,7 @@ class Integration_Mail_Contact
         $this->mail->setBodyHtml($msg);
         $this->mail->setBodyText(strip_tags($msg));
 
-        $result =  $this->mail->send();
+        $result =  $this->mail->send($transport);
         return $result;
     }
 
