@@ -79,7 +79,7 @@ implements Application_Model_Task_Interface {
         //let's load sql to mysql database
         $this->_importDatabaseDump();
 
-        $this->_importFiles();
+        //$this->_importFiles();
 
         //now lets configure our local xml file
         $this->_updateLocalXml();
@@ -177,13 +177,18 @@ implements Application_Model_Task_Interface {
         unset($output);
     }
     
+    /**
+     * @deprecated: this should be taken care of within transport class
+     * This 
+     */
     protected function _importFiles(){
         
-        $this->logger->log('Moving downloaded sources to main folder.', Zend_Log::INFO);
-        exec('sudo mv '.ltrim($this->_customRemotePath,'/').'* .', $output);
+        /*$this->logger->log('Moving downloaded sources to main folder.', Zend_Log::INFO);
+        $command = 'sudo mv '.ltrim($this->_customRemotePath,'/').'* .';
+        exec($command, $output);
         $message = var_export($output, true);
-        $this->logger->log("\nsudo mv ".ltrim($this->_customRemotePath, '/')."* .\n" . $message, Zend_Log::DEBUG);
-        unset($output);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        unset($output);*/
     }
 
     protected function _updateLocalXml() {
@@ -215,7 +220,7 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/var/')) {
             exec('sudo mkdir var');
-            exec('touch var/.htaccess');
+            exec('sudo touch var/.htaccess');
             //create htaccess 
             exec('sudo cat Order deny,allow >> var/.htaccess');
             exec('sudo cat Deny from all >> var/.htaccess');
@@ -251,7 +256,7 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'',
             PHP_EOL.'    RewriteRule .* ../get.php [L]',
             PHP_EOL.'</IfModule>');
-            exec('touch media/.htaccess');
+            exec('sudo touch media/.htaccess');
             foreach ($lines as $line){
                 exec('sudo cat \''.$line.'\' >> media/.htaccess');
             }
