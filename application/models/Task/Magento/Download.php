@@ -128,8 +128,6 @@ implements Application_Model_Task_Interface {
         exec($command);
         $this->logger->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
 
-        
-
         chdir($startCwd);
 
         /* send email to store owner start */
@@ -217,7 +215,7 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/var/')) {
             exec('sudo mkdir var');
-            
+            exec('touch var/.htaccess');
             //create htaccess 
             exec('sudo cat Order deny,allow >> var/.htaccess');
             exec('sudo cat Deny from all >> var/.htaccess');
@@ -253,9 +251,9 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'',
             PHP_EOL.'    RewriteRule .* ../get.php [L]',
             PHP_EOL.'</IfModule>');
-            
+            exec('touch media/.htaccess');
             foreach ($lines as $line){
-                exec('sudo cat '.$line.' >> media/.htaccess');
+                exec('sudo cat \''.$line.'\' >> media/.htaccess');
             }
             
         }
