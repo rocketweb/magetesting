@@ -85,9 +85,12 @@ implements Application_Model_Task_Interface {
         $this->_updateLocalXml();
 
         $this->_setupMagentoConnect();
+        
         //remove main fetched folder
         $parts = explode('/', $this->_customRemotePath);
+        if (isset($parts[0])){
         exec('sudo rm ' . $parts[0] . ' -R', $output);
+        }
         unset($parts);
 
         $this->_cleanupFilesystem();
