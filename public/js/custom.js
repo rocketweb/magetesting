@@ -85,7 +85,7 @@ $(document).ready(function () {
                            if(typeof html == 'string' && html.length) {
                                $deploy_table_body.append(html.replace(/(Adding )([^\(]*[^\(\s])( \(.*\))*\</ig, '$2<'));
                            }
-                           $(".btn.request-deployment.disabled").tooltip({placement: 'right'});
+                           $(".btn.request-deployment.disabled").tooltip({placement: 'left'});
                        }
                     });
                 }
