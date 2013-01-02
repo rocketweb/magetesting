@@ -1,6 +1,27 @@
 @import "variables";
 @import "mixins";
 
+div.navbar {
+    div.red-bar, a.btn.btn-navbar, div.nav-collapse {
+        display: none;
+    }
+    div.navbar-inner {
+        box-shadow: none;
+        border: 0;
+        background-color: #fff;
+        background-image: none;
+        
+        a:after {
+            color: #fff;
+            content: "";
+        }
+                
+        .logo {
+            margin: 40px;
+        }
+    }
+}
+
 div.invoice {
 	padding: 40px;
     
@@ -17,6 +38,18 @@ div.invoice {
         font-style: normal;
         font-weight: 700;
         margin: 0;
+    }
+    
+    fieldset {
+        margin: 40px 0;
+    }
+    
+    .invoice-addresses {
+        margin: 40px 0;
+        
+        .invoice-address-billto {
+            margin-left: 0;
+        }
     }
     
     /*font-family: @MainFamily;

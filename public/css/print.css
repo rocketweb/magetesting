@@ -1,4 +1,4 @@
-hr, footer, div.navbar { display: none; }
+hr, footer { display: none; }
 body { padding-top: 0px; }
 
 company-details h3 {
@@ -33,7 +33,23 @@ company-details p {
     margin-right: 10px;
 }
 
+* { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; } /* Black prints faster: h5bp.com/s */
+  a, a:visited { text-decoration: underline; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }  /* Don't show links for images, or javascript/internal links */
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  thead { display: table-header-group; } /* h5bp.com/t */
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page { margin: 0.5cm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+  
+div.navbar div.red-bar,div.navbar a.btn.btn-navbar,div.navbar div.nav-collapse{display:none;}
+div.navbar div.navbar-inner{box-shadow:none;border:0;background-color:#fff;background-image:none;}div.navbar div.navbar-inner a:after{color:#fff;content:"";}
+div.navbar div.navbar-inner .logo{margin:40px;}
 div.invoice{padding:40px;}div.invoice h1{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:700;margin-bottom:40px;font-size:28px;}
 div.invoice h5{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:700;margin:0;}
-
-
+div.invoice fieldset{margin:40px 0;}
+div.invoice .invoice-addresses{margin:40px 0;}div.invoice .invoice-addresses .invoice-address-billto{margin-left:0;}
