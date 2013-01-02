@@ -217,6 +217,10 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/var/')) {
             exec('sudo mkdir var');
+            
+            //create htaccess 
+            exec('sudo cat Order deny,allow >> var/.htaccess');
+            exec('sudo cat Deny from all >> var/.htaccess');
         }
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/downloader/')) {
@@ -225,8 +229,39 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/media/')) {
             exec('sudo mkdir media');
+            
+            $lines = array('Options All -Indexes',
+            PHP_EOL.'<IfModule mod_php5.c>',
+            PHP_EOL.'php_flag engine 0',
+            PHP_EOL.'</IfModule>',
+            PHP_EOL.'AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi',
+            PHP_EOL.'Options -ExecCGI',
+            PHP_EOL.'<IfModule mod_rewrite.c>',
+            PHP_EOL.'',
+            PHP_EOL.'############################################',
+            PHP_EOL.'## enable rewrites',
+            PHP_EOL.'',
+            PHP_EOL.'    Options +FollowSymLinks',
+            PHP_EOL.'    RewriteEngine on',
+            PHP_EOL.'',
+            PHP_EOL.'############################################',
+            PHP_EOL.'## never rewrite for existing files',
+            PHP_EOL.'    RewriteCond %{REQUEST_FILENAME} !-f',
+            PHP_EOL.'',
+            PHP_EOL.'############################################',
+            PHP_EOL.'## rewrite everything else to index.php',
+            PHP_EOL.'',
+            PHP_EOL.'    RewriteRule .* ../get.php [L]',
+            PHP_EOL.'</IfModule>');
+            
+            foreach ($lines as $line){
+                exec('sudo cat '.$line.' >> media/.htaccess');
+            }
+            
         }
-
+        
+        
+        //add var/.htaccess if not exist       
         $command = 'sudo chmod 777 var/.htaccess app/etc';
         exec($command, $output);
         $message = var_export($output, true);
@@ -246,6 +281,7 @@ implements Application_Model_Task_Interface {
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
+        //add media if not exist
         $command = 'sudo chmod 777 media -R';
         exec($command, $output);
         $message = var_export($output, true);
