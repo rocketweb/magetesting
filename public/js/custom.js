@@ -5,7 +5,10 @@ $(document).ready(function () {
         placement: 'bottom'
     });
     $(".subscribe-now, .btn.disabled.change-plan").tooltip({});
-
+    $("button.request-deployment[rel=tooltip]").tooltip({
+        placement: 'left'
+    });
+    
     /* prevent click event and init popover */
     $('[rel=popover]').click(function(){return false;}).popover();
     $('[rel=popover]').mouseover(function(){
