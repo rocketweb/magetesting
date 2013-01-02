@@ -33,5 +33,7 @@ company-details p {
     margin-right: 10px;
 }
 
-div.invoice{padding:40px;}div.invoice h1{margin-bottom:40px;font-size:28px;}
+div.invoice{padding:40px;}div.invoice h1{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:700;margin-bottom:40px;font-size:28px;}
+div.invoice h5{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:700;margin:0;}
+
 
