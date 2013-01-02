@@ -58,6 +58,7 @@ fieldset.margins.margins-first{margin:60px 0 30px 0;}fieldset.margins.margins-fi
 .invoice .invoice-purchase .invoice-total{margin-top:30px;}.invoice .invoice-purchase .invoice-total div{border-top:1px dotted #ccc;}.invoice .invoice-purchase .invoice-total div.currency{font-weight:700;}
 .remove-typekit>*{font-family:Helvetica,Arial,sans-serif;}
 .img-resize{width:100%;position:relative;top:0;left:0;}
+.braintree-vault-note{margin:6px 12px 0 0;}
 footer .links,footer .links a{color:#bbb;}
 .js-video{height:0;padding-top:25px;padding-bottom:67.5%;margin-bottom:10px;position:relative;}.js-video.vimeo{padding-top:0;}
 .js-video.widescreen{padding-bottom:57.25%;}
