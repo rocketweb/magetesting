@@ -53,7 +53,8 @@ class Application_Model_StoreExtensionMapper{
             ->setExtensionId($row->extension_id)
             ->setAddedDate($row->added_date)
             ->setBraintreeTransactionId($row->braintree_transaction_id)
-            ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed);
+            ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
+            ->setReminderSent($row->reminder_sent);
 
         return $storeExtension;
     }
@@ -70,7 +71,8 @@ class Application_Model_StoreExtensionMapper{
                   ->setExtensionId($row->extension_id)
                   ->setAddedDate($row->added_date)
                   ->setBraintreeTransactionId($row->braintree_transaction_id)
-                  ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed);
+                  ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
+                  ->setReminderSent($row->reminder_sent);
 
             $entries[] = $entry;
         }
@@ -89,13 +91,9 @@ class Application_Model_StoreExtensionMapper{
             ->setExtensionId($row->extension_id)
             ->setAddedDate($row->added_date)
             ->setBraintreeTransactionId($row->braintree_transaction_id)
-            ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed);
+            ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
+            ->setReminderSent($row->reminder_sent);
 
         return $storeExtension;
     }
 }
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>

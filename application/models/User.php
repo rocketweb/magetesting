@@ -296,6 +296,22 @@ class Application_Model_User {
     }
     
     /**
+     * Checks the user has store extension by id
+     * 
+     * @param int $id Extension Id
+     * @return mixed False or array
+     */
+    public function hasStoreExtension($id) {
+        $extension = $this->getMapper()->hasStoreExtension($id, $this);
+        
+        if(is_null($extension)) {
+            return false;
+        }
+        
+        return $extension;
+    }
+    
+    /**
      *
      * @param datetime $planActiveTo
      * @return \Application_Model_User 

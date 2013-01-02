@@ -8,7 +8,9 @@ class Application_Model_StoreExtension {
     protected $_added_date;
     protected $_braintree_transaction_id;
     protected $_braintree_transaction_confirmed;
-    
+    protected $_reminder_sent;
+
+
     protected $_mapper;
     
     public function __construct(array $options = null)
@@ -96,7 +98,17 @@ class Application_Model_StoreExtension {
         return $this->_braintree_transaction_confirmed;
     }
     
+    public function setReminderSent($value)
+    {
+        $this->_reminder_sent = $value;
+        return $this;
+    }
 
+    public function getReminderSent()
+    {
+        return $this->_reminder_sent;
+    }
+    
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -145,6 +157,7 @@ class Application_Model_StoreExtension {
             'added_date'       => $this->getAddedDate(),
             'braintree_transaction_id' => $this->getBraintreeTransactionId(),
             'braintree_transaction_confirmed' => $this->getBraintreeTransactionConfirmed(),
+            'reminder_sent' => $this->getReminderSent(),
         );
     }
 }

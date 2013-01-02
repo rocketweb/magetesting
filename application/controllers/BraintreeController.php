@@ -85,7 +85,45 @@ class BraintreeController extends Integration_Controller_Action
                         'state'       => $user->getState(),
                         'country'     => $user->getCountry()
                     );
+                    
+                    
+                    //prevents false parameters in GET request 
+                    if($this->_request->isGet()) { 
+                        $extension = $user->hasStoreExtension($id);
+                        
+                        if(!$extension) {
+                            $this->_helper->flashMessenger(
+                                array(
+                                    'type' => 'error', 
+                                    'message' => 'It is not your extension.'
+                                )
+                            );
+                            return $this->_helper->redirector->gotoRoute(
+                                array(
+                                    'controller' => 'my-account',
+                                    'action' => 'compare'
+                                ), 'default', true
+                            );
+                        }
 
+                        //link has not been sent by email OR the payment transaction is in progress
+                        if($extension->reminder_sent == 0 || !is_null($extension->braintree_transaction_id)) {
+                            $this->_helper->flashMessenger(
+                                array(
+                                    'type' => 'error', 
+                                    'message' => 'Wrong parameters in url.'
+                                )
+                            );
+                            return $this->_helper->redirector->gotoRoute(
+                                array(
+                                    'controller' => 'my-account',
+                                    'action' => 'compare'
+                                ), 'default', true
+                            );
+                        }
+
+                    }
+                    
                     // Do not allow user to change his plan before braintree settle last transaction
                     if(($form == 'plan' OR $form == 'change-plan') AND $user->hasPlanActive() AND !(int)$user->getBraintreeTransactionConfirmed()) {
                         $this->_helper->flashMessenger(

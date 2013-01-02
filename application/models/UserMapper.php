@@ -247,5 +247,9 @@ class Application_Model_UserMapper {
         return $entries;
         
     }
+    
+    public function hasStoreExtension($extensionId, Application_Model_User $user) {
+        return $this->getDbTable()->getStoreExtensionByUserId($extensionId, $user->getId());
+    }
   
 }
