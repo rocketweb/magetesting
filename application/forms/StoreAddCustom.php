@@ -94,7 +94,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
 //        $this->custom_host->setValue('ie. ftp.my-company.com');
         
         $this->addElement('text', 'custom_remote_path', array(
-                'label'       => 'Remote Path to Magento Root',
+                'label'       => 'Remote absolute path to Magento Root',
                 'required'    => true,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html',
@@ -104,7 +104,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
 //        $this->custom_remote_path->setValue('ie. /website/html');
         
         $this->addElement('text', 'custom_sql', array(
-                'label'       => 'Remote Path to SQL dump',
+                'label'       => 'Remote absolute path to SQL dump',
                 'required'    => true,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/dump.sql',
@@ -133,7 +133,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         ));
         
         $this->addElement('text', 'custom_file', array(
-                'label'       => 'Remote Path to .zip or .tar.gz package containing all store files',
+                'label'       => 'Remote absolute path to .zip or .tar.gz package containing all store files',
                 'required'    => false,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/store_backup.tar.gz',
