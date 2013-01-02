@@ -59,7 +59,7 @@ class QueueController extends Integration_Controller_Action {
                 $version = $versionModel->find((int) $request->getParam('version', 0));
 
                 if ($version->getEdition() != 'CE') {
-                    $this->_helper->FlashMessenger('Hacking forbidden.');
+                    $this->_helper->FlashMessenger('Please select magento editon.');
                     return $this->_helper->redirector->gotoRoute(
                                     array(), 'default', false
                     );

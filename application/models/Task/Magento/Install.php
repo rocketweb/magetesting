@@ -44,8 +44,8 @@ implements Application_Model_Task_Interface {
         $this->_applyXmlRpcPatch();
 
         $this->_disableAdminNotifications();
-        
         $this->_disableStoreCache();
+        $this->_enableLogging();
 
         $this->_createSymlink();
         

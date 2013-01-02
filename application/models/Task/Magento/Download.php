@@ -332,6 +332,8 @@ implements Application_Model_Task_Interface {
         $this->_clearStoreCache();
         
         $this->_disableStoreCache();
+        
+        $this->_enableLogging();
     }
     
     protected function _createAdminUser(){
