@@ -883,13 +883,17 @@ class QueueController extends Integration_Controller_Action {
                     AND !$revision['braintree_transaction_id']
                     && $revision['price']>0
                 ) {
-                    $request_button = '<button type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
+                    $request_button = '<button type="submit"
+                    rel="tooltip" data-original-title="You need to purchase this extension in order to request a deployment" 
+                    data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
                 } elseif($revision['braintree_transaction_id'] && !$revision['braintree_transaction_confirmed']) {
                     $request_button = '<button 
-                        title="Your payment for extension is being processed now. You will be able to request deployment just after payment is settled."
+                        rel="tooltip" data-original-title="Your payment for extension is being processed now. You will be able to request deployment just after payment is settled." 
                         type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy disabled" name="revision">Buy To Request Deployment</a>'.PHP_EOL;
                 } else {
-                    $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
+                    $request_button = '<button type="submit"
+                    rel="tooltip" data-original-title="Click to deploy"
+                    class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                 }
                 $content .= (($revision['filename'] AND $revision['braintree_transaction_id'] AND (int)$revision['braintree_transaction_confirmed']) ? $download_button : $request_button).PHP_EOL;
                 $content .= '</td>'.PHP_EOL;
