@@ -44,7 +44,12 @@ class UserController extends Integration_Controller_Action
     public function resetPasswordAction()
     {
         $form = new Application_Form_UserResetPassword();
-
+        $supportEmail = $this->getInvokeArg('bootstrap')
+                                     ->getResource('config')
+                                    ->user
+                                    ->activationEmail
+                                    ->from
+                                    ->email;
         if($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
                 $redirect = array(
@@ -53,9 +58,22 @@ class UserController extends Integration_Controller_Action
                 );
     
                 $user = new Application_Model_User();
-                $newPassword = $user->resetPassword(
-                    $form->email->getValue()
-                );
+                
+                try {
+                    $newPassword = $user->resetPassword(
+                        $form->email->getValue()
+                    );
+                } catch (PDOException $e){
+                    $message['type']    = 'error';
+                    $message['message'] = 'There was a problem with setting new password, please contact us at.'.$supportEmail; 
+                    $this->_helper->flashMessenger($message);
+                        $redirect['action'] = 'reset-password';
+                        return $this->_helper->redirector->goToRoute(
+                                $redirect,
+                                'default',
+                                true
+                    );
+                }
 
                 if($newPassword) {
                     // send activation email to the specified user
@@ -63,10 +81,27 @@ class UserController extends Integration_Controller_Action
                                      ->getResource('config')
                                      ->user
                                      ->resetPassword;
+                    
+                     
+                    
+                    try {
                     $mail = new Integration_Mail_UserResetPassword($mailData, $user);
                     $mail->send();
+                    } catch (Exception $e){
+                        $message['type']    = 'error';
+                        $message['message'] = 'There was a problem with sending email to you, please contact us at.'.$supportEmail; 
+                        $this->_helper->flashMessenger($message);
+                        $redirect['action'] = 'reset-password';
+                        return $this->_helper->redirector->goToRoute(
+                                $redirect,
+                                'default',
+                                true
+                        );
+                    }
+                    
                     $message['type']    = 'success';
-                    $message['message'] = 'We sent you link with form to set your new password.'; 
+                    $message['message'] = 'We sent you link with form to set your new password.';
+                    
                 } else {
                     $message['type']    = 'notice';
                     $message['message'] = 'Wrong credentials.';
@@ -79,7 +114,8 @@ class UserController extends Integration_Controller_Action
                         'default',
                         true
                 );
-            }
+                
+            } 
         }
 
         $this->view->form = $form;

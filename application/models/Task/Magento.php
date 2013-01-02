@@ -219,6 +219,10 @@ extends Application_Model_Task {
             throw new Application_Model_Task_Exception($message);
         }
     }
-           
+    
+    protected function _disableStoreCache(){
+    /* update cache setting - disable all */
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_cache_option\` SET \`value\`=\'0\'"');
+    }
 }
         
