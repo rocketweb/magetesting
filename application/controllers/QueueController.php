@@ -109,6 +109,7 @@ class QueueController extends Integration_Controller_Action {
                                             )
                                             , 0, 4)
                             )
+                            ->setBackendName('admin')
                             ->setStatus('installing-magento')
                             ->setType('clean');
                                        
@@ -299,6 +300,7 @@ class QueueController extends Integration_Controller_Action {
                             ->setCustomPass($form->custom_pass->getValue())
                             ->setCustomSql($form->custom_sql->getValue())
                             ->setType('custom')
+                            ->setBackendName('admin')
                             ->setCustomFile($form->custom_file->getValue());
                     $storeId = $storeModel->save();
                     
