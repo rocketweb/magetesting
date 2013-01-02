@@ -74,7 +74,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
             $auth->getStorage()->write((object)$user->__toArray());
 
             /* if user:
-             * - haven't choosed plan yet or
+             * - haven't choose plan yet or
              * - his 7 days plan expired
              * redirect his to compare plan page.
              */
@@ -88,7 +88,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
                 $this->_helper->FlashMessenger(array(
                     'from_scratch' => true,
                     'type'=> 'notice', 
-                    'message' => '<strong>You don\'t have any active plan. </strong> Either your 7 days plan expired or you haven\'t choosed plan yet. Please choose plan now.'));
+                    'message' => '<strong>You don\'t have any active plan. </strong> Either your 7 days plan expired or you haven\'t choose plan yet. Please choose plan now.'));
                 return $this->_helper->redirector->gotoRoute(array(
                         'module' => 'default',
                         'controller' => 'my-account',
