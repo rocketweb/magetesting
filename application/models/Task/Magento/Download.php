@@ -212,10 +212,13 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/var/')) {
             exec('sudo mkdir var');
-            exec('sudo touch var/.htaccess');
+            exec('sudo touch '.$this->_storeFolder . '/' . $this->_domain . '/var/.htaccess');
             //create htaccess 
-            exec('sudo cat Order deny,allow >> var/.htaccess');
-            exec('sudo cat Deny from all >> var/.htaccess');
+            $lines = array('Order deny,allow',
+                PHP_EOL.'Deny from all');
+            foreach ($lines as $line){
+                exec('sudo echo \''.$line.'\' >> '.$this->_storeFolder . '/' . $this->_domain . '/var/.htaccess');
+            }
         }
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/downloader/')) {
@@ -224,6 +227,7 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/media/')) {
             exec('sudo mkdir media');
+            exec('sudo touch '.$this->_storeFolder . '/' . $this->_domain . '/media/.htaccess');
             
             $lines = array('Options All -Indexes',
             PHP_EOL.'<IfModule mod_php5.c>',
@@ -248,9 +252,9 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'',
             PHP_EOL.'    RewriteRule .* ../get.php [L]',
             PHP_EOL.'</IfModule>');
-            exec('sudo touch media/.htaccess');
+            
             foreach ($lines as $line){
-                exec('sudo cat \''.$line.'\' >> media/.htaccess');
+                exec('sudo echo \''.$line.'\' >> '.$this->_storeFolder . '/' . $this->_domain . '/media/.htaccess');
             }
             
         }

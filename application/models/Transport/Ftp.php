@@ -46,10 +46,6 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             $customPort = 21;
         }
         
-        //make sure custom port have slash at the end
-        //if(substr($customPort,-1)!="/"){
-//            $customPort .= '/';
-//        }
         $this->_customPort = $customPort;
         
         
@@ -65,23 +61,20 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             $customRemotePath = '/'.$customRemotePath;
         }
 
-        //make sure remote path does not contain slash at the beginning
-        //$customRemotePath = ltrim($customRemotePath, '/');
         $this->_customRemotePath = $customRemotePath;
 
         //SQL
-         //make sure sql file path does not contain slash at the beginning       
+         //make sure sql file path does contain slash at the beginning       
         $customSql = $this->_storeObject->getCustomSql();
-        //make sure remote path containts slash at the beginning
         if (substr($customSql, 0, 1)!='/'){
             $customSql = '/'.$customSql;
         }
         $this->_customSql = $customSql;
 
         //FILE
-         //make sure sql file path does not contain slash at the beginning       
+         //make sure sql file path does contain slash at the beginning       
         $customFile = $this->_storeObject->getCustomFile();
-        $customFile = ltrim($customFile,'/');
+        $customFile = '/'.ltrim($customFile,'/');
 
         $this->_customFile = $customFile;
 
@@ -107,8 +100,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "--password='".$this->_storeObject->getCustomPass()."' ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command, $output);
-        //$message = var_export($output, true);
-        //$log->log($command."\n" . $message, LOG_DEBUG);
+        $message = var_export($output, true);
+        $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         $sqlSizeInfo = explode(' ... ',$output[0]);
 
@@ -140,13 +133,15 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
              "--password='".$this->_storeObject->getCustomPass()."' ".
              "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."";
         exec($command, $output);
-        //$message = var_export($output, true);
+        $message = var_export($output, true);
+        $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         unset($output);
         
         /**
          * TODO: validate output
          */
+        $this->_moveFiles();
         
         return true;
     }
@@ -228,7 +223,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "--password='".$this->_storeObject->getCustomPass()."' ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
-        //$message = var_export($output, true);
+        $message = var_export($output, true);
+        $this->logger->log($command."\n" . $message, LOG_DEBUG);
         unset($output);
         
         /*TODO: validate output, that file really existed */
@@ -247,6 +243,12 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $pathinfo  = pathinfo($this->_customFile);
         exec('tar -zxf '.$pathinfo['basename'].' -C temporarystoredir/');
         
+        $this->_moveFiles();
+        
+        return true;
+    }
+    
+    protected function _moveFiles(){
         //locate mage file 
         $output = array();
         $mageroot = '';
@@ -280,13 +282,12 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         * Note: since we use absolute paths: /home/main/something
         * we need to use 1st array element noth 0th
         */
+        echo $this->_customRemotePath;
         $parts = explode('/', $this->_customRemotePath);
         if (isset($parts[1]) && trim($part) != '') {
             exec('sudo rm ' . $parts[1] . ' -R', $output);
         }
         unset($parts);
-        
-        return true;
     }
     
     /*TODO: maybe methods validateFileExist and validateFileSize ? */
