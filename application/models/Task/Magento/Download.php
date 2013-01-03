@@ -85,17 +85,6 @@ implements Application_Model_Task_Interface {
 
         $this->_setupMagentoConnect();
         
-        /**
-         * Remove main fetched folder 
-         * Note: since we use absolute paths: /home/main/something
-         * we need to use 1st array element noth 0th
-         */
-        $parts = explode('/', $this->_customRemotePath);
-        if (isset($parts[1]) && trim($part) != '') {
-            exec('sudo rm ' . $parts[1] . ' -R', $output);
-        }
-        unset($parts);
-
         $this->_cleanupFilesystem();
 
         // update backend admin password

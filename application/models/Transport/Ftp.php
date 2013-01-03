@@ -275,6 +275,17 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         exec($command,$output);
         unset($output);
         
+        /**
+        * Remove main fetched folder 
+        * Note: since we use absolute paths: /home/main/something
+        * we need to use 1st array element noth 0th
+        */
+        $parts = explode('/', $this->_customRemotePath);
+        if (isset($parts[1]) && trim($part) != '') {
+            exec('sudo rm ' . $parts[1] . ' -R', $output);
+        }
+        unset($parts);
+        
         return true;
     }
     
