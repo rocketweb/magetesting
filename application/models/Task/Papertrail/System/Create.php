@@ -56,26 +56,24 @@ implements Application_Model_Task_Interface {
         if (!file_exists($filename)){
             exec('sudo touch '.$filename);
 
-            $lines = array('$ModLoad imfile',
-            '$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/system.log',
-            '$InputFileTag system-'.$this->_domain.':',
-            '$InputFileStateFile papertrail-system-'.$this->_domain.'',
-            '$InputRunFileMonitor',
-            '$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/exception.log',
-            '$InputFileTag exception-'.$this->_domain.':',
-            '$InputFileStateFile papertrail-exception-'.$this->_domain.'',
-            '$InputRunFileMonitor',
-            '',
-            'if $programname == \'system-'.$this->_domain.'\' then @mage-testing1.papertrailapp.com:15729',
-            '& ~',
-            '',
-            'if $programname == \'exception-'.$this->_domain.'\' then @mage-testing1.papertrailapp.com:15729',
-            '& ~'
-            );
+            $lines = '$ModLoad imfile'.
+            PHP_EOL.'$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/system.log'.
+            PHP_EOL.'$InputFileTag system-'.$this->_domain.':'.
+            PHP_EOL.'$InputFileStateFile papertrail-system-'.$this->_domain.''.
+            PHP_EOL.'$InputRunFileMonitor'.
+            PHP_EOL.'$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/exception.log'.
+            PHP_EOL.'$InputFileTag exception-'.$this->_domain.':'.
+            PHP_EOL.'$InputFileStateFile papertrail-exception-'.$this->_domain.''.
+            PHP_EOL.'$InputRunFileMonitor'.
+            PHP_EOL.''.
+            PHP_EOL.'if $programname == \"system-'.$this->_domain.'\" then @mage-testing1.papertrailapp.com:15729'.
+            PHP_EOL.'& ~'.
+            PHP_EOL.''.
+            PHP_EOL.'if $programname == \"exception-'.$this->_domain.'\" then @mage-testing1.papertrailapp.com:15729'.
+            PHP_EOL.'& ~';
             
-            foreach ($lines as $line){
-                exec('sudo echo \''.$line.'\' >> '.$filename);
-            }
+            exec('sudo echo \''.$lines.'\' >> '.$filename);
+            
         }
         
         exec('sudo /etc/init.d/rsyslog restart');
