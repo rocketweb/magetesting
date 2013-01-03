@@ -50,8 +50,8 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _createRsyslogFile(){
-        $systemUser = $this->config->magento->userprefix.'_'.$this->_userObject->getLogin();
-        
+        $systemUser = $this->config->magento->userprefix.$this->_userObject->getLogin();
+        $this->_domain = $this->_storeObject->getDomain();
         $filename = '/etc/rsyslog.d/'.$systemUser.'_'.$this->_domain.'.conf';
         if (!file_exists($filename)){
             exec('sudo touch '.$filename);
@@ -78,7 +78,7 @@ implements Application_Model_Task_Interface {
             }
         }
         
-        exec('/etc/init.d/rsyslog restart');
+        exec('sudo /etc/init.d/rsyslog restart');
         
     }
     
