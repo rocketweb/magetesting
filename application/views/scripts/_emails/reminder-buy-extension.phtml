@@ -1,8 +1,8 @@
 <p>Hi, <?php $v = current($this->data); echo $v['firstname']; ?></p>
 
-<p>Thanks for installing new extension!</p>
+<p>Thanks for installing a new extension!  We hope this meets the needs for your store and you are ready to take the next step to start using this extension with your customers.</p>
 
-<p>Please click this link and buy this extension(s)</p>
+<p>Please click the link(s) below to make a purchase.  After purchase you will have access to the code for any final tweaks you'd like to make before putting this on your live store.</p>
 
 <?php foreach($this->data as $record): $record = (object)$record; ?>
     <p><a href="<?php echo $record->url ?>/braintree/form?pay-for=extension&source=extension&domain=<?php echo $record->domain ?>&id=<?php echo $record->extension_id ?>">Buy <?php echo $record->name ?> extension</a></p>
