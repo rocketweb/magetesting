@@ -23,5 +23,27 @@ $(document).ready(function(){
         $this.parent().find('.input-radio-button input').attr('checked', 'checked');
         
     });
-    
+
+    //first fire this up on load
+    var customProtocolElement = $("#custom_protocol");
+    updateLabels();
+
+    //then fire it up on every change
+    customProtocolElement.change(function() {
+        updateLabels();
+    });
+
+    function updateLabels(){
+        if (customProtocolElement.val() == 'ssh') {
+            $("#custom_remote_path").parent().find('label').html('Remote absolute path to Magento Root');
+            $("#custom_file").parent().find('label').html('Remote absolute path to .zip or .tar.gz package containing all store files');
+            $("#custom_sql").parent().find('label').html('Remote absolute path to SQL dump');
+        } else {
+            $("#custom_remote_path").parent().find('label').html('Remote relative path to Magento Root');
+            $("#custom_file").parent().find('label').html('Remote relative path to .zip or .tar.gz package containing all store files');
+            $("#custom_sql").parent().find('label').html('Remote relative path to SQL dump');
+        }
+    }
+
+
 });
