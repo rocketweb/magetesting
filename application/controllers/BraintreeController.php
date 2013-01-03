@@ -433,7 +433,7 @@ class BraintreeController extends Integration_Controller_Action
                             $old_plan = $old_plan->find($user->getPlanId());
 
                             $subscription_end = explode(' ', $user->getPlanActiveTo());
-                            $subscription_end = strtotime($subscription_end[0]);//strtotime('15-12-2012');
+                            $subscription_end = strtotime($subscription_end[0]);
                             $subscription_start = strtotime('-' . $old_plan->getBillingPeriod(), $subscription_end);
                             $today = strtotime(date('Y-m-d'));
                             $subscription_range_days = ($subscription_end-$subscription_start)/3600/24;
@@ -465,7 +465,7 @@ class BraintreeController extends Integration_Controller_Action
                                     'amount' => round($amount, 2),
                                     'customerId' => $user->getBraintreeVaultId()
                                 ));
-                            }
+                            } 
                             $redirect = array(
                                     'controller' => 'my-account',
                                     'action' => 'index'
@@ -474,16 +474,15 @@ class BraintreeController extends Integration_Controller_Action
                             $payment = new Application_Model_Payment();
                             $payment->findByTransactionId($user->getBraintreeTransactionId());
                             if(is_object($result) AND $result->success AND $payment->getId()) {
+                                $payment->setId(NULL);
+                                $payment->setPrice($amount);
+                                $payment->setDate(date('Y-m-d H:i:s'));
+                                $payment->setBraintreeTransactionId($result->transaction->id);
+                                $payment->setTransactionName($plan->getName());
                                 if($amount > 0) {
-                                    $payment->setId(NULL);
-                                    $payment->setBraintreeTransactionId($result->transaction->id);
-                                    $payment->setPrice(0);
-                                    $payment->setDate(date('Y-m-d H:i:s'));
-                                    $payment->setTransactionName($plan->getName());
                                     $user->setBraintreeTransactionId($result->transaction->id);
                                     $user->setBraintreeTransactionConfirmed(0);
                                 }
-                                $payment->setPrice((float)$payment->getPrice()+$amount);
                                 $payment->save();
 
                                 $user->setPlanId($id);

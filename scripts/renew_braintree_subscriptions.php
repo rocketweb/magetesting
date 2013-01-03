@@ -11,7 +11,7 @@ Braintree_Configuration::privateKey($config->braintree->privateKey);
 $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('user')
-    ->joinLeft('plan','user.plan_id = plan.id', array('plan.billing_period', 'plan.price'))
+    ->joinLeft('plan','user.plan_id = plan.id', array('plan.billing_period', 'plan.price', 'plan.name as plan_name'))
     ->where('plan_active_to <= ?', date("Y-m-d H:i:s"))
     ->where(new Zend_Db_Expr('LENGTH(braintree_transaction_id) > 0'))
     ->where('braintree_transaction_confirmed = 1')
@@ -44,6 +44,20 @@ if($result) {
                     ), // set
                     array('id = ?' => $row['id']) // where
                 );
+                $last_payment = new Application_Model_Payment();
+                // use credentials from previous invoice
+                $last_payment->findLastForUser($row['id']);
+                $last_payment->setId(NULL);
+                $last_payment->setDate(NULL);
+                $last_payment->setBraintreeTransactionId($braintree->transaction->id);
+                // fetch plan name and price
+                $plan = new Application_Model_Plan();
+                $plan->find($row['plan_id']);
+                $last_payment->setPrice($row['price']);
+                $last_payment->setTransactionName($row['plan_name']);
+                $last_payment->setTransactionType('subscription');
+                // save new payment
+                $last_payment->save();
             } else {
                 $log->log('Plan has not been renewed for user: ' . $row['id'], Zend_Log::INFO);
             }

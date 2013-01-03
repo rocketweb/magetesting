@@ -32,7 +32,7 @@ class Application_Model_PlanMapper {
     {
         $data = $plan->__toArray();
 
-        if (null === ($id = $plan->getId())) {
+        if (!($id = (int)$plan->getId())) {
             unset($data['id']);
             $this->getDbTable()->insert($data);
         } else {
