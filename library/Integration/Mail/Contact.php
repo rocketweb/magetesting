@@ -34,7 +34,7 @@ class Integration_Mail_Contact
         $this->mail->setBodyHtml($msg);
         $this->mail->setBodyText(strip_tags($msg));
 
-        $result =  $this->mail->send($transport);
+        $result =  $this->mail->send();
         return $result;
     }
 
