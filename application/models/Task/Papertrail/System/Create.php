@@ -46,6 +46,40 @@ implements Application_Model_Task_Interface {
                                   ->save();
         }
         
+        $this->_createRsyslogFile();
     }
 
+    protected function _createRsyslogFile(){
+        $systemUser = $this->config->magento->userprefix.'_'.$this->_userObject->getLogin();
+        
+        $filename = '/etc/rsyslog.d/'.$systemUser.'_'.$this->_domain.'.conf';
+        if (!file_exists($filename)){
+            exec('sudo touch '.$filename);
+
+            $lines = array('$ModLoad imfile',
+            '$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/system.log',
+            '$InputFileTag system-'.$this->_domain.':',
+            '$InputFileStateFile papertrail-system-'.$this->_domain.'',
+            '$InputRunFileMonitor',
+            '$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/exception.log',
+            '$InputFileTag exception-'.$this->_domain.':',
+            '$InputFileStateFile papertrail-exception-'.$this->_domain.'',
+            '$InputRunFileMonitor',
+            '',
+            'if $programname == \'system-'.$this->_domain.'\' then @mage-testing1.papertrailapp.com:15729',
+            '& ~',
+            '',
+            'if $programname == \'exception-'.$this->_domain.'\' then @mage-testing1.papertrailapp.com:15729',
+            '& ~'
+            );
+            
+            foreach ($lines as $line){
+                exec('sudo echo \''.$line.'\' >> '.$filename);
+            }
+        }
+        
+        exec('/etc/init.d/rsyslog restart');
+        
+    }
+    
 }

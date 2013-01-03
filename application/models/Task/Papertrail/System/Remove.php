@@ -36,7 +36,20 @@ implements Application_Model_Task_Interface {
             $this->_storeObject->setPapertrailSyslogPort(null);
             $this->_storeObject->save();
         }
+        
+        $this->_removeRsyslogFile();
 
+    }
+    
+    public function _removeRsyslogFile(){
+        $systemUser = $this->config->magento->userprefix.'_'.$this->_userObject->getLogin();
+        
+        $filename = '/etc/rsyslog.d/'.$systemUser.'_'.$this->_domain.'.conf';
+        if (file_exists($filename)){
+            exec('sudo rm '.$filename);
+        }
+        
+        exec('/etc/init.d/rsyslog restart');
     }
 
 }
