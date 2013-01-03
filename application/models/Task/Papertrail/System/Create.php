@@ -66,10 +66,10 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'$InputFileStateFile papertrail-exception-'.$this->_domain.''.
             PHP_EOL.'$InputRunFileMonitor'.
             PHP_EOL.''.
-            PHP_EOL.'if $programname == \"system-'.$this->_domain.'\" then @mage-testing1.papertrailapp.com:15729'.
+            PHP_EOL.'if $programname == \'system-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().''.
             PHP_EOL.'& ~'.
             PHP_EOL.''.
-            PHP_EOL.'if $programname == \"exception-'.$this->_domain.'\" then @mage-testing1.papertrailapp.com:15729'.
+            PHP_EOL.'if $programname == \'exception-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().''.
             PHP_EOL.'& ~';
             
             exec('sudo echo \''.$lines.'\' >> '.$filename);
