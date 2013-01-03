@@ -42,20 +42,11 @@
         		    			    <?php echo $payment->getFirstName(); ?>
         		    			    <?php echo $payment->getLastName(); ?>
         		    			</strong><br>
-        		    			<?php echo $payment->getStreet(); ?><br />
-        		    			<?php echo $payment->getCity().', '.$payment->getPostalCode(); ?><br />
-        		    			<?php echo $payment->getCountry().', '.$payment->getState(); ?>
+        		    			<?php echo $payment->getStreet(); $state = array_search($payment->getState(), RocketWeb_List::getStatesOfAmerica()); ?><br />
+        		    			<?php echo $payment->getCity() . ', '. $state . ' ' . $payment->getPostalCode(); ?><br />
+        		    			<?php echo $payment->getCountry(); ?>
         		    		</address>
         		    	</div>
-        		    	<div class="span4 invoice-address invoice-address-shipto">
-        		    		<h5>SHIP TO:</h5>
-        		    		<address>
-        		    			<strong></strong><br>
-        		    			<?php echo $payment->getStreet(); ?><br />
-        		    			<?php echo $payment->getCity().', '.$payment->getPostalCode(); ?><br />
-        		    			<?php echo $payment->getCountry().', '.$payment->getState(); ?>
-        		    		</address>
-            		    </div>
                 	</div>
                 </fieldset>
                 
