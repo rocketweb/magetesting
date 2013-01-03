@@ -27,7 +27,10 @@ class Application_Model_RevisionMapper {
     public function save(Application_Model_Revision $revision)
     {
         $data = $revision->__toArray();
-
+        if ($revision->getId()==0){
+            unset($data['extension_id']);
+        }
+            
         if (null === ($id = $revision->getId())) {
             unset($data['id']);
             $revision->setId($this->getDbTable()->insert($data));
