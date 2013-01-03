@@ -54,7 +54,6 @@ implements Application_Model_Task_Interface {
             throw new Application_Model_Task_Exception($e->getMessage());
         }
         
-        
         try {
             $transportModel->downloadFilesystem();
         } catch (Application_Model_Transport_Exception $e) {
@@ -86,10 +85,14 @@ implements Application_Model_Task_Interface {
 
         $this->_setupMagentoConnect();
         
-        //remove main fetched folder
+        /**
+         * Remove main fetched folder 
+         * Note: since we use absolute paths: /home/main/something
+         * we need to use 1st array element noth 0th
+         */
         $parts = explode('/', $this->_customRemotePath);
-        if (isset($parts[0])){
-        exec('sudo rm ' . $parts[0] . ' -R', $output);
+        if (isset($parts[1]) && trim($part) != '') {
+            exec('sudo rm ' . $parts[1] . ' -R', $output);
         }
         unset($parts);
 
