@@ -72,7 +72,7 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'if $programname == \'exception-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().''.
             PHP_EOL.'& ~';
             
-            exec('sudo echo \''.$lines.'\' >> '.$filename);
+            file_put_contents($filename, $lines);
             
         }
         
