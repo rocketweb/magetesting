@@ -9,13 +9,14 @@ class Integration_Mail_ReminderBuyExtension
     public function __construct($config, $data)
     {
         $this->data = $data;
-
+        $current = current($this->data);
+        
         $from = $config->from;
 
         //headers set up here
         $this->mail = new Zend_Mail('utf-8');
         $this->mail->setFrom($from->email, $from->desc);
-        $this->mail->addTo($this->data->email);
+        $this->mail->addTo($current['email']);
         $this->mail->setSubject($config->subject);
 
         $this->view = Zend_Layout::getMvcInstance()->getView();
@@ -23,10 +24,7 @@ class Integration_Mail_ReminderBuyExtension
 
     public function send()
     {
-        $this->view->firstname = $this->data->firstname;
-        $this->view->extension_id = $this->data->extension_id;
-        $this->view->domain = $this->data->domain;
-        $this->view->url = $this->data->url;
+        $this->view->data = $this->data;
         $this->view->addScriptPath(APPLICATION_PATH. '/views/scripts');
 
         //body setup here
@@ -38,6 +36,9 @@ class Integration_Mail_ReminderBuyExtension
         $result =  $this->mail->send();
         return $result;
     }
-
+    
+    public function getMail() {
+        return $this->mail;
+    }
 
 }

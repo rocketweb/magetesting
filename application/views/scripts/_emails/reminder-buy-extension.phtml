@@ -1,11 +1,13 @@
-<p>Hi, <?php echo $this->firstname ?></p>
+<p>Hi, <?php $v = current($this->data); echo $v['firstname']; ?></p>
 
 <p>Thanks for installing new extension!</p>
 
-<p>Please click this link and buy this extension</p>
+<p>Please click this link and buy this extension(s)</p>
 
-<p><a href="<?php echo $this->url ?>/braintree/form?pay-for=extension&source=extension&domain=<?php echo $this->domain ?>&id=<?php echo $this->extension_id ?>">Buy your extension</a></p>
-
+<?php foreach($this->data as $record): $record = (object)$record; ?>
+    <p><a href="<?php echo $record->url ?>/braintree/form?pay-for=extension&source=extension&domain=<?php echo $record->domain ?>&id=<?php echo $record->extension_id ?>">Buy your extension</a></p>
+<?php endforeach; ?>
+    
 <p>
     -- <br /> <a href="http://magetesting.com">magetesting.com</a>
 </p>
