@@ -4,8 +4,8 @@ include 'init.console.php';
 $select = new Zend_Db_Select($db);
 $sql = $select
     ->from(array('se' => 'store_extension'))
-    ->where('se.added_date >= ?', date('Y-m-d', strtotime('-3 day', strtotime(date('Y-m-d')))) )
-    ->where('se.braintree_transaction_confirmed = 0')
+    ->where('se.added_date <= ?', date('Y-m-d', strtotime('-3 day', strtotime(date('Y-m-d')))) )
+    ->where('se.braintree_transaction_id IS NULL')
     ->where('se.reminder_sent = 0')
     ->joinLeft(array('st' => 'store'), 'st.id = se.store_id', array('st.user_id', 'st.domain'))
     ->joinLeft(array('u' => 'user'), 'u.id = st.user_id', array('u.email', 'u.firstname'))
