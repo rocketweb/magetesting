@@ -52,7 +52,13 @@ class IndexController extends Integration_Controller_Action
         
         $this->view->form = $form;
     }
-    
+
+    public function ourPlansAction() {
+        $plans = new Application_Model_Plan();
+        $this->view->plans = $plans->fetchAll();
+        $this->renderScript('my-account/compare.phtml');
+    }
+
     public function partnersAction() {
         // action body
     }

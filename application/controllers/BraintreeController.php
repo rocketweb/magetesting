@@ -24,8 +24,16 @@ class BraintreeController extends Integration_Controller_Action
     // @todo: we check whether extension exist in store in response but we should do that also for form etc
     public function formAction() {
         $message = '';
-        $form = $this->_getParam('pay-for');
-        $id = $this->_getParam('id');
+
+        $session = new Zend_Session_Namespace('Default');
+        if(isset($session->preselected_plan_id) AND $session->preselected_plan_id) {
+            $form = 'plan';
+            $id = $session->preselected_plan_id;
+            unset($session->preselected_plan_id);
+        } else {
+            $form = $this->_getParam('pay-for');
+            $id = $this->_getParam('id');
+        }
 
         // check whether GET params are ok
         if(!in_array($form, array('plan', 'extension', 'change-plan'))) {
@@ -88,7 +96,7 @@ class BraintreeController extends Integration_Controller_Action
                     
                     
                     //prevents false parameters in GET request 
-                    if($this->_request->isGet()) { 
+                    if($this->_request->isGet() AND $form != 'plan') { 
                         $extension = $user->hasStoreExtension($id);
                         
                         if(!$extension) {

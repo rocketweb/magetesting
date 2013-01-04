@@ -61,37 +61,6 @@ resources.session.saveHandler.options.modifiedColumn = "modified"
 resources.session.saveHandler.options.dataColumn     = "data"
 resources.session.saveHandler.options.lifetimeColumn = "lifetime"
 
-;Routing
-routes.about.type = "Zend_Controller_Router_Route_Static"
-routes.about.route = "about-us"
-routes.about.defaults.controller = "index"
-routes.about.defaults.action = "about-us"
-routes.about.defaults.module = "default"
-
-routes.contact.type = "Zend_Controller_Router_Route_Static"
-routes.contact.route = "contact-us"
-routes.contact.defaults.controller = "index"
-routes.contact.defaults.action = "contact-us"
-routes.contact.defaults.module = "default"
-
-routes.partners.type = "Zend_Controller_Router_Route_Static"
-routes.partners.route = "partners"
-routes.partners.defaults.controller = "index"
-routes.partners.defaults.action = "partners"
-routes.partners.defaults.module = "default"
-
-routes.privacy.type = "Zend_Controller_Router_Route_Static"
-routes.privacy.route = "privacy"
-routes.privacy.defaults.controller = "index"
-routes.privacy.defaults.action = "privacy"
-routes.privacy.defaults.module = "default"
-
-routes.terms.type = "Zend_Controller_Router_Route_Static"
-routes.terms.route = "terms-of-service"
-routes.terms.defaults.controller = "index"
-routes.terms.defaults.action = "terms-of-service"
-routes.terms.defaults.module = "default"
-
 [staging : production]
 
 [testing : production]

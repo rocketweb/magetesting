@@ -16,7 +16,9 @@
         		    enctype="<?php echo $this->form->getEnctype() ?>"
         		    method="<?php echo $this->form->getMethod() ?>"
         		    class="<?php echo $this->form->getAttrib('class') ?>">
-        		    
+        		    <?php if($this->preselected_plan_id): ?>
+        		    <input type="hidden" name="preselected_plan_id" value="<?php echo $this->preselected_plan_id; ?>" />
+        		    <?php endif;?>
         		    <div class="tab-stripe"></div>
         		    <fieldset>
             		    <legend>Account details</legend>

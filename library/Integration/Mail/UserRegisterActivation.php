@@ -21,16 +21,24 @@ class Integration_Mail_UserRegisterActivation
         $this->view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
     }
 
-    public function send()
+    public function send($preselected_plan_id = NULL)
     {
-        $activationUrl = $this->view->url(
-            array(
-                'controller' => 'user',
-                'action'     => 'activate',
-                'id'         => $this->user->getId(),
-                'hash'       => sha1($this->user->getLogin().$this->user->getEmail().$this->user->getAddedDate())
-            )
+        $activationUrlParams = array();
+        $string_to_hash = $this->user->getLogin().$this->user->getEmail().$this->user->getAddedDate();
+        if((int)$preselected_plan_id) {
+            $string_to_hash .= $preselected_plan_id;
+            $activationUrlParams['ppid'] = $preselected_plan_id;
+        }
+        $activationUrlParams += array(
+            'controller' => 'user',
+            'action'     => 'activate',
+            'id'         => $this->user->getId(),
+            'hash'       => sha1($string_to_hash)
         );
+        $activationUrl = $this->view->url(
+            $activationUrlParams
+        );
+
         $this->view->activationLink = $this->view->serverUrl().$activationUrl;
 
         //body setup here

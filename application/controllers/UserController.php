@@ -284,10 +284,16 @@ class UserController extends Integration_Controller_Action
             ),
             'class'      => 'span4'
 	    ));
-	
-        
-        if ($this->_request->isPost()) {
-            $formData = $this->_request->getPost();          
+
+	    // add to form preselected plan id if chosen
+	    $this->view->preselected_plan_id = NULL;
+	    $plan_id = (int)$this->_getParam('preselected_plan_id', 0);
+	    if($plan_id) {
+	        $this->view->preselected_plan_id = $plan_id;
+	    }
+
+        $formData = $this->_request->getPost();
+        if(count($formData) > 1) {
 
             if($form->isValid($formData)) {
                 
@@ -335,7 +341,7 @@ class UserController extends Integration_Controller_Action
                                  ->activationEmail;
                 $mail = new Integration_Mail_UserRegisterActivation($mailData, $user);
                 try {
-                    $mail->send();
+                    $mail->send($this->view->preselected_plan_id);
                     $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');
@@ -372,19 +378,22 @@ class UserController extends Integration_Controller_Action
                 'controller' => 'user',
                 'action'     => 'register'
         );
+
         if($request->isGet()) {
             $id = $request->getParam('id');
             $hash = $request->getParam('hash');
+            $preselected_plan_id = (int)$request->getParam('ppid', 0);
             if($id AND $hash) {
                 $user = new Application_Model_User();
-                switch($user->activateUser($id, $hash)) {
+                switch($user->activateUser($id, $hash, $preselected_plan_id)) {
                     case 0:
                         $user = new Application_Model_User();
                         $user->find($id);
                         
                         $auth = Zend_Auth::getInstance();
                         $auth->getStorage()->write((object)$user->__toArray());
-                        
+                        $session = new Zend_Session_Namespace('Default');
+                        $session->preselected_plan_id = $preselected_plan_id;
                         $flashMessage = 'Activation completed. You have been logged in successfully.';
                         $redirect['action'] = 'dashboard';
                         break;

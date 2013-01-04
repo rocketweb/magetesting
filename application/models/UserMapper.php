@@ -168,7 +168,7 @@ class Application_Model_UserMapper {
      * @param sha1-string $hash
      * @return number
      */
-    public function activateUser($id, $hash)
+    public function activateUser($id, $hash, $preselected_plan_id = 0)
     {
         if((int)$id > 0) {
             $user = $this->find($id, new Application_Model_User());
@@ -177,7 +177,11 @@ class Application_Model_UserMapper {
                     // user already activated
                     return 2;
                 }
-                $user_hash = sha1($user->getLogin().$user->getEmail().$user->getAddedDate());
+                $string_to_hash = $user->getLogin().$user->getEmail().$user->getAddedDate();
+                if((int)$preselected_plan_id) {
+                    $string_to_hash .= $preselected_plan_id;
+                }
+                $user_hash = sha1($string_to_hash);
                 if($user_hash == $hash) {
                     // activate user
                     $user->setStatus('active');
