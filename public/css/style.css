@@ -457,8 +457,7 @@ th.compare-table-data-name {
     display: inline-block;
     width: 270px;
     height: 140px;
-    padding: 0;
-    padding-top: 15px;
+    padding: 7px 0 8px 0;
     background: #34aae5;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -466,7 +465,7 @@ th.compare-table-data-name {
     border-top: none;
     color: #fff;
 }
-.compare-table-data-name h3 span, .compare-table-data-name h2 span {
+.compare-table-data-name h3 span, .compare-table-data-name h2 span, .compare-table-data-name h4 span {
 	text-shadow: 1px 1px 1px #353535;
 }
 .compare-table-data-name h3 span {
@@ -482,13 +481,21 @@ th.compare-table-data-name {
 	font-family: "pragmatica-web",Helvetica,Arial,sans-serif;
 	font-style: normal;
 	font-weight: 700;
-	font-size: 70px;
-
+	font-size: 56px;
 	width: 100%;
 	text-align: center;
 	display: block;
 	margin-top: 10px;
-
+}
+.compare-table-data-name h4 {
+	font-family: "pragmatica-web",Helvetica,Arial,sans-serif;
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	width: 100%;
+	text-align: center;
+	display: block;
+	margin-top: 10px;
 }
 td.compare-table-row-title {
 	color: #ffffff;
@@ -587,6 +594,28 @@ td.compare-table-price-button {
 	box-shadow: 0 8px 6px -6px #888888;
 }
 
+div.in-all-plans {
+	margin-top: 60px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+div.in-all-plans h4 {
+}
+div.in-all-plans h4 span {
+	background-color: #fff;
+	padding: 0 20px;
+}
+div.in-all-plans ul {
+	border-top: 1px solid #e7e7e7;
+    list-style: none;
+    
+}
+div.in-all-plans ul li {
+    float: left;
+    width: 210px;
+    margin: 20px 0 0 73px;
+    text-align: left;
+}
 /** Stores Border Radious **/
 div.accordion div.accordion-group:last-child{
 	border-bottom-left-radius: 6px;
