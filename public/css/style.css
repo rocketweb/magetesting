@@ -353,7 +353,7 @@ html,body{height:100%;}
 .clickable .element:hover{cursor:pointer;}
 .clickable .element:hover h3{text-shadow:0 0 10px white, 0 0 10px white ;}
 .clickable .element:hover h2{color:white;}
-body.index{background: url('../images/bg_pattern.jpg') repeat left top #f1f1f1;}body.index .content{text-align:center;}body.index .content h1,body.index .content h2,body.index .content h3,body.index .content h4{font-family:"pragmatica-web",Helvetica,Arial,sans-serif;color:#19333a;}
+body.index{background: url('../img/bg_pattern.jpg') repeat left top #f1f1f1;}body.index .content{text-align:center;}body.index .content h1,body.index .content h2,body.index .content h3,body.index .content h4{font-family:"pragmatica-web",Helvetica,Arial,sans-serif;color:#19333a;}
 body.index .content h1{margin-bottom:0;font-size:31.5px;font-weight:700;letter-spacing:-1px;}
 body.index .content h2{margin:0 auto;font-family:"pragmatica-web",Helvetica,Arial,sans-serif;font-size:21.5px;font-weight:300;}
 body.index .content img.cubes{z-index:-1;margin-top:0px;width:85%;}
