@@ -142,7 +142,8 @@
                     <td class="compare-table-price-empty"></td>
                     <?php foreach($this->plans as $plan): ?>
                         <td class="compare-table-price-button">
-                        <?php if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
+                        <?php if(is_object($this->user)): ?>
+                            <?php if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                             <button
                                 type="button" 
                                 title="Your payment for plan is being processed now. You will be able to change plan just after payment is settled."
@@ -150,14 +151,20 @@
                             >
                                 Subscribe now
                             </button>
-                        <?php else: ?>
+                            <?php else: ?>
                             <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form'), 'default', true); ?>">
                                 <input type="hidden" name="pay-for" value="<?php echo ($this->user->hasPlanActive() ? 'change-plan' : 'plan'); ?>" />
                                 <input type="hidden" name="source" value="plan" />
                                 <input type="hidden" name="id" value="<?php echo $plan->getId(); ?>" />
                                 <button type="submit" class="btn btn-large btn-inverse">Subscribe now</button>
                             </form>
-                        <?php endif; ?>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <form method="post" action="<?php echo $this->url(array('controller' => 'user', 'action' => 'register'), 'default', true); ?>">
+                                <input type="hidden" name="preselected_plan_id" value="<?php echo $plan->getId(); ?>" />
+                                <button type="submit" class="btn btn-large btn-inverse">Subscribe now</button>
+                            </form>
+                        <?php endif;?>
                         </td>
                         <td class="compare-table-price-empty"></td>
                     <?php endforeach; ?>
