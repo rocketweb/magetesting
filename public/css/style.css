@@ -701,3 +701,7 @@ body:before {
     float: left;
     height: 100%;
 }
+
+h4.ext-price{
+    color: #34aae5;
+}
