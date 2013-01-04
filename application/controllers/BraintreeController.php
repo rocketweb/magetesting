@@ -191,11 +191,17 @@ class BraintreeController extends Integration_Controller_Action
                     $this->view->show_billing_and_card = true;
                     if($user->getBraintreeVaultId()) {
                         $transaction['customerId'] = $user->getBraintreeVaultId();
+                        $transaction['orderId'] = $domain.'-ext-'.$id;
                         $transaction['options']['storeInVaultOnSuccess'] = false;
                         $transaction['options']['addBillingAddressToPaymentMethod'] = false;
                         $this->view->show_billing_and_card = false;
                     }
-                    $url_segments = array('controller' => 'braintree', 'action' => 'response', 'pay-for' => $form, 'id' => $id);
+                    $url_segments = array(
+                        'controller' => 'braintree', 
+                        'action' => 'response', 
+                        'pay-for' => $form, 
+                        'id' => $id
+                    );
                     if($form == 'extension') {
                         $url_segments['domain'] = $domain;
                     }
