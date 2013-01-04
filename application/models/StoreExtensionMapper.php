@@ -27,7 +27,11 @@ class Application_Model_StoreExtensionMapper{
     public function save(Application_Model_StoreExtension $storeExtension)
     {
         $data = $storeExtension->__toArray();
-
+        
+        if($storeExtension->getReminderSent()===null){
+            unset($data['reminder_sent']);
+        }
+        
         if (null === ($id = $storeExtension->getId())) {
             unset($data['id']);
             $data['added_date'] = date('Y-m-d H:i:s');
