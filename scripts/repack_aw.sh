@@ -42,7 +42,7 @@ else
     cp -r ${BASEDIR}/temp/step2/ ${BASEDIR}/temp/step1 
 
     # encode step1 directory
-    $IONCUBE --allowed-server *.magetesting.com --obfuscate all --obfuscation-key "$KEY" --obfuscation-ex ${DIR}/ioncube.blist --ignore .svn/ --ignore .DS_Store  --encode "*.php" --encode "*.phtml" ${BASEDIR}/temp/step1 -o ${BASEDIR}/temp/step1-encoded
+    $IONCUBE --allowed-server magetesting.com,*.magetesting.com --obfuscate all --obfuscation-key "$KEY" --obfuscation-ex ${DIR}/ioncube.blist --ignore .svn/ --ignore .DS_Store  --encode "*.php" --encode "*.phtml" ${BASEDIR}/temp/step1 -o ${BASEDIR}/temp/step1-encoded
 
     # pack step1 as our open source extension
     tar -czf ${BASEDIR}/open/${FILENAME}.tar.gz -C ${BASEDIR}/temp/step1 .
