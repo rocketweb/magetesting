@@ -11,7 +11,10 @@
                     </fieldset>
                     <?php if($this->show_billing_and_card): ?>
                     <div class="tab-stripe"></div>
-                    <fieldset>
+                    <fieldset class="braintree-billing-details">
+                    <?php if($this->address['street']): ?>
+                        <input type="hidden" id="has-prefilled-data" value="1" />
+                    <?php endif; ?>
                         <legend>Personal details</legend>
                         <div class="row">
                             <div class="span4">

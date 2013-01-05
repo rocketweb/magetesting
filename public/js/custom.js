@@ -1,5 +1,38 @@
 $(document).ready(function () {
-    
+
+    /*
+     * Code below, saves user my-account details before request leave us to braintree
+     * It just checks whether payment form has address fields and if form was not
+     * pre filled earlier
+     */
+    var $braintree_billing_details = $('.braintree-billing-details'),
+        $prefilled_data = $braintree_billing_details.find('#has-prefilled-data');
+
+    if($braintree_billing_details.length && !$prefilled_data.length) {
+        $braintree_billing_details.parents('form:first').submit(function() {
+            var $submit = $(this).find(':submit');
+            if($submit.hasClass('disabled')) {
+                return false;
+            }
+            $submit.addClass('disabled');
+            $.ajax({
+                url: '/magetesting/my-account/edit-account',
+                type: 'POST',
+                async: false,
+                data: {
+                    firstname: $('#customer_first_name').val(),
+                    lastname: $('#customer_last_name').val(),
+                    street: $('#billing_street_address').val(),
+                    postal_code: $('#billing_postal_code').val(),
+                    state: $('#billing_region').val(),
+                    city: $('#billing_locality').val(),
+                    country: $('#billing_country_name').val(),
+                }
+            });
+        });
+    }
+
+
     // configure tooltip messages in place of default browser title popovers
     $("a[rel=tooltip]").tooltip({
         placement: 'bottom'

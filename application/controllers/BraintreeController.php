@@ -3,19 +3,18 @@
 
 class BraintreeController extends Integration_Controller_Action
 {
-       
     public function init(){
-       parent::init();
-       require_once 'Braintree.php';
-       $config = $this->getInvokeArg('bootstrap')
-                      ->getResource('config');
-       
-       Braintree_Configuration::environment($config->braintree->environment);
-       Braintree_Configuration::merchantId($config->braintree->merchantId);
-       Braintree_Configuration::publicKey($config->braintree->publicKey);
-       Braintree_Configuration::privateKey($config->braintree->privateKey);
+        parent::init();
+        require_once 'Braintree.php';
+        $config = $this->getInvokeArg('bootstrap')
+                       ->getResource('config');
 
-       $this->_helper->sslSwitch();
+        Braintree_Configuration::environment($config->braintree->environment);
+        Braintree_Configuration::merchantId($config->braintree->merchantId);
+        Braintree_Configuration::publicKey($config->braintree->publicKey);
+        Braintree_Configuration::privateKey($config->braintree->privateKey);
+
+        $this->_helper->sslSwitch();
     }
 
     // @todo: I think we should concat form and response due to error reporting.
@@ -79,7 +78,15 @@ class BraintreeController extends Integration_Controller_Action
                 );
             }
             // display chosen form
-            $address = array();
+            $address = array(
+                'first_name'  => '',
+                'last_name'   => '',
+                'street'      => '',
+                'postal_code' => '',
+                'city'        => '',
+                'state'       => '',
+                'country'     => ''
+            );
             if((int)$this->auth->getIdentity()->id) {
                 $user = new Application_Model_User();
                 $user->find($this->auth->getIdentity()->id);
@@ -164,75 +171,65 @@ class BraintreeController extends Integration_Controller_Action
                     }
                 }
             }
-            // user needs to have filled billing address
-            if(isset($address['street']) AND $address['street']) {
-                // fetch additional data for specific_content
-                $model = null;
-                if($form == 'plan' OR $form == 'change-plan') {
-                    $model = new Application_Model_Plan();
-                } else {
-                    $model = new Application_Model_Extension();
-                }
-                if(is_object($model)) {
-                    $row = $model->find($id);
-                    if($row->getName()) {
-                        $data = $row->__toArray();
-                    }
-                }
 
-                $transaction = array(
-                    'type' => 'sale',
-                    'amount' => $row->getPrice(),
-                    'options' => array(
-                        'storeInVaultOnSuccess' => true,
-                        'addBillingAddressToPaymentMethod' => true,
-                        'submitForSettlement' => true
-                    )
-                );
-                if($form == 'change-plan') {
-                    // change plan form has his own view
-                    $this->_helper->viewRenderer->setRender('change-plan');
-                    $this->view->id = $id;
-                    $form = 'plan';
-                } else {
-                    // should we display inputs for billing address and credit card
-                    $this->view->show_billing_and_card = true;
-                    if($user->getBraintreeVaultId()) {
-                        $transaction['customerId'] = $user->getBraintreeVaultId();
-                        $transaction['orderId'] = $domain.'-ext-'.$id;
-                        $transaction['options']['storeInVaultOnSuccess'] = false;
-                        $transaction['options']['addBillingAddressToPaymentMethod'] = false;
-                        $this->view->show_billing_and_card = false;
-                    }
-                    $url_segments = array(
-                        'controller' => 'braintree', 
-                        'action' => 'response', 
-                        'pay-for' => $form, 
-                        'id' => $id
-                    );
-                    if($form == 'extension') {
-                        $url_segments['domain'] = $domain;
-                    }
-                    $this->view->tr_data = Braintree_TransparentRedirect::transactionData(array(
-                        'redirectUrl' => $this->view->serverUrl() . $this->view->url($url_segments)
-                        ,
-                        'transaction' => $transaction,
-                    ));
-                }
-                $this->view->specific_content = $this->view->partial(
-                        'braintree/'.$form.'.phtml',
-                        $data
-                );
-                $this->view->address = $address;
+            // fetch additional data for specific_content
+            $model = null;
+            if($form == 'plan' OR $form == 'change-plan') {
+                $model = new Application_Model_Plan();
             } else {
-                return $this->_helper->redirector->gotoRoute(
-                    array(
-                        'controller' => 'my-account',
-                        'action' => 'edit-account',
-                        'inform' => 1
-                    ), 'default', true
-                );
+                $model = new Application_Model_Extension();
             }
+            if(is_object($model)) {
+                $row = $model->find($id);
+                if($row->getName()) {
+                    $data = $row->__toArray();
+                }
+            }
+
+            $transaction = array(
+                'type' => 'sale',
+                'amount' => $row->getPrice(),
+                'options' => array(
+                    'storeInVaultOnSuccess' => true,
+                    'addBillingAddressToPaymentMethod' => true,
+                    'submitForSettlement' => true
+                )
+            );
+            if($form == 'change-plan') {
+                // change plan form has his own view
+                $this->_helper->viewRenderer->setRender('change-plan');
+                $this->view->id = $id;
+                $form = 'plan';
+            } else {
+                // should we display inputs for billing address and credit card
+                $this->view->show_billing_and_card = true;
+                if($user->getBraintreeVaultId()) {
+                    $transaction['customerId'] = $user->getBraintreeVaultId();
+                    $transaction['orderId'] = $domain.'-ext-'.$id;
+                    $transaction['options']['storeInVaultOnSuccess'] = false;
+                    $transaction['options']['addBillingAddressToPaymentMethod'] = false;
+                    $this->view->show_billing_and_card = false;
+                }
+                $url_segments = array(
+                    'controller' => 'braintree', 
+                    'action' => 'response', 
+                    'pay-for' => $form, 
+                    'id' => $id
+                );
+                if($form == 'extension') {
+                    $url_segments['domain'] = $domain;
+                }
+                $this->view->tr_data = Braintree_TransparentRedirect::transactionData(array(
+                    'redirectUrl' => $this->view->serverUrl() . $this->view->url($url_segments)
+                    ,
+                    'transaction' => $transaction,
+                ));
+            }
+            $this->view->specific_content = $this->view->partial(
+                    'braintree/'.$form.'.phtml',
+                    $data
+            );
+            $this->view->address = $address;
 
             $this->view->source = $this->_getParam('source',null);
         }
@@ -393,6 +390,7 @@ class BraintreeController extends Integration_Controller_Action
                     );
                 }
             } else {
+                echo 'error';
                 if ($log = $this->getLog()) {
                     $errors = '';
                     $errors .= $this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - errors:'.PHP_EOL;
