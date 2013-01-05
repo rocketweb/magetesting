@@ -13,7 +13,9 @@ class Application_Model_Plan {
     protected $_stores;
 
     protected $_price;
-    
+
+    protected $_price_description;
+
     protected $_ftp_access;
     
     protected $_phpmyadmin_access;
@@ -21,6 +23,8 @@ class Application_Model_Plan {
     protected $_can_add_custom_store;
     
     protected $_billing_period;
+
+    protected $_billing_description;
 
     protected $_is_hidden;
 
@@ -92,7 +96,18 @@ class Application_Model_Plan {
     {
         return $this->_price;
     }
-    
+
+    public function setPriceDescription($value)
+    {
+        $this->_price_description = $value;
+        return $this;
+    }
+
+    public function getPriceDescription()
+    {
+        return $this->_price_description;
+    }
+
     public function setFtpAccess($value)
     {
         $this->_ftp_access = $value;
@@ -135,6 +150,17 @@ class Application_Model_Plan {
     public function getBillingPeriod()
     {
         return $this->_billing_period;
+    }
+
+    public function setBillingDescription($value)
+    {
+        $this->_billing_description = $value;
+        return $this;
+    }
+
+    public function getBillingDescription()
+    {
+        return $this->_billing_description;
     }
 
     public function setIsHidden($value)
@@ -207,7 +233,9 @@ class Application_Model_Plan {
             'phpmyadmin_access' => $this->getPhpmyadminAccess(),
             'can_add_custom_store' => $this->getCanAddCustomStore(),
             'billing_period' => $this->getBillingPeriod(),
+            'billing_description' => $this->getBillingDescription(),
             'price'     => $this->getPrice(),
+            'price_description'     => $this->getPriceDescription(),
             'is_hidden' => $this->getIsHidden(),
             'auto_renew' => $this->getAutoRenew()
         );

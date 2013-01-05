@@ -52,10 +52,12 @@ class Application_Model_PlanMapper {
               ->setName($row->name)
               ->setStores($row->stores)
               ->setPrice($row->price)
+              ->setPriceDescription($row->price_description)
               ->setFtpAccess($row->ftp_access)
               ->setPhpmyadminAccess($row->phpmyadmin_access)
               ->setCanAddCustomStore($row->can_add_custom_store)
               ->setBillingPeriod($row->billing_period)
+              ->setBillingDescription($row->billing_description)
               ->setIsHidden($row->is_hidden)
               ->setAutoRenew($row->auto_renew);
         
@@ -81,10 +83,12 @@ class Application_Model_PlanMapper {
                   ->setName($row->name)
                   ->setStores($row->stores)
                   ->setPrice($row->price)
+                  ->setPriceDescription($row->price_description)
                   ->setFtpAccess($row->ftp_access)
                   ->setPhpmyadminAccess($row->phpmyadmin_access)
-                    ->setCanAddCustomStore($row->can_add_custom_store)
+                  ->setCanAddCustomStore($row->can_add_custom_store)
                   ->setBillingPeriod($row->billing_period)
+                  ->setBillingDescription($row->billing_description)
                   ->setIsHidden($row->is_hidden)
                   ->setAutoRenew($row->auto_renew);
             $entries[] = $entry;
@@ -102,10 +106,12 @@ class Application_Model_PlanMapper {
                   ->setName($row->name)
                   ->setStores($row->stores)
                   ->setPrice($row->price)
+                  ->setPriceDescription($row->price_description)
                   ->setFtpAccess($row->ftp_access)
                   ->setPhpmyadminAccess($row->phpmyadmin_access)
-                    ->setCanAddCustomStore($row->can_add_custom_store)
+                  ->setCanAddCustomStore($row->can_add_custom_store)
                   ->setBillingPeriod($row->billing_period)
+                  ->setBillingDescription($row->billing_description)
                   ->setIsHidden($row->is_hidden)
                   ->setAutoRenew($row->auto_renew);
             $entries[] = $entry;
@@ -126,10 +132,12 @@ class Application_Model_PlanMapper {
               ->setName($row->name)
               ->setStores($row->stores)
               ->setPrice($row->price)
+              ->setPriceDescription($row->price_description)
               ->setFtpAccess($row->ftp_access)
               ->setPhpmyadminAccess($row->phpmyadmin_access)
-                ->setCanAddCustomStore($row->can_add_custom_store)
+              ->setCanAddCustomStore($row->can_add_custom_store)
               ->setBillingPeriod($row->billing_period)
+              ->setBillingDescription($row->billing_description)
               ->setIsHidden($row->is_hidden)
               ->setAutoRenew($row->auto_renew);
         return $entry;
