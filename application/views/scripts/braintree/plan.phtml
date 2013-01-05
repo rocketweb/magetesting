@@ -1,3 +1,8 @@
-<h3>Plan: <?php echo $this->name; ?></h3>
-<h3>Price: <?php echo $this->price; ?></h3>
-<h3>Billing Period: <?php echo $this->billing_period; ?></h3>
+<h3><?php echo $this->name; ?></h3>
+<h4 class="ext-price">Price: $<?php echo $this->price; ?>
+<?php if (isset($this->price_description) && strlen($this->price_description)): ?>
+, <?php echo $this->escape($this->price_description); ?>
+<?php endif; ?>
+</h4>
+
+<h5>Access: <?php echo $this->billing_description; ?></h5>
