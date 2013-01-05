@@ -192,10 +192,12 @@
                             </form>
                             <?php endif; ?>
                         <?php else: ?>
-                            <form method="post" action="<?php echo $this->url(array('controller' => 'user', 'action' => 'register'), 'default', true); ?>">
+                            <?php $this->getHelper('ServerUrl')->setScheme('https'); ?>
+                            <form method="post" action="<?php echo $this->serverUrl($this->url(array('controller' => 'user', 'action' => 'register'), 'default', true)); ?>">
                                 <input type="hidden" name="preselected_plan_id" value="<?php echo $plan->getId(); ?>" />
                                 <button type="submit" class="btn btn-large btn-success">Get started</button>
                             </form>
+                            <?php $this->getHelper('ServerUrl')->setScheme('http'); ?>
                         <?php endif;?>
                         </td>
                         <td class="compare-table-price-empty"></td>
