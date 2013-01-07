@@ -36,7 +36,7 @@
     			            <div class="wrapper">
                                 <!-- removing this one for now until some workaround is found -->
     			                	<!--<div class="hover_inner_shadow"></div>-->
-                                    
+
     			                <?php if((float)$extension['price']): ?>
     			                	<?php if((int)$extension['store_id'] AND !(int)$extension['q_id']): ?>
     			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium_installed.png'); ?>" alt="premium" /></div>
@@ -50,7 +50,7 @@
     			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free.png'); ?>" alt="free" /></div>
     			                	<?php endif; ?>
     			                <?php endif; ?>
-    			                
+
     			                <?php if($extension['logo']): ?>
     			                <div class="icon big">
                                     <?php echo $this->Thumbnail($extension['logo'], null, 110, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
@@ -63,18 +63,22 @@
     			                    <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
     			                </div>
     			                <?php endif; ?>
-    			                
+
     			                <div class="info">
     			                    <h5><?php echo $extension['name']; ?></h5>
-    			                    <p>by <?php echo $extension['author']; ?></p>
+    			                    <p class="author">by <?php echo $extension['author']; ?></p>
+    			                    <?php if((float)$extension['price']): ?>
+    			                    <p class="extension-price pull-right">$<?php echo $extension['price']; ?></p>
+    			                    <?php endif; ?>
+    			                    <p>Verison: <?php echo $extension['version']; ?></p>
     			                </div>
-    			                
+
     			                <div class="extras hidden">
     			                    <p class="description"><?php echo $extension['description']; ?></p>
     		                    <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
     		                        <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View screens</a>
     		                        <!-- START EXTENSION'S SCREENSHOTS -->
-    		                        <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions --> 
+    		                        <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions -->
     		                        <ul class="screenshots hidden">
     		                        <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
     		                            <li data-id="<?php echo $extension['name'].' #'.++$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>

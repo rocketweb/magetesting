@@ -89,22 +89,21 @@ body {
 #extensions {
     .shadow;
     border: 1px solid @Grey;
-    
+
     .mt_filters {
         padding: 10px 25px;
-        
+
         .option-center {
             margin-left: 90px;
         }
     }
-    
+
     .extensions_well {
         padding: 10px 19px;
     }
 }
 
 .element {
-
     width: @ElementWidth;
     height: @ElementHeight;
     margin: @ElementPad;
@@ -117,14 +116,14 @@ body {
     -webkit-border-radius: 4px;
        -moz-border-radius: 4px;
             border-radius: 4px;
-    
-    .hover_inner_shadow{
+
+    .hover_inner_shadow {
         position: absolute;
         right: 0;
         width: 100%;
         height: 100%;
         z-index: 9999;
-        
+
         &:hover {
             background: -moz-linear-gradient(top, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.04) 38%, rgba(0,0,0,0.03) 50%, rgba(0,0,0,0) 100%);
             background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.02)), color-stop(38%,rgba(0,0,0,0.04)), color-stop(50%,rgba(0,0,0,0.03)), color-stop(100%,rgba(0,0,0,0)));
@@ -134,20 +133,29 @@ body {
             background: linear-gradient(to bottom, rgba(0,0,0,0.02) 0%,rgba(0,0,0,0.04) 38%,rgba(0,0,0,0.03) 50%,rgba(0,0,0,0) 100%);
         }
     }
-    
+
     .ribbon {
         position: absolute;
         right: 0;
         z-index: 9999;
     }
-    
+
     &.premium {
         width: (@ElementWidth * 2) + (@ElementPad * 3);
         background: #fff;
-        
+
         .wrapper {
             .info {
                 color: @Red;
+
+                .author {
+                    margin: 0 0 0 0;
+                }
+
+                .extension-price {
+                    font-size: 12px;
+                    color: @Blue;
+                }
             }
             div.icon {
                 max-width: 84px;
@@ -155,32 +163,32 @@ body {
             }
         }
     }
-    
+
     &.free {
         .wrapper {
             text-align: center;
             margin: 0 auto;
-            
+
             div.icon {
                 padding: 12px 0;
-                
+
                 &.small {
                     display: block;
                 }
-                
+
                 &.big {
                     display: none;
                 }
-                
+
                 img {
                     max-width: 28px;
                     max-height: 38px;
                 }
             }
-            
+
             .info {
                 color: #6d6d6d;
-                
+
                 h5 {
                     padding: 0 8px;
                     word-wrap: break-word;
@@ -188,52 +196,52 @@ body {
                     font-size: 13px;
                     line-height: 16px;
                 }
-                
+
                 p {
                     font-size: 11px;
                 }
             }
         }
     }
-    
+
     &.premium, &.large {
         .wrapper {
             margin-top: 0;
             text-align: left;
-            
+
             div.icon {
                 float: left;
                 min-width: 84px;
                 min-height: @ElementHeight;
                 text-align: center;
                 margin-top: 24px;
-                
+
                 &.small {
                     display: none;
                 }
-                
+
                 &.big {
                     display: block;
                     margin-top: 0;
                     padding-top: 0;
-                    
+
                     img {
                         max-width: 84px;
                         max-height: @ElementHeight;
                     }
                 }
-                                
+
                 img {
                     position: relative;
                 }
             }
-            
+
             .info {
                 float: left;
                 width: (@ElementWidth * 2) - 100;
                 margin-left: 12px;
                 text-align: left;
-                
+
                 h5 {
                     padding: 0 8px 0 0;
                     margin: 34px 0 0 0;
@@ -242,19 +250,28 @@ body {
                     font-size: 15px;
                     line-height: 16px;
                 }
-                
+
                 p {
                     font-size: 12px;
                     color: #6d6d6d;
                 }
+
+                .author {
+                    margin: 0 0 0 0;
+                }
+
+                .extension-price {
+                    font-size: 12px;
+                    color: @Blue;
+                }
             }
         }
     }
-    
+
     &.large {
         .shadow;
     }
-    
+
     .extras {
         position: absolute;
         bottom: 0;
@@ -262,25 +279,25 @@ body {
         font-size: 12px;
         color: #6d6d6d;
         margin: 0 20px;
-        
+
         .description {
             height: 62px;
             line-height: 15px;
             min-width: 245px;
             overflow: hidden;
         }
-        
+
         .btn-mini {
             border-radius: 12px 12px 12px 12px;
             font-size: 11px;
             padding: 1px 12px;
         }
-        
+
         .progress {
             margin: 8px 10px 0 8px;
         }
     }
-    
+
 }
 
 .element.large,
