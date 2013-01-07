@@ -228,8 +228,8 @@ INSERT INTO `edition` VALUES  (1,'CE','Community'),
 
 $sql[] = "
 INSERT INTO `user` (`id`, `login`, `password`, `email`, `firstname`, `lastname`, `street`, `postal_code`, `city`, `state`, `added_date`, `subscr_id`, `plan_id`, `plan_active_to`, `status`, `group`, `has_system_account`, `system_account_name`, `country`, `downgraded`) VALUES
-(1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'jan@rocketweb.com', 'John', 'Admin', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', NULL, 0, NULL, 'active', 'admin', 1, 'mi_admin', NULL, 2),
-(2, 'commercial-user', '616821f7a69735aacee22f88f870d00062c0f2d2', 'jan@rocketweb.com', 'John', 'Commercial', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', NULL, 0, NULL, 'active', 'free-user', 0, NULL, NULL, 2),
+(1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'admin@rocketweb.com', 'John', 'Admin', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', NULL, 0, NULL, 'active', 'admin', 1, 'mi_admin', NULL, 2),
+(2, 'commercial-user', '616821f7a69735aacee22f88f870d00062c0f2d2', 'wojtek@rocketweb.com', 'John', 'Commercial', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', NULL, 0, NULL, 'active', 'free-user', 0, NULL, NULL, 2),
 (3, 'standard-user', 'd285033046d5df2851143596830bca4811bf3af8', 'jan@rocketweb.com', 'John', 'Standard', 'Some street 12', '501234x', 'New York City', 'New York', '0000-00-00 00:00:00', NULL, NULL, NULL, 'active', 'free-user', 0, NULL, 'USA', 1)
 ";
 
