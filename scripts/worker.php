@@ -46,7 +46,7 @@ if(isset($opts->help)) {
 if (flock($fp, LOCK_EX | LOCK_NB)) {
     $queueModel = new Application_Model_Queue();
 
-    $worker = new Application_Model_Worker($config,$db);
+    $worker = new Application_Model_Worker($config,$db,$log);
     while ($queueElement = $queueModel->getForServer($current_server_id,$mode)){
         $worker->work($queueElement);
     }

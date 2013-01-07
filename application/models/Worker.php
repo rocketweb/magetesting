@@ -2,9 +2,10 @@
 
 class Application_Model_Worker {
 
-    public function __construct(&$config, &$db) {
+    public function __construct(&$config, &$db, &$log) {
         $this->config = $config;
         $this->db = $db;
+        $this->log = $log;
     }
 
     public function work(Application_Model_Queue $queueElement){
@@ -19,33 +20,32 @@ class Application_Model_Worker {
         $queueElement->setRetryCount($newRetryCount)->save();
         $customTaskModel = new $className($this->config,$this->db);
 
-        try {
-            try {
-                $customTaskModel->setup($queueElement);
-                $this->db->update('queue', array('status' => 'processing'), 'id = ' . $queueElement->getId());
-                $queueElement->setStatus('processing');
-                $customTaskModel->process();
-
-                $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
-                $this->db->delete('queue', array('id=' . $queueElement->getId()));
-
-                /** 
-                 * if no other tasks are present for this store, 
-                 * update store status to ready
-                 * Otherwise, leave current status until we jump to next task
-                 */
-                $queueModel = new Application_Model_Queue();
-                if(!$queueModel->countForStore($queueElement->getStoreId())){
-                    $this->db->update('store', array('status' => 'ready'), 'id = ' . $queueElement->getStoreId());
-                }
-            } catch (Application_Model_Task_Exception $e){
-                $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
-                $this->db->update('store', array('error_message' => $e->getMessage(),'status' => 'error'), 'id = ' . $queueElement->getStoreId());
-            }
         
+        try {
+            $customTaskModel->setup($queueElement);
+            $this->db->update('queue', array('status' => 'processing'), 'id = ' . $queueElement->getId());
+            $queueElement->setStatus('processing');
+            $customTaskModel->process();
+
+            $this->db->update('queue', array('parent_id' => '0'), 'parent_id = ' . $queueElement->getId());
+            $this->db->delete('queue', array('id=' . $queueElement->getId()));
+
+            /** 
+             * if no other tasks are present for this store, 
+             * update store status to ready
+             * Otherwise, leave current status until we jump to next task
+             */
+            $queueModel = new Application_Model_Queue();
+            if(!$queueModel->countForStore($queueElement->getStoreId())){
+                $this->db->update('store', array('status' => 'ready'), 'id = ' . $queueElement->getStoreId());
+            }
+        } catch (Application_Model_Task_Exception $e){
+            $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
+            $this->db->update('store', array('error_message' => $e->getMessage(),'status' => 'error'), 'id = ' . $queueElement->getStoreId());
         } catch (Exception $e){
-            $log = $this->getLog();
+            $log = $this->log;
             $log->log($e->getMessage(), Zend_Log::CRIT, $e->getTraceAsString());
         }
+        
     }
 }
