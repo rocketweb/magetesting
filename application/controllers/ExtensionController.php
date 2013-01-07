@@ -104,7 +104,7 @@ class ExtensionController extends Integration_Controller_Action {
                     'author'       => $extension->getAuthor(),
                     'category_id'  => $extension->getCategoryId()
                 );
-                $success_message = 'Extension has benn changed properly.';
+                $success_message = 'Extension has been changed properly.';
             } else {
                 $noExtension = true;
             }
