@@ -27,7 +27,7 @@ class Application_Model_RevisionMapper {
     public function save(Application_Model_Revision $revision)
     {
         $data = $revision->__toArray();
-        if ($revision->getId()==0){
+        if ($revision->getExtensionId()==0){
             unset($data['extension_id']);
         }
             
