@@ -76,6 +76,8 @@ class Application_Form_UserRegister extends Integration_Form
                 'class'      => 'span4'
         ));
 
+        $unique = new Zend_Validate_Db_NoRecordExists(array('table' => 'user', 'field' => 'email'));
+        $unique->setMessage('This email is already registered.'); 
         // Add a email element
         $this->addElement('text', 'email', array(
                 'label'      => 'E-mail',
@@ -83,7 +85,8 @@ class Application_Form_UserRegister extends Integration_Form
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
-                        new Zend_Validate_EmailAddress()
+                        new Zend_Validate_EmailAddress(),
+                        $unique
                 ),
                 'class'      => 'span4'
         ));
