@@ -172,7 +172,7 @@ And this is button from autologin feature
 */
 ?>
                         	    <a target="_blank"
-                                    href="<?php echo str_replace('https', 'http', $this->serverUrl()).$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true).'/'.$item['backend_name']; ?>"
+                                    href="<?php echo 'http://'.$item['server_domain'].'/store/'.$item['domain'].'/'.$item['backend_name']; ?>"
                                     class="btn btn-mini admin-panel pull-right"
                                 ><i class="icon icon-wrench"></i> Admin Panel</a>
                             	<a target="_blank" href="<?php echo $this->getScheme().$item['server_domain'].'/store/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
