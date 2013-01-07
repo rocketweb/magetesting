@@ -276,7 +276,11 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         $this->logger->log('Installing Magento.', Zend_Log::INFO);
         exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < keyset0.sql');
         
-        $storeurl = $this->config->magento->storeUrl . '/store/' . $this->_storeObject->getDomain(); //fetch from zend config
+        
+        $serverModel = new Application_Model_Server();
+        $serverModel->find($this->_storeObject->getServerId());
+        
+        $storeurl = 'http://'.$serverModel->getDomain() . '/store/' . $this->_storeObject->getDomain(); //fetch from zend config
         
         $command = 'cd ' . $this->_storeFolder . '/' . $this->_domain . ';sudo  /usr/bin/php -f install.php --' .
                 ' --license_agreement_accepted "yes"' .

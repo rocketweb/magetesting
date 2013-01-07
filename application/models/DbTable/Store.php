@@ -38,6 +38,7 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
                            'l.store_id = '.$this->_name.'.id', 
                            array('l.msg')
                        )
+                ->joinLeft('server','server.id = '.$this->_name.'.server_id',array('server_domain'=>'domain'))
                        ->where('user_id = ?', $user_id)
                        ->where('status != ?', 'removing-magento')
                        ->group(array('store.id'))
@@ -101,10 +102,12 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
 	SELECT COUNT( q.id )
 	FROM `queue` `q`
 	WHERE `q`.`id` <= (
-	SELECT id
-	FROM queue
-	WHERE domain = '$store_name' )
-	AND `status` = 'ready'
+        SELECT `id`
+        FROM store
+        WHERE `domain` = '$store_name' 
+    )
+	AND `status` != 'ready'
+    AND `status` !='error'
 	*/
     
         $select = $this->select()

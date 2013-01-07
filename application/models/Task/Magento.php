@@ -46,7 +46,11 @@ extends Application_Model_Task {
     
         // assign values
         $html->assign('domain', $this->_storeObject->getDomain());
-        $html->assign('storeUrl', $this->config->magento->storeUrl);
+        
+        $serverModel = new Application_Model_Server();
+        $serverModel->find($this->_storeObject->getServerId());
+        
+        $html->assign('storeUrl', 'http://'.$serverModel->getDomain());
         $html->assign('backend_name', $this->_storeObject->getBackendName());
         $html->assign('admin_login', $this->_adminuser);
         $html->assign('admin_password', $this->_adminpass);
@@ -157,7 +161,10 @@ extends Application_Model_Task {
         $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
         $html->assign('ftppass', $user_details['systempass']);
 
-        $html->assign('storeUrl', $config->magento->storeUrl);
+        $serverModel = new Application_Model_Server();
+        $serverModel->find($this->_storeObject->getServerId());
+        
+        $html->assign('storeUrl', 'http://'.$serverModel->getDomain());
 
         // render view
         $bodyText = $html->render('ftp-account-credentials.phtml');
@@ -186,7 +193,10 @@ extends Application_Model_Task {
         $html->assign('dbuser', $config->magento->userprefix . $user_details['dbuser']);
         $html->assign('dbpass', $user_details['dbpass']);
 
-        $html->assign('storeUrl', $config->magento->storeUrl);
+        $serverModel = new Application_Model_Server();
+        $serverModel->find($this->_storeObject->getServerId());
+        
+        $html->assign('storeUrl', 'http://'.$serverModel->getDomain());
 
         // render view
         $bodyText = $html->render('phpmyadmin-credentials.phtml');
