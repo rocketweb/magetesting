@@ -18,6 +18,8 @@ class Integration_Mail_ReminderBuyExtension
         $this->mail->setFrom($from->email, $from->desc);
         $this->mail->addTo($current['email']);
         $this->mail->setSubject($config->subject);
+        $this->mail->setReplyTo( $from->email, $from->desc );
+        $this->mail->setReturnPath($from->email);
 
         $this->view = Zend_Layout::getMvcInstance()->getView();
     }
