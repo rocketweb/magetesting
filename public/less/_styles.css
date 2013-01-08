@@ -112,9 +112,9 @@ html,body{height:100%;}
 .element.premium .wrapper .info .extension-price{font-size:12px;font-weight:bold;color:#000;}
 .element.premium .wrapper .info .extension-version{font-size:11px;}
 .element.premium .wrapper div.icon{max-width:84px;max-height:112px;}
-.element.free .wrapper{text-align:center;margin:0 auto;}.element.free .wrapper div.icon{padding:12px 0;}.element.free .wrapper div.icon.small{display:block;}
+.element.free .wrapper{text-align:center;margin:0 auto;}.element.free .wrapper div.icon{padding:12px 0 8px 0;}.element.free .wrapper div.icon.small{display:block;}
 .element.free .wrapper div.icon.big{display:none;}
-.element.free .wrapper div.icon img{max-width:28px;max-height:38px;}
+.element.free .wrapper div.icon img{max-width:38px;max-height:38px;}
 .element.free .wrapper .info{color:#6d6d6d;}.element.free .wrapper .info h5{padding:0 8px;word-wrap:break-word;margin:0;font-size:13px;line-height:16px;}
 .element.free .wrapper .info p{font-size:11px;}.element.free .wrapper .info p.extension-version{font-size:11px;display:none;}
 .element.free .wrapper .info .info-main{min-height:50px;max-height:50px;overflow:hidden;}
