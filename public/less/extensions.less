@@ -139,7 +139,13 @@ body {
         right: 0;
         z-index: 9999;
     }
-
+    
+    .info {
+        .info-main {
+            height: 50px;
+        }
+    }
+    
     &.premium {
         width: (@ElementWidth * 2) + (@ElementPad * 3);
         background: #fff;
@@ -154,7 +160,12 @@ body {
 
                 .extension-price {
                     font-size: 12px;
-                    color: @Blue;
+                    font-weight: bold;
+                    color: #000;
+                }
+                
+                .extension-version {
+                    font-size: 11px;
                 }
             }
             div.icon {
@@ -199,6 +210,10 @@ body {
 
                 p {
                     font-size: 11px;
+                    &.extension-version {
+                        font-size: 11px;
+                        display: none;
+                    }
                 }
             }
         }
@@ -254,6 +269,10 @@ body {
                 p {
                     font-size: 12px;
                     color: #6d6d6d;
+                    
+                    &.extension-version {
+                        display: inherit;
+                    }
                 }
 
                 .author {
@@ -262,7 +281,8 @@ body {
 
                 .extension-price {
                     font-size: 12px;
-                    color: @Blue;
+                    font-weight: bold;
+                    color: #000;
                 }
             }
         }

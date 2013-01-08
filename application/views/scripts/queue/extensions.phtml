@@ -65,12 +65,14 @@
     			                <?php endif; ?>
 
     			                <div class="info">
-    			                    <h5><?php echo $extension['name']; ?></h5>
-    			                    <p class="author">by <?php echo $extension['author']; ?></p>
+    			                    <div class="info-main">
+    			                    	<h5><?php echo $extension['name']; ?></h5>
+    			                    	<p class="author">by <?php echo $extension['author']; ?></p>
+    			                    </div>
     			                    <?php if((float)$extension['price']): ?>
     			                    <p class="extension-price pull-right">$<?php echo $extension['price']; ?></p>
     			                    <?php endif; ?>
-    			                    <p>Verison: <?php echo $extension['version']; ?></p>
+    			                    <p class="extension-version">Version: <?php echo $extension['version']; ?></p>
     			                </div>
 
     			                <div class="extras hidden">
