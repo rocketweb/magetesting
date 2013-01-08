@@ -464,7 +464,7 @@ $(document).ready(function () {
     
     /* update progress bar when store extension is installing */
     progressBarExtension('show');
-    setInterval(function(){ progressBarExtension('update') }, 15000);
+    setInterval(function(){ progressBarExtension('update') }, 30000);
     
 });
 
