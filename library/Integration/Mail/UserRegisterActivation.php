@@ -17,6 +17,8 @@ class Integration_Mail_UserRegisterActivation
         $mail->setFrom( $from->email, $from->desc );
         $mail->addTo($user->getEmail());
         $mail->setSubject($config->subject);
+        $mail->setReplyTo( $from->email, $from->desc );
+        $mail->setReturnPath($from->email);
 
         $this->view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
     }

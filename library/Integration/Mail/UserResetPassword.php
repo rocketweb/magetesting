@@ -14,9 +14,11 @@ class Integration_Mail_UserResetPassword
         $from = $config->from;
         //headers set up here
         $mail = $this->mail = new Zend_Mail('utf-8');
-        $mail->setFrom( $from->mail, $from->desc );
+        $mail->setFrom( $from->email, $from->desc );
         $mail->addTo($user->getEmail());
         $mail->setSubject($config->subject);
+        $mail->setReplyTo( $from->email, $from->desc );
+        $mail->setReturnPath($from->email);
 
         $this->view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
     }
