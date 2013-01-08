@@ -16,7 +16,6 @@ class UserController extends Integration_Controller_Action
 
     public function dashboardAction()
     {
-        //var_dump($this->auth->getIdentity());die;
         $storeModel = new Application_Model_Store();
 
         $timeExecution = $this->getInvokeArg('bootstrap')
@@ -65,7 +64,7 @@ class UserController extends Integration_Controller_Action
                     );
                 } catch (PDOException $e){
                     $message['type']    = 'error';
-                    $message['message'] = 'There was a problem with setting new password, please contact us at.'.$supportEmail; 
+                    $message['message'] = 'There was a problem with setting new password, please contact us at: '.$supportEmail; 
                     $this->_helper->flashMessenger($message);
                         $redirect['action'] = 'reset-password';
                         return $this->_helper->redirector->goToRoute(
@@ -83,13 +82,13 @@ class UserController extends Integration_Controller_Action
                                      ->resetPassword;
                     
                      
-                    
                     try {
-                    $mail = new Integration_Mail_UserResetPassword($mailData, $user);
-                    $mail->send();
+                        $mail = new Integration_Mail_UserResetPassword();
+                        $mail->setup($mailData, array('user'=>$user));
+                        $mail->send();
                     } catch (Exception $e){
                         $message['type']    = 'error';
-                        $message['message'] = 'There was a problem with sending email to you, please contact us at.'.$supportEmail; 
+                        $message['message'] = 'There was a problem with sending email to you, please contact us at: '.$supportEmail; 
                         $this->_helper->flashMessenger($message);
                         $redirect['action'] = 'reset-password';
                         return $this->_helper->redirector->goToRoute(
@@ -317,9 +316,7 @@ class UserController extends Integration_Controller_Action
                         ), 'default', true);
                     }
                 }
-                
-                $serverModel = new Application_Model_Server();
-                
+                               
                 $user->setOptions($form->getValues());
                 $user = $user->save();
 
@@ -335,17 +332,19 @@ class UserController extends Integration_Controller_Action
                 }
 
                 // send activation email to the specified user
-                $mailData = $this->getInvokeArg('bootstrap')
+                $mailConfigData = $this->getInvokeArg('bootstrap')
                                  ->getResource('config')
                                  ->user
                                  ->activationEmail;
-                $mail = new Integration_Mail_UserRegisterActivation($mailData, $user);
+                $mail = new Integration_Mail_UserRegisterActivation();
+                $mail->setup($mailConfigData, array('user' =>$user, 'preselected_plan_id' => $this->view->preselected_plan_id));
                 try {
-                    $mail->send($this->view->preselected_plan_id);
+                    $mail->send();
                     $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');
                     $log->log('User Register - Unable to send email', Zend_Log::CRIT, json_encode($e->getTraceAsString()));
+                    exit;
                     $this->_helper->FlashMessenger(
                         array(
                             'type' => 'error',

@@ -42,7 +42,8 @@ if($result) {
 
 
 function sendEmail(array $mailData, $config, $log) {
-    $mail = new Integration_Mail_ReminderBuyExtension($config->cron->buyStoreExtension, $mailData);
+    $mail = new Integration_Mail_ReminderBuyExtension();
+    $mail->setup($config->cron->buyStoreExtension, $mailData);
 
     try {
         $mail->send();

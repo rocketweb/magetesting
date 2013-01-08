@@ -1,46 +1,48 @@
 <?php
 
-class Integration_Mail_ReminderBuyExtension
+class Integration_Mail_ReminderBuyExtension extends Integration_Mail
 {
-    protected $data;
-    protected $view;
-    protected $mail;
+    protected $_template = '_emails/reminder-buy-extension.phtml';
+    
+    protected $_config;
+    protected $_data;
 
-    public function __construct($config, $data)
-    {
-        $this->data = $data;
-        $current = current($this->data);
-        
-        $from = $config->from;
-
-        //headers set up here
-        $this->mail = new Zend_Mail('utf-8');
-        $this->mail->setFrom($from->email, $from->desc);
-        $this->mail->addTo($current['email']);
-        $this->mail->setSubject($config->subject);
-        $this->mail->setReplyTo( $from->email, $from->desc );
-        $this->mail->setReturnPath($from->email);
-
-        $this->view = Zend_Layout::getMvcInstance()->getView();
-    }
-
-    public function send()
-    {
-        $this->view->data = $this->data;
-        $this->view->addScriptPath(APPLICATION_PATH. '/views/scripts');
-
-        //body setup here
-        $msg = $this->view->render('_emails/reminder-buy-extension.phtml');
-
-        $this->mail->setBodyHtml($msg);
-        $this->mail->setBodyText(strip_tags($msg));
-
-        $result =  $this->mail->send();
-        return $result;
+    public function __construct(){
+        parent::__construct();
     }
     
-    public function getMail() {
-        return $this->mail;
+    public function setup($config, $data){
+        $this->_config = $config;
+        $this->_data = $data;
+        
+        $this->_setHeaders();
+        $this->_setView();
+        $this->_setBody();
+    }
+    
+    protected function _setHeaders(){
+        $current = current($this->_data);
+        $from = $this->_config->from;
+        
+        $this->mail->setFrom($from->email, $from->desc);
+        $this->mail->addTo($current['email']);
+        $this->mail->setSubject($this->_config->subject);
+        $this->mail->setReplyTo( $from->email, $from->desc );
+        $this->mail->setReturnPath($from->email);
+    }
+    
+    protected function _setView(){
+        $this->view = Zend_Layout::getMvcInstance()->getView();
+        $this->view->data = $this->_data;
+    }
+    
+    protected function _setBody(){
+        /*TODO: check if this line is necessary*/
+        $this->view->addScriptPath(APPLICATION_PATH. '/views/scripts');
+        
+        $msg = $this->view->render($this->_template);
+        $this->mail->setBodyHtml($msg);
+        $this->mail->setBodyText(strip_tags($msg));
     }
 
 }

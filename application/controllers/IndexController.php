@@ -27,12 +27,13 @@ class IndexController extends Integration_Controller_Action
 
             if ($form->isValid($formData)) {
 
-                $mailData = $this->getInvokeArg('bootstrap')
+                $mailConfigData = $this->getInvokeArg('bootstrap')
                                  ->getResource('config')
                                  ->contact
                                  ->message;
                 
-                $mail = new Integration_Mail_Contact($mailData, (object)$formData);
+                $mail = new Integration_Mail_Contact();
+                $mail->setup($mailConfigData, array('formData' => (object)$formData));
 
                 try {
                     $mail->send();
