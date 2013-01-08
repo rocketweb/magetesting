@@ -436,7 +436,12 @@ th.compare-table-title-row {
 	padding: 0;
 }
 .compare-table td {
-	border-top: 1px solid #e7e7e7;
+	/*border-top: 1px solid #e7e7e7;*/
+	border-bottom: 1px solid #e7e7e7;
+}
+.compare-table td.last {
+	/*border-top: 1px solid #e7e7e7;*/
+	border-bottom: 0;
 }
 span.compare-table-title {
 	display: block;
@@ -510,25 +515,25 @@ th.compare-table-data-name {
 	margin-top: 10px;
 }
 td.compare-table-row-title {
-	color: #ffffff;
+	color: #37363c;
 }
 tr.compare-table-row-title {
-	background: #13272e;
+	background: #f3f8fc;
 }
 .compare-table tbody tr.compare-table-row-title-empty {
 	background: none;
 	border: none;
 }
 td.compare-table-empty {
-	background: #13272e;
+	background: #f3f8fc;
 }
 td.compare-table-row-title {
 	padding: 18px 0;
 	padding-left: 20px;
 	font-size: 15px;
 	font-weight: bold;
-	text-shadow: 1px 1px 1px #353535;
-	border-top: 1px solid #5c6a6d;
+	text-shadow: 1px 1px 1px #bbb;
+	border-top: 1px solid #34AAE5;
 }
 
 td.compare-table-row-title .popover .popover-title,
@@ -543,7 +548,7 @@ td.compare-table-row-title i.icon {
 	margin-right: 12px;
 }
 td.compare-table-empty {
-	border-top: 1px solid #5c6a6d;
+	/*border-top: 1px solid #cdd1d4;*/
 	min-width: 40px;
 }
 td.compare-table-data {
@@ -561,12 +566,12 @@ td.compare-table-row-title-last {
 	display: inline-block;
 	border-bottom-left-radius: 6px ;
 	width: 232px;
-	background: #13272e;
+	background: #f3f8fc;
 	border: none;
-	border-top: 1px solid #5c6a6d;
-	-webkit-box-shadow: 5px 8px 6px -6px #888888;
+	/*border-top: 1px solid #cdd1d4;*/
+	/*-webkit-box-shadow: 5px 8px 6px -6px #888888;
 	-moz-box-shadow: 5px 8px 6px -6px #888888;
-	box-shadow: 5px 8px 6px -6px #888888;
+	box-shadow: 5px 8px 6px -6px #888888;*/
 
 }
 tr.compare-table-row-title-last {
@@ -577,15 +582,18 @@ tr.compare-table-row-title-last td.compare-table-empty {
 	display: inline-block;
 	height: 40px;
 	width: 42px;
-	-webkit-box-shadow: 0 2px 6px 0px #888888;
+	/*-webkit-box-shadow: 0 2px 6px 0px #888888;
 	-moz-box-shadow: 0 2px 6px 0px #888888;
-	box-shadow: 0 2px 6px 0px #888888;
+	box-shadow: 0 2px 6px 0px #888888;*/
 }
+
 tr.compare-table-row-title-last td.compare-table-empty:last-child {
 	border-bottom-right-radius: 6px;
 }
+
 td.compare-table-price-empty {
 	border-top: none;
+	border-bottom: none;
 }
 td.compare-table-price-button {
 	height: 69px;
@@ -595,6 +603,7 @@ td.compare-table-price-button {
 	padding-top: 24px ;
 	vertical-align: middle ;
 	border: 1px solid #e7e7e7;
+	border-top: 0;
 	border-bottom-left-radius: 6px;
 	border-bottom-right-radius: 6px;
 	color: #fff;
