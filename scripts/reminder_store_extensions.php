@@ -8,7 +8,7 @@ $sql = $select
     ->where('se.braintree_transaction_id IS NULL')
     ->where('se.reminder_sent = 0')
     ->joinLeft(array('st' => 'store'), 'st.id = se.store_id', array('st.user_id', 'st.domain'))
-    ->joinLeft('server','server.id = st.store_id',array('server_domain'=>'domain'))
+    ->joinLeft('server','server.id = se.store_id', array('server_domain' => 'domain'))
     ->joinLeft(array('u' => 'user'), 'u.id = st.user_id', array('u.email', 'u.firstname'))
     ->joinLeft(array('e' => 'extension'), 'e.id = se.extension_id', array('e.name'))
     ->order('st.user_id');
