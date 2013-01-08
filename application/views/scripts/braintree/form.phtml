@@ -39,7 +39,7 @@
                         <div class="row">
                             <div class="span4">
                                 <div class="control-group">
-                                    <label for="billing_street_address" class="control-label required">Street Address</label>
+                                    <label for="billing_street_address" class="control-label required">Street</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][street_address]" id="billing_street_address" value="<?php echo $this->address['street']; ?>" />
                                     </div>
@@ -47,7 +47,7 @@
                             </div>
                             <div class="span4">
                                 <div class="control-group">
-                                    <label for="billing_extended_address" class="control-label required">Extended Address</label>
+                                    <label for="billing_extended_address" class="control-label required">Extended Street</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][extended_address]" id="billing_extended_address" value="<?php echo $this->address['state']; ?>" />
                                     </div>
@@ -55,7 +55,7 @@
                             </div>
                             <div class="span4">
                                 <div class="control-group">
-                                    <label for="billing_locality" class="control-label required">Locality</label>
+                                    <label for="billing_locality" class="control-label required">City</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][locality]" id="billing_locality" value="<?php echo $this->address['city']; ?>" />
                                     </div>
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['country']) ? 'error' : ''); ?>">
                                     <label for="billing_country_name" class="control-label required">Country</label>
                                     <div class="controls">
                                         <select name="transaction[billing][country_name]" id="billing_country_name" class="span4">
@@ -94,6 +94,13 @@
                                                 <option value="<?php echo $country; ?>" label="<?php echo $country; ?>" <?php echo $country == $this->address['country'] ? 'selected="selected"' :''; ?>><?php echo $country; ?></option>
                                             <?php endforeach; ?>
                                         </select>
+                                        <?php if(isset($this->errors['country'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['country'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -104,28 +111,49 @@
                         <legend>Credit Card Details</legend>
                         <div class="row">
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['credit_card']) ? 'error' : ''); ?>">
                                     <label for="braintree_credit_card_number" class="control-label required">Credit Card Number</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[credit_card][number]" id="braintree_credit_card_number" />
+                                        <?php if(isset($this->errors['credit_card'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['credit_card'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['exp_date']) ? 'error' : ''); ?>">
                                     <label for="braintree_credit_card_exp" class="control-label required">Credit Card Expiry (mm/yyyy)</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[credit_card][expiration_date]" id="braintree_credit_card_exp" />
+                                        <?php if(isset($this->errors['exp_date'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['exp_date'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['cvv']) ? 'error' : ''); ?>">
                                     <label for="braintree_credit_card_cvv" class="control-label">Credit Card Verification Number</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[credit_card][cvv]" id="braintree_credit_card_cvv" />
+                                        <?php if(isset($this->errors['cvv'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['cvv'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>

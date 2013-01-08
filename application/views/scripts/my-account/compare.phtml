@@ -163,7 +163,7 @@
                     <?php endforeach; ?>
                 </tr>*/?>
                 <tr class="compare-table-row-title compare-table-row-title-last">
-                    <td class="compare-table-row-title  compare-table-row-title-last"
+                    <td class="compare-table-row-title  compare-table-row-title-last">
                         <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Access" data-content="">
                             <i class="icon icon-blue icon-info-sign"></i> Access
                         </div>
@@ -184,7 +184,7 @@
                                 title="Your payment for plan is being processed now. You will be able to change plan just after payment is settled."
                                 class="btn btn-large btn-success disabled subscribe-now">Subscribe now</button>
                             <?php else: ?>
-                            <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'form'), 'default', true); ?>">
+                            <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment'), 'default', true); ?>">
                                 <input type="hidden" name="pay-for" value="<?php echo ($this->user->hasPlanActive() ? 'change-plan' : 'plan'); ?>" />
                                 <input type="hidden" name="source" value="plan" />
                                 <input type="hidden" name="id" value="<?php echo $plan->getId(); ?>" />

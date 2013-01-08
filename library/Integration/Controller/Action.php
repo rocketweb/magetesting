@@ -79,11 +79,10 @@ class Integration_Controller_Action extends Zend_Controller_Action
              * redirect his to compare plan page.
              */
             if ($user->getGroup() != 'admin' AND !$user->hasPlanActive()
-                AND ($controller != 'my-account' || $action != 'compare')
-                AND ($controller != 'my-account' || $action != 'edit-account')
-                AND ($controller != 'braintree' || $action != 'form')
-                AND ($controller != 'braintree' || $action != 'response')
+                AND ($controller != 'my-account' || !in_array($action, array('compare', 'index', 'edit-account')))
+                AND ($controller != 'braintree' || $action != 'payment')
                 AND ($controller != 'user' || $action != 'logout')
+                AND ($controller != 'index' || $action != 'index')
                 ) {
                 $this->_helper->FlashMessenger(array(
                     'from_scratch' => true,
