@@ -16,7 +16,7 @@ $(document).ready(function () {
             }
             $submit.addClass('disabled');
             $.ajax({
-                url: '/magetesting/my-account/edit-account',
+                url: '/my-account/edit-account',
                 type: 'POST',
                 async: false,
                 data: {
