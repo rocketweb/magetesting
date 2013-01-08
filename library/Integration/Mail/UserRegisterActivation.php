@@ -14,7 +14,7 @@ class Integration_Mail_UserRegisterActivation
         $from = $config->from;
         //headers set up here
         $mail = $this->mail = new Zend_Mail('utf-8');
-        $mail->setFrom( $from->mail, $from->desc );
+        $mail->setFrom( $from->email, $from->desc );
         $mail->addTo($user->getEmail());
         $mail->setSubject($config->subject);
 
