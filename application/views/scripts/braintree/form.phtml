@@ -74,13 +74,14 @@
                             <div class="span4">
                                 <div class="control-group">
                                     <label for="billing_region" class="control-label required">State</label>
-                                    <div class="controls">
+                                    <div class="controls" id="region">
                                         <select name="transaction[billing][region]" id="billing_region" class="span4">
                                             <option value="Select State" label="Select State">Select State</option>
                                             <?php foreach (RocketWeb_List::getStatesOfAmerica() as $state): ?>
                                                 <option value="<?php echo $state; ?>" label="<?php echo $state; ?>" <?php echo $state == $this->address['state'] ? 'selected="selected"' :''; ?>><?php echo $state; ?></option>
                                             <?php endforeach; ?>
                                         </select>
+                                        <input class="span4"  type="text" name="transaction[billing][region]" id="billing_region" value="<?php echo $this->address['state']; ?>" style="display: none" />
                                     </div>
                                 </div>
                             </div>

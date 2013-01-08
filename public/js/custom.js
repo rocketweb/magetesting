@@ -466,6 +466,23 @@ $(document).ready(function () {
     progressBarExtension('show');
     setInterval(function(){ progressBarExtension('update') }, 30000);
     
+    
+    /* payment form - display dropdown for US and text field for all other countries */
+    changeInputSelect();    
+        
+    $('#payment-form #billing_country_name').change(function() {
+        changeInputSelect();
+    });
+
+    $('#payment-form button').click(function() {
+        if($('#payment-form #region input').css('display') == 'none') {
+            $('#payment-form #region input').remove();
+        }
+
+        if($('#payment-form #region select').css('display') == 'none') {
+            $('#payment-form #region select').remove();
+        }
+    });
 });
 
 function progressBarExtension(param) {
@@ -478,4 +495,14 @@ function progressBarExtension(param) {
                 $(this).parent().parent().click();
         }
     });
+}
+
+function changeInputSelect() {
+    if( $('#payment-form #billing_country_name').val() == 'United States' ) {
+        $('#payment-form div#region select').show();
+        $('#payment-form div#region input').hide();
+    } else {
+        $('#payment-form div#region select').hide();
+        $('#payment-form div#region input').show();
+    }
 }
