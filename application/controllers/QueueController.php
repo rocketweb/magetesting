@@ -416,7 +416,7 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel = new Application_Model_Store();
                 $storeModel->setUserId($this->auth->getIdentity()->id)
                         ->setDomain($domain);
-                $byAdmin = $this->auth->GetIdentity()
+                $byAdmin = $this->auth->getIdentity()
                         ->group == 'admin' ? true : false;
 
                 $storeModel->changeStatusToClose($byAdmin);
@@ -448,7 +448,7 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel = new Application_Model_Queue();
                 $queueModel->setTask('MagentoRemove')
                         ->setStoreId($currentStore->id)
-                        ->setUserId($this->auth->getIdentity()->id)
+                        ->setUserId($byAdmin ? $currentStore->user_id : $this->auth->getIdentity()->id)
                         ->setParentId($removingId)
                         ->setExtensionId(0)
                         ->setServerId($this->auth->getIdentity()->server_id)

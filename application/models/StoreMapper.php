@@ -150,7 +150,6 @@ class Application_Model_StoreMapper {
     {
         if($store->getUserId() AND $store->getDomain()) {
             if($byAdmin) {
-                
                 $this->getDbTable()->update(
                         array('status' => 'closed'),
                         array('domain = ?' => $store->getDomain())
