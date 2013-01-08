@@ -461,4 +461,21 @@ $(document).ready(function () {
         $extensions_isotope.isotope('reLayout');
     });
     /* STORE EXTENSIONS ISOTOPE */
+    
+    /* update progress bar when store extension is installing */
+    progressBarExtension('show');
+    setInterval(function(){ progressBarExtension('update') }, 15000);
+    
 });
+
+function progressBarExtension(param) {
+    $('div.extras div.progress').each(function() {
+        if(!$(this).hasClass('hidden')) {
+            if(param == 'update')
+                location.reload();
+            
+            if(param == 'show')
+                $(this).parent().parent().click();
+        }
+    });
+}
