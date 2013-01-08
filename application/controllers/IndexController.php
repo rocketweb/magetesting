@@ -55,7 +55,7 @@ class IndexController extends Integration_Controller_Action
     }
 
     public function ourPlansAction() {
-        if($this->auth->getIdentity()->id) {
+        if($this->auth->hasIdentity() && $this->auth->getIdentity()->id) {
             return $this->_helper->redirector->gotoRoute(array('controller' => 'my-account', 'action' => 'compare'), 'default', true);
         }
         $plans = new Application_Model_Plan();
