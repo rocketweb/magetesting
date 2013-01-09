@@ -90,12 +90,12 @@ class Integration_Controller_Action extends Zend_Controller_Action
                     'message' => '<strong>You don\'t have any active plan. </strong> Either your 7 days plan expired or you haven\'t choose plan yet. Please choose plan now.'));
 
                 // if user selected plan before registration and just activated his account, redirect him to payment form
-                $session = new Zend_Session_Namespace('Default');
-                if((int)$session->preselected_plan_id AND $controller == 'user' AND $action == 'dashboard') {
+
+                if((int)$user->getPreselectedPlanId() AND $controller == 'user' AND $action == 'dashboard') {
                     return $this->_helper->redirector->gotoRoute(array(
                             'module' => 'default',
                             'controller' => 'braintree',
-                            'action' => 'form',
+                            'action' => 'payment',
                     ), 'default', true);
                 }
                 return $this->_helper->redirector->gotoRoute(array(

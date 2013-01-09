@@ -227,20 +227,20 @@ class BraintreeController extends Integration_Controller_Action
             if(!$id) {
                 $id = NULL;
                 $flash_message = array('type' => 'error', 'message' => 'Wrong id.');
-            }
 
-            // show form with preselected plan if user does not have active plan
-            $preselected_plan_id = 1;#(int)$user->getPreselectedPlanId();
-            if($pay_for == 'plan' AND $preselected_plan_id AND !$user->hasPlanActive()) {
-                $pay_for = 'plan';
-                $id = $preselected_plan_id;
-                $flash_message = NULL;
+                // show form with preselected plan if user does not have active plan
+                (int)$user->getPreselectedPlanId();
+                if(!$pay_for AND (int)$user->getPreselectedPlanId() AND !$user->hasPlanActive()) {
+                    $pay_for = 'plan';
+                    $id = $user->getPreselectedPlanId();
+                    $flash_message = NULL;
+                }
             }
 
             // if form type or entity id is wrong, throw exception to help in redirecting
             if(!$pay_for OR !$id) {
                 $redirect = array('controller' => 'my-account', 'action' => 'compare');
-                throw new Braintree_Controller_Exception($flash_message);
+                throw new Braintree_Controller_Exception($flash_message['message']);
             }
 
             /*

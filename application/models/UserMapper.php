@@ -85,7 +85,8 @@ class Application_Model_UserMapper {
              ->setPlanRaisedToDate($row->plan_raised_to_date)
              ->setPlanIdBeforeRaising($row->plan_id_before_raising)
              ->setHasPapertrailAccount($row->has_papertrail_account)
-             ->setPapertrailApiToken($row->papertrail_api_token);
+             ->setPapertrailApiToken($row->papertrail_api_token)
+             ->setPreselectedPlanId($row->preselected_plan_id);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -129,7 +130,8 @@ class Application_Model_UserMapper {
                   ->setBraintreeTransactionId($row->braintree_transaction_id)
                   ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
                   ->setHasPapertrailAccount($row->has_papertrail_account)
-                  ->setPapertrailApiToken($row->papertrail_api_token);
+                  ->setPapertrailApiToken($row->papertrail_api_token)
+                  ->setPreselectedPlanId($row->preselected_plan_id);
 
             $entries[] = $entry;
         }

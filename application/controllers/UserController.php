@@ -388,11 +388,13 @@ class UserController extends Integration_Controller_Action
                     case 0:
                         $user = new Application_Model_User();
                         $user->find($id);
+                        if($preselected_plan_id AND !(int)$user->getPreselectedPlanId()) {
+                            $user->setPreselectedPlanId($preselected_plan_id);
+                            $user->save();
+                        }
                         
                         $auth = Zend_Auth::getInstance();
                         $auth->getStorage()->write((object)$user->__toArray());
-                        $session = new Zend_Session_Namespace('Default');
-                        $session->preselected_plan_id = $preselected_plan_id;
                         $flashMessage = 'Activation completed. You have been logged in successfully.';
                         $redirect['action'] = 'dashboard';
                         break;

@@ -58,6 +58,8 @@ class Application_Model_User {
 
     protected $_papertrail_api_token;
 
+    protected $_preselected_plan_id;
+
     public function __construct(array $options = null)
     {
         if (is_array($options)) {
@@ -425,7 +427,18 @@ class Application_Model_User {
     {
         return $this->_papertrail_api_token;
     }
+
+    public function setPreselectedPlanId($value)
+    {
+        $this->_preselected_plan_id = $value;
+        return $this;
+    }
     
+    public function getPreselectedPlanId()
+    {
+        return $this->_preselected_plan_id;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -514,6 +527,7 @@ class Application_Model_User {
             'plan_id_before_raising' => $this->getPlanIdBeforeRaising(),
             'has_papertrail_account' =>$this->getHasPapertrailAccount(),
             'papertrail_api_token' => $this->getPapertrailApiToken(),
+            'preselected_plan_id' => $this->getPreselectedPlanId()
         );
     }
     
