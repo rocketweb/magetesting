@@ -897,7 +897,13 @@ class QueueController extends Integration_Controller_Action {
                 } else {
                     $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                 }
-                $content .= (($revision['filename'] AND $revision['braintree_transaction_id'] AND (int)$revision['braintree_transaction_confirmed']) ? $download_button : $request_button).PHP_EOL;
+                
+                $content .= (($revision['filename'] AND
+                    (
+                        $revision['braintree_transaction_id'] AND (int) $revision['braintree_transaction_confirmed'] OR $revision['price'] == 0
+                    )
+                ) ? $download_button : $request_button) . PHP_EOL;
+
                 $content .= '</td>'.PHP_EOL;
                 $content .= '</tr>'.PHP_EOL;
             }
