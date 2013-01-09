@@ -65,7 +65,8 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $select->joinLeft(
             array('ec' => 'extension_category'),
             'ec.id = e.category_id',
-            'ec.class as category_class'
+            array('ec.class as category_class','ec.logo as category_logo')
+            
         );
         $select->order(array('se.store_id DESC', 'q_id ASC', 'price DESC'));
         $select->group(new Zend_Db_Expr('e.id DESC'));
