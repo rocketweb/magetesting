@@ -26,7 +26,7 @@ if($result) {
             } catch(Zend_Service_Exception $e) {
                 $log->log($e->getMessage(), Zend_Log::CRIT);
                 //retry later
-                continue;
+                //continue;
             }
 
             if(isset($response->status) && $response->status == 'ok') {
@@ -75,7 +75,7 @@ if($result) {
 
 
         //--------------MAGETESTING PART START-------------
-        $user->e($user->getId());
+        $db->delete('user','id = '.$user->getId());
         //--------------MAGETESTING PART END---------------
     }
 }
