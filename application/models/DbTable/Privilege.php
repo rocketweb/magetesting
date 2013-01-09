@@ -81,7 +81,9 @@ class Application_Model_DbTable_Privilege {
      * implement this when have user management implemented, so you can delete mi_login when you remove account
      */
     public function dropUser($login){
-        //'mi_'.$login
+        $this->adapter->getConnection()->exec("DROP USER '".$this->config->magento->userprefix.$login."'@'localhost'");
+        $this->adapter->getConnection()->exec("FLUSH TABLES");
+        $this->adapter->getConnection()->exec("FLUSH PRIVILEGES");            
     }
     
     /**
