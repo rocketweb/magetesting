@@ -794,25 +794,31 @@ class QueueController extends Integration_Controller_Action {
             if($revisionModel->getExtensionId()) {
                 $extension = new Application_Model_StoreExtension();
                 $extension = $extension->fetchStoreExtension($revisionModel->getStoreId(), $revisionModel->getExtensionId());
-                               
-                if(!$extension->getBraintreeTransactionId()) {
-                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'Deploying not paid extension is forbidden.'));
+
+                $extension_data = new Application_Model_Extension();
+                $extension_data = $extension_data->find($extension->getExtensionId());
+                if((float)$extension_data->getPrice() > 0) {
+                    // check whether user paid for extension
+                    if(!$extension->getBraintreeTransactionId()) {
+                        $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'Deploying not paid extension is forbidden.'));
+                        
+                        return $this->_helper->redirector->gotoRoute(array(
+                                'module' => 'default',
+                                'controller' => 'user',
+                                'action' => 'dashboard',
+                        ), 'default', true);
+                    }
+
+                    // check whether payment was settled by gateway
+                    if(!(int)$extension->getBraintreeTransactionConfirmed()) {
+                        $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'We\'re still waiting for extension payment confirmation, please try again later.'));
                     
-                    return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'dashboard',
-                    ), 'default', true);
-                }
-                
-                if(!(int)$extension->getBraintreeTransactionConfirmed()) {
-                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'We\'re still waiting for extension payment confirmation, please try again later.'));
-                    
-                    return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'dashboard',
-                    ), 'default', true);
+                        return $this->_helper->redirector->gotoRoute(array(
+                                'module' => 'default',
+                                'controller' => 'user',
+                                'action' => 'dashboard',
+                        ), 'default', true);
+                    }
                 }
             } 
             $domain = $this->_getParam('domain');        
