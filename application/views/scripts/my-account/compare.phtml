@@ -33,8 +33,13 @@
                         </div>
                     </td>
                     <?php foreach($this->plans as $plan): ?>
-                        <td class="compare-table-data"><?php echo $plan->getStores(); ?></td>
-                        <td class="compare-table-empty"></td>
+                        <?php if((int)$plan->getFtpAccess()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php else: ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </tr>
                 <tr class="compare-table-row-title">
