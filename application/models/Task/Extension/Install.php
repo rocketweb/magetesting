@@ -12,6 +12,9 @@ implements Application_Model_Task_Interface {
         $extensionModel = new Application_Model_Extension();
         $extensionModel->find($queueElement->getExtensionId());
         $this->_extensionObject = $extensionModel;
+
+        $this->_dbuser = $this->_userObject->getLogin();
+        $this->_domain = $this->_storeObject->getDomain();
     }
     
     public function process(Application_Model_Queue $queueElement = null) {
@@ -72,29 +75,35 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Unpacking and installing extension.', Zend_Log::INFO);
 
         if ($this->_extensionObject->getPrice() > 0 ){
-            
-            exec('tar -zxvf '.
+            $command = 'tar -zxvf '.
                 $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded().
-                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain()
-            ,$output);
+                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain();
+            exec($command, $output);
             
         } else {
-        
-            exec('tar -zxvf '.
+            $command = 'tar -zxvf '.
                 $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension().
-                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain()
-            ,$output);
+                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain();
+            exec($command, $output);
 
         }
         
         //output contains unpacked files list, so it should never be empty if unpacking suceed
-        $this->logger->log(var_export($output,true),Zend_Log::DEBUG);
+        $message = var_export($output,true);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         if (count($output)==0){
             
             $message = 'There was an error while installing extension '.$this->_extensionObject->getName();
             $this->logger->log($message, Zend_Log::EMERG);
             throw new Application_Model_Task_Exception($message);
         }      
+
+        $this->logger->log('Changing owner of store directory files.', Zend_Log::INFO);
+        $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain;
+        exec($command, $output);
+        $message = var_export($output, true);
+        $this->logger->log("\n" .$command. "\n" . $message, Zend_Log::DEBUG);
+        unset($output);
         
     }    
 
