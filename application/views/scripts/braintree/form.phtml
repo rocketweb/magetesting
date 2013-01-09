@@ -2,7 +2,7 @@
     <div class="span12">
         <div class="form-box">
             <div class="box">
-                <form class="form-stacked" id="payment-form" method="POST" action="<?php echo Braintree_TransparentRedirect::url(); ?>">
+                <form class="form-stacked form-input-select" id="payment-form" method="POST" action="<?php echo Braintree_TransparentRedirect::url(); ?>">
                     <input class="span4"  type="hidden" name="tr_data" value="<?php echo htmlentities($this->tr_data); ?>" />
                     <div class="tab-stripe tab-stripe-red"></div>
                     <fieldset>
@@ -75,13 +75,13 @@
                                 <div class="control-group">
                                     <label for="billing_region" class="control-label required">State</label>
                                     <div class="controls" id="region">
-                                        <select name="transaction[billing][region]" id="billing_region" class="span4">
+                                        <select name="transaction[billing][region]" id="billing_region" class="select-state span4">
                                             <option value="Select State" label="Select State">Select State</option>
                                             <?php foreach (RocketWeb_List::getStatesOfAmerica() as $state): ?>
                                                 <option value="<?php echo $state; ?>" label="<?php echo $state; ?>" <?php echo $state == $this->address['state'] ? 'selected="selected"' :''; ?>><?php echo $state; ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                        <input class="span4"  type="text" name="transaction[billing][region]" id="billing_region" value="<?php echo $this->address['state']; ?>" style="display: none" />
+                                        <input class="input-state span4"  type="text" name="transaction[billing][region]" id="billing_region" value="<?php echo $this->address['state']; ?>" style="display: none" />
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                                 <div class="control-group <?php echo (isset($this->errors['country']) ? 'error' : ''); ?>">
                                     <label for="billing_country_name" class="control-label required">Country</label>
                                     <div class="controls">
-                                        <select name="transaction[billing][country_name]" id="billing_country_name" class="span4">
+                                        <select name="transaction[billing][country_name]" id="billing_country_name" class="select-country span4">
                                             <?php foreach (RocketWeb_List::getCountries() as $country): ?>
                                                 <option value="<?php echo $country; ?>" label="<?php echo $country; ?>" <?php echo $country == $this->address['country'] ? 'selected="selected"' :''; ?>><?php echo $country; ?></option>
                                             <?php endforeach; ?>

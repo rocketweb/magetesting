@@ -470,17 +470,17 @@ $(document).ready(function () {
     /* payment form - display dropdown for US and text field for all other countries */
     changeInputSelect();    
         
-    $('#payment-form #billing_country_name').change(function() {
+    $('.form-stacked.form-input-select select.select-country').change(function() {
         changeInputSelect();
     });
 
-    $('#payment-form button').click(function() {
-        if($('#payment-form #region input').css('display') == 'none') {
-            $('#payment-form #region input').remove();
+    $('.form-stacked.form-input-select button').click(function() {
+        if($('.form-stacked.form-input-select input.input-state').css('display') == 'none') {
+            $('.form-stacked.form-input-select input.input-state').remove();
         }
 
-        if($('#payment-form #region select').css('display') == 'none') {
-            $('#payment-form #region select').remove();
+        if($('.form-stacked.form-input-select select.select-state').css('display') == 'none') {
+            $('.form-stacked.form-input-select select.select-state').remove();
         }
     });
 });
@@ -498,11 +498,11 @@ function progressBarExtension(param) {
 }
 
 function changeInputSelect() {
-    if( $('#payment-form #billing_country_name').val() == 'United States' ) {
-        $('#payment-form div#region select').show();
-        $('#payment-form div#region input').hide();
+    if( $('.form-stacked.form-input-select select.select-country').val() == 'United States' ) {
+        $('.form-stacked.form-input-select select.select-state').show();
+        $('.form-stacked.form-input-select input.input-state').hide();
     } else {
-        $('#payment-form div#region select').hide();
-        $('#payment-form div#region input').show();
+        $('.form-stacked.form-input-select select.select-state').hide();
+        $('.form-stacked.form-input-select input.input-state').show();
     }
 }

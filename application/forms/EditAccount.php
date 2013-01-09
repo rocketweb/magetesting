@@ -12,7 +12,7 @@ class Application_Form_EditAccount extends Integration_Form
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
-        $this->setAttrib('class', 'form-stacked');
+        $this->setAttrib('class', 'form-stacked form-input-select');
         $this->setAttrib('id', 'edit-account-form');
 
         // Add a firstname element
@@ -30,7 +30,7 @@ class Application_Form_EditAccount extends Integration_Form
         $regex = new Zend_Validate_Regex("/^[a-z' -]+$/i");
         $regex->setMessage('Allowed chars: a-z, space, dash, apostrophe', 'regexNotMatch');
         // Add a firstname element
-        $this->addElement('text', 'lastname', array(
+        $a=$this->addElement('text', 'lastname', array(
                 'label'      => 'Last name',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
@@ -40,7 +40,6 @@ class Application_Form_EditAccount extends Integration_Form
                 ),
                 'class'      => 'span4'
         ));
-
         
         // Add a street element
         $this->addElement('text', 'street', array(
@@ -74,7 +73,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                 ),
-                'class'      => 'span4',
+                'class'      => 'select-state span4',
                 'multiOptions' => array_combine($states, $states),
         ));
         
@@ -98,7 +97,7 @@ class Application_Form_EditAccount extends Integration_Form
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(2, 50)),
                 ),
-                'class'      => 'span4',
+                'class'      => 'select-country span4',
                 'multiOptions' => array_combine($countries, $countries),
         ));
 
@@ -166,7 +165,9 @@ class Application_Form_EditAccount extends Integration_Form
 
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('overall');
-
+        $this->state->removeDecorator('Label');
+        $this->state->removeDecorator('overall');
+        $this->state->removeDecorator('HtmlTag');
     }
 
 
