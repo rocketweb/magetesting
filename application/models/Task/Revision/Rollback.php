@@ -30,7 +30,11 @@ implements Application_Model_Task_Interface {
         $params = $this->_queueObject->getTaskParams();
        
         //revert files using rollback_files_to param, prevent opening commit message
-        exec('git revert '.$params['rollback_files_to'].' --no-edit');
+        $command = 'git revert '.$params['rollback_files_to'].' --no-edit';
+        exec($command,$output);
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+
         chdir($startCwd);
     }
 
