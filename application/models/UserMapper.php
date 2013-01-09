@@ -257,5 +257,10 @@ class Application_Model_UserMapper {
     public function hasStoreExtension($extensionId, Application_Model_User $user) {
         return $this->getDbTable()->getStoreExtensionByUserId($extensionId, $user->getId());
     }
+    
+    public function delete($id)
+    {
+        $this->getDbTable()->delete($id);
+    }
   
 }

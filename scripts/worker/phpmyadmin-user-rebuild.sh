@@ -28,11 +28,11 @@ then
 fi
 
 #create our rules
-touch /etc/phpmyadmin/magetesting-rules.php
+sudo touch /etc/phpmyadmin/magetesting-rules.php
 
 #rewrite config files with new ruleset
- echo "<?php" >> /etc/phpmyadmin/magetesting-rules.php_temp
- echo "\$cfg['Servers'][1]['AllowDeny']['order'] = 'deny,allow';" >> /etc/phpmyadmin/magetesting-rules.php_temp
- echo "\$cfg['Servers'][1]['AllowDeny']['rules'] = array($USERPERMISSIONS);" >> /etc/phpmyadmin/magetesting-rules.php_temp
+ sudo echo "<?php" >> /etc/phpmyadmin/magetesting-rules.php_temp
+ sudo echo "\$cfg['Servers'][1]['AllowDeny']['order'] = 'deny,allow';" >> /etc/phpmyadmin/magetesting-rules.php_temp
+ sudo echo "\$cfg['Servers'][1]['AllowDeny']['rules'] = array($USERPERMISSIONS);" >> /etc/phpmyadmin/magetesting-rules.php_temp
 
-mv /etc/phpmyadmin/magetesting-rules.php_temp /etc/phpmyadmin/magetesting-rules.php
+sudo mv /etc/phpmyadmin/magetesting-rules.php_temp /etc/phpmyadmin/magetesting-rules.php

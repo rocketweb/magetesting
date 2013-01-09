@@ -39,12 +39,20 @@ if($result) {
 
 
         //--------------SYSTEM/MYSQL PART START-------------
+            $startcwd = getcwd();
+        
             //remove ftp account
             $user->disableFtp();
 
             //rebuild phpmyadmin blacklist
             $user->disablePhpmyadmin();
-
+            chdir('worker');
+            //remove system user
+            $command = 'sudo sh remove_user.sh ' . $config->magento->userprefix . $user->getLogin();
+            exec($command, $output);
+            
+            chdir($startcwd);
+            
             //remove mysql user
              $DbManager = new Application_Model_DbTable_Privilege($db,$config);
             if ($DbManager->checkIfUserExists($user->getLogin())){
@@ -62,14 +70,12 @@ if($result) {
                 $log->log($message, Zend_Log::NOTICE);
             }
             
-            //remove system user
-            $command = 'sudo ./remove_user.sh ' . $config->magento->userprefix . $user->getLogin();
-            exec($command, $output);
+            
         //--------------SYSTEM/MYSQL PART END--------------
 
 
         //--------------MAGETESTING PART START-------------
-        $user->delete($user->getId());
+        $user->e($user->getId());
         //--------------MAGETESTING PART END---------------
     }
 }
