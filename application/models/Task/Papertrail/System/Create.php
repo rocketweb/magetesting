@@ -51,6 +51,7 @@ implements Application_Model_Task_Interface {
 
     protected function _createRsyslogFile(){
         $systemUser = $this->config->magento->userprefix.$this->_userObject->getLogin();
+        $papertrailPrefix = $this->config->papertrail->prefix;
         $this->_domain = $this->_storeObject->getDomain();
         $filename = '/etc/rsyslog.d/'.$systemUser.'_'.$this->_domain.'.conf';
         if (!file_exists($filename)){
@@ -66,10 +67,12 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'$InputFileStateFile papertrail-exception-'.$this->_domain.''.
             PHP_EOL.'$InputRunFileMonitor'.
             PHP_EOL.''.
-            PHP_EOL.'if $programname == \'system-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().''.
+            PHP_EOL.'$template Template-'.$this->_domain.', "%timestamp% '.$papertrailPrefix.$this->_domain.' %syslogtag% %msg%\n"'.
+            PHP_EOL.''.
+            PHP_EOL.'if $programname == \'system-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
             PHP_EOL.'& ~'.
             PHP_EOL.''.
-            PHP_EOL.'if $programname == \'exception-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().''.
+            PHP_EOL.'if $programname == \'exception-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
             PHP_EOL.'& ~';
             
             file_put_contents($filename, $lines);
