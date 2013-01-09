@@ -7,14 +7,6 @@
 </style>
 <![endif]-->
 
-<?php
-    $countPlans = 0;
-    $totalPlans = 0;
-    foreach($this->plans as $plan){
-        $totalPlans++;
-    }
-?>
-
 <div class="row">
     <div class="span12">
         <h1>Pricing</h1>
@@ -209,8 +201,7 @@
                             <?php $this->getHelper('ServerUrl')->setScheme('http'); ?>
                         <?php endif;?>
                         </td>
-                        <?php if($emptyCount === 0) { $emptyClass = 'empty-middle'; $emptyCount++; } else { $emptyClass = 'empty-right'; } ?>
-                        <td class="compare-table-price-empty <?php echo $emptyClass;?>"></td>
+                        <td class="compare-table-price-empty"></td>
                     <?php endforeach; ?>
                 </tr>
                 <?php /*

@@ -590,14 +590,7 @@ tr.compare-table-row-title-last td.compare-table-empty:last-child {
 td.compare-table-price-empty {
 	border: none;
 }
-td.compare-table-price-empty.empty-left {
-	border-left: none;
-}
-td.compare-table-price-empty.empty-middle {
-}
-td.compare-table-price-empty.empty-right {
-	
-}
+
 td.compare-table-price-button {
 	height: 69px;
 	display: inline-block;
