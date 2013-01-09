@@ -4,7 +4,7 @@
     <div class="span12">
         <input id="base-url" type="hidden" value="<?php echo $this->baseUrl(); ?>" />
 
-        <?php if($storeCount > 0): ?>
+        <?php if($storeCount > 0 AND $storeCount < $this->planModel->getStores()): ?>
         <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a>
         <?php endif; ?>
 
