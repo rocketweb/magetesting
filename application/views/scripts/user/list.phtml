@@ -26,13 +26,10 @@
                     'controller' => 'user',
                     'action' => 'edit',
                     'id' => $user['id'])); ?>" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>
-            <?php if($user['status']=='inactive' || $user['group']=='admin'): ?>
+            <?php if($user['status']=='deleted' || $user['group']=='admin'): ?>
                 <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
             <?php else: ?>
-                <a href="<?php echo $this->url(array('module' => 'default', 
-                    'controller' => 'user',
-                    'action' => 'remove',
-                    'id' => $user['id'])); ?>" class="btn btn-danger"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
+                    <a href="#user-deletion" role="button" class="btn btn-danger user-remove" data-toggle="modal" data-user-id="<?php echo $user['id']; ?>"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
             <?php endif;?>
             </td>
         </tr>
@@ -41,3 +38,21 @@
 </table>
 
 <?php echo $this->paginationControl($this->users, 'Sliding', '_partials/paginationControl.phtml'); ?>
+
+<div id="user-deletion" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>User deletion</h3>
+    </div>
+    <div class="modal-body">
+        <p>Do you really want to delete user "<b></b>"</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <form method="post" action="<?php echo $this->url(array('controller' => 'user', 'action' => 'remove'), 'default', true); ?>">
+            <input type="hidden" name="confirm" value="1" />
+            <input type="hidden" name="id" value="" />
+            <button class="btn btn-primary" type="submit">Remove</button>
+        </form>
+    </div>
+</div>

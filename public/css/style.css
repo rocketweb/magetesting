@@ -751,3 +751,8 @@ body:before {
 h4.ext-price{
     color: #34aae5;
 }
+
+/* modal */
+#user-deletion form {
+    display: inline;
+}

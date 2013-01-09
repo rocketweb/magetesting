@@ -212,6 +212,13 @@ class UserController extends Integration_Controller_Action
                                 'controller' => 'user',
                                 'action' => 'login',
                         ), 'default', true);
+                    } elseif($userData->status == 'deleted') {
+                        $this->_helper->FlashMessenger('Your account has been deleted');
+                        return $this->_helper->redirector->gotoRoute(array(
+                                'module' => 'default',
+                                'controller' => 'user',
+                                'action' => 'login',
+                        ), 'default', true);
                     } else {
                         $user = new Application_Model_User();
                         $user->find($userData->id);
@@ -547,17 +554,51 @@ class UserController extends Integration_Controller_Action
     
     public function removeAction(){
         $id = (int)$this->_getParam('id', 0);
-        if ($id == $this->auth->getIdentity()->id){
-            
-            //should we allow people to remove their accounts?
-        } else {
-            if($this->auth->getIdentity()->group != 'admin'){
-                //you have no right to be here,redirect
+
+        $user = new Application_Model_User();
+        $user = $user->find($id);
+
+        $redirect = array(
+            'controller' => 'user',
+            'action' => 'dashboard'
+        );
+
+        if($this->auth->getIdentity()->group == 'admin' AND (int)$user->getId() AND $this->getRequest()->isPost()){
+            if((int)$this->_getParam('confirm', 0)) {
+                $task = new Application_Model_Queue();
+                $task->setUserId($user->getId())
+                     ->setServerId($user->getServerId())
+                     ->setStatus('pending')
+                     ->setExtensionId(0);
+
+                $store_model = new Application_Model_Store();
+                foreach($store_model->getAllForUser($user->getId()) as $store) {
+                    $task->setStoreId($store['id']);
+
+                    $parentId = 0;
+                    if (strlen($store['papertrail_syslog_hostname'])) {
+                        $task->setTask('PapertrailSystemRemove')
+                             ->setParentId(0)
+                             ->setId(0)
+                             ->save();
+                        $removingId = $task->getId();
+                    }
+
+                    $task->setId(0)
+                         ->setTask('MagentoRemove')
+                         ->setParentId($parentId);
+                    $task->save();
+                }
+                $user->setStatus('deleted');
+                $user->save();
+                $this->_helper->flashMessenger('User has been successfully removed.');
             }
+            $redirect['action'] = 'list';
         }
-        
-        //TODO: account removal
-        // here account removal or deactivating is made        ?
+
+        $this->_helper->redirector->gotoRoute(
+                $redirect, 'default', true
+        );
     }
     
     public function papertrailAction()

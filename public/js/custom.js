@@ -32,6 +32,21 @@ $(document).ready(function () {
         });
     }
 
+    /*
+     * Admin User deletion modal
+     */
+    var $user_deletion_modal = $('#user-deletion'),
+        $user_deletion_buttons = $('.user-remove');
+    if($user_deletion_buttons.length) {
+        $user_deletion_buttons.click(function() {
+            var $this = $(this);
+            $user_deletion_modal.find('.modal-body b').text(
+                $this.parents('tr:first').find('td:eq(0)').text()
+            );
+            $user_deletion_modal.find('form :input[name=id]').val($this.data('user-id'));
+
+        })
+    }
 
     // configure tooltip messages in place of default browser title popovers
     $("a[rel=tooltip]").tooltip({

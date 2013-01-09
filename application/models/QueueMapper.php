@@ -40,7 +40,7 @@ class Application_Model_QueueMapper {
             'added_date' => $queue->getAddedDate(),
         );
         
-        if (null === ($id = $queue->getId())) {
+        if (!($id = (int)$queue->getId())) {
             unset($data['id']);
             unset($data['retry_count']);
             $queue->setId($this->getDbTable()->insert($data));
