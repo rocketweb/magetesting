@@ -11,25 +11,30 @@ Braintree_Configuration::privateKey($config->braintree->privateKey);
 $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('user')
-    ->where('plan_active_to >= ?', date("Y-m-d H:i:s"))
+    ->where('plan_active_to >= ?', date("Y-m-d"))
     ->where(new Zend_Db_Expr('LENGTH(braintree_transaction_id) > 0'))
-    ->where('braintree_transaction_confirmed = 0');
+    ->where(new Zend_Db_Expr('braintree_transaction_confirmed = 0 OR braintree_transaction_confirmed IS NULL'));
 
 $result = $db->fetchAll($sql);
 
 if($result) {
     foreach($result as $row) {
-        $transaction = Braintree_Transaction::find($row['braintree_transaction_id']);
+        try {
+            $transaction = Braintree_Transaction::find($row['braintree_transaction_id']);
 
-        if(isset($transaction->status) AND $transaction->status == 'settled') {
-            $log->log('Plan payment confirmed for user: ' . $row['id'], Zend_Log::INFO);
-            $db->update(
-                'user', // table
-                array('braintree_transaction_confirmed' => 1), // set
-                array('id = ?' => $row['id']) // where
-            );
-        } else {
-            $log->log('Plan payment not confirmed for user: ' . $row['id'], Zend_Log::INFO);
+            if(isset($transaction->status) AND $transaction->status == 'settled') {
+                $log->log('Plan payment confirmed for user: ' . $row['id'], Zend_Log::INFO);
+                $db->update(
+                    'user', // table
+                    array('braintree_transaction_confirmed' => 1), // set
+                    array('id = ?' => $row['id']) // where
+                );
+            } else {
+                $log->log('Plan payment not confirmed for user: ' . $row['id'], Zend_Log::INFO);
+            }
+        } catch(Braintree_Exception $e) {
+            $log->log('Braintree service is unavailable - exiting...', Zend_Log::ALERT);
+            exit;
         }
     }
     $log->log('All plan payments processed.', Zend_Log::INFO);
