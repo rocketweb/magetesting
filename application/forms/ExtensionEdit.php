@@ -127,21 +127,21 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'allowEmpty' => true,
                 'class'      => 'span4'
         ));
-        $this->addElement('text', 'edition', array(
+        $this->addElement('select', 'edition', array(
                 'label'      => 'Edition',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'allowEmpty' => true,
                 'class'      => 'span4'
         ));
-        $this->addElement('text', 'from_version', array(
+        $this->addElement('select', 'from_version', array(
                 'label'      => 'Supported from',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'allowEmpty' => true,
                 'class'      => 'span4'
         ));
-        $this->addElement('text', 'to_version', array(
+        $this->addElement('select', 'to_version', array(
                 'label'      => 'Supported to',
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),

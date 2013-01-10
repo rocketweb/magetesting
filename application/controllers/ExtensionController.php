@@ -88,6 +88,32 @@ class ExtensionController extends Integration_Controller_Action {
         );
 
         $form->category_id->addMultiOptions($extension_categories);
+        
+        $verModel = new Application_Model_Version();
+        $versions = array();
+        foreach($verModel->fetchAll() as $version) {
+            $versions[$version->getVersion()] = $version->getVersion();
+        }
+        
+        $form->from_version->addMultiOptions($versions);
+        $form->from_version->addValidator(
+            new Zend_Validate_InArray(array_keys($versions))
+        );
+        $form->to_version->addMultiOptions($versions);
+        $form->to_version->addValidator(
+            new Zend_Validate_InArray(array_keys($versions))
+        );
+
+        $editionModel = new Application_Model_Edition();
+        $editions = array();
+        foreach($editionModel->fetchAll() as $edition) {
+            $editions[$edition->getKey()] = $edition->getKey();
+        }
+        
+        $form->edition->addMultiOptions($editions);
+        $form->edition->addValidator(
+            new Zend_Validate_InArray(array_keys($editions))
+        );
 
         /* $id > 0 AND extension found in database */
         $noExtension = false;
