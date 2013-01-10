@@ -51,7 +51,8 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
                        ->from($this->_name, 'count(user_id) as stores')
-                       ->where('user_id = ?', $user_id);
+                       ->where('user_id = ?', $user_id)
+                       ->where('status != ?', 'removing-magento');
 
         return $this->fetchAll($select);
     }
