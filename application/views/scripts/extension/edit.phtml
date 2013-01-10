@@ -109,13 +109,19 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                         </ul>
                                     <?php endif; ?>
                                     <?php foreach ($this->screenshots as $key => $screenshot): ?>
+                                        <div class="screenshot-image">
+                                            <div class="deletion-container">
+                                                <div class="deletion-curtain"></div>
+                                                <button class="btn btn-danger">Remove</button>
+                                            </div>
+                                            <input form="extension-form" type="hidden" name="screenshots[]" value="<?php echo $screenshot; ?>">
                                         <?php if (isset($this->screenshots_ids[$key]) AND $this->screenshots_ids[$key]): ?>
                                             <input form="extension-form" type="hidden" name="screenshots_ids[]" value="<?php echo $this->screenshots_ids[$key]; ?>">
                                             <img src="<?php echo $this->ImagePath($screenshot, 'extension/screenshots', false); ?>" />
                                         <?php else: ?>
                                             <img src="<?php echo $this->baseUrl('public/assets/img/temp/' . $this->directoryHash . '/' . $screenshot); ?>" />
                                         <?php endif; ?>
-                                        <input form="extension-form" type="hidden" name="screenshots[]" value="<?php echo $screenshot; ?>">
+                                        </div>
                                     <?php endforeach; ?>
                                 </div>
                             </div><!-- /control-group -->
