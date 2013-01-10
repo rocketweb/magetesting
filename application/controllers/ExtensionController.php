@@ -146,69 +146,92 @@ class ExtensionController extends Integration_Controller_Action {
                 $extension_new_name = (isset($_FILES["extension_file"]) && $_FILES["extension_file"]["name"] ? $_FILES["extension_file"]["name"] : '');
                 $extension_encoded_new_name = (isset($_FILES["extension_encoded_file"]) && $_FILES["extension_encoded_file"]["name"] ? $_FILES["extension_encoded_file"]["name"] : '');
 
+                $message1 = 'File "' .$extension_new_name . '" already exists in the system.';
+                $message2 = 'File "' .$extension_encoded_new_name . '" already exists in the system.';
+        
+                $unique = new Zend_Validate_Db_NoRecordExists(array('table' => 'extension', 'field' => 'extension'));
+                $unique->setMessage($message1); 
+
+                $unique2 = new Zend_Validate_Db_NoRecordExists(array('table' => 'extension', 'field' => 'extension_encoded'));
+                $unique2->setMessage($message2);
+                $errors = false;
+
                 $adapter = new Zend_File_Transfer_Adapter_Http();
+                
                 if($extension_new_name) {
-                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/open/';
-                    if(!file_exists($dir)) {
-                        @mkdir($dir, 0777, true);
+                    if($unique->isValid($extension_new_name)) {
+                        $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/open/';
+                        if(!file_exists($dir)) {
+                            @mkdir($dir, 0777, true);
+                        }
+                        $adapter->setDestination($dir);
+                        $adapter->receive('extension_file');
+                        
+                        if($extension->getExtension() AND $extension->getExtension() != $extension_new_name) {
+                            $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/open/'.$extension->getExtension();
+                            if(file_exists($file_to_delete)) {
+                                @unlink($file_to_delete);
+                            }
+                        }
+                        $extension->setExtension($extension_new_name);
+                        
+                    } else {
+                        $errors = true;
+                        $form->getElement('extension_file')->addError($message1);
                     }
-                    $adapter->setDestination($dir);
-                    $adapter->receive('extension_file');
                 }
+                
                 if($extension_encoded_new_name) {
-                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/encoded/';
-                    if(!file_exists($dir)) {
-                        @mkdir($dir, 0777, true);
+                    if($unique2->isValid($extension_encoded_new_name)) {
+                        $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/encoded/';
+                        if(!file_exists($dir)) {
+                            @mkdir($dir, 0777, true);
+                        }
+                        $adapter->setDestination($dir);
+                        $adapter->receive('extension_encoded_file');
+                        
+                        if($extension->getExtensionEncoded() AND $extension->getExtensionEncoded() != $extension_encoded_new_name) {
+                            $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/encoded/'.$extension->getExtensionEncoded();
+                            if(file_exists($file_to_delete)) {
+                                @unlink($file_to_delete);
+                            }
+                        }
+                        $extension->setExtensionEncoded($extension_encoded_new_name);
+                        
+                    } else {
+                        $errors = true;
+                        $form->getElement('extension_encoded_file')->addError($message2);
                     }
-                    $adapter->setDestination($dir);
-                    $adapter->receive('extension_encoded_file');
                 }
-
-                if($extension_new_name) {
-                    if($extension->getExtension() AND $extension->getExtension() != $extension_new_name) {
-                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/open/'.$extension->getExtension();
-                        if(file_exists($file_to_delete)) {
-                            @unlink($file_to_delete);
+                
+                if(!$errors) {
+                    $extension->setOptions($formData);
+                    $extension->save();
+                    $extension_id = $extension->getId();
+                    if($old_logo != $new_logo) {
+                        if($old_logo) {
+                            @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
+                        }
+                        if($new_logo) {
+                            $new_file_name = $this->view->NiceString(substr_replace($new_logo, '-'.$extension_id, strrpos($new_logo, '.'), 0));
+                            $new_path = $this->view->ImagePath($new_file_name, 'extension/logo', true, false);
+                            if(!file_exists($new_path)) {
+                                @mkdir($new_path, 0777, true);
+                            }
+                            @copy($this->_tempDir.$this->view->directoryHash.'/'.$new_logo, $new_path.$new_file_name);
+                            $extension->setLogo($new_file_name);
                         }
                     }
-                    $extension->setExtension($extension_new_name);
-                }
-                if($extension_encoded_new_name) {
-                    if($extension->getExtensionEncoded() AND $extension->getExtensionEncoded() != $extension_encoded_new_name) {
-                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/encoded/'.$extension->getExtensionEncoded();
-                        if(file_exists($file_to_delete)) {
-                            @unlink($file_to_delete);
-                        }
-                    }
-                    $extension->setExtensionEncoded($extension_encoded_new_name);
-                }
+                    $this->_saveImages($extension_id);
+                    $extension->save();
 
-                $extension->setOptions($formData);
-                $extension->save();
-                $extension_id = $extension->getId();
-                if($old_logo != $new_logo) {
-                    if($old_logo) {
-                        @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
-                    }
-                    if($new_logo) {
-                        $new_file_name = $this->view->NiceString(substr_replace($new_logo, '-'.$extension_id, strrpos($new_logo, '.'), 0));
-                        $new_path = $this->view->ImagePath($new_file_name, 'extension/logo', true, false);
-                        if(!file_exists($new_path)) {
-                            @mkdir($new_path, 0777, true);
-                        }
-                        @copy($this->_tempDir.$this->view->directoryHash.'/'.$new_logo, $new_path.$new_file_name);
-                        $extension->setLogo($new_file_name);
-                    }
+                    $this->_helper->FlashMessenger($success_message);
+                    return $this->_helper->redirector->gotoRoute(array(
+                            'module'     => 'default',
+                            'controller' => 'extension',
+                            'action'     => 'index',
+                    ), 'default', true);
                 }
-                $this->_saveImages($extension_id);
-                $extension->save();
-
-                $this->_helper->FlashMessenger($success_message);
-                return $this->_helper->redirector->gotoRoute(array(
-                        'module'     => 'default',
-                        'controller' => 'extension',
-                        'action'     => 'index',
-                ), 'default', true);
             }
         } else {
             $extension_data = array_merge($extension_data, $extension_entity_data);
