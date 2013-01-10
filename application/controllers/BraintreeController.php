@@ -2,6 +2,8 @@
 
 class BraintreeController extends Integration_Controller_Action
 {
+    protected $_general_error_message = 'We had a problem contacting payment gateway. Please try again or contact with <a href="mailto:support@magetesting.com">support@magetesting.com</a>.';
+
     public function init(){
         parent::init();
         require_once 'Braintree.php';
@@ -175,7 +177,7 @@ class BraintreeController extends Integration_Controller_Action
                 $error = 'User: '.$this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - message:'.$e->getMessage();
                 $log->log('Braintree - Response', Zend_Log::DEBUG, $error);
             }
-            $message = array('type' => 'notify', 'message' => 'We couldn\'t handle your payment request.');
+            $message = array('from_scratch' => true, 'type' => 'error', 'message' => $this->_general_error_message);
             $redirect = array(
                 'controller' => 'my-account',
                 'action' => 'compare'
@@ -437,6 +439,8 @@ class BraintreeController extends Integration_Controller_Action
                         case 81714:
                         case 81703:
                         case 81716:
+                        case 81715:
+                        case 81703:
                             $field_key = 'credit_card';
                         break;
                         case 91803:
@@ -461,10 +465,11 @@ class BraintreeController extends Integration_Controller_Action
                     } else {
                         if($log = $this->getLog()) {
                             $error = 'User: '.$this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - message:'.$error->message.'('.$error->code.')';
-                            $log->log('Braintree - Response errors', Zend_Log::ERR, $error);
+                            $log->log('Braintree - Response unknown errors', Zend_Log::ERR, $error);
                         }
+
                         if(!$flash_message) {
-                            $flash_message = array('type' =>'notice', 'message' => 'We couldn\'t handle your payment.');
+                            $flash_message =array('from_scratch' => true, 'type' => 'error', 'message' => $this->_general_error_message);
                         }
                         if(!$redirect) {
                             $redirect = array(
@@ -489,6 +494,12 @@ class BraintreeController extends Integration_Controller_Action
                 array_merge(array('module' => 'default'), $redirect)
                 , 'default', true
             );
+        }
+
+        // if we have some errors for payment fields
+        // render flash message
+        if(isset($this->view->errors) AND $this->view->errors) {
+            $this->view->messages = array(array('type' => 'error', 'message' => 'Some fields are filled incorrectly, please fix them and submit form again.'));
         }
     }
 
@@ -598,7 +609,7 @@ class BraintreeController extends Integration_Controller_Action
                                     $error = 'User: '.$this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - message:'.$e->getMessage();
                                     $log->log('Braintree - Response', Zend_Log::ERR, $error);
                                 }
-                                $flash_message = 'We couldn\'t change your plan.';
+                                $flash_message = array('from_scratch' => true, 'type' => 'error', 'message' => $this->_general_error_message);
                                 $redirect = array(
                                     'controller' => 'my-account',
                                     'action' => 'compare'
