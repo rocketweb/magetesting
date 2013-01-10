@@ -42,7 +42,7 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
             'controller' => 'user',
             'action'     => 'activate',
             'id'         => $this->_userObject->getId(),
-            'hash'       => sha1($string_to_hash)
+            'hash'       => substr(sha1($string_to_hash),0,20)
         );
         $activationUrl = $this->view->url(
             $activationUrlParams
