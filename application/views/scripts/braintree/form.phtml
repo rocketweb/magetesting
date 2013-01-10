@@ -66,25 +66,11 @@
                         </div>
                         <div class="row">
                             <div class="span4">
-                                <div class="control-group">
-                                    <label for="billing_region" class="control-label required">State</label>
-                                    <div class="controls" id="region">
-                                        <select name="transaction[billing][region]" id="billing_region" class="select-state span4">
-                                            <option value="Select State" label="Select State">Select State</option>
-                                            <?php foreach (RocketWeb_List::getStatesOfAmerica() as $state): ?>
-                                                <option value="<?php echo $state; ?>" label="<?php echo $state; ?>" <?php echo $state == $this->address['state'] ? 'selected="selected"' :''; ?>><?php echo $state; ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <input class="input-state span4"  type="text" name="transaction[billing][region]" id="billing_region" value="<?php echo $this->address['state']; ?>" style="display: none" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="span4">
                                 <div class="control-group <?php echo (isset($this->errors['country']) ? 'error' : ''); ?>">
                                     <label for="billing_country_name" class="control-label required">Country</label>
                                     <div class="controls">
                                         <select name="transaction[billing][country_name]" id="billing_country_name" class="select-country span4">
-                                            <?php foreach (RocketWeb_List::getCountries() as $country): ?>
+                                            <?php foreach (RocketWeb_List::getCountries() as $country): if(empty($this->address['country'])){$this->address['country'] = 'United States';} ?>
                                                 <option value="<?php echo $country; ?>" label="<?php echo $country; ?>" <?php echo $country == $this->address['country'] ? 'selected="selected"' :''; ?>><?php echo $country; ?></option>
                                             <?php endforeach; ?>
                                         </select>
@@ -95,6 +81,20 @@
                                             <?php endforeach; ?>
                                         </ul>
                                         <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="control-group">
+                                    <label for="billing_region" class="control-label required">State</label>
+                                    <div class="controls" id="region">
+                                        <select name="transaction[billing][region]" id="billing_region" class="select-state span4">
+                                            <option value="Select State" label="Select State">Select State</option>
+                                            <?php foreach (RocketWeb_List::getStatesOfAmerica() as $state): ?>
+                                                <option value="<?php echo $state; ?>" label="<?php echo $state; ?>" <?php echo $state == $this->address['state'] ? 'selected="selected"' :''; ?>><?php echo $state; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <input class="input-state span4"  type="text" name="transaction[billing][region]" id="billing_region" value="<?php echo $this->address['state']; ?>" style="display: none" />
                                     </div>
                                 </div>
                             </div>
