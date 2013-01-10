@@ -129,4 +129,10 @@ class Application_Model_QueueMapper {
         return $this->getDbTable()->countForStore($storeId);
     }
     
+    public function findPositionByName($storeName)
+    {
+        return $this->getDbTable()
+                    ->findPositionByName($storeName);
+        
+    }
 }

@@ -109,4 +109,18 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
             return false;
         }
     }
+    
+    public function findPositionByName($store_name)
+    {
+        $select = $this->select()
+                        ->setIntegrityCheck(false)
+                        ->from($this->_name, array('num' => 'count(store_id)'))
+                        ->where("store_id <= (SELECT id FROM store WHERE domain = '".$store_name."')")
+                        ->where('status != ?', 'ready')
+                        ->where('status != ?', 'error')
+                        ->where('retry_count < ?', 4);
+                       
+//	Zend_Debug::Dump($select->assemble());
+        return $this->fetchRow($select);
+    }
 }

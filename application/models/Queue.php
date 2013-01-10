@@ -261,4 +261,8 @@ class Application_Model_Queue {
         return $this->getMapper()->countForStore($storeId);
     }
     
+    public function findPositionByName($storeName) {
+        return $this->getMapper()->findPositionByName($storeName);
+    }
+    
 }

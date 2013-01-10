@@ -652,14 +652,14 @@ class QueueController extends Integration_Controller_Action {
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $domain = $request->getParam('domain', null);
-        if ($request->isPost() && $domain!=null) {
+        if ($request->isPost() && $domain != null) {
             
             $timeExecution = $this->getInvokeArg('bootstrap')
                                   ->getResource('config')
                                   ->magento
                                   ->storeTimeExecution;
             
-            $storeModel = new Application_Model_Store();
+            $storeModel = new Application_Model_Queue();
             $storeItem = $storeModel->findPositionByName($domain);
             
             $this->_response->setBody(Zend_Json_Encoder::encode($storeItem->num * $timeExecution));
