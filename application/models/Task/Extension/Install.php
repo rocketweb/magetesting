@@ -112,6 +112,20 @@ implements Application_Model_Task_Interface {
         $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
         unset($output);
         
+        //set permission on dirs 
+        $command = 'find '.$tmpExtensionDir.' -type d -print | xargs chmod 755';
+        exec($command,$output);
+        $message = var_export($output,true);
+        $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
+        unset($output);
+        
+        //set permission on files
+        $command = 'find '.$tmpExtensionDir.' -type f -print | xargs chmod 644';
+        exec($command,$output);
+        $message = var_export($output,true);
+        $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
+        unset($output);
+        
         //move files from $tmpExtensionDir to store folder
         $command = 'cp -rp '.$tmpExtensionDir.'/* '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/ ';
         exec($command,$output);
