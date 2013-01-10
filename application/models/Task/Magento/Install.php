@@ -38,6 +38,12 @@ implements Application_Model_Task_Interface {
         $this->_runXmlPatch();
         
         $this->_runInstaller();
+        
+        /**
+         * In i.e 1.7.0.2 locks were created during running _runInstaller, 
+         * this is to prevent locking reindexer in adminpanel then
+         */
+        exec('chmod 666 -R '.$this->_storeFolder . '/' . $this->_domain.'/var/locks/*');
 
         $this->_setupMagentoConnect();
 
@@ -52,6 +58,9 @@ implements Application_Model_Task_Interface {
         chdir($startCwd);
 
         $this->_sendStoreReadyEmail();
+        
+        //just to be sure every
+        $this->_setFilesystemPermissions();
               
     }
 
