@@ -25,15 +25,13 @@ class UserController extends Integration_Controller_Action
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
         
-
         $planModel = new Application_Model_Plan();
         $planModel->find($this->auth->getIdentity()->plan_id);
-//        Zend_Debug::dump($planModel);die;
+
         $this->view->planModel = $planModel;
         $this->view->user = $this->auth->getIdentity();
         $this->view->userGroup = $this->view->user->group;
         $this->view->queue = $paginator;
-        $this->view->timeExecution = $timeExecution;
         $this->view->response = $this->getResponse();
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/user-dashboard.js'), 'text/javascript');
     }
