@@ -10,10 +10,37 @@ $(document).ready(function () {
 
     if($braintree_billing_details.length && !$prefilled_data.length) {
         $braintree_billing_details.parents('form:first').submit(function() {
-            var $submit = $(this).find(':submit');
+            var $submit = $(this).find(':submit'),
+                $exp_date_month = $('#exp-date-month'),
+                $exp_date_year = $('#exp-date-year'),
+                $braintree_exp_date = $('#braintree_credit_card_exp');
+
+            /* form already submitted */
             if($submit.hasClass('disabled')) {
                 return false;
             }
+
+            $process_form = true;
+            if(!$exp_date_month.val().length) {
+                $exp_date_month.focus();
+                $process_form = false;
+            }
+            if(!$exp_date_year.val().length) {
+                /* let month be focused first on error */
+                if($process_form) {
+                    $exp_date_year.focus();
+                }
+                $process_form = false;
+            }
+
+            /* stop submittion if cc exp date is wrong */
+            if(!$process_form) {
+                $exp_date_month.parents('.control-group:first').addClass('error');
+                return false;
+            } else {
+                $braintree_exp_date.val($exp_date_month.val() + '/' + $exp_date_year.val());
+            }
+
             $submit.addClass('disabled');
             $.ajax({
                 url: '/my-account/edit-account',

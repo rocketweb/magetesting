@@ -757,3 +757,6 @@ h4.ext-price{
 #user-deletion form {
     display: inline;
 }
+#exp-date-year {
+    width: 80px;
+}
