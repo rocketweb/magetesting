@@ -459,7 +459,20 @@ $(document).ready(function () {
             $('.form-stacked.form-input-select select.select-state').remove();
         }
     });
-});
+    
+    
+    $('form#extension-filter-form select').change(function() {
+        current = window.location.href;
+        isIndex = window.location.href.match(/index/g);
+        
+        if(isIndex == null) {
+             current = window.location.href.replace('/extension', '/extension/index');
+        }
+        
+        current = current.replace('/edition/CE', '').replace('/edition/EE', '').replace('/edition/PE', '').replace('/edition/ALL', '');
+        window.location.href = current + '/edition/' + $(this).val();
+        });
+    });
 
 function progressBarExtension(param) {
     $('div.extras div.progress').each(function() {
