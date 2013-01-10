@@ -109,7 +109,6 @@ extends Application_Model_Task {
             $startDir = getcwd();
             chdir('worker');
             unset($output);
-
             $command = 'sudo ./create_user.sh ' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_systempass . ' ' . $this->config->magento->usersalt . ' ' . $this->config->magento->systemHomeFolder.'';
             exec($command, $output);
             chdir($startDir);
@@ -142,6 +141,7 @@ extends Application_Model_Task {
             }
             
             $this->_userObject->setHasSystemAccount(1)->save();
+            $this->_createVirtualHost();
         }
     }
     
@@ -239,6 +239,35 @@ extends Application_Model_Task {
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/active\',\'1\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/file\',\'system.log\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/exception_file\',\'exception.log\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
+    }
+    
+    protected function _createVirtualHost(){
+       
+        exec('sudo touch /etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain());
+        exec('sudo mkdir /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser);
+        exec('sudo cp /home/www-data/php5-fcgi /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
+        exec('sudo chown -R '.$this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser.' /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'');
+        
+        $content = "<VirtualHost *:80>
+            ServerAdmin support@magetesting.com
+            ServerName ".$this->_dbuser.".".$this->_serverObject->getDomain()."
+
+            Alias /fcgi-bin/ /home/www-data/".$this->config->magento->userprefix . $this->_dbuser."/
+            SuexecUserGroup ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
+
+            DocumentRoot /home/".$this->config->magento->userprefix . $this->_dbuser."/public_html/
+            <Directory /home/".$this->config->magento->userprefix . $this->_dbuser."/public_html/>
+                    Options Indexes FollowSymLinks
+                    AllowOverride All
+                    Order allow,deny
+                    allow from all
+            </Directory>
+        </VirtualHost>";
+        
+        file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
+        
+        exec('sudo a2ensite '.$this->_dbuser.'.'.$this->_serverObject->getDomain());
+        exec('sudo /etc/init.d/apache2 reload');
     }
 }
         

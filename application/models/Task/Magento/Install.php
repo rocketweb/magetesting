@@ -43,7 +43,10 @@ implements Application_Model_Task_Interface {
          * In i.e 1.7.0.2 locks were created during running _runInstaller, 
          * this is to prevent locking reindexer in adminpanel then
          */
-        exec('chmod 666 -R '.$this->_storeFolder . '/' . $this->_domain.'/var/locks/*');
+        $filename = $this->_storeFolder . '/' . $this->_domain.'/var/locks';
+        if (file_exists($filename) && is_dir($filename)){
+            exec('chmod 666 -R '.$this->_storeFolder . '/' . $this->_domain.'/var/locks/*');
+        }
 
         $this->_setupMagentoConnect();
 
@@ -59,9 +62,6 @@ implements Application_Model_Task_Interface {
 
         $this->_sendStoreReadyEmail();
         
-        //just to be sure every
-        $this->_setFilesystemPermissions();
-              
     }
 
     protected function _prepareFileSystem() {
@@ -289,7 +289,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
         
-        $storeurl = 'http://'.$serverModel->getDomain() . '/store/' . $this->_storeObject->getDomain(); //fetch from zend config
+        $storeurl = 'http://'.$this->_dbuser.'.'.$serverModel->getDomain() . '/' . $this->_storeObject->getDomain(); //fetch from zend config
         
         $command = 'cd ' . $this->_storeFolder . '/' . $this->_domain . ';sudo  /usr/bin/php -f install.php --' .
                 ' --license_agreement_accepted "yes"' .
