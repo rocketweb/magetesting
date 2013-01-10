@@ -390,6 +390,7 @@ class BraintreeController extends Integration_Controller_Action
                 $error = 'User: '.$this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - message:'.$e->getMessage();
                 $log->log('Braintree - Response', Zend_Log::ERR, $error);
             }
+
             $flash_message = array('type' => 'error', 'message' => 'Braintree service temporarily unavailable.');
             $redirect = array(
                     'controller' => 'user',
@@ -420,8 +421,11 @@ class BraintreeController extends Integration_Controller_Action
         if(is_object($braintree_result)) {
             $braintree_errors = $braintree_result->errors->deepAll();
             if(!$braintree_errors) {
-                $flash_message = array('type' =>'error', 'message' => 'Payment: '.$braintree_result->message);
-                $redirect = array('controller' => 'my-account');
+                $this->view->messages = array(array('type' =>'error', 'message' => 'Your payment has been declined. Please check your payment details.'));
+                if($log = $this->getLog()) {
+                    $error = 'User: '.$this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - message:'.$braintree_result->message;
+                    $log->log('Braintree - payment declined', Zend_Log::NOTICE, $error);
+                }
             } else {
                 foreach($braintree_result->errors->deepAll() as $error) {
                     $field_key = '';
@@ -560,8 +564,8 @@ class BraintreeController extends Integration_Controller_Action
                                         'amount' => round($amount, 2),
                                         'customerId' => $user->getBraintreeVaultId()
                                     ));
-                                } 
-    
+                                }
+
                                 $payment = new Application_Model_Payment();
                                 $payment->findByTransactionId($user->getBraintreeTransactionId());
                                 if(is_object($result) AND $result->success AND $payment->getId()) {
@@ -575,7 +579,7 @@ class BraintreeController extends Integration_Controller_Action
                                         $user->setBraintreeTransactionConfirmed(0);
                                     }
                                     $payment->save();
-    
+
                                     $user->setPlanId($id);
                                     $user->setPlanActiveTo(date('Y-m-d H:i:s', $new_plan_end));
                                     $user->save();
@@ -586,6 +590,8 @@ class BraintreeController extends Integration_Controller_Action
                                     );
                                 } else {
                                     $this->_handleResponseErrors($result);
+                                    $this->_setParam('pay-for', 'change-plan');
+                                    $this->_showPaymentForm(true);
                                 }
                             } catch(Braintree_Exception $e) {
                                 if($log = $this->getLog()) {

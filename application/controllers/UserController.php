@@ -328,8 +328,8 @@ class UserController extends Integration_Controller_Action
                         ), 'default', true);
                     }
                 }
-                               
                 $user->setOptions($form->getValues());
+                $user->setPreselectedPlanId($plan_id);
                 $user = $user->save();
 
                 if ($useCoupons && $coupon) {
@@ -349,7 +349,7 @@ class UserController extends Integration_Controller_Action
                                  ->user
                                  ->activationEmail;
                 $mail = new Integration_Mail_UserRegisterActivation();
-                $mail->setup($mailConfigData, array('user' =>$user, 'preselected_plan_id' => $this->view->preselected_plan_id));
+                $mail->setup($mailConfigData, array('user' => $user));
                 try {
                     $mail->send();
                     $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
@@ -393,18 +393,13 @@ class UserController extends Integration_Controller_Action
         if($request->isGet()) {
             $id = $request->getParam('id');
             $hash = $request->getParam('hash');
-            $preselected_plan_id = (int)$request->getParam('ppid', 0);
             if($id AND $hash) {
                 $user = new Application_Model_User();
-                switch($user->activateUser($id, $hash, $preselected_plan_id)) {
+                switch($user->activateUser($id, $hash)) {
                     case 0:
                         $user = new Application_Model_User();
                         $user->find($id);
-                        if($preselected_plan_id AND !(int)$user->getPreselectedPlanId()) {
-                            $user->setPreselectedPlanId($preselected_plan_id);
-                            $user->save();
-                        }
-                        
+
                         $auth = Zend_Auth::getInstance();
                         $auth->getStorage()->write((object)$user->__toArray());
                         $flashMessage = 'Activation completed. You have been logged in successfully.';

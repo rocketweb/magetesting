@@ -16,8 +16,7 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
     public function setup($mailConfig, $data){
         $this->_config = $mailConfig;
         
-        $this->_userObject = $data['user'];;
-        $this->_ppid = $data['preselected_plan_id'];
+        $this->_userObject = $data['user'];
                  
         $this->_setHeaders();
         $this->_setView();
@@ -38,10 +37,7 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
         $this->view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
         $activationUrlParams = array();
         $string_to_hash = $this->_userObject->getLogin().$this->_userObject->getEmail().$this->_userObject->getAddedDate();
-        if((int)$this->_ppid) {
-            $string_to_hash .= $this->_ppid;
-            $activationUrlParams['ppid'] = $this->_ppid;
-        }
+
         $activationUrlParams += array(
             'controller' => 'user',
             'action'     => 'activate',

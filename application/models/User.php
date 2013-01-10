@@ -488,7 +488,7 @@ class Application_Model_User {
      * 1 - wrong data<br />
      * 2 - previously activated
      */
-    public function activateUser($id, $hash, $preselected_plan_id)
+    public function activateUser($id, $hash)
     {
         return $this->getMapper()->activateUser($id, $hash, $preselected_plan_id);
     }
