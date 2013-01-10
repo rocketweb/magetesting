@@ -21,23 +21,23 @@
         <tr>
             <td>
                 <div class="media">
-                    <?php if($extension['item']->getLogo()): ?>
-                        <?php echo $this->Thumbnail($extension['item']->getLogo(), null, 110, array('class' => 'pull-left media-object logo', 'alt' => $extension['item']->getLogo()), $this->ImagePath($extension['item']->getLogo(), 'extension/logo', false, false)); ?>
+                    <?php if($extension['logo']): ?>
+                        <?php echo $this->Thumbnail($extension['logo'], null, 110, array('class' => 'pull-left media-object logo', 'alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
                     <?php endif; ?>
                     <div class="media-body">
-                        <h4 class="media-heading display-inline"><?php echo $extension['item']->getName(); ?></h4>
-                        <?php if($extension['item']->getVersion()): ?>
-                        <p class="display-inline">( <?php echo $extension['item']->getVersion(); ?> )</p>
+                        <h4 class="media-heading display-inline"><?php echo $extension['name']; ?></h4>
+                        <?php if($extension['version']): ?>
+                        <p class="display-inline">( <?php echo $extension['version']; ?> )</p>
                         <?php endif; ?>
-                        <p><?php echo $extension['item']->getDescription(); ?></p>
+                        <p><?php echo $extension['description']; ?></p>
                     </div>
                 </div>
             </td>
             <td>
                 <?php
                 $supported_versions = '';
-                $supported_versions .= (($version = $extension['item']->getFromVersion()) ? 'From  '.$version : '');
-                $supported_versions .= (($version = $extension['item']->getToVersion()) ? ' to '.$version : '');
+                $supported_versions .= (($version = $extension['from_version']) ? 'From  '.$version : '');
+                $supported_versions .= (($version = $extension['to_version']) ? ' to '.$version : '');
                 if(!$supported_versions) {
                     $supported_versions = 'N.A.';
                 }
@@ -47,15 +47,17 @@
                    rel="tooltip"
                    data-placement="top"
                    title="<?php echo $supported_versions; ?>">
-                <?php echo $extension['item']->getEdition(); ?></a>
+                <?php echo $extension['edition']; ?></a>
             </td>
-            <td><?php echo $extension['item']->getPrice(); ?></td>
+            <td><?php echo $extension['price']; ?></td>
             <td class="nowrap">
-                <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $extension['item']->getId()), 'default', true); ?>" class="btn btn-success"><i class="icon-pencil icon-white"></i> Edit</a>
-                <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $extension['item']->getId()), 'default', true); ?>" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete</a>
+                <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-success"><i class="icon-pencil icon-white"></i> Edit</a>
+                <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete</a>
                 
             </td>
         </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<?php echo $this->paginationControl($this->extensions, 'Sliding', '_partials/paginationControl.phtml'); ?>

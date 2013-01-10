@@ -19,7 +19,14 @@ class ExtensionController extends Integration_Controller_Action {
     public function listAction() {
         $extensionModel = new Application_Model_Extension();
         // that should add extension screenshots to it
-        $this->view->extensions = $extensionModel->fetchAll();
+        
+        $page = (int) $this->_getParam('page', 0);
+        $paginator = $extensionModel->fetchList();
+
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(10);
+
+        $this->view->extensions = $paginator;
         
         $this->_helper->viewRenderer('grid');
     }
