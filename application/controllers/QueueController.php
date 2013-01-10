@@ -11,19 +11,12 @@ class QueueController extends Integration_Controller_Action {
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-index.js'), 'text/javascript');
         $storeModel = new Application_Model_Store();
 
-        $timeExecution = $this->getInvokeArg('bootstrap')
-                        ->getResource('config')
-                ->magento
-                ->storeTimeExecution;
-        $queueCounter = $storeModel->getPendingItems($timeExecution);
-
         $page = (int) $this->_getParam('page', 0);
         $paginator = $storeModel->getWholeQueue();
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
 
         $this->view->queue = $paginator;
-        $this->view->queueCounter = $queueCounter;
     }
 
     public function addAction() {
@@ -652,21 +645,15 @@ class QueueController extends Integration_Controller_Action {
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $domain = $request->getParam('domain', null);
+        
         if ($request->isPost() && $domain != null) {
-            
-            $timeExecution = $this->getInvokeArg('bootstrap')
-                                  ->getResource('config')
-                                  ->magento
-                                  ->storeTimeExecution;
-            
-            $storeModel = new Application_Model_Queue();
-            $storeItem = $storeModel->findPositionByName($domain);
-            
-            $this->_response->setBody(Zend_Json_Encoder::encode($storeItem->num * $timeExecution));
+            $this->_response->setBody(
+                Application_Model_Queue::getTimeLeftByStoreDomain($domain)
+            );
         } 
     }
     
-    public function commitAction(){
+    public function commitAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         $domain = $this->getRequest()->getParam('domain');        

@@ -119,8 +119,7 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                         ->where('status != ?', 'ready')
                         ->where('status != ?', 'error')
                         ->where('retry_count < ?', 4);
-                       
-//	Zend_Debug::Dump($select->assemble());
+
         return $this->fetchRow($select);
     }
 }

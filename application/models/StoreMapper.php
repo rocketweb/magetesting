@@ -190,24 +190,9 @@ class Application_Model_StoreMapper {
         return new Zend_Paginator($adapter);
     }
 
-    public function getPendingItems($timeExecution)
-    {
-        $keys = array();
-        foreach($this->getDbTable()->getPendingItems() as $key => $row) {
-            $keys[$row->id] = ++$key*$timeExecution;
-        }
-        return $keys;
-    }
-    
     public function findByDomain($domain){
         return $this->getDbTable()
                     ->findByDomain($domain);
     }
-    
-    public function findPositionByName($store_name)
-    {
-        return $this->getDbTable()
-                    ->findPositionByName($store_name);
-        
-    }
+
 }

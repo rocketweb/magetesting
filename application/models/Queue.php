@@ -262,7 +262,19 @@ class Application_Model_Queue {
     }
     
     public function findPositionByName($storeName) {
-        return $this->getMapper()->findPositionByName($storeName);
+        return $this->getMapper()->findPositionByName($storeName)->num;
+    }
+    
+    /**
+     * Get time in seconds
+     * 
+     * @param string $domain
+     * @return int
+     */
+    public static function getTimeLeftByStoreDomain($domain) {
+        $model = new self;
+        return Zend_Registry::get('config')->magento->storeTimeExecution 
+            * $model->findPositionByName($domain);
     }
     
 }

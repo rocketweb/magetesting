@@ -18,12 +18,6 @@ class UserController extends Integration_Controller_Action
     {
         $storeModel = new Application_Model_Store();
 
-        $timeExecution = $this->getInvokeArg('bootstrap')
-                              ->getResource('config')
-                              ->magento
-                              ->storeTimeExecution;
-        $storeCounter = $storeModel->getPendingItems($timeExecution);
-
         $page = (int) $this->_getParam('page', 0);
         $paginator = $storeModel->getAllForUser(
             $this->auth->getIdentity()->id
@@ -39,7 +33,6 @@ class UserController extends Integration_Controller_Action
         $this->view->user = $this->auth->getIdentity();
         $this->view->userGroup = $this->view->user->group;
         $this->view->queue = $paginator;
-        $this->view->queueCounter = $storeCounter;
         $this->view->timeExecution = $timeExecution;
         $this->view->response = $this->getResponse();
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/user-dashboard.js'), 'text/javascript');

@@ -289,11 +289,6 @@ class Application_Model_Store {
         return $this->getMapper()->getWholeQueue();
     }
 
-    public function getPendingItems($timeExecution)
-    {
-        return $this->getMapper()->getPendingItems($timeExecution);
-    }
-    
     public function getCustomProtocol(){
       return $this->_custom_protocol;
     }
@@ -405,11 +400,6 @@ class Application_Model_Store {
     public function findByDomain( $domain )
     {
         return $this->getMapper()->findByDomain( $domain );
-    }
-    
-    public function findPositionByName( $store_name )
-    {
-        return $this->getMapper()->findPositionByName( $store_name );
     }
     
     public function getCustomFile(){

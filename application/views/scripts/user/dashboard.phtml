@@ -114,7 +114,7 @@
                                     <?php else:*/ ?>
                                         <?php echo $this->niceStatus($item['status']); ?>
                                         <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
-                                            - <?php echo $this->leftTime($this->queueCounter[$item['id']]); ?>
+                                            - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByStoreDomain($item['domain'])); ?>
                                         <?php endif; ?>
                                     </span>
                                 <?php if($item['status'] == 'error'): ?>

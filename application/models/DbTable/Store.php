@@ -77,15 +77,6 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
                     ->join('version', 'store.version_id = version.id', 'version')
                     ->order(array('status asc', 'store.id asc'));
     }
-
-    public function getPendingItems()
-    {
-        $select = $this->select()
-                        ->where('status != ?', 'ready')
-                        ->where('status != ?', 'error');
-
-        return $this->fetchAll($select);
-    }
        
     public function findByDomain($domain){
         $select = $this->select()
@@ -94,31 +85,6 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
                        ->join('version', 'store.version_id = version.id', 'version')
                        ->where('domain = ?', $domain);
                        
-        return $this->fetchRow($select);
-    }
-    
-    public function findPositionByName($store_name)
-    {
-	/**
-	SELECT COUNT( q.id )
-	FROM `queue` `q`
-	WHERE `q`.`id` <= (
-        SELECT `id`
-        FROM store
-        WHERE `domain` = '$store_name' 
-    )
-	AND `status` != 'ready'
-    AND `status` !='error'
-	*/
-    
-        $select = $this->select()
-                        ->setIntegrityCheck(false)
-                        ->from($this->_name, array('num' => 'count(store.id)'))
-                        ->where("store.id <= (SELECT id FROM store WHERE domain = '".$store_name."')")
-                        ->where('status != ?', 'ready')
-                        ->where('status != ?', 'error');
-                       
-//	Zend_Debug::Dump($select->assemble());
         return $this->fetchRow($select);
     }
 }
