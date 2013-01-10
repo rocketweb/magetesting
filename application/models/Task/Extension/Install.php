@@ -74,20 +74,25 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log('Unpacking and installing extension.', Zend_Log::INFO);
 
+        $tmp = sys_get_temp_dir();
+        $tmpExtensionDir = $tmp.
+                            '/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . 
+                            '/'.$this->_storeObject->getDomain().
+                            '/'.$this->_extensionObject->getId();
+        mkdir($tmpExtensionDir, 0777, true);
+        
         if ($this->_extensionObject->getPrice() > 0 ){
-            $command = 'tar -zxvf '.
-                $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded().
-                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain();
-            exec($command, $output);
+            $command = 'tar -zxvf '.$this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded().' -C '. $tmpExtensionDir
+            ;
             
         } else {
             $command = 'tar -zxvf '.
                 $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension().
-                ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain();
-            exec($command, $output);
+                ' -C '.$tmpExtensionDir;
 
         }
         
+        exec($command, $output);
         //output contains unpacked files list, so it should never be empty if unpacking suceed
         $message = var_export($output,true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
@@ -96,13 +101,22 @@ implements Application_Model_Task_Interface {
             $message = 'There was an error while installing extension '.$this->_extensionObject->getName();
             $this->logger->log($message, Zend_Log::EMERG);
             throw new Application_Model_Task_Exception($message);
-        }      
-
-        $this->logger->log('Changing owner of store directory files.', Zend_Log::INFO);
-        $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain;
-        exec($command, $output);
-        $message = var_export($output, true);
-        $this->logger->log("\n" .$command. "\n" . $message, Zend_Log::DEBUG);
+        }  
+        
+        unset($output);
+        
+        //set permissions on files in tmp directory
+        $command = 'chown -R '.$this->config->magento->userprefix . $this->_userObject->getLogin().':'.$this->config->magento->userprefix . $this->_userObject->getLogin().' '.$tmpExtensionDir.'';
+        exec($command,$output);
+        $message = var_export($output,true);
+        $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
+        unset($output);
+        
+        //move files from $tmpExtensionDir to store folder
+        $command = 'cp -rp '.$tmpExtensionDir.'/* '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/ ';
+        exec($command,$output);
+        $message = var_export($output,true);
+        $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
         unset($output);
         
     }    
