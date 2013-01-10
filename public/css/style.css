@@ -757,12 +757,11 @@ h4.ext-price{
 #user-deletion form {
     display: inline;
 }
-<<<<<<< Updated upstream
+
 #exp-date-year {
     width: 80px;
-=======
+}
 
 form#extension-filter-form {
     margin: 8px 10px 0 0;
->>>>>>> Stashed changes
 }
