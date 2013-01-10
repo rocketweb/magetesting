@@ -18,15 +18,32 @@ class ExtensionController extends Integration_Controller_Action {
 
     public function listAction() {
         $extensionModel = new Application_Model_Extension();
-        // that should add extension screenshots to it
         
         $page = (int) $this->_getParam('page', 0);
-        $paginator = $extensionModel->fetchList();
+
+        $editionModel = new Application_Model_Edition();
+        $editions = array('ALL' => 'All');
+        
+        foreach($editionModel->fetchAll() as $edition) {
+            $editions[$edition->getKey()] = $edition->getKey();
+        }
+        
+        $form = new Application_Form_ExtensionFilterEdition();
+        $form->populate($this->_request->getParams());
+        $form->getElement('edition')->addMultiOptions($editions);
+        $form->getElement('edition')->addValidator(
+            new Zend_Validate_InArray(array_keys($editions))
+        );
+
+        $edition = $this->_getParam('edition', 'ALL');
+
+        $paginator = $extensionModel->fetchList($edition);
 
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
 
         $this->view->extensions = $paginator;
+        $this->view->form = $form;
         
         $this->_helper->viewRenderer('grid');
     }

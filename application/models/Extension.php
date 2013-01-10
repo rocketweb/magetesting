@@ -344,7 +344,7 @@ class Application_Model_Extension {
         return $model->fetchByExtensionId($id);
     }
     
-    public function fetchList() {
-        return $this->getMapper()->fetchList();
+    public function fetchList($edition = 'all') {
+        return $this->getMapper()->fetchList($edition);
     }
 }
