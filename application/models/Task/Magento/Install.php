@@ -43,7 +43,10 @@ implements Application_Model_Task_Interface {
          * In i.e 1.7.0.2 locks were created during running _runInstaller, 
          * this is to prevent locking reindexer in adminpanel then
          */
-        exec('chmod 666 -R '.$this->_storeFolder . '/' . $this->_domain.'/var/locks/*');
+        $dirname = $this->_storeFolder . '/' . $this->_domain.'/var/locks/';
+        if (file_exists($dirname) && is_dir($dirname)){
+            exec('chmod 666 -R '.$dirname.'*');
+        }
 
         $this->_setupMagentoConnect();
 
