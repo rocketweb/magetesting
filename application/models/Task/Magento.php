@@ -107,10 +107,15 @@ extends Application_Model_Task {
             $this->logger->log('Creating system user.', Zend_Log::INFO);
             
             $startDir = getcwd();
-            chdir('worker');
+            
+            $workerfolder = APPLICATION_PATH.'/../scripts/worker';
+            chdir($workerfolder);
+            $command = 'cd '.APPLICATION_PATH.'/../scripts/worker';
+            exec($command,$output);
             unset($output);
 
             $command = 'sudo ./create_user.sh ' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_systempass . ' ' . $this->config->magento->usersalt . ' ' . $this->config->magento->systemHomeFolder.'';
+            
             exec($command, $output);
             chdir($startDir);
             $message = var_export($output, true);

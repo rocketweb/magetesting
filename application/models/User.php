@@ -541,7 +541,19 @@ class Application_Model_User {
      */
     public function enableFtp(){
         $config = Zend_Registry::get('config');
-        exec('cd worker; sudo ./ftp-user-add.sh ' . $config->magento->userprefix . $this->getLogin() . ' ; cd ..');
+        $startcwd = getcwd();
+        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
+        
+        chdir($workerfolder);
+        
+        $command = 'cd '.$workerfolder;
+        exec($command,$output);
+
+        exec('sudo ./ftp-user-add.sh ' . $config->magento->userprefix . $this->getLogin() . ' ;');
+        
+        exec('cd '.$startcwd);
+        chdir($startcwd);
+        
     }
     
     /**
@@ -550,7 +562,19 @@ class Application_Model_User {
      */
     public function disableFtp(){
         $config = Zend_Registry::get('config');
-        exec('cd worker; sudo ./ftp-user-remove.sh ' . $config->magento->userprefix . $this->getLogin() . ' ; cd ..');
+        
+        $startcwd = getcwd();
+        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
+        
+        chdir($workerfolder);
+        
+        $command = 'cd '.$workerfolder;
+        exec($command,$output);
+        
+        exec('sudo ./ftp-user-remove.sh ' . $config->magento->userprefix . $this->getLogin() . '');
+        
+        exec('cd '.$startcwd);
+        chdir($startcwd);
     }
     
     /**
@@ -597,6 +621,18 @@ class Application_Model_User {
         }
         
         $deniedList = implode(',',$disableArray);
-        exec('cd worker; sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'" ; cd ..',$output);
+        
+        $startcwd = getcwd();
+        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
+        
+        chdir($workerfolder);
+        
+        $command = 'cd '.$workerfolder;
+        exec($command,$output);
+        
+        exec('sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'";',$output);
+        
+        exec('cd '.$startcwd);
+        chdir($startcwd);
     }
 }

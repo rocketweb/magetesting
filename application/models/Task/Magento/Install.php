@@ -59,9 +59,6 @@ implements Application_Model_Task_Interface {
 
         $this->_sendStoreReadyEmail();
         
-        //just to be sure every
-        $this->_setFilesystemPermissions();
-              
     }
 
     protected function _prepareFileSystem() {

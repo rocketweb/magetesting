@@ -40,18 +40,33 @@ if($result) {
 
         //--------------SYSTEM/MYSQL PART START-------------
             $startcwd = getcwd();
-        
             //remove ftp account
             $user->disableFtp();
 
             //rebuild phpmyadmin blacklist
             $user->disablePhpmyadmin();
-            chdir('worker');
+
+            $workerfolder = APPLICATION_PATH.'/../scripts/worker';
+            chdir($workerfolder);
+            $command = 'cd '.APPLICATION_PATH.'/../scripts/worker';
+            exec($command,$output);
+            unset($output);
+
             //remove system user
-            $command = 'sudo sh remove_user.sh ' . $config->magento->userprefix . $user->getLogin();
+            $command = 'sudo ./remove_user.sh ' . $config->magento->userprefix . $user->getLogin();
             exec($command, $output);
+            if (empty($output)){
+                echo 'sh user removal script failed';
+            } elseif(isset($output[0]) && $output[0]=='error'){ 
+                echo 'sh script was run without arguments';
+            }
+
+            unset($output);
+
             
+
             chdir($startcwd);
+
             
             //remove mysql user
              $DbManager = new Application_Model_DbTable_Privilege($db,$config);
