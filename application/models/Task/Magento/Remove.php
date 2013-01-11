@@ -33,7 +33,7 @@ implements Application_Model_Task_Interface {
         chdir(STORE_PATH);
 
         $this->logger->log('Removing store directory recursively.', Zend_Log::INFO);
-        exec('rm -R '.$this->_storeFolder.'/'.$this->_storeObject->getDomain());
+        exec('sudo rm -R '.$this->_storeFolder.'/'.$this->_storeObject->getDomain());
         unlink($this->_storeObject->getDomain());
         chdir($this->_storeFolder);
 

@@ -567,7 +567,7 @@ class UserController extends Integration_Controller_Action
                              ->setParentId(0)
                              ->setId(0)
                              ->save();
-                        $removingId = $task->getId();
+                        $parentId = $task->getId();
                     }
 
                     $task->setId(0)
