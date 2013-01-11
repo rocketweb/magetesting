@@ -490,7 +490,7 @@ class Application_Model_User {
      */
     public function activateUser($id, $hash)
     {
-        return $this->getMapper()->activateUser($id, $hash, $preselected_plan_id);
+        return $this->getMapper()->activateUser($id, $hash);
     }
 
     public function resetPassword($email)
