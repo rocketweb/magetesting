@@ -471,8 +471,20 @@ $(document).ready(function () {
         
         current = current.replace('/edition/CE', '').replace('/edition/EE', '').replace('/edition/PE', '').replace('/edition/ALL', '');
         window.location.href = current + '/edition/' + $(this).val();
-        });
     });
+    
+    
+    $('#extension-form select#edition').change(function() {
+        changeVersionByEdition();
+    });
+    
+    changeVersionByEdition();
+    
+    $('#extension-form').submit(function() {
+        $('#extension-form select[name$="_version"]:hidden').remove();
+    });
+        
+});
 
 function progressBarExtension(param) {
     $('div.extras div.progress').each(function() {
@@ -494,4 +506,12 @@ function changeInputSelect() {
         $('.form-stacked.form-input-select select.select-state').hide();
         $('.form-stacked.form-input-select input.input-state').show();
     }
+}
+
+function changeVersionByEdition() {
+    val = $('#extension-form select#edition').val();
+
+    $('#extension-form select#from_version').hide();
+    $('#extension-form select#to_version').hide();
+    $('#extension-form select.'+val).show();
 }

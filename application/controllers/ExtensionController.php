@@ -107,6 +107,11 @@ class ExtensionController extends Integration_Controller_Action {
         $form->category_id->addMultiOptions($extension_categories);
         
         $verModel = new Application_Model_Version();
+        
+        $this->view->versionCe = $verModel->getAllForEdition('CE');
+        $this->view->versionPe = $verModel->getAllForEdition('PE');
+        $this->view->versionEe = $verModel->getAllForEdition('EE');
+        
         $versions = array();
         foreach($verModel->fetchAll() as $version) {
             $versions[$version->getVersion()] = $version->getVersion();
@@ -162,6 +167,7 @@ class ExtensionController extends Integration_Controller_Action {
             $noExtension = true;
         }
 
+        $this->view->extension = $extension;
         $this->view->tempDir = $this->_tempDir;
         $this->view->directoryHash = $extension_data['directory_hash'];
 
