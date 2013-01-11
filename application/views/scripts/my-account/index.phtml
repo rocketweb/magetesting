@@ -88,7 +88,7 @@
                         </div>
                         <?php endif; ?>
 
-                        <?php if ($this->user->getGroup()=='free-user'): ?>
+                        <?php if (!$this->user->hasPlanActive()): ?>
                         <br />
                         <div class="row">
                           <div class="span4">Have a coupon code?</div> 

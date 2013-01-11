@@ -450,10 +450,14 @@ class BraintreeController extends Integration_Controller_Action
                             $field_key = 'cvv';
                         break;
                         case 91510:
-                            $flash_message = array('type' =>'notice', 'message' => 'Your Vault id is invalid. Please inform us about that incident.');
+                            $flash_message = array('type' =>'notice', 'message' => $this->_general_error_message);
                             $redirect = array(
                                 'controller' => 'my-account'
                             );
+                            if($log = $this->getLog()) {
+                                $error = 'User: '.$this->auth->getIdentity()->login.' - '.$this->getRequest()->getRequestUri().' - message: Wrong Vault ID';
+                                $log->log('Braintree - Response errors', Zend_Log::ERR, $error);
+                            }
                         break;
                     }
     

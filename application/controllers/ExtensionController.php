@@ -466,7 +466,6 @@ class ExtensionController extends Integration_Controller_Action {
         /* delete extension screenshots removed from form */
         $form_screenshots = $this->_getParam('screenshots_ids', array());
         $form_screenshots = (is_array($form_screenshots) ? $form_screenshots: array());
-
         $extension_screenshots = new Application_Model_ExtensionScreenshot();
         foreach($extension_screenshots->fetchByExtensionId($extension_id) as $screenshot) {
             if(!in_array($screenshot->getId(), $form_screenshots)) {
