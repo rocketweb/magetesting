@@ -110,7 +110,7 @@ function updateStatuses() {
       //make new request
       requests[domain] = $.ajax({
             type: "POST",
-            url: "/queue/getstatus",
+            url: $('body').data('siteRoot') + "/queue/getstatus",
             data: "domain=" + $(this).find(".storedomain").val(),
             dataType: "json",
             success: function(json) {
@@ -131,7 +131,7 @@ function updateLabel(row, new_status) {
         //update pending time counter
         $.ajax({
             type: "POST",
-            url: "/queue/gettimeleft",
+            url: $('body').data('siteRoot') + "/queue/gettimeleft",
             data: "domain=" + row.find(".storedomain").val(),
             dataType: "json",
             success: function(json) {

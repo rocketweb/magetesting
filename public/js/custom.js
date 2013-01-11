@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    var siteRoot = $('body').data('siteRoot');
     /*
      * Code below, saves user my-account details before request leave us to braintree
      * It just checks whether payment form has address fields and if form was not
@@ -43,7 +44,7 @@ $(document).ready(function () {
 
             $submit.addClass('disabled');
             $.ajax({
-                url: '/my-account/edit-account',
+                url: siteRoot + '/my-account/edit-account',
                 type: 'POST',
                 async: false,
                 data: {
@@ -98,8 +99,7 @@ $(document).ready(function () {
         $deployment_form = $deployment_modal.find('form'),
         $rollback_name = $deployment_modal.find('.rollback-name'),
         $commit_comment = $deployment_modal.find('#commit_comment'),
-        $deploy_table_body = $deployment_modal.find('.table tbody'),
-        $base_url = $('#base-url').val();
+        $deploy_table_body = $deployment_modal.find('.table tbody');
 
     $deploy_table_body.on('click', '.request-deployment.request-buy', function(e) {
         if ($(this).is('.disabled')){
@@ -108,7 +108,7 @@ $(document).ready(function () {
         e.stopPropagation();
         e.preventDefault();
         var $this = $(this);
-        form_string = '<form id="buy_request" method="post" action="/braintree/payment">';
+        form_string = '<form id="buy_request" method="post" action="' + siteRoot + '/braintree/payment">';
         form_string += '<input type="hidden" name="domain" value="'+$this.data('store-domain')+'" />';
         form_string += '<input type="hidden" name="source" value="deployment-request" />';
         form_string += '<input type="hidden" name="pay-for" value="extension" /><input type="hidden" name="id" value="'+$this.val()+'" /></form>';
@@ -120,7 +120,7 @@ $(document).ready(function () {
         var $this = $(this);
         if(!$this.hasClass('disabled')) {
             var $domain = $this.nextAll('.storedomain').val(),
-                $form_action = $base_url+'/queue/[replace]/domain/'+$domain,
+                $form_action = siteRoot + '/queue/[replace]/domain/' + $domain,
                 $remove_class = '',
                 $add_class = '';
             if($this.hasClass('rollback-button')) {
