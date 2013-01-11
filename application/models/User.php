@@ -630,7 +630,11 @@ class Application_Model_User {
         $command = 'cd '.$workerfolder;
         exec($command,$output);
         
-        exec('sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'";',$output);
+        if(file_exists('/etc/phpmyadmin') && is_dir('/etc/phpmyadmin')){
+            exec('sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'";',$output);
+        } else {
+            echo 'phpmyadmin config not found in /etc/phpmyadmin, please fix paths accordingly';
+        }
         
         exec('cd '.$startcwd);
         chdir($startcwd);

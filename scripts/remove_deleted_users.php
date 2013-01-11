@@ -15,6 +15,7 @@ if($result) {
         $user = new Application_Model_User();
         $user->find($row['id']);
         //--------------PAPERTRAIL PART START-------------
+        if ($user->getHasPapertrailAccount()){
             $id = $config->papertrail->prefix . (string) $user->getId();
 
             $service = new RocketWeb_Service_Papertrail(
@@ -35,24 +36,27 @@ if($result) {
                 $user->setHasPapertrailAccount(0);
                 $user->save();
             }
+        }
         //--------------PAPERTRAIL PART END-----------------
 
 
         //--------------SYSTEM/MYSQL PART START-------------
-            $startcwd = getcwd();
-            //remove ftp account
-            $user->disableFtp();
+        $startcwd = getcwd();
+        //remove ftp account
+        $user->disableFtp();
 
-            //rebuild phpmyadmin blacklist
-            $user->disablePhpmyadmin();
+        //rebuild phpmyadmin blacklist
+        $user->disablePhpmyadmin();
 
+
+
+        //remove system user
+        if ($user->getHasSystemAccount()){
             $workerfolder = APPLICATION_PATH.'/../scripts/worker';
             chdir($workerfolder);
             $command = 'cd '.APPLICATION_PATH.'/../scripts/worker';
             exec($command,$output);
             unset($output);
-
-            //remove system user
             $command = 'sudo ./remove_user.sh ' . $config->magento->userprefix . $user->getLogin();
             exec($command, $output);
             if (empty($output)){
@@ -62,30 +66,26 @@ if($result) {
             }
 
             unset($output);
-
-            
-
             chdir($startcwd);
+        }
 
-            
-            //remove mysql user
-             $DbManager = new Application_Model_DbTable_Privilege($db,$config);
-            if ($DbManager->checkIfUserExists($user->getLogin())){
-                try {
-                    $log->log('Dropping ' . $user->getLogin() . ' user.', Zend_Log::INFO);
-                    $DbManager->dropUser($user->getLogin());
-                } catch(PDOException $e){
-                    $message = 'Could not remove mysql user';
-                    $log->log($message, Zend_Log::CRIT);
-                    flock($fp, LOCK_UN); // release the lock
-                    continue;
-                }
-            } else {
-                $message = 'user does not exist, ignoring.';
-                $log->log($message, Zend_Log::NOTICE);
+
+        //remove mysql user
+         $DbManager = new Application_Model_DbTable_Privilege($db,$config);
+        if ($DbManager->checkIfUserExists($user->getLogin())){
+            try {
+                $log->log('Dropping ' . $user->getLogin() . ' user.', Zend_Log::INFO);
+                $DbManager->dropUser($user->getLogin());
+            } catch(PDOException $e){
+                $message = 'Could not remove mysql user';
+                $log->log($message, Zend_Log::CRIT);
+                flock($fp, LOCK_UN); // release the lock
+                continue;
             }
-            
-            
+        } else {
+            $message = 'user does not exist, ignoring.';
+            $log->log($message, Zend_Log::NOTICE);
+        }
         //--------------SYSTEM/MYSQL PART END--------------
 
 
