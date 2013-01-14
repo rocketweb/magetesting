@@ -464,7 +464,7 @@ $(document).ready(function () {
     $('form#extension-filter-form select').change(function() {
         current = window.location.href;
         isIndex = window.location.href.match(/index/g);
-        
+      
         if(isIndex == null) {
              current = window.location.href.replace('/extension', '/extension/index');
         }
@@ -472,7 +472,6 @@ $(document).ready(function () {
         current = current.replace('/edition/CE', '').replace('/edition/EE', '').replace('/edition/PE', '').replace('/edition/ALL', '');
         window.location.href = current + '/edition/' + $(this).val();
     });
-    
     
     $('#extension-form select#edition').change(function() {
         changeVersionByEdition();
@@ -483,7 +482,6 @@ $(document).ready(function () {
     $('#extension-form').submit(function() {
         $('#extension-form select[name$="_version"]:hidden').remove();
     });
-        
 });
 
 function progressBarExtension(param) {
