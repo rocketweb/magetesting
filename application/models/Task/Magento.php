@@ -136,6 +136,7 @@ extends Application_Model_Task {
                 $planModel->find($this->_userObject->getPlanId());
                 
                 if ($planModel->getFtpAccess()){
+                    $this->_userObject->enableFtp();
                     $this->_sendFtpEmail($user_details);
                 }
                 

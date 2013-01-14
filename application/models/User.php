@@ -537,7 +537,6 @@ class Application_Model_User {
     
     /**
      * Adds user to authorized ftp users
-     * TODO: implement
      */
     public function enableFtp(){
         $config = Zend_Registry::get('config');
