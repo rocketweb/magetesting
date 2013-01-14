@@ -18,7 +18,7 @@ if($result) {
         $storeModel = new Application_Model_Store();
         $stores = $storeModel->getAllForUser($row['id']);
         
-        if ($stores){
+        if ($stores->getTotalItemCount()){
             /* we have stores waiting to remove, discard this user */
             continue;
         }
@@ -31,21 +31,17 @@ if($result) {
                 $config->papertrail->username,
                 $config->papertrail->password    
             );
+           
             try { 
-                $response = $service->removeUser((string)$id);
+                $responseExists = $service->getAccountUsage($id);
+                $responseRemove = $service->removeUser($id);
             } catch(Zend_Service_Exception $e) {
                 $log->log($e->getMessage(), Zend_Log::CRIT);
                 //retry later
-                
-                /**
-                 * Note: since papertrail has some issues on dev, this continue 
-                 * is commented out to not prevent user from being removed when 
-                 * papertrail removal fails with 404 response
-                 */
-                //continue;
+                continue;
             }
 
-            if(isset($response->status) && $response->status == 'ok') {
+            if(isset($responseRemove->status) && $responseRemove->status == 'ok') {
                 //success
                 $user->setPapertrailApiToken(null);
                 $user->setHasPapertrailAccount(0);
