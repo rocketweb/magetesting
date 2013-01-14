@@ -14,6 +14,15 @@ if($result) {
 
         $user = new Application_Model_User();
         $user->find($row['id']);
+        
+        $storeModel = new Application_Model_Store();
+        $stores = $storeModel->getAllForUser($row['id']);
+        
+        if ($stores){
+            /* we have stores waiting to remove, discard this user */
+            continue;
+        }
+        
         //--------------PAPERTRAIL PART START-------------
         if ($user->getHasPapertrailAccount()){
             $id = $config->papertrail->prefix . (string) $user->getId();
@@ -27,6 +36,12 @@ if($result) {
             } catch(Zend_Service_Exception $e) {
                 $log->log($e->getMessage(), Zend_Log::CRIT);
                 //retry later
+                
+                /**
+                 * Note: since papertrail has some issues on dev, this continue 
+                 * is commented out to not prevent user from being removed when 
+                 * papertrail removal fails with 404 response
+                 */
                 //continue;
             }
 
@@ -90,7 +105,17 @@ if($result) {
 
 
         //--------------MAGETESTING PART START-------------
-        $db->delete('user','id = '.$user->getId());
+        try {
+            $db->delete('user','id = '.$user->getId());
+        } catch (PDOException $e){
+            $log->log('Cannot remove user id: '.$user->getId().' (possibly existing stores)',Zend_Log::ERR,$e->getTraceAsString());
+            continue;
+        } catch (Exception $e){
+            $log->log('Cannot remove user id: '.$user->getId().'',Zend_Log::ERR,$e->getTraceAsString());
+            continue;
+        }
+
+
         //--------------MAGETESTING PART END---------------
     }
 }
