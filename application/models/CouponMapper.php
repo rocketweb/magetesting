@@ -130,27 +130,22 @@ class Application_Model_CouponMapper {
         
         if ($coupon){
             if (!$coupon->getUserId()){
-                if ($user->getGroup()=='free-user'){
-                    if(strtotime($coupon->getActiveTo()) > time()){
-                        
-                        //update user with new data
-                        $user->setPlanActiveTo(date("Y-m-d H:i:s",strtotime("now " . $coupon->getDuration() . "")));
-                        $user->setPlanId($coupon->getPlanId());
-                        $user->save();
-                       
-                        //update coupon info
-                        $coupon->setUserId($user->getId());
-                        $coupon->setUsedDate(date("Y-m-d",time()));
-                        $coupon->save();
-                        
-                        return true; 
-                        
-                    } else {
-                        $this->setError('Coupon Expired');
-                        return false;
-                    }                   
+                if(strtotime($coupon->getActiveTo()) > time()){
+                    
+                    //update user with new data
+                    $user->setPlanActiveTo(date("Y-m-d H:i:s",strtotime("now " . $coupon->getDuration() . "")));
+                    $user->setPlanId($coupon->getPlanId());
+                    $user->save();
+                   
+                    //update coupon info
+                    $coupon->setUserId($user->getId());
+                    $coupon->setUsedDate(date("Y-m-d",time()));
+                    $coupon->save();
+                    
+                    return true; 
+                    
                 } else {
-                    $this->setError('Your account is already non-free, you cannot apply coupons');
+                    $this->setError('Coupon Expired');
                     return false;
                 }
             } else {

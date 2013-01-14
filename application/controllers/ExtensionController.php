@@ -18,8 +18,32 @@ class ExtensionController extends Integration_Controller_Action {
 
     public function listAction() {
         $extensionModel = new Application_Model_Extension();
-        // that should add extension screenshots to it
-        $this->view->extensions = $extensionModel->fetchAll();
+        
+        $page = (int) $this->_getParam('page', 0);
+
+        $editionModel = new Application_Model_Edition();
+        $editions = array('ALL' => 'All');
+        
+        foreach($editionModel->fetchAll() as $edition) {
+            $editions[$edition->getKey()] = $edition->getKey();
+        }
+        
+        $form = new Application_Form_ExtensionFilterEdition();
+        $form->populate($this->_request->getParams());
+        $form->getElement('edition')->addMultiOptions($editions);
+        $form->getElement('edition')->addValidator(
+            new Zend_Validate_InArray(array_keys($editions))
+        );
+
+        $edition = $this->_getParam('edition', 'ALL');
+
+        $paginator = $extensionModel->fetchList($edition);
+
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(10);
+
+        $this->view->extensions = $paginator;
+        $this->view->form = $form;
         
         $this->_helper->viewRenderer('grid');
     }
@@ -81,6 +105,37 @@ class ExtensionController extends Integration_Controller_Action {
         );
 
         $form->category_id->addMultiOptions($extension_categories);
+        
+        $verModel = new Application_Model_Version();
+        
+        $this->view->versionCe = $verModel->getAllForEdition('CE');
+        $this->view->versionPe = $verModel->getAllForEdition('PE');
+        $this->view->versionEe = $verModel->getAllForEdition('EE');
+        
+        $versions = array();
+        foreach($verModel->fetchAll() as $version) {
+            $versions[$version->getVersion()] = $version->getVersion();
+        }
+        
+        $form->from_version->addMultiOptions($versions);
+        $form->from_version->addValidator(
+            new Zend_Validate_InArray(array_keys($versions))
+        );
+        $form->to_version->addMultiOptions($versions);
+        $form->to_version->addValidator(
+            new Zend_Validate_InArray(array_keys($versions))
+        );
+
+        $editionModel = new Application_Model_Edition();
+        $editions = array();
+        foreach($editionModel->fetchAll() as $edition) {
+            $editions[$edition->getKey()] = $edition->getKey();
+        }
+        
+        $form->edition->addMultiOptions($editions);
+        $form->edition->addValidator(
+            new Zend_Validate_InArray(array_keys($editions))
+        );
 
         /* $id > 0 AND extension found in database */
         $noExtension = false;
@@ -112,6 +167,7 @@ class ExtensionController extends Integration_Controller_Action {
             $noExtension = true;
         }
 
+        $this->view->extension = $extension;
         $this->view->tempDir = $this->_tempDir;
         $this->view->directoryHash = $extension_data['directory_hash'];
 
@@ -410,7 +466,6 @@ class ExtensionController extends Integration_Controller_Action {
         /* delete extension screenshots removed from form */
         $form_screenshots = $this->_getParam('screenshots_ids', array());
         $form_screenshots = (is_array($form_screenshots) ? $form_screenshots: array());
-
         $extension_screenshots = new Application_Model_ExtensionScreenshot();
         foreach($extension_screenshots->fetchByExtensionId($extension_id) as $screenshot) {
             if(!in_array($screenshot->getId(), $form_screenshots)) {

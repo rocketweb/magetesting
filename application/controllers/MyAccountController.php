@@ -198,6 +198,17 @@ class MyAccountController extends Integration_Controller_Action
     public function couponAction() {
         $request = $this->getRequest();
         $couponForm = new Application_Form_CouponRegister();
+
+        $user = new Application_Model_User();
+        $user = $user->find($this->auth->getIdentity()->id);
+        // users with active plan cannot use coupons
+        if($user->hasPlanActive()) {
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'my-account'
+            ), 'default', true);
+        }
+
         if ($request->isPost()) {
             $formData = $request->getPost();
 
@@ -207,8 +218,11 @@ class MyAccountController extends Integration_Controller_Action
                 $coupon = $modelCoupon->findByCode($couponForm->code->getValue());
                 if ($coupon) {
                     
-                    $applyResult = $modelCoupon->apply($coupon->getId(), $this->auth->getIdentity()->id);
-                    
+                    $applyResult = $modelCoupon->apply($modelCoupon->getId(), $user->getId());
+                    $user->setBraintreeTransactionConfirmed(NULL);
+                    $user->setBraintreeTransactionId(NULL);
+                    $user->save();
+
                     if ($applyResult === true) {
                     $flashMessage = 'Congratulations, you have successfully changed your plan!';
                     $this->_helper->flashMessenger($flashMessage);

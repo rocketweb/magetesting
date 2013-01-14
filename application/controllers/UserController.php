@@ -300,9 +300,8 @@ class UserController extends Integration_Controller_Action
             if($form->isValid($formData)) {
                 
                 $modelCoupon = new Application_Model_Coupon();
+                $coupon = $modelCoupon->findByCode($formData['coupon']);
                 if ($useCoupons) {
-                    $coupon = $modelCoupon->findByCode($formData['coupon']);
-
                     if (!$coupon){
                         $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'No coupon found!'));
                         return $this->_helper->redirector->gotoRoute(array(
@@ -323,13 +322,15 @@ class UserController extends Integration_Controller_Action
                 $user->setPreselectedPlanId($plan_id);
                 $user = $user->save();
 
-                if ($useCoupons && $coupon) {
+                if ($useCoupons || $coupon) {
                     $result = $modelCoupon->apply($modelCoupon->getId(), $user->getId());
                     if ($result) {
                         //coupon->apply changed user so we need to fetch it again
                         $modelUser = new Application_Model_User();
                         $user = $modelUser->find($user->getId());
                         $user->setGroup('commercial-user');
+                        $user->setBraintreeTransactionConfirmed(NULL);
+                        $user->setBraintreeTransactionId(NULL);
                         $user = $user->save();
                     }
                 }
@@ -567,7 +568,7 @@ class UserController extends Integration_Controller_Action
                              ->setParentId(0)
                              ->setId(0)
                              ->save();
-                        $removingId = $task->getId();
+                        $parentId = $task->getId();
                     }
 
                     $task->setId(0)

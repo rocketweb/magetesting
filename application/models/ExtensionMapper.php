@@ -176,5 +176,21 @@ class Application_Model_ExtensionMapper {
         ;
         return $extension;
     }
+    
+    public function fetchList($edition) {
+        $select = $this->getDbTable()->select();
+
+        if(in_array($edition, array('CE', 'PE', 'EE'))) {
+            $select->where('edition = ?', $edition);
+        }
+        
+        $select->order('name');
+
+        $adapter = new Zend_Paginator_Adapter_Array(
+            $this->getDbTable()->fetchAll($select)->toArray()
+        );
+        
+        return new Zend_Paginator($adapter);
+    }
 
 }

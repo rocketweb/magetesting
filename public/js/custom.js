@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    var siteRoot = $('body').data('siteRoot');
     /*
      * Code below, saves user my-account details before request leave us to braintree
      * It just checks whether payment form has address fields and if form was not
@@ -10,13 +11,40 @@ $(document).ready(function () {
 
     if($braintree_billing_details.length && !$prefilled_data.length) {
         $braintree_billing_details.parents('form:first').submit(function() {
-            var $submit = $(this).find(':submit');
+            var $submit = $(this).find(':submit'),
+                $exp_date_month = $('#exp-date-month'),
+                $exp_date_year = $('#exp-date-year'),
+                $braintree_exp_date = $('#braintree_credit_card_exp');
+
+            /* form already submitted */
             if($submit.hasClass('disabled')) {
                 return false;
             }
+
+            $process_form = true;
+            if(!$exp_date_month.val().length) {
+                $exp_date_month.focus();
+                $process_form = false;
+            }
+            if(!$exp_date_year.val().length) {
+                /* let month be focused first on error */
+                if($process_form) {
+                    $exp_date_year.focus();
+                }
+                $process_form = false;
+            }
+
+            /* stop submittion if cc exp date is wrong */
+            if(!$process_form) {
+                $exp_date_month.parents('.control-group:first').addClass('error');
+                return false;
+            } else {
+                $braintree_exp_date.val($exp_date_month.val() + '/' + $exp_date_year.val());
+            }
+
             $submit.addClass('disabled');
             $.ajax({
-                url: '/my-account/edit-account',
+                url: siteRoot + '/my-account/edit-account',
                 type: 'POST',
                 async: false,
                 data: {
@@ -71,8 +99,7 @@ $(document).ready(function () {
         $deployment_form = $deployment_modal.find('form'),
         $rollback_name = $deployment_modal.find('.rollback-name'),
         $commit_comment = $deployment_modal.find('#commit_comment'),
-        $deploy_table_body = $deployment_modal.find('.table tbody'),
-        $base_url = $('#base-url').val();
+        $deploy_table_body = $deployment_modal.find('.table tbody');
 
     $deploy_table_body.on('click', '.request-deployment.request-buy', function(e) {
         if ($(this).is('.disabled')){
@@ -81,7 +108,7 @@ $(document).ready(function () {
         e.stopPropagation();
         e.preventDefault();
         var $this = $(this);
-        form_string = '<form id="buy_request" method="post" action="/braintree/payment">';
+        form_string = '<form id="buy_request" method="post" action="' + siteRoot + '/braintree/payment">';
         form_string += '<input type="hidden" name="domain" value="'+$this.data('store-domain')+'" />';
         form_string += '<input type="hidden" name="source" value="deployment-request" />';
         form_string += '<input type="hidden" name="pay-for" value="extension" /><input type="hidden" name="id" value="'+$this.val()+'" /></form>';
@@ -93,7 +120,7 @@ $(document).ready(function () {
         var $this = $(this);
         if(!$this.hasClass('disabled')) {
             var $domain = $this.nextAll('.storedomain').val(),
-                $form_action = $base_url+'/queue/[replace]/domain/'+$domain,
+                $form_action = siteRoot + '/queue/[replace]/domain/' + $domain,
                 $remove_class = '',
                 $add_class = '';
             if($this.hasClass('rollback-button')) {
@@ -188,72 +215,6 @@ $(document).ready(function () {
         e.preventDefault();
         $extension_id.val($(this).data('extension-id')).parent('form').submit();
     });
-
-    var $admin_extension = $('table.admin-extensions'),
-        $admin_extension_uploader = $('#fileupload'),
-        $screenshots = $('.screenshots'),
-        $logo_container = $('.logo-container');
-
-    // allow lightbox for admin extension screenshots
-    if($admin_extension.length) {
-        $admin_extension.find('.btn.show-screenshots').click(function() {
-            $(this).next('.screenshots-container').children('a:first').click();
-            return false;
-        });
-    }
-
-    if($admin_extension_uploader.length) {
-        $admin_extension_uploader.on('click', '.btn.as-logo', function() {
-            var $checkbox = $(this).children('input');
-            $checkbox.attr('checked', !$checkbox.attr('checked'));
-            $admin_extension_uploader.find('.btn.as-logo > input').not($checkbox).attr('checked', false);
-        });
-        /* handle images uploading */
-        var $directory_hash = $('#directory_hash').val();
-        $directory_hash = $directory_hash ? $directory_hash : '';
-        // Initialize the jQuery File Upload widget:
-        $admin_extension_uploader.fileupload({
-            // Uncomment the following to send cross-domain cookies:
-            //xhrFields: {withCredentials: true},
-            url: $admin_extension_uploader.attr('action'),
-            dropZone: $('.fileinput-button.btn.btn-success'),
-            dataType: 'json',
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            formData: {directory_hash: $directory_hash}
-        }).bind('fileuploadsubmit',
-            function(e, data){
-                data.formData = {
-                    checked: (!data.context.find('input:checkbox').attr('checked') ? 0 : 1),
-                    directory_hash: $directory_hash
-                };
-            }
-        ).bind('fileuploadcompleted',
-            function (e, data) {
-                e.preventDefault();
-                $.each(data.result, function(i, file) {
-                    if(typeof file.error == "undefined") {
-                        if(file.as_logo == 1) {
-                            $logo_container.children().remove();
-                            $logo_container.append(
-                                $('<input type="hidden" name="logo" value="'+file.name+'" />')
-                                .add($('<img src="'+file.url+'" />'))
-                            );
-                        } else {
-                            $screenshots.append(
-                                $('<input type="hidden" name="screenshots_ids[]" value="" form="extension-form" />')
-                                .add($('<input type="hidden" name="screenshots[]" value="'+file.name+'"  form="extension-form" />'))
-                                .add($('<img src="'+file.url+'" />'))
-                            );
-                        }
-
-                        setTimeout(function() {
-                            data.context.fadeOut(500, function(){ $(this).remove(); });
-                        }, 500);
-                    }
-                });
-            }
-        );
-    }
 
     var $view_store = $('.view-store'),
         $admin_panel = $('.admin-panel');
@@ -498,6 +459,29 @@ $(document).ready(function () {
             $('.form-stacked.form-input-select select.select-state').remove();
         }
     });
+    
+    
+    $('form#extension-filter-form select').change(function() {
+        current = window.location.href;
+        isIndex = window.location.href.match(/index/g);
+      
+        if(isIndex == null) {
+             current = window.location.href.replace('/extension', '/extension/index');
+        }
+        
+        current = current.replace('/edition/CE', '').replace('/edition/EE', '').replace('/edition/PE', '').replace('/edition/ALL', '');
+        window.location.href = current + '/edition/' + $(this).val();
+    });
+    
+    $('#extension-form select#edition').change(function() {
+        changeVersionByEdition();
+    });
+    
+    changeVersionByEdition();
+    
+    $('#extension-form').submit(function() {
+        $('#extension-form select[name$="_version"]:hidden').remove();
+    });
 });
 
 function progressBarExtension(param) {
@@ -520,4 +504,12 @@ function changeInputSelect() {
         $('.form-stacked.form-input-select select.select-state').hide();
         $('.form-stacked.form-input-select input.input-state').show();
     }
+}
+
+function changeVersionByEdition() {
+    val = $('#extension-form select#edition').val();
+
+    $('#extension-form select#from_version').hide();
+    $('#extension-form select#to_version').hide();
+    $('#extension-form select.'+val).show();
 }

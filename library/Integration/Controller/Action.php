@@ -84,6 +84,10 @@ class Integration_Controller_Action extends Zend_Controller_Action
                 AND ($controller != 'user' || $action != 'logout')
                 AND ($controller != 'index' || $action != 'index')
                 ) {
+                // keep flash messages
+                foreach($this->view->messages as $flash_message) {
+                    $this->_helper->FlashMessenger($flash_message);
+                }
                 // if user selected plan before registration and just activated his account, redirect him to payment form
                 if((int)$user->getPreselectedPlanId() AND $controller == 'user' AND $action == 'dashboard') {
                     return $this->_helper->redirector->gotoRoute(array(

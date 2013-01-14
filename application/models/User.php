@@ -490,7 +490,7 @@ class Application_Model_User {
      */
     public function activateUser($id, $hash)
     {
-        return $this->getMapper()->activateUser($id, $hash, $preselected_plan_id);
+        return $this->getMapper()->activateUser($id, $hash);
     }
 
     public function resetPassword($email)
@@ -537,11 +537,22 @@ class Application_Model_User {
     
     /**
      * Adds user to authorized ftp users
-     * TODO: implement
      */
     public function enableFtp(){
         $config = Zend_Registry::get('config');
-        exec('cd worker; sudo ./ftp-user-add.sh ' . $config->magento->userprefix . $this->getLogin() . ' ; cd ..');
+        $startcwd = getcwd();
+        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
+        
+        chdir($workerfolder);
+        
+        $command = 'cd '.$workerfolder;
+        exec($command,$output);
+
+        exec('sudo ./ftp-user-add.sh ' . $config->magento->userprefix . $this->getLogin() . ' ;');
+        
+        exec('cd '.$startcwd);
+        chdir($startcwd);
+        
     }
     
     /**
@@ -550,7 +561,19 @@ class Application_Model_User {
      */
     public function disableFtp(){
         $config = Zend_Registry::get('config');
-        exec('cd worker; sudo ./ftp-user-remove.sh ' . $config->magento->userprefix . $this->getLogin() . ' ; cd ..');
+        
+        $startcwd = getcwd();
+        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
+        
+        chdir($workerfolder);
+        
+        $command = 'cd '.$workerfolder;
+        exec($command,$output);
+        
+        exec('sudo ./ftp-user-remove.sh ' . $config->magento->userprefix . $this->getLogin() . '');
+        
+        exec('cd '.$startcwd);
+        chdir($startcwd);
     }
     
     /**
@@ -597,6 +620,22 @@ class Application_Model_User {
         }
         
         $deniedList = implode(',',$disableArray);
-        exec('cd worker; sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'" ; cd ..',$output);
+        
+        $startcwd = getcwd();
+        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
+        
+        chdir($workerfolder);
+        
+        $command = 'cd '.$workerfolder;
+        exec($command,$output);
+        
+        if(file_exists('/etc/phpmyadmin') && is_dir('/etc/phpmyadmin')){
+            exec('sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'";',$output);
+        } else {
+            echo 'phpmyadmin config not found in /etc/phpmyadmin, please fix paths accordingly';
+        }
+        
+        exec('cd '.$startcwd);
+        chdir($startcwd);
     }
 }

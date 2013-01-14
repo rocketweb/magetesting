@@ -3,7 +3,7 @@ $(document).ready(function(){
         
         $.ajax({
             type: "POST",
-            url: "/queue/getVersions",
+            url: $('body').data('siteRoot') + "/queue/getVersions",
             data: "edition="+ $("#edition").val(),
             dataType: "json",
             success: function(json){

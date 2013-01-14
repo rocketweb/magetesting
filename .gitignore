@@ -17,3 +17,4 @@ instance/
 store/
 tests/log/
 tests/test.log
+public/assets/

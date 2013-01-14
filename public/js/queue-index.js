@@ -1,4 +1,4 @@
-
+var siteRoot = $('body').data('siteRoot');
 /* status auto-update start*/
 //define globals
 var requests = [],
@@ -25,7 +25,7 @@ function updateStatuses(){
       //make new request
       requests[domain] = $.ajax({
             type: "POST",
-            url: "/queue/getstatus",
+            url: siteRoot + "/queue/getstatus",
             data: "domain=" + domain,
             dataType: "json",
             success: function(json){
@@ -60,7 +60,7 @@ function updateLabel(row, new_status, domain){
             //update pending time counter
             $.ajax({
                 type: "POST",
-                url: "/queue/getminutesleft",
+                url: siteRoot + "/queue/getminutesleft",
                 data: "domain=" + domain,
                 dataType: "json",
                 success: function(json){

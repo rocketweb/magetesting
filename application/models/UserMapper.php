@@ -179,9 +179,9 @@ class Application_Model_UserMapper {
                     // user already activated
                     return 2;
                 }
-                $string_to_hash = $user->getLogin().$user->getEmail().$user->getAddedDate();
 
-                $user_hash = sha1($string_to_hash);
+                $string_to_hash = $user->getLogin().$user->getEmail().$user->getAddedDate();
+                $user_hash = substr(sha1($string_to_hash),0,20);
                 if($user_hash == $hash) {
                     // activate user
                     $user->setStatus('active');
