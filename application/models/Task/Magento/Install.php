@@ -289,7 +289,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
         
-        $storeurl = 'http://'.$serverModel->getDomain() . '/store/' . $this->_storeObject->getDomain(); //fetch from zend config
+        $storeurl = 'http://'.$this->_dbuser.'.'.$serverModel->getDomain() . '/' . $this->_storeObject->getDomain(); //fetch from zend config
         
         $command = 'cd ' . $this->_storeFolder . '/' . $this->_domain . ';sudo  /usr/bin/php -f install.php --' .
                 ' --license_agreement_accepted "yes"' .

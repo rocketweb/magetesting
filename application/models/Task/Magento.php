@@ -251,8 +251,14 @@ extends Application_Model_Task {
        
         exec('sudo touch /etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain());
         exec('sudo mkdir /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser);
-        exec('sudo cp /home/www-data/php5-fcgi /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
+        
+        $this->_createFcgiWrapper();
+        
+        $this->_preparePhpIni();
+        
         exec('sudo chown -R '.$this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser.' /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'');
+        exec('sudo chown root:root /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini');
+        exec('sudo chmod 644 /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini');
         
         $content = "<VirtualHost *:80>
             ServerAdmin support@magetesting.com
@@ -274,6 +280,32 @@ extends Application_Model_Task {
         
         exec('sudo a2ensite '.$this->_dbuser.'.'.$this->_serverObject->getDomain());
         exec('sudo /etc/init.d/apache2 reload');
+    }
+    
+    protected function _createFcgiWrapper(){
+        exec('sudo touch /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
+        $php5fcgi = '#!/bin/sh'.
+        'exec /usr/bin/php5-cgi -c /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini \\'.
+        '-d open_basedir=/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html \\'.
+        '$1';
+        file_put_contents('/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi', $php5fcgi);
+        exec('sudo chmod 755 /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
+    }
+    
+    protected function _preparePhpIni(){
+        exec('sudo cp /etc/php5/apache2/php.ini /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini');
+        
+        //regex to replace disable_functions
+        $functionsToBlock = array('exec','system','shell_exec','passthru');
+        $text = file_get_contents('/etc/php5/apache2/php.ini');
+
+        $currentSetting;
+        preg_match_all('#disable_functions =(.*)#i',$text,$currentSetting);
+        $currentlyDisabled = explode(',',$currentSetting[1][0]);
+        $finalDisabled = array_filter(array_merge($currentlyDisabled,$functionsToBlock));
+
+        $result = preg_replace('#disable_functions =(.*?)#is','disable_functions = '.implode(',',$finalDisabled),$text);
+        
     }
 }
         
