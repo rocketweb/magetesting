@@ -285,9 +285,9 @@ extends Application_Model_Task {
     protected function _createFcgiWrapper(){
         exec('sudo touch /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
         $php5fcgi = '#!/bin/sh'.
-        'exec /usr/bin/php5-cgi -c /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini \\'.
-        '-d open_basedir=/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html \\'.
-        '$1';
+        PHP_EOL.'exec /usr/bin/php5-cgi -c /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini \\'.
+        PHP_EOL.'-d open_basedir=/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html \\'.
+        PHP_EOL.'$1';
         file_put_contents('/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi', $php5fcgi);
         exec('sudo chmod 755 /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
     }
