@@ -12,7 +12,9 @@ defined('APPLICATION_ENV')
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library'),
-    get_include_path(),
+
+// turning this off to not look within folders outside open_basedir
+//    get_include_path(),
 )));
 
 /** Zend_Application */
