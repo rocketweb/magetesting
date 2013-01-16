@@ -50,7 +50,7 @@ extends Application_Model_Task {
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
         
-        $html->assign('storeUrl', 'http://'.$this->userObject->getLogin().'.'.$serverModel->getDomain());
+        $html->assign('storeUrl', 'http://'.$this->_userObject->getLogin().'.'.$serverModel->getDomain());
         $html->assign('backend_name', $this->_storeObject->getBackendName());
         $html->assign('admin_login', $this->_adminuser);
         $html->assign('admin_password', $this->_adminpass);
