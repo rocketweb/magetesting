@@ -1,13 +1,15 @@
 <p>Hi, <?php $v = current($this->data); echo $v['firstname']; ?></p>
 
-<p>Thanks for installing a new extension!  We hope this meets the needs for your store and you are ready to take the next step to start using this extension with your customers.</p>
+<p>Thanks for installing a new extension!  We hope this meets the needs for your store.  Please be sure to thoroughly test this extension and check the Papertrail web based log files to make sure there are no new errors.</p>
 
-<p>Please click the link(s) below to make a purchase.  After purchase you will have access to the code for any final tweaks you'd like to make before putting this on your live store.</p>
+<p>Once you purchase this extension you will have access to the code for any changed you'd like to make before putting this on your live store.</p>
+
+<p>Please click the link(s) below to make a purchase.</p>
 
 <?php foreach($this->data as $record): $record = (object)$record; ?>
     <p><a href="<?php echo $record->url ?>/braintree/form?pay-for=extension&source=extension&domain=<?php echo $record->domain ?>&id=<?php echo $record->extension_id ?>">Buy <?php echo $record->name ?> extension</a></p>
 <?php endforeach; ?>
     
 <p>
-    -- <br /> <a href="http://magetesting.com">magetesting.com</a>
+    -- <br /> <a href="<?php echo $this->storeUrl ?>">magetesting.com</a>
 </p>
