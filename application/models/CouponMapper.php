@@ -76,6 +76,24 @@ class Application_Model_CouponMapper {
         return true;
     }
 
+    public function findByUser($user_id, Application_Model_Coupon $coupon)
+    {
+        $result = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('user_id = ?', $user_id));
+        if (0 == count($result)) {
+            return false;
+        }
+
+        $row = $result->current();
+        $coupon->setId($row->id)
+               ->setCode($row->code)
+               ->setUsedDate($row->used_date)
+               ->setUserId($row->user_id)
+               ->setPlanId($row->plan_id)
+               ->setDuration($row->duration)
+               ->setActiveTo($row->active_to);
+        return $coupon;
+    }
+
     public function fetchAll($activeOnly = false)
     {
         if ($activeOnly===true){

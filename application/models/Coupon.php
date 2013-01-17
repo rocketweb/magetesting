@@ -170,7 +170,11 @@ class Application_Model_Coupon {
     {
         return $this->getMapper()->apply($coupon_id, $user_id);
     }
-    
+
+    public function findByUser($user_id) {
+        return $this->getMapper()->findByUser($user_id, $this);
+    }
+
     public function isUnused()
     {
         if ($this->getUserId()){

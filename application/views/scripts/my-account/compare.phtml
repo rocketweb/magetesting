@@ -187,7 +187,9 @@
                             <?php if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                             <button
                                 type="button" 
+                                <?php if($this->user->getBraintreeTransactionId()): ?>
                                 title="Your payment for plan is being processed now. You will be able to change plan just after payment is settled."
+                                <?php endif; ?>
                                 class="btn btn-large btn-success disabled subscribe-now">Subscribe now</button>
                             <?php else: ?>
                             <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment'), 'default', true); ?>">
@@ -198,7 +200,7 @@
                             </form>
                             <?php endif; ?>
                         <?php else: ?>
-                            <?php $this->getHelper('ServerUrl')->setScheme('https'); ?>
+                            <?php //$this->getHelper('ServerUrl')->setScheme('https'); ?>
                             <form method="post" action="<?php echo $this->serverUrl($this->url(array('controller' => 'user', 'action' => 'register'), 'default', true)); ?>">
                                 <input type="hidden" name="preselected_plan_id" value="<?php echo $plan->getId(); ?>" />
                                 <button type="submit" class="btn btn-large btn-success">Get started</button>
