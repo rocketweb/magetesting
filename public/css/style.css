@@ -209,7 +209,8 @@ p.user-name, .user-name {
     max-width: 100px;
 }
 .screenshots img {
-    max-width: 200px;
+    /*max-width: 200px;*/
+   max-height: 100%;
 }
 
 .nowrap {
@@ -770,19 +771,26 @@ form#extension-filter-form {
 .screenshot-image {
     position: relative;
     display: inline-block;
+    height: 180px;
 }
 .deletion-container {
     text-align: center;
     display: none;
+    position: relative;
 }
 
 .deletion-container .btn {
-    margin-top: 40%;
+	width: 80px;
+	height: 30px;
+    top: 50%;
+    left: 50%;
+    margin-top: 75px;
+    margin-left: -40px;
     position: absolute;
 }
 .deletion-curtain {
     width: 100%;
-    height: 100%;
+    height: 180px;
     background: black;
     display: block;
     position: absolute;

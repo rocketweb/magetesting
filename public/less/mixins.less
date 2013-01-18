@@ -1,3 +1,23 @@
+.Transition(@parameters){
+    transition: @parameters;
+    -o-transition: @parameters;
+    -moz-transition: @parameters;
+    -webkit-transition: @parameters;
+}
+
+.Fade(@direction: 1, @speed: .25s, @ease: ease-in-out) {
+    opacity: @direction;
+    @percent: (100 * @direction);
+    filter:alpha(opacity=@percent);
+    .Transition(opacity @speed @ease);
+    
+    &:hover, &:focus {
+        opacity: (1 - @direction);
+        @percent: (100 * (1 - @direction));
+        filter:alpha(opacity=@percent);
+    }
+}
+	
 .shadow(@strength: 8px) {
 	-webkit-box-shadow: 0 @strength 6px -6px #888;
 	   -moz-box-shadow: 0 @strength 6px -6px #888;

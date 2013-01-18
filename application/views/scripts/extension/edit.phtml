@@ -142,14 +142,14 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                         <div class="span8">
                             <div class="control-group <?php echo ($this->form->screenshots->hasErrors() ? 'error' : ''); ?>">
                                 <label class="control-label required">Screenshots</label>
-                                <div class="controls screenshots">
+                                <div class="controls screenshots thumbnails">
                                     <?php if ($this->form->screenshots->hasErrors()): ?>
                                         <ul class="errors">
                                             <li>You have to upload at least one image.</li>
                                         </ul>
                                     <?php endif; ?>
                                     <?php foreach ($this->screenshots as $key => $screenshot): ?>
-                                        <div class="screenshot-image">
+                                        <div class="screenshot-image thumbnail">
                                             <div class="deletion-container">
                                                 <div class="deletion-curtain"></div>
                                                 <button class="btn btn-danger">Remove</button>
