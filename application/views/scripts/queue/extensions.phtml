@@ -1,6 +1,21 @@
 <?php
     $this->headScript()->appendFile($this->baseUrl('public/js/jquery.isotope.min.js'));
+	
+	$ex = array();
+	foreach($this->extensions as $extension) {
+		$item = array(
+			"id"			=> $extension["id"],
+			"name"			=> $extension["name"],
+			"description"	=> $extension["description"],
+			"author"		=> $extension["author"],
+			"price"			=> $extension['price']
+		);
+		array_push($ex, $item);
+	}
+	$json = json_encode($ex);
 ?>
+<script>var extensions = <?php echo $json;?></script>
+
 <div class="row">
     <div class="span12">
 		<h1>Store '<?php echo $this->store_name; ?>' Extensions</h1>
@@ -10,9 +25,12 @@
     			<div class="mt_filters">
     				<section id="options" class="clearfix">
     					<div class="btn-toolbar">
+	    					<form class="pull-right">
+								<input class="input-medium search-as-you-type" type="text" placeholder="Search">
+							</form>
     						<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
     			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
-    			                <button class="btn btn-small btn-gold" data-option-value=".premium"><i class="icon-star"></i> Premium</button>
+    			                <button class="btn btn-small btn-gold" data-option-value=".premium">Premium</button>
     			                <button class="btn btn-small btn-inverse" data-option-value=".free">Free</button>
     						</div>
     						<div class="btn-group option-set option-center" data-toggle="buttons-radio" data-option-key="filter">
@@ -21,18 +39,19 @@
     			                <button class="btn btn-small" data-option-value=".<?php echo $category->getClass(); ?>"><?php echo $category->getName(); ?></button>
     			            	<?php endforeach; ?>
     						</div>
-    						<div class="btn-group option-set pull-right" data-toggle="buttons-radio" data-option-key="filter">
+    						<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
     			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
     			                <button class="btn btn-small" data-option-value=".installed">Installed</button>
     			                <button class="btn btn-small" data-option-value=".notInstalled">Not installed</button>
     						</div>
     					</div>
+    					
     			    </section>
     			</div>
     			<div class="extensions_well">
     				<div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
     			    <?php foreach($this->extensions as $extension): ?>
-    			        <div class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['store_id'] ? ' installed' : ' notInstalled'); ?>">
+    			        <div id="extension_<?php echo $extension['id']; ?>" class="element <?php echo $extension['category_class']; ?> <?php echo ((float)$extension['price'] ? 'premium' : 'free'), ((int)$extension['store_id'] ? ' installed' : ' notInstalled'); ?>">
     			            <div class="wrapper">
                                 <!-- removing this one for now until some workaround is found -->
     			                	<!--<div class="hover_inner_shadow"></div>-->

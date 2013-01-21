@@ -293,7 +293,94 @@ $(document).ready(function () {
             }
             return false;
         });
+        
+        
+        // Filter as you type functions
+        
+        function cloneJSON(obj) {
+        	return JSON.parse(JSON.stringify(obj));
+		}
+		
+		var maxOnScreen = -1; // -1 no limit
+		var minKeywordLength = 3;
+        var keywords = "";
+		var fields = ["name", "description", "author", "price"];
+        var clonedExtensions = $('.element').clone(true);
+        
+        $search_input = $('#extensions .mt_filters .search-as-you-type');
+        $search_input.typeahead({
+        	source: function(query, process) {
+	            /* For future reference
+	             * 
+	             *$.post(siteRoot + '/extensions/search', { q: query, limit: 8 }, function(data) {
+	                process(JSON.parse(data));
+	            });*/
+	           	var data = cloneJSON(extensions);
+	           	
+	           	$(clonedExtensions).each(function(index){
+        			$this = $(this);
+        			var el = $extensions_isotope.find('#' + $this.attr('id'));
+        			if(!el.length){
+        				$extensions_isotope.isotope( 'insert', $this );
+        			}
+        		});
+        		
+	           	if(query.length >= minKeywordLength){
+	        		var filteredElements = filterExtensions(data, query);
+	        		
+	        		$(clonedExtensions).each(function(index){
+	        			$this = $(this);
+	        			var el = $extensions_isotope.find('#' + $this.attr('id'));
+	        			/*$(filteredElements).each(function(){
+	        				var $element = $(this)[0];
+		        			var id = $extensions_isotope.find('#extension_' + $element.id);
+		        			console.log(id);
+	        			});*/
+	        		});
+	        		
+	        		
+	        		$('.element').each(function(){
+	        			$this = $(this);
+					    if(!$this.hasClass('userFilter')){
+					        $extensions_isotope.isotope( 'remove', $this );
+					    }
+					});
+				} else {
+					$(clonedExtensions).each(function(index){
+	        			$this = $(this);
+	        			var el = $extensions_isotope.find('#' + $this.attr('id'));
+	        			if(!el.length){
+	        				$extensions_isotope.isotope( 'insert', $this );
+	        			}
+	        		});
+				}
+	        }
+        });
+		
+		function filterExtensions( _json, _keywords ){
+			$('.element').removeClass('userFilter');
+			
+			var _results = $.grep(_json, function(value, index) {
+				var found = false;
+				
+				_keywords = _keywords.toLowerCase();
+				
+				for(var i in fields){
+					var v = value[fields[i]].toLowerCase();
+					if(v.indexOf(_keywords) !== -1){
+						$('#extension_' + value['id']).addClass('userFilter');
+						found = true;
+					}
+				}
+				
+				return found;
+			});
+			
+			return _results;
+		}
+        
     }
+    
     // EVENT: On click "Install" button
     $('.install').click(function(event){
         "use strict";
