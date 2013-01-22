@@ -311,6 +311,12 @@ class ExtensionController extends Integration_Controller_Action {
                             'controller' => 'extension',
                             'action'     => 'index',
                     ), 'default', true);
+                } else {
+                    return $this->_helper->redirector->gotoRoute(array(
+                            'module'     => 'default',
+                            'controller' => 'extension',
+                            'action'     => 'index',
+                    ), 'default', true);
                 }
             }
         } else {
