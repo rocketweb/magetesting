@@ -306,55 +306,66 @@ $(document).ready(function () {
         var keywords = "";
 		var fields = ["name", "description", "author", "price"];
         var clonedExtensions = $('.element').clone(true);
+        var f_findExtensions = function(query, process) {
+            /* For future reference
+             * 
+             *$.post(siteRoot + '/extensions/search', { q: query, limit: 8 }, function(data) {
+                process(JSON.parse(data));
+            });*/
+            var data = cloneJSON(extensions);
+            
+            $(clonedExtensions).each(function(index){
+                $this = $(this);
+                var el = $extensions_isotope.find('#' + $this.attr('id'));
+                if(!el.length){
+                    $extensions_isotope.isotope( 'insert', $this );
+                }
+            });
+            
+            if(query.length >= minKeywordLength){
+                var filteredElements = filterExtensions(data, query);
+                
+                $(clonedExtensions).each(function(index){
+                    $this = $(this);
+                    var el = $extensions_isotope.find('#' + $this.attr('id'));
+                    /*$(filteredElements).each(function(){
+                        var $element = $(this)[0];
+                        var id = $extensions_isotope.find('#extension_' + $element.id);
+                        console.log(id);
+                    });*/
+                });
+                
+                
+                $('.element').each(function(){
+                    $this = $(this);
+                    if(!$this.hasClass('userFilter')){
+                        $extensions_isotope.isotope( 'remove', $this );
+                    }
+                });
+            } else {
+                $(clonedExtensions).each(function(index){
+                    $this = $(this);
+                    var el = $extensions_isotope.find('#' + $this.attr('id'));
+                    if(!el.length){
+                        $extensions_isotope.isotope( 'insert', $this );
+                    }
+                });
+            }
+        }
         
         $search_input = $('#extensions .mt_filters .search-as-you-type');
         $search_input.typeahead({
-        	source: function(query, process) {
-	            /* For future reference
-	             * 
-	             *$.post(siteRoot + '/extensions/search', { q: query, limit: 8 }, function(data) {
-	                process(JSON.parse(data));
-	            });*/
-	           	var data = cloneJSON(extensions);
-	           	
-	           	$(clonedExtensions).each(function(index){
-        			$this = $(this);
-        			var el = $extensions_isotope.find('#' + $this.attr('id'));
-        			if(!el.length){
-        				$extensions_isotope.isotope( 'insert', $this );
-        			}
-        		});
-        		
-	           	if(query.length >= minKeywordLength){
-	        		var filteredElements = filterExtensions(data, query);
-	        		
-	        		$(clonedExtensions).each(function(index){
-	        			$this = $(this);
-	        			var el = $extensions_isotope.find('#' + $this.attr('id'));
-	        			/*$(filteredElements).each(function(){
-	        				var $element = $(this)[0];
-		        			var id = $extensions_isotope.find('#extension_' + $element.id);
-		        			console.log(id);
-	        			});*/
-	        		});
-	        		
-	        		
-	        		$('.element').each(function(){
-	        			$this = $(this);
-					    if(!$this.hasClass('userFilter')){
-					        $extensions_isotope.isotope( 'remove', $this );
-					    }
-					});
-				} else {
-					$(clonedExtensions).each(function(index){
-	        			$this = $(this);
-	        			var el = $extensions_isotope.find('#' + $this.attr('id'));
-	        			if(!el.length){
-	        				$extensions_isotope.isotope( 'insert', $this );
-	        			}
-	        		});
-				}
-	        }
+        	source: f_findExtensions
+        }).keyup(function() {
+            // this onChange event will help with showing all extensions when user erased data from field
+            var $this = $(this);
+            if($this.val().length) {
+                $this.removeClass('without-length');
+            } else if(!$this.hasClass('without-length')) {
+                // do not allow to show all extensions more than once if search input has no length
+                $this.addClass('without-length');
+                f_findExtensions($this.val(), null);
+            }
         });
 		
 		function filterExtensions( _json, _keywords ){
@@ -367,7 +378,7 @@ $(document).ready(function () {
 				
 				for(var i in fields){
 					var v = value[fields[i]].toLowerCase();
-					if(v.indexOf(_keywords) !== -1){
+					if(!_keywords || v.indexOf(_keywords) !== -1){
 						$('#extension_' + value['id']).addClass('userFilter');
 						found = true;
 					}
