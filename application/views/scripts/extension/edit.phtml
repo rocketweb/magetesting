@@ -67,22 +67,22 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                     <div class="controls">
                                         <select name="from_version" id="from_version" class="CE span4">
                                         <?php foreach ($this->versionCe as $value): ?>
-                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getFromVersion()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
+                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getFromVersion() OR $value['version'] == $this->form->from_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
                                         <select name="from_version" id="from_version" class="PE span4" style="display: none;">
                                         <?php foreach ($this->versionPe as $value): ?>
-                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getFromVersion()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
+                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getFromVersion() OR $value['version'] == $this->form->from_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
                                         <select name="from_version" id="from_version" class="EE span4" style="display: none;">
                                         <?php foreach ($this->versionEe as $value): ?>
-                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getFromVersion()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
+                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getFromVersion() OR $value['version'] == $this->form->from_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
+                                        
                                     </div>
                                 </div>
-                                
                                 <?php //echo $this->form->from_version; ?>
                             </div>
                             <div class="span4">
@@ -90,17 +90,17 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                     <div class="controls">
                                         <select name="to_version" id="to_version" class="CE span4">
                                         <?php foreach ($this->versionCe as $value): ?>
-                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
+                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion() OR $value['version'] == $this->form->to_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
                                         <select name="to_version" id="to_version" class="PE span4" style="display: none;">
                                         <?php foreach ($this->versionPe as $value): ?>
-                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
+                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion() OR $value['version'] == $this->form->to_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
                                         <select name="to_version" id="to_version" class="EE span4" style="display: none;">
                                         <?php foreach ($this->versionEe as $value): ?>
-                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
+                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion() OR $value['version'] == $this->form->to_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
                                     </div>
