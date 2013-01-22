@@ -223,13 +223,14 @@ class ExtensionController extends Integration_Controller_Action {
                         
                         try {
                             $adapter->setDestination($dir);
-                        } catch (Exception $e) {
+                        } catch (Zend_File_Transfer_Exception $e) {
                             $this->_helper->FlashMessenger(
                                 array(
                                     'type' => 'error',
                                     'message' => $e->getMessage() . ' ' . $dir
                                 )
                             );
+                            $errors = true;
                         }
 
                         $adapter->receive('extension_file');
@@ -257,13 +258,14 @@ class ExtensionController extends Integration_Controller_Action {
                         
                         try {
                             $adapter->setDestination($dir);
-                        } catch (Exception $e) {
+                        } catch (Zend_File_Transfer_Exception $e) {
                             $this->_helper->FlashMessenger(
                                 array(
                                     'type' => 'error',
                                     'message' => $e->getMessage() . ' ' . $dir
                                 )
                             );
+                            $errors = true;
                         }
                         
                         $adapter->receive('extension_encoded_file');
