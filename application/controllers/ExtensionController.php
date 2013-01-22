@@ -220,7 +220,18 @@ class ExtensionController extends Integration_Controller_Action {
                         if(!file_exists($dir)) {
                             @mkdir($dir, 0777, true);
                         }
-                        $adapter->setDestination($dir);
+                        
+                        try {
+                            $adapter->setDestination($dir);
+                        } catch (Exception $e) {
+                            $this->_helper->FlashMessenger(
+                                array(
+                                    'type' => 'error',
+                                    'message' => $e->getMessage() . ' ' . $dir
+                                )
+                            );
+                        }
+
                         $adapter->receive('extension_file');
                         
                         if($extension->getExtension() AND $extension->getExtension() != $extension_new_name) {
@@ -243,7 +254,18 @@ class ExtensionController extends Integration_Controller_Action {
                         if(!file_exists($dir)) {
                             @mkdir($dir, 0777, true);
                         }
-                        $adapter->setDestination($dir);
+                        
+                        try {
+                            $adapter->setDestination($dir);
+                        } catch (Exception $e) {
+                            $this->_helper->FlashMessenger(
+                                array(
+                                    'type' => 'error',
+                                    'message' => $e->getMessage() . ' ' . $dir
+                                )
+                            );
+                        }
+                        
                         $adapter->receive('extension_encoded_file');
                         
                         if($extension->getExtensionEncoded() AND $extension->getExtensionEncoded() != $extension_encoded_new_name) {
