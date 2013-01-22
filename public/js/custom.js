@@ -302,7 +302,7 @@ $(document).ready(function () {
 		}
 		
 		var maxOnScreen = -1; // -1 no limit
-		var minKeywordLength = 3;
+		var minKeywordLength = 0;
         var keywords = "";
 		var fields = ["name", "description", "author", "price"];
         var clonedExtensions = $('.element').clone(true);
