@@ -322,10 +322,9 @@ $(document).ready(function () {
             $extensions_isotope.isotope({ filter: '.matches' });
         }
 
+        // prevent form submitting for query search field
+        $search_input.parents('form:first').submit(function() { return false; })
         $search_input.keyup(function(e) {
-            if(event.keyCode == 13) {
-                e.preventDefault();
-            }
             var newValue_search_input = $search_input.val();
             // allow filtering only when query input was filed or truncated
             if(lastValue_search_input.length != newValue_search_input.length || lastValue_search_input != newValue_search_input) {
