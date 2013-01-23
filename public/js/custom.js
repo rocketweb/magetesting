@@ -304,7 +304,7 @@ $(document).ready(function () {
             $extensions = $('.element');
 
         var f_filterExtensionsByQuery = function f_filterExtensionsByQuery() {
-            var queryString = $search_input.val();
+            var queryString = $search_input.val().toLowerCase();
             $extensions.each(function(k, e) {
                 var $element = $(e);
                 if(!queryString ||
