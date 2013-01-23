@@ -323,8 +323,8 @@ $(document).ready(function () {
         }
 
         $search_input.keyup(function(e) {
-            if(e.which == 32) {
-                return false;
+            if(event.keyCode == 13) {
+                e.preventDefault();
             }
             var newValue_search_input = $search_input.val();
             // allow filtering only when query input was filed or truncated
