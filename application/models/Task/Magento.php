@@ -147,6 +147,8 @@ extends Application_Model_Task {
             }
             
             $this->_userObject->setHasSystemAccount(1)->save();
+            
+            $this->_createUserTmpDir();
             $this->_createVirtualHost();
         }
     }
@@ -282,29 +284,43 @@ extends Application_Model_Task {
         exec('sudo /etc/init.d/apache2 reload');
     }
     
+    protected function _createUserTmpDir(){
+         exec('sudo mkdir /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp');
+         exec('sudo chmod 777 /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp');
+    }
+    
     protected function _createFcgiWrapper(){
         exec('sudo touch /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
         $php5fcgi = '#!/bin/sh'.
         PHP_EOL.'exec /usr/bin/php5-cgi -c /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini \\'.
-        PHP_EOL.'-d open_basedir=/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html \\'.
+        PHP_EOL.'-d open_basedir=/home/'.$this->config->magento->userprefix . $this->_dbuser.' \\'.
         PHP_EOL.'$1';
         file_put_contents('/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi', $php5fcgi);
         exec('sudo chmod 755 /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
     }
     
     protected function _preparePhpIni(){
-        exec('sudo cp /etc/php5/apache2/php.ini /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini');
+        
+        $userPhpIni = '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini';
+        
+        exec('sudo cp /etc/php5/apache2/php.ini '.$userPhpIni);
         
         //regex to replace disable_functions
         $functionsToBlock = array('exec','system','shell_exec','passthru');
-        $text = file_get_contents('/etc/php5/apache2/php.ini');
+        $text = file_get_contents($userPhpIni);
 
         $currentSetting;
         preg_match_all('#disable_functions =(.*)#i',$text,$currentSetting);
         $currentlyDisabled = explode(',',$currentSetting[1][0]);
         $finalDisabled = array_filter(array_merge($currentlyDisabled,$functionsToBlock));
 
+        //overwrite disable_functions option
         $result = preg_replace('#disable_functions =(.*?)#is','disable_functions = '.implode(',',$finalDisabled),$text);
+        
+        //overwrite upload_tmp_dir option to users dir
+        $result = preg_replace('#(;)?upload_tmp_dir(.*)#is','upload_tmp_dir = /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp/');
+        
+        file_put_contents($userPhpIni,$result);
         
     }
 }
