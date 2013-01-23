@@ -60,8 +60,9 @@ implements Application_Model_Task_Interface {
         
         chdir($startCwd);
 
-        $this->_sendStoreReadyEmail();
+        $this->_reindexStore();
         
+        $this->_sendStoreReadyEmail();
     }
 
     protected function _prepareFileSystem() {

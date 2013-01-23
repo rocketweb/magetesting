@@ -320,8 +320,12 @@ extends Application_Model_Task {
         //overwrite upload_tmp_dir option to users dir
         $result = preg_replace('#(;)?upload_tmp_dir(.*)#is','upload_tmp_dir = /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp/');
         
-        file_put_contents($userPhpIni,$result);
-        
+        file_put_contents($userPhpIni,$result);  
+    }
+
+    /* Running this prevents store from reindex requirement in admin */
+    protected function _reindexStore(){
+        exec('php /home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php --reindex all');
     }
 }
         
