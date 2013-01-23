@@ -309,8 +309,8 @@ $(document).ready(function () {
                 var $element = $(e);
                 if(!queryString ||
                    (
-                     $element.find('.info').text().match(queryString) ||
-                     $element.find('.description').text().match(queryString)
+                     $element.find('.info').text().toLowerCase().match(queryString) ||
+                     $element.find('.description').text().toLowerCase().match(queryString)
                    )
                 ) {
                     $element.addClass('matches');
