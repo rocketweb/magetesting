@@ -164,15 +164,15 @@ extends Application_Model_Task {
         $config = $this->config;
         $html = new Zend_View();
         $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
-        // assign valeues
-        $html->assign('ftphost', $config->magento->ftphost);
-        $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
-        $html->assign('ftppass', $user_details['systempass']);
-
+        
+        // assign values
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
+        $html->assign('ftphost', 'http://'.$this->_userObject->getLogin().'.'.$serverModel->getDomain());
+        $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
+        $html->assign('ftppass', $user_details['systempass']);
         
-        $html->assign('storeUrl', 'http://'.$serverModel->getDomain());
+        $html->assign('storeUrl', 'http://'.$config->magento->storeUrl);
 
         // render view
         $bodyText = $html->render('ftp-account-credentials.phtml');
