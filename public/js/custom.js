@@ -322,7 +322,10 @@ $(document).ready(function () {
             $extensions_isotope.isotope({ filter: '.matches' });
         }
 
-        $search_input.keyup(function() {
+        $search_input.keyup(function(e) {
+            if(e.which == 32) {
+                return false;
+            }
             var newValue_search_input = $search_input.val();
             // allow filtering only when query input was filed or truncated
             if(lastValue_search_input.length != newValue_search_input.length || lastValue_search_input != newValue_search_input) {
