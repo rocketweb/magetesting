@@ -234,7 +234,7 @@ $(document).ready(function () {
     }
 
     /* STORE EXTENSIONS ISOTOPE */
-    var $extensions_isotope = $('.extensions_well > #container'),
+    var $extensions_isotope = $('.extensions_well > #container'),  // it should be change to #extensions_isotope or smth
         $extensions_filter_container = $('#options'),
         $extensions_filter_options = $extensions_filter_container.find('button')
         ElementPad        = 5,
@@ -296,100 +296,47 @@ $(document).ready(function () {
         
         
         // Filter as you type functions
-        
-        function cloneJSON(obj) {
-        	return JSON.parse(JSON.stringify(obj));
-		}
-		
-		var maxOnScreen = -1; // -1 no limit
-		var minKeywordLength = 0;
-        var keywords = "";
-		var fields = ["name", "description", "author", "price"];
-        var clonedExtensions = $('.element').clone(true);
-        var f_findExtensions = function(query, process) {
-            /* For future reference
-             * 
-             *$.post(siteRoot + '/extensions/search', { q: query, limit: 8 }, function(data) {
-                process(JSON.parse(data));
-            });*/
-            var data = cloneJSON(extensions);
-            
-            $(clonedExtensions).each(function(index){
-                $this = $(this);
-                var el = $extensions_isotope.find('#' + $this.attr('id'));
-                if(!el.length){
-                    $extensions_isotope.isotope( 'insert', $this );
+        var keyTime, // it informs keyup event when last key was pressed
+            delayTime = 500, // pause between key pressing before we fire up filtering - default = 1000 ms = 1 second
+            $search_input = $('.search-as-you-type'),
+            lastValue_search_input = '',
+            lastTimeout,
+            $extensions = $('.element');
+
+        var f_filterExtensionsByQuery = function f_filterExtensionsByQuery() {
+            var queryString = $search_input.val();
+            $extensions.each(function(k, e) {
+                var $element = $(e);
+                if(!queryString ||
+                   (
+                     $element.find('.info').text().match(queryString) ||
+                     $element.find('.description').text().match(queryString)
+                   )
+                ) {
+                    $element.addClass('matches');
+                } else {
+                    $element.removeClass('matches');
                 }
             });
-            
-            if(query.length >= minKeywordLength){
-                var filteredElements = filterExtensions(data, query);
-                
-                $(clonedExtensions).each(function(index){
-                    $this = $(this);
-                    var el = $extensions_isotope.find('#' + $this.attr('id'));
-                    /*$(filteredElements).each(function(){
-                        var $element = $(this)[0];
-                        var id = $extensions_isotope.find('#extension_' + $element.id);
-                        console.log(id);
-                    });*/
-                });
-                
-                
-                $('.element').each(function(){
-                    $this = $(this);
-                    if(!$this.hasClass('userFilter')){
-                        $extensions_isotope.isotope( 'remove', $this );
-                    }
-                });
-            } else {
-                $(clonedExtensions).each(function(index){
-                    $this = $(this);
-                    var el = $extensions_isotope.find('#' + $this.attr('id'));
-                    if(!el.length){
-                        $extensions_isotope.isotope( 'insert', $this );
-                    }
-                });
-            }
+
+            $extensions_isotope.isotope({ filter: '.matches' });
         }
-        
-        $search_input = $('#extensions .mt_filters .search-as-you-type');
-        $search_input.typeahead({
-        	source: f_findExtensions
-        }).keyup(function() {
-            // this onChange event will help with showing all extensions when user erased data from field
-            var $this = $(this);
-            if($this.val().length) {
-                $this.removeClass('without-length');
-            } else if(!$this.hasClass('without-length')) {
-                // do not allow to show all extensions more than once if search input has no length
-                $this.addClass('without-length');
-                f_findExtensions($this.val(), null);
+
+        $search_input.keyup(function() {
+            var newValue_search_input = $search_input.val();
+            // allow filtering only when query input was filed or truncated
+            if(lastValue_search_input.length != newValue_search_input.length || lastValue_search_input != newValue_search_input) {
+                // set lastValue to current value
+                lastValue_search_input = newValue_search_input;
+                keyTime = (new Date()).getTime(); // pressed key ms
+                // erase last timeout
+                if(lastTimeout) {
+                    clearTimeout(lastTimeout);
+                }
+                // set new timeout execution
+                lastTimeout = setTimeout(f_filterExtensionsByQuery, delayTime);
             }
         });
-		
-		function filterExtensions( _json, _keywords ){
-			$('.element').removeClass('userFilter');
-			
-			var _results = $.grep(_json, function(value, index) {
-				var found = false;
-				
-				_keywords = _keywords.toLowerCase();
-				
-				for(var i in fields){
-					var v = value[fields[i]].toLowerCase();
-					if(!_keywords || v.indexOf(_keywords) !== -1){
-						$('#extension_' + value['id']).addClass('userFilter');
-						found = true;
-					}
-				}
-				
-				return found;
-			});
-			
-			return _results;
-		}
-        
     }
     
     // EVENT: On click "Install" button
