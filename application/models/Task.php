@@ -6,22 +6,46 @@
 
 class Application_Model_Task {
 
+    /**
+     *  @var Application_Model_Queue 
+     */
     protected $_queueObject = '';
+    
+    /**
+     *  @var Application_Model_Store 
+     */
     protected $_storeObject = '';
+    
+    /** 
+     * @var Application_Model_User 
+     */
     protected $_userObject = '';
+    
+    /**
+     *  @var Application_Model_Version 
+     */
     protected $_versionObject = '';
+    
+    /**
+     *  @var Application_Model_Server 
+     */
+    protected $_serverObject ='';
     
     protected $_storeFolder = '';
     protected $config;
     protected $db;
     protected $filePrefix;
+    
+    /**
+     *
+     * @var Zend_Log
+     */
     protected $logger;
     
     public function __construct(&$config,&$db) {
         
         $this->config = $config;
         $this->db = $db;
-        
         $this->filePrefix = array(
             'CE' => 'magento',
             'EE' => 'enterprise',
@@ -45,9 +69,13 @@ class Application_Model_Task {
         $versionModel = new Application_Model_Version();
         $versionModel->find($storeModel->getVersionId());
         
+        $serverModel = new Application_Model_Server();
+        $serverModel->find($storeModel->getServerId());
+        
         $this->_storeObject = $storeModel;
         $this->_userObject = $userModel;
         $this->_versionObject = $versionModel;
+        $this->_serverObject = $serverModel;
         
         $this->_storeFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html';
 

@@ -12,6 +12,7 @@ USERLOGIN=${args[0]}
 #decides if we need to restart ftp server
 RESTART=0
 
+touch /etc/vsftpd.chroot_list_temp
 
 #and the code that handles it
 if grep -q $USERLOGIN $FILE; then

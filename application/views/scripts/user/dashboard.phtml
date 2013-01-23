@@ -172,10 +172,10 @@ And this is button from autologin feature
 */
 ?>
                         	    <a target="_blank"
-                                    href="<?php echo 'http://'.$item['server_domain'].'/store/'.$item['domain'].'/'.$item['backend_name']; ?>"
+                                    href="<?php echo 'http://'.$this->user->login.'.'.$item['server_domain'].'/'.$item['domain'].'/'.$item['backend_name']; ?>"
                                     class="btn btn-mini admin-panel pull-right"
                                 ><i class="icon icon-wrench"></i> Admin Panel</a>
-                            	<a target="_blank" href="<?php echo $this->getScheme().$item['server_domain'].'/store/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
+                            	<a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
                             </div>
                         </div>
                         <div class="span6 left-content">

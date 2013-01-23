@@ -79,7 +79,7 @@
                 <a class="btn btn-success disabled"><i class="icon-white icon-eye-close"></i>&nbsp;Visit</a>
                 <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php else: ?>
-                <a href="<?php echo $this->baseUrl('store/'.$item['domain']); ?>" class="btn btn-success"><i class="icon-white icon-eye-open"></i>&nbsp;Visit</a>
+                <a href="<?php echo 'http://'.$item['login'].'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-success"><i class="icon-white icon-eye-open"></i>&nbsp;Visit</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger delete-store admin"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php endif;?>
             </td>

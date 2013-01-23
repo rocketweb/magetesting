@@ -99,6 +99,19 @@ if($result) {
         }
         //--------------SYSTEM/MYSQL PART END--------------
 
+        //--------------VIRTUALHOST PART START-------------
+        $serverModel = new Application_Model_Server();
+        $serverModel->find($user->getServerId());
+            
+        exec('sudo a2dissite '.$user->getLogin().'.'.$serverModel->getDomain());
+        
+        $vhostfile = '/etc/apache2/sites-available/'.$user->getLogin().'.'.$serverModel->getDomain();
+        if(file_exists($vhostfile)){
+            unlink($vhostfile);
+        }
+        
+        exec('sudo /etc/init.d/apache2 reload');
+        //--------------VIRTUALHOST PART END-------------
 
         //--------------MAGETESTING PART START-------------
         try {
