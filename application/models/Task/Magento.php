@@ -318,7 +318,7 @@ extends Application_Model_Task {
         $result = preg_replace('#disable_functions =(.*?)#is','disable_functions = '.implode(',',$finalDisabled),$text);
         
         //overwrite upload_tmp_dir option to users dir
-        $result = preg_replace('#(;)?upload_tmp_dir(.*)#is','upload_tmp_dir = /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp/');
+        $result = preg_replace('#(;)?upload_tmp_dir(.*)#is','upload_tmp_dir = /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp/',$result);
         
         file_put_contents($userPhpIni,$result);  
     }
