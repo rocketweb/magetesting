@@ -74,7 +74,7 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log('Unpacking and installing extension.', Zend_Log::INFO);
 
-        $tmp = sys_get_temp_dir();
+        $tmp = '/home/'.$this->config->magento->userprefix . $this->_userObject->getLogin().'/tmp/';
         $tmpExtensionDir = $tmp.
                             '/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . 
                             '/'.$this->_storeObject->getDomain().
