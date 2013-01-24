@@ -28,6 +28,17 @@ class UserController extends Integration_Controller_Action
         $planModel = new Application_Model_Plan();
         $planModel->find($this->auth->getIdentity()->plan_id);
 
+        $dateActive = new DateTime($this->auth->getIdentity()->plan_active_to);
+        $dateToday = new DateTime();
+        $interval = $dateToday->diff($dateActive);
+        $diff = (int)$interval->format('%R%a');
+        
+        if($planModel->getAutoRenew() == 0 AND $diff <= 7) {
+            $message['type']    = 'notice';
+            $message['message'] = 'You are using '.$planModel->getName().' plan and it will expire in '.$diff.' days';
+            $this->view->messages = array($message);
+        }
+        
         $this->view->planModel = $planModel;
         $this->view->user = $this->auth->getIdentity();
         $this->view->userGroup = $this->view->user->group;
