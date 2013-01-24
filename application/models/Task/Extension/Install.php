@@ -74,7 +74,7 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log('Unpacking and installing extension.', Zend_Log::INFO);
 
-        $tmp = '/home/'.$this->config->magento->userprefix . $this->_userObject->getLogin().'/tmp/';
+        $tmp = '/home/'.$this->config->magento->userprefix . $this->_userObject->getLogin().'/extensiontmp';
         $tmpExtensionDir = $tmp.
                             '/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . 
                             '/'.$this->_storeObject->getDomain().
@@ -133,6 +133,8 @@ implements Application_Model_Task_Interface {
         $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
         unset($output);
         
+        //remove tmpextensiondir
+        exec('sudo rm -R '.$tmp);
     }    
 
 }
