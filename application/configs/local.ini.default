@@ -19,6 +19,9 @@ magento.userprefix = "mi_"
 magento.usersalt = "a63hd93u" ;used for mysql user password creation
 magento.systemHomeFolder = "/home" ;where should user store folders land in
 
+;SQL Limit on imported files in bytes - 536870912 by default (500mb)
+magento.sqlDumpByteLimit = 536870912
+
 google.analyticsId = ""
 
 user.activationEmail.subject = "Activate your account for magetesting.com"

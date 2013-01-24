@@ -26,7 +26,7 @@ implements Application_Model_Task_Interface {
         /* Instantiate Transport Model */
         try {
             $transportModel = new Application_Model_Transport();
-            $transportModel = $transportModel->factory($this->_storeObject, $this->logger);
+            $transportModel = $transportModel->factory($this->_storeObject, $this->logger, $this->config);
         } catch (Application_Model_Transport_Exception $e) {
             $this->logger->log($e->getMessage(),Zend_Log::ERR);
             throw new Application_Model_Task_Exception($e->getMessage());

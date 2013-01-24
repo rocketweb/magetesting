@@ -8,11 +8,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     protected $_customFile = '';
     protected $_customSql = ''; 
     
-    public function setup(Application_Model_Store &$store, $logger = NULL){
+    public function setup(Application_Model_Store &$store, $logger = NULL, $config = NULL){
         
         $this->_storeObject = $store;
         
-        parent::setup($store, $logger);
+        parent::setup($store, $logger, $config);
         $this->_prepareCustomVars($store);
     }
     
@@ -154,17 +154,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command,$output);
 
-        //$message = var_export($output, true);
-
         foreach ($output as $out) {
             if (substr($out, 0, 8) == '==> SIZE') {
                 $sqlSizeInfo = explode(' ... ', $out);
             }
         }
-
-        /*if(isset($sqlSizeInfo[1])){
-            //$log->log($sqlSizeInfo[1], LOG_DEBUG);
-        }*/
 
        //limit is in bytes!
         if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){                       
@@ -190,7 +184,6 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "--password='".$this->_storeObject->getCustomPass()."' ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
-        //$message = var_export($output, true);
         
         unset($output);
         

@@ -3,7 +3,7 @@
 class Application_Model_Transport {
     
     /* In Bytes */
-    protected $_sqlFileLimit = '60000000'; // move to config and set during setup?
+    protected $_sqlFileLimit = ''; // move to config and set during setup?
     
     protected $_protocol = '';
     protected $_host = '';
@@ -13,9 +13,11 @@ class Application_Model_Transport {
     
     protected $logger = NULL;
     
-    public function setup(Application_Model_Store &$store, $logger = NULL){
+    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
         $this->setConnection($store);
 
+        $this->_sqlFileLimit = $config->magento->sqlDumpByteLimit;
+        
         if ($logger instanceof Zend_Log) {
             $this->logger = $logger;
         }

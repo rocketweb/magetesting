@@ -11,11 +11,11 @@ extends Application_Model_Transport {
 
     private $_connection;
 
-    public function setup(Application_Model_Store &$store, $logger = NULL){
+    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
 
         $this->_storeObject = $store;
 
-        parent::setup($store, $logger);
+        parent::setup($store, $logger, $config);
         
         $this->_prepareCustomVars($store);
 
