@@ -715,17 +715,36 @@ class QueueController extends Integration_Controller_Action {
         
         $revisionModel = new Application_Model_Revision();
         $revisionModel->getLastForStore($store->id);
+        if ($revisionModel->getExtensionId()){
+            $extensionId = $revisionModel->getExtensionId();
+        } else { 
+            $extensionId = 0;
+        }
+        
+        $queueModel = new Application_Model_Queue();
+        
+        /**
+         * When user will click 2 times for rollback, using middle button, 
+         * script will add 2 rollback task and one will hang infinitely.
+         * Following lines are here to prevent it 
+         */
+        
+        if ($queueModel->alreadyExists('RevisionRollback', $store->id, $extensionId, $store->server_id)){
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
+        
+        
         
         /* add task with RevisionRollback */
-        $queueModel = new Application_Model_Queue();
+        
         $queueModel->setStoreId($store->id);
         $queueModel->setStatus('pending');
         $queueModel->setUserId($store->user_id);
-        if ($revisionModel->getExtensionId()){
-                $queueModel->setExtensionId($revisionModel->getExtensionId());
-        } else { 
-                $queueModel->setExtensionId(0);
-        }
+        $queueModel->setExtensionId($extensionId);
         $queueModel->setParentId(0);
         $queueModel->setServerId($store->server_id);
         $queueModel->setTask('RevisionRollback');

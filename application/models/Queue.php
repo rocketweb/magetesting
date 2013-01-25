@@ -277,4 +277,13 @@ class Application_Model_Queue {
             * $model->findPositionByName($domain);
     }
     
+    /**
+     * Used to prevent adding the same task twice.
+     * @param type $taskType - e.g MagentoInstall
+     * @return boolean
+     */
+    public function alreadyExists($taskType,$storeId,$extensionId=0,$serverId=1){      
+        return $this->getMapper()->alreadyExists($taskType,$storeId,$extensionId,$serverId);
+    }
+    
 }

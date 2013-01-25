@@ -135,4 +135,9 @@ class Application_Model_QueueMapper {
                     ->findPositionByName($storeName);
         
     }
+    
+    public function alreadyExists($taskType,$storeId,$extensionId=NULL,$serverId=1){
+        return $this->getDbTable()
+                    ->alreadyExists($taskType,$storeId,$extensionId,$serverId);
+    }
 }
