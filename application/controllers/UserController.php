@@ -34,8 +34,10 @@ class UserController extends Integration_Controller_Action
         $diff = (int)$interval->format('%R%a');
         
         if($planModel->getAutoRenew() == 0 AND $diff <= 7) {
+            $diff++;
+            $s = $diff > 1 ? 's' : '';
             $message['type']    = 'notice';
-            $message['message'] = 'You are using '.$planModel->getName().' plan and it will expire in '.$diff.' days';
+            $message['message'] = 'You are using '.$planModel->getName().' plan and it will expire in '.$diff.' day'.$s;
             $this->view->messages = array($message);
         }
         
