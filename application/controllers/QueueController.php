@@ -721,7 +721,11 @@ class QueueController extends Integration_Controller_Action {
         $queueModel->setStoreId($store->id);
         $queueModel->setStatus('pending');
         $queueModel->setUserId($store->user_id);
-        $queueModel->setExtensionId($revisionModel->getExtensionId());
+        if ($revisionModel->getExtensionId()){
+                $queueModel->setExtensionId($revisionModel->getExtensionId());
+        } else { 
+                $queueModel->setExtensionId(0);
+        }
         $queueModel->setParentId(0);
         $queueModel->setServerId($store->server_id);
         $queueModel->setTask('RevisionRollback');
