@@ -113,6 +113,8 @@ implements Application_Model_Task_Interface {
 
         $this->_importAdminFrontname();
 
+        $this->_cleanLogTables();
+        
         $store_path = str_replace('/application/../store/', '/store/', STORE_PATH);
 
         $this->logger->log('Added symbolic link for store directory.', Zend_Log::INFO);
@@ -470,6 +472,28 @@ implements Application_Model_Task_Interface {
      
         $where = array('id = ?' => $this->_storeObject->getId());
         $this->db->update('store', $set, $where);
+    }
+    
+    protected function _cleanLogTables(){
+        
+        $tablesToClean = array(
+            'log_customer',
+            'log_quote',
+            'log_summary',
+            'log_summary_type',
+            'log_url',
+            'log_url_info',
+            'log_visitor',
+            'log_visitor_info',
+            'log_visitor_online',
+            'sendfriend_log'
+        );
+        
+        foreach ($tablesToClean as $tableName){
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
+                ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . 
+                ' -e "TRUNCATE TABLE \`'.$tableName.'\`"');
+        }
     }
     
 }
