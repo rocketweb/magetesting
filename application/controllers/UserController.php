@@ -281,8 +281,14 @@ class UserController extends Integration_Controller_Action
         $form = new Application_Form_UserRegister();
         $form->populate($user->__toArray());
 
-        $form->getElement('login')->addValidator('Db_NoRecordExists',false,
-                array('table' => 'user', 'field' => 'login'));
+        $regex = new Zend_Validate_Regex("/^[a-z0-9_-]+$/");
+        $regex->setMessage('Allowed chars: lowercase a-z, digits, dash, underscore', 'regexNotMatch');
+        
+        $form->getElement('login')
+                ->addValidator('Db_NoRecordExists',false,
+                    array('table' => 'user', 'field' => 'login')
+                )
+                ->addValidator($regex);
         
         $useCoupons = $this->getInvokeArg('bootstrap')
                               ->getResource('config')

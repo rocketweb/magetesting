@@ -10,8 +10,8 @@ class Application_Form_UserRegister extends Integration_Form
         $this->setAttrib('class', 'form-stacked form-register');
 
         // Add a login element
-        $regex = new Zend_Validate_Regex("/^[a-z0-9_-]+$/i");
-        $regex->setMessage('Allowed chars: a-z, digits, dash, underscore', 'regexNotMatch');
+        $regex = new Zend_Validate_Regex("/^[a-z0-9_-]+$/");
+        $regex->setMessage('Allowed chars: lowercase a-z, digits, dash, underscore', 'regexNotMatch');
         $this->addElement('text', 'login', array(
                 'label'      => 'Username',
                 'required'   => true,
