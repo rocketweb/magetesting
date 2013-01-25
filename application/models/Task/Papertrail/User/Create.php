@@ -14,9 +14,15 @@ implements Application_Model_Task_Interface {
 
     public function process(Application_Model_Queue $queueElement = null) {
         $this->_updateStoreStatus('creating-papertrail-user');
-
+        
         $this->logger->log('Creating papertrail user.', Zend_Log::INFO);
 
+        if($this->_userObject->getHasPapertrailAccount() 
+            && $this->_userObject->getPapertrailApiToken()){
+            $this->logger->log('User already exist in papertrail, will not try to create it through API.', Zend_Log::INFO);
+            return true;
+        }
+        
         $id = $this->config->papertrail->prefix . (string) $this->_userObject->getId();
         
         $output = array(
