@@ -129,9 +129,9 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                         ->setIntegrityCheck(false)
                         ->from($this->_name)
                         ->where("store_id = ?", $storeId)
-                        ->where('task != ?', $taskType)
-                        ->where('extension_id != ?', $extensionId)
-                        ->where('server_id', $serverId);
+                        ->where('task = ?', $taskType)
+                        ->where('extension_id = ?', $extensionId)
+                        ->where('server_id = ?', $serverId);
 
         if(count($this->fetchAll($select)) > 0){
             return true;
