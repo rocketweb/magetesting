@@ -799,7 +799,7 @@ form#extension-filter-form {
 }
 
 /* fix for close button when error during installation occured */
-.accordion-group .accordion-heading .accordion-toggle .in-use {
+.accordion-group .accordion-heading .accordion-toggle .in-use.error-bar {
     float: left;
     margin-left: 20px;
 }

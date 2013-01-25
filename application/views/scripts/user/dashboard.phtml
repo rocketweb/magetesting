@@ -101,7 +101,7 @@
                         endswitch;
                     ?>
                         <div class="span4 right-content pull-right">
-                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''); ?>">
+                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''); ?>">
                                 <?php if($item['status'] == 'error'): ?>
                                 <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Error occured. Please contact with administrator.'  ?>" data-trigger="hover">
                                 <?php endif; ?>
