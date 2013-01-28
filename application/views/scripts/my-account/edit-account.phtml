@@ -10,7 +10,7 @@
 	        	    
 	        	    <div class="tab-stripe"></div>
 	        	    <fieldset>
-	        	        <legend>Account details</legend>
+	        	        <legend>Login Details</legend>
 	        	        <div class="row">
 	        	            <div class="span4">
 	        	                <?php echo $this->form->login; ?>
@@ -31,7 +31,7 @@
 	        	    
 	        	    <div class="tab-stripe"></div>
 	        	    <fieldset>
-	        	        <legend>Personal details</legend>
+	        	        <legend>Personal Details</legend>
 	        	        <div class="row">
 	        	            <div class="span4">
 	        	                <?php echo $this->form->firstname; ?>
@@ -59,7 +59,7 @@
 	        	            </div>
 	        	            <div class="span4">
                                         <div class="control-group">
-                                        <label for="state" class="state-label required">State</label>
+                                        <label for="state" class="state-label required">State / Province</label>
                                             <?php echo $this->form->state; ?>
                                             <input class="input-state span4"type="text" name="state" value="<?php echo $this->form->getValue('state') != 'Select State' ? $this->form->getValue('state') : ''; ?>" style="display: none" />
 	        	            

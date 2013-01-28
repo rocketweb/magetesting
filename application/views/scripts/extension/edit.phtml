@@ -52,7 +52,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                     </fieldset>
                     <div class="tab-stripe"></div>
                     <fieldset>
-                        <legend>Versioning / Specific info</legend>
+                        <legend>Version / Compatability</legend>
                         <div class="row">
                             <div class="span4">
                                 <?php echo $this->form->version; ?>
@@ -131,7 +131,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                     <?php endif; ?>
                                     <?php if ($this->form->logo->hasErrors()): ?>
                                         <ul class="errors">
-                                            <li>You have to upload image first.</li>
+                                            <li>Please upload an image first.</li>
                                         </ul>
                                     <?php endif; ?>
                                 </div>
@@ -145,7 +145,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                 <div class="controls screenshots thumbnails">
                                     <?php if ($this->form->screenshots->hasErrors()): ?>
                                         <ul class="errors">
-                                            <li>You have to upload at least one image.</li>
+                                            <li>Please upload at least one image.</li>
                                         </ul>
                                     <?php endif; ?>
                                     <?php foreach ($this->screenshots as $key => $screenshot): ?>
