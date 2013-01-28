@@ -21,6 +21,7 @@ magento.systemHomeFolder = "/home" ;where should user store folders land in
 
 ;SQL Limit on imported files in bytes - 536870912 by default (500mb)
 magento.sqlDumpByteLimit = 536870912
+magento.storeDumpByteLimit = 1073741824
 
 google.analyticsId = ""
 

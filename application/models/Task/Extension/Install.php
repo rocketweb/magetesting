@@ -79,16 +79,19 @@ implements Application_Model_Task_Interface {
                             '/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . 
                             '/'.$this->_storeObject->getDomain().
                             '/'.$this->_extensionObject->getId();
-        mkdir($tmpExtensionDir, 0777, true);
+        
+        if (!file_exists($tmpExtensionDir)){
+            mkdir($tmpExtensionDir, 0777, true);
+        }
         
         if ($this->_extensionObject->getPrice() > 0 ){
-            $command = 'tar -zxvf '.$this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded().' -C '. $tmpExtensionDir
-            ;
+            $command = 'tar -zxvf '.$this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded().
+            ' -C '. $tmpExtensionDir;
             
         } else {
             $command = 'tar -zxvf '.
-                $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension().
-                ' -C '.$tmpExtensionDir;
+            $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension().
+            ' -C '.$tmpExtensionDir;
 
         }
         

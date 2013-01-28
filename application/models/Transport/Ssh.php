@@ -216,7 +216,34 @@ extends Application_Model_Transport {
             $this->_errorMessage = 'Couldn\'t find data file, will not install queue element';
             throw new Application_Model_Transport_Exception($this->_errorMessage);     
         }
+        
 
+        /*check downloaded package filesize */
+        if($output = ssh2_exec($this->_connection, 'du -b '.$this->_customSql.'')) {
+            stream_set_blocking($output, true);
+            $content = stream_get_contents($output);
+        }
+
+        if ($this->logger instanceof Zend_Log) {
+            $this->logger->log('Checking package file size.', Zend_Log::INFO);
+            $this->logger->log("\n" . $content . "\n", Zend_Log::DEBUG);
+        }
+
+        // Since du should return something like '12345   filename.ext'
+        $duParts = explode("\t",$content);
+        $sqlSizeInfo = $duParts[0];
+
+       //limit is in bytes!
+        if ($duParts[0] == 'du:' && $duParts[1] == 'cannot' && $duParts[1]=='access'){                       
+            $this->_errorMessage = 'Couldn\'t find store package file, will not install';
+            throw new Application_Model_Transport_Exception($this->_errorMessage);
+        }
+
+        if ($sqlSizeInfo > $this->_storeFileLimit){
+            $this->_errorMessage = 'Store file is too big';
+            throw new Application_Model_Transport_Exception($this->_errorMessage);
+        }
+        
         /* Download file*/
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
         $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
@@ -249,7 +276,7 @@ extends Application_Model_Transport {
         }
 
         /* move files from unpacked dir into our instance location */
-        echo 'mageroot:'.$mageroot;
+        //echo 'mageroot:'.$mageroot;
         $output = array();
         $command = 'sudo mv '.$mageroot.'/.??* .';
         exec($command,$output);
@@ -259,7 +286,7 @@ extends Application_Model_Transport {
         $command = 'sudo mv '.$mageroot.'/* .';
         exec($command,$output);
         unset($output);
-        echo 'post-mageroot';
+        //echo 'post-mageroot';
 
         return true;
     }
