@@ -219,7 +219,7 @@ extends Application_Model_Transport {
         
 
         /*check downloaded package filesize */
-        if($output = ssh2_exec($this->_connection, 'du -b '.$this->_customSql.'')) {
+        if($output = ssh2_exec($this->_connection, 'du -b '.$this->_customFile.'')) {
             stream_set_blocking($output, true);
             $content = stream_get_contents($output);
         }
@@ -252,11 +252,15 @@ extends Application_Model_Transport {
                 .' -p'.$this->_customPort.' "cat '.$this->_customFile.'"'
                 .' | sudo tar -xzvf - -C .';
         exec($command,$output);
+        $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
                      
         //locate mage file 
         $output = array();
         $mageroot = '';
-        exec('find -L -name Mage.php',$output);      
+        $command = 'find -L -name Mage.php';
+        exec($command,$output);      
+        $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
+
 
         /* no matchees found */
         if ( count($output) == 0 ){
