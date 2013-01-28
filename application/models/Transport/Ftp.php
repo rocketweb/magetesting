@@ -175,6 +175,35 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         return true;
     }
     
+        protected function _checkStoreDump(){
+        $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customFile." 2>&1 ".
+            "--passive-ftp ".
+            "--user='".$this->_storeObject->getCustomLogin()."' ".
+            "--password='".$this->_storeObject->getCustomPass()."' ".
+            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
+        exec($command,$output);
+
+        foreach ($output as $out) {
+            if (substr($out, 0, 8) == '==> SIZE') {
+                $packageSizeInfo = explode(' ... ', $out);
+            }
+        }
+
+       //limit is in bytes!
+        if ($packageSizeInfo[1] == 'done' || $packageSizeInfo[1] == 0){                       
+            $this->_errorMessage = 'Couldn\'t find store package file.';
+            throw new Application_Model_Transport_Exception($this->_errorMessage);
+        }
+        unset($output);
+
+        if ($packageSizeInfo[1] > $this->_storeFileLimit){
+            $this->_errorMessage = 'Store file is too big.';
+            throw new Application_Model_Transport_Exception($this->_errorMessage);
+        }
+        
+        return true;
+    }
+    
     public function downloadDatabase(){
         
         $command = "wget  ".$this->_customHost.":".$this->_customPort."".$this->_customSql." ".
@@ -207,6 +236,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     protected function _downloadAndUnpack(){
+        
+        $this->_checkStoreDump();
         
         //download file
         $command = "wget  ".$this->_customHost.":".$this->_customPort."".$this->_customFile." ".

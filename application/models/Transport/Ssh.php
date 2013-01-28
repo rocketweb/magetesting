@@ -231,7 +231,7 @@ extends Application_Model_Transport {
 
         // Since du should return something like '12345   filename.ext'
         $duParts = explode("\t",$content);
-        $sqlSizeInfo = $duParts[0];
+        $packageSizeInfo = $duParts[0];
 
        //limit is in bytes!
         if ($duParts[0] == 'du:' && $duParts[1] == 'cannot' && $duParts[1]=='access'){                       
@@ -239,7 +239,7 @@ extends Application_Model_Transport {
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
 
-        if ($sqlSizeInfo > $this->_storeFileLimit){
+        if ($packageSizeInfo > $this->_storeFileLimit){
             $this->_errorMessage = 'Store file is too big';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
