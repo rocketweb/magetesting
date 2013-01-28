@@ -62,6 +62,8 @@ implements Application_Model_Task_Interface {
 
         $this->_reindexStore();
         
+        $this->_createLocalXml();
+        
         $this->_sendStoreReadyEmail();
     }
 
@@ -348,6 +350,25 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         file_put_contents($this->_storeFolder .'/'. $this->_domain.'/app/code/core/Mage/Install/etc/config.xml',$configXml);
         unset($configXml);
         
+    }
+    
+    protected function _createLocalXml() {
+        $localXmlPath = $this->_storeFolder . '/' . $this->_domain.'/app/design/adminhtml/default/default/layout/local.xml';
+        $data = '<layout> 
+                   <default> 
+                        <remove name="notification_security" /> 
+                        <remove name="notification_survey" /> 
+                    </default> 
+                 </layout> ';
+        $flag = 0;
+        
+        if (file_exists($localXmlPath)) {
+            $flag = FILE_APPEND;
+        } else {
+            $data = '<?xml version="1.0"?>' . $data;
+        }
+        
+        file_put_contents($localXmlPath, $data, $flag);
     }
     
 }
