@@ -139,4 +139,15 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
             return false;
         }
     }
+    
+    public function getNextForStore($storeId){
+
+        $select = $this->select()
+                       ->from($this->_name)
+                       ->where($this->_name.'.store_id = ?',$storeId)
+                       ->order(array('queue.id ASC', 'parent_id asc'))
+                       ->limit(1);
+
+        return $this->fetchRow($select);
+    }
 }

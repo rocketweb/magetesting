@@ -286,4 +286,11 @@ class Application_Model_Queue {
         return $this->getMapper()->alreadyExists($taskType,$storeId,$extensionId,$serverId);
     }
     
+    /**
+     * used in worker 
+     * when updating store status to next element type
+     */
+    public function getNextForStore($storeId){
+        return $this->getMapper()->getNextForStore($storeId);
+    }
 }

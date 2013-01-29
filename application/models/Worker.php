@@ -33,11 +33,22 @@ class Application_Model_Worker {
             /** 
              * if no other tasks are present for this store, 
              * update store status to ready
-             * Otherwise, leave current status until we jump to next task
+             * Otherwise, update status so we know what's in queue
              */
             $queueModel = new Application_Model_Queue();
             if(!$queueModel->countForStore($queueElement->getStoreId())){
                 $this->db->update('store', array('status' => 'ready'), 'id = ' . $queueElement->getStoreId());
+            } else {
+                /**
+                 * update store status to new task type
+                 */
+                $storeModel = new Application_Model_Store();
+                $nextElement = $queueModel->getNextForStore($queueElement->getStoreId());
+                $newStatus = $storeModel->getStatusFromTask($nextElement->getTask());
+                $this->db->update('store', 
+                        array('status' => $newStatus), 
+                        'id = ' . $queueElement->getStoreId()
+                        );
             }
         } catch (Application_Model_Task_Exception $e){
             $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());

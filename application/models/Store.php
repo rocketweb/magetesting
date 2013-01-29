@@ -410,4 +410,9 @@ class Application_Model_Store {
       $this->_custom_file = $value;
       return $this;
     }
+    
+    public function getStatusFromTask($taskName){
+        return $this->getMapper()->getStatusFromTask($taskName);
+    }
+    
 }

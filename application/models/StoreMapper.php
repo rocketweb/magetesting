@@ -194,5 +194,27 @@ class Application_Model_StoreMapper {
         return $this->getDbTable()
                     ->findByDomain($domain);
     }
+    
+    public function getStatusFromTask($taskName){
+        
+        $possibleStatuses = array(
+            'ExtensionInstall' => 'installing-extesion',
+            'ExtensionOpensource' => 'installing-extension', /*special case*/
+            'MagentoDownload' => 'downloading-magento',
+            'MagentoInstall' => 'installing-magento',
+            'MagentoRemove' => 'removing-magento',
+            'RevisionCommit' => 'committing-revision',
+            'RevisionDeploy' => 'deploying-revision',
+            'RevisionRollback' => 'rolling-back-revision',
+            'RevisionInit' => 'committing-revision', /*special case*/
+            'PapertrailUserCreate' => 'creating-papertrail-user',
+            'PapertrailUserRemove' => 'removing-papertrail-user',
+            'PapertrailSystemCreate' => 'creating-papertrail-system',
+            'PapertrailSystemRemove' => 'removing-papertrail-system'
+        );
+        
+        return $possibleStatuses[$taskName];
+        
+    }
 
 }

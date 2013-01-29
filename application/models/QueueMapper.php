@@ -140,4 +140,8 @@ class Application_Model_QueueMapper {
         return $this->getDbTable()
                     ->alreadyExists($taskType,$storeId,$extensionId,$serverId);
     }
+    
+    public function getNextForStore($storeId){
+        return $this->getDbTable()->getNextForStore($storeId);
+    }
 }
