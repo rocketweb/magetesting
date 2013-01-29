@@ -265,8 +265,8 @@ class Application_Model_Queue {
         return $this->getMapper()->findPositionByName($storeName)->num;
     }
     
-    public function findPositionByUserandId($user_id,$queue_id) {
-        return $this->getMapper()->findPositionByUserandId($user_id,$queue_id)->num;
+    public function findPositionByUserAndId($user_id,$queue_id) {
+        return $this->getMapper()->findPositionByUserAndId($user_id,$queue_id)->num;
     }
     
     /**
@@ -284,7 +284,7 @@ class Application_Model_Queue {
     public static function getTimeLeftByUserAndId($user_id,$queue_id) {
         $model = new self;
         return Zend_Registry::get('config')->magento->storeTimeExecution 
-            * $model->findPositionByUserandId($user_id,$queue_id);
+            * $model->findPositionByUserAndId($user_id,$queue_id);
     }
     
     /**
