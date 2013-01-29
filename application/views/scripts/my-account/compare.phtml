@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="span12">
-        <h1>Pricing</h1>
+        <h1>Mage Testing Plan Comparison and Pricing</h1>
         <?php $user = $this->user; ?>
         <table class="compare-table" style="margin-bottom: 20px">
             <thead>
@@ -188,22 +188,22 @@
                             <button
                                 type="button" 
                                 <?php if($this->user->getBraintreeTransactionId()): ?>
-                                title="Your payment for plan is being processed now. You will be able to change plan just after payment is settled."
+                                title="Your payment for your current plan is being processed now. It make take up to 24 hours for this to complete.  You will be able to change your plan immediately after your initial payment has settled."
                                 <?php endif; ?>
-                                class="btn btn-large btn-success disabled subscribe-now">Subscribe now</button>
+                                class="btn btn-large btn-success disabled subscribe-now">Subscribe Now</button>
                             <?php else: ?>
                             <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment'), 'default', true); ?>">
                                 <input type="hidden" name="pay-for" value="<?php echo ($this->user->hasPlanActive() ? 'change-plan' : 'plan'); ?>" />
                                 <input type="hidden" name="source" value="plan" />
                                 <input type="hidden" name="id" value="<?php echo $plan->getId(); ?>" />
-                                <button type="submit" class="btn btn-large btn-success">Get started</button>
+                                <button type="submit" class="btn btn-large btn-success">Get Started</button>
                             </form>
                             <?php endif; ?>
                         <?php else: ?>
                             <?php $this->getHelper('ServerUrl')->setScheme('https'); ?>
                             <form method="post" action="<?php echo $this->serverUrl($this->url(array('controller' => 'user', 'action' => 'register'), 'default', true)); ?>">
                                 <input type="hidden" name="preselected_plan_id" value="<?php echo $plan->getId(); ?>" />
-                                <button type="submit" class="btn btn-large btn-success">Get started</button>
+                                <button type="submit" class="btn btn-large btn-success">Get Started</button>
                             </form>
                             <?php $this->getHelper('ServerUrl')->setScheme('http'); ?>
                         <?php endif;?>

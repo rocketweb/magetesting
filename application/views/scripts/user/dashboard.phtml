@@ -5,10 +5,10 @@
         <input id="base-url" type="hidden" value="<?php echo $this->baseUrl(); ?>" />
 
         <?php if($storeCount > 0 AND $storeCount < $this->planModel->getStores()): ?>
-        <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add new store</a>
+        <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add New Store</a>
         <?php endif; ?>
 
-        <h1>Your stores</h1>
+        <h1>Your Magento Stores</h1>
         <!-- START ACCORDION -->
         <div class="accordion" id="accordion">
 
@@ -20,27 +20,27 @@
                     <div class="accordion-toggle">
                         <div class="for-use ready pull-right">
                             <a target="_blank" href="#" class="btn btn-faded btn-mini view-store disabled"><i class="icon icon-white icon-home"></i> View Store</a>
-                            <a href="#" class="btn btn-mini btn-faded admin-panel disabled"><i class="icon icon-white icon-wrench"></i> Admin Panel</a>
+                            <a href="#" class="btn btn-mini btn-faded admin-panel disabled"><i class="icon icon-white icon-wrench"></i> Access Admin</a>
                         </div>
                     </div>
                 </div>
                 <div class="accordion-body collapse in mt_store">
                     <div class="accordion-inner">
                         <?php if ($this->user->plan_id == 0 ): ?>
-                            <a href="<?php echo $this->url(array('controller'=>'my-account', 'action' => 'compare'))?>" class="btn btn-red btn-select-plan-to-add"><i class="icon icon-white icon-plus-sign"></i> Select plan to add your first store</a>
+                            <a href="<?php echo $this->url(array('controller'=>'my-account', 'action' => 'compare'))?>" class="btn btn-red btn-select-plan-to-add"><i class="icon icon-white icon-plus-sign"></i> Select a plan to add your first store</a>
                         <?php else: ?>
                             <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red btn-add-store"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a>
                         <?php endif; ?>
                         <div class="row version-info">
                             <div class="span2 first"><strong>Edition:</strong></div>
                             <div class="span2"><strong>Version:</strong></div>
-                            <div class="span2"><strong>Sample data:</strong></div>
+                            <div class="span2"><strong>Sample Data:</strong></div>
                         </div>
                         <p class="description"></p>
                         <div class="row">
                             <!-- START DETAILS BOX -->
                             <div class="span4 panel details">
-                                <h5>Details</h5>
+                                <h5>Configuration</h5>
                                 <div class="control-group">
                                     <div class="controls">
                                         <a href="#" class="btn btn-inverse btn-faded disabled"><i class="icon icon-cog"></i> Extensions</a>
@@ -55,7 +55,7 @@
                                 <h5>Deployment</h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <a href="#" class="btn btn-faded rollback-button disabled"><i class="icon icon-white icon-circle-arrow-left"></i> Roll Back</a>
+                                        <a href="#" class="btn btn-faded rollback-button disabled"><i class="icon icon-white icon-circle-arrow-left"></i> Rollback</a>
                                         <a href="#" class="btn btn-faded commit-button disabled" ><i class="icon icon-white icon-ok-sign"></i> Commit</a>
                                         <a href="#" class="btn btn-faded deploy-button disabled">Deploy <i class="icon icon-white icon-circle-arrow-right"></i> </a>
                                     </div>
@@ -65,7 +65,7 @@
 
                             <!-- START PROBLEMS BOX -->
                             <div class="span3 panel">
-                                <h5>Problems</h5>
+                                <h5>Troubleshooting</h5>
                                 <div class="control-group">
                                     <div class="controls">
                                         <a href="#" class="btn btn-faded disabled"><i class="icon icon-white icon-info-sign"></i> Show Logs</a>
@@ -175,7 +175,7 @@ And this is button from autologin feature
                                 <a target="_blank"
                                     href="<?php echo 'http://'.$this->user->login.'.'.$item['server_domain'].'/'.$item['domain'].'/'.$item['backend_name']; ?>"
                                     class="btn btn-mini admin-panel pull-right"
-                                ><i class="icon icon-wrench"></i> Admin Panel</a>
+                                ><i class="icon icon-wrench"></i> Access Admin</a>
                                 <a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
                             <?php endif; ?>
                             </div>
@@ -194,20 +194,20 @@ And this is button from autologin feature
                             <div class="span2 first"><strong>Edition:</strong> <?php echo $this->escape($item['edition']); ?></div>
                             <div class="span2"><strong>Version:</strong> <?php echo $this->escape($item['version']); ?> </div>
                             <div class="span2">
-                                <strong>Sample data:</strong>
+                                <strong>Sample Data:</strong>
                             <?php if($item['sample_data']): ?>
                                 Yes
                             <?php else: ?>
                                 No
                             <?php endif; ?>
                             </div>
-                            <div class="span3"><strong>Added:</strong> <?php echo date("M j, Y H:i A",strtotime($item['created_at'])); ?></div>
+                            <div class="span3"><strong>Store Added:</strong> <?php echo date("M j, Y H:i A",strtotime($item['created_at'])); ?></div>
                         </div>
                         <p class="description"><?php echo $item['description']; ?></p>
                         <div class="row">
                             <!-- START DETAILS BOX -->
                             <div class="span4 panel details">
-                                <h5>Details</h5>
+                                <h5>Configuration</h5>
                                 <div class="control-group">
                                     <div class="controls">
                                    	<?php if(in_array($item['status'], array('closed'))): ?>
@@ -236,7 +236,7 @@ And this is button from autologin feature
                                            class="btn rollback-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>"
                                            data-comment="<?php echo $item['comment']; ?>"
                                            >
-                                            <i class="icon icon-circle-arrow-left"></i> Roll Back
+                                            <i class="icon icon-circle-arrow-left"></i> Rollback
                                         </a>
                                         <a href="#" class="btn commit-button<?php echo ((int)$item['revision_count'] > 0 ? '' : ' disabled'); ?>" ><i class="icon icon-ok-sign"></i> Commit</a>
                                         <a href="#" class="btn deploy-button<?php echo ((int)$item['revision_count'] > 1 ? '' : ' disabled'); ?>">Deploy <i class="icon icon-circle-arrow-right"></i> </a>
@@ -248,7 +248,7 @@ And this is button from autologin feature
 
                             <!-- START PROBLEMS BOX -->
                             <div class="span3 panel">
-                                <h5>Problems</h5>
+                                <h5>Troubleshooting</h5>
                                 <div class="control-group">
                                     <div class="controls">
                                         <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
@@ -276,12 +276,12 @@ And this is button from autologin feature
 <div id="commitModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Commit your changes</h3>
+        <h3 id="myModalLabel">Commit Your Changes</h3>
     </div>
     <div class="modal-body">
-        <p>All your changes made manually will be commited to repository</p>
+        <p>All your changes will be committed to the repository.</p>
         <p>
-            Briefly explain what has been changed:
+            Briefly explain what you have changed since the last commit:
             <br />
             <textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here" ></textarea>
         </p>
@@ -289,7 +289,7 @@ And this is button from autologin feature
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary commit-confirm">Commit changes</button>
+        <button class="btn btn-primary commit-confirm">Commit Changes</button>
     </div>
 </div>
 
@@ -320,14 +320,14 @@ And this is button from autologin feature
         </div>
         <div class="modal-body">
             <p class="rollback">
-                This will rollback<span class="rollback-name"></span>. Are you sure you want rollback theese changes?
+                This will rollback<span class="rollback-name"></span>. Are you sure you want rollback these changes?
             </p>
-            <div class="rollback alert">Note: all changes made in magento admin panel after that extension installation will be lost.</div>
+            <div class="rollback alert">Note: any changes you may have made to code or in the Magento admin after the last commit will be lost.</div>
             <p class="commit">
-                This will save state of all files added and edited using FTP in your store. You will have an ability to rollback that change in the future. Are you sure you want to continue?<br />
+                This will save state of all files added and edited using FTP in your store. You will have the ability to rollback the last commit you've made. Are you sure you want to continue?<br />
                 <label>Your comment:</label>
                 <textarea id="commit_comment" name="commit_comment" placeholder="Add your comment here"></textarea>
-                <span class="help-block">Briefly explain what has been changed.</span>
+                <span class="help-block">Briefly explain what has been changed since the last commit.</span>
             </p>
             <div class="deploy">
                 <table class="table table-striped table-condensed">
@@ -344,15 +344,15 @@ And this is button from autologin feature
         </div>
         <div class="modal-footer">
             <div class="commit">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">No, cancel</button>
-                <button type="submit" value="commit" name="action" class="btn btn-primary">Yes, commit</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button type="submit" value="commit" name="action" class="btn btn-primary">Commit</button>
             </div>
             <div class="rollback">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">No, cancel</button>
-                <button type="submit" value="rollback" name="action" class="btn btn-primary">Yes, please rollback</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button type="submit" value="rollback" name="action" class="btn btn-primary">Rollback</button>
             </div>
             <p class="deploy pull-left">
-                Choose saved state of your store and download that to deploy on your server.
+                Choose saved state of your store and download a zip file of all changes to upload to your live store.
             </p>
         </div>
     </form>

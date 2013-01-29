@@ -42,7 +42,7 @@
     						<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
     			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
     			                <button class="btn btn-small" data-option-value=".installed">Installed</button>
-    			                <button class="btn btn-small" data-option-value=".notInstalled">Not installed</button>
+    			                <button class="btn btn-small" data-option-value=".notInstalled">Not Installed</button>
     						</div>
     					</div>
     					
@@ -107,7 +107,7 @@
     			                <div class="extras hidden">
     			                    <p class="description"><?php echo $extension['description']; ?></p>
     		                    <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
-    		                        <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View screens</a>
+    		                        <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View Screenshots</a>
     		                        <!-- START EXTENSION'S SCREENSHOTS -->
     		                        <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions -->
     		                        <ul class="screenshots hidden">
