@@ -644,11 +644,12 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(true);
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
-        $domain = $request->getParam('domain', null);
+        $userid = $request->getParam('user', null);
+        $queueid = $request->getParam('queue', null);
         
         if ($request->isPost() && $domain != null) {
             $this->_response->setBody(
-                Application_Model_Queue::getTimeLeftByStoreDomain($domain)
+                Application_Model_Queue::getTimeLeftByUserAndId($userid,$queueid)
             );
         } 
     }

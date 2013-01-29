@@ -123,6 +123,20 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
         return $this->fetchRow($select);
     }
     
+    public function findPositionByUserAndId($user_id,$queue_id){
+            
+        $select = $this->select()
+                    ->setIntegrityCheck(false)
+                    ->from($this->_name, array('num' => 'count(id)'))
+                    ->where("id <= '".$queue_id."' ")
+                    ->where("user_id <= '".$user_id."' ")
+                    ->where('status != ?', 'ready')
+                    ->where('status != ?', 'error')
+                    ->where('retry_count < ?', 4);
+
+        return $this->fetchRow($select);
+    }
+    
     public function alreadyExists($taskType,$storeId,$extensionId,$serverId)
     {
         $select = $this->select()

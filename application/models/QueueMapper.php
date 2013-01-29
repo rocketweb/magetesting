@@ -136,6 +136,12 @@ class Application_Model_QueueMapper {
         
     }
     
+    public function findPositionByUserAndId($user_id,$queue_id)
+    {
+        return $this->getDbTable()
+                    ->findPositionByUserAndId($user_id,$queue_id);
+    }
+    
     public function alreadyExists($taskType,$storeId,$extensionId=NULL,$serverId=1){
         return $this->getDbTable()
                     ->alreadyExists($taskType,$storeId,$extensionId,$serverId);

@@ -132,7 +132,7 @@ function updateLabel(row, new_status) {
         $.ajax({
             type: "POST",
             url: $('body').data('siteRoot') + "/queue/gettimeleft",
-            data: "domain=" + row.find(".storedomain").val(),
+            data: "queue=" + row.find(".queueval").val() + "&user="+ row.find(".userval").val(),
             dataType: "json",
             success: function(json) {
                 row.find("span.statusHolder").html(niceStatus(new_status) + " - " + leftTime(json));

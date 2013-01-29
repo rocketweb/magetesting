@@ -114,7 +114,7 @@
                                     <?php else:*/ ?>
                                         <?php echo $this->niceStatus($item['status']); ?>
                                         <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
-                                            - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByStoreDomain($item['domain'])); ?>
+                                        - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByUserAndId($item['user_id'],$item['id'])); ?>
                                         <?php endif; ?>
                                     </span>
                                 <?php if($item['status'] == 'error'): ?>
@@ -185,6 +185,8 @@ And this is button from autologin feature
                             <div class="span5"><?php echo $this->escape($item['store_name']) ?></div>
                         </div>
                         <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
+                        <input type="hidden" class="queueval" value="<?php echo $this->escape($item['id']) ?>" />
+                        <input type="hidden" class="userval" value="<?php echo $this->escape($item['user_id']) ?>" />
                     </div>
                 </div>
                 <?php if($item['status'] != 'closed'): ?>
