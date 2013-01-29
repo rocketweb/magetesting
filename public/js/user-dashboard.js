@@ -176,6 +176,11 @@ function niceStatus(status) {
 }
 
 function leftTime(seconds) {
+    
+    if (seconds == null || seconds == 0 ){
+        location.reload();
+    }
+    
     string = '';
     denominator = 60;
     
