@@ -16,6 +16,7 @@ class UserController extends Integration_Controller_Action
 
     public function dashboardAction()
     {
+
         $storeModel = new Application_Model_Store();
 
         $page = (int) $this->_getParam('page', 0);

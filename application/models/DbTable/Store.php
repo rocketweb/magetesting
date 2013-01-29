@@ -40,10 +40,11 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
                        )
                 ->joinLeft('server','server.id = '.$this->_name.'.server_id',array('server_domain'=>'domain'))
                 ->joinLeft('queue','queue.server_id = '.$this->_name.'.server_id AND store.id = queue.store_id')
-                       ->where('user_id = ?', $user_id)
-                       ->where('status != ?', 'removing-magento')
+                       ->where('store.user_id = ?', $user_id)
+                       ->where('store.status != ?', 'removing-magento')
                        ->group(array('store.id'))
-                       ->order(array('status asc', 'store.id asc'));
+                        ->order(array('queue.id asc'));
+                       //->order(array('status asc', 'store.id asc'));
 
         return $select;
     }
