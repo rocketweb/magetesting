@@ -55,7 +55,7 @@
                 <div class="progress progress-striped install-bar active" data-domain="<?php echo $item['domain']; ?>" style="margin-bottom:0px;margin-top:5px;">
                     <div class="bar" style="width: 100%;">
                     <?php if($item['status'] == 'pending'): ?>
-                        In Queue - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByUserAndId($item['user_id'],$item['id'])); ?>
+                        In Queue - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByUserAndId($item['user_id'],$item['queue_id'])); ?>
                     <?php else: ?>
                         <?php echo ucwords(str_replace('-', ' ', $item['status'])); ?>
                     <?php endif; ?>
