@@ -148,6 +148,19 @@ class Application_Model_QueueMapper {
     }
     
     public function getNextForStore($storeId){
-        return $this->getDbTable()->getNextForStore($storeId);
+        $row = $this->getDbTable()->getNextForStore($storeId);
+        $entry = new Application_Model_Queue();
+            $entry->setId($row->id)
+            ->setStoreId($row->store_id)
+            ->setStatus($row->status)
+            ->setUserId($row->user_id)
+            ->setExtensionId($row->extension_id)
+            ->setTask($row->task)
+            ->setTaskParams($row->task_params,false)
+            ->setRetryCount($row->retry_count)
+            ->setServerId($row->server_id)
+            ->setParentId($row->parent_id)
+            ->setAddedDate($row->added_date);
+            return $entry;
     }
 }
