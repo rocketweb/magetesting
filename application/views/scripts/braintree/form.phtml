@@ -15,7 +15,7 @@
                     <?php if($this->address['street']): ?>
                         <input type="hidden" id="has-prefilled-data" value="1" />
                     <?php endif; ?>
-                        <legend>Personal details</legend>
+                        <legend>Personal Details</legend>
                         <div class="row">
                             <div class="span4">
                                 <div class="control-group">
@@ -39,7 +39,7 @@
                         <div class="row">
                             <div class="span4">
                                 <div class="control-group">
-                                    <label for="billing_street_address" class="control-label required">Street</label>
+                                    <label for="billing_street_address" class="control-label required">Street Address</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][street_address]" id="billing_street_address" value="<?php echo $this->address['street']; ?>" />
                                     </div>
@@ -47,7 +47,7 @@
                             </div>
                             <div class="span4">
                                 <div class="control-group">
-                                    <label for="billing_postal_code" class="control-label required">Postal Code</label>
+                                    <label for="billing_postal_code" class="control-label required">Zip / Postal Code</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][postal_code]" id="billing_postal_code" value="<?php echo $this->address['postal_code']; ?>" />
                                     </div>
@@ -86,7 +86,7 @@
                             </div>
                             <div class="span4">
                                 <div class="control-group">
-                                    <label for="billing_region" class="control-label required">State</label>
+                                    <label for="billing_region" class="control-label required">State / Province</label>
                                     <div class="controls" id="region">
                                         <select name="transaction[billing][region]" id="billing_region" class="select-state span4">
                                             <option value="Select State" label="Select State">Select State</option>
@@ -123,7 +123,7 @@
                         <div class="row">
                             <div class="span4">
                                 <div class="control-group <?php echo (isset($this->errors['exp_date']) ? 'error' : ''); ?>">
-                                    <label for="braintree_credit_card_exp" class="control-label required">Credit Card Expiration Date</label>
+                                    <label for="braintree_credit_card_exp" class="control-label required">Credit Card Expiration</label>
                                     <div class="controls">
                                         <select class="span2" id="exp-date-month">
                                             <option value="">Month</option>
@@ -174,7 +174,7 @@
                         </button>
                     <?php if(!$this->show_billing_and_card): ?>
                         <p class="pull-right braintree-vault-note">
-                            Your Credit Card saved in secure Braintree Vault will be used for payment.
+                            Your Credit Card saved in the secure Braintree Payment Gateway Vault will be used for payment.
                         </p>
                     <?php endif; ?>
 
