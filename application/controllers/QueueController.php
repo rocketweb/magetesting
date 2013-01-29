@@ -647,7 +647,7 @@ class QueueController extends Integration_Controller_Action {
         $userid = $request->getParam('user', null);
         $queueid = $request->getParam('queue', null);
         
-        if ($request->isPost() && $domain != null) {
+        if ($request->isPost() && $userid != null && $queueid != null) {
             $this->_response->setBody(
                 Application_Model_Queue::getTimeLeftByUserAndId($userid,$queueid)
             );
