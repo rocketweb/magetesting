@@ -55,7 +55,7 @@
                    title="<?php echo $supported_versions; ?>">
                 <?php echo $extension['edition']; ?></a>
             </td>
-            <td><?php echo $extension['price']; ?></td>
+            <td>$<?php printf("%d", $extension['price']); ?></td>
             <td class="nowrap">
                 <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-success"><i class="icon-pencil icon-white"></i> Edit</a>
                 <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete</a>
