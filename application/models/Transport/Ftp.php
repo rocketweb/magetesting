@@ -17,11 +17,15 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     public function checkProtocolCredentials(){
-        exec("wget --spider ".$this->_customHost.":".$this->_customPort." ".
+        $command = "wget --spider ".$this->_customHost.":".$this->_customPort." ".
              "--passive-ftp ".
              "--user='".$this->_storeObject->getCustomLogin()."' ".
-             "--password='".$this->_storeObject->getCustomPass()."' ".
-             "".$this->_customHost.":".$this->_customPort." 2>&1 | grep 'Logged in!'",$output);
+             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
+             "".$this->_customHost.":".$this->_customPort." 2>&1 | grep 'Logged in!'";
+        
+        exec($command, $output);
+        $message = var_export($output, true);
+        $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         if (!isset($output[0])){
             throw new Application_Model_Transport_Exception('Couldn\'t log in with given ftp credentials');
@@ -97,7 +101,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."app/Mage.php 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_storeObject->getCustomLogin()."' ".
-            "--password='".$this->_storeObject->getCustomPass()."' ".
+            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command, $output);
         $message = var_export($output, true);
@@ -130,7 +134,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
                     $this->_customRemotePath."shell,".
                     $this->_customRemotePath."skin' " .
              "--user='".$this->_storeObject->getCustomLogin()."' ".
-             "--password='".$this->_storeObject->getCustomPass()."' ".
+             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
              "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."";
         exec($command, $output);
         $message = var_export($output, true);
@@ -150,7 +154,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customSql." 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_storeObject->getCustomLogin()."' ".
-            "--password='".$this->_storeObject->getCustomPass()."' ".
+            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command,$output);
 
@@ -179,7 +183,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customFile." 2>&1 ".
             "--passive-ftp ".
             "--user='".$this->_storeObject->getCustomLogin()."' ".
-            "--password='".$this->_storeObject->getCustomPass()."' ".
+            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command,$output);
 
@@ -210,7 +214,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "--passive-ftp ".
             "-N ".  
             "--user='".$this->_storeObject->getCustomLogin()."' ".
-            "--password='".$this->_storeObject->getCustomPass()."' ".
+            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
         
@@ -244,7 +248,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "--passive-ftp ".
             "-N ".  
             "--user='".$this->_storeObject->getCustomLogin()."' ".
-            "--password='".$this->_storeObject->getCustomPass()."' ".
+            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
         $message = var_export($output, true);
