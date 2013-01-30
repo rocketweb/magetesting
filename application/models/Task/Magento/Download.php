@@ -358,8 +358,8 @@ implements Application_Model_Task_Interface {
         $serverModel->find($this->_storeObject->getServerId());
                 
         //update core_config_data with new url
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_config_data\` SET \`value\` = \''.'http://'.$serverModel->getDomain().'/store/'.$this->_domain.'/\' WHERE \`path\`=\'web/unsecure/base_url\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_config_data\` SET \`value\` = \''.'http://'.$serverModel->getDomain().'/store/'.$this->_domain.'/\' WHERE \`path\`=\'web/secure/base_url\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_config_data\` SET \`value\` = \''.'http://'.$this->_dbuser.'.'.$serverModel->getDomain().'/'.$this->_domain.'/\' WHERE \`path\`=\'web/unsecure/base_url\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_config_data\` SET \`value\` = \''.'http://'.$this->_dbuser.'.'.$serverModel->getDomain().'/'.$this->_domain.'/\' WHERE \`path\`=\'web/secure/base_url\'"');
 
         //update contact emails
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'contacts/email/recipient_email\';"');
