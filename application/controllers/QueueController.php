@@ -540,7 +540,11 @@ class QueueController extends Integration_Controller_Action {
         $this->view->extensions = $extensions = $extensionModel->fetchStoreExtensions($store_name);
         $this->view->categories = $extensionCategoryModel->fetchAll();
 
-        $this->view->store_name = $store_name;
+        
+        //fetch queue data
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->findByDomain($store_name);
+        $this->view->store_name = $store->store_name;
         if ($request->isPost()) {
             $not_installed = true;
             foreach($extensions as $extension) {
@@ -549,11 +553,6 @@ class QueueController extends Integration_Controller_Action {
                 }
             }
             if($not_installed) {
-                
-
-                //fetch queue data
-                $storeModel = new Application_Model_Store();
-                $store = $storeModel->findByDomain($store_name);
 
                 if ((int)$request->getParam('extension_id') > 0) {
                     $storeRow = $storeModel->find($store->id);
