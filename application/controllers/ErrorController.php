@@ -24,6 +24,7 @@ class ErrorController extends Integration_Controller_Action
                 $this->getResponse()->setHttpResponseCode(404);
                 $priority = Zend_Log::NOTICE;
                 $this->view->message = 'Page not found';
+                $this->render('404');
                 break;
             default:
                 // application error
