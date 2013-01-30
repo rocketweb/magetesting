@@ -99,7 +99,7 @@
     			                    	<p class="author">by <?php echo $extension['author']; ?></p>
     			                    </div>
     			                    <?php if((float)$extension['price']): ?>
-    			                    <p class="extension-price pull-right">$<?php echo $extension['price']; ?></p>
+    			                    <p class="extension-price pull-right">$<?php printf("%d", $extension['price']); ?></p>
     			                    <?php endif; ?>
     			                    <p class="extension-version">Version: <?php echo $extension['version']; ?></p>
     			                </div>
