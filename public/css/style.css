@@ -75,6 +75,21 @@ font-weight: 300;
 .modal-body.extend-height {
     max-height: 410px;
 }
+.modal.extended-video{
+    width: 830px;
+    margin-left: -415px;
+}
+.modal.extended-video .modal-header{
+    border-bottom: none;
+}
+.modal-video {
+    position: relative;
+    width: 800px;
+    height: 480px;
+    padding: 15px;
+    overflow-y: auto;
+    background: #fff;
+}
 .halfoffset1 {
     margin-left: 50px;
 }
@@ -377,8 +392,13 @@ body.index .content div.inner section div.pull-right h3,body.index .content div.
 body.index .content div.inner section.watch-video{box-shadow:none;background:#ffffff url('../img/watch-video-back.jpg') no-repeat top right;}body.index .content div.inner section.watch-video .headings{margin-left:0;margin-right:60px;}
 body.index .content div.inner section.watch-video h3{font-size:22.5px;}
 body.index .content div.inner section.watch-video h4{font-size:18.5px;}
-body.index .content div.inner section.watch-video div.mac-book-air{margin-left:10px;}body.index .content div.inner section.watch-video div.mac-book-air .js-video iframe{height:248px;left:108px;top:50px;width:395px;}
-body.index .content div.inner section.simple{padding-top:60px;}body.index .content div.inner section.simple h3:first-of-type{margin-top:0px;}
+body.index .content div.inner section.watch-video div.mac-book-air{margin:25px 0 0 0; background: #fff url('../img/mac-book-air.png') no-repeat left top; position: relative; width: 610px; height: 324px;}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper{position: absolute; left: 107px; top: 23px; width: 397px; height: 250px; overflow: hidden;}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a{display: block; position: absolute; width: 100%; height: 100%; background: url('../img/video_buttons.png') no-repeat left top; -webkit-transition:background 0.2s ease-in; -moz-transition:background 0.2s ease-in; -o-transition:background 0.2s ease-in; transition:background 0.2s ease-in;}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a:hover{background-color: rgba(0, 0, 0, 0.2);}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper img{position: absolute; width: 100%; height: 100%;}
+body.index .content div.inner section.simple{padding-top:60px;}
+body.index .content div.inner section.simple h3:first-of-type{margin-top:0px;}
 body.index .content div.inner section.safe h3:first-of-type{margin-top:40px;}
 body.index .content div.inner section.safe img{margin-top:50px;margin-bottom:80px;}
 body.index .content div.inner section.safe ul.thumbs li img:last-of-type{margin-bottom:60px;}
