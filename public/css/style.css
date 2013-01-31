@@ -396,7 +396,7 @@ body.index .content div.inner section.watch-video div.mac-book-air{margin:25px 0
 body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper{position: absolute; left: 107px; top: 23px; width: 397px; height: 250px; overflow: hidden;}
 body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a{display: block; position: absolute; width: 100%; height: 100%; background: url('../img/video_buttons.png') no-repeat left top; -webkit-transition:background 0.2s ease-in; -moz-transition:background 0.2s ease-in; -o-transition:background 0.2s ease-in; transition:background 0.2s ease-in;}
 body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a:hover{background-color: rgba(0, 0, 0, 0.2);}
-body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper img{position: absolute; width: 100%; height: 100%;}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper img{position: absolute; width: 100%; height: 100%; top: 0; left: 0;}
 body.index .content div.inner section.simple{padding-top:60px;}
 body.index .content div.inner section.simple h3:first-of-type{margin-top:0px;}
 body.index .content div.inner section.safe h3:first-of-type{margin-top:40px;}
