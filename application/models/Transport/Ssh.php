@@ -109,7 +109,7 @@ extends Application_Model_Transport {
          * First we change to root then use ltrim on abolute path to prevent:
          * tar: Removing leading `/' from member names
          */
-        $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
+        $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
                 .' -p'.$this->_customPort.' "cd /;tar -zcf - '.ltrim($this->_customRemotePath,'/').' --exclude='.$this->_customRemotePath.'var --exclude='.$this->_customRemotePath.'media"'
@@ -168,7 +168,7 @@ extends Application_Model_Transport {
          * First we change to root then use ltrim on abolute path to prevent:
          * tar: Removing leading `/' from member names
          */
-        $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
+        $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
                 .' -p'.$this->_customPort.' "cd /;tar -zcf - '.ltrim($this->_customSql,'/').'"'
@@ -246,7 +246,7 @@ extends Application_Model_Transport {
         
         /* Download file*/
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
-        $command = 'sshpass -p'.$this->_storeObject->getCustomPass()
+        $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
                 .' -p'.$this->_customPort.' "cat '.$this->_customFile.'"'
