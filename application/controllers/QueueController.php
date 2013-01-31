@@ -960,5 +960,63 @@ class QueueController extends Integration_Controller_Action {
         }
         /* Prevent from going forward if max stores have been reached - stop */
     }
-    
+
+    /* FTP VALIDATION SECTION */
+    // validate whether ftp credentials are valid and we can connect to server
+    public function validateFtpCredentialsAction() {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $response = array(
+            'status' => 'error',
+            'message' => 'Ftp Credentials are not valid.'
+        );
+        if($this->_validateFtpCredentials()) {
+            $response['message'] = 'Webroot couldn\'t be found.';
+            if(($response['value'] = $this->_findWebrootOnFtp())) {
+                $response['status'] = 'success';
+                $response['message'] = 'Webroot has been found successfully.';
+            }
+        }
+        $this->getResponse()->setBody(json_encode($response));
+    }
+
+    // checks whether ftp credentials are ok
+    protected function _validateFtpCredentials() {
+        return true;
+    }
+
+    /*
+     * finds magento webroot in folders like www, public_html, htdocs, web
+     * and look for familiar magento files/folder like 'app' or smth
+     */
+    protected function _findWebrootOnFtp() {
+        return '';
+    }
+
+    // finds sql dump only when webroot is given and ftp credentials are valid
+    public function findSqlFileAction() {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $response = array(
+                'status' => 'error',
+                'message' => 'Ftp Credentials are not valid.'
+        );
+        if($this->_validateFtpCredentials()) {
+            $response['message'] = 'Webroot path has to be specified.';
+            if($this->getParam('webroot')) {
+                $response['message'] = 'Sql dump couldn\'t be found';
+                if(($response['value'] = $this->_findSqlDumpOnFtp())) {
+                    $response['status'] = 'success';
+                    $response['message'] = 'Sql dump file has been found successfully.';
+                }
+            }
+        }
+        $this->getResponse()->setBody(json_encode($response));
+    }
+
+    protected function _findSqlDumpOnFtp() {
+        return '';
+    }
 }

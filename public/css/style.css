@@ -823,3 +823,7 @@ form#extension-filter-form {
     float: left;
     margin-left: 20px;
 }
+
+/* fast fix for custom mangento installation */
+.input-append .add-on { cursor: pointer; }
+.input-append .tooltip-inner { max-width: none; }
