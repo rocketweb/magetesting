@@ -7,6 +7,8 @@ class Application_Model_ExtensionCategory {
     protected $_name;
 
     protected $_class;
+    
+    protected $_logo;
 
     protected $_mapper;
 
@@ -62,6 +64,17 @@ class Application_Model_ExtensionCategory {
         $this->_class = $value;
         return $this;
     }
+    
+    public function getLogo()
+    {
+        return $this->_logo;
+    }
+    
+    public function setLogo($value)
+    {
+        $this->_logo = $value;
+        return $this;
+    }
 
     public function getMapper()
     {
@@ -103,7 +116,8 @@ class Application_Model_ExtensionCategory {
         return array(
             'id'    => $this->getId(),
             'name'  => $this->getName(),
-            'class' => $this->getClass()
+            'class' => $this->getClass(),
+            'logo' => $this->getLogo()
         );
     }
 

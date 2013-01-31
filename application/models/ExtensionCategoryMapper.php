@@ -48,7 +48,8 @@ class Application_Model_ExtensionCategoryMapper {
         $row = $result->current();
         $object->setId($row->id)
                ->setName($row->name)
-               ->setClass($row->class);
+               ->setClass($row->class)
+               ->setLogo($row->logo);
         return $object;
     }
 
@@ -60,7 +61,8 @@ class Application_Model_ExtensionCategoryMapper {
             $entry = new Application_Model_ExtensionCategory();
             $entry->setId($row->id)
                   ->setName($row->name)
-                  ->setClass($row->class);
+                  ->setClass($row->class)
+                  ->setLogo($row->logo);
             $entries[] = $entry;
         }
         return $entries;
