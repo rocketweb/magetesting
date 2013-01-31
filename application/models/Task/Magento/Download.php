@@ -75,6 +75,7 @@ implements Application_Model_Task_Interface {
 
         /* end of transport usage */
 
+	$this->_prepareDatabaseDump();
         //let's load sql to mysql database
         $this->_importDatabaseDump();
 
@@ -493,6 +494,57 @@ implements Application_Model_Task_Interface {
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
                 ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . 
                 ' -e "TRUNCATE TABLE \`'.$tableName.'\`"');
+        }
+    }
+
+    /**
+     * If database dump is a gz
+     */
+    protected function _prepareDatabaseDump() {
+
+        $output = array();
+
+        /* check for gz */
+        $path_parts = pathinfo($this->_customSql);
+        $sqlname = $path_parts['basename'];
+        exec('gunzip -t ' . $sqlname . ' 2>&1', $output);
+
+        $this->logger->log($sqlname, Zend_Log::DEBUG);
+        $unpacked = 0;
+        if (isset($output[1])
+                && $output[1] == 'gzip: ' . $sqlname . ': not in gzip format'
+        ) {
+            $unpacked = 1;
+        } else {
+            /* file is tar.gz or gz */
+            exec('tar -ztvf ' . $sqlname . '', $output);
+            if (empty($output)) {
+                /* is gz */
+                exec('gunzip ' . $sqlname . '', $output);
+                $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
+                $unpacked = 1;
+            } else {
+                /* is tar.gz */
+                exec('tar -zxvf ' . $sqlname . '', $output);
+                $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
+                $unpacked = 1;
+            }
+        }
+        unset($output);
+        if ($unpacked) {
+            exec('find . -type f -name "*.sql" -and -not -path "*lib*" -and -not -name "keyset*"', $output);
+            $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
+            /* no matches found */
+            if (count($output) == 0) {
+                throw new Application_Model_Task_Exception('sql file has not been found in given package');
+            }
+
+            foreach ($output as $line) {
+                if (substr($line, -4) == '.sql') {
+                    $this->_customSql = str_replace('./', '', $line);
+                    break;
+                }
+            }
         }
     }
     
