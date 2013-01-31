@@ -50,7 +50,15 @@ $(document).ready(function(){
         $find_sql_file = $find_sql_file = $('.find-sql-file'),
         $ftp_fields = $('fieldset:eq(1)').find('select, input'),
         $sql_field = $('#custom_sql'),
-        $remote_path_field = $('#custom_remote_path');
+        $container = $('#main .container'),
+        $remote_path_field = $('#custom_remote_path'),
+        f_create_flash_message = function(message, type) {
+            if(type === undefined || (type !== 'success' && type !== 'error')) {
+                type = 'success';
+            }
+            $container.prepend($(message).attr('id', 'show-flashmessage'));
+            window.location.hash = '#show-flashmessage';
+        };
 
     if($validate_connection.length) {
         $validate_connection.click(function() {
@@ -68,9 +76,8 @@ $(document).ready(function(){
                 dataType : 'json',
                 success : function(response) {
                     if(response.status !== undefined) {
-                        var flash_type = response.status == 'success' ? 'alert-success' : 'alert-error';
                         if(response.message) {
-                            // create flash message
+                            f_create_flash_message(response.message, response.status);
                         }
                         if(response.value) {
                             $remote_path_field.val(response.val);
@@ -98,9 +105,8 @@ $(document).ready(function(){
                 dataType : 'json',
                 success : function(response) {
                     if(response.status !== undefined) {
-                        var flash_type = response.status == 'success' ? 'alert-success' : 'alert-error';
                         if(response.message) {
-                            // create flash message
+                            f_create_flash_message(response.message, response.status);
                         }
                         if(response.value) {
                             $sql_field.val(response.val);

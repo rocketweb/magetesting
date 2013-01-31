@@ -982,6 +982,7 @@ class QueueController extends Integration_Controller_Action {
                 $response['message'] = 'Webroot has been found successfully.';
             }
         }
+        $response['message'] = $this->_prepareFlashMessage($response);
         $this->getResponse()->setBody(json_encode($response));
     }
 
@@ -1017,10 +1018,24 @@ class QueueController extends Integration_Controller_Action {
                 }
             }
         }
+        $response['message'] = $this->_prepareFlashMessage($response);
         $this->getResponse()->setBody(json_encode($response));
     }
 
     protected function _findSqlDumpOnFtp() {
         return '';
+    }
+
+    protected function _prepareFlashMessage($data) {
+        if($data['message']) {
+            $this->view->messages = array(
+                array(
+                    'type' => $data['status'],
+                    'message' => $data['message']
+                )
+            );
+            return trim($this->view->partial('_partials/messages.phtml', 'default', array('messages' => $this->view->messages)));
+        }
+        return $data['message'];
     }
 }
