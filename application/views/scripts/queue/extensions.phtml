@@ -24,11 +24,41 @@
     			<div class="tab-stripe"></div>
     			<div class="mt_filters">
     				<section id="options" class="clearfix">
-    					<div class="btn-toolbar">
-	    					<form class="pull-right">
-								<input class="input-medium search-as-you-type" type="text" placeholder="Search">
-							</form>
-    						<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
+    					<div class="btn-toolbar pull-left">
+							
+							<div class="btn-group" data-title="Price filter">
+								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Price filter <span class="caret"></span></a>
+								<ul class="dropdown-menu option-set" data-option-key="filter">
+                                    <li><a class="btn-all" tabindex="-1" href="#" data-option-value="*">All</a></li>
+                                    <li class="divider"></li>
+									<li><a class="btn-goldd" tabindex="-1" href="#" data-option-value=".premium">Premium</a></li>
+									<li><a tabindex="-1" href="#" data-option-value=".free">Free</a></li>
+								</ul>
+							</div>
+							
+							<div class="btn-group" data-title="Categories">
+								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Categories <span class="caret"></span></a>
+								<ul class="dropdown-menu option-set" data-option-key="filter">
+                                    <li><a class="btn-all" tabindex="-1" href="#" data-option-value="*">All</a></li>
+                                    <li class="divider"></li>
+                                    <?php foreach($this->categories as $category): ?>
+									<li><a tabindex="-1" href="#" data-option-value=".<?php echo $category->getClass(); ?>"><?php echo $category->getName(); ?></a></li>
+					            	<?php endforeach; ?>
+								</ul>
+							</div>
+							
+							<div class="btn-group" data-title="My store">
+								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">My store <span class="caret"></span></a>
+								<ul class="dropdown-menu option-set" data-option-key="filter">
+                                    <li><a class="btn-all" tabindex="-1" href="#" data-option-value="*">All</a></li>
+                                    <li class="divider"></li>
+									<li><a tabindex="-1" href="#" data-option-value=".installed">Installed</a></li>
+									<li><a tabindex="-1" href="#" data-option-value=".notInstalled">Not installed</a></li>
+								</ul>
+							</div>
+							
+								
+    						<!--<div class="btn-group option-set" data-toggle="buttons-radio" data-option-key="filter">
     			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
     			                <button class="btn btn-small btn-gold" data-option-value=".premium">Premium</button>
     			                <button class="btn btn-small btn-inverse" data-option-value=".free">Free</button>
@@ -43,9 +73,11 @@
     			                <button class="btn btn-small btn-all" data-option-value="*">All</button>
     			                <button class="btn btn-small" data-option-value=".installed">Installed</button>
     			                <button class="btn btn-small" data-option-value=".notInstalled">Not Installed</button>
-    						</div>
+    						</div>-->
     					</div>
-    					
+    					<form class="pull-right search-as-you-type">
+							<input class="search-as-you-type-input" type="text" placeholder="Search">
+						</form>
     			    </section>
     			</div>
     			<div class="extensions_well">

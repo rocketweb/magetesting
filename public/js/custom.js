@@ -239,12 +239,14 @@ $(document).ready(function () {
     /* STORE EXTENSIONS ISOTOPE */
     var $extensions_isotope = $('.extensions_well > #container'),  // it should be change to #extensions_isotope or smth
         $extensions_filter_container = $('#options'),
-        $extensions_filter_options = $extensions_filter_container.find('button')
+        $extensions_filter_options = $extensions_filter_container.find('li a'),
+        $extensions_filters_search = '',
+        $extensions_filters = '',
         ElementPad        = 5,
-        ElementWidth    = 135 + (ElementPad * 2),
-        ElementHeight    = 112,
-        ColumnWidth        = ElementWidth + ElementPad,
-        RowHeight        = ElementHeight + ElementPad;
+        ElementWidth      = 135 + (ElementPad * 2),
+        ElementHeight     = 112,
+        ColumnWidth       = ElementWidth + ElementPad,
+        RowHeight         = ElementHeight + ElementPad;
 
     if($extensions_isotope.length) {
         $extensions_isotope.imagesLoaded(function() {
@@ -258,7 +260,8 @@ $(document).ready(function () {
         })
         
         // Pre-toggle "All" buttons
-        $('.btn-all').button('toggle');
+        $('li a.btn-all').parent().addClass('active');
+        //$('.btn-all').button('toggle');
         
         $extensions_isotope.isotope({
             masonry : {
@@ -276,10 +279,37 @@ $(document).ready(function () {
                 rowHeight : RowHeight * 2
               }
         });
-        $extensions_filter_options.click(function() {
+        $extensions_filter_options.click(function(e) {
             var $this = $(this);
+            var $dropdown = $this.parent().parent();
+            var $group = $dropdown.parent();
             var selector = 'selected';
+            
             if(! $this.hasClass(selector)) {
+            	$dropdown.find('li').removeClass('active');
+	    		$dropdown.find('li a').removeClass(selector);
+						
+            	$this.addClass(selector).parent().addClass('active');
+            	$title = $group.attr('data-title');
+            	$group.find('a.btn.dropdown-toggle').html($title + ": " + $this.html() + ' <span class="caret"></span>');
+            	
+            	$extensions_filters = '';
+            	$extensions_filter_container.find('.' + selector).each(function() {
+                    var $option = $(this).data('option-value');
+                    if($option != '*') {
+                        $extensions_filters += $option;
+                    }
+                });
+                $extensions_isotope.isotope({filter: $extensions_filters + $extensions_filters_search});
+            }
+            
+            // Bootstrap + isotope conflict fix
+            $('.btn-group.open').removeClass('open');
+            
+            /*
+             * Original filters code
+             * 
+             *if(! $this.hasClass(selector)) {
                 $this.siblings()
                      .removeClass(selector)
                      .removeClass('active')
@@ -293,7 +323,8 @@ $(document).ready(function () {
                     }
                 });
                 $extensions_isotope.isotope({filter: $filter});
-            }
+            }*/
+            
             return false;
         });
         
@@ -301,7 +332,7 @@ $(document).ready(function () {
         // Filter as you type functions
         var keyTime, // it informs keyup event when last key was pressed
             delayTime = 500, // pause between key pressing before we fire up filtering - default = 1000 ms = 1 second
-            $search_input = $('.search-as-you-type'),
+            $search_input = $('.search-as-you-type-input'),
             lastValue_search_input = '',
             lastTimeout,
             $extensions = $('.element');
@@ -317,12 +348,14 @@ $(document).ready(function () {
                    )
                 ) {
                     $element.addClass('matches');
+                    $extensions_filters_search = '.matches';
                 } else {
                     $element.removeClass('matches');
+                    $extensions_filters_search = '';
                 }
             });
 
-            $extensions_isotope.isotope({ filter: '.matches' });
+            $extensions_isotope.isotope({ filter: $extensions_filters + '.matches' });
         }
 
         // prevent form submitting for query search field
