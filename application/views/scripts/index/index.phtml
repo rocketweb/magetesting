@@ -103,10 +103,12 @@
   <script type="text/javascript">
     var iframe = $('#vimeo-player')[0];
     var player = $f(iframe);
+    $('#video-modal').on('show', function (e) {
+        player.api('play');
+    })
     $('#video-modal').on('hide', function (e) {
         player.api('pause');
     })
-      
   </script>
  </div>
  <!-- END OF VIDEO MODAL -->
