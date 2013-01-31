@@ -1,21 +1,14 @@
-$(document).ready(function(){
-    $("#edition").change(function(){
-        
-        $.ajax({
-            type: "POST",
-            url: $('body').data('siteRoot') + "/queue/getVersions",
-            data: "edition="+ $("#edition").val(),
-            dataType: "json",
-            success: function(json){
-                var opts = "";
-                $.each(json,function(index, item){
-                    opts =  opts + "<option value=\""+ item.id +"\">" + item.version + "</option>";
-                });
+$(document).ready(function() {
+    $('#version-'+$("#edition").val()).show();
+    
+    $("#edition").change(function() {
+        $('#version-CE').hide();
+        $('#version-EE').hide();
+        $('#version-PE').hide();
+        $('#version-'+$(this).val()).show();
+    });
 
-                $("#version").html(opts);
-            }
-
-        });
-        
+    $('form').submit(function() {
+        $('select:hidden').remove();
     });
 });

@@ -49,11 +49,7 @@ class Application_Form_StoreAddClean extends Integration_Form{
                 ),
                 'class'      => 'span4'
         ));
-
-        $emptyVersion = array('' => 'Choose...');
-        $versions = array_merge($emptyVersion,$editionModel->getOptions());
-
-        $this->edition->addMultiOptions($versions);
+        $this->edition->addMultiOptions($editionModel->getOptions());
 
         $versionModel = new Application_Model_Version();
         $this->addElement('select', 'version', array(
@@ -65,7 +61,7 @@ class Application_Form_StoreAddClean extends Integration_Form{
                 ),
                 'class'      => 'span4'
         ));
-        //$this->version->addMultiOptions();
+
 
          
         // Add the submit button

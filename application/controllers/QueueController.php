@@ -38,6 +38,10 @@ class QueueController extends Integration_Controller_Action {
     public function addCleanAction() {
         $this->checkStoreLimit();
         
+        $version = new Application_Model_Version();
+        $versions = $version->fetchAll();
+        $this->view->versions = $versions;
+        
         $form = new Application_Form_StoreAddClean();
         $form->populate($this->getRequest()->getParams());
 
