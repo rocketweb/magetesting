@@ -84,6 +84,9 @@ $(document).ready(function () {
     $("button.request-deployment[rel=tooltip]").tooltip({
         placement: 'left'
     });
+    $('.tooltip-top').tooltip({
+        placement: 'top'
+    });
     
     /* prevent click event and init popover */
     $('[rel=popover]').click(function(){return false;}).popover();

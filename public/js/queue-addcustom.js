@@ -1,6 +1,7 @@
 $(document).ready(function(){
     var $version = $('#version'),
-        $version_options = $version.find('option');
+        $version_options = $version.find('option'),
+        siteRoot = $('body').data('siteRoot');
     $("#edition").change(function(){
         $version.val($version_options.hide().filter('[value^="'+$(this).val()+'"]').show().filter(':first').val());//hide().filter('[value^="'+$this.val()+'"]').show().filter(':first').val();
     });
@@ -45,5 +46,69 @@ $(document).ready(function(){
         }
     }
 
+    var $validate_connection = $('.validate-connection-details'),
+        $find_sql_file = $find_sql_file = $('.find-sql-file'),
+        $ftp_fields = $('fieldset:eq(1)').find('select, input'),
+        $sql_field = $('#custom_sql'),
+        $remote_path_field = $('#custom_remote_path');
 
+    if($validate_connection.length) {
+        $validate_connection.click(function() {
+            var $this = $(this),
+                $ftp_fields_data = {};
+                $ftp_fields.each(function(k, element) {
+                    var $e = $(element);
+                    $ftp_fields_data[$e.attr('name')] = $e.val();
+                });
+
+            $.ajax({
+                url : siteRoot + '/queue/validate-ftp-credentials',
+                data : $ftp_fields_data,
+                type : 'POST',
+                dataType : 'json',
+                success : function(response) {
+                    if(response.status !== undefined) {
+                        var flash_type = response.status == 'success' ? 'alert-success' : 'alert-error';
+                        if(response.message) {
+                            // create flash message
+                        }
+                        if(response.value) {
+                            $remote_path_field.val(response.val);
+                        }
+                    }
+                }
+            });
+            return false;
+        });
+    }
+
+    if($find_sql_file.length) {
+        $find_sql_file.click(function() {
+            var $this = $(this),
+                $ftp_fields_data = {};
+                $ftp_fields.add($sql_field).each(function(k, element) {
+                    var $e = $(element);
+                    $ftp_fields_data[$e.attr('name')] = $e.val();
+                });
+
+            $.ajax({
+                url : siteRoot + '/queue/find-sql-file',
+                data : $ftp_fields_data,
+                type : 'POST',
+                dataType : 'json',
+                success : function(response) {
+                    if(response.status !== undefined) {
+                        var flash_type = response.status == 'success' ? 'alert-success' : 'alert-error';
+                        if(response.message) {
+                            // create flash message
+                        }
+                        if(response.value) {
+                            $sql_field.val(response.val);
+                        }
+                    }
+                }
+            });
+            return false;
+        });
+    }
 });

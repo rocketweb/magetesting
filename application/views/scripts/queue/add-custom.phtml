@@ -87,12 +87,15 @@
             	        </div>
             	        <div class="row row-large">
                             <div class="span8">
+                                <div class="input-append">
                                 <?php echo $this->form->custom_sql ?>
+                                <span class="add-on tooltip-top find-sql-file" data-title="Find Latest Magento Admin Database Backup">Find database backup</span>
                             </div>
                         </div>
             	    </fieldset>
             	    
             	    <div class="form-actions">
+            	        <a class="btn tooltip-top validate-connection-details" data-title="We will check if connection details are correct and we will try to look for your store location.">Validate connection details</a>
             	        <button type="submit" name="<?php echo $this->form->storeAdd->getName(); ?>" id="<?php echo $this->form->storeAdd->getId() ?>" class="btn btn-inverse pull-right">
             	            <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->storeAdd->getLabel() ?>
             	        </button>
