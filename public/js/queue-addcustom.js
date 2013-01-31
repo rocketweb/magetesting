@@ -56,7 +56,9 @@ $(document).ready(function(){
             if(type === undefined || (type !== 'success' && type !== 'error')) {
                 type = 'success';
             }
+            $('#show-flashmessage').remove();
             $container.prepend($(message).attr('id', 'show-flashmessage'));
+            window.location.hash = '';
             window.location.hash = '#show-flashmessage';
         };
 
