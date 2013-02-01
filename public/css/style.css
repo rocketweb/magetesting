@@ -835,7 +835,8 @@ form#extension-filter-form {
     top: 0; 
     overflow: hidden; 
     position: absolute; 
-    display: block; 
+    /*display: block;*/
+    display: none;
     width: 200px; 
     height: 100%;
 }
