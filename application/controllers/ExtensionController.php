@@ -288,8 +288,14 @@ class ExtensionController extends Integration_Controller_Action {
                     $extension->setOptions($formData);
                     $extension->save();
                     $extension_id = $extension->getId();
+                    
+                    if($this->_getParam('remove_logo', null)) {
+                        @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
+                        $oldLogoRemoved = true;
+                    }
+                    
                     if($old_logo != $new_logo) {
-                        if($old_logo) {
+                        if($old_logo && !$oldLogoRemoved) {
                             @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
                         }
                         if($new_logo) {

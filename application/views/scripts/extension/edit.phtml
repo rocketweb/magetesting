@@ -124,6 +124,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                         <?php if (isset($this->old_logo) AND $this->old_logo): ?>
                                             <input type="hidden" name="old_logo" value="<?php echo $this->old_logo; ?>" />
                                             <img src="<?php echo $this->ImagePath($this->old_logo, 'extension/logo', false); ?>" />
+                                            <input name="remove_logo" value="1" type="checkbox"/> Remove Logo
                                         <?php else: ?>
                                             <img src="<?php echo $this->baseUrl('public/assets/img/temp/' . $this->directoryHash . '/' . $this->logo); ?>" />
                                         <?php endif; ?>
