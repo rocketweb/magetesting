@@ -243,8 +243,8 @@ class UserController extends Integration_Controller_Action
                                 // if date is farther than 3 days
                                 // inform that we downgraded user account
                                 $user->setGroup('free-user')
-                                ->setDowngraded(2)
-                                ->save();
+                                     ->setDowngraded(2)
+                                     ->save();
                                 $this->_helper->FlashMessenger(array('type'=> 'error', 'message' => 'We downgraded your account to free user.'));
                                 $userData->group = 'free-user';
                             }
@@ -252,10 +252,21 @@ class UserController extends Integration_Controller_Action
 
                         $this->_helper->FlashMessenger('You have been logged in successfully');
 
+                        $controller = 'user';
+                        $action = 'dashboard';
+
+                        // redirect back to page requested before login
+                        $session = new Zend_Session_Namespace('after_login_redirect');
+                        if(isset($session->controller)) {
+                            $controller = $session->controller;
+                            $action = $session->action;
+                            unset($session->controller, $session->action);
+                        }
+
                         return $this->_helper->redirector->gotoRoute(array(
                                 'module'     => 'default',
-                                'controller' => 'user',
-                                'action'     => 'dashboard',
+                                'controller' => $controller,
+                                'action'     => $action,
                         ), 'default', true);
                     }
                 } else {

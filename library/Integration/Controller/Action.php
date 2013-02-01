@@ -135,6 +135,13 @@ class Integration_Controller_Action extends Zend_Controller_Action
          * redirect not logged user to login form
          */
         if ('guest' == $type) {
+            $session = new Zend_Session_Namespace('after_login_redirect');
+            // do not allow redirection to user/login
+            if($controller != 'user' AND $action != 'login') {
+                $session->controller = $controller;
+                $session->action = $action;
+            }
+
             $goTo = 'user/login';
         }
 
