@@ -245,6 +245,13 @@ class BraintreeController extends Integration_Controller_Action
                 throw new Braintree_Controller_Exception($flash_message['message']);
             }
 
+            // if user already has given plan, redirect him to compare page
+            if($user->hasPlanActive() AND $id == $user->getPlanId()) {
+                $redirect = array('controller' => 'my-account', 'action' => 'compare');
+                $flash_message = array('type' => 'notice', 'message' => 'You already have this plan.');
+                throw new Braintree_Controller_Exception($flash_message['message']);
+            }
+
             /*
              * display chosen form
              */
@@ -351,7 +358,9 @@ class BraintreeController extends Integration_Controller_Action
                 // change-plan form has his own view
                 $this->_helper->viewRenderer->setRender('change-plan');
                 $this->view->id = $id;
+                $this->view->plan_change_calculation = $this->_calculatePlanChange($user, $model);
                 $pay_for = 'plan';
+                $this->view->new_plan_name = $data['name'];
             } else {
                 $this->_helper->viewRenderer->setRender('form');
                 // should we display inputs for billing address and credit card
@@ -541,33 +550,12 @@ class BraintreeController extends Integration_Controller_Action
                                 'action'     => 'dashboard'
                             );
                         } else {
-                            $old_plan = new Application_Model_Plan();
-                            $old_plan = $old_plan->find($user->getPlanId());
+                            $plan_change_calculation = $this->_calculatePlanChange($user, $plan);
 
-                            $subscription_end = explode(' ', $user->getPlanActiveTo());
-                            $subscription_end = strtotime($subscription_end[0]);
-                            $subscription_start = strtotime('-' . $old_plan->getBillingPeriod(), $subscription_end);
-                            $today = strtotime(date('Y-m-d'));
-                            $subscription_range_days = ($subscription_end-$subscription_start)/3600/24;
-                            $subscription_used_days = (($today-$subscription_start)/3600/24)+1;
-                            $subscription_not_used_days = $subscription_range_days-$subscription_used_days;
-                            $refund = round($subscription_not_used_days/$subscription_range_days*(float)$old_plan->getPrice(), 2);
-                            
-                            $new_plan_start = $subscription_start;
-                            $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
-                            $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
-
-                            if($today >= $new_plan_end-(3600*24) AND $new_plan_range_days < $subscription_range_days) {
-                                $new_plan_start = $today;
-                                $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
-                                $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
-                            }
-                            $new_plan_used_days = (($today-$new_plan_start)/3600/24)+1;
-                            $new_plan_not_used_days = $new_plan_range_days-$new_plan_used_days;
-                            $extra_charge = round($new_plan_not_used_days/$new_plan_range_days*(float)$plan->getPrice(), 2);
                             // if new plan ends earlier than the old one, move payment day to today
                             $result = null;
-                            $amount = (float)$extra_charge-$refund;
+                            $amount = $plan_change_calculation['amount'];
+                            $new_plan_end = $plan_change_calculation['new_plan_end'];
 
                             try {
                                 if($amount < 0) {
@@ -656,5 +644,43 @@ class BraintreeController extends Integration_Controller_Action
                     , 'default', true
             );
         }
+    }
+
+    protected function _calculatePlanChange($user, $plan) {
+        $old_plan = new Application_Model_Plan();
+        $old_plan = $old_plan->find($user->getPlanId());
+
+        $subscription_end = explode(' ', $user->getPlanActiveTo());
+        $subscription_end = strtotime($subscription_end[0]);
+        $subscription_start = strtotime('-' . $old_plan->getBillingPeriod(), $subscription_end);
+        $today = strtotime(date('Y-m-d'));
+        $subscription_range_days = ($subscription_end-$subscription_start)/3600/24;
+        $subscription_used_days = (($today-$subscription_start)/3600/24)+1;
+        $subscription_not_used_days = $subscription_range_days-$subscription_used_days;
+        $refund = round($subscription_not_used_days/$subscription_range_days*(float)$old_plan->getPrice(), 2);
+
+        $new_plan_start = $subscription_start;
+        $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
+        $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
+
+        if($today >= $new_plan_end-(3600*24) AND $new_plan_range_days < $subscription_range_days) {
+            $new_plan_start = $today;
+            $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
+            $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
+        }
+        $new_plan_used_days = (($today-$new_plan_start)/3600/24)+1;
+        $new_plan_not_used_days = $new_plan_range_days-$new_plan_used_days;
+        $extra_charge = round($new_plan_not_used_days/$new_plan_range_days*(float)$plan->getPrice(), 2);
+        // if new plan ends earlier than the old one, move payment day to today
+        $result = null;
+        $amount = (float)$extra_charge-$refund;
+
+        return array(
+            'amount' => $amount,
+            'billing_period' => $old_plan->getBillingPeriod(),
+            'plan_name' => $old_plan->getName(),
+            'used_days' => $subscription_used_days,
+            'new_plan_end' => $new_plan_end
+        );
     }
 }
