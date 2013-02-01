@@ -2,6 +2,7 @@
 
 class Application_Model_ExtensionMapper {
 
+    /* var Application_Model_DbTable_Extension */
     protected $_dbTable;
 
     public function setDbTable($dbTable)

@@ -32,6 +32,7 @@ class Application_Model_Extension {
     
     protected $_price;
     
+    /* var Application_Model_ExtensionMapper */
     protected $_mapper;
         
     public function __construct(array $options = null)

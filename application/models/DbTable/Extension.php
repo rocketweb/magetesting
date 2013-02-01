@@ -86,7 +86,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $this->select()
                  ->from(array('e' => $this->_name))
                  ->setIntegrityCheck(false)
-                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e.category_id', array('ec.class as category_class'))
+                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e.category_id', array('ec.class as category_class','ec.logo as category_logo'))
                  ->where('e.edition = ?', 'CE')
                  ->where('e.extension IS NOT NULL')
                  ->order('price DESC');
