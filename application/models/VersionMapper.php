@@ -63,7 +63,7 @@ class Application_Model_VersionMapper {
 
     public function fetchAll()
     {
-        $resultSet = $this->getDbTable()->fetchAll();
+        $resultSet = $this->getDbTable()->fetchAll(null, 'version');
         $entries   = array();
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Version();

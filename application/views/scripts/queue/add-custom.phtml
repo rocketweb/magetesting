@@ -26,7 +26,23 @@
             	                <?php echo $this->form->edition ?>
             	            </div>
             	            <div class="span4">
-            	                <?php echo $this->form->version ?>
+                                <label for="version" class="control-label required">Version</label>
+                                <select name="version" id="version-CE" class="span4" style="display: none;">
+                                    <?php foreach($this->versions as $version): if($version->getEdition() == 'CE'):?>
+                                        <option value="<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
+                                    <?php endif; endforeach; ?>
+                                </select>
+                                <select name="version" id="version-EE" class="span4" style="display: none;">
+                                    <?php foreach($this->versions as $version): if($version->getEdition() == 'EE'): ?>
+                                        <option value="<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
+                                    <?php endif; endforeach; ?>
+                                </select>
+                                <select name="version" id="version-PE" class="span4" style="display: none;">
+                                    <?php foreach($this->versions as $version): if($version->getEdition() == 'PE'): ?>
+                                        <option value="<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
+                                    <?php endif; endforeach; ?>
+                                </select>
+            	                <?php //echo $this->form->version ?>
             	            </div>
             	        </div>
             	    </fieldset>

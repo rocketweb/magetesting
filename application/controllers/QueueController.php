@@ -225,6 +225,10 @@ class QueueController extends Integration_Controller_Action {
 
         $form = new Application_Form_StoreAddCustom();
         $form->populate($request->getParams());
+        
+        $version = new Application_Model_Version();
+        $versions = $version->fetchAll();
+        $this->view->versions = $versions;
 
         $this->view->input_radio = 'remote_path';
         if ($request->isPost()) {
