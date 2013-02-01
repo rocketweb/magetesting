@@ -565,6 +565,15 @@ $(document).ready(function () {
     $('#extension-form').submit(function() {
         $('#extension-form select[name$="_version"]:hidden').remove();
     });
+    
+    $("#help").click(function () {
+        var $helpBlock = $('#context-help');
+        $helpBlock.animate({
+            right: parseInt($helpBlock.css('right'), 10) == 0 ?
+                -$helpBlock.outerWidth() :
+                0
+        });
+    });
 });
 
 function progressBarExtension(param) {

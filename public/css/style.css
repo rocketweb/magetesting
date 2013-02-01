@@ -828,3 +828,25 @@ form#extension-filter-form {
 /* fast fix for custom mangento installation */
 .input-append .add-on { cursor: pointer; }
 .input-append .tooltip-inner { max-width: none; }
+
+/* help container */
+#wrap-context-help {
+    right: 0; 
+    top: 0; 
+    overflow: hidden; 
+    position: absolute; 
+    display: block; 
+    width: 200px; 
+    height: 100%;
+}
+
+#context-help {
+    background-color: black; 
+    color: white; 
+    width: 200px; 
+    height: 100%; 
+    position: absolute; 
+    top: 0; 
+    margin-left: 0; 
+    right: -200px
+}    
