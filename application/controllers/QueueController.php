@@ -1004,13 +1004,13 @@ class QueueController extends Integration_Controller_Action {
             ftp_chdir($this->_ftpStream,$res[0]);
             $contents = ftp_nlist($this->_ftpStream, ".");
             $res = array_values(array_intersect($baseFolders,$contents));
-            
+
             if ($res){
                 /*in case we have second folder*/
                 ftp_chdir($this->_ftpStream,$res[0]);
                 $contents = ftp_nlist($this->_ftpStream, ".");
-                $res = array_values(array_intersect($baseFolders,$contents));
-                
+                //$res = array_values(array_intersect($baseFolders,$contents));
+               
                 //find magento files
                 return $this->_checkForMagentoFolders();
                 
@@ -1030,14 +1030,14 @@ class QueueController extends Integration_Controller_Action {
     
     protected function _checkForMagentoFolders(){
         $contents = ftp_nlist($this->_ftpStream, ".");
-        return $contents;
+        
         if (in_array('app',$contents) 
             && in_array('lib',$contents)
             && in_array('js',$contents)
-            && in_array('script',$contents)
+            && in_array('scripts',$contents)
             && in_array('skin',$contents)
         ) {
-            return true;
+            return ftp_pwd($this->_ftpStream);
         }
         return false;
     }
