@@ -990,17 +990,56 @@ class QueueController extends Integration_Controller_Action {
         $this->getResponse()->setBody(json_encode($response));
     }
 
-    // checks whether ftp credentials are ok
-    protected function _validateFtpCredentials() {
-        return true;
-    }
-
     /*
      * finds magento webroot in folders like www, public_html, htdocs, web
      * and look for familiar magento files/folder like 'app' or smth
      */
     protected function _findWebrootOnFtp() {
-        return '';
+    
+        $baseFolders = array('www','public_html','web','htdocs',$this->_customHost);
+        // get contents of the current directory
+        $contents = ftp_nlist($this->_ftpStream, ".");
+        $res = array_values(array_intersect($baseFolders,$contents));
+        if ($res){
+            ftp_chdir($this->_ftpStream,$res[0]);
+            $contents = ftp_nlist($this->_ftpStream, ".");
+            $res = array_values(array_intersect($baseFolders,$contents));
+            
+            if ($res){
+                /*in case we have second folder*/
+                ftp_chdir($this->_ftpStream,$res[0]);
+                $contents = ftp_nlist($this->_ftpStream, ".");
+                $res = array_values(array_intersect($baseFolders,$contents));
+                
+                //find magento files
+                return $this->_checkForMagentoFolders();
+                
+            } else {
+            /*we are in web dir*/
+            
+                //find magento files
+                return $this->_checkForMagentoFolders();
+            }
+            
+            //find magento files
+            return $this->_checkForMagentoFolders();
+        }
+        
+        return false;
+    }
+    
+    protected function _checkForMagentoFolders(){
+        $contents = ftp_nlist($this->_ftpStream, ".");
+        return $contents;
+        if (in_array('app',$contents) 
+            && in_array('lib',$contents)
+            && in_array('js',$contents)
+            && in_array('script',$contents)
+            && in_array('skin',$contents)
+        ) {
+            return true;
+        }
+        return false;
     }
 
     // finds sql dump only when webroot is given and ftp credentials are valid

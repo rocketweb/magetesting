@@ -96,7 +96,7 @@ $(document).ready(function(){
                             f_create_flash_message(response.message, response.status);
                         }
                         if(response.value) {
-                            $remote_path_field.val(response.val);
+                            $remote_path_field.val(response.value);
                         }
                     }
                 }
