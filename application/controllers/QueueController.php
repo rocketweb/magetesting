@@ -1034,7 +1034,6 @@ class QueueController extends Integration_Controller_Action {
         if (in_array('app',$contents) 
             && in_array('lib',$contents)
             && in_array('js',$contents)
-            && in_array('scripts',$contents)
             && in_array('skin',$contents)
         ) {
             return ftp_pwd($this->_ftpStream);
