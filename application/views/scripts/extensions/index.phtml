@@ -46,7 +46,7 @@
                                     <?php echo $this->Thumbnail($extension['logo'], null, 38, array('alt' => $extension['logo']), $this->ImagePath($extension['logo'], 'extension/logo', false, false)); ?>
     			                </div>
     			                <?php else: ?>
-    			                <div class="icon">
+    			                
                                     <?php if($extension['category_logo']): ?>
                                         <div class="icon big">
                                             <?php echo $this->Thumbnail($extension['category_logo'], null, 110, array('alt' => $extension['category_logo']), $this->ImagePath($extension['category_logo'], 'extension_category', false, false)); ?>
@@ -58,7 +58,7 @@
                                         <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
                                     <?php endif; ?>
     			                    
-    			                </div>
+    			                
     			                <?php endif; ?>
     			                
     			                <div class="info">
