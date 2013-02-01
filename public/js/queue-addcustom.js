@@ -125,7 +125,7 @@ $(document).ready(function(){
                             f_create_flash_message(response.message, response.status);
                         }
                         if(response.value) {
-                            $sql_field.val(response.val);
+                            $sql_field.val(response.value);
                         }
                     }
                 }

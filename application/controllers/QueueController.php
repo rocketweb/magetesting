@@ -1043,7 +1043,7 @@ class QueueController extends Integration_Controller_Action {
     }
 
     // finds sql dump only when webroot is given and ftp credentials are valid
-    public function findSqlFileAction() {
+        public function findSqlFileAction() {
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
@@ -1053,20 +1053,43 @@ class QueueController extends Integration_Controller_Action {
         );
         if($this->_validateFtpCredentials()) {
             $response['message'] = 'Webroot path has to be specified.';
-            if($this->getParam('webroot')) {
+            //if($this->getParam('webroot')) {
                 $response['message'] = 'Sql dump couldn\'t be found';
                 if(($response['value'] = $this->_findSqlDumpOnFtp())) {
                     $response['status'] = 'success';
                     $response['message'] = 'Sql dump file has been found successfully.';
                 }
-            }
+            //}
         }
         $response['message'] = $this->_prepareFlashMessage($response);
         $this->getResponse()->setBody(json_encode($response));
     }
 
     protected function _findSqlDumpOnFtp() {
-        return '';
+        $this->_validateFtpCredentials();
+        $basePath = $this->_findWebrootOnFtp();
+        //return $basePath;
+        $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
+        $filetimes = array();
+        if ($raw){
+            foreach ($raw as $file){
+                
+                $parts = explode(" ",$file);
+                $filetimes[$parts[24]]= strtotime($parts[21].' '.$parts[22].' '.$parts[23]); 
+            }
+        }
+        
+        $maxtime = 0;
+        $newestFile = '';
+        foreach ($filetimes as $file => $filetime){
+            if ($filetime > $maxtime){
+                $newestFile = $file;
+                $maxtime = $filetime;
+            }
+        }
+               
+        return rtrim($basePath,'/').'/var/backups/'.$newestFile;
+        
     }
 
     protected function _prepareFlashMessage($data) {
