@@ -9,7 +9,7 @@ $(document).ready(function () {
     var $braintree_billing_details = $('.braintree-billing-details'),
         $prefilled_data = $braintree_billing_details.find('#has-prefilled-data');
 
-    if($braintree_billing_details.length && !$prefilled_data.length) {
+    if($braintree_billing_details.length) {
         $braintree_billing_details.parents('form:first').submit(function() {
             var $submit = $(this).find(':submit'),
                 $exp_date_month = $('#exp-date-month'),
@@ -34,7 +34,7 @@ $(document).ready(function () {
                 $process_form = false;
             }
 
-            /* stop submittion if cc exp date is wrong */
+            /* stop submitting if cc exp date is wrong */
             if(!$process_form) {
                 $exp_date_month.parents('.control-group:first').addClass('error');
                 return false;
@@ -43,20 +43,24 @@ $(document).ready(function () {
             }
 
             $submit.addClass('disabled');
-            $.ajax({
-                url: siteRoot + '/my-account/edit-account',
-                type: 'POST',
-                async: false,
-                data: {
-                    firstname: $('#customer_first_name').val(),
-                    lastname: $('#customer_last_name').val(),
-                    street: $('#billing_street_address').val(),
-                    postal_code: $('#billing_postal_code').val(),
-                    state: $('#billing_region').val(),
-                    city: $('#billing_locality').val(),
-                    country: $('#billing_country_name').val(),
-                }
-            });
+
+            // do not save address to my-account if form was prefilled using data from my-account
+            if(!$prefilled_data.length) {
+                $.ajax({
+                    url: siteRoot + '/my-account/edit-account',
+                    type: 'POST',
+                    async: false,
+                    data: {
+                        firstname: $('#customer_first_name').val(),
+                        lastname: $('#customer_last_name').val(),
+                        street: $('#billing_street_address').val(),
+                        postal_code: $('#billing_postal_code').val(),
+                        state: $('#billing_region').val(),
+                        city: $('#billing_locality').val(),
+                        country: $('#billing_country_name').val(),
+                    }
+                });
+            }
         });
     }
 
