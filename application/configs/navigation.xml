@@ -77,19 +77,19 @@
                 <privilege>index</privilege>
                 <icon>icon-white icon-user</icon>
             </userAccount>
-            <!-- <userRegister>
-                <label>Create Account</label>
+            <signUp>
+                <label>Sign Up</label>
                 <module>default</module>
-                <controller>user</controller>
-                <action>register</action>
-                <route>default</route>
+                <controller>index</controller>
+                <action>our-plans</action>
+                <route>compare</route>
                 <reset_params>true</reset_params>
-                <resource>default_user</resource>
-                <privilege>register</privilege>
+                <resource>default_index</resource>
+                <privilege>our-plans</privilege>
                 <icon>glyphicons_044_keys_white_half.png</icon>
-            </userRegister> -->
+            </signUp>
             <userLogin>
-                <label>Log in</label>
+                <label>Log In</label>
                 <module>default</module>
                 <controller>user</controller>
                 <action>login</action>
