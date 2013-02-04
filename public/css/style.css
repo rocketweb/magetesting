@@ -373,7 +373,7 @@ html,body{height:100%;}
 .element.large{-webkit-box-shadow:0 8px 6px -6px #888888;-moz-box-shadow:0 8px 6px -6px #888888;box-shadow:0 8px 6px -6px #888888;}
 .element .extras{position:absolute;bottom:0;height:110px;font-size:12px;color:#6d6d6d;margin:0 20px;}.element .extras .description{height:62px;line-height:15px;min-width:245px;overflow:hidden;}
 .element .extras .btn-mini{border-radius:12px 12px 12px 12px;font-size:11px;padding:1px 12px;}
-.element .extras .progress{margin:8px 10px 0 8px;}
+.element .extras .progress{margin:8px 0 0 0;}
 .element.large,.variable-sizes .element.large,.variable-sizes .element.large.width2.height2{font-size:3.0em;width:285px;height:236px;z-index:100;}
 .clickable .element:hover{cursor:pointer;}
 .clickable .element:hover h3{text-shadow:0 0 10px white, 0 0 10px white ;}
