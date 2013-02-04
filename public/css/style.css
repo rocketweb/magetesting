@@ -831,7 +831,7 @@ form#extension-filter-form {
 
 /* help container */
 #wrap-context-help {
-    right: 0; 
+    right: -200px; 
     top: 0; 
     overflow: hidden; 
     position: fixed; 
@@ -851,7 +851,7 @@ form#extension-filter-form {
     position: absolute; 
     top: 0; 
     margin-left: 0; 
-    right: -200px
+    right: 0px
 }   
 
 #wrap-context-help #context-help div {
