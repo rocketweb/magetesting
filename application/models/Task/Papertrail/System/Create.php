@@ -77,6 +77,9 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'& ~'.
             PHP_EOL.''.
             PHP_EOL.'if $programname == \'exception-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
+            PHP_EOL.'& ~'.
+            PHP_EOL.''.
+	    PHP_EOL.'if $programname == \'revision-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
             PHP_EOL.'& ~';
             PHP_EOL.''.
 	    PHP_EOL.'if $programname == \'revision-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
