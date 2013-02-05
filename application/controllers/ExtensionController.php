@@ -377,16 +377,24 @@ class ExtensionController extends Integration_Controller_Action {
             if($form->isValid($request->getParams())) {
                 // someone agreed deletion 
                 if($request->getParam('submit') == 'Yes') {
+                    $flash_message = array(
+                        'type' => 'success',
+                        'message' => 'You have deleted extension successfully.'
+                    );
                     $extension = new Application_Model_Extension();
                     // set news id to the one passed by get param
-                    
-                    $extension->delete($request->getParam('id'));
+                    try {
+                        $extension->delete($request->getParam('id'));
+                    } catch(Exception $e) {
+                        $this->getLog()->log('Admin - extension delete', Zend_Log::error, $e->getMessage());
+                        $flash_message = array(
+                            'type' => 'error',
+                            'message' => 'We couldn\'t delete extension ( probably is installed).<span class="hidden">'.$e->getMessage().'</span>'
+                        );
+                    }
                     // set message
                     $this->_helper->FlashMessenger(
-                        array(
-                            'type' => 'success',
-                            'message' => 'You have deleted extension successfully.'
-                        )
+                        $flash_message
                     );
                 } else {
                     // deletion cancelled
