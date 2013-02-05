@@ -41,6 +41,7 @@ class Application_Model_Task {
      * @var Zend_Log
      */
     protected $logger;
+    protected $revisionLogger;
     
     public function __construct(&$config,&$db) {
         
@@ -122,7 +123,33 @@ class Application_Model_Task {
         $logger->addWriter($writerDb);
 
         $this->logger = $logger;
-    }
+        
+        try{
+        
+        $revisionLogPath = '/home/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . 
+			      '/public_html/'.$this->_storeObject->getDomain().'/var/log/';
+        
+        if (!file_exists($revisionLogPath)){
+	  exec('sudo mkdir -p '.$revisionLogPath);
+        }
+        
+        $revisionLogFile = 'revision.log';
+        
+        if (!file_exists($revisionLogPath.$revisionLogFile)){
+	  exec('sudo touch '.$revisionLogPath.$revisionLogFile);
+	  exec('sudo chmod 777 '.$revisionLogPath.$revisionLogFile);
+	}
+        
+        
+          $formatter = new Zend_Log_Formatter_Simple('%message%' . PHP_EOL);
+
+	  $writerFile = new Zend_Log_Writer_Stream($revisionLogPath.$revisionLogFile);
+	  $writerFile->setFormatter($formatter);
+	  $revisionLogger = new Zend_Log($writerFile);
+	  $this->revisionLogger = $revisionLogger;
+        } catch (Zend_Log_Exception $e){
+	  $this->logger->log('Creating writed for revisions failed : ' . $e->getMessage(), Zend_Log::EMERG);
+        }
       
     /**
      * 
