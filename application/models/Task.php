@@ -150,6 +150,8 @@ class Application_Model_Task {
         } catch (Zend_Log_Exception $e){
 	  $this->logger->log('Creating writed for revisions failed : ' . $e->getMessage(), Zend_Log::EMERG);
         }
+
+    }
       
     /**
      * 
