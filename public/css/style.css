@@ -862,3 +862,9 @@ form#extension-filter-form {
 #wrap-context-help #context-help div i {
     cursor: pointer;
 }
+
+/* fix for isotope button.install class for remove button */
+.element .extras .btn-mini.delete {
+    padding: 1px 5px;
+    margin-left: 10px;
+}
