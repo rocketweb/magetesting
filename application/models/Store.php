@@ -187,14 +187,34 @@ class Application_Model_Store {
         return $this->_backend_name;
     }
 
-    public function setBackendPassword($password)
+    public function setBackendPassword($password, $encrypt = true)
     {
-        $this->_backend_password = $password;
+        if($encrypt === true) {
+            $key = Zend_Registry::get('config')->mcrypt->key;
+            $vector = Zend_Registry::get('config')->mcrypt->vector;
+
+            $filter = new Zend_Filter_Encrypt(array('adapter' => 'Mcrypt', 'key' => $key));
+            $filter->setVector($vector);
+            
+            $password = base64_encode($filter->filter($password));
+        }
+        
+        $this->_backend_password= $password;
         return $this;
     }
 
-    public function getBackendPassword()
+    public function getBackendPassword($decrypt = true)
     {
+        if($decrypt === true && $this->_backend_password) {
+            $key = Zend_Registry::get('config')->mcrypt->key;
+            $vector = Zend_Registry::get('config')->mcrypt->vector;
+        
+            $filter = new Zend_Filter_Decrypt(array('adapter' => 'Mcrypt', 'key' => $key));
+            $filter->setVector($vector);
+            
+            return preg_replace( "/\p{Cc}*$/u", "", $filter->filter(base64_decode($this->_backend_password)));
+        }
+        
         return $this->_backend_password;
     }
 
@@ -236,30 +256,30 @@ class Application_Model_Store {
     public function __toArray()
     {
         return array(
-                'id'               => $this->getId(),
-                'edition'          => $this->getEdition(),
-                'status'           => $this->getStatus(),
-                'version_id'       => $this->getVersionId(),
-                'user_id'          => $this->getUserId(),
-                'domain'           => $this->getDomain(),
-                'store_name'    => $this->getStoreName(),
-                'description'      => $this->getDescription(),
-                'backend_name' => $this->getBackendName(),
-                'backend_password' => $this->getBackendPassword(),
-                'sample_data'      => $this->getSampleData(),
-                'custom_protocol'  => $this->getCustomProtocol(),
-                'custom_host'      => $this->getCustomHost(),
-                'custom_port'      => $this->getCustomPort(),
-                'custom_remote_path' => $this->getCustomRemotePath(),
-                'custom_login'     =>  $this->getCustomLogin(),
-                'custom_pass'      => $this->getCustomPass(),
-                'custom_sql'       => $this->getCustomSql(),
-                'error_message'       => $this->getErrorMessage(),
-                'revision_count'       => $this->getRevisionCount(),
-                'type'       => $this->getType(),
-                'custom_file'      => $this->getCustomFile(),
-                'papertrail_syslog_hostname' => $this->getPapertrailSyslogHostname(),
-                'papertrail_syslog_port' => $this->getPapertrailSyslogPort(),
+                'id'                         => $this->_id,
+                'edition'                    => $this->_edition,
+                'status'                     => $this->_status,
+                'version_id'                 => $this->_version_id,
+                'user_id'                    => $this->_user_id,
+                'domain'                     => $this->_domain,
+                'store_name'                 => $this->_store_name,
+                'description'                => $this->_description,
+                'backend_name'               => $this->_backend_name,
+                'backend_password'           => $this->_backend_password,
+                'sample_data'                => $this->_sample_data,
+                'custom_protocol'            => $this->_custom_protocol,
+                'custom_host'                => $this->_custom_host,
+                'custom_port'                => $this->_custom_port,
+                'custom_remote_path'         => $this->_custom_remote_path,
+                'custom_login'               => $this->_custom_login,
+                'custom_pass'                => $this->_custom_pass,
+                'custom_sql'                 => $this->_custom_sql,
+                'error_message'              => $this->_error_message,
+                'revision_count'             => $this->_revision_count,
+                'type'                       => $this->_type,
+                'custom_file'                => $this->_custom_file,
+                'papertrail_syslog_hostname' => $this->_papertrail_syslog_hostname,
+                'papertrail_syslog_port'     => $this->_papertrail_syslog_port,
         );
     }
 
@@ -334,13 +354,33 @@ class Application_Model_Store {
       return $this;
     }
     
-    public function getCustomPass(){
-      return $this->_custom_pass;
+    public function getCustomPass($decrypt = true) {
+        if($decrypt === true && $this->_custom_pass) {
+            $key = Zend_Registry::get('config')->mcrypt->key;
+            $vector = Zend_Registry::get('config')->mcrypt->vector;
+        
+            $filter = new Zend_Filter_Decrypt(array('adapter' => 'Mcrypt', 'key' => $key));
+            $filter->setVector($vector);
+            return preg_replace( "/\p{Cc}*$/u", "", $filter->filter(base64_decode($this->_custom_pass)));
+        }
+        
+        return $this->_custom_pass;
     }
     
-    public function setCustomPass($value){
-      $this->_custom_pass = $value;
-      return $this;
+    public function setCustomPass($value, $encrypt = true) {
+        if($encrypt === true) {
+            $key = Zend_Registry::get('config')->mcrypt->key;
+            $vector = Zend_Registry::get('config')->mcrypt->vector;
+
+            $filter = new Zend_Filter_Encrypt(array('adapter' => 'Mcrypt', 'key' => $key));
+            $filter->setVector($vector);
+
+            $value = base64_encode($filter->filter(trim($value)));
+        }
+
+        $this->_custom_pass = $value;
+        
+        return $this;
     }
     
     public function getCustomSql(){
