@@ -26,35 +26,8 @@ class Application_Model_StoreMapper {
 
     public function save(Application_Model_Store $store)
     {
-        $data = array(
-            'id'                         => $store->getId(),
-            'edition'                    => $store->getEdition(),
-            'status'                     => $store->getStatus(),
-            'version_id'                 => $store->getVersionId(),
-            'user_id'                    => $store->getUserId(),
-            'server_id'                  => $store->getServerId(),
-            'domain'                     => $store->getDomain(),
-            'store_name'              => $store->getStoreName(),
-            'description'                => $store->getDescription(),
-            'sample_data'                => $store->getSampleData(),
-            'backend_name'               => $store->getBackendName(),
-            'backend_password'           => $store->getBackendPassword(),
-            'custom_protocol'            => $store->getCustomProtocol(),
-            'custom_host'                => $store->getCustomHost(),
-            'custom_port'                => $store->getCustomPort(),
-            'custom_remote_path'         => $store->getCustomRemotePath(),
-            'custom_login'               => $store->getCustomLogin(),
-            'custom_pass'                => $store->getCustomPass(),
-            'custom_sql'                 => $store->getCustomSql(),
-            'error_message'              => $store->getErrorMessage(),
-            'revision_count'             => $store->getRevisionCount(),
-            'type'                       => $store->getType(),
-            'custom_file'                => $store->getCustomFile(),
-            'papertrail_syslog_hostname' => $store->getPapertrailSyslogHostname(),
-            'papertrail_syslog_port'     => $store->getPapertrailSyslogPort(),
-                
-        );
-
+        $data = $store->__toArray();
+        
         if (null === ($id = $store->getId())) {
             unset($data['id']);
             $data['backend_password'] = '';
@@ -72,6 +45,7 @@ class Application_Model_StoreMapper {
             return;
         }
         $row = $result->current();
+        
         $store->setId($row->id)
                 ->setEdition($row->edition)
                 ->setStatus($row->status)
@@ -83,13 +57,13 @@ class Application_Model_StoreMapper {
                 ->setDescription($row->description)
                 ->setSampleData($row->sample_data)
                 ->setBackendName($row->backend_name)
-                ->setBackendPassword($row->backend_password)
+                ->setBackendPassword($row->backend_password, false)
                 ->setCustomProtocol($row->custom_protocol)
                 ->setCustomHost($row->custom_host)
                 ->setCustomPort($row->custom_port)
                 ->setCustomRemotePath($row->custom_remote_path)
                 ->setCustomLogin($row->custom_login)
-                ->setCustomPass($row->custom_pass)
+                ->setCustomPass($row->custom_pass, false)
                 ->setCustomSql($row->custom_sql)
                 ->setErrorMessage($row->error_message)
                 ->setRevisionCount($row->revision_count)
@@ -97,6 +71,7 @@ class Application_Model_StoreMapper {
                 ->setCustomFile($row->custom_file)
                 ->setPapertrailSyslogPort($row->papertrail_syslog_port)
                 ->setPapertrailSyslogHostname($row->papertrail_syslog_hostname);
+
         return $store;
     }
 
@@ -122,13 +97,13 @@ class Application_Model_StoreMapper {
                     ->setDescription($row->description)
                     ->setSampleData($row->sample_data)
                     ->setBackendName($row->backend_name)
-                    ->setBackendPassword($row->backend_password)
+                    ->setBackendPassword($row->backend_password, false)
                     ->setCustomProtocol($row->custom_protocol)
                     ->setCustomHost($row->custom_host)
                     ->setCustomPort($row->custom_port)
                     ->setCustomRemotePath($row->custom_remote_path)
                     ->setCustomLogin($row->custom_login)
-                    ->setCustomPass($row->custom_pass)
+                    ->setCustomPass($row->custom_pass, false)
                     ->setCustomSql($row->custom_sql)
                     ->setErrorMessage($row->error_message)
                     ->setRevisionCount($row->revision_count)
