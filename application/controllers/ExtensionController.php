@@ -364,10 +364,11 @@ class ExtensionController extends Integration_Controller_Action {
                     try {
                         $extension->delete($request->getParam('id'));
                     } catch(Exception $e) {
-                        $this->getLog()->log('Admin - extension delete', Zend_Log::error, $e->getMessage());
+                        $this->getLog()->log('Admin - extension delete', Zend_Log::ERR, $e->getMessage());
                         $flash_message = array(
                             'type' => 'error',
-                            'message' => 'We couldn\'t delete extension ( probably is installed).<span class="hidden">'.$e->getMessage().'</span>'
+                            'from_scratch' => 1,
+                            'message' => 'We couldn\'t delete extension ( probably is installed ).<span class="hidden">'.$e->getMessage().'</span>'
                         );
                     }
                     // set message
