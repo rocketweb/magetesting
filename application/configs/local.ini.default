@@ -5,7 +5,8 @@ magento.storeUrl = "http://magetesting.dev"
 
 ;this addresses go to account email notifications
 magento.ftphost = "ftp://magetesting.com"
-magento.dbhost = "db.magetesting.com"
+magento.dbhost = "http://four.rocketweb.com/phpdb"
+;magento.dbhost = "http://www.magetesting.com/phpdb"
 
 magento.standardUser.stores = 0
 
