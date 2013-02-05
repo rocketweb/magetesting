@@ -140,8 +140,7 @@ extends Application_Model_Task {
                 }
                 
                 if ($planModel->getPhpmyadminAccess()){
-                    // commented out for now as it is not finished yet
-                    //$this->_sendPhpmyadminEmail($user_details);
+                    $this->_sendPhpmyadminEmail($user_details);
                 }
                 /* send email with account details stop */
             }
