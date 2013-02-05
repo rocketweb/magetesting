@@ -66,6 +66,10 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'$InputFileTag exception-'.$this->_domain.':'.
             PHP_EOL.'$InputFileStateFile papertrail-exception-'.$this->_domain.''.
             PHP_EOL.'$InputRunFileMonitor'.
+	    PHP_EOL.'$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/revision.log'.
+            PHP_EOL.'$InputFileTag revision-'.$this->_domain.':'.
+            PHP_EOL.'$InputFileStateFile papertrail-revision-'.$this->_domain.''.
+            PHP_EOL.'$InputRunFileMonitor'.
             PHP_EOL.''.
             PHP_EOL.'$template Template-'.$this->_domain.', "%timestamp% '.$papertrailPrefix.$this->_domain.' %syslogtag% %msg%\n"'.
             PHP_EOL.''.
@@ -73,6 +77,9 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'& ~'.
             PHP_EOL.''.
             PHP_EOL.'if $programname == \'exception-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
+            PHP_EOL.'& ~';
+            PHP_EOL.''.
+	    PHP_EOL.'if $programname == \'revision-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
             PHP_EOL.'& ~';
             
             file_put_contents($filename, $lines);
