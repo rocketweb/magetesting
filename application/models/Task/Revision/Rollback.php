@@ -35,6 +35,29 @@ implements Application_Model_Task_Interface {
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
 
+        $params['commit_comment'] = 'Manual Commit';
+	if ($extensionId = $this->_queueObject->getExtensionId()){
+	  $extensionObject = new Application_Model_Extension();
+	  $extensionObject->find($extensionId);
+	  $params['commit_comment'] = $extensionObject->getName();
+	}
+	
+        $linesToLog = array();
+        $linesToLog[] = date("Y-m-d H:i:s").' - Reverting files from: '.$params['commit_comment'];
+        $candumpnow=0;
+        foreach ($output as $line){
+	    if(strstr($line,'git commit --amend --author=')){
+	      $candumpnow=1;
+	      continue;
+	    }
+	    if (!$candumpnow || trim($line)==''){
+	      continue;
+	    }
+	    
+	    $linesToLog[] = $line;
+        }
+	$this->revisionLogger->info(implode("\n",$linesToLog));
+
         chdir($startCwd);
     }
 
