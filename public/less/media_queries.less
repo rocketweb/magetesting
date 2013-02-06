@@ -1,4 +1,6 @@
-// Bootstrap default - large screen
+.yesYouCanEditHere;
+
+/* Bootstrap default - large screen */
 @media only screen
 and (min-width : 980px){
     #screenshots {
@@ -20,17 +22,18 @@ and (max-width : 979px) {
         .navbar-inner {
             .nav {
             	&.nav-mainmenu {
-            	   background-color: @Red;
+            	    background-color: @Red;
+                    z-index: 2;
+                    
+            	    li {
+            	        &.open {
+            	            background-color: @Blue;
 
-            	   li {
-            	       &.open {
-            	           background-color: @Blue;
-
-            	           .dropdown-menu {
-            	               margin-right: 15px;
-            	           }
-            	       }
-            	   }
+            	            .dropdown-menu {
+            	                margin-right: 15px;
+            	            }
+            	        }
+            	    }
                 }
 
                 & > li > a {
@@ -115,7 +118,7 @@ and (max-width : 979px) {
     }
 }
 
-// Bootstrap standard medium screen
+/* Bootstrap standard medium screen */
 @media (min-width: 768px) and (max-width: 979px) {
     body {
         &.index {
@@ -141,7 +144,7 @@ and (max-width : 979px) {
     }
 }
 
-// Bootstrap standard small screen
+/* Bootstrap standard small screen */
 @media (max-width: 767px) {
     body {
         &.index {
@@ -157,6 +160,15 @@ and (max-width : 979px) {
                     }
                 }
             }
+        }
+    }
+    
+    .accordion-group .accordion-heading .accordion-toggle {
+        .left-content {
+            width: 100%;
+        }
+        .right-content {
+            display: none;
         }
     }
 }
@@ -239,8 +251,8 @@ and (max-width : 348px) {
             }
         }
     }
+    
 }
-
 @media only screen
 and (min-width : 349px)
 and (max-width : 481px) {

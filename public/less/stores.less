@@ -1,3 +1,5 @@
+.yesYouCanEditHere;
+
 /* STORE EDIT SCREEN */
 .store-edit {
     .control-group{
@@ -20,7 +22,8 @@
 .accordion-group {
     margin-bottom: -1px;
     border-radius: 0px;
-
+    clear: both;
+    
     &.accordion-add-new {
         border-width: 3px;
         border-style: dashed;
@@ -35,7 +38,7 @@
                 cursor: pointer;
             }
         }
-
+        
         .accordion-inner {
             .version-info {
             	  color: @Grey;
@@ -114,13 +117,23 @@
 
             .left-content, .right-content {
             }
-
+            
+            .left-content {
+            	width: 70%;
+                
+                .store-name {
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+            }
+            
             .right-content {
                 margin-left: 0px;
                 .btn {
                     margin-left: 6px;
                 }
             }
+            
             .arrow {
                 //width: @ElementSize;
                 //margin-right: ((@ElementSize / 4) - @ElementPad);
@@ -160,7 +173,11 @@
             }
         }
     }
-
+    
+    .accordion-body.collapse {
+        clear: both;
+    }
+    
     .accordion-inner {
         border-top: none;
 
