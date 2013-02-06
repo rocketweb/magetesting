@@ -276,6 +276,19 @@ extends Application_Model_Task {
                     Order allow,deny
                     allow from all
             </Directory>
+
+            php_flag log_errors on
+            #php 5.4.X
+            #php_value error_reporting 32767
+
+            #php 5.3.X
+            php_value error_reporting 30719
+
+            #php 5.2.X
+            #php_value error_reporting 6143
+
+            php_value error_log /home/".$this->config->magento->userprefix . $this->_dbuser."/jan-php.error.log
+
         </VirtualHost>";
         
         file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
