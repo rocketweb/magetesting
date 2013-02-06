@@ -86,6 +86,10 @@ papertrail.prefix = "dev-";
 ;SSL
 ssl.active = 0
 
+;Mcrypt
+mcrypt.key = "0af717633ca0419bacde2628d81c127c"
+mcrypt.vector = "79t1e2s4" 
+
 [staging : production]
 
 [testing : production]
