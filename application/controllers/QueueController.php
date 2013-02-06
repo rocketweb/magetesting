@@ -643,7 +643,13 @@ class QueueController extends Integration_Controller_Action {
             $storeItem = $storeModel->findByDomain($domain);
             
             $this->_response->setBody(Zend_Json_Encoder::encode($storeItem->status));
-        } 
+        } else {
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
     }
     
     public function gettimeleftAction() {
@@ -658,7 +664,13 @@ class QueueController extends Integration_Controller_Action {
             $this->_response->setBody(
                 Application_Model_Queue::getTimeLeftByUserAndId($userid,$queueid)
             );
-        } 
+        } else {
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
     }
     
     public function commitAction() {
