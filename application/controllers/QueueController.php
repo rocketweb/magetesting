@@ -1238,15 +1238,22 @@ class QueueController extends Integration_Controller_Action {
 
     protected function _findSqlDumpOnFtp() {
         $this->_validateFtpCredentials();
+
         $basePath = $this->_findWebrootOnFtp();
         //return $basePath;
         $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
+if (!$raw){
+/* try passive mode */
+ftp_pasv($this->_ftpStream,true);
+$raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
+}
+
         $filetimes = array();
         if ($raw){
             foreach ($raw as $file){
                 $parts = explode(" ",$file);
-                if (isset($parts[24])){
-                    $filetimes[$parts[24]]= strtotime($parts[21].' '.$parts[22].' '.$parts[23]);
+                if (isset($parts[10])){
+                    $filetimes[$parts[10]]= strtotime($parts[7].' '.$parts[8].' '.$parts[9]);
                 }
             }
         }
