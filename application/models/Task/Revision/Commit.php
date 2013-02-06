@@ -126,22 +126,24 @@ implements Application_Model_Task_Interface {
         $this->logger->log($message, Zend_Log::DEBUG);
 
 	/* log lines to revision log */
-        $linesToLog = array();
-        $linesToLog[] = date("Y-m-d H:i:s").' - '.$params['commit_comment'];
-        $candumpnow=0;
-        foreach ($output as $line){
-	    if(strstr($line,'git commit --amend --author=')){
-	      $candumpnow=1;
-	      continue;
-	    }
-	    if (!$candumpnow || trim($line)==''){
-	      continue;
-	    }
-	    
-	    $linesToLog[] = $line;
+        if($params['commit_comment'] != 'Initial Magento Commit'){
+            $linesToLog = array();
+            $linesToLog[] = date("Y-m-d H:i:s").' - '.$params['commit_comment'];
+            $candumpnow=0;
+            foreach ($output as $line){
+                if(strstr($line,'git commit --amend --author=')){
+                  $candumpnow=1;
+                  continue;
+                }
+                if (!$candumpnow || trim($line)==''){
+                  continue;
+                }
+
+                $linesToLog[] = $line;
+            }
+
+            $this->revisionLogger->info(implode("\n",$linesToLog));
         }
-        
-        $this->revisionLogger->info(implode("\n",$linesToLog));
 
         if (count($output) < 3 && isset($output[2]) && trim($output[2])=='nothing to commit (working directory clean)'){
             $message = 'No changes have been made, automatic commit aborted';
