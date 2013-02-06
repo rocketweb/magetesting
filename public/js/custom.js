@@ -570,7 +570,7 @@ $(document).ready(function () {
         $('#extension-form select[name$="_version"]:hidden').remove();
     });
     
-    $("#help, #context-help i").click(function () {
+    $("#iconmenu-help, #context-help i").click(function () {
         var $helpBlock = $('#wrap-context-help');
         $helpBlock.animate({
             right: parseInt($helpBlock.css('right'), 10) == 0 ?
