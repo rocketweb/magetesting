@@ -1242,11 +1242,11 @@ class QueueController extends Integration_Controller_Action {
         $basePath = $this->_findWebrootOnFtp();
         //return $basePath;
         $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
-if (!$raw){
-/* try passive mode */
-ftp_pasv($this->_ftpStream,true);
-$raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
-}
+        if (!$raw){
+            /* try passive mode */
+            ftp_pasv($this->_ftpStream,true);
+            $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
+        }
 
         $filetimes = array();
         if ($raw){
