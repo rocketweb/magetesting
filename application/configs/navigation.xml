@@ -99,6 +99,14 @@
                 <privilege>login</privilege>
                 <icon>icon-white icon-arrow-down</icon>
             </userLogin>
+            <help>
+                <label>Help</label>
+                <id>help</id>
+                <uri>#</uri>
+                <resource>default_user</resource>
+                <privilege>logout</privilege>
+                <icon>icon-white icon-question-sign</icon>
+            </help>
             <userLogout>
                 <label>Logout</label>
                 <module>default</module>
