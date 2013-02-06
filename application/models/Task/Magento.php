@@ -265,6 +265,9 @@ extends Application_Model_Task {
             ServerAdmin support@magetesting.com
             ServerName ".$this->_dbuser.".".$this->_serverObject->getDomain()."
 
+            ErrorLog /home/".$this->config->magento->userprefix . $this->_dbuser."/error.log
+            CustomLog /home/".$this->config->magento->userprefix . $this->_dbuser."/access.log combined
+
             Alias /fcgi-bin/ /home/www-data/".$this->config->magento->userprefix . $this->_dbuser."/
             SuexecUserGroup ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
 
@@ -275,6 +278,7 @@ extends Application_Model_Task {
                     Order allow,deny
                     allow from all
             </Directory>
+
         </VirtualHost>";
         
         file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
