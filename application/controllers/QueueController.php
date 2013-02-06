@@ -503,7 +503,7 @@ class QueueController extends Integration_Controller_Action {
 
         $storeModel = new Application_Model_Store();
         $this->view->store = $store = $storeModel->find($id);
-
+        
         if ($store->getUserId() == $this->auth->getIdentity()->id) {
             //its ok to edit
         } else {
@@ -515,17 +515,19 @@ class QueueController extends Integration_Controller_Action {
                                 ), 'default', true);
             }
         }
-
+        
         $form = new Application_Form_StoreEdit($store->getStatus() == 'pending');
+        
         $populate = array_merge(
+            $store->__toArray(),
             array(
                 'store_name' => $store->getStoreName(),
                 'backend_password' => $store->getBackendPassword(),
                 'backend_login' => $this->auth->getIdentity()->login
             ),
-            $store->__toArray(),
             array('custom_pass_confirm' => $store->getCustomPass())
         );
+
         $form->populate($populate);
 
         if ($this->_request->isPost()) {
