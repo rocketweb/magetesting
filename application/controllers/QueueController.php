@@ -1058,6 +1058,17 @@ class QueueController extends Integration_Controller_Action {
         $baseFolders = array('www','public_html','web','htdocs',$this->_customHost);
         // get contents of the current directory
         $contents = ftp_nlist($this->_ftpStream, ".");
+
+	if(!$contents){
+	    /*try passive transfer*/
+	    ftp_pasv($this->_ftpStream, true);
+	    $contents = ftp_nlist($this->_ftpStream,".");
+	}
+
+	if (!$contents){
+	    return false;
+	}
+
         $res = array_values(array_intersect($baseFolders,$contents));
         if ($res){
             ftp_chdir($this->_ftpStream,$res[0]);
