@@ -90,7 +90,7 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'& ~'.
             
             /* apache error log, ignore sudo lines and mysql to prevent password logging */
-            PHP_EOL.'if $programname == \'php-'.$this->_domain.'\' and $msg contains \'/home/'.$systemUser.'/public_html/'.$this->_domain.'\' and\' and $msg !contains \'mysql\' and\' and $msg !contains \'sudo\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
+            PHP_EOL.'if $programname == \'php-'.$this->_domain.'\' and $msg contains \'/home/'.$systemUser.'/public_html/'.$this->_domain.'\' and not ($msg contains \'mysql\' or $msg contains \'sudo\') then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
             PHP_EOL.'& ~'.
             PHP_EOL.'';
             
