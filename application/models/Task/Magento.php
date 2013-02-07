@@ -84,7 +84,6 @@ extends Application_Model_Task {
     
     /**
      * Creates system account for user during store installation (in worker.php)
-     * TODO: Same Method exists in MgentoInstall And MagentoDownload, 
      */
     protected function _createSystemAccount() {
         if ($this->_userObject->getHasSystemAccount() == 0) {
@@ -149,6 +148,7 @@ extends Application_Model_Task {
             
             $this->_createUserTmpDir();
             $this->_createVirtualHost();
+            $this->_setUserQuota();
         }
     }
     
@@ -329,6 +329,19 @@ extends Application_Model_Task {
     /* Running this prevents store from reindex requirement in admin */
     protected function _reindexStore(){
         exec('php /home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php --reindex all');
+    }
+    
+    protected function _setUserQuota(){
+        //4GB soft limit
+        //5GB hard limit
+        exec("sudo quotatool".
+        " -u ".$this->config->magento->userprefix . $this->_dbuser.
+        " -bq 4000M". //soft limit
+        " -l '5000 Mb'". //hard limit 
+        " /");
+        
+        //set grace time (0seconds mean instant)
+        exec("sudo quotatool -u ".$this->config->magento->userprefix . $this->_dbuser." -b -t 0 seconds /");
     }
 }
         
