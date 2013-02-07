@@ -106,3 +106,8 @@
 </div>
 
 <?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>
+<?php 
+    $data = <<<EOT
+
+EOT;
+    echo $this->partial('_partials/helpContext.phtml', array('data' => $data)); 

@@ -94,14 +94,8 @@
     	</div>
     </div>
 </div>
+<?php 
+    $data = <<<EOT
 
-<div id="wrap-context-help">
-    <div id="context-help">
-        <h2>Help</h2>
-        <ul>
-            <li>Submit a Ticket</li>
-            <li>Chat</li>
-            <li>Documentation</li>
-        </ul>
-    </div>
-</div>
+EOT;
+    echo $this->partial('_partials/helpContext.phtml', array('data' => $data));
