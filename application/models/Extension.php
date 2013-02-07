@@ -344,8 +344,4 @@ class Application_Model_Extension {
         $model = new Application_Model_ExtensionScreenshot();
         return $model->fetchByExtensionId($id);
     }
-    
-    public function fetchList($edition = 'all') {
-        return $this->getMapper()->fetchList($edition);
-    }
 }
