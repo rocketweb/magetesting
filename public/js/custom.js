@@ -89,7 +89,10 @@ $(document).ready(function () {
         placement: 'left'
     });
     $('.tooltip-top').tooltip({
-        placement: 'top'
+        placement: 'top',
+        title: function() {
+            return $(this).data('tooltip-title');
+        }
     });
     
     /* prevent click event and init popover */

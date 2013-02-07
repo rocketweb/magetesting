@@ -66,14 +66,23 @@ $(document).ready(function(){
         $sql_field = $('#custom_sql'),
         $container = $('#main .container'),
         $remote_path_field = $('#custom_remote_path'),
-        f_create_flash_message = function(message, type) {
+        f_create_flash_message = function(message, type, $element) {
             if(type === undefined || (type !== 'success' && type !== 'error')) {
                 type = 'success';
             }
-            $('#show-flashmessage').remove();
-            $container.prepend($(message).attr('id', 'show-flashmessage'));
-            window.location.hash = '';
-            window.location.hash = '#show-flashmessage';
+
+            $element.popover({
+                'title' : 'Status',
+                'content' : message,
+                'html' : true,
+                'trigger' : 'manual',
+                'placement' : 'right'
+            }).popover('show');
+
+            // destroy shown popover
+            setTimeout(function() {
+                $element.popover('destroy');
+            }, 1000);
         };
 
     if($validate_connection.length) {
@@ -95,7 +104,7 @@ $(document).ready(function(){
                 success : function(response) {
                     if(response.status !== undefined) {
                         if(response.message) {
-                            f_create_flash_message(response.message, response.status);
+                            f_create_flash_message(response.message, response.status, $validate_connection);
                         }
                         if(response.value) {
                             $remote_path_field.val(response.value);
@@ -130,7 +139,7 @@ $(document).ready(function(){
                 success : function(response) {
                     if(response.status !== undefined) {
                         if(response.message) {
-                            f_create_flash_message(response.message, response.status);
+                            f_create_flash_message(response.message, response.status, $find_sql_file);
                         }
                         if(response.value) {
                             $sql_field.val(response.value);
