@@ -16,7 +16,7 @@
         <?php if($storeCount === 0): ?>
             <!-- START STORE -->
             <div class="accordion-group accordion-add-new" data-active="0">
-                <div class="accordion-heading">
+                <div class="accordion-heading hidden-phone">
                     <div class="accordion-toggle">
                         <div class="for-use ready pull-right">
                             <a target="_blank" href="#" class="btn btn-faded btn-mini view-store disabled"><i class="icon icon-white icon-home"></i> View Store</a>
@@ -31,13 +31,13 @@
                         <?php else: ?>
                             <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red btn-add-store"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a>
                         <?php endif; ?>
-                        <div class="row version-info">
+                        <div class="row version-info hidden-phone">
                             <div class="span2 first"><strong>Edition:</strong></div>
                             <div class="span2"><strong>Version:</strong></div>
                             <div class="span2"><strong>Sample Data:</strong></div>
                         </div>
-                        <p class="description"></p>
-                        <div class="row">
+                        <p class="description hidden-phone"></p>
+                        <div class="row hidden-phone">
                             <!-- START DETAILS BOX -->
                             <div class="span4 panel details">
                                 <h5>Configuration</h5>
