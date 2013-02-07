@@ -862,3 +862,8 @@ form#extension-filter-form {
 #wrap-context-help #context-help div i {
     cursor: pointer;
 }
+
+#extension-form .file-name {
+    word-break: break-all;
+    cursor: auto;
+}

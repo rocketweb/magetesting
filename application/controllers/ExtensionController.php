@@ -136,12 +136,15 @@ class ExtensionController extends Integration_Controller_Action {
         $form->edition->addValidator(
             new Zend_Validate_InArray(array_keys($editions))
         );
-
+        
         /* $id > 0 AND extension found in database */
         $noExtension = false;
         if($id) {
             $extension = $extension->find($id);
             if($extension->getId()) {
+                $this->view->extension_file = $extension->getExtension();
+                $this->view->extension_encoded_file = $extension->getExtensionEncoded();
+                
                 foreach($extension->fetchScreenshots() as $row) {
                     $screenshots_ids[] = $row->getId();
                     $screenshots[] = $row->getImage();
@@ -202,86 +205,66 @@ class ExtensionController extends Integration_Controller_Action {
                 $extension_new_name = (isset($_FILES["extension_file"]) && $_FILES["extension_file"]["name"] ? $_FILES["extension_file"]["name"] : '');
                 $extension_encoded_new_name = (isset($_FILES["extension_encoded_file"]) && $_FILES["extension_encoded_file"]["name"] ? $_FILES["extension_encoded_file"]["name"] : '');
 
-                $message1 = 'File "' .$extension_new_name . '" already exists in the system.';
-                $message2 = 'File "' .$extension_encoded_new_name . '" already exists in the system.';
-        
-                $unique = new Zend_Validate_Db_NoRecordExists(array('table' => 'extension', 'field' => 'extension'));
-                $unique->setMessage($message1); 
-
-                $unique2 = new Zend_Validate_Db_NoRecordExists(array('table' => 'extension', 'field' => 'extension_encoded'));
-                $unique2->setMessage($message2);
                 $errors = false;
 
                 $adapter = new Zend_File_Transfer_Adapter_Http();
                 
                 if($extension_new_name) {
-                    if($unique->isValid($extension_new_name)) {
-                        $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/open/';
-                        if(!file_exists($dir)) {
-                            @mkdir($dir, 0777, true);
-                        }
-                        
-                        try {
-                            $adapter->setDestination($dir);
-                        } catch (Zend_File_Transfer_Exception $e) {
-                            $this->_helper->FlashMessenger(
-                                array(
-                                    'type' => 'error',
-                                    'message' => $e->getMessage() . ' ' . $dir
-                                )
-                            );
-                            $errors = true;
-                        }
-
-                        $adapter->receive('extension_file');
-                        
-                        if($extension->getExtension() AND $extension->getExtension() != $extension_new_name) {
-                            $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/open/'.$extension->getExtension();
-                            if(file_exists($file_to_delete)) {
-                                @unlink($file_to_delete);
-                            }
-                        }
-                        $extension->setExtension($extension_new_name);
-                        
-                    } else {
-                        $errors = true;
-                        $form->getElement('extension_file')->addError($message1);
+                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/open/';
+                    if(!file_exists($dir)) {
+                        @mkdir($dir, 0777, true);
                     }
+
+                    try {
+                        $adapter->setDestination($dir);
+                    } catch (Zend_File_Transfer_Exception $e) {
+                        $this->_helper->FlashMessenger(
+                            array(
+                                'type' => 'error',
+                                'message' => $e->getMessage() . ' ' . $dir
+                            )
+                        );
+                        $errors = true;
+                    }
+
+                    $adapter->receive('extension_file');
+
+                    if($extension->getExtension() AND $extension->getExtension() != $extension_new_name) {
+                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/open/'.$extension->getExtension();
+                        if(file_exists($file_to_delete)) {
+                            @unlink($file_to_delete);
+                        }
+                    }
+                    $extension->setExtension($extension_new_name);
                 }
                 
                 if($extension_encoded_new_name) {
-                    if($unique2->isValid($extension_encoded_new_name)) {
-                        $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/encoded/';
-                        if(!file_exists($dir)) {
-                            @mkdir($dir, 0777, true);
-                        }
-                        
-                        try {
-                            $adapter->setDestination($dir);
-                        } catch (Zend_File_Transfer_Exception $e) {
-                            $this->_helper->FlashMessenger(
-                                array(
-                                    'type' => 'error',
-                                    'message' => $e->getMessage() . ' ' . $dir
-                                )
-                            );
-                            $errors = true;
-                        }
-                        
-                        $adapter->receive('extension_encoded_file');
-                        
-                        if($extension->getExtensionEncoded() AND $extension->getExtensionEncoded() != $extension_encoded_new_name) {
-                            $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/encoded/'.$extension->getExtensionEncoded();
-                            if(file_exists($file_to_delete)) {
-                                @unlink($file_to_delete);
-                            }
-                        }
-                        $extension->setExtensionEncoded($extension_encoded_new_name);
-                        
-                    } else {
-                        $errors = true;
-                        $form->getElement('extension_encoded_file')->addError($message2);
+                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/encoded/';
+                    if(!file_exists($dir)) {
+                        @mkdir($dir, 0777, true);
                     }
+
+                    try {
+                        $adapter->setDestination($dir);
+                    } catch (Zend_File_Transfer_Exception $e) {
+                        $this->_helper->FlashMessenger(
+                            array(
+                                'type' => 'error',
+                                'message' => $e->getMessage() . ' ' . $dir
+                            )
+                        );
+                        $errors = true;
+                    }
+
+                    $adapter->receive('extension_encoded_file');
+
+                    if($extension->getExtensionEncoded() AND $extension->getExtensionEncoded() != $extension_encoded_new_name) {
+                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/encoded/'.$extension->getExtensionEncoded();
+                        if(file_exists($file_to_delete)) {
+                            @unlink($file_to_delete);
+                        }
+                    }
+                    $extension->setExtensionEncoded($extension_encoded_new_name);
                 }
                 
                 if(!$errors) {
