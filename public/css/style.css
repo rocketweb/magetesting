@@ -868,3 +868,8 @@ form#extension-filter-form {
     padding: 1px 5px;
     margin-left: 10px;
 }
+
+#extension-form .file-name {
+    word-break: break-all;
+    cursor: auto;
+}
