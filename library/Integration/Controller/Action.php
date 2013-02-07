@@ -136,8 +136,8 @@ class Integration_Controller_Action extends Zend_Controller_Action
          */
         if ('guest' == $type) {
             $session = new Zend_Session_Namespace('after_login_redirect');
-            // do not allow redirection to user/login
-            if($controller != 'user' AND $action != 'login') {
+            // do not allow redirection to user/login and to pages with POST data
+            if(!$this->getRequest()->isPost() AND $controller != 'user' AND $action != 'login') {
                 $session->controller = $controller;
                 $session->action = $action;
             }
