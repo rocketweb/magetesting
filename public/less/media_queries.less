@@ -142,6 +142,12 @@ and (max-width : 979px) {
             }
         }
     }
+    .accordion-group .accordion-inner {
+        & .btn {
+            width: 80%;
+            margin-bottom: 4px;
+        }
+    }
 }
 
 /* Bootstrap standard small screen */
@@ -163,9 +169,38 @@ and (max-width : 979px) {
         }
     }
     
+    .accordion-group .accordion-inner {
+        .version-info {
+            font-size: 12px;
+        }
+        .panel {
+            &.details {
+                border-right: none;
+            }
+            
+            &.deployment {
+                border-right: none;
+                
+                h5 {
+                    span.version {
+                    	float: none;
+                        margin-left: 10px;
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+        & .btn {
+            width: 26%;
+        }
+    }
+    
     .accordion-group .accordion-heading .accordion-toggle {
         .left-content {
             width: 100%;
+            .store-name {
+                font-size: 14px;
+            }
         }
         .right-content {
     		position: absolute;
@@ -182,6 +217,8 @@ and (max-width : 979px) {
             }
         }
     }
+    
+    
     .tab-stripe.active {
         min-height: 76px;
     }
@@ -214,6 +251,48 @@ and (max-width : 480px) {
             }
         }
     }
+    
+    .accordion-group {
+        .accordion-heading .accordion-toggle {
+            .left-content {
+                .store-name {
+                    font-size: 14px;
+                }
+            }
+        }
+        .accordion-inner {
+        	.version-info {
+                font-size: 12px;
+            }
+            .panel {
+                &.details {
+                    border-right: none;
+                }
+                
+                &.deployment {
+                    border-right: none;
+                    
+                    h5 {
+                    	span.version {
+                    		float: none;
+                            margin-left: 10px;
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+            
+            & .btn {
+                width: 26%;
+                &.rollback-button, &.commit-button, &.deploy-button {
+                    width: 90%;
+                    margin-bottom: 6px;
+                }
+            }
+        }
+    }
+    
+    
 }
 
 /* Smartphones (landscape) ----------- */
@@ -266,6 +345,11 @@ and (max-width : 348px) {
         }
     }
     
+    .accordion-group .accordion-inner {
+        & .btn {
+            width: inherit;
+        }
+    }
 }
 @media only screen
 and (min-width : 349px)
