@@ -3,6 +3,12 @@
 class QueueController extends Integration_Controller_Action {
 
     public function init() {
+        /* following two variables used during ftp credentials vlidation */
+        $this->_ftpStream = '';
+        $this->_sshStream = '';
+        $this->_customHost = '';
+        $this->_sshWebrootPath='';
+        
         $this->_helper->sslSwitch();
         parent::init();
     }
@@ -991,15 +997,66 @@ class QueueController extends Integration_Controller_Action {
             'status' => 'error',
             'message' => 'Ftp Credentials are not valid.'
         );
-        if($this->_validateFtpCredentials()) {
-            $response['message'] = 'Webroot couldn\'t be found.';
-            if(($response['value'] = $this->_findWebrootOnFtp())) {
-                $response['status'] = 'success';
-                $response['message'] = 'Webroot has been found successfully.';
-            }
+        $request = $this->getRequest();
+        switch($request->getParam('custom_protocol')){
+            case 'ftp':
+                if($this->_validateFtpCredentials()) {
+                    $response['message'] = 'Webroot couldn\'t be found.';
+                    if(($response['value'] = $this->_findWebrootOnFtp())) {
+                        $response['status'] = 'success';
+                        $response['message'] = 'Webroot has been found successfully.';
+                    }
+                }
+            break;
+            case 'ssh':
+                if ($this->_validateSshCredentials()) {
+                    $response['message'] = 'Webroot couldn\'t be found.';
+                    if (($response['value'] = $this->_findWebrootOnSsh())) {
+                        $response['status'] = 'success';
+                        $response['message'] = 'Webroot has been found successfully.';
+                    }
+                }
+            break;
+            default:
+            /*do nothing, error is set*/
+        
         }
         $response['message'] = $this->_prepareFlashMessage($response);
         $this->getResponse()->setBody(json_encode($response));
+    }
+    
+    protected function _validateFtpCredentials(){
+        
+        // set up a connection or die
+        $request = $this->getRequest();
+        $this->_customHost = $request->getParam('custom_host');
+        $this->_ftpStream = ftp_connect($this->_customHost,(int)$request->getParam('custom_port'),3600); 
+        if ($this->_ftpStream){
+            if (ftp_login($this->_ftpStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+    
+    protected function _validateSshCredentials(){
+        
+        // set up a connection or die
+        $request = $this->getRequest();
+        $this->_customHost = $request->getParam('custom_host');
+        $customPort = (int)$request->getParam('custom_port',22);
+        if (trim($customPort) == ''){
+            $customPort = 22;
+        }
+        $this->_sshStream = ssh2_connect($this->_customHost,$customPort); 
+        if ($this->_sshStream){
+            if (ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -1024,23 +1081,98 @@ class QueueController extends Integration_Controller_Action {
                 //$res = array_values(array_intersect($baseFolders,$contents));
                
                 //find magento files
-                return $this->_checkForMagentoFolders();
+                return $this->_checkForMagentoFoldersOnFtp();
                 
             } else {
             /*we are in web dir*/
             
                 //find magento files
-                return $this->_checkForMagentoFolders();
+                return $this->_checkForMagentoFoldersOnFtp();
             }
             
             //find magento files
-            return $this->_checkForMagentoFolders();
+            return $this->_checkForMagentoFoldersOnFtp();
         }
         
         return false;
     }
     
-    protected function _checkForMagentoFolders(){
+    protected function _findWebrootOnSsh() {
+         $request = $this->getRequest();
+         $customPort = (int)$request->getParam('custom_port',22);
+        if (trim($customPort) == ''){
+            $customPort = 22;
+        }
+         
+        $appPaths = $skinPaths = $libPaths = $jsPaths = array(); 
+        /* app folder */
+        $findapp = 'find . -type d -name "app" -printf "%h\n" | sort -u';
+        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
+                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
+                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
+                .' -p'.$customPort." '".$findapp."'";
+              // echo $command;
+        exec($command,$appPaths);
+        //var_dump($appPaths);
+        
+        // skin folder 
+        $findskin = 'find . -type d -name "skin" -printf "%h\n" | sort -u';
+        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
+                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
+                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
+                .' -p'.$customPort." '".$findskin."'";
+               
+        exec($command,$skinPaths);
+        
+	// lib folder 
+        $findlib = 'find . -type d -name "lib" -printf "%h\n" | sort -u';
+        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
+                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
+                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
+                .' -p'.$customPort." '".$findlib."'";
+               
+        exec($command,$libPaths);
+      
+	// js folder 
+	$findjs = 'find . -type d -name "js" -printf "%h\n" | sort -u';
+        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
+                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
+                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
+                .' -p'.$customPort." '".$findjs."'";
+               
+        exec($command,$jsPaths);
+	
+	/* get rid of paths that does not have all mentioned folders */
+	$possibleOptions = array_values(array_intersect($appPaths,$skinPaths,$libPaths,$jsPaths));
+	
+	if (count($possibleOptions)==0){
+	  return false;
+	}
+	
+	/* additional check - check remaining paths for these that contain app/Mage.php file */
+	foreach ($possibleOptions as $path){
+	  $findmageapp = 'find '.str_replace('./','',$path).' -type f -name "Mage.php" -printf "`pwd`/%h\n" | sort -u';
+	  //return $findmageapp;
+	  $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
+                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
+                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
+                .' -p'.$customPort." '".$findmageapp."'";
+               
+	  exec($command,$validPaths);
+	  
+	  if (isset($validPaths[0])){
+	    $path = str_replace('/app','',$validPaths[0]);
+	    $this->_sshWebrootPath = $path;
+	    return $path;
+	  } else {
+	    return false;
+	  }
+	  
+	}
+	                  
+    }
+    
+    protected function _checkForMagentoFoldersOnFtp(){
         $contents = ftp_nlist($this->_ftpStream, ".");
         
         if (in_array('app',$contents) 
@@ -1058,20 +1190,49 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
+        $request = $this->getRequest();
+        
         $response = array(
                 'status' => 'error',
                 'message' => 'Ftp Credentials are not valid.'
         );
-        if($this->_validateFtpCredentials()) {
-            $response['message'] = 'Webroot path has to be specified.';
-            //if($this->getParam('webroot')) {
-                $response['message'] = 'Sql dump couldn\'t be found';
-                if(($response['value'] = $this->_findSqlDumpOnFtp())) {
-                    $response['status'] = 'success';
-                    $response['message'] = 'Sql dump file has been found successfully.';
+        
+        switch ($request->getParam('custom_protocol')){
+            case 'ftp':
+                if ($this->_validateFtpCredentials()) {
+                    $response['message'] = 'Webroot path has to be specified.';
+                    //if($this->getParam('webroot')) {
+                    $response['message'] = 'Sql dump couldn\'t be found';
+                    if (($response['value'] = $this->_findSqlDumpOnFtp())) {
+                        $response['status'] = 'success';
+                        $response['message'] = 'Sql dump file has been found successfully.';
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Sql dump file has not been found.';
+                    }
+                    //}
                 }
-            //}
+            break;
+            case 'ssh':
+                if ($this->_validateSshCredentials()) {
+                    $response['message'] = 'Webroot path has to be specified.';
+                    //if($this->getParam('webroot')) {
+                    $response['message'] = 'Sql dump couldn\'t be found';
+                    if (($response['value'] = $this->_findSqlDumpOnSsh())) {
+                        $response['status'] = 'success';
+                        $response['message'] = 'Sql dump file has been found successfully.';
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Sql dump file has not been found.';
+                    }
+                    //}
+                }
+            break;
+            default:
+                /*invalid response is already set before switch*/
         }
+        
+        
         $response['message'] = $this->_prepareFlashMessage($response);
         $this->getResponse()->setBody(json_encode($response));
     }
@@ -1084,23 +1245,83 @@ class QueueController extends Integration_Controller_Action {
         $filetimes = array();
         if ($raw){
             foreach ($raw as $file){
-                
                 $parts = explode(" ",$file);
-                $filetimes[$parts[24]]= strtotime($parts[21].' '.$parts[22].' '.$parts[23]); 
+                if (isset($parts[24])){
+                    $filetimes[$parts[24]]= strtotime($parts[21].' '.$parts[22].' '.$parts[23]);
+                }
             }
         }
         
         $maxtime = 0;
         $newestFile = '';
-        foreach ($filetimes as $file => $filetime){
-            if ($filetime > $maxtime){
-                $newestFile = $file;
-                $maxtime = $filetime;
+        if ($filetimes){
+            foreach ($filetimes as $file => $filetime){
+                if ($filetime > $maxtime){
+                    $newestFile = $file;
+                    $maxtime = $filetime;
+                }
             }
+        } else {
+            return false;
         }
                
         return rtrim($basePath,'/').'/var/backups/'.$newestFile;
         
+    }
+    
+    /** @TODO:implement */
+    protected function _findSqlDumpOnSsh(){
+        $this->_validateSshCredentials();
+        
+        if ($this->_sshWebrootPath==''){
+	  $this->_sshWebrootPath = $this->_findWebrootOnSsh();
+        }
+        
+        $request = $this->getRequest();
+        $customPort = (int)$request->getParam('custom_port',22);
+        if (trim($customPort) == ''){
+            $customPort = 22;
+        }
+        
+        $backupPath = $this->_sshWebrootPath.'/var/backups/';
+        
+        $findbackups = 'ls -al '.$backupPath.'';
+	  //return $findmageapp;
+	  $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
+                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
+                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
+                .' -p'.$customPort." '".$findbackups."'";
+               
+	  exec($command,$raw);
+        
+        
+        $filetimes = array();
+        if ($raw){
+            foreach ($raw as $file){
+		
+                $parts = explode(" ",$file);
+                if (isset($parts[11]) && $parts[11]!='.' && $parts[11]!='..'){
+	//	    $files[]= $parts;
+                    $filetimes[$parts[11]]= strtotime($parts[5].' '.$parts[7].' '.$parts[8]);
+                }
+            }
+        }
+        //return $files;
+        $maxtime = 0;
+        $newestFile = '';
+        if ($filetimes){
+            foreach ($filetimes as $file => $filetime){
+                if ($filetime > $maxtime){
+                    $newestFile = $file;
+                    $maxtime = $filetime;
+                }
+            }
+        } else {
+            return false;
+        }
+               
+        return rtrim($this->_sshWebrootPath,'/').'/var/backups/'.$newestFile;
+
     }
 
     protected function _prepareFlashMessage($data) {
