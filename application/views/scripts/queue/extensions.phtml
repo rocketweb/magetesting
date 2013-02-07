@@ -213,16 +213,9 @@
 </div>
 <!-- END SCREENSHOTS CAROUSEL -->
 
-<div id="wrap-context-help">
-    <div id="context-help">
-        <div>
-            <i class="icon-remove icon-white"></i>
-            <h3>Help</h3>
-            <ul>
-                <li>Submit a Ticket</li>
-                <li>Chat</li>
-                <li>Documentation</li>
-            </ul>
-        </div>
-    </div>
-</div>
+<?php 
+    $data = <<<EOT
+
+EOT;
+    echo $this->partial('_partials/helpContext.phtml', array('data' => $data)); 
+?>
