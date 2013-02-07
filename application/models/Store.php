@@ -260,6 +260,7 @@ class Application_Model_Store {
                 'edition'                    => $this->_edition,
                 'status'                     => $this->_status,
                 'version_id'                 => $this->_version_id,
+                'server_id'                  => $this->_server_id,
                 'user_id'                    => $this->_user_id,
                 'domain'                     => $this->_domain,
                 'store_name'                 => $this->_store_name,
