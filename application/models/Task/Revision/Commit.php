@@ -44,7 +44,6 @@ implements Application_Model_Task_Interface {
          
     }
     
-    
     /* For now just an alias */
     protected function _commitManual(){
         $this->logger->log('Making manual GIT commit.', Zend_Log::INFO);
@@ -70,13 +69,12 @@ implements Application_Model_Task_Interface {
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
 
-
 	/* log lines to revision log */
         $linesToLog = array();
         $linesToLog[] = date("Y-m-d H:i:s").' - '.$params['commit_comment'];
         $candumpnow=0;
         foreach ($output as $line){
-	    if(strstr($line,'git commit --amend --author=')){
+	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author=')){
 	      $candumpnow=1;
 	      continue;
 	    }
@@ -86,10 +84,8 @@ implements Application_Model_Task_Interface {
 	    
 	    $linesToLog[] = $line;
         }
-        
+
         $this->revisionLogger->info(implode("\n",$linesToLog));
-
-
                
         if (!isset($matches[2])){
             $message = 'Could not find revision information, aborting';
@@ -131,7 +127,7 @@ implements Application_Model_Task_Interface {
             $linesToLog[] = date("Y-m-d H:i:s").' - '.$params['commit_comment'];
             $candumpnow=0;
             foreach ($output as $line){
-                if(strstr($line,'git commit --amend --author=')){
+	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author=')){
                   $candumpnow=1;
                   continue;
                 }
