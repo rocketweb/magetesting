@@ -100,7 +100,7 @@
                                $progressClass = 'progress-info';
                         endswitch;
                     ?>
-                        <div class="right-content pull-right">
+                        <div class="right-content pull-right inactive">
                             <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''); ?>">
                                 <?php if($item['status'] == 'error'): ?>
                                 <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Error occured. Please contact with administrator.'  ?>" data-trigger="hover">
@@ -187,12 +187,8 @@ And this is button from autologin feature
                             </div>
                         </div>
                         <div class="left-content">
-                            <div class="arrow pull-left"><i class="icon-chevron-down icon-blue"></i></div>
-                            <div class="store-name"><?php echo $this->escape($item['store_name']) ?> hxhsiqhi hiwhdi wown onwuo xuwobdouwbdouw hdouw hdouwhdouwbduio w</div>
-                        </div>
-                        <div class="span6 left-content hidden">
-                            <div class="arrow pull-left"><i class="icon-chevron-down icon-blue"></i></div>
-                            <div class="span5 store-name"><?php echo $this->escape($item['store_name']) ?> hxhsiqhi hiwhdi wown onwuo xuwobdouwbdouw hdouw hdouwhdouwbduio w</div>
+                            <div class="arrow pull-left"><i class="icon icon-chevron-down icon-blue"></i></div>
+                            <div class="store-name"><?php echo $this->escape($item['store_name']) ?></div>
                         </div>
                         <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                         <input type="hidden" class="queueval" value="<?php echo $this->escape($item['queue_id']) ?>" />

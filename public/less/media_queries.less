@@ -168,8 +168,22 @@ and (max-width : 979px) {
             width: 100%;
         }
         .right-content {
-            display: none;
+    		position: absolute;
+            margin-top: 32px;
+            
+        	&.inactive {
+                display: none;
+            }
+            
+            .in-use {
+                span.span3 {
+                    width: 230px;
+                }
+            }
         }
+    }
+    .tab-stripe.active {
+        min-height: 76px;
     }
 }
 
