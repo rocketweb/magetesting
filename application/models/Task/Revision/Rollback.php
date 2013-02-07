@@ -46,7 +46,7 @@ implements Application_Model_Task_Interface {
         $linesToLog[] = date("Y-m-d H:i:s").' - Reverting files from: '.$params['commit_comment'];
         $candumpnow=0;
         foreach ($output as $line){
-	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author=')){
+	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author')){
 	      $candumpnow=1;
 	      continue;
 	    }
