@@ -7,11 +7,22 @@
 ?>
 <div class="row">
     <div class="span12">
+        <h1 class="pull-left">
     <?php if('queue' == $page_type): ?>
-		<h1>Store '<?php echo $this->store_name; ?>' Extensions</h1>
-    <?php else: ?>
-        <h1>All Available Extensions</h1>
-	<?php endif; ?>
+		Store '<?php echo $this->store_name; ?>' Extensions
+    <?php elseif('frontend' == $page_type): ?>
+        All Available Extensions
+	<?php else: ?>
+	    Manage Extensions
+    <?php endif; ?>
+        </h1>
+        <div class="pull-right">
+            <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'add'), 'default', true); ?>" class="btn btn-blue btn-large"><i class="icon-plus icon-white"></i> Add new extension</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="span12">
 		<div class="form-box">
     		<div id="extensions" class="box">
     			<div class="tab-stripe"></div>
