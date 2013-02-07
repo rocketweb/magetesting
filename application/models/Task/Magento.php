@@ -335,7 +335,7 @@ extends Application_Model_Task {
         " -u ".$this->config->magento->userprefix . $this->_dbuser.
         " -bq 4000M". //soft limit
         " -l '5000 Mb'". //hard limit 
-        " /home/".$this->config->magento->userprefix . $this->_dbuser."");
+        " /");
         
         //set grace time (0seconds mean instant)
         exec("sudo quotatool -u ".$this->config->magento->userprefix . $this->_dbuser." -b -t 0 seconds /");
