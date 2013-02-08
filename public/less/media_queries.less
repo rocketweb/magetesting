@@ -240,6 +240,72 @@ and (max-width : 481px) {
         }
     }
     
+    @transitionDuration : 0s;
+
+    .isotope,
+    .isotope .isotope-item {
+      -webkit-transition-duration: @transitionDuration;
+         -moz-transition-duration: @transitionDuration;
+          -ms-transition-duration: @transitionDuration;
+           -o-transition-duration: @transitionDuration;
+              transition-duration: @transitionDuration;
+    }
+    
+    #extensions {
+        .element {
+            width: 360px;
+            
+            &.premium.large, &.free.large {
+                height: 216px;
+            }
+            
+            &.free {
+                width: 172px;
+            }
+            
+            &.premium, &.free.large {
+                width: 360px;
+                
+                .wrapper {
+                    .info {
+                        width: 250px;
+                        
+                        h5 {
+                            margin-top: 24px;
+                        }
+                    }
+                    
+                    .extras {
+                        margin: 0 10px;
+                        height: 100px;
+                        
+                        .description {
+                            min-width: 195px;
+                            text-align: justify;
+                            font-size: 10px;
+                            line-height: 12px;
+                            height: 50px;
+                            padding: 0 10px;
+                        }
+                        
+                        .progress {
+                            margin: 8px 0 0 8px;
+                        }
+                        
+                        /*.btn-mini {
+                            width: 100%;
+                            padding-left: 0;
+                            padding-right: 0;
+                            
+                            &.btn-screenshots {
+                                margin-bottom: 4px;
+                            }
+                        }*/
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* Smartphones (portrait) ----------- */
