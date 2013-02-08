@@ -298,20 +298,85 @@ and (max-width : 348px) {
         }
     }
     
-    #extensions .mt_filters {
-        .btn-group {
-            width: 100%;
-            margin-right: 0;
-            margin-bottom: 4px;
-            
-            & + .btn-group {
-                margin-left: 0;
+    
+    @transitionDuration : 0s;
+
+    .isotope,
+    .isotope .isotope-item {
+      -webkit-transition-duration: @transitionDuration;
+         -moz-transition-duration: @transitionDuration;
+          -ms-transition-duration: @transitionDuration;
+           -o-transition-duration: @transitionDuration;
+              transition-duration: @transitionDuration;
+    }
+    
+    #extensions {
+        .element {
+            width: 213px;
+            &.premium.large, &.free.large {
+                height: 266px;
             }
             
-            .btn {
+            &.premium, &.free.large {
+                width: 213px;
+                
+                .wrapper {
+                    .info {
+                        width: 105px;
+                        
+                        h5 {
+                            margin-top: 24px;
+                            font-size: 12px;
+                        }
+                        
+                        p, p.extension-version {
+                            font-size: 10px;
+                        }
+                    }
+                    
+                    .extras {
+                        margin: 0 10px;
+                        height: 140px;
+                        
+                        .description {
+                            min-width: 195px;
+                            text-align: justify;
+                            font-size: 10px;
+                            line-height: 10px;
+                        }
+                        
+                        .progress {
+                            margin: 8px 0 0 8px;
+                        }
+                        
+                        .btn-mini {
+                            width: 100%;
+                            padding-left: 0;
+                            padding-right: 0;
+                            
+                            &.btn-screenshots {
+                                margin-bottom: 4px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .mt_filters {
+            .btn-group {
                 width: 100%;
-                padding-left: 0;
-                padding-right: 0;
+                margin-right: 0;
+                margin-bottom: 4px;
+                
+                & + .btn-group {
+                    margin-left: 0;
+                }
+                
+                .btn {
+                    width: 100%;
+                    padding-left: 0;
+                    padding-right: 0;
+                }
             }
         }
     }
