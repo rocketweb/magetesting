@@ -1007,7 +1007,13 @@ class QueueController extends Integration_Controller_Action {
                     if(($response['value'] = $this->_findWebrootOnFtp())) {
                         $response['status'] = 'success';
                         $response['message'] = 'Webroot has been found successfully.';
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Credentials correct, but webroot couldn\'t be found.';
                     }
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Credentials are incorrect.';
                 }
             break;
             case 'ssh':
@@ -1016,7 +1022,13 @@ class QueueController extends Integration_Controller_Action {
                     if (($response['value'] = $this->_findWebrootOnSsh())) {
                         $response['status'] = 'success';
                         $response['message'] = 'Webroot has been found successfully.';
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Credentials correct, but webroot couldn\'t be found.';
                     }
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Credentials are incorrect.';
                 }
             break;
             default:
@@ -1028,14 +1040,23 @@ class QueueController extends Integration_Controller_Action {
     }
     
     protected function _validateFtpCredentials(){
-        
-        // set up a connection or die
+               
         $request = $this->getRequest();
+        
+        if (trim($request->getParam('custom_host',''))=='' 
+            || trim($request->getParam('custom_login',''))==''
+            || trim($request->getParam('custom_pass',''))=='' )
+        {
+            return false;
+        } 
+        
         $this->_customHost = $request->getParam('custom_host');
         $this->_ftpStream = ftp_connect($this->_customHost,(int)$request->getParam('custom_port'),3600); 
         if ($this->_ftpStream){
             if (ftp_login($this->_ftpStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
+            } else {
+                return false;
             }
         } else {
             return false;
@@ -1044,8 +1065,14 @@ class QueueController extends Integration_Controller_Action {
     
     protected function _validateSshCredentials(){
         
-        // set up a connection or die
         $request = $this->getRequest();
+        if (trim($request->getParam('custom_host',''))=='' 
+            || trim($request->getParam('custom_login',''))==''
+            || trim($request->getParam('custom_pass',''))=='' )
+        {
+            return false;
+        } 
+               
         $this->_customHost = $request->getParam('custom_host');
         $customPort = (int)$request->getParam('custom_port',22);
         if (trim($customPort) == ''){
@@ -1055,6 +1082,8 @@ class QueueController extends Integration_Controller_Action {
         if ($this->_sshStream){
             if (ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
+            } else {
+                return false;
             }
         } else {
             return false;
@@ -1180,9 +1209,7 @@ class QueueController extends Integration_Controller_Action {
 	  } else {
 	    return false;
 	  }
-	  
-	}
-	                  
+	}             
     }
     
     protected function _checkForMagentoFoldersOnFtp(){
@@ -1221,9 +1248,12 @@ class QueueController extends Integration_Controller_Action {
                         $response['message'] = 'Sql dump file has been found successfully.';
                     } else {
                         $response['status'] = 'error';
-                        $response['message'] = 'Sql dump file has not been found.';
+                        $response['message'] = 'Credentials are correct, but Sql dump file has not been found.';
                     }
                     //}
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Credentials are incorrect.';
                 }
             break;
             case 'ssh':
@@ -1236,25 +1266,25 @@ class QueueController extends Integration_Controller_Action {
                         $response['message'] = 'Sql dump file has been found successfully.';
                     } else {
                         $response['status'] = 'error';
-                        $response['message'] = 'Sql dump file has not been found.';
+                        $response['message'] = 'Credentials are correct, but Sql dump file has not been found.';
                     }
                     //}
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Credentials are incorrect.';
                 }
             break;
             default:
                 /*invalid response is already set before switch*/
         }
         
-        
         $response['message'] = $this->_prepareFlashMessage($response);
         $this->getResponse()->setBody(json_encode($response));
     }
 
     protected function _findSqlDumpOnFtp() {
-        $this->_validateFtpCredentials();
-
         $basePath = $this->_findWebrootOnFtp();
-        //return $basePath;
+
         $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
         if (!$raw){
             /* try passive mode */
@@ -1265,9 +1295,13 @@ class QueueController extends Integration_Controller_Action {
         $filetimes = array();
         if ($raw){
             foreach ($raw as $file){
+                
+                /* number of spaces is inconsistent among server, hence preg_replace */
+                $file = preg_replace('!\s\s+!', ' ', $file);
+
                 $parts = explode(" ",$file);
-                if (isset($parts[10])){
-                    $filetimes[$parts[10]]= strtotime($parts[7].' '.$parts[8].' '.$parts[9]);
+                if (isset($parts[8])){
+                    $filetimes[$parts[8]]= strtotime($parts[5].' '.$parts[6].' '.$parts[7]);
                 }
             }
         }
@@ -1289,9 +1323,7 @@ class QueueController extends Integration_Controller_Action {
         
     }
     
-    /** @TODO:implement */
     protected function _findSqlDumpOnSsh(){
-        $this->_validateSshCredentials();
         
         if ($this->_sshWebrootPath==''){
 	  $this->_sshWebrootPath = $this->_findWebrootOnSsh();
@@ -1306,8 +1338,7 @@ class QueueController extends Integration_Controller_Action {
         $backupPath = $this->_sshWebrootPath.'/var/backups/';
         
         $findbackups = 'ls -al '.$backupPath.'';
-	  //return $findmageapp;
-	  $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
+        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
                 .' -p'.$customPort." '".$findbackups."'";
@@ -1318,15 +1349,17 @@ class QueueController extends Integration_Controller_Action {
         $filetimes = array();
         if ($raw){
             foreach ($raw as $file){
-		
+                
+                /* number of spaces is inconsistent among server, hence preg_replace */
+		$file = preg_replace('!\s\s+!', ' ', $file);
                 $parts = explode(" ",$file);
-                if (isset($parts[11]) && $parts[11]!='.' && $parts[11]!='..'){
-	//	    $files[]= $parts;
-                    $filetimes[$parts[11]]= strtotime($parts[5].' '.$parts[7].' '.$parts[8]);
+                
+                if (isset($parts[8]) && $parts[8]!='.' && $parts[8]!='..'){
+                    $filetimes[$parts[8]]= strtotime($parts[5].' '.$parts[6].' '.$parts[7]);
                 }
             }
         }
-        //return $files;
+
         $maxtime = 0;
         $newestFile = '';
         if ($filetimes){
