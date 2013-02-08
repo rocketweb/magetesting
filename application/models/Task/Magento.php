@@ -341,7 +341,7 @@ extends Application_Model_Task {
         " /");
         
         //set grace time (0seconds mean instant)
-        exec("sudo quotatool -u ".$this->config->magento->userprefix . $this->_dbuser." -b -t 0 seconds /");
+        exec("sudo quotatool -u ".$this->config->magento->userprefix . $this->_dbuser." -b -t '0 seconds' /");
     }
 }
         
