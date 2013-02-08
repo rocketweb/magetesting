@@ -473,6 +473,8 @@ implements Application_Model_Task_Interface {
      
         $where = array('id = ?' => $this->_storeObject->getId());
         $this->db->update('store', $set, $where);
+        
+        $this->_storeObject->setBackendName($frontname)->save();
     }
     
     protected function _cleanLogTables(){
