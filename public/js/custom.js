@@ -249,16 +249,19 @@ $(document).ready(function () {
         ElementPad        = 5,
         ElementWidth      = 135 + (ElementPad * 2),
         ElementHeight     = 112;
-
+	
+	
+	/* MEDIA QUERIES HACK */
 	var wellWidth = $('.extensions_well').width();
 	if(wellWidth < 300){
 		ElementWidth = wellWidth - (ElementPad * 2);
 	} else if(wellWidth < 500){
 		ElementPad = 4;
-    	ElementWidth = (wellWidth - (ElementPad * 4)) / 2;
+    	ElementWidth = 184;
     } else if(wellWidth < 650){
-		//ElementPad = 4;
-    	ElementWidth = 246;//(wellWidth - (ElementPad * 3)) / 3;
+    	ElementWidth = 246;
+    } else if(wellWidth < 900){
+    	ElementWidth = 166;
     }
 
     var ColumnWidth       = ElementWidth + ElementPad,

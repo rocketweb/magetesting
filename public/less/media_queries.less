@@ -139,6 +139,52 @@ and (max-width : 979px) {
             }
         }
     }
+    
+    #extensions {
+        .element {
+            width: 155px;
+            
+            &.premium.large, &.free.large {
+                height: 236px;
+            }
+            
+            &.free {
+                width: 155px;
+            }
+            
+            &.premium, &.free.large {
+                width: 326px;
+                
+                .wrapper {
+                    .info {
+                        width: 210px;
+                        
+                        h5 {
+                            margin-top: 24px;
+                        }
+                    }
+                    
+                    .extras {
+                        margin: 0 10px;
+                        height: 100px;
+                        
+                        .description {
+                            min-width: 275px;
+                            text-align: justify;
+                            font-size: 10px;
+                            line-height: 12px;
+                            height: 50px;
+                            padding: 0 10px;
+                        }
+                        
+                        .progress {
+                            margin: 8px 0 0 8px;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Bootstrap standard small screen
@@ -449,7 +495,7 @@ and (max-width : 348px) {
                         height: 140px;
                         
                         .description {
-                            min-width: 195px;
+                            min-width: 175px;
                             text-align: justify;
                             font-size: 10px;
                             line-height: 10px;
