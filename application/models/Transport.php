@@ -134,4 +134,7 @@ class Application_Model_Transport {
         return false;
     }
        
+    public function changePassOnStars($pass, $text) {
+        return str_replace($pass, '********', $text);
+    }
 }
