@@ -256,6 +256,9 @@ $(document).ready(function () {
 	} else if(wellWidth < 500){
 		ElementPad = 4;
     	ElementWidth = (wellWidth - (ElementPad * 4)) / 2;
+    } else if(wellWidth < 650){
+		//ElementPad = 4;
+    	ElementWidth = 246;//(wellWidth - (ElementPad * 3)) / 3;
     }
 
     var ColumnWidth       = ElementWidth + ElementPad,

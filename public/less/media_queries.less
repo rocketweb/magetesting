@@ -170,6 +170,60 @@ and (max-width : 979px) {
         }
     }
     
+    #extensions {
+        .element {
+            width: 236px;
+            
+            &.premium.large, &.free.large {
+                height: 236px;
+            }
+            
+            &.free {
+                //width: 155px;
+            }
+            
+            &.premium, &.free.large {
+                width: 236px;
+                
+                .wrapper {
+                    .info {
+                        width: 120px;
+                        
+                        h5 {
+                            font-size: 13px;
+                            margin-top: 24px;
+                        }
+                        
+                        p, p.extension-version {
+                            font-size: 10px;
+                        }
+                        p.extension-price {
+                            font-size: 12px;
+                        }
+                    }
+                    
+                    .extras {
+                        margin: 0 10px;
+                        height: 100px;
+                        
+                        .description {
+                            min-width: 195px;
+                            text-align: justify;
+                            font-size: 10px;
+                            line-height: 12px;
+                            height: 50px;
+                            padding: 0 10px;
+                        }
+                        
+                        .progress {
+                            margin: 8px 0 0 8px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     body {
         &.index {
             .content {
@@ -291,16 +345,6 @@ and (max-width : 481px) {
                         .progress {
                             margin: 8px 0 0 8px;
                         }
-                        
-                        /*.btn-mini {
-                            width: 100%;
-                            padding-left: 0;
-                            padding-right: 0;
-                            
-                            &.btn-screenshots {
-                                margin-bottom: 4px;
-                            }
-                        }*/
                     }
                 }
             }
