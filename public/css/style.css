@@ -873,3 +873,7 @@ form#extension-filter-form {
     word-break: break-all;
     cursor: auto;
 }
+
+.input-append.custom-sql-input .alert{
+    font-size: 14px;
+}
