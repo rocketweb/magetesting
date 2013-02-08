@@ -891,3 +891,7 @@ table.compare-table tbody tr td.compare-table-price-button form button.btn{paddi
     word-break: break-all;
     cursor: auto;
 }
+
+.input-append.custom-sql-input .alert{
+    font-size: 14px;
+}
