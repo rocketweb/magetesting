@@ -74,6 +74,9 @@ extends Application_Model_Task {
         
     }
     
+    /**
+     * @deprecated: since we're having per-user-vhosts, we don't need symlinks
+     */
     protected function _createSymlink(){
         $domain = $this->_storeObject->getDomain();
         $this->logger->log('Added symbolic link for store directory.', Zend_Log::INFO);
