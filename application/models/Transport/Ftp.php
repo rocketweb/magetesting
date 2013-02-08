@@ -24,7 +24,9 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
              "".$this->_customHost.":".$this->_customPort." 2>&1 | grep 'Logged in!'";
         
         exec($command, $output);
+        
         $message = var_export($output, true);
+        $command = $this->changePassOnStars($this->_storeObject->getCustomPass(), $command);
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         if (!isset($output[0])){
@@ -105,6 +107,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command, $output);
         $message = var_export($output, true);
+        $command = $this->changePassOnStars($this->_storeObject->getCustomPass(), $command);
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         $sqlSizeInfo = explode(' ... ',$output[0]);
@@ -138,6 +141,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
              "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."";
         exec($command, $output);
         $message = var_export($output, true);
+        $command = $this->changePassOnStars($this->_storeObject->getCustomPass(), $command);
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         unset($output);
@@ -252,6 +256,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
         $message = var_export($output, true);
+        $command = $this->changePassOnStars($this->_storeObject->getCustomPass(), $command);
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
         unset($output);
         
