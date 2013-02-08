@@ -143,6 +143,33 @@ and (max-width : 979px) {
 
 // Bootstrap standard small screen
 @media (max-width: 767px) {
+    
+    h1.pull-left {
+        float: none;
+        text-align: center;
+    }
+    
+    .btn-add-ext {
+        text-align: center;
+        
+        &.pull-right {
+            float: none;
+        }
+    }
+    
+    #extensions .mt_filters {
+        .search-as-you-type {
+            width: 100%;
+            margin: 10px 0 0;
+            
+            input.search-as-you-type-input {
+                width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }
+    
     body {
         &.index {
             .content {
@@ -191,15 +218,34 @@ and (max-width : 480px) {
 }
 
 /* Smartphones (landscape) ----------- */
-/* @media only screen
-and (min-width : 321px) {
-
-} */
+@media only screen
+and (min-width : 321px)
+and (max-width : 481px) {
+    #extensions .mt_filters {
+        .btn-group {
+            width: 100%;
+            margin-bottom: 4px;
+            
+            & + .btn-group {
+                margin-left: 0;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        .search-as-you-type input.search-as-you-type-input {
+            width: 97%;
+        }
+    }
+    
+}
 
 /* Smartphones (portrait) ----------- */
 @media only screen
 and (max-width : 348px) {
-	.logo {
+	  .logo {
         width: 71%;
     }
 
@@ -236,6 +282,36 @@ and (max-width : 348px) {
                 div.inner {
                     margin-top: 20px;
                 }
+            }
+        }
+    }
+    
+    .btn-add-ext {
+        float: none;
+        
+        .btn {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+    
+    #extensions .mt_filters {
+        .btn-group {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 4px;
+            
+            & + .btn-group {
+                margin-left: 0;
+            }
+            
+            .btn {
+                width: 100%;
+                padding-left: 0;
+                padding-right: 0;
             }
         }
     }

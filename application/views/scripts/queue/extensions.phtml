@@ -16,7 +16,7 @@
 	    Manage Extensions
     <?php endif; ?>
         </h1>
-        <div class="pull-right">
+        <div class="pull-right btn-add-ext">
             <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'add'), 'default', true); ?>" class="btn btn-blue btn-large"><i class="icon-plus icon-white"></i> Add new extension</a>
         </div>
     </div>
@@ -32,7 +32,7 @@
 							
 							<div class="btn-group" data-title="Price filter">
 								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Price filter <span class="caret"></span></a>
-								<ul class="dropdown-menu option-set" data-option-key="filter">
+								<ul class="dropdown-menu option-set" data-option-key="filter" style="width:100%">
                                     <li><a class="btn-all" tabindex="-1" href="#" data-option-value="*">All</a></li>
                                     <li class="divider"></li>
 									<li><a class="btn-goldd" tabindex="-1" href="#" data-option-value=".premium">Premium</a></li>
