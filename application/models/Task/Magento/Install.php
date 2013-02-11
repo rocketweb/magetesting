@@ -327,9 +327,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
 
         // update backend admin password
         $this->logger->log('Changing store backend password.', Zend_Log::INFO);
-        $set = array('backend_password' => $this->_adminpass);
-        $where = array('domain = ?' => $this->_domain);
-        $this->db->update('store', $set, $where);
+        $this->_storeObject->setBackendPassword($this->_adminpass)->save();
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
         // end
         
