@@ -1,7 +1,0 @@
-div.navbar div.red-bar,div.navbar a.btn.btn-navbar,div.navbar div.nav-collapse{display:none;}
-div.navbar div.navbar-inner{box-shadow:none;border:0;background-color:#fff;background-image:none;}div.navbar div.navbar-inner a:after{color:#fff;content:"";}
-div.navbar div.navbar-inner .logo{margin:40px;}
-div.invoice{padding:40px;}div.invoice h1{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:700;margin-bottom:40px;font-size:28px;}
-div.invoice h5{font-family:"pragmatica-web-condensed",Helvetica,Arial,sans-serif;font-style:normal;font-weight:700;margin:0;}
-div.invoice fieldset{margin:40px 0;}
-div.invoice .invoice-addresses{margin:40px 0;}div.invoice .invoice-addresses .invoice-address-billto{margin-left:0;}
