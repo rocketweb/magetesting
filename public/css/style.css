@@ -1504,14 +1504,20 @@ body.index footer hr {
   }
 }
 @media (max-width: 767px) {
-  body.index .content div.inner section {
-    padding: 10px 0;
-  }
-  body.index .content div.inner section h3,
-  body.index .content div.inner section h4 {
-    text-align: center;
-    margin: 0;
-  }
+	body.index .content div.inner section {
+		padding: 10px 0;
+	}
+	body.index .content div.inner section h3,
+	body.index .content div.inner section h4 {
+		text-align: center;
+		margin: 0;
+	}
+	#footer {
+	    text-align: center;
+	}
+	#footer p.pull-right, #footer p.pull-left {
+		float: none;
+	}
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
@@ -1523,61 +1529,61 @@ and (min-width : 321px) {
 } */
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width: 348px) {
-  .logo {
-    width: 71%;
-  }
-  .navbar-global .btn {
-    margin-top: 27px;
-  }
-  body.index .mt {
-    margin-top: 20px;
-  }
-  body.index .content h1 {
-    margin-bottom: 20px;
-    font-size: 21.5px;
-    line-height: 30px;
-  }
-  body.index .content h2 {
-    width: 100%;
-    font-size: 13.5px;
-    line-height: 20px;
-  }
-  body.index .content img.cubes {
-    z-index: -1;
-    margin-top: 0px;
-  }
-  body.index .content div.inner {
-    margin-top: 20px;
-  }
+	.logo {
+		width: 71%;
+	}
+	.navbar-global .btn {
+		margin-top: 27px;
+	}
+	body.index .mt {
+		margin-top: 20px;
+	}
+	body.index .content h1 {
+		margin-bottom: 20px;
+		font-size: 21.5px;
+		line-height: 30px;
+	}
+	body.index .content h2 {
+		width: 100%;
+		font-size: 13.5px;
+		line-height: 20px;
+	}
+	body.index .content img.cubes {
+		z-index: -1;
+		margin-top: 0px;
+	}
+	body.index .content div.inner {
+		margin-top: 20px;
+	}
 }
 @media only screen and (min-width: 349px) and (max-width: 481px) {
-  body.index .mt {
-    margin-top: 20px;
-  }
-  body.index .content h1 {
-    margin-bottom: 4px;
-    font-size: 21.5px;
-    line-height: 30px;
-  }
-  body.index .content h2 {
-    width: 60%;
-    margin-bottom: 0;
-    font-size: 15.5px;
-    line-height: 20px;
-  }
-  body.index .content img.cubes {
-    z-index: -1;
-    margin-top: 0px;
-  }
-  body.index .content div.inner {
-    margin-top: 20px;
-  }
-  body.index .content div.inner section.watch-video div.mac-book-air .js-video iframe {
-    height: 60%;
-    left: 18%;
-    top: 6%;
-    width: 64%;
-  }
+	body.index .mt {
+		margin-top: 20px;
+	}
+	body.index .content h1 {
+		margin-bottom: 4px;
+		font-size: 21.5px;
+		line-height: 30px;
+	}
+	body.index .content h2 {
+		width: 60%;
+		margin-bottom: 0;
+		font-size: 15.5px;
+		line-height: 20px;
+	}
+	body.index .content img.cubes {
+		z-index: -1;
+		margin-top: 0px;
+	}
+	body.index .content div.inner {
+		margin-top: 20px;
+	}
+	body.index .content div.inner section.watch-video div.mac-book-air .js-video iframe {
+		height: 60%;
+		left: 18%;
+		top: 6%;
+		width: 64%;
+	}
 }
 
 /** LESS - END COMPILED CSS **/
