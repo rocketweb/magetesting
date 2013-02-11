@@ -32,13 +32,24 @@ if($result) {
                 $config->papertrail->password    
             );
            
+            $removeUser = false;
             try { 
                 $responseExists = $service->getAccountUsage($id);
-                $responseRemove = $service->removeUser($id);
+                $removeUser = true;
             } catch(Zend_Service_Exception $e) {
                 $log->log($e->getMessage(), Zend_Log::CRIT);
-                //retry later
-                continue;
+                //retry later if error
+                $removeUser = false;
+            }
+            
+            //account exist
+            if ($removeUser){
+                try{
+                    $responseRemove = $service->removeUser($id);
+                } catch(Zend_Service_Exception $e) {
+                    //if remove failed in papertrail, retry later
+                    continue;
+                }
             }
 
             if(isset($responseRemove->status) && $responseRemove->status == 'ok') {
@@ -107,11 +118,11 @@ if($result) {
         //--------------SYSTEM/MYSQL PART END--------------
 
         //--------------RSYSLOG FILES PART START-----------
-        exec('sudo rm '.$this->config->magento->userprefix.$this->_userObject->getLogin().'_*');
+        exec('sudo rm '.$config->magento->userprefix.$user->getLogin().'_*');
         //--------------RSYSLOG FILES PART END ------------
         
         //--------------SUEXEC PART START------------------
-        exec('sudo rm -R /home/www-data/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'');
+        exec('sudo rm -R /home/www-data/'.$config->magento->userprefix.$user->getLogin().'');
         //--------------SUEXEC PART END------------------
         
         
