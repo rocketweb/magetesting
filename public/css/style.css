@@ -238,6 +238,9 @@ p.user-name, .user-name {
     display: block;
 }
 
+p.right-indent {
+	margin: 0 40px 10px 0;
+}
 
 /** LESS - START COMPILED CSS **/
 html,
@@ -1515,6 +1518,10 @@ body.index footer hr {
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
+	p.right-indent {
+		margin: 0 10px 10px 0;
+	}
+
 }
 /* Smartphones (landscape) ----------- */
 /* @media only screen
