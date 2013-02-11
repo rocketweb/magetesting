@@ -579,15 +579,21 @@ class QueueController extends Integration_Controller_Action {
 
                     /* Adding extension to queue */
                     try {
-                        
+                        $extensionId = $request->getParam('extension_id');
+
+                        //add row to store_extension
+                        $storeExtensionModel = new Application_Model_StoreExtension();
+                        $storeExtensionModel->setStoreId($store->id);
+                        $storeExtensionModel->setExtensionId($extensionId);
+                        $storeExtensionModel->save();
+
                         /** 
                          * Find if we have any other ExtensionInstall tasks 
                          * for this store 
                          */
                         $extensionQueueItem = new Application_Model_Queue();
                         $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($store->id);
-                        
-                        $extensionId = $request->getParam('extension_id');
+
                         $extensionQueueItem->setStoreId($store->id);
                         $extensionQueueItem->setStatus('pending');
                         $extensionQueueItem->setUserId($store->user_id);
@@ -617,12 +623,6 @@ class QueueController extends Integration_Controller_Action {
                                 )
                         );
                         $queueModel->save();
-
-                        //add row to store_extension
-                        $storeExtensionModel = new Application_Model_StoreExtension();
-                        $storeExtensionModel->setStoreId($store->id);
-                        $storeExtensionModel->setExtensionId($extensionId);
-                        $storeExtensionModel->save();
 
                         $this->_response->setBody('done');
                     } catch (Exception $e) {
