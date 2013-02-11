@@ -79,10 +79,14 @@ $(document).ready(function(){
                 'placement' : 'right'
             }).popover('show');
 
-            // destroy shown popover
-            setTimeout(function() {
+            // overwrite alert close event, by popover destroy
+            $element.data('popover').$tip.find('.close').click(function() {
+                // destroy popover on click
                 $element.popover('destroy');
-            }, 1000);
+
+                // do not use alert data dismiss event
+                return false;
+            });
         };
 
     if($validate_connection.length) {
