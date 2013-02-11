@@ -66,11 +66,10 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'$InputFileTag exception-'.$this->_domain.':'.
             PHP_EOL.'$InputFileStateFile papertrail-exception-'.$this->_domain.''.
             PHP_EOL.'$InputRunFileMonitor'.
-	    PHP_EOL.'$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/revision.log'.
+	    	PHP_EOL.'$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/revision.log'.
             PHP_EOL.'$InputFileTag revision-'.$this->_domain.':'.
             PHP_EOL.'$InputFileStateFile papertrail-revision-'.$this->_domain.''.
             PHP_EOL.'$InputRunFileMonitor'.
- 
             /* 4 lines for user own errorlog */
             PHP_EOL.'$InputFileName /home/'.$systemUser.'/error.log'.
             PHP_EOL.'$InputFileTag php-'.$this->_domain.':'.
@@ -86,8 +85,9 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'if $programname == \'exception-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
             PHP_EOL.'& ~'.
             PHP_EOL.''.
-	    PHP_EOL.'if $programname == \'revision-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
+	    	PHP_EOL.'if $programname == \'revision-'.$this->_domain.'\' then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.
             PHP_EOL.'& ~'.
+			PHP_EOL.''.
             
             /* apache error log, ignore sudo lines and mysql to prevent password logging */
             PHP_EOL.'if $programname == \'php-'.$this->_domain.'\' and $msg contains \'/home/'.$systemUser.'/public_html/'.$this->_domain.'\' and not ($msg contains \'mysql\' or $msg contains \'sudo\') then @'.$this->_storeObject->getPapertrailSyslogHostname().':'.$this->_storeObject->getPapertrailSyslogPort().';Template-'.$this->_domain.

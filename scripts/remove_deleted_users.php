@@ -76,6 +76,13 @@ if($result) {
                 echo 'sh script was run without arguments';
             }
 
+            //just in case remove_user.sh didn't work
+            exec('sudo userdel -f ' . $config->magento->userprefix . $user->getLogin());
+    
+            if (file_exists('/home/' . $config->magento->userprefix . $user->getLogin())){
+                exec('sudo rm -R /home/' . $config->magento->userprefix . $user->getLogin());
+            }
+            
             unset($output);
             chdir($startcwd);
         }
@@ -99,6 +106,15 @@ if($result) {
         }
         //--------------SYSTEM/MYSQL PART END--------------
 
+        //--------------RSYSLOG FILES PART START-----------
+        exec('sudo rm '.$this->config->magento->userprefix.$this->_userObject->getLogin().'_*');
+        //--------------RSYSLOG FILES PART END ------------
+        
+        //--------------SUEXEC PART START------------------
+        exec('sudo rm -R /home/www-data/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'');
+        //--------------SUEXEC PART END------------------
+        
+        
         //--------------VIRTUALHOST PART START-------------
         $serverModel = new Application_Model_Server();
         $serverModel->find($user->getServerId());
@@ -124,7 +140,7 @@ if($result) {
             continue;
         }
 
-
         //--------------MAGETESTING PART END---------------
+        
     }
 }
