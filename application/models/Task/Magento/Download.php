@@ -532,15 +532,26 @@ implements Application_Model_Task_Interface {
         }
         unset($output);
         if ($unpacked) {
-            exec('find . -type f -name "*.sql" -and -not -path "*lib*" -and -not -name "keyset*"', $output);
+            $command = 'find . -type f -name "*.sql" -and -not -path "*lib*" -and -not -name "keyset*"';
+            exec($command, $output);
+            $this->logger->log($command, Zend_Log::DEBUG);
             $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
             /* no matches found */
             if (count($output) == 0) {
-                throw new Application_Model_Task_Exception('sql file has not been found in given package');
+                
+                unset($output);
+                //there is no custom made sql, try to look for one that contains create statements:
+                $command = "sudo grep -lir 'CREATE TABLE `admin_role`' . | grep 'backups'";
+                exec($command, $output);
+                $this->logger->log($command, Zend_Log::DEBUG);
+                $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
+                if (count($output) == 0) {
+                    throw new Application_Model_Task_Exception('sql file has not been found in given package');
+                }
             }
 
-            foreach ($output as $line) {
-                if (substr($line, -4) == '.sql') {
+            foreach ($output as $line) {               
+                if (substr($line, -4) == '.sql' || strstr($line,'/var/backups/')) {
                     $this->_customSql = str_replace('./', '', $line);
                     break;
                 }
