@@ -119,7 +119,7 @@ extends Application_Model_Transport {
         if ($this->logger instanceof Zend_Log) {
             $message = var_export($output, true);
             $this->logger->log('Downloading store files.', Zend_Log::INFO);
-            $command = $this->changePassOnStars($this->_storeObject->getCustomPass(), $command);
+            $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
             $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         }
         /**
@@ -179,7 +179,7 @@ extends Application_Model_Transport {
         if ($this->logger instanceof Zend_Log) {
             $message = var_export($output, true);
             $this->logger->log('Downloading store database.', Zend_Log::INFO);
-            $command = $this->changePassOnStars($this->_storeObject->getCustomPass(), $command);
+            $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
             $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         }
 
@@ -254,7 +254,7 @@ extends Application_Model_Transport {
                 .' -p'.$this->_customPort.' "cat '.$this->_customFile.'"'
                 .' | sudo tar -xzvf - -C .';
         exec($command,$output);
-        $command = $this->changePassOnStars($this->_storeObject->getCustomPass(), $command);
+        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
         $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
                      
         //locate mage file 
