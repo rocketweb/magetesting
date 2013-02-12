@@ -55,9 +55,7 @@ implements Application_Model_Task_Interface {
         $this->_disableAdminNotifications();
         $this->_disableStoreCache();
         $this->_enableLogging();
-
-        $this->_createSymlink();
-        
+      
         chdir($startCwd);
 
         $this->_reindexStore();

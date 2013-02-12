@@ -54,17 +54,8 @@ implements Application_Model_Task_Interface {
         
         unlink(APPLICATION_PATH . '/../data/logs/'.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.log');
     
-    }
-
-    protected function _removeDatabase() {
-        
-    }
-
-    protected function _removeStoreFilesystem() {
-        
-    }
-
-    protected function _cleanupMainDatabase() {
+        //remove store rsyslog config
+        exec('sudo rm '.$this->config->magento->userprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.conf');
         
     }
 
