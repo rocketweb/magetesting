@@ -1388,15 +1388,6 @@ class QueueController extends Integration_Controller_Action {
     }
 
     protected function _prepareFlashMessage($data) {
-        if($data['message']) {
-            $this->view->messages = array(
-                array(
-                    'type' => $data['status'],
-                    'message' => $data['message']
-                )
-            );
-            return trim($this->view->partial('_partials/messages.phtml', 'default', array('messages' => $this->view->messages)));
-        }
-        return $data['message'];
+        return '<a class="close" data-dismiss="alert" href="#">×</a><div class="popover-font-fix">'.$data['message'].'</div>';
     }
 }
