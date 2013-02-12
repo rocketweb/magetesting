@@ -390,7 +390,7 @@ class QueueController extends Integration_Controller_Action {
                     $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
                 }
             } else {
-                $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Form invalid'));
+                $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Form data is invalid. Please check fields below and correct them.'));
             }
         }
 
