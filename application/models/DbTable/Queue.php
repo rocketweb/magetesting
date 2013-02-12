@@ -168,7 +168,8 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
     public function removePendingForStore($storeId){
         $this->delete('queue',array(
             'store_id = ' . $storeId,
-            'status  = "pending"'
+            'status  = "pending"',
+            'task != "MagentoRemove"'
             )
         );
         
