@@ -303,4 +303,9 @@ class Application_Model_Queue {
     public function getNextForStore($storeId){
         return $this->getMapper()->getNextForStore($storeId);
     }
+    
+    /* Remove pending items when closing store to avoid their execution */
+    public function removePendingForStore($storeId){
+        return $this->getMapper()->removePendingForStore($storeId);
+    }
 }

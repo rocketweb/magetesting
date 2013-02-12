@@ -431,6 +431,14 @@ class QueueController extends Integration_Controller_Action {
                 $currentStore = $storeModel->findByDomain($domain);
 
                 $storeModel->find($currentStore->id);
+                
+                /**
+                 * Remove not yet finished 
+                 * and not yet started tasks for that store 
+                 */
+                $queueModel=  new Application_Model_Queue();
+                $queueModel->removePendingForStore($currentStore->id);
+                
                 $storeModel->setStatus('removing-magento')->save();
                 
                 //removing system from Papertrail

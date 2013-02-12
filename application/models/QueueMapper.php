@@ -163,4 +163,9 @@ class Application_Model_QueueMapper {
             ->setAddedDate($row->added_date);
             return $entry;
     }
+    
+    public function removePendingForStore($storeId){
+        
+        return $this->getDbTable()->removePendingForStore($storeId);
+    }
 }
