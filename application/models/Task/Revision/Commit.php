@@ -85,7 +85,15 @@ implements Application_Model_Task_Interface {
 	    $linesToLog[] = $line;
         }
 
-        $this->revisionLogger->info(implode("\n",$linesToLog));
+        /** 
+         * Split logger into parts and let it rest for a while 
+         * with each iteration. This lets rsyslog send all lines to papertrail 
+         */
+        $revLogs = array_chunk($linesToLog,10);
+        foreach($revLogs as $tenlines){
+            $this->revisionLogger->info(implode("\n",$tenlines));
+            usleep(3000);
+        }
                
         if (!isset($matches[2])){
             $message = 'Could not find revision information, aborting';
@@ -138,7 +146,16 @@ implements Application_Model_Task_Interface {
                 $linesToLog[] = $line;
             }
 
-            $this->revisionLogger->info(implode("\n",$linesToLog));
+            /** 
+             * Split logger into parts and let it rest for a while 
+             * with each iteration. This lets rsyslog send all lines to papertrail 
+             */
+            $revLogs = array_chunk($linesToLog,10);
+            foreach($revLogs as $tenlines){
+                $this->revisionLogger->info(implode("\n",$tenlines));
+                usleep(3000);
+            }
+            
         }
 
         if (count($output) < 3 && isset($output[2]) && trim($output[2])=='nothing to commit (working directory clean)'){
