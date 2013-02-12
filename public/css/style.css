@@ -1619,6 +1619,14 @@ body.index footer hr {
     text-align: center;
     margin: 0;
   }
+
+
+  #footer {
+    text-align: center;
+  }
+  #footer p.pull-right, #footer p.pull-left {
+    float: none;
+  }
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
