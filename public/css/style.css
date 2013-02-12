@@ -239,7 +239,7 @@ p.user-name, .user-name {
 }
 
 
-/** LESS - START COMPILED CSS **/
+/* LESS - START COMPILED CSS */ 
 html,
 body {
   height: 100%;
@@ -362,7 +362,7 @@ body {
 }
 .navbar-global .pull-right > li > .dropdown-menu {
   background: #34aae5;
-  margin-right: 94px;
+  margin-right: 172px;
   margin-top: 0;
   -webkit-border-top-left-radius: 0;
   -webkit-border-top-right-radius: 0;
@@ -817,6 +817,7 @@ footer .links a {
 .accordion-group {
   margin-bottom: -1px;
   border-radius: 0px;
+  clear: both;
 }
 .accordion-group.accordion-add-new {
   border-width: 3px;
@@ -891,17 +892,28 @@ footer .links a {
   outline: 0;
   text-decoration: none;
 }
+.accordion-group .accordion-heading .accordion-toggle .left-content {
+  width: 70%;
+}
+.accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
+  overflow: hidden;
+  white-space: nowrap;
+}
 .accordion-group .accordion-heading .accordion-toggle .right-content {
   margin-left: 0px;
 }
 .accordion-group .accordion-heading .accordion-toggle .right-content .btn {
   margin-left: 6px;
 }
+.accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
+  display: block;
+}
 .accordion-group .accordion-heading .accordion-toggle .arrow {
+  margin-right: 4px;
   text-align: center;
 }
 .accordion-group .accordion-heading .accordion-toggle .arrow i {
-  margin-top: 8px;
+  margin-top: 3px;
 }
 .accordion-group .accordion-heading .accordion-toggle .title {
   margin-top: 5px;
@@ -925,6 +937,9 @@ footer .links a {
 .accordion-group .accordion-heading .accordion-toggle .in-use .popover {
   font-size: 14px;
 }
+.accordion-group .accordion-body.collapse {
+  clear: both;
+}
 .accordion-group .accordion-inner {
   border-top: none;
 }
@@ -944,10 +959,6 @@ footer .links a {
 }
 .accordion-group .accordion-inner .panel.details {
   border-right: 1px solid #ddd;
-  /*a.btn {
-                    width: 25%;
-                }*/
-
 }
 .accordion-group .accordion-inner .panel.details table {
   font-size: 12px;
@@ -1026,8 +1037,6 @@ body {
   margin-bottom: 20px;
 }
 #extensions {
-  /*.shadow;*/
-
   border: 1px solid #e5e5e5;
 }
 #extensions.box {
@@ -1240,7 +1249,7 @@ body {
   padding: 1px 12px;
 }
 .element .extras .progress {
-  margin: 8px 10px 0 8px;
+  margin: 8px 0 0 0;
 }
 .element.large,
 .variable-sizes .element.large,
@@ -1312,30 +1321,14 @@ body.index .content div.inner {
   box-shadow: 0 6px 6px -6px #888888;
 }
 body.index .content div.inner section {
-  background: #ffffff;
-  /* Old browsers */
-
-  background: -moz-linear-gradient(top, #ffffff 0%, #f3f8fc 100%);
-  /* FF3.6+ */
-
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #f3f8fc));
-  /* Chrome,Safari4+ */
-
-  background: -webkit-linear-gradient(top, #ffffff 0%, #f3f8fc 100%);
-  /* Chrome10+,Safari5.1+ */
-
-  background: -o-linear-gradient(top, #ffffff 0%, #f3f8fc 100%);
-  /* Opera 11.10+ */
-
-  background: -ms-linear-gradient(top, #ffffff 0%, #f3f8fc 100%);
-  /* IE10+ */
-
-  background: linear-gradient(to bottom, #ffffff 0%, #f3f8fc 100%);
-  /* W3C */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f3f8fc', GradientType=0);
-  /* IE6-9 */
-
+  background: #ffffff; /* Old browsers */
+  background: -moz-linear-gradient(top, #ffffff 0%, #f3f8fc 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #f3f8fc)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #ffffff 0%, #f3f8fc 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #ffffff 0%, #f3f8fc 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #ffffff 0%, #f3f8fc 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #ffffff 0%, #f3f8fc 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f3f8fc', GradientType=0); /* IE6-9 */
   box-shadow: 0 -6px 12px -10px #888888;
   padding: 40px 0 0 0;
 }
@@ -1448,6 +1441,7 @@ body.index footer hr {
   border: 0;
   padding-top: 1px;
 }
+/* Bootstrap default - large screen */
 @media only screen and (min-width: 980px) {
   #screenshots .modal {
     width: 960px;
@@ -1460,6 +1454,7 @@ body.index footer hr {
   }
   .navbar-global .navbar-inner .nav.nav-mainmenu {
     background-color: #f64135;
+    z-index: 2;
   }
   .navbar-global .navbar-inner .nav.nav-mainmenu li.open {
     background-color: #34aae5;
@@ -1517,6 +1512,7 @@ body.index footer hr {
     width: 64%;
   }
 }
+/* Bootstrap standard medium screen */
 @media (min-width: 768px) and (max-width: 979px) {
   body.index .content div.inner section.watch-video div.mac-book-air .js-video iframe {
     height: 189px;
@@ -1524,7 +1520,12 @@ body.index footer hr {
     top: 45px;
     width: 301px;
   }
+  .accordion-group .accordion-inner .btn {
+    width: 80%;
+    margin-bottom: 4px;
+  }
 }
+/* Bootstrap standard small screen */
 @media (max-width: 767px) {
   body.index .content div.inner section {
     padding: 10px 0;
@@ -1534,9 +1535,85 @@ body.index footer hr {
     text-align: center;
     margin: 0;
   }
+  .accordion-group .accordion-inner .version-info {
+    font-size: 12px;
+  }
+  .accordion-group .accordion-inner .panel.details {
+    border-right: none;
+  }
+  .accordion-group .accordion-inner .panel.deployment {
+    border-right: none;
+  }
+  .accordion-group .accordion-inner .panel.deployment h5 span.version {
+    float: none;
+    margin-left: 10px;
+    margin-right: 0;
+  }
+  .accordion-group .accordion-inner .btn {
+    width: 26%;
+  }
+  .accordion-group .accordion-heading .accordion-toggle .left-content {
+    width: 100%;
+  }
+  .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
+    font-size: 14px;
+  }
+  .accordion-group .accordion-heading .accordion-toggle .right-content {
+    position: absolute;
+    margin-top: 32px;
+  }
+  .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
+    display: none;
+  }
+  .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
+    width: 230px;
+  }
+  .tab-stripe.active {
+    min-height: 76px;
+  }
+  .accordion-group.accordion-add-new .accordion-inner .btn-add-store {
+    width: 50%;
+    margin-left: 20%;
+    position: inherit;
+    top: 0;
+  }
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
+  .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
+    font-size: 14px;
+  }
+  .accordion-group .accordion-inner .version-info {
+    font-size: 12px;
+  }
+  .accordion-group .accordion-inner .panel.details {
+    border-right: none;
+  }
+  .accordion-group .accordion-inner .panel.deployment {
+    border-right: none;
+  }
+  .accordion-group .accordion-inner .panel.deployment h5 span.version {
+    float: none;
+    margin-left: 10px;
+    margin-right: 0;
+  }
+  .accordion-group .accordion-inner .btn {
+    width: 26%;
+  }
+  .accordion-group .accordion-inner .btn.rollback-button,
+  .accordion-group .accordion-inner .btn.commit-button,
+  .accordion-group .accordion-inner .btn.deploy-button {
+    width: 90%;
+    margin-bottom: 6px;
+  }
+  .accordion-group.accordion-add-new .accordion-inner .btn-add-store {
+    width: 50%;
+    margin-left: 20%;
+    padding: 8px 12px 4px 12px;
+    position: inherit;
+    top: 0;
+    width: inherit;
+  }
 }
 /* Smartphones (landscape) ----------- */
 /* @media only screen
@@ -1571,6 +1648,16 @@ and (min-width : 321px) {
   body.index .content div.inner {
     margin-top: 20px;
   }
+  .accordion-group .accordion-inner .btn {
+    width: inherit;
+  }
+  .accordion-group.accordion-add-new .accordion-inner .btn-add-store {
+    margin-left: 6px;
+    padding: 8px 12px 4px 12px
+          position: inherit;
+    top: 0;
+    width: inherit;
+  }
 }
 @media only screen and (min-width: 349px) and (max-width: 481px) {
   body.index .mt {
@@ -1602,7 +1689,7 @@ and (min-width : 321px) {
   }
 }
 
-/** LESS - END COMPILED CSS **/
+/* LESS - END COMPILED CSS */
 
 
 #store-deployment .rollback, #store-deployment .commit, #store-deployment .deploy {
@@ -2031,7 +2118,6 @@ form#extension-filter-form {
     height: 100%;
     z-index: 65000;
     vertical-align: baseline;
-    
 }
 
 #wrap-context-help #context-help {
