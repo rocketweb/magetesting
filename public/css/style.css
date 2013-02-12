@@ -902,6 +902,6 @@ table.compare-table tbody tr td.compare-table-price-button form button.btn{paddi
     cursor: auto;
 }
 
-.input-append.custom-sql-input .alert{
+.popover-font-fix {
     font-size: 14px;
 }
