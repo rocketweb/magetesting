@@ -238,6 +238,9 @@ p.user-name, .user-name {
     display: block;
 }
 
+p.right-indent {
+	margin: 0 40px 10px 0;
+}
 
 /** LESS - START COMPILED CSS **/
 html,
