@@ -238,6 +238,9 @@ p.user-name, .user-name {
     display: block;
 }
 
+p.right-indent {
+	margin: 0 40px 10px 0;
+}
 
 /** LESS - START COMPILED CSS **/
 html,
@@ -362,7 +365,7 @@ body {
 }
 .navbar-global .pull-right > li > .dropdown-menu {
   background: #34aae5;
-  margin-right: 94px;
+  margin-right: 172px;
   margin-top: 0;
   -webkit-border-top-left-radius: 0;
   -webkit-border-top-right-radius: 0;
@@ -1504,23 +1507,21 @@ body.index footer hr {
   }
 }
 @media (max-width: 767px) {
-	body.index .content div.inner section {
-		padding: 10px 0;
-	}
-	body.index .content div.inner section h3,
-	body.index .content div.inner section h4 {
-		text-align: center;
-		margin: 0;
-	}
-	#footer {
-	    text-align: center;
-	}
-	#footer p.pull-right, #footer p.pull-left {
-		float: none;
-	}
+  body.index .content div.inner section {
+    padding: 10px 0;
+  }
+  body.index .content div.inner section h3,
+  body.index .content div.inner section h4 {
+    text-align: center;
+    margin: 0;
+  }
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
+	p.right-indent {
+		margin: 0 10px 10px 0;
+	}
+
 }
 /* Smartphones (landscape) ----------- */
 /* @media only screen
