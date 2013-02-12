@@ -874,6 +874,6 @@ form#extension-filter-form {
     cursor: auto;
 }
 
-.input-append.custom-sql-input .alert{
+.popover-font-fix {
     font-size: 14px;
 }
