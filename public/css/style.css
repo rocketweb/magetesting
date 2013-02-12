@@ -362,7 +362,7 @@ body {
 }
 .navbar-global .pull-right > li > .dropdown-menu {
   background: #34aae5;
-  margin-right: 172px;
+  margin-right: 94px;
   margin-top: 0;
   -webkit-border-top-left-radius: 0;
   -webkit-border-top-right-radius: 0;
@@ -817,7 +817,6 @@ footer .links a {
 .accordion-group {
   margin-bottom: -1px;
   border-radius: 0px;
-  clear: both;
 }
 .accordion-group.accordion-add-new {
   border-width: 3px;
@@ -892,28 +891,17 @@ footer .links a {
   outline: 0;
   text-decoration: none;
 }
-.accordion-group .accordion-heading .accordion-toggle .left-content {
-  width: 70%;
-}
-.accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
-  overflow: hidden;
-  white-space: nowrap;
-}
 .accordion-group .accordion-heading .accordion-toggle .right-content {
   margin-left: 0px;
 }
 .accordion-group .accordion-heading .accordion-toggle .right-content .btn {
   margin-left: 6px;
 }
-.accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
-  display: block;
-}
 .accordion-group .accordion-heading .accordion-toggle .arrow {
-  margin-right: 4px;
   text-align: center;
 }
 .accordion-group .accordion-heading .accordion-toggle .arrow i {
-  margin-top: 3px;
+  margin-top: 8px;
 }
 .accordion-group .accordion-heading .accordion-toggle .title {
   margin-top: 5px;
@@ -936,9 +924,6 @@ footer .links a {
 }
 .accordion-group .accordion-heading .accordion-toggle .in-use .popover {
   font-size: 14px;
-}
-.accordion-group .accordion-body.collapse {
-  clear: both;
 }
 .accordion-group .accordion-inner {
   border-top: none;
@@ -1249,7 +1234,7 @@ body {
   padding: 1px 12px;
 }
 .element .extras .progress {
-  margin: 8px 0 0 0;
+  margin: 8px 10px 0 8px;
 }
 .element.large,
 .variable-sizes .element.large,
@@ -1441,7 +1426,6 @@ body.index footer hr {
   border: 0;
   padding-top: 1px;
 }
-/* Bootstrap default - large screen */
 @media only screen and (min-width: 980px) {
   #screenshots .modal {
     width: 960px;
@@ -1454,7 +1438,6 @@ body.index footer hr {
   }
   .navbar-global .navbar-inner .nav.nav-mainmenu {
     background-color: #f64135;
-    z-index: 2;
   }
   .navbar-global .navbar-inner .nav.nav-mainmenu li.open {
     background-color: #34aae5;
@@ -1512,7 +1495,6 @@ body.index footer hr {
     width: 64%;
   }
 }
-/* Bootstrap standard medium screen */
 @media (min-width: 768px) and (max-width: 979px) {
   body.index .content div.inner section.watch-video div.mac-book-air .js-video iframe {
     height: 189px;
@@ -1520,100 +1502,25 @@ body.index footer hr {
     top: 45px;
     width: 301px;
   }
-  .accordion-group .accordion-inner .btn {
-    width: 80%;
-    margin-bottom: 4px;
-  }
 }
-/* Bootstrap standard small screen */
 @media (max-width: 767px) {
-  body.index .content div.inner section {
-    padding: 10px 0;
-  }
-  body.index .content div.inner section h3,
-  body.index .content div.inner section h4 {
-    text-align: center;
-    margin: 0;
-  }
-  .accordion-group .accordion-inner .version-info {
-    font-size: 12px;
-  }
-  .accordion-group .accordion-inner .panel.details {
-    border-right: none;
-  }
-  .accordion-group .accordion-inner .panel.deployment {
-    border-right: none;
-  }
-  .accordion-group .accordion-inner .panel.deployment h5 span.version {
-    float: none;
-    margin-left: 10px;
-    margin-right: 0;
-  }
-  .accordion-group .accordion-inner .btn {
-    width: 26%;
-  }
-  .accordion-group .accordion-heading .accordion-toggle .left-content {
-    width: 100%;
-  }
-  .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
-    font-size: 14px;
-  }
-  .accordion-group .accordion-heading .accordion-toggle .right-content {
-    position: absolute;
-    margin-top: 32px;
-  }
-  .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
-    display: none;
-  }
-  .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
-    width: 230px;
-  }
-  .tab-stripe.active {
-    min-height: 76px;
-  }
-  .accordion-group.accordion-add-new .accordion-inner .btn-add-store {
-    width: 50%;
-    margin-left: 20%;
-    position: inherit;
-    top: 0;
-  }
+	body.index .content div.inner section {
+		padding: 10px 0;
+	}
+	body.index .content div.inner section h3,
+	body.index .content div.inner section h4 {
+		text-align: center;
+		margin: 0;
+	}
+	#footer {
+	    text-align: center;
+	}
+	#footer p.pull-right, #footer p.pull-left {
+		float: none;
+	}
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
-  .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
-    font-size: 14px;
-  }
-  .accordion-group .accordion-inner .version-info {
-    font-size: 12px;
-  }
-  .accordion-group .accordion-inner .panel.details {
-    border-right: none;
-  }
-  .accordion-group .accordion-inner .panel.deployment {
-    border-right: none;
-  }
-  .accordion-group .accordion-inner .panel.deployment h5 span.version {
-    float: none;
-    margin-left: 10px;
-    margin-right: 0;
-  }
-  .accordion-group .accordion-inner .btn {
-    width: 26%;
-  }
-  .accordion-group .accordion-inner .btn.rollback-button,
-  .accordion-group .accordion-inner .btn.commit-button,
-  .accordion-group .accordion-inner .btn.deploy-button {
-    width: 90%;
-    margin-bottom: 6px;
-  }
-  .accordion-group.accordion-add-new .accordion-inner .btn-add-store {
-    width: 50%;
-    margin-left: 20%;
-    padding: 8px 12px 4px 12px;
-    position: inherit;
-    top: 0;
-    width: inherit;
-  }
 }
 /* Smartphones (landscape) ----------- */
 /* @media only screen
