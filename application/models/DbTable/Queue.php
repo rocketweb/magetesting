@@ -169,7 +169,9 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
         $this->delete('queue',array(
             'store_id = ' . $storeId,
             'status  = "pending"',
-            'task != "MagentoRemove"'
+            'task != "MagentoRemove"',
+            'task != "PapertrailSystemRemove"',
+            
             )
         );
         
