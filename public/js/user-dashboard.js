@@ -26,9 +26,15 @@ $(document).ready(function(){
 						}
 					);
 					_parent.removeClass('mt_shadow');
+					_parent.find('.right-content').addClass('inactive');
+					_parent.find('.tab-stripe').removeClass('active');
+					_parent.find('.left-content .arrow .icon').removeClass('icon-chevron-up').addClass('icon-chevron-down')
 					//_store.parent().removeClass('active-accordion-header');
 				} else {
 					_parent.addClass('mt_shadow');
+					_parent.find('.right-content').removeClass('inactive');
+					_parent.find('.tab-stripe').addClass('active');
+					_parent.find('.left-content .arrow .icon').removeClass('icon-chevron-down').addClass('icon-chevron-up')
 					//_store.parent().addClass('active-accordion-header');
 				}
 			});
@@ -55,6 +61,9 @@ $(document).ready(function(){
 					}
 				);
 				_parent.removeClass('mt_shadow');
+				_parent.find('.right-content').addClass('inactive');
+				_parent.find('.tab-stripe').removeClass('active');
+				_parent.find('.left-content .arrow .icon').removeClass('icon-chevron-up').addClass('icon-chevron-down')
 				//_store.parent().parent().removeClass('active-accordion-header');
 			});
 		}

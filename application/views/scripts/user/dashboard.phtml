@@ -16,7 +16,7 @@
         <?php if($storeCount === 0): ?>
             <!-- START STORE -->
             <div class="accordion-group accordion-add-new" data-active="0">
-                <div class="accordion-heading">
+                <div class="accordion-heading hidden-phone">
                     <div class="accordion-toggle">
                         <div class="for-use ready pull-right">
                             <a target="_blank" href="#" class="btn btn-faded btn-mini view-store disabled"><i class="icon icon-white icon-home"></i> View Store</a>
@@ -31,13 +31,13 @@
                         <?php else: ?>
                             <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red btn-add-store"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a>
                         <?php endif; ?>
-                        <div class="row version-info">
+                        <div class="row version-info hidden-phone">
                             <div class="span2 first"><strong>Edition:</strong></div>
                             <div class="span2"><strong>Version:</strong></div>
                             <div class="span2"><strong>Sample Data:</strong></div>
                         </div>
-                        <p class="description"></p>
-                        <div class="row">
+                        <p class="description hidden-phone"></p>
+                        <div class="row hidden-phone">
                             <!-- START DETAILS BOX -->
                             <div class="span4 panel details">
                                 <h5>Configuration</h5>
@@ -100,7 +100,7 @@
                                $progressClass = 'progress-info';
                         endswitch;
                     ?>
-                        <div class="span4 right-content pull-right">
+                        <div class="right-content pull-right inactive">
                             <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''); ?>">
                                 <?php if($item['status'] == 'error'): ?>
                                 <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Error occured. Please contact with administrator.'  ?>" data-trigger="hover">
@@ -186,9 +186,9 @@ And this is button from autologin feature
                             <?php endif; ?>
                             </div>
                         </div>
-                        <div class="span6 left-content">
-                            <div class="arrow pull-left"><i class="icon-chevron-down icon-blue"></i></div>
-                            <div class="span5"><?php echo $this->escape($item['store_name']) ?></div>
+                        <div class="left-content">
+                            <div class="arrow pull-left"><i class="icon icon-chevron-down icon-blue"></i></div>
+                            <div class="store-name"><?php echo $this->escape($item['store_name']) ?></div>
                         </div>
                         <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                         <input type="hidden" class="queueval" value="<?php echo $this->escape($item['queue_id']) ?>" />
