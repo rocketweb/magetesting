@@ -56,7 +56,16 @@ implements Application_Model_Task_Interface {
 	    
 	    $linesToLog[] = $line;
         }
-	$this->revisionLogger->info(implode("\n",$linesToLog));
+        
+	/** 
+         * Split logger into parts and let it rest for a while 
+         * with each iteration. This lets rsyslog send all lines to papertrail 
+         */
+        $revLogs = array_chunk($linesToLog,10);
+        foreach($revLogs as $tenlines){
+            $this->revisionLogger->info(implode("\n",$tenlines));
+            usleep(3000);
+        }
 
         chdir($startCwd);
     }
