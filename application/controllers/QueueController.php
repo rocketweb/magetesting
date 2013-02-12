@@ -1051,7 +1051,12 @@ class QueueController extends Integration_Controller_Action {
         } 
         
         $this->_customHost = $request->getParam('custom_host');
-        $this->_ftpStream = ftp_connect($this->_customHost,(int)$request->getParam('custom_port'),3600); 
+        if ($protocol = strstr($this->_customHost,'://',true)){
+            $this->_customHost = str_replace($protocol.'://','',$this->_customHost);
+        }
+        $this->_customHost = trim($this->_customHost,'/');
+        
+        $this->_ftpStream = @ftp_connect($this->_customHost,(int)$request->getParam('custom_port'),3600); 
         if ($this->_ftpStream){
             if (ftp_login($this->_ftpStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
@@ -1074,11 +1079,16 @@ class QueueController extends Integration_Controller_Action {
         } 
                
         $this->_customHost = $request->getParam('custom_host');
+        if ($protocol = strstr($this->_customHost,'://',true)){
+            $this->_customHost = str_replace($protocol.'://','',$this->_customHost);
+        }
+        $this->_customHost = trim($this->_customHost,'/');
+        
         $customPort = (int)$request->getParam('custom_port',22);
         if (trim($customPort) == ''){
             $customPort = 22;
         }
-        $this->_sshStream = ssh2_connect($this->_customHost,$customPort); 
+        $this->_sshStream = @ssh2_connect($this->_customHost,$customPort); 
         if ($this->_sshStream){
             if (ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
