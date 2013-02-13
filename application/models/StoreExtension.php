@@ -9,6 +9,7 @@ class Application_Model_StoreExtension {
     protected $_braintree_transaction_id;
     protected $_braintree_transaction_confirmed;
     protected $_reminder_sent;
+    protected $_status;
 
 
     protected $_mapper;
@@ -109,6 +110,15 @@ class Application_Model_StoreExtension {
         return $this->_reminder_sent;
     }
     
+    public function setStatus($value){
+        $this->_status= $value;
+        return $this;
+    }
+    
+    public function getStatus(){
+        return $this->_status;
+    }
+    
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -158,6 +168,7 @@ class Application_Model_StoreExtension {
             'braintree_transaction_id' => $this->getBraintreeTransactionId(),
             'braintree_transaction_confirmed' => $this->getBraintreeTransactionConfirmed(),
             'reminder_sent' => $this->getReminderSent(),
+            'status' => $this->getStatus()
         );
     }
 }
