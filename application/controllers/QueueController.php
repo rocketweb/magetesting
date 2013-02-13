@@ -586,7 +586,7 @@ class QueueController extends Integration_Controller_Action {
                         $storeExtensionModel->setStoreId($store->id);
                         $storeExtensionModel->setExtensionId($extensionId);
                         $storeExtensionModel->setStatus('pending');
-                        $storeExtensionModel->save();
+                        $storeExtensionModel = $storeExtensionModel->save();
 
                         /** 
                          * Find if we have any other ExtensionInstall tasks 
@@ -625,7 +625,7 @@ class QueueController extends Integration_Controller_Action {
                         );
                         $queueModel->save();
 
-                        $this->_response->setBody('done');
+                        $this->_response->setBody($storeExtensionModel->getId());
                     } catch (Exception $e) {
                         if ($log = $this->getLog()) {
                             $log->log('Error while adding extension to queue - ' . $e->getMessage(), LOG_ERR);
