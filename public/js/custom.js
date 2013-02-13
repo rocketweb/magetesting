@@ -23,8 +23,10 @@ $(document).ready(function () {
                     maxlength: 254 
                 },
                 'transaction[billing][country_name]': {
-                    required: true,
-                    maxlength: 254
+                    required: true
+                },
+                'transaction[billing][region]': {
+                    required: true
                 },
                 'transaction[credit_card][number]': {
                     required: true,
@@ -45,9 +47,7 @@ $(document).ready(function () {
             errorPlacement: function(error, element) {
                 if(error.html()) {
                     element.parents('.control-group').addClass("error");
-                } else {
-                    element.parents('.control-group').removeClass("error");
-                }
+                } 
                 
                 if(element.attr("name") != "exp-date-month") {
                     error.insertAfter(element);
@@ -59,6 +59,9 @@ $(document).ready(function () {
                   rangelength: "Credit card number must be 12-19 digits."
                 }
             },
+            unhighlight: function(element) {
+                $(element).parents('.control-group').removeClass("error");
+            }
         });
 
     }
