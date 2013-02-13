@@ -117,7 +117,6 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                         ->from($this->_name, array('num' => 'count(store_id)'))
                         ->where("store_id <= (SELECT id FROM store WHERE domain = '".$store_name."')")
                         ->where('status != ?', 'ready')
-                        ->where('status != ?', 'error')
                         ->where('retry_count < ?', 4);
 
         return $this->fetchRow($select);
@@ -131,7 +130,6 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->where("id <= '".$queue_id."' ")
                     ->where("user_id <= '".$user_id."' ")
                     ->where('status != ?', 'ready')
-                    ->where('status != ?', 'error')
                     ->where('retry_count < ?', 4);
 
         return $this->fetchRow($select);
