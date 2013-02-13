@@ -475,7 +475,12 @@ $(document).ready(function () {
             type    : 'POST',
             data    : {extension_id : $this.data('install-extension')},
             success : function(response) {
-                $this.addClass('hidden').prev('.progress').removeClass('hidden');
+                if(response != 'error' && response != '') {
+                    var $replacement = $('<span class="label update-status label-info pull-right">Pending</span>');
+                    $this.replaceWith($replacement);
+                    $replacement.parents('.element:first').data('store-extension-id', response);
+                    f_update_status($replacement);
+                }
             }
         });
         
