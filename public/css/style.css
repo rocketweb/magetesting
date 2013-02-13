@@ -1379,12 +1379,48 @@ body.index .content div.inner section.watch-video h4 {
 }
 body.index .content div.inner section.watch-video div.mac-book-air {
   margin-left: 10px;
+  background:transparent url('../img/mac-book-air.png') no-repeat left top; 
+  position: relative; 
+  width: 610px; 
+  height: 325px;
 }
 body.index .content div.inner section.watch-video div.mac-book-air .js-video iframe {
   height: 248px;
   left: 108px;
   top: 50px;
   width: 395px;
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper{
+  position: absolute; 
+  left: 107px; 
+  top: 23px; 
+  width: 397px; 
+  height: 250px; 
+  overflow: hidden;
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a{
+  display: block; 
+  position: absolute; 
+  width: 100%; 
+  height: 100%; 
+  background: url('../img/video_buttons.png') no-repeat left top; 
+  -webkit-transition:background 0.2s ease-in; 
+  -moz-transition:background 0.2s ease-in; 
+  -o-transition:background 0.2s ease-in; 
+  transition:background 0.2s ease-in;
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link-responsive{ 
+  display:none; 
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a:hover{
+  background-color: rgba(0, 0, 0, 0.2);
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 body.index .content div.inner section.simple {
   padding-top: 60px;
