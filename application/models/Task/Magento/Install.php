@@ -62,7 +62,9 @@ implements Application_Model_Task_Interface {
         
         $this->_createLocalXml();
         
-        $this->_updateAdminAccount();
+        if ($this->_storeObject->getEdition()=='EE'){
+            $this->_updateAdminAccount();
+        }
         
         $this->_sendStoreReadyEmail();
     }
@@ -81,12 +83,14 @@ implements Application_Model_Task_Interface {
             throw new Application_Model_Task_Exception($message);
         }
 
-        $this->logger->log('Preparing store directory.', Zend_Log::INFO);
-        exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
-        $message = var_export($output, true);
-                
-        $this->logger->log($message, Zend_Log::DEBUG);
-        unset($output);
+        if (!file_exists($this->_storeFolder . '/' . $this->_domain)){
+            $this->logger->log('Preparing store directory.', Zend_Log::INFO);
+            exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
+            $message = var_export($output, true);
+
+            $this->logger->log($message, Zend_Log::DEBUG);
+            unset($output);
+        }
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain) || !is_dir($this->_storeFolder . '/' . $this->_domain)) {
             $message = 'Store directory does not exist, aborting.';
