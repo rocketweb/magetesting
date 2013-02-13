@@ -7,6 +7,7 @@ $sql = $select
     ->where('se.added_date <= ?', date('Y-m-d', strtotime('-3 day', strtotime(date('Y-m-d')))) )
     ->where('se.braintree_transaction_id IS NULL')
     ->where('se.reminder_sent = 0')
+    ->where('e.price > 0')
     ->joinLeft(array('st' => 'store'), 'st.id = se.store_id', array('st.user_id', 'st.domain'))
     ->joinLeft('server','server.id = se.store_id', array('server_domain' => 'domain'))
     ->joinLeft(array('u' => 'user'), 'u.id = st.user_id', array('u.email', 'u.firstname'))
