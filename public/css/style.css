@@ -1391,6 +1391,10 @@ body.index .content div.inner section.watch-video h4 {
 }
 body.index .content div.inner section.watch-video div.mac-book-air {
     margin-left: 10px;
+    background:transparent url('../img/mac-book-air.png') no-repeat left top;
+    position: relative;
+    width: 610px;
+    height: 325px; 
 }
 body.index .content div.inner section.watch-video div.mac-book-air .js-video iframe {
     height: 248px;
@@ -1398,6 +1402,38 @@ body.index .content div.inner section.watch-video div.mac-book-air .js-video ifr
     top: 50px;
     width: 395px;
 }
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper{
+    position: absolute;
+    left: 107px;
+    top: 23px;
+    width: 397px;
+    height: 250px;
+    overflow: hidden;
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a{
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('../img/video_buttons.png') no-repeat left top;
+    -webkit-transition:background 0.2s ease-in;
+    -moz-transition:background 0.2s ease-in;
+    -o-transition:background 0.2s ease-in;
+    transition:background 0.2s ease-in;
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link-responsive{
+    display:none;
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a:hover{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+} 
 body.index .content div.inner section.simple {
     padding-top: 60px;
 }
@@ -2386,61 +2422,15 @@ form#extension-filter-form {
     cursor: pointer;
 }
 
-/* Media Quires */
-@media only screen and (max-width:979px) {    
-    /*body.index .content div.inner section.watch-video .headings  {
-        margin-right: 0;
-        clear: both;
-    }
-    body.index .content div.inner section.watch-video div.mac-book-air  {
-        margin: 0 auto;
-        clear: both;
-    }
-    
-    body.index .content div.inner section.watch-video .headings  {
-        width: 100%;
-        padding-bottom: 30px;
-    }
-    
-    body.index .content div.inner section.watch-video div.pull-right h3,  body.index .content div.inner section.watch-video div.pull-right h4  {
-        text-align: center;
-    }*/
-}
-
 @media (min-width:768px) and (max-width:979px) {
-    /*body.index .content div.inner section p {
-         width: 250px;
-    }
-    
-    body.index .content div.inner section h3:first-of-type  {
-         margin: 0;
-    }
-    
-    body.index .content div.inner section div.pull-left h3,  body.index .content div.inner section div.pull-left h4,  body.index .content div.inner section div.pull-left p  {
-         margin-left: 20px;
-    }
-    
-    .span6.pull-right {
-         margin-right: 40px;
-    }
-    
-    .span6.pull-left {
-         margin-left: 40px;
-    }
-    
-    body.index .content div.inner section.flexible .pull-right {
-         margin-right: 35px;
-    }
-
-    body.index .content div.inner section.flexible ul.thumbs {
-         margin-left: 10px;
-    }*/
-    
-    table.compare-table tbody tr td.compare-table-row-title,  table.compare-table thead tr th.compare-table-title-row {
+    table.compare-table tbody tr td.compare-table-row-title,
+    table.compare-table thead tr th.compare-table-title-row {
         width: 200px;
     }
     
-    table.compare-table thead tr th.compare-table-data-name,  table.compare-table tbody tr td.compare-table-data,  table.compare-table tbody tr td.compare-table-price-button {
+    table.compare-table thead tr th.compare-table-data-name,
+    table.compare-table tbody tr td.compare-table-data,
+    table.compare-table tbody tr td.compare-table-price-button {
         width: 180px;
     }
     
@@ -2452,7 +2442,8 @@ form#extension-filter-form {
         height: 66px;
     }
     
-    table.compare-table thead tr th.compare-table-empty-first,  table.compare-table tbody tr td.compare-table-empty {
+    table.compare-table thead tr th.compare-table-empty-first,
+    table.compare-table tbody tr td.compare-table-empty {
         width: 53px;
         min-width: 0;
         padding: 0;
@@ -2495,71 +2486,6 @@ form#extension-filter-form {
 }
 
 @media (max-width:767px) {
-    /*.span12 {
-         width: 600px;
-    }
-
-    .container,  .navbar-static-top .container, 
-    .navbar-fixed-top .container,
-    .navbar-fixed-bottom .container  {
-        width: 600px;
-    }
-    
-    body.index .content div.inner section {
-        padding:90px 0 !important;
-    }
-    
-    body.index .content div.inner section:last-child {
-        padding:90px 0 0 0!important;
-    }
-    
-    body.index .content div.inner section h3, body.index .content div.inner section h4 {
-        text-align:center;
-        margin:0;
-    }
-    
-    body.index .content div.inner section div.pull-left h3, body.index .content div.inner section div.pull-right h3 {
-        text-align: center;
-        margin-left: 0;
-    }
-
-    body.index .content div.inner section div.pull-left p, body.index .content div.inner section div.pull-right p {
-        width: 356px;
-        margin-left: 125px;
-        text-align: justify;
-        padding-bottom:0px;
-    }
-
-     .span6.pull-left img {
-        margin-left: 10px;
-    }
-
-    body.index .content div.inner section ul.thumbs,  body.index .content div.inner section.flexible ul.thumbs {
-        width: 356px;
-        margin-left: 118px;
-        display: inline-block;
-        float: left;
-    }
-
-    body.index .content div.inner section.safe img  {
-        margin: 0;
-    }
-    body.index .content div.inner section.watch-video div.mac-book-air  {
-        -webkit-transform: scale(0.9);
-        -moz-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        -o-transform: scale(0.9);
-        transform: scale(0.9);
-    }
-    
-    body.index .content div.inner section.flexible img  {
-        margin: 40px 0 0 0px;
-    }
-    
-    body.index .content div.inner section h3:first-of-type {
-        margin: 0;
-    }*/
-    
     section.extensions a.btn-success {
         float:right;
         margin-bottom: 50px;
@@ -2581,11 +2507,14 @@ form#extension-filter-form {
         display: none;
     }
     
-    table.compare-table tbody tr td.compare-table-row-title,  table.compare-table thead tr th.compare-table-title-row {
+    table.compare-table tbody tr td.compare-table-row-title,
+    table.compare-table thead tr th.compare-table-title-row {
         width: 130px;
     }
     
-    table.compare-table thead tr th.compare-table-data-name,  table.compare-table tbody tr td.compare-table-data,  table.compare-table tbody tr td.compare-table-price-button {
+    table.compare-table thead tr th.compare-table-data-name,
+    table.compare-table tbody tr td.compare-table-data,
+    table.compare-table tbody tr td.compare-table-price-button {
         width: 180px;
     }
     
@@ -2597,7 +2526,8 @@ form#extension-filter-form {
         height: 66px;
     }
     
-    table.compare-table thead tr th.compare-table-empty-first,  table.compare-table tbody tr td.compare-table-empty {
+    table.compare-table thead tr th.compare-table-empty-first,
+    table.compare-table tbody tr td.compare-table-empty {
         width: 26px;
         min-width: 0;
         padding: 0;
@@ -2641,45 +2571,14 @@ form#extension-filter-form {
 
 /** Smartphone (landscape and portrait) - fix **/
 @media only screen and (min-device-width:320px) and (max-width:480px) {
-    /*.span12 {
-         width: 400px;
-    }
-
-    .container,  .navbar-static-top .container,
-    .navbar-fixed-top .container,
-    .navbar-fixed-bottom .container  {
-        width: 400px;
-    }
-
-    body.index .content div.inner section.safe img  {
-         margin: 0;
-    }
-
-    body.index .content div.inner section.watch-video div.mac-book-air  {
-        -webkit-transform: scale(0.6);
-        -moz-transform: scale(0.6);
-        -ms-transform: scale(0.6);
-        -o-transform: scale(0.6);
-        transform: scale(0.6);
-        margin-left: -105px;
-        margin-bottom: -60px;
-    }
-
-    body.index .content div.inner section div.pull-left p,
-    body.index .content div.inner section div.pull-right p {
-        margin-left: 20px;
-    }
-
-    body.index .content div.inner section ul.thumbs,
-    body.index .content div.inner section.flexible ul.thumbs  {
-        margin-left: 14px;
-    }*/
-    
-    table.compare-table tbody tr td.compare-table-row-title,  table.compare-table thead tr th.compare-table-title-row {
+    table.compare-table tbody tr td.compare-table-row-title,
+    table.compare-table thead tr th.compare-table-title-row {
         width: 90px;
     }
 
-    table.compare-table thead tr th.compare-table-data-name,  table.compare-table tbody tr td.compare-table-data,  table.compare-table tbody tr td.compare-table-price-button {
+    table.compare-table thead tr th.compare-table-data-name, 
+    table.compare-table tbody tr td.compare-table-data, 
+    table.compare-table tbody tr td.compare-table-price-button {
         width: 90px;
     }
     
@@ -2687,7 +2586,8 @@ form#extension-filter-form {
         height: 140px;
     }
     
-    table.compare-table thead tr th.compare-table-empty-first,  table.compare-table tbody tr td.compare-table-empty {
+    table.compare-table thead tr th.compare-table-empty-first,
+    table.compare-table tbody tr td.compare-table-empty {
         width: 6px;
         min-width: 0;
         padding: 0;
@@ -2711,7 +2611,9 @@ form#extension-filter-form {
         line-height: 20px;
     }
     
-    .compare-table-data-name h3,  .compare-table-data-name h2,  .compare-table-data-name h4 {
+    .compare-table-data-name h3,
+    .compare-table-data-name h2,
+    .compare-table-data-name h4 {
         margin: 0;
     }
     
