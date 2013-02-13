@@ -124,7 +124,7 @@
                                     <label for="billing_region" class="control-label required">State / Province</label>
                                     <div class="controls" id="region">
                                         <select name="transaction[billing][region]" id="billing_region" class="select-state span4">
-                                            <option value="Select State" label="Select State">Select State</option>
+                                            <option value="">Select State</option>
                                             <?php foreach (RocketWeb_List::getStatesOfAmerica() as $state): ?>
                                                 <option value="<?php echo $state; ?>" label="<?php echo $state; ?>" <?php echo $state == $this->address['state'] ? 'selected="selected"' :''; ?>><?php echo $state; ?></option>
                                             <?php endforeach; ?>
