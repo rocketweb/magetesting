@@ -585,6 +585,7 @@ class QueueController extends Integration_Controller_Action {
                         $storeExtensionModel = new Application_Model_StoreExtension();
                         $storeExtensionModel->setStoreId($store->id);
                         $storeExtensionModel->setExtensionId($extensionId);
+                        $storeExtensionModel->setStatus('pending');
                         $storeExtensionModel->save();
 
                         /** 
@@ -646,11 +647,17 @@ class QueueController extends Integration_Controller_Action {
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $domain = $request->getParam('domain', null);
-        if ($request->isPost() && $domain!=null) {
-            $storeModel = new Application_Model_Store();
-            $storeItem = $storeModel->findByDomain($domain);
+        $extension_id = (int)$request->getParam('extension_id', null);
+        if ($request->isPost() && ($domain!=null || $extension_id)) {
+            if($extension_id) {
+                $model = new Application_Model_StoreExtension();
+                $model = (object)$model->find($extension_id)->__toArray();
+            } else {
+                $model = new Application_Model_Store();
+                $model = $model->findByDomain($domain);
+            }
             
-            $this->_response->setBody(Zend_Json_Encoder::encode($storeItem->status));
+            $this->_response->setBody(Zend_Json_Encoder::encode($model->status));
         } else {
             return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',

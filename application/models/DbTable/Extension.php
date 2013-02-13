@@ -55,7 +55,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $select->joinLeft(
             array('se' => 'store_extension'),
             new Zend_Db_Expr('e.id = se.extension_id AND ( se.store_id =  '.$this->getDefaultAdapter()->quote($store->id).' OR se.store_id IS NULL )'),
-            array('se.store_id', 'se.braintree_transaction_id')
+            array('se.store_id', 'se.braintree_transaction_id', 'se.status', 'store_extension_id' => 'se.id')
         );
         $select->joinLeft(
             array('q' => 'queue'),
