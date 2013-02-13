@@ -167,13 +167,13 @@
                                 <div class="control-group <?php echo (isset($this->errors['exp_date']) ? 'error' : ''); ?>">
                                     <label for="braintree_credit_card_exp" class="control-label required">Credit Card Expiration</label>
                                     <div class="controls">
-                                        <select class="span2" id="exp-date-month">
+                                        <select class="span2" id="exp-date-month" name="exp-date-month">
                                             <option value="">Month</option>
                                         <?php for($i = 1; $i < 13; $i++): ?>
                                             <option value="<?php echo ($i < 10 ? '0'.$i : $i); ?>"><?php echo ($i < 10 ? '0'.$i : $i), ' - ', date('F', mktime(0,0,0,$i,1));?></option>
                                         <?php endfor; ?>
                                         </select>
-                                        <select class="span1" id="exp-date-year">
+                                        <select class="span1" id="exp-date-year" name="exp-date-year">
                                             <option value="">Year</option>
                                         <?php for($i = date('Y'); $i < (int)date('Y')+11; $i++): ?>
                                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>

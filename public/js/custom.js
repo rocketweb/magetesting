@@ -1,4 +1,67 @@
 $(document).ready(function () {
+    if($('#payment-form').length) {
+        $('#payment-form').validate({
+            errorClass: 'error',
+            rules: {
+                'transaction[billing][first_name]': { 
+                    required: true,
+                    maxlength: 254 
+                },
+                'transaction[billing][last_name]': { 
+                    required: true,
+                    maxlength: 254 
+                },
+                'transaction[billing][street_address]': { 
+                    required: true,
+                    maxlength: 254 
+                },
+                'transaction[billing][postal_code]': { 
+                    required: true 
+                },
+                'transaction[billing][locality]': { 
+                    required: true,
+                    maxlength: 254 
+                },
+                'transaction[billing][country_name]': {
+                    required: true,
+                    maxlength: 254
+                },
+                'transaction[credit_card][number]': {
+                    required: true,
+                    rangelength: [12, 19]
+                },
+                'transaction[credit_card][cvv]': {
+                    required: true,
+                    rangelength: [3, 4],
+                    number: true
+                },
+                'exp-date-month': {
+                    required: true
+                },
+                'exp-date-year': {
+                    required: true
+                }
+            },
+            errorPlacement: function(error, element) {
+                if(error.html()) {
+                    element.parents('.control-group').addClass("error");
+                } else {
+                    element.parents('.control-group').removeClass("error");
+                }
+                
+                if(element.attr("name") != "exp-date-month") {
+                    error.insertAfter(element);
+                }
+                
+            },
+            messages: {
+                'transaction[credit_card][number]': {
+                  rangelength: "Credit card number must be 12-19 digits."
+                }
+            },
+        });
+
+    }
 
     var siteRoot = $('body').data('siteRoot');
     /*
@@ -8,6 +71,7 @@ $(document).ready(function () {
      */
     var $braintree_billing_details = $('.braintree-billing-details'),
         $prefilled_data = $braintree_billing_details.find('#has-prefilled-data');
+
 
     if($braintree_billing_details.length) {
         $braintree_billing_details.parents('form:first').submit(function() {
@@ -22,17 +86,17 @@ $(document).ready(function () {
             }
 
             $process_form = true;
-            if(!$exp_date_month.val().length) {
-                $exp_date_month.focus();
-                $process_form = false;
-            }
-            if(!$exp_date_year.val().length) {
-                /* let month be focused first on error */
-                if($process_form) {
-                    $exp_date_year.focus();
-                }
-                $process_form = false;
-            }
+//            if(!$exp_date_month.val().length) {
+//                $exp_date_month.focus();
+//                $process_form = false;
+//            }
+//            if(!$exp_date_year.val().length) {
+//                /* let month be focused first on error */
+//                if($process_form) {
+//                    $exp_date_year.focus();
+//                }
+//                $process_form = false;
+//            }
 
             /* stop submitting if cc exp date is wrong */
             if(!$process_form) {
@@ -42,7 +106,7 @@ $(document).ready(function () {
                 $braintree_exp_date.val($exp_date_month.val() + '/' + $exp_date_year.val());
             }
 
-            $submit.addClass('disabled');
+//            $submit.addClass('disabled');
 
             // do not save address to my-account if form was prefilled using data from my-account
             if(!$prefilled_data.length) {
