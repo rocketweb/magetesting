@@ -218,8 +218,7 @@ class BraintreeController extends Integration_Controller_Action
 
         $pay_for = $this->_getParam('pay-for');
         $id = (int)$this->_getParam('id', 0);
-        $this->view->domain = $domain = $this->_getParam('domain');
-
+        $this->view->domain = $domain = $this->_getParam('domain'); 
         try {
             // check whether GET params are ok
             if(!in_array($pay_for, array('plan', 'extension', 'change-plan'))) {

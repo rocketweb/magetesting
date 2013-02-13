@@ -2228,3 +2228,7 @@ form#extension-filter-form {
     word-break: break-all;
     cursor: auto;
 }
+
+label.error {
+    color: #b94a48;
+}
