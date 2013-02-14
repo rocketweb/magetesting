@@ -1392,6 +1392,7 @@ body.index .content div.inner section.watch-video h4 {
 body.index .content div.inner section.watch-video div.mac-book-air {
     margin-left: 10px;
     background:transparent url('../img/mac-book-air.png') no-repeat left top;
+    background-size: 100%;
     position: relative;
     width: 610px;
     height: 325px; 
@@ -1402,7 +1403,7 @@ body.index .content div.inner section.watch-video div.mac-book-air .js-video ifr
     top: 50px;
     width: 395px;
 }
-body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper{
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
     position: absolute;
     left: 107px;
     top: 23px;
@@ -1410,24 +1411,25 @@ body.index .content div.inner section.watch-video div.mac-book-air div.video-wra
     height: 250px;
     overflow: hidden;
 }
-body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a{
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a {
     display: block;
     position: absolute;
     width: 100%;
     height: 100%;
     background: url('../img/video_buttons.png') no-repeat left top;
+    background-size: 100%;
     -webkit-transition:background 0.2s ease-in;
     -moz-transition:background 0.2s ease-in;
     -o-transition:background 0.2s ease-in;
     transition:background 0.2s ease-in;
 }
-body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link-responsive{
-    display:none;
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link-responsive {
+    display: none;
 }
-body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a:hover{
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a:hover {
     background-color: rgba(0, 0, 0, 0.2);
 }
-body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper img{
+body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper img {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -1548,12 +1550,61 @@ body.index footer hr {
     }
 }
 @media (min-width: 768px) and (max-width: 979px) {
-    body.index .content div.inner section.watch-video div.mac-book-air .js-video iframe {
-        height: 189px;
-        left: 83px;
-        top: 45px;
-        width: 301px;
+	body.index .content div.inner section div.pull-left h3,
+	body.index .content div.inner section div.pull-left h4,
+	body.index .content div.inner section div.pull-left p {
+	    margin-left: 20px;
+	}
+	body.index .content div.inner section div.pull-left p,
+    body.index .content div.inner section div.pull-right p {
+	    width: 280px;
+	}
+    body.index .content div.inner section.watch-video .headings {
+        margin: 0 auto;
     }
+    body.index .content div.inner section.watch-video .span8 {
+        width: 436px;
+    }
+    body.index .content div.inner section.watch-video .span3 {
+        width: 260px;
+    }
+    body.index .content div.inner section h3:first-of-type {
+        margin: 80px 0 0 0;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 95%;
+        height: 290px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
+        height: 168px;
+        left: 73px;
+        top: 17px;
+        width: 268px;
+    }
+    
+    body.index .content div.inner section.simple .span6 img {
+    	width: 86%;
+    }
+    body.index .content div.inner section.safe .span5.pull-right {
+        float: left;
+    }
+    body.index .content div.inner section.flexible {
+        padding-bottom: 40px;
+    }
+    body.index .content div.inner section.flexible h3:first-of-type {
+        margin-top: 50px;
+    }
+    
+    body.index .content div.inner section.flexible ul.thumbs {
+        margin-left: 12px;
+    }
+    body.index .content div.inner section.flexible ul.thumbs li img:last-of-type {
+        margin-bottom: 0;
+    }
+    body.index .content div.inner section.extensions .span5 p {
+        width: 260px;
+    }
+    
     .accordion-group .accordion-inner .btn {
         width: 80%;
         margin-bottom: 4px;
@@ -1611,6 +1662,90 @@ body.index footer hr {
     .btn-add-ext.pull-right {
         float: none;
     }
+    
+    body.index .content div.inner section {
+        padding: 10px 0;
+    }
+    body.index .content h1 {
+        margin: 0 auto 16px;
+        width: 80%;
+    }
+    body.index .content h2 {
+        line-height: 34px;
+        width: 80%;
+    }
+    body.index .content div.inner section h3,
+    body.index .content div.inner section h4 {
+        text-align: center;
+        margin: 0;
+    }
+    body.index .content div.inner section .pull-right[class*="span"],
+    body.index .content div.inner section .pull-left[class*="span"] {
+        float: none;
+    }
+    body.index .content div.inner section.watch-video .headings {
+        margin: 0 auto;
+    }
+    body.index .content div.inner section.watch-video .headings h3 {
+        float: none;
+        margin: 20px 0 0 0;
+        text-align: center;
+    }
+    body.index .content div.inner section.watch-video .span8.pull-left {
+        float: left;
+    }
+    body.index .content div.inner section h3:first-of-type,
+    body.index .content div.inner section.simple h3:first-of-type,
+    body.index .content div.inner section.safe h3:first-of-type,
+    body.index .content div.inner section.flexible h3:first-of-type,
+    body.index .content div.inner section.extensions h3:first-of-type {
+        margin: 20px 0 0 100px;
+    }
+    body.index .content div.inner section.watch-video .headings h4 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 95%;
+        height: 290px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
+        height: 209px;
+        left: 91px;
+        top: 21px;
+        width: 333px;
+    }
+    body.index .content div.inner section.safe img {
+        margin-top: 20px;
+        margin-bottom: 0;
+    }
+    body.index .content div.inner section ul.thumbs {
+        margin: 0 20px 0 90px;
+    }
+    body.index .content div.inner section.safe ul.thumbs li img:last-of-type,
+    body.index .content div.inner section.flexible ul.thumbs li img:last-of-type {
+        margin-bottom: 25px;
+    }
+    body.index .content div.inner section div.pull-left p,
+    body.index .content div.inner section div.pull-right p {
+        float: none;
+        width: 70%;
+        margin-left: 100px;
+        margin-bottom: 25px;
+    }
+    body.index .content div.inner section.flexible .span6 img {
+        margin-top: 20px;
+        margin-right: 0;
+        margin-bottom: 0;
+    }
+    body.index .content div.inner section.extensions {
+        padding-top: 25px;
+    }
+    body.index .content div.inner section.extensions a.btn-success {
+        float: left;
+        margin-bottom: 25px;
+    }
+    
     #extensions .mt_filters .search-as-you-type {
         width: 100%;
         margin: 10px 0 0;
@@ -1668,15 +1803,7 @@ body.index footer hr {
     #extensions .element.free.large .wrapper .extras .progress {
         margin: 8px 0 0 8px;
     }
-    body.index .content div.inner section {
-        padding: 10px 0;
-    }
-    body.index .content div.inner section h3,
-    body.index .content div.inner section h4 {
-        text-align: center;
-        margin: 0;
-    }
-
+    
     .accordion-group .accordion-inner .version-info {
         font-size: 12px;
     }
@@ -1732,6 +1859,62 @@ body.index footer hr {
 	p.right-indent {
         margin: 0 10px 10px 0;
     }
+    
+    body.index .content div.inner section {
+        padding: 10px 0 25px 0;
+    }
+    body.index .content div.inner section h3:first-of-type {
+        margin: 20px 0 0 0;
+        text-align: center;
+    }
+    body.index .content div.inner section.watch-video .headings {
+        margin: 0 auto;
+    }
+    body.index .content div.inner section.watch-video .headings h3 {
+        float: none;
+        margin: 20px 0 0 0;
+        text-align: center;
+    }
+    body.index .content div.inner section.watch-video .headings h4 {
+    	text-align: center;
+    	margin-bottom: 20px;
+    }
+    body.index .content div.inner section .pull-right[class*="span"],
+    body.index .content div.inner section .pull-left[class*="span"] {
+        float: none;
+    }
+    body.index .content div.inner section.watch-video .span8.pull-left {
+        float: left;
+    }
+    body.index .content div.inner section.simple,
+    body.index .content div.inner section.extensions {
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+    body.index .content div.inner section.simple .span6 > img,
+    body.index .content div.inner section.safe .span6 > img,
+    body.index .content div.inner section.flexible .span6 > img,
+    body.index .content div.inner section.extensions .span6 > img {
+        max-width: 86%;
+    }
+    body.index .content div.inner section.safe img {
+        margin-top: 20px;
+        margin-bottom: 0;
+    }
+    body.index .content div.inner section.flexible img {
+        margin-bottom: 0;
+        margin-right: 0;
+        margin-top: 20px;
+    }
+    body.index .content div.inner section.safe ul.thumbs li img:last-of-type,
+    body.index .content div.inner section.flexible ul.thumbs li img:last-of-type {
+        margin-bottom: 0;
+    }
+    body.index .content div.inner section.extensions a.btn-success {
+        float: none;
+        margin: 0 auto;
+    }
+    
     .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
         font-size: 14px;
     }
@@ -1769,6 +1952,45 @@ body.index footer hr {
 }
 /* Smartphones (landscape) ----------- */
 @media only screen and (min-width: 321px) and (max-width: 481px) {
+    body.index .content h1 {
+        margin-bottom: 4px;
+        font-size: 21.5px;
+        line-height: 30px;
+    }
+    body.index .content h2 {
+        width: 70%;
+        margin-bottom: 0;
+        font-size: 15.5px;
+        line-height: 20px;
+    }
+    body.index .content div.inner section ul.thumbs,
+    body.index .content div.inner section.flexible ul.thumbs {
+        margin: 20px 20px 0 27px;
+    }
+    body.index .content div.inner section div.pull-left p,
+    body.index .content div.inner section div.pull-right p {
+        font-size: 12px;
+        line-height: 16px;
+        margin: 0 36px 20px 36px;
+        width: 84%;
+    }
+    body.index .content div.inner section.simple h3:first-of-type,
+    body.index .content div.inner section.safe h3:first-of-type,
+    body.index .content div.inner section.flexible h3:first-of-type,
+    body.index .content div.inner section.extensions h3:first-of-type {
+        margin: 20px 0 8px 36px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 95%;
+        height: 220px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
+        height: 163px;
+        left: 70px;
+        top: 16px;
+        width: 261px;
+    }
+    
     #extensions .mt_filters .btn-group {
         width: 100%;
         margin-bottom: 4px;
@@ -1859,6 +2081,38 @@ body.index footer hr {
     body.index .content div.inner {
         margin-top: 20px;
     }
+    body.index .content div.inner section ul.thumbs,
+    body.index .content div.inner section.flexible ul.thumbs {
+        margin: 20px 20px 0 13px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 92%;
+        height: 140px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
+        height: 98px;
+        left: 42px;
+        top: 10px;
+        width: 156px;
+    }
+    body.index .content div.inner section.simple h3:first-of-type,
+    body.index .content div.inner section.safe h3:first-of-type,
+    body.index .content div.inner section.flexible h3:first-of-type,
+    body.index .content div.inner section.extensions h3:first-of-type {
+    	font-size: 22.5px;
+        margin: 20px 0 8px 22px;
+    }
+    body.index .content div.inner section div.pull-left p,
+    body.index .content div.inner section div.pull-right p {
+        font-size: 12px;
+        line-height: 16px;
+        margin: 0 22px 20px 22px;
+        width: 84%;
+    }
+    
+    body.index .content div.inner section.safe .span6.pull-left {
+        float: left;
+    }
     
     #extensions .element {
         width: 213px;
@@ -1942,20 +2196,10 @@ body.index footer hr {
     }
 }
 @media only screen and (min-width: 349px) and (max-width: 481px) {
-    body.index .mt {
+    /*body.index .mt {
         margin-top: 20px;
     }
-    body.index .content h1 {
-        margin-bottom: 4px;
-        font-size: 21.5px;
-        line-height: 30px;
-    }
-    body.index .content h2 {
-        width: 60%;
-        margin-bottom: 0;
-        font-size: 15.5px;
-        line-height: 20px;
-    }
+    
     body.index .content img.cubes {
         z-index: -1;
         margin-top: 0px;
@@ -1968,7 +2212,7 @@ body.index footer hr {
         left: 18%;
         top: 6%;
         width: 64%;
-    }
+    }*/
 }
 
 /* LESS - END COMPILED CSS */
@@ -2282,7 +2526,7 @@ form#payment-form fieldset h3{
 }
 
 #main {
-    //overflow: auto;
+    /*overflow: auto;*/
     padding-bottom: 60px;
 }
 
@@ -2491,7 +2735,7 @@ form#extension-filter-form {
         margin-bottom: 50px;
     }
     
-    body.index .content div.inner section.safe ul.thumbs li img:last-of-type  {
+    /*body.index .content div.inner section.safe ul.thumbs li img:last-of-type  {
         margin: 0;
     }
     
@@ -2505,7 +2749,7 @@ form#extension-filter-form {
     
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link {
         display: none;
-    }
+    }*/
     
     table.compare-table tbody tr td.compare-table-row-title,
     table.compare-table thead tr th.compare-table-title-row {
