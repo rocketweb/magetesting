@@ -260,6 +260,13 @@ implements Application_Model_Task_Interface {
                 exec('sudo echo \''.$line.'\' >> '.$this->_storeFolder . '/' . $this->_domain . '/media/.htaccess');
             }
             
+            /**
+            * This line is here to prevent:
+            * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
+            * when vsftpd is set to use chroot list
+            */
+            exec('sudo chmod a-w '.$this->_storeFolder.'');
+            
         }
         
         
