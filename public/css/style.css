@@ -2655,7 +2655,7 @@ form#extension-filter-form {
     top: 0; 
     margin-left: 0; 
     right: 0px
-}     
+}   
 
 #wrap-context-help #context-help div {
     margin-left: 10px;
@@ -2893,12 +2893,8 @@ form#extension-filter-form {
 
 .popover-font-fix {
     font-size: 14px;
-<<<<<<< HEAD
 }
 
 label.error {
     color: #b94a48;
 }
-=======
-}
->>>>>>> masterdevfix
