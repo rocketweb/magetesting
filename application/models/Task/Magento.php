@@ -288,6 +288,10 @@ extends Application_Model_Task {
         
         exec('sudo a2ensite '.$this->_dbuser.'.'.$this->_serverObject->getDomain());
         exec('sudo /etc/init.d/apache2 reload');
+        
+        $redirector = '<?php 
+        header("Location: ' . $this->config->magento->storeUrl . '/user/dashboard")';
+        file_put_contents('/home/'.$this->config->magento->userprefix . $this->_dbuser.'/index.php', $redirector);
     }
     
     protected function _createUserTmpDir(){
