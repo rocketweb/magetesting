@@ -2268,3 +2268,7 @@ form#extension-filter-form {
 .popover-font-fix {
     font-size: 14px;
 }
+
+label.error {
+    color: #b94a48;
+}
