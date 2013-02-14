@@ -291,7 +291,10 @@ extends Application_Model_Task {
         
         $redirector = '<?php 
         header("Location: ' . $this->config->magento->storeUrl . '/user/dashboard")';
-        file_put_contents('/home/'.$this->config->magento->userprefix . $this->_dbuser.'/index.php', $redirector);
+        $fileLocation = '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/index.php';
+        file_put_contents($fileLocation, $redirector);
+        exec('sudo chmod a+x '.$fileLocation);
+        exec('sudo chown '.$this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser.' '.$fileLocation);
     }
     
     protected function _createUserTmpDir(){
