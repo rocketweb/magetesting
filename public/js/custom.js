@@ -399,7 +399,7 @@ $(document).ready(function () {
             }
         });
     }
-    
+
     // EVENT: On click "Install" button
     $('.install').click(function(event){
         "use strict";
@@ -411,7 +411,12 @@ $(document).ready(function () {
             type    : 'POST',
             data    : {extension_id : $this.data('install-extension')},
             success : function(response) {
-                $this.addClass('hidden').prev('.progress').removeClass('hidden');
+                if(response != 'error' && response != '') {
+                    var $replacement = $('<span class="label update-status label-info pull-right">Pending</span>');
+                    $this.replaceWith($replacement);
+                    $replacement.parents('.element:first').data('store-extension-id', response);
+                    f_update_status($replacement);
+                }
             }
         });
         
@@ -543,12 +548,7 @@ $(document).ready(function () {
         $extensions_isotope.isotope('reLayout');
     });
     /* STORE EXTENSIONS ISOTOPE */
-    
-    /* update progress bar when store extension is installing */
-    progressBarExtension('show');
-    setInterval(function(){ progressBarExtension('update') }, 30000);
-    
-    
+
     /* payment form - display dropdown for US and text field for all other countries */
     changeInputSelect();    
         
@@ -597,19 +597,44 @@ $(document).ready(function () {
                 0
         });
     });
-});
 
-function progressBarExtension(param) {
-    $('div.extras div.progress').each(function() {
-        if(!$(this).hasClass('hidden')) {
-            if(param == 'update')
-                location.reload();
-            
-            if(param == 'show')
-                $(this).parent().parent().click();
-        }
-    });
-}
+    /* Store extensions status updater */
+    var f_update_status = function($element) {
+        setTimeout(function() {
+            $.ajax({
+                url : siteRoot + '/queue/getstatus',
+                type : 'POST',
+                dataType : 'json',
+                data : { extension_id : $element.parents('.element:first').data('store-extension-id') },
+                success: function(response) {
+                    var $replacement = [];
+                    if(response == 'processing') {
+                        $replacement = $('<span class="label update-status label-important pull-right">Installing</span>');
+                        f_update_status($replacement);
+                    } else if(response == 'ready') {
+                        $replacement = $('<span class="label update-status label-success pull-right">Success</span>');
+                        setTimeout(function() { location.reload(); }, 500);
+                    } else {
+                        f_update_status($element);
+                    }
+
+                    if($replacement.length) {
+                        $element.replaceWith($replacement);
+                    }
+                }
+            });
+        }, 5000);
+    };
+    $status_labels = $('.update-status');
+    if($status_labels.length) {
+        $status_labels.each(function(k, e) {
+            $element = $(e);
+            $element.parents('.element').addClass('large').find('.extras').removeClass('hidden');
+            f_update_status($element);
+        });
+        $extensions_isotope.isotope('reLayout');
+    }
+});
 
 function changeInputSelect() {
     if( $('.form-stacked.form-input-select select.select-country').val() == 'United States' ) {

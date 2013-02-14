@@ -579,15 +579,22 @@ class QueueController extends Integration_Controller_Action {
 
                     /* Adding extension to queue */
                     try {
-                        
+                        $extensionId = $request->getParam('extension_id');
+
+                        //add row to store_extension
+                        $storeExtensionModel = new Application_Model_StoreExtension();
+                        $storeExtensionModel->setStoreId($store->id);
+                        $storeExtensionModel->setExtensionId($extensionId);
+                        $storeExtensionModel->setStatus('pending');
+                        $storeExtensionModel = $storeExtensionModel->save();
+
                         /** 
                          * Find if we have any other ExtensionInstall tasks 
                          * for this store 
                          */
                         $extensionQueueItem = new Application_Model_Queue();
                         $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($store->id);
-                        
-                        $extensionId = $request->getParam('extension_id');
+
                         $extensionQueueItem->setStoreId($store->id);
                         $extensionQueueItem->setStatus('pending');
                         $extensionQueueItem->setUserId($store->user_id);
@@ -618,13 +625,7 @@ class QueueController extends Integration_Controller_Action {
                         );
                         $queueModel->save();
 
-                        //add row to store_extension
-                        $storeExtensionModel = new Application_Model_StoreExtension();
-                        $storeExtensionModel->setStoreId($store->id);
-                        $storeExtensionModel->setExtensionId($extensionId);
-                        $storeExtensionModel->save();
-
-                        $this->_response->setBody('done');
+                        $this->_response->setBody($storeExtensionModel->getId());
                     } catch (Exception $e) {
                         if ($log = $this->getLog()) {
                             $log->log('Error while adding extension to queue - ' . $e->getMessage(), LOG_ERR);
@@ -646,11 +647,17 @@ class QueueController extends Integration_Controller_Action {
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $domain = $request->getParam('domain', null);
-        if ($request->isPost() && $domain!=null) {
-            $storeModel = new Application_Model_Store();
-            $storeItem = $storeModel->findByDomain($domain);
+        $extension_id = (int)$request->getParam('extension_id', null);
+        if ($request->isPost() && ($domain!=null || $extension_id)) {
+            if($extension_id) {
+                $model = new Application_Model_StoreExtension();
+                $model = (object)$model->find($extension_id)->__toArray();
+            } else {
+                $model = new Application_Model_Store();
+                $model = $model->findByDomain($domain);
+            }
             
-            $this->_response->setBody(Zend_Json_Encoder::encode($storeItem->status));
+            $this->_response->setBody(Zend_Json_Encoder::encode($model->status));
         } else {
             return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
