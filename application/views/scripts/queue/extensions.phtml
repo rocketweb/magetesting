@@ -150,7 +150,7 @@
     			                    <?php if((float)$extension['price']): ?>
     			                    <p class="extension-price pull-right">$<?php printf("%d", $extension['price']); ?></p>
     			                    <?php endif; ?>
-    			                    <p class="extension-version">Version: <?php echo $extension['version']; ?></p>
+    			                    <p class="extension-version">Version: <?php echo $extension['version']; ?><?php echo 'extension' == $page_type ? ' ('.$extension['edition'].')' : ''; ?></p>
     			                </div>
 
     			                <div class="extras hidden">
