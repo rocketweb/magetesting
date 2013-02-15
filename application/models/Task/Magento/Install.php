@@ -66,6 +66,8 @@ implements Application_Model_Task_Interface {
             $this->_updateAdminAccount();
         }
         
+        $this->_fixUserHomeChmod();
+        
         $this->_sendStoreReadyEmail();
     }
 
@@ -233,13 +235,6 @@ implements Application_Model_Task_Interface {
             unset($output);
         }
         
-        /**
-         * This line is here to prevent:
-         * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
-         * when vsftpd is set to use chroot list
-         */
-        exec('sudo chmod a-w '.$this->_storeFolder.'');
-        
     }
 
     protected function _setupMagentoConnect() {
@@ -388,5 +383,13 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
                 . ' -e \'UPDATE enterprise_admin_passwords SET expires = \''.$timestamp.'\' \'');
     }
     
+    protected function _fixUserHomeChmod(){
+        /**
+         * This line is here to prevent:
+         * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
+         * when vsftpd is set to use chroot list
+         */
+        exec('sudo chmod a-w '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin().'');
+    }
     
 }
