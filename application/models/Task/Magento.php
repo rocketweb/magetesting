@@ -265,6 +265,7 @@ extends Application_Model_Task {
         exec('sudo chmod 644 /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini');
         
         $content = "<VirtualHost *:80>
+            SetEnv TMPDIR /home/".$this->config->magento->userprefix . $this->_dbuser."/tmp/
             ServerAdmin support@magetesting.com
             ServerName ".$this->_dbuser.".".$this->_serverObject->getDomain()."
 
@@ -345,6 +346,32 @@ extends Application_Model_Task {
         
         //set grace time (0seconds mean instant)
         exec("sudo quotatool -u ".$this->config->magento->userprefix . $this->_dbuser." -b -t '0 seconds' /");
+    }
+    
+    /**
+     * The purpose of this method is to replace calls to sys_get_temp dir()
+     * with calls to getenv('TMPDIR')
+     * Each user virtualhost was equipped with 
+     * SetEnv TMPDIR /home/$sysuser/tmp/
+     * to handle this correctly
+     */
+    protected function _updateConnectFiles(){
+       
+        $files_to_update = array(
+            'downloader/Maged/Model/Config/Abstract.php',
+            'downloader/Maged/Model/Connect.php',
+            'downloader/Maged/Controller.php',
+            'downloader/lib/Mage/Connect/Packager.php',
+            'downloader/lib/Mage/Connect/Command/Registry.php',
+            'downloader/lib/Mage/Connect/Config.php',
+            'downloader/lib/Mage/Connect/Loader/Ftp.php'
+        );
+        
+        foreach ($files_to_update as $file){
+            $fileContents = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file);
+            $fileContents = str_replace("sys_get_temp_dir()", "getenv('TMPDIR')", $fileContents);
+            file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
+        }
     }
 }
         

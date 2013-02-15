@@ -358,6 +358,7 @@ implements Application_Model_Task_Interface {
         }
         
         file_put_contents($this->_storeFolder.'/'.$this->_domain.'/downloader/connect.cfg', $header.serialize($connect_cfg));
+        $this->_updateConnectFiles();
     }
 
     protected function _updateCoreConfigData() {
