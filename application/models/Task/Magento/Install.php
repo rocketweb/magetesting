@@ -286,6 +286,8 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         }
         file_put_contents($this->_storeFolder . '/' . $this->_domain . '/downloader/connect.cfg', $header . serialize($connect_cfg));
         // end
+        
+        $this->_updateConnectFiles();
     }
 
     protected function _disableAdminNotifications() {
@@ -385,4 +387,6 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname 
                 . ' -e \'UPDATE enterprise_admin_passwords SET expires = \''.$timestamp.'\' \'');
     }
+    
+    
 }
