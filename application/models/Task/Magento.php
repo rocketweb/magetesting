@@ -288,6 +288,13 @@ extends Application_Model_Task {
         
         exec('sudo a2ensite '.$this->_dbuser.'.'.$this->_serverObject->getDomain());
         exec('sudo /etc/init.d/apache2 reload');
+        
+        $redirector = '<?php '.
+        PHP_EOL.'header("Location: ' . $this->config->magento->storeUrl . '/user/dashboard");';
+        $fileLocation = '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/index.php';
+        file_put_contents($fileLocation, $redirector);
+        exec('sudo chmod a+x '.$fileLocation);
+        exec('sudo chown '.$this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser.' '.$fileLocation);
     }
     
     protected function _createUserTmpDir(){
