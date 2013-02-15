@@ -2272,3 +2272,9 @@ form#extension-filter-form {
 label.error {
     color: #b94a48;
 }
+
+.accordion-group .accordion-heading .accordion-toggle .in-use.error-bar {
+    float: none;
+    margin-right: 35px;
+    max-width: 200px;
+}
