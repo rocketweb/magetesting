@@ -98,6 +98,8 @@ $(document).ready(function(){
                     $ftp_fields_data[$e.attr('name')] = $e.val();
                 });
 
+            // disable button
+            $this.button('loading');
             $.ajax({
                 url : siteRoot + '/queue/validate-ftp-credentials',
                 data : $ftp_fields_data,
@@ -112,6 +114,10 @@ $(document).ready(function(){
                             $remote_path_field.val(response.value);
                         }
                     }
+                },
+                complete : function() {
+                    // enable button
+                    $this.button('reset');
                 }
             });
             return false;
@@ -127,6 +133,8 @@ $(document).ready(function(){
                     $ftp_fields_data[$e.attr('name')] = $e.val();
                 });
 
+            // disable button
+            $this.button('loading');
             $.ajax({
                 url : siteRoot + '/queue/find-sql-file',
                 data : $ftp_fields_data,
@@ -141,6 +149,10 @@ $(document).ready(function(){
                             $sql_field.val(response.value);
                         }
                     }
+                },
+                complete : function() {
+                    // enable button
+                    $this.button('reset');
                 }
             });
             return false;
