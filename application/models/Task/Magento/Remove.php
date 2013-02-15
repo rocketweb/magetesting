@@ -34,7 +34,6 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log('Removing store directory recursively.', Zend_Log::INFO);
         exec('sudo rm -R '.$this->_storeFolder.'/'.$this->_storeObject->getDomain());
-        unlink($this->_storeObject->getDomain());
         chdir($this->_storeFolder);
 
         $this->logger->log('Removing store entries from Mage Testing database.', Zend_Log::INFO);
@@ -52,7 +51,10 @@ implements Application_Model_Task_Interface {
         //remove store
         $this->db->delete('store','id='.$this->_storeObject->getId());
         
-        unlink(APPLICATION_PATH . '/../data/logs/'.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.log');
+        $logpath = APPLICATION_PATH . '/../data/logs/'.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.log';
+        if (file_exists($logpath)){
+            unlink($logpath);
+        }
     
         //remove store rsyslog config
         exec('sudo rm '.$this->config->magento->userprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.conf');
