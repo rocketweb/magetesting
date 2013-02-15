@@ -1265,7 +1265,7 @@ body {
     cursor: pointer;
 }
 .clickable .element:hover h3 {
-    text-shadow: 0 0 10px white,
+    text-shadow: 0 0 10px white;
 }
 .clickable .element:hover h2 {
     color: white;
@@ -1350,7 +1350,7 @@ body.index .content div.inner section p {
 body.index .content div.inner section ul.thumbs {
     margin: 0 20px 0 -10px;
     padding: 0
- width: 320px;
+    width: 320px;
     list-style: none;
 }
 body.index .content div.inner section ul.thumbs li {
@@ -2893,12 +2893,8 @@ form#extension-filter-form {
 
 .popover-font-fix {
     font-size: 14px;
-<<<<<<< HEAD
 }
 
 label.error {
     color: #b94a48;
 }
-=======
-}
->>>>>>> masterdevfix
