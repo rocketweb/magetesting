@@ -57,7 +57,10 @@ implements Application_Model_Task_Interface {
         }
     
         //remove store rsyslog config
-        exec('sudo rm '.$this->config->magento->userprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.conf');
+        $conffile = $this->config->magento->userprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.conf';
+        if (file_exists($conffile)){
+            exec('sudo rm '.$conffile);
+        }
         
     }
 
