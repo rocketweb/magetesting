@@ -16,9 +16,11 @@
 	    Manage Extensions
     <?php endif; ?>
         </h1>
+        <?php if('extension' == $page_type): ?>
         <div class="pull-right btn-add-ext">
             <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'add'), 'default', true); ?>" class="btn btn-blue btn-large"><i class="icon-plus icon-white"></i> Add new extension</a>
         </div>
+        <?php endif; ?>
     </div>
 </div>
 <div class="row">
