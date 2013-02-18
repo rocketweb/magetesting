@@ -339,7 +339,7 @@ extends Application_Model_Task {
 
     /* Running this prevents store from reindex requirement in admin */
     protected function _reindexStore(){
-        exec('php /home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php --reindex all');
+        exec('sudo -u '.$this->config->magento->userprefix . $this->_dbuser.' -s php /home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php --reindex all');
     }
     
     protected function _setUserQuota(){
