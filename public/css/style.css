@@ -917,10 +917,12 @@ footer .links a {
     text-decoration: underline;
 }
 .accordion-group .accordion-heading .accordion-toggle .pending {
-    clear: right;
     color: #f64135;
     font-size: 11px;
     text-transform: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .accordion-group .accordion-heading .accordion-toggle .in-use .popover {
     font-size: 14px;
@@ -1940,7 +1942,7 @@ form#extension-filter-form {
 
 @media only screen and (min-width: 980px) {
     #screenshots .modal {
-    width: 960px;
+        width: 960px;
         margin-left: -480px;
     }
 }
@@ -2440,6 +2442,13 @@ form#extension-filter-form {
         padding: 10px 14px;
          font-size: 18px;
     }
+    
+     /* fix for close button when error during installation occured */
+    .accordion-group .accordion-heading .accordion-toggle .right-content {
+        margin-top: 0;
+        position: inherit;
+        width:auto;
+    }
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
@@ -2604,8 +2613,15 @@ form#extension-filter-form {
     }
     
     /* fix for close button when error during installation occured */
+    .accordion-group .accordion-heading .accordion-toggle .right-content {
+        margin-top: 32px;
+        position: absolute;
+    }
     .accordion-group .accordion-heading .accordion-toggle .in-use.error-bar {
         max-width: 100%; 
+    }
+    .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right {
+        float: none;
     }
 }
 /* Smartphones (landscape) ----------- */
@@ -2710,7 +2726,16 @@ form#extension-filter-form {
     #extensions .element.free.large .wrapper .extras .progress {
         margin: 8px 0 0 8px;
     }
+    
+    /* fix for close button when error during installation occured */
+    .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
+        width: 360px;
+    }
+    .accordion-group .accordion-heading .accordion-toggle .pending {
+        max-width: 360px;
+    }
 }
+
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width: 348px) {
     .logo {
@@ -2851,6 +2876,14 @@ form#extension-filter-form {
         position: inherit;
         top: 0;
         width: inherit;
+    }
+    
+    /* fix for close button when error during installation occured */
+    .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
+        width: 200px;
+    }
+    .accordion-group .accordion-heading .accordion-toggle .pending {
+        max-width: 200px;
     }
 }
 
