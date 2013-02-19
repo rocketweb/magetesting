@@ -2625,8 +2625,9 @@ form#extension-filter-form {
 
 /* fix for close button when error during installation occured */
 .accordion-group .accordion-heading .accordion-toggle .in-use.error-bar {
-    float: left;
-    margin-left: 20px;
+    float: none;
+    margin-right: 35px;
+    max-width: 200px; 
 }
 
 /* fast fix for custom mangento installation */

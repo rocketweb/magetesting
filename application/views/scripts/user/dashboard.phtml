@@ -101,32 +101,6 @@
                         endswitch;
                     ?>
                         <div class="right-content pull-right inactive">
-                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''); ?>">
-                                <?php if($item['status'] == 'error'): ?>
-                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Error occured. Please contact with administrator.'  ?>" data-trigger="hover">
-                                <?php endif; ?>
-                                    <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px" >
-                                        <span class="bar" style="width: 100%;"></span>
-                                    </span>
-                                    <?php if($item['status'] == 'downloading-magento'): ?>
-                                    <span class="pending pull-right">
-                                        Creating site via FTP/SSH.  This may take 1 hour or more.  You will receive an email when this is complete.
-                                    </span>
-                                    <?php else: ?>
-                                    <span class="pending pull-right statusHolder">
-                                    <?php /*if($item['status'] == 'pending'): ?>
-                                        In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
-                                    <?php else:*/ ?>
-                                        <?php echo $this->niceStatus($item['status']); ?>
-                                        <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
-                                        - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByUserAndId($item['user_id'],$item['queue_id'])); ?>
-                                        <?php endif; ?>
-                                    </span>
-                                    <?php endif; ?>
-                                <?php if($item['status'] == 'error'): ?>
-                                </span>
-                                <?php endif; ?>
-                            </div>
                             <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
                             <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
 <?php
@@ -184,6 +158,32 @@ And this is button from autologin feature
                                 ><i class="icon icon-wrench"></i> Access Admin</a>
                                 <a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
                             <?php endif; ?>
+                            </div>
+                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''); ?>">
+                                <?php if($item['status'] == 'error'): ?>
+                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Error occured. Please contact with administrator.'  ?>" data-trigger="hover">
+                                <?php endif; ?>
+                                    <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px" >
+                                        <span class="bar" style="width: 100%;"></span>
+                                    </span>
+                                    <?php if($item['status'] == 'downloading-magento'): ?>
+                                    <span class="pending pull-right">
+                                        Creating site via FTP/SSH.  This may take 1 hour or more.  You will receive an email when this is complete.
+                                    </span>
+                                    <?php else: ?>
+                                    <span class="pending pull-right statusHolder">
+                                    <?php /*if($item['status'] == 'pending'): ?>
+                                        In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
+                                    <?php else:*/ ?>
+                                        <?php echo $this->niceStatus($item['status']); ?>
+                                        <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
+                                        - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByUserAndId($item['user_id'],$item['queue_id'])); ?>
+                                        <?php endif; ?>
+                                    </span>
+                                    <?php endif; ?>
+                                <?php if($item['status'] == 'error'): ?>
+                                </span>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="left-content">
