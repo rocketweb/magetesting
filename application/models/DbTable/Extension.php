@@ -89,7 +89,8 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e.category_id', array('ec.class as category_class','ec.logo as category_logo'))
                  ->where('e.extension IS NOT NULL')
                  ->order('price DESC');
-        if('admin' != Zend_Auth::getInstance()->getIdentity()->group) {
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        if(!is_object($identity) || 'admin' != $identity->group) {
             $select->where('e.edition = ?', 'CE');
         }
         return $this->fetchAll($select);
