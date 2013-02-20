@@ -2173,6 +2173,14 @@ form#extension-filter-form {
     #extensions .element.free.large .wrapper .extras .progress {
         margin: 8px 0 0 8px;
     }
+    
+    div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank input {
+        margin-left: 25px;
+        width: 96%;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
+       width: 64%;
+    }
 }
 @media (max-width: 767px) {
     h1.pull-left {
@@ -2485,7 +2493,7 @@ form#extension-filter-form {
     }
     div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
        width: 64%;
-   }
+    }
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
@@ -2693,6 +2701,11 @@ form#extension-filter-form {
     div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank input {
         margin-left: 25px;
         width: 100%;
+    }
+    div.form-box.custom-info .btn.tooltip-top.validate-connection-details {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 /* Smartphones (landscape) ----------- */
@@ -2971,23 +2984,12 @@ form#extension-filter-form {
     }
     
     /* Add custom store - radio input fix */
+   div.form-box fieldset {
+       padding: 0 10px 20px;
+   }
    div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
        width: 56%;
    }
-    /*div.form-box.custom-info div.box fieldset.custom-files .alert-info {
-        width: 170px;
-    }
-    div.form-box.custom-info div.box .input-radio .input-radio-alert.alert-blank label {
-        padding-left: 25px;
-        width: 100%;
-    }
-    div.form-box.custom-info fieldset.custom-files .input-radio .input-radio-alert.alert-info input {
-        width: 155px;
-    }
-    div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank input {
-        margin-left: 25px;
-        width: 100%;
-    }*/
 }
 
 @media only screen and (max-width: 479px) {
