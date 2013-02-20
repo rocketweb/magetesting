@@ -90,7 +90,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  ->where('e.extension IS NOT NULL')
                  ->order('price DESC');
         $identity = Zend_Auth::getInstance()->getIdentity();
-        if(is_object($identity) && 'admin' != $identity->group) {
+        if(!is_object($identity) || 'admin' != $identity->group) {
             $select->where('e.edition = ?', 'CE');
         }
         return $this->fetchAll($select);
