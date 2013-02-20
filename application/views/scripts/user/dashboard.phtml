@@ -101,7 +101,7 @@
                         endswitch;
                     ?>
                         <div class="right-content pull-right inactive">
-                        <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
+                            <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
                             <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
 <?php
 /* For now, admin autologin feature will be disabled due to no secure content policy ( SSL )
