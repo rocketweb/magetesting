@@ -23,8 +23,10 @@ implements Application_Model_Task_Interface {
         $this->_createDbBackup();
         if ($this->_commit()){
             $hash = $this->_revisionHash;
-            $this->_insertRevisionInfo();
-            $this->_updateRevisionCount('+1');
+            if('manual-commit' != $hash) {
+                $this->_insertRevisionInfo();
+                $this->_updateRevisionCount('+1');
+            }
         }
     }
 
@@ -66,6 +68,13 @@ implements Application_Model_Task_Interface {
             // but to avoid setting store status as error
             return false;
         }
+
+        // do nothing if there were no changes
+        if(stristr(implode($output), 'nothing to commit')) {
+            $this->_revisionHash = 'manual-commit';
+            return true;
+        }
+
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
 
