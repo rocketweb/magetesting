@@ -1,7 +1,7 @@
 <div class="row">
     <div class="span12">
 	    <h1>Import your Magento store</h1>
-        <div class="form-box">
+        <div class="form-box custom-info">
             <div class="box">
             	<form action="<?php echo $this->form->getAction() ?>"
             	    enctype="<?php echo $this->form->getEnctype() ?>"
@@ -78,7 +78,7 @@
             	    </fieldset>
             	    
             	    <div class="tab-stripe"></div>
-            	    <fieldset>
+            	    <fieldset class="custom-files">
             	        <legend>Current Store Files and Database</legend>
             	        <div class="input-radio">
             	        	<div class="row">
@@ -105,8 +105,9 @@
             	        <div class="row row-large">
                             <div class="span8">
                                 <div class="input-append custom-sql-input">
-                                <?php echo $this->form->custom_sql ?>
-                                <span class="add-on tooltip-top find-sql-file btn" data-loading-text="Loading..." data-tooltip-title="Find Latest Magento Admin Database Backup">Find database backup</span>
+                                    <?php echo $this->form->custom_sql ?>
+                                    <span class="add-on tooltip-top find-sql-file btn" data-loading-text="Loading..." data-tooltip-title="Find Latest Magento Admin Database Backup">Find<span class="hidden-phone-portrait"> database</span> backup</span>
+                                </div>
                             </div>
                         </div>
             	    </fieldset>

@@ -2173,6 +2173,14 @@ form#extension-filter-form {
     #extensions .element.free.large .wrapper .extras .progress {
         margin: 8px 0 0 8px;
     }
+    
+    div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank input {
+        margin-left: 25px;
+        width: 96%;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
+       width: 64%;
+    }
 }
 @media (max-width: 767px) {
     h1.pull-left {
@@ -2449,6 +2457,43 @@ form#extension-filter-form {
         position: inherit;
         width:auto;
     }
+    
+    /* Add custom store - radio input fix */
+    div.form-box.custom-info .input-radio {
+        clear: both;
+    }
+    div.form-box.custom-info .input-radio .input-radio-button input {
+        float: left;
+        margin-top: 5px;
+        width: 12px;
+    }
+    div.form-box div.box legend {
+        line-height: 27px;
+        padding: 10px 0;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .alert-info {
+        float: left;
+        margin-left: 12px;
+        padding-right: 0;
+        width: 90%;
+    }
+    div.form-box.custom-info .input-radio .input-radio-alert.alert-info input {
+        width: 96%;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files label {
+        padding-right: 12px;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank label {
+        padding-left: 25px;
+        width: 100%;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank input {
+        margin-left: 25px;
+        width: 96%;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
+       width: 64%;
+    }
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
@@ -2623,6 +2668,45 @@ form#extension-filter-form {
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right {
         float: none;
     }
+    
+    /* Add custom store - radio input fix */
+    div.form-box.custom-info .input-radio {
+        clear: both;
+    }
+    div.form-box.custom-info .input-radio .input-radio-alert.alert-info input {
+        width: 90%;
+    }
+    div.form-box.custom-info .input-radio .input-radio-button input {
+        float: left;
+        margin-top: 5px;
+        width: 12px;
+    }
+    div.form-box div.box legend {
+        line-height: 27px;
+        padding: 10px 0;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .alert-info {
+    	float: left;
+        margin-left: 12px;
+        padding-right: 0;
+        width: 80%;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files label {
+        padding-right: 12px;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank label {
+        padding-left: 25px;
+        width: 100%;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank input {
+        margin-left: 25px;
+        width: 100%;
+    }
+    div.form-box.custom-info .btn.tooltip-top.validate-connection-details {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 /* Smartphones (landscape) ----------- */
 @media only screen and (min-width: 321px) and (max-width: 481px) {
@@ -2734,10 +2818,23 @@ form#extension-filter-form {
     .accordion-group .accordion-heading .accordion-toggle .pending {
         max-width: 360px;
     }
+    
+    /* Add custom store - radio input fix */
+    
+    div.form-box.custom-info div.box fieldset.custom-files .input-radio .input-radio-alert.alert-blank input {
+        width: 93%;
+    }
+    div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
+       width: 51%;
+   }
 }
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width: 348px) {
+	.hidden-phone-portrait {
+	    display: none;
+	}
+    
     .logo {
         width: 71%;
     }
@@ -2885,6 +2982,14 @@ form#extension-filter-form {
     .accordion-group .accordion-heading .accordion-toggle .pending {
         max-width: 200px;
     }
+    
+    /* Add custom store - radio input fix */
+   div.form-box fieldset {
+       padding: 0 10px 20px;
+   }
+   div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
+       width: 56%;
+   }
 }
 
 @media only screen and (max-width: 479px) {
@@ -2917,22 +3022,6 @@ form#extension-filter-form {
         float:right;
         margin-bottom: 50px;
     }
-    
-    /*body.index .content div.inner section.safe ul.thumbs li img:last-of-type  {
-        margin: 0;
-    }
-    
-    body.index .content div.inner section.simple h3:first-of-type  {
-        margin-top: 40px;
-    }
-    
-    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link-responsive  {
-        display: block;
-    }
-    
-    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link {
-        display: none;
-    }*/
     
     table.compare-table tbody tr td.compare-table-row-title,
     table.compare-table thead tr th.compare-table-title-row {
