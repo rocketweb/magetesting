@@ -364,21 +364,23 @@ extends Application_Model_Task {
      */
     protected function _updateConnectFiles(){
        
-        $files_to_update = array(
-            'downloader/Maged/Model/Config/Abstract.php',
-            'downloader/Maged/Model/Connect.php',
-            'downloader/Maged/Controller.php',
-            'downloader/lib/Mage/Connect/Packager.php',
-            'downloader/lib/Mage/Connect/Command/Registry.php',
-            'downloader/lib/Mage/Connect/Config.php',
-            'downloader/lib/Mage/Connect/Loader/Ftp.php'
-        );
-        
-        foreach ($files_to_update as $file){
-            $fileContents = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file);
-            $fileContents = str_replace("sys_get_temp_dir()", "getenv('TMPDIR')", $fileContents);
-            file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
-        }
+        if ($this->_versionObject->getVersion() > '1.4.2.0'){
+            $files_to_update = array(
+                'downloader/Maged/Model/Config/Abstract.php',
+                'downloader/Maged/Model/Connect.php',
+                'downloader/Maged/Controller.php',
+                'downloader/lib/Mage/Connect/Packager.php',
+                'downloader/lib/Mage/Connect/Command/Registry.php',
+                'downloader/lib/Mage/Connect/Config.php',
+                'downloader/lib/Mage/Connect/Loader/Ftp.php'
+            );
+
+            foreach ($files_to_update as $file){
+                $fileContents = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file);
+                $fileContents = str_replace("sys_get_temp_dir()", "getenv('TMPDIR')", $fileContents);
+                file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
+            }
+        } 
     }
 }
         
