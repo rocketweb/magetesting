@@ -1,6 +1,7 @@
 /* @override 
     http://dev.magetesting.com/public/css/style.css
-    http://magetesting:8888/public/css/style.css */
+    http://magetesting:8888/public/css/style.css
+	http://magetesting.com/public/css/style.css */
 
 /* FONTS
 
@@ -2495,6 +2496,32 @@ form#extension-filter-form {
        width: 64%;
     }
 }
+
+@media only screen and (max-width: 479px) {
+    .mt-login {
+        position: relative;
+        top: 10%;
+        left: inherit;
+        margin: 20px 0 0 0;
+        width: auto;
+    }
+    .mt-login legend h1 {
+        display: none !important;
+    }
+    .mt-login .mt-login-input input {
+        width: 100%;
+    }
+    
+    td.compare-table-data  {
+        font-size:18px;
+    }
+    
+    table.compare-table tbody tr td.compare-table-price-button form button.btn {
+        padding: 12px 17px;
+        font-size: 18px;
+    }
+}
+
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-width: 480px) {
     p.right-indent {
@@ -2990,166 +3017,6 @@ form#extension-filter-form {
    div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
        width: 56%;
    }
-}
-
-@media only screen and (max-width: 479px) {
-    .mt-login {
-        position: relative;
-        top: 10%;
-        left: inherit;
-        margin: 20px 0 0 0;
-        width: auto;
-    }
-    .mt-login legend h1 {
-        display: none !important;
-    }
-    .mt-login .mt-login-input input {
-        width: 100%;
-    }
-    
-    td.compare-table-data  {
-        font-size:18px;
-    }
-    
-    table.compare-table tbody tr td.compare-table-price-button form button.btn {
-        padding: 12px 17px;
-        font-size: 18px;
-    }
-}
-
-@media (max-width:767px) {
-    section.extensions a.btn-success {
-        float:right;
-        margin-bottom: 50px;
-    }
-    
-    table.compare-table tbody tr td.compare-table-row-title,
-    table.compare-table thead tr th.compare-table-title-row {
-        width: 130px;
-    }
-    
-    table.compare-table thead tr th.compare-table-data-name,
-    table.compare-table tbody tr td.compare-table-data,
-    table.compare-table tbody tr td.compare-table-price-button {
-        width: 180px;
-    }
-    
-    table.compare-table thead tr th.compare-table-data-name {
-        height: 160px;
-    }
-    
-    span.compare-table-empty  {
-        height: 66px;
-    }
-    
-    table.compare-table thead tr th.compare-table-empty-first,
-    table.compare-table tbody tr td.compare-table-empty {
-        width: 26px;
-        min-width: 0;
-        padding: 0;
-    }
-    
-    span.compare-table-title  {
-        font-size: 24px;
-    }
-    
-    td.compare-table-row-title  {
-        font-size: 15px;
-    }
-    
-    td.compare-table-row-title i.icon {
-        display: none;
-    }
-    
-    .compare-table-data-name h3 span  {
-        width: auto;
-        font-size: 20px;
-        line-height: 30px;
-    }
-    
-    .compare-table-data-name h2 span {
-        font-size: 46px;
-    }
-    
-    .compare-table-data-name h4 span {
-        font-size: 15px;
-    }
-    
-    td.compare-table-data  {
-        font-size:18px;
-    }
-    
-    table.compare-table tbody tr td.compare-table-price-button form button.btn {
-        padding: 10px 14px;
-         font-size: 18px;
-    }
-}
-
-/** Smartphone (landscape and portrait) - fix **/
-@media only screen and (min-device-width:320px) and (max-width:480px) {
-    table.compare-table tbody tr td.compare-table-row-title,
-    table.compare-table thead tr th.compare-table-title-row {
-        width: 90px;
-    }
-
-    table.compare-table thead tr th.compare-table-data-name, 
-    table.compare-table tbody tr td.compare-table-data, 
-    table.compare-table tbody tr td.compare-table-price-button {
-        width: 90px;
-    }
-    
-    table.compare-table thead tr th.compare-table-data-name {
-        height: 140px;
-    }
-    
-    table.compare-table thead tr th.compare-table-empty-first,
-    table.compare-table tbody tr td.compare-table-empty {
-        width: 6px;
-        min-width: 0;
-        padding: 0;
-    }
-    
-    span.compare-table-title  {
-        font-size: 18px;
-    }
-    
-    td.compare-table-row-title  {
-        font-size: 12px;
-    }
-    
-    td.compare-table-row-title i.icon {
-        display: none;
-    }
-    
-    .compare-table-data-name h3 span  {
-        width: auto;
-        font-size: 15px;
-        line-height: 20px;
-    }
-    
-    .compare-table-data-name h3,
-    .compare-table-data-name h2,
-    .compare-table-data-name h4 {
-        margin: 0;
-    }
-    
-    .compare-table-data-name h2 span {
-        font-size: 30px;
-    }
-    
-    .compare-table-data-name h4 span {
-        font-size: 12px;
-        line-height: 0px ;
-    }
-    
-    td.compare-table-data  {
-        font-size:15px;
-    }
-    
-    table.compare-table tbody tr td.compare-table-price-button form button.btn {
-        padding: 4px 6px;
-        font-size: 12px;
-    }
 }
 
 /* fix for isotope button.install class for remove button */
