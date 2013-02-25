@@ -380,7 +380,16 @@ extends Application_Model_Task {
                 $fileContents = str_replace("sys_get_temp_dir()", "getenv('TMPDIR')", $fileContents);
                 file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
             }
+            
+            //fix cokie path and followlocation for our hosts, we dont need it here and it causes warnings
+            $fileContents = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/downloader/lib/Mage/HTTP/Client/Curl.php');
+            $fileContents = str_replace("const COOKIE_FILE = 'var/cookie';", "const COOKIE_FILE = '".$this->_storeFolder . "/" . $this->_domain."/var/cookie';", $fileContents);
+            $fileContents = str_replace('$this->curlOption(CURLOPT_FOLLOWLOCATION, 1);', '$this->curlOption(CURLOPT_FOLLOWLOCATION, 0);', $fileContents);
+            file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
+            
         } 
+        
+        
     }
 }
         
