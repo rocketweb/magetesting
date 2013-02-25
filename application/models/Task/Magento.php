@@ -386,7 +386,7 @@ extends Application_Model_Task {
             $fileContents = file_get_contents($file);
             $fileContents = str_replace("const COOKIE_FILE = 'var/cookie';", "const COOKIE_FILE = '".$this->_storeFolder . "/" . $this->_domain."/var/cookie';", $fileContents);
             $fileContents = str_replace('$this->curlOption(CURLOPT_FOLLOWLOCATION, 1);', '$this->curlOption(CURLOPT_FOLLOWLOCATION, 0);', $fileContents);
-            file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
+            file_put_contents($file, $fileContents);
             
         } 
         
