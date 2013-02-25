@@ -382,7 +382,8 @@ extends Application_Model_Task {
             }
             
             //fix cokie path and followlocation for our hosts, we dont need it here and it causes warnings
-            $fileContents = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/downloader/lib/Mage/HTTP/Client/Curl.php');
+            $file = $this->_storeFolder . '/' . $this->_domain.'/downloader/lib/Mage/HTTP/Client/Curl.php';
+            $fileContents = file_get_contents($file);
             $fileContents = str_replace("const COOKIE_FILE = 'var/cookie';", "const COOKIE_FILE = '".$this->_storeFolder . "/" . $this->_domain."/var/cookie';", $fileContents);
             $fileContents = str_replace('$this->curlOption(CURLOPT_FOLLOWLOCATION, 1);', '$this->curlOption(CURLOPT_FOLLOWLOCATION, 0);', $fileContents);
             file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
