@@ -2093,17 +2093,17 @@ form#extension-filter-form {
     body.index .content div.inner section h3:first-of-type {
         margin: 80px 0 0 0;
     }
-    body.index .content div.inner section.watch-video div.mac-book-air {
-        width: 95%;
-        height: 290px;
-    }
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
-        height: 168px;
-        left: 73px;
-        top: 17px;
-        width: 268px;
+        height: 185px;
+        left: 79px;
+        top: 18px;
+        width: 293px;
     }
-    
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 450px;
+        height: 290px;
+        margin: 0 auto;
+    }
     body.index .content div.inner section.simple .span6 img {
         width: 86%;
     }
@@ -2235,15 +2235,22 @@ form#extension-filter-form {
         text-align: center;
         margin-bottom: 20px;
     }
-    body.index .content div.inner section.watch-video div.mac-book-air {
-        width: 95%;
-        height: 290px;
-    }
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
-        height: 209px;
-        left: 91px;
-        top: 21px;
-        width: 333px;
+        height: 195px;
+        left: 84px;
+        top: 19px;
+        width: 313px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 480px;
+        height: 290px;
+        margin: 0 auto;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link-responsive {
+        display: block;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link{
+        display: none;
     }
     body.index .content div.inner section.safe img {
         margin-top: 20px;
@@ -2770,17 +2777,17 @@ form#extension-filter-form {
     body.index .content div.inner section.extensions h3:first-of-type {
         margin: 20px 0 8px 36px;
     }
-    body.index .content div.inner section.watch-video div.mac-book-air {
-        width: 95%;
-        height: 220px;
-    }
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
-        height: 163px;
-        left: 70px;
-        top: 16px;
-        width: 261px;
+        height: 154px;
+        left: 66px;
+        top: 15px;
+        width: 248px;
     }
-    
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 380px;
+        height: 210px;
+        margin: 0 auto;
+    }
     #extensions .mt_filters .btn-group {
         width: 100%;
         margin-bottom: 4px;
@@ -2897,15 +2904,16 @@ form#extension-filter-form {
     body.index .content div.inner section.flexible ul.thumbs {
         margin: 20px 20px 0 13px;
     }
-    body.index .content div.inner section.watch-video div.mac-book-air {
-        width: 92%;
-        height: 140px;
-    }
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
-        height: 98px;
-        left: 42px;
+        height: 101px;
+        left: 44px;
         top: 10px;
-        width: 156px;
+        width: 163px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 250px;
+        height: 130px;
+        margin: 0 auto;
     }
     body.index .content div.inner section.simple h3:first-of-type,
     body.index .content div.inner section.safe h3:first-of-type,
