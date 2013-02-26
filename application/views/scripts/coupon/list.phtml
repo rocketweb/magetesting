@@ -1,0 +1,62 @@
+<div class="row">
+    <div class="span12">
+        <h1 class="pull-left">
+            Coupons
+        </h1>
+        <div class="pull-right btn-add-ext">
+            <a href="<?php echo $this->url(array('controller' => 'coupon', 'action' => 'add'), 'default', true); ?>" class="btn btn-blue btn-large"><i class="icon-plus icon-white"></i> Add New Coupon</a>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Coupon Code</th>
+            <th>Used Date</th>
+            <th>User</th>
+            <th>Plan</th>
+            <th>Duration</th>
+            <th>Active to</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->coupons as $coupon): ?>
+        <tr>
+            <td><?php echo $coupon['code']; ?></td>
+            <td><?php echo ('' != $coupon['used_date'] ? date('Y-m-d', strtotime($coupon['used_date'])) : ''); ?></td>
+            <td><?php echo $coupon['user']; ?></td>
+            <td><?php echo $coupon['plan']; ?></td>
+            <td><?php echo $coupon['duration'] ?></td>
+            <td><?php echo date('Y-m-d', strtotime($coupon['active_to'])); ?></td>
+            <td>
+                <a href="<?php echo $this->url(array('module' => 'default', 
+                    'controller' => 'coupon',
+                    'action' => 'edit',
+                    'id' => $coupon['id'])); ?>" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>
+                <a href="#" role="button" class="btn btn-danger" data-toggle="modal" data-coupon-id="<?php echo $coupon['id']; ?>"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<?php echo $this->paginationControl($this->coupons, 'Sliding', '_partials/paginationControl.phtml'); ?>
+
+<div id="user-deletion" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Delete User</h3>
+    </div>
+    <div class="modal-body">
+        <p>Do you really want to delete user "<b></b>"</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <form method="post" action="<?php echo $this->url(array('controller' => 'user', 'action' => 'remove'), 'default', true); ?>">
+            <input type="hidden" name="confirm" value="1" />
+            <input type="hidden" name="id" value="" />
+            <button class="btn btn-primary" type="submit">Remove</button>
+        </form>
+    </div>
+</div>

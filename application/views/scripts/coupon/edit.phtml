@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="span12">
+        <h1><?php echo $this->form->getLegend(); ?></h1>
+        <div class="form-box">
+            <div class="box">
+                <form method="post" id="extension-form" enctype="multipart/form-data">
+                    <div class="tab-stripe"></div>
+                    <fieldset>
+                        <legend>Coupon Details</legend>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->code; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->plan_id; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->duration; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->active_to; ?>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <?php if('edit' == $this->action): ?>
+                    <div class="tab-stripe"></div>
+                    <fieldset>
+                        <legend>Usage details</legend>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->user_id; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->used_date; ?>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <?php endif; ?>
+                    <div class="form-actions">
+                        <?php echo $this->form->submit; ?>
+                        <a href="<?php echo $this->url(array('cancel' => 1), 'default', false); ?>" class="btn">Cancel</a>
+                    </div>
+                </form>
+            </div><!-- /box -->
+        </div><!-- /form-box -->
+    </div><!-- /span12 -->
+</div><!-- /row -->
