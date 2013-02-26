@@ -34,7 +34,10 @@
                     'controller' => 'coupon',
                     'action' => 'edit',
                     'id' => $coupon['id'])); ?>" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>
-                <a href="#" role="button" class="btn btn-danger" data-toggle="modal" data-coupon-id="<?php echo $coupon['id']; ?>"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 
+                    'controller' => 'coupon',
+                    'action' => 'delete',
+                    'id' => $coupon['id'])); ?>" role="button" class="btn btn-danger" data-toggle="modal" data-coupon-id="<?php echo $coupon['id']; ?>"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
             </td>
         </tr>
         <?php endforeach; ?>

@@ -38,6 +38,11 @@ class Application_Model_CouponMapper {
         return $coupon;
     }
 
+    public function delete($id)
+    {
+        $this->getDbTable()->delete(array('id = ?' => $id));
+    }
+
     public function find($id, Application_Model_Coupon $coupon)
     {
         $result = $this->getDbTable()->find($id);

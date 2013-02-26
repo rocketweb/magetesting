@@ -119,12 +119,12 @@ class CouponController extends Integration_Controller_Action {
         // array with redirect to grid page
         $redirect = array(
                 'module'      => 'default',
-                'controller'  => 'extension',
+                'controller'  => 'coupon',
                 'action'      => 'index'
         );
 
         // init form object
-        $form = new Application_Form_ExtensionDelete();
+        $form = new Application_Form_CouponDelete();
 
         // shorten request
         $request = $this->getRequest();
@@ -136,7 +136,7 @@ class CouponController extends Integration_Controller_Action {
             $this->_helper->FlashMessenger(
                 array(
                     'type' => 'error',
-                    'message' => 'You cannot delete extension with specified id.'
+                    'message' => 'You cannot delete coupon with specified id.'
                 )
             );
             // redirect to grid
@@ -152,18 +152,18 @@ class CouponController extends Integration_Controller_Action {
                 if($request->getParam('submit') == 'Yes') {
                     $flash_message = array(
                         'type' => 'success',
-                        'message' => 'You have deleted extension successfully.'
+                        'message' => 'You have deleted coupon successfully.'
                     );
-                    $extension = new Application_Model_Extension();
+                    $coupon = new Application_Model_Coupon();
                     // set news id to the one passed by get param
                     try {
-                        $extension->delete($request->getParam('id'));
+                        $coupon->delete($request->getParam('id'));
                     } catch(Exception $e) {
-                        $this->getLog()->log('Admin - extension delete', Zend_Log::ERR, $e->getMessage());
+                        $this->getLog()->log('Admin - coupon delete', Zend_Log::ERR, $e->getMessage());
                         $flash_message = array(
                             'type' => 'error',
                             'from_scratch' => 1,
-                            'message' => 'We couldn\'t delete extension ( probably is installed ).<span class="hidden">'.$e->getMessage().'</span>'
+                            'message' => 'We couldn\'t delete coupon.<span class="hidden">'.$e->getMessage().'</span>'
                         );
                     }
                     // set message
@@ -176,7 +176,7 @@ class CouponController extends Integration_Controller_Action {
                     $this->_helper->FlashMessenger(
                         array(
                             'type' => 'notice',
-                            'message' => 'Extension deletion cancelled.'
+                            'message' => 'Coupon deletion cancelled.'
                         )
                     );
                 }
