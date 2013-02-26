@@ -2608,6 +2608,11 @@ form#extension-filter-form {
     .accordion-group .accordion-inner .btn {
         width: 26%;
     }
+    
+    .accordion-group .accordion-inner .btn.extensions-button,
+    .accordion-group .accordion-inner .btn.edit-button,
+    .accordion-group .accordion-inner .btn.log-button,
+    .accordion-group .accordion-inner .btn.help-button,
     .accordion-group .accordion-inner .btn.rollback-button,
     .accordion-group .accordion-inner .btn.commit-button,
     .accordion-group .accordion-inner .btn.deploy-button {

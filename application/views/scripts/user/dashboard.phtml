@@ -219,16 +219,16 @@ And this is button from autologin feature
                                 <div class="control-group">
                                     <div class="controls">
                                    	<?php if(in_array($item['status'], array('closed'))): ?>
-                                        <a href="#" class="btn btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                        <a href="#" class="btn btn-inverse extensions-button disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php else: ?>
                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'store' => $item['domain']), 'default', true); ?>"
-                                           class="btn btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                           class="btn btn-inverse extensions-button"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php endif; ?>
                                     <?php if($item['status']=='closed'): ?>
-                                        <a href="#" class="btn disabled"><i class="icon icon-pencil"></i> Edit Details</a>
+                                        <a href="#" class="btn edit-button disabled"><i class="icon icon-pencil"></i> Edit Details</a>
                                     <?php else: ?>
                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
-                                           class="btn"><i class="icon icon-pencil"></i> Edit Details</a>
+                                           class="btn edit-button"><i class="icon icon-pencil"></i> Edit Details</a>
                                     <?php endif; ?>
                                     </div>
                                 </div>
@@ -259,8 +259,8 @@ And this is button from autologin feature
                                 <h5>Troubleshooting</h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
-                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn "><i class="icon icon-question-sign"></i> Get Help</a>
+                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn log-button <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
+                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn help-button"><i class="icon icon-question-sign"></i> Get Help</a>
                                     </div>
                                 </div>
                             </div>
