@@ -62,13 +62,16 @@ class Application_Form_CouponEdit extends Integration_Form
                 'class'      => 'span4'
         ));
 
+        $check_duration_callback = new Zend_Validate_Callback(array('callback' => array($this, 'check_duration')));
+        $check_duration_callback->setMessage('\'%value%\' is not valid duration format.', Zend_Validate_Callback::INVALID_VALUE);
         // Add duration element
         $this->addElement('text', 'duration', array(
                 'label'      => 'Duration',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 20))
+                        array('validator' => 'StringLength', 'options' => array(3, 20)),
+                        $check_duration_callback,
                 ),
                 'allowEmpty' => false,
                 'class'      => 'span4'
@@ -98,5 +101,13 @@ class Application_Form_CouponEdit extends Integration_Form
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('Overall');
         $this->submit->setAttrib('class', 'btn btn-inverse pull-right');
+    }
+
+    public function check_duration($value) {
+        if('1970-01-01' == date('Y-m-d', strtotime($value))) {
+            return false;
+        }
+
+        return true;
     }
 }
