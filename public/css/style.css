@@ -1649,7 +1649,6 @@ td.compare-table-data {
 }
 td.compare-table-row-title-last {
     padding-right: 32px;
-    display: inline-block;
     border-bottom-left-radius: 6px ;
     width: 232px;
     background: #f3f8fc;
@@ -1660,7 +1659,6 @@ tr.compare-table-row-title-last {
     border: none;
 }
 tr.compare-table-row-title-last td.compare-table-empty {
-    display: inline-block;
     height: 40px;
     width: 42px;
     border-bottom: 1px solid #e7e7e7;
@@ -2095,17 +2093,17 @@ form#extension-filter-form {
     body.index .content div.inner section h3:first-of-type {
         margin: 80px 0 0 0;
     }
-    body.index .content div.inner section.watch-video div.mac-book-air {
-        width: 95%;
-        height: 290px;
-    }
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
-        height: 168px;
-        left: 73px;
-        top: 17px;
-        width: 268px;
+        height: 185px;
+        left: 79px;
+        top: 18px;
+        width: 293px;
     }
-    
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 450px;
+        height: 290px;
+        margin: 0 auto;
+    }
     body.index .content div.inner section.simple .span6 img {
         width: 86%;
     }
@@ -2237,15 +2235,22 @@ form#extension-filter-form {
         text-align: center;
         margin-bottom: 20px;
     }
-    body.index .content div.inner section.watch-video div.mac-book-air {
-        width: 95%;
-        height: 290px;
-    }
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
-        height: 209px;
-        left: 91px;
-        top: 21px;
-        width: 333px;
+        height: 195px;
+        left: 84px;
+        top: 19px;
+        width: 313px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 480px;
+        height: 290px;
+        margin: 0 auto;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link-responsive {
+        display: block;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper a.home-video-link{
+        display: none;
     }
     body.index .content div.inner section.safe img {
         margin-top: 20px;
@@ -2497,7 +2502,7 @@ form#extension-filter-form {
     }
 }
 
-@media only screen and (max-width: 479px) {
+@media only screen and (max-width: 480px) {
     .mt-login {
         position: relative;
         top: 10%;
@@ -2622,30 +2627,32 @@ form#extension-filter-form {
    
     table.compare-table tbody tr td.compare-table-row-title,
     table.compare-table thead tr th.compare-table-title-row {
-        width: 90px;
+        width: 140px;
+    }
+    table.compare-table tbody tr td.compare-table-row-title {
+        padding: 5px 4px 5px 20px;
+    }
+    table.compare-table thead tr th.compare-table-data-name, table.compare-table tbody tr td.compare-table-data, table.compare-table tbody tr td.compare-table-price-button {
+        width: 110px;
+    }
+    table.compare-table thead tr th.compare-table-data-name, th.compare-table-title-row {
+        height: 120px;
     }
 
-    table.compare-table thead tr th.compare-table-data-name, 
-    table.compare-table tbody tr td.compare-table-data, 
-    table.compare-table tbody tr td.compare-table-price-button {
-        width: 90px;
-    }
-    
-    table.compare-table thead tr th.compare-table-data-name {
-        height: 140px;
-    }
-    
     table.compare-table thead tr th.compare-table-empty-first,
     table.compare-table tbody tr td.compare-table-empty {
-        width: 6px;
+        width: 20px;
         min-width: 0;
-        padding: 0;
+        padding: 0 !important;
     }
     
     span.compare-table-title  {
-        font-size: 18px;
+        font-size: 16px;
+        padding: 26px 0 0 20px;
     }
-    
+    .compare-table th, .compare-table td {
+        padding: 0;
+    }
     td.compare-table-row-title  {
         font-size: 12px;
     }
@@ -2659,13 +2666,14 @@ form#extension-filter-form {
         font-size: 15px;
         line-height: 20px;
     }
-    
     .compare-table-data-name h3,
     .compare-table-data-name h2,
     .compare-table-data-name h4 {
         margin: 0;
     }
-    
+    .compare-table-data-name h3{
+        margin-top: 20px;
+    }
     .compare-table-data-name h2 span {
         font-size: 30px;
     }
@@ -2684,6 +2692,10 @@ form#extension-filter-form {
         font-size: 12px;
     }
     
+    
+    div.in-all-plans ul li {
+        margin: 20px 0 0 13px;
+    }
     /* fix for close button when error during installation occured */
     .accordion-group .accordion-heading .accordion-toggle .right-content {
         margin-top: 32px;
@@ -2765,17 +2777,17 @@ form#extension-filter-form {
     body.index .content div.inner section.extensions h3:first-of-type {
         margin: 20px 0 8px 36px;
     }
-    body.index .content div.inner section.watch-video div.mac-book-air {
-        width: 95%;
-        height: 220px;
-    }
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
-        height: 163px;
-        left: 70px;
-        top: 16px;
-        width: 261px;
+        height: 154px;
+        left: 66px;
+        top: 15px;
+        width: 248px;
     }
-    
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 380px;
+        height: 210px;
+        margin: 0 auto;
+    }
     #extensions .mt_filters .btn-group {
         width: 100%;
         margin-bottom: 4px;
@@ -2892,15 +2904,16 @@ form#extension-filter-form {
     body.index .content div.inner section.flexible ul.thumbs {
         margin: 20px 20px 0 13px;
     }
-    body.index .content div.inner section.watch-video div.mac-book-air {
-        width: 92%;
-        height: 140px;
-    }
     body.index .content div.inner section.watch-video div.mac-book-air div.video-wrapper {
-        height: 98px;
-        left: 42px;
+        height: 101px;
+        left: 44px;
         top: 10px;
-        width: 156px;
+        width: 163px;
+    }
+    body.index .content div.inner section.watch-video div.mac-book-air {
+        width: 250px;
+        height: 130px;
+        margin: 0 auto;
     }
     body.index .content div.inner section.simple h3:first-of-type,
     body.index .content div.inner section.safe h3:first-of-type,
@@ -3015,6 +3028,32 @@ form#extension-filter-form {
    }
    div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
        width: 56%;
+   }
+   table.compare-table tbody tr td.compare-table-row-title,
+   table.compare-table thead tr th.compare-table-title-row {
+       width: 40px;
+   }
+   table.compare-table tbody tr td.compare-table-row-title {
+       padding: 5px 4px 5px 10px;
+   }
+   table.compare-table thead tr th.compare-table-data-name, table.compare-table tbody tr td.compare-table-data, table.compare-table tbody tr td.compare-table-price-button {
+       width: 80px;
+   }
+   table.compare-table thead tr th.compare-table-data-name, th.compare-table-title-row {
+       height: 120px;
+   }
+   
+   table.compare-table thead tr th.compare-table-empty-first, table.compare-table tbody tr td.compare-table-empty {
+       width: 10px;
+       min-width: 0;
+       padding: 0 ;
+   }
+   span.compare-table-title  {
+       font-size: 16px;
+       padding: 26px 0 0 10px;
+   }
+   .compare-table th, .compare-table td {
+       padding: 0;
    }
 }
 
