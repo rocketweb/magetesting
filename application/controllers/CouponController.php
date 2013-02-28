@@ -81,6 +81,11 @@ class CouponController extends Integration_Controller_Action {
                 );
 
                 $form->user_id->addMultiOptions(array('' => '') + $users);
+
+                // disable form for used coupon
+                if($coupon_data['used_date']) {
+                    $form->disableFields();
+                }
             } else {
                 $this->_helper->FlashMessenger('Coupon with given id does not exist.');
                 return $this->_helper->redirector->gotoRoute(array(
@@ -93,6 +98,9 @@ class CouponController extends Integration_Controller_Action {
 
         if($this->_request->isPost()) {
             $formData = $this->_request->getPost();
+            if($formData['code'] != $couponModel->getCode()) {
+                $form->addUniqueCodeValidator();
+            }
             if($form->isValid($formData)) {
                 $couponModel->setOptions($formData)->save();
 
