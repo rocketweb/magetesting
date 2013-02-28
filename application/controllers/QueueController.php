@@ -1405,4 +1405,38 @@ class QueueController extends Integration_Controller_Action {
     protected function _prepareFlashMessage($data) {
         return '<a class="close" data-dismiss="alert" href="#">×</a><div class="popover-font-fix">'.$data['message'].'</div>';
     }
+
+    public function getBackendFormAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $result = new stdClass();
+        $result->type = 'error';
+        $result->message = '';
+
+        $request = $this->getRequest();
+        $store_url = parse_url($request->getParam('store_url'));
+        if($request->isPost() && is_array($store_url) && stristr($store_url['host'], 'magetesting.com')) {
+            $client = new Zend_Http_Client();
+            $client->setAdapter(new Zend_Http_Client_Adapter_Curl());
+            $client->setUri($request->getParam('store_url'));
+
+            try {
+                $response = $client->request();
+                if($body = $response->getBody()) {
+                    preg_match('/(\<form.*\<\/form\>)/ims', $body, $match);
+                    if(2 == count($match)) {
+                        $result->type = 'found';
+                        $result->message = $match[1];
+                    }
+                }
+            } catch(Exception $e) {
+                if ($log = $this->getLog()) {
+                    $log->log('Error while fetching backend form - ' . $e->getMessage(), LOG_ERR);
+                }
+            }
+        }
+
+        $this->getResponse()->setBody(json_encode($result));
+    }
 }
