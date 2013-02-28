@@ -36,7 +36,7 @@ class Application_Form_CouponEdit extends Integration_Form
                         array('validator' => 'Date')
                 ),
                 'allowEmpty' => true,
-                'class'      => 'span4 datepicker'
+                'class'      => 'span4'
         ));
 
         // Add user id element

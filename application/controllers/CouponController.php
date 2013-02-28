@@ -102,9 +102,13 @@ class CouponController extends Integration_Controller_Action {
                 $form->addUniqueCodeValidator();
             }
             if($form->isValid($formData)) {
-                $couponModel->setOptions($formData)->save();
+                if(!$coupon_data['used_date']) {
+                    $couponModel->setOptions($formData)->save();
+                    $this->_helper->FlashMessenger('Extension has been added properly.');
+                } else {
+                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'Used coupon can\'t be edited.'));
+                }
 
-                $this->_helper->FlashMessenger('Extension has been added properly.');
                 return $this->_helper->redirector->gotoRoute(array(
                         'module'     => 'default',
                         'controller' => 'coupon',
