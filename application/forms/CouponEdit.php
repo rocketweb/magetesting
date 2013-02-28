@@ -21,7 +21,7 @@ class Application_Form_CouponEdit extends Integration_Form
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 45))
+                        array('validator' => 'StringLength', 'options' => array(3, 45)),
                 ),
                 'allowEmpty' => false,
                 'class'      => 'span4'
@@ -86,7 +86,7 @@ class Application_Form_CouponEdit extends Integration_Form
                         array('validator' => 'Date')
                 ),
                 'allowEmpty' => false,
-                'class'      => 'span4'
+                'class'      => 'span4 datepicker'
         ));
 
         // Add the submit button
@@ -109,5 +109,18 @@ class Application_Form_CouponEdit extends Integration_Form
         }
 
         return true;
+    }
+
+    public function disableFields() {
+        foreach($this->getElements() as $key => $element) {
+            $element->setAttribs(array('disabled' => 'disabled'));
+        }
+    }
+
+    public function addUniqueCodeValidator() {
+        $this->code->addValidator(new Zend_Validate_Db_NoRecordExists(array(
+                'table' => 'coupon',
+                'field' => 'code'
+        )));
     }
 }
