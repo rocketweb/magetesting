@@ -15,7 +15,11 @@ class CouponController extends Integration_Controller_Action {
 
     public function listAction() {
         $couponModel = new Application_Model_Coupon();
-        $this->view->coupons = $couponModel->fetchList();
+        $paginator = $couponModel->fetchList();
+        $page = (int) $this->_getParam('page', 0);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(10);
+        $this->view->coupons = $paginator;
         $this->render('list');
     }
 
