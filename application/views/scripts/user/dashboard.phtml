@@ -83,7 +83,7 @@
         <?php endif; ?>
 
         <?php /* IF USER HAS STORES */ ?>
-        <?php if($storeCount > 0): ?>
+        <?php if($storeCount > 0): $decryptor = new Application_Model_Store(); ?>
         <?php foreach ($this->queue as $key => $item): ?>
             <!-- START STORE -->
             <div class="accordion-group" data-active="0">
@@ -108,7 +108,7 @@
                                     class="btn btn-mini admin-panel pull-right"
                                     data-backend-url="<?php echo 'http://'.$this->user->login.'.'.$item['server_domain'].'/'.$item['domain'].'/'.$item['backend_name']; ?>"
                                     data-backend-login="<?php echo $this->user->login; ?>"
-                                    data-backend-password="<?php echo $item['backend_password']; ?>"
+                                    data-backend-password="<?php echo $decryptor->setBackendPassword($item['backend_password'], false)->getBackendPassword(); ?>"
                                 ><i class="icon icon-wrench"></i> Access Admin</a>
                                 <a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
                             <?php endif; ?>
