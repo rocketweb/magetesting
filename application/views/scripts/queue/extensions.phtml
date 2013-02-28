@@ -102,7 +102,10 @@
     			    <?php foreach($this->extensions as $extension): ?>
     			        <div class="element <?php echo $extension['category_class']; ?> <?php echo strtolower($extension['edition']).' ', ((float)$extension['price'] ? 'premium' : 'free'), ('queue' == $page_type ? ($extension['status'] == 'ready' ? ' installed' : ' notInstalled') : ''); ?>"
     			        <?php if('frontend' != $page_type): ?>
-    			            id="extension_<?php echo $extension['id']; ?>" data-store-extension-id="<?php echo $extension['store_extension_id']; ?>"
+    			            id="extension_<?php echo $extension['id']; ?>"
+			            <?php endif; ?>
+			            <?php if('queue' == $page_type): ?>
+			                data-store-extension-id="<?php echo $extension['store_extension_id']; ?>"
 			            <?php endif; ?>
     			        >
     			            <div class="wrapper">
