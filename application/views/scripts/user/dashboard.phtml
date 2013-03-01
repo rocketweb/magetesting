@@ -8,7 +8,7 @@
         <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add New Store</a>
         <?php endif; ?>
 
-        <h1>Your Magento Stores</h1>
+        <h1>Your Magento Store</h1>
         <!-- START ACCORDION -->
         <div class="accordion" id="accordion">
 
@@ -161,7 +161,7 @@ And this is button from autologin feature
                             </div>
                             <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''); ?>">
                                 <?php if($item['status'] == 'error'): ?>
-                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Error occured. Please contact with administrator.'  ?>" data-trigger="hover">
+                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Please click on Help button above to submit a support ticket.'  ?>" data-trigger="hover">
                                 <?php endif; ?>
                                     <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px" >
                                         <span class="bar" style="width: 100%;"></span>
