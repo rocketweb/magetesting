@@ -117,7 +117,7 @@
                                 <?php if($item['status'] == 'error'): ?>
                                 <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Please click on Help button above to submit a support ticket.'  ?>" data-trigger="hover">
                                 <?php endif; ?>
-                                    <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px" >
+                                    <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right active" style="height:12px; margin-bottom: 0px" >
                                         <span class="bar" style="width: 100%;"></span>
                                     </span>
                                     <?php if($item['status'] == 'downloading-magento'): ?>
@@ -131,7 +131,7 @@
                                     <?php else:*/ ?>
                                         <?php echo $this->niceStatus($item['status']); ?>
                                         <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
-                                        - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByUserAndId($item['user_id'],$item['queue_id'])); ?>
+                                        - please be patient as your request is being made.
                                         <?php endif; ?>
                                     </span>
                                     <?php endif; ?>
