@@ -1833,6 +1833,11 @@ h4.ext-price{
     color: #34aae5;
 }
 
+.line {
+    width: 174px;
+    border-top: 1px solid #e5e5e5;
+}
+
 /* modal */
 #user-deletion form {
     display: inline;
@@ -3268,4 +3273,8 @@ label.error {
   cursor: pointer;
   width: 16px;
   height: 16px;
+}
+
+#braintree_credit_card_cvv {
+    width: 32px;
 }
