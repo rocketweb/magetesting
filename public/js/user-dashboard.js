@@ -136,17 +136,6 @@ function updateLabel(row, new_status) {
 
     if (new_status == "ready" || new_status == "error") {
         location.reload();
-    } else {
-        //update pending time counter
-        $.ajax({
-            type: "POST",
-            url: $('body').data('siteRoot') + "/queue/gettimeleft",
-            data: "queue=" + row.find(".queueval").val() + "&user="+ row.find(".userval").val(),
-            dataType: "json",
-            success: function(json) {
-                row.find("span.statusHolder").html(niceStatus(new_status) + " - " + leftTime(json));
-            }
-        });
     }
 }
 /* status auto-update end*/
