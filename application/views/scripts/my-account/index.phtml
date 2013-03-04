@@ -10,7 +10,7 @@
                     <div class="row">
                         <div class="span4">
                             <p class="user-name"><?php echo $this->escape($this->user->getFirstname()).' '.$this->escape($this->user->getLastname()); ?></p>
-                            <p>Member since <?php echo date('F j,Y', strtotime($this->user->getAddedDate())); ?></p>
+                            <p>Member since <?php echo date('F j, Y', strtotime($this->user->getAddedDate())); ?></p>
                         </div>
                         <div class="span3 offset1"><a class="btn btn-blue btn-block"href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'edit-account'), 'default', true); ?>">Edit account</a></div>
                     </div>

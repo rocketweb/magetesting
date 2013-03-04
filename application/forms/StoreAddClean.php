@@ -21,7 +21,9 @@ class Application_Form_StoreAddClean extends Integration_Form{
         ));
 
         $this->addElement('radio', 'sample_data', array(
-                'label'       => 'Install sample data',
+                'label'       => '<span rel="popover" data-trigger="hover" data-placement="top" data-original-title="Install sample data" data-content="Install sample data installs a demo Magento store with populated products. No sample data installs basic Magento frontend with no products.">
+                                    <i class="icon icon-blue icon-info-sign"></i> Install sample data
+                                  </span>',
                 'required'    => true,
                 'label_class' => 'radio inline'
         ));
