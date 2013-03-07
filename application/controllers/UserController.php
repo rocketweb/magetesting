@@ -26,10 +26,12 @@ class UserController extends Integration_Controller_Action
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
         
+        
         /* check expiry date for plan start */
+        $planModel = new Application_Model_Plan();
+        
         if ($this->auth->getIdentity()->group != 'admin'){
-
-            $planModel = new Application_Model_Plan();
+   
             $planModel->find($this->auth->getIdentity()->plan_id);
 
             $dateActive = new DateTime($this->auth->getIdentity()->plan_active_to);
