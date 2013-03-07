@@ -113,13 +113,13 @@
     			                	<!--<div class="hover_inner_shadow"></div>-->
 
     			                <?php if((float)$extension['price']): ?>
-    			                	<?php if('queue' == $page_type AND (int)$extension['store_id'] AND $extension['status'] == 'ready'): ?>
+    			                	<?php if('queue' == $page_type AND $extension['status'] == 'ready'): ?>
     			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium_installed.png'); ?>" alt="premium" /></div>
     			                	<?php else: ?>
     			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_premium.png'); ?>" alt="premium" /></div>
     			                	<?php endif; ?>
     			                <?php else: ?>
-    			                	<?php if('queue' == $page_type AND (int)$extension['store_id'] AND $extension['status'] == 'ready'): ?>
+    			                	<?php if('queue' == $page_type AND $extension['status'] == 'ready'): ?>
     			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free_installed.png'); ?>" alt="free" /></div>
     			                	<?php else: ?>
     			                	<div class="ribbon"><img src="<?php echo $this->baseUrl('/public/img/extensions/ribbon_free.png'); ?>" alt="free" /></div>
@@ -179,7 +179,7 @@
         		                        <span class="label update-status label-important pull-right">Installing</span>
         		                        <?php endif; ?>
     		                        <?php endif; ?>
-        			                <?php if(!(int)$extension['store_id']): ?>
+        			                <?php if(!$extension['status']): ?>
         			                    <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
         			                <?php elseif((float)$extension['price'] AND $extension['status'] == 'ready' AND !$extension['braintree_transaction_id']): ?>
             			                <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment'), 'default', true); ?>">
@@ -191,8 +191,11 @@
                                         </form>
         			                <?php endif; ?>
     			                <?php elseif('extension' == $page_type): ?>
+    			                    <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'list-versions', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-mini pull-right">Version List</a>
+    			                    <!-- 
     			                    <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-danger btn-mini pull-right delete" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-remove"></i></a>
     			                    <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-mini pull-right" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-cog"></i> Edit</a>
+    			                     -->
     			                <?php endif;?>
     			                </div>
     			            </div>
