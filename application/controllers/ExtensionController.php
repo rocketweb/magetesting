@@ -351,7 +351,7 @@ class ExtensionController extends Integration_Controller_Action {
                         $flash_message = array(
                             'type' => 'error',
                             'from_scratch' => 1,
-                            'message' => 'We couldn\'t delete extension ( probably is installed ).<span class="hidden">'.$e->getMessage().'</span>'
+                            'message' => 'Extension couldn’t be deleted as it is currently installed in one of the stores.<span class="hidden">'.$e->getMessage().'</span>'
                         );
                     }
                     // set message
