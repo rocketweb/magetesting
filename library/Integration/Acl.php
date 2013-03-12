@@ -61,7 +61,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'default_index', array('index', 'about-us', 'contact-us', 'partners', 'privacy', 'terms-of-service','our-plans'));
         $this->allow('free-user', 'default_extensions', array('index'));
         $this->allow('free-user', 'default_queue', array(
-                'add','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus', 'get-backend-form'
+                'add','add-clean', 'close', 'getVersions', 'edit','extensions','getstatus', 'login-to-store-backend'
         ));
         $this->allow('free-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'
@@ -80,7 +80,7 @@ class Integration_Acl extends Zend_Acl
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
                 'commit', 'deploy','gettimeleft', 'request-deployment',
-                'validate-ftp-credentials', 'find-sql-file', 'get-backend-form'
+                'validate-ftp-credentials', 'find-sql-file', 'login-to-store-backend'
         ));
         $this->allow('commercial-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit', 'papertrail'
@@ -98,7 +98,7 @@ class Integration_Acl extends Zend_Acl
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
                 'commit', 'deploy','gettimeleft', 'request-deployment',
-                'validate-ftp-credentials', 'find-sql-file', 'get-backend-form'
+                'validate-ftp-credentials', 'find-sql-file', 'login-to-store-backend'
         ));
         $this->allow('awaiting-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'

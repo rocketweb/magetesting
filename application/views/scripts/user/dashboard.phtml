@@ -102,13 +102,11 @@
                     ?>
                         <div class="right-content pull-right inactive">
                             <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
-                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
+                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'login-to-store-backend','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
                             <?php if($item['status'] == 'ready'): ?>
                                 <a
                                     class="btn btn-mini admin-panel pull-right"
-                                    data-backend-url="<?php echo 'http://'.$this->user->login.'.'.$item['server_domain'].'/'.$item['domain'].'/'.$item['backend_name']; ?>"
-                                    data-backend-login="<?php echo $this->user->login; ?>"
-                                    data-backend-password="<?php echo $decryptor->setBackendPassword($item['backend_password'], false)->getBackendPassword(); ?>"
+                                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'login-to-store-backend', 'store' => $item['domain']), 'default', true); ?>"
                                 ><i class="icon icon-wrench"></i> Access Admin</a>
                                 <a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
                             <?php endif; ?>
