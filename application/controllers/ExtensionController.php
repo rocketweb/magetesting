@@ -393,7 +393,12 @@ class ExtensionController extends Integration_Controller_Action {
             $extension = $extension->find($id);
             if($extension->getName()) {
                 $response->status = 'ok';
-                
+                $versions = $extension->findByName($extension->getName());
+                foreach($versions as $version) {
+                    $actions = '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $version->getId()), 'default', true) . '" class="btn btn-primary">Edit</a>';
+                    $actions .= '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $version->getId()), 'default', true) . '" class="btn btn-danger">Delete</a>';
+                    $response->message .= '<tr><td>' . $version->getVersion() . '</td><td>' . $actions . '</td></tr>';
+                }
             } else {
                 $response->message = 'Specified extension does not exist.';
             }
@@ -408,28 +413,25 @@ class ExtensionController extends Integration_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(true);
         $this->_helper->layout->disableLayout();
 
+        $redirect = array(
+                'module'      => 'default',
+                'controller'  => 'extension',
+                'action'      => 'index'
+        );
         $request = $this->getRequest();
         $extension_id = (int)$request->getParam('id', 0);
         $extension_version = $request->getParam('version', '');
         if($request->isPost()) {
-            $response = '';
             if($extension_id && $extension_version) {
                 $extension = new Application_Model_Extension();
                 if($extension->addVersionToExtension($extension_id, $extension_version)) {
-                    $response = 'true';
+                    $this->_helper->FlashMessenger('Succesfully added version to extension.');
                 }
             }
-            $this->getResponse()->setBody($response);
-        } else {
-            $redirect = array(
-                'module'      => 'default',
-                'controller'  => 'extension',
-                'action'      => 'index'
-            );
-            return $this->_helper->redirector->gotoRoute(
-                $redirect, 'default', true
-            );
         }
+        return $this->_helper->redirector->gotoRoute(
+                $redirect, 'default', true
+        );
     }
 
     public function uploadAction()

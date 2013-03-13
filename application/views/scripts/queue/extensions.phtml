@@ -191,11 +191,7 @@
                                         </form>
         			                <?php endif; ?>
     			                <?php elseif('extension' == $page_type): ?>
-    			                    <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'list-versions', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-mini pull-right">Version List</a>
-    			                    <!-- 
-    			                    <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-danger btn-mini pull-right delete" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-remove"></i></a>
-    			                    <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-mini pull-right" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-cog"></i> Edit</a>
-    			                     -->
+    			                    <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'list-versions', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-mini pull-right version-list" data-extension-id="<?php echo $extension['id']; ?>">Version List</a>
     			                <?php endif;?>
     			                </div>
     			            </div>
@@ -208,6 +204,37 @@
 	</div>
 </div>
 
+<?php if('extension' == $page_type):
+    $this->headScript()->appendFile($this->baseUrl('public/js/manage-extensions.js'));
+?>
+<div class="modal hide fade version-list-modal">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3></h3>
+    </div>
+    <div class="modal-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <form action="<?php echo $this->url(array('controller' => 'extension', 'action' => 'add-version-to-extension'), 'default', true); ?>" method="POST" class="form-search">
+            <input name="id" type="hidden" />
+            <input name="version" class="input-small" type="text" placeholder="Type version" />
+            <a href="#" class="btn pull-left" data-dismiss="modal">Close</a>
+            <button type="submit" class="btn btn-success">Add Version</button>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
 
 <!-- START SCREENSHOTS CAROUSEL -->
 <div id="screenshots">

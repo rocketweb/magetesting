@@ -188,4 +188,16 @@ ORDER BY  `installed` DESC ,  `price` DESC
                 
 	return $this->fetchRow($select);
     }
+
+    public function findByName($name)
+    {
+        $select =
+            $this->select()
+                 ->setIntegrityCheck(false)
+                 ->from($this->_name)
+                 ->where('name = ?', $name)
+                 ->order('version DESC');
+
+        return $this->fetchAll($select);
+    }
 }

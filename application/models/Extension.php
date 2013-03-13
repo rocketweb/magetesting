@@ -250,6 +250,11 @@ class Application_Model_Extension {
         return $this;
     }
 
+    public function findByName($name)
+    {
+        return $this->getMapper()->findByName($name);
+    }
+
     public function fetchAll()
     {
         $extensions = array();
@@ -377,7 +382,7 @@ class Application_Model_Extension {
         }
 
         try {
-            $image_path = new Zend_View_Helper_ImagePath();
+            $image_path = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->getActionController()->view;
             // copy logo image
             $new_logo_filename = preg_replace('/\-([0-9]+)\.(.*)$/i', '-'.$new_extension_id.'.$2', $this->getLogo());
             if($new_logo_filename != $this->getLogo() && $new_logo_filename !== FALSE) {
