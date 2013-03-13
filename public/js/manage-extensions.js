@@ -10,8 +10,8 @@ $(document).ready(function() {
     if($version_list_buttons.length) {
         $version_list_buttons.click(function() {
             var $this = $(this);
-            if(!$this.hasClass('disable')) {
-                $this.addClass('disable');
+            if(!$this.hasClass('disabled')) {
+                $this.addClass('disabled');
                 $.ajax({
                     url : $this.attr('href'),
                     type : 'POST',
@@ -23,7 +23,7 @@ $(document).ready(function() {
                                 $version_list_modal_table_body.html(result.message);
                                 $version_list_modal_extension_field.val($this.data('extension-id'));
                                 $version_list_modal.modal('show');
-                                $this.removeClass('disable');
+                                $this.removeClass('disabled');
                             }
                         }
                     }
