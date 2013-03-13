@@ -915,6 +915,8 @@ class QueueController extends Integration_Controller_Action {
         if($domain) {
             $model = new Application_Model_Store();
             $store = $model->findByDomain($domain);
+            $serverModel = new Application_Model_Server();
+            $server = $serverModel->find($store->server_id);
         }
         $content = '';
         if(
@@ -935,7 +937,7 @@ class QueueController extends Integration_Controller_Action {
                 $content .= '<td>'.PHP_EOL;
                     //<button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
                 $download_button = '<a class="btn btn-primary download-deployment" href="'.
-                    $this->view->url(array('module' => 'default', 'controller' => 'store', 'action' => $domain), 'default', true).'/var/deployment/'.$revision['filename']
+                    'http://'.$this->auth->getIdentity()->login.'.'.$server->getDomain().'/'.$domain.'/var/deployment/'.$revision['filename']
                 .'">Download</a>'.PHP_EOL;
                                
                 if( (int)$revision['extension_id'] 
