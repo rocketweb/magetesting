@@ -3269,3 +3269,24 @@ label.error {
   width: 16px;
   height: 16px;
 }
+
+/* fix for extension version control modal */
+.modal.version-list-modal {
+    width: 800px;
+    margin-left: -400px;
+}
+.modal.version-list-modal table .btn + .btn {
+    margin-left: 5px;
+}
+.modal.version-list-modal .modal-footer .form {
+    margin-bottom: 0px;
+}
+.modal.version-list-modal .modal-footer .control-group {
+    margin-bottom: 0px;
+}
+.modal.version-list-modal .modal-footer .control-label {
+    width: auto;
+}
+.modal.version-list-modal .modal-footer .btn-success {
+    margin-left: 5px;
+}

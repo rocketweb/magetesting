@@ -397,7 +397,14 @@ class ExtensionController extends Integration_Controller_Action {
                 foreach($versions as $version) {
                     $actions = '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $version->getId()), 'default', true) . '" class="btn btn-primary">Edit</a>';
                     $actions .= '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $version->getId()), 'default', true) . '" class="btn btn-danger">Delete</a>';
-                    $response->message .= '<tr><td>' . $version->getVersion() . '</td><td>' . $actions . '</td></tr>';
+                    $files = '';
+                    if($extension->getExtension()) {
+                        $files .= '<div class="label label-success">' . $extension->getExtension() . '</div><br />';
+                    }
+                    if($extension->getExtensionEncoded()) {
+                        $files .= '<div class="label label-important">' . $extension->getExtensionEncoded() . '</div><br />';
+                    }
+                    $response->message .= '<tr><td>' . $version->getVersion() . '</td><td>' . $files . '</td><td class="nowrap">' . $actions . '</td></tr>';
                 }
             } else {
                 $response->message = 'Specified extension does not exist.';
