@@ -19,7 +19,7 @@ $(document).ready(function() {
                     success : function(result) {
                         if(expectInObject(['status', 'message'], result)) {
                             if('ok' == result.status) {
-                                $version_list_modal_title.text($this.parents('.wrapper:first').find('.info .info-main h5').text());
+                                $version_list_modal_title.text($this.parents('.wrapper:first').find('.info .info-main h5').text() + ' releases');
                                 $version_list_modal_table_body.html(result.message);
                                 $version_list_modal_extension_field.val($this.data('extension-id'));
                                 $version_list_modal.modal('show');

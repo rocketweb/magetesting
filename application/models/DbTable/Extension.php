@@ -84,7 +84,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
             $this->select()
                  ->from($this->_name, array('*', 'braintree_transaction_id' => new Zend_Db_Expr('NULL'), 'braintree_transaction_confirmed'  => new Zend_Db_Expr('NULL'), 'status'  => new Zend_Db_Expr('NULL'), 'installed' => new Zend_Db_Expr('0')))
                  ->setIntegrityCheck(false)
-                 ->where('extension IS NOT NULL')
+                 ->where('extension > ""')
                  ->where(' ?
                      BETWEEN REPLACE(from_version,\'.\',\'\')
                      AND REPLACE(to_version,\'.\',\'\')',
@@ -132,11 +132,11 @@ ORDER BY  `installed` DESC ,  `price` DESC
             $this->select()
                  ->from($this->_name, array('name', 'edition', 'version' => new Zend_Db_Expr('max(version)')))
                  ->setIntegrityCheck(false)
-                 ->where('extension IS NOT NULL')
                  ->group(array('name', 'edition'));
         $identity = Zend_Auth::getInstance()->getIdentity();
         if(!is_object($identity) || 'admin' != $identity->group) {
-            $sub_select->where('edition = ?', 'CE');
+            $sub_select->where('edition = ?', 'CE')
+                       ->where('extension > ""');
         }
         $select = 
             $this->select()
