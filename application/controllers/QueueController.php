@@ -3,13 +3,17 @@
 class QueueController extends Integration_Controller_Action {
 
     public function init() {
-        /* following two variables used during ftp credentials vlidation */
+        /* following two variables used during ftp credentials validation */
         $this->_ftpStream = '';
         $this->_sshStream = '';
         $this->_customHost = '';
         $this->_sshWebrootPath='';
-        
-        $this->_helper->sslSwitch();
+
+        $sslSwitch = true;
+        if('login-to-store-backend' == $this->getRequest()->getActionName()) {
+            $sslSwitch = false;
+        }
+        $this->_helper->sslSwitch($sslSwitch);
         parent::init();
     }
 
@@ -1005,8 +1009,6 @@ class QueueController extends Integration_Controller_Action {
     }
 
     public function loginToStoreBackendAction() {
-        $this->_helper->sslSwitch(false);
-
         $request = $this->getRequest();
         $domain = $request->getParam('store');
         $store = new Application_Model_Store();
