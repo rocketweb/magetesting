@@ -1023,7 +1023,8 @@ class QueueController extends Integration_Controller_Action {
         }
         if($store->id && $this->auth->getIdentity()->id == $store->user_id && $server->getDomain()) {
             $this->view->item = $store->toArray();
-            $this->view->store_url = 'http://' . $this->auth->getIdentity()->login . '.' . $server->getDomain() . '/' . $domain . '/' . $store->backend_name;
+            $this->view->user = $this->auth->getIdentity()->login;
+            $this->view->store_url = 'http://' . $this->view->user . '.' . $server->getDomain() . '/' . $domain . '/' . $store->backend_name;
             $this->view->form = $this->_getStoreBackendLoginForm($this->view->store_url);
         } else {
             // not post or store does not exists or user does not have that store
