@@ -62,9 +62,9 @@ class Application_Model_ExtensionMapper {
         return $extension;
     }
 
-    public function findByName($name)
+    public function findByNameForEdition($name, $edition)
     {
-        $resultSet = $this->getDbTable()->findByName($name);
+        $resultSet = $this->getDbTable()->findByNameForEdition($name, $edition);
         $entries   = array();
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Extension();
