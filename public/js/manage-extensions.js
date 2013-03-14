@@ -24,6 +24,8 @@ $(document).ready(function() {
                                 $version_list_modal_extension_field.val($this.data('extension-id'));
                                 $version_list_modal.modal('show');
                                 $this.removeClass('disabled');
+                            } else {
+                                window.location.reload();
                             }
                         }
                     }

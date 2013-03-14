@@ -366,6 +366,8 @@ class Application_Model_Extension {
 
         if((int)!$this->getId()) {
             $this->find($id);
+        } else {
+            return false;
         }
 
         // reset id to create new record
@@ -384,7 +386,7 @@ class Application_Model_Extension {
         try {
             $image_path = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->getActionController()->view;
             // copy logo image
-            $new_logo_filename = preg_replace('/\-([0-9]+)\.(.*)$/i', '-'.$new_extension_id.'.$2', $this->getLogo());
+            $new_logo_filename = preg_replace('/\-(' . $id . ')\.(.*)$/i', '-'.$new_extension_id.'.$2', $this->getLogo());
             if($new_logo_filename != $this->getLogo() && $new_logo_filename !== FALSE) {
                 $copy_from = $image_path->ImagePath($this->getLogo(), 'extension/logo');
                 $copy_to = $image_path->ImagePath($new_logo_filename, 'extension/logo');
@@ -393,17 +395,18 @@ class Application_Model_Extension {
                     $this->save();
                 }
             }
-    
+
             // copy screenshots in table and in file structure
-            $screenshots = $this->fetchScreenshots();
+            $screenshots = $this->fetchScreenshots($id);
             foreach($screenshots as $screenshot) {
-                $new_screenshot_filename = preg_replace('/\-([0-9]+)\.(.*)$/i', '-'.$new_extension_id.'.$2', $screenshot);
+                $new_screenshot_filename = preg_replace('/\-(' . $id . ')\.(.*)$/i', '-'.$new_extension_id.'.$2', $screenshot->getImage());
                 if($new_screenshot_filename != $screenshot->getImage() && $new_screenshot_filename !== FALSE) {
                     $copy_from = $image_path->ImagePath($screenshot->getImage(), 'extension/screenshots');
                     $copy_to = $image_path->ImagePath($new_screenshot_filename, 'extension/screenshots');
                     if(copy($copy_from, $copy_to)) {
                         $new_screenshot = new Application_Model_ExtensionScreenshot();
                         $new_screenshot->setExtensionId($new_extension_id);
+                        $new_screenshot->setImage($new_screenshot_filename);
                         $new_screenshot->save();
                     }
                 }
@@ -412,13 +415,8 @@ class Application_Model_Extension {
         catch(Exception $e) {
             // revert changes
             $this->delete($this->getId());
-            // log exception
-            if($log = Zend_Controller_Front::getInstance()->getLog()) {
-                $log->log('Cloning extension', Zend_Log::ERR, $e->getMessage());
-            }
             return false;
         }
-
         return true;
     }
 }
