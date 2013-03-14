@@ -189,13 +189,14 @@ ORDER BY  `installed` DESC ,  `price` DESC
 	return $this->fetchRow($select);
     }
 
-    public function findByName($name)
+    public function findByNameForEdition($name, $edition)
     {
         $select =
             $this->select()
                  ->setIntegrityCheck(false)
                  ->from($this->_name)
                  ->where('name = ?', $name)
+                 ->where('edition = ?', $edition)
                  ->order('version DESC');
 
         return $this->fetchAll($select);
