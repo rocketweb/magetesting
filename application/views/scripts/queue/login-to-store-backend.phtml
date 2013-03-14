@@ -8,7 +8,7 @@
 $(document).ready(function() {
     $('div.magento-form form')
         .attr('action', '<?php echo $this->store_url; ?>')
-        .find(':text').val('<?php echo $this->item['backend_name']; ?>').end()
+        .find(':text').val('<?php echo $this->user; ?>').end()
         .find(':password').val('<?php echo $decryptor->setBackendPassword($this->item['backend_password'], false)->getBackendPassword(); ?>').end()
         .submit();
 });
