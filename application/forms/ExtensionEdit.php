@@ -27,6 +27,18 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'class'      => 'span4'
         ));
 
+        // Add module namespace element
+        $this->addElement('text', 'namespace_module', array(
+                'label'      => 'Namespace_Module',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(3, 255))
+                ),
+                'allowEmpty' => false,
+                'class'      => 'span4'
+        ));
+
         // Add description element
         $this->addElement('textarea', 'description', array(
                 'label'      => 'Description',

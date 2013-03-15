@@ -51,18 +51,19 @@ class ExtensionController extends Integration_Controller_Action {
         }
 
         $extension_data = array(
-            'title'          => $this->_getParam('title', ''),
-            'version'        => $this->_getParam('version', ''),
-            'edition'        => $this->_getParam('edition', ''),
-            'from_version'   => $this->_getParam('from_version', ''),
-            'to_version'     => $this->_getParam('to_version', ''),
-            'description'    => $this->_getParam('description', ''),
-            'price'          => $this->_getParam('price', ''),
-            'logo'           => $this->_getParam('logo', ''),
-            'screenshots'    => $this->_getParam('screenshots', array()),
-            'directory_hash' => $this->_getParam('directory_hash', time().'-'.uniqid()),
-            'category_id'    => $this->_getParam('category_id', ''),
-            'author'         => $this->_getParam('author', '')
+            'title'           => $this->_getParam('title', ''),
+            'namespace_module'=> $this->_getParam('namespace_module', ''),
+            'version'         => $this->_getParam('version', ''),
+            'edition'         => $this->_getParam('edition', ''),
+            'from_version'    => $this->_getParam('from_version', ''),
+            'to_version'      => $this->_getParam('to_version', ''),
+            'description'     => $this->_getParam('description', ''),
+            'price'           => $this->_getParam('price', ''),
+            'logo'            => $this->_getParam('logo', ''),
+            'screenshots'     => $this->_getParam('screenshots', array()),
+            'directory_hash'  => $this->_getParam('directory_hash', time().'-'.uniqid()),
+            'category_id'     => $this->_getParam('category_id', ''),
+            'author'          => $this->_getParam('author', '')
         );
         $name = 'Application_Form_Extension'.$action;
         $form = new $name;
@@ -128,17 +129,18 @@ class ExtensionController extends Integration_Controller_Action {
                     $screenshots[] = $row->getImage();
                 }
                 $extension_entity_data = array(
-                    'title'        => $extension->getName(),
-                    'description'  => $extension->getDescription(),
-                    'version'      => $extension->getVersion(),
-                    'edition'      => $extension->getEdition(),
-                    'from_version' => $extension->getFromVersion(),
-                    'to_version'   => $extension->getToVersion(),
-                    'price'        => $extension->getPrice(),
-                    'logo'         => $extension->getLogo(),
-                    'screenshots'  => $screenshots,
-                    'author'       => $extension->getAuthor(),
-                    'category_id'  => $extension->getCategoryId()
+                    'title'           => $extension->getName(),
+                    'namespace_module'=> $extension->getNamespaceModule(),
+                    'description'     => $extension->getDescription(),
+                    'version'         => $extension->getVersion(),
+                    'edition'         => $extension->getEdition(),
+                    'from_version'    => $extension->getFromVersion(),
+                    'to_version'      => $extension->getToVersion(),
+                    'price'           => $extension->getPrice(),
+                    'logo'            => $extension->getLogo(),
+                    'screenshots'     => $screenshots,
+                    'author'          => $extension->getAuthor(),
+                    'category_id'     => $extension->getCategoryId()
                 );
                 $success_message = 'Extension has been changed properly.';
             } else {
@@ -246,39 +248,53 @@ class ExtensionController extends Integration_Controller_Action {
                 }
                 
                 if(!$errors) {
-                    $extension->setOptions($formData);
-                    $extension->save();
-                    $extension_id = $extension->getId();
-                    
-                    if($this->_getParam('remove_logo', null)) {
-                        @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
-                        $extension->setLogo(NULL);
-                        $oldLogoRemoved = true;
-                    }
-                    
-                    if($old_logo != $new_logo) {
-                        if($old_logo && !$oldLogoRemoved) {
+                    try {
+                        $extension->setOptions($formData);
+                        $extension->save();
+                        $extension_id = $extension->getId();
+                        
+                        if($this->_getParam('remove_logo', null)) {
                             @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
+                            $extension->setLogo(NULL);
+                            $oldLogoRemoved = true;
                         }
-                        if($new_logo) {
-                            $new_file_name = $this->view->NiceString(substr_replace($new_logo, '-'.$extension_id, strrpos($new_logo, '.'), 0));
-                            $new_path = $this->view->ImagePath($new_file_name, 'extension/logo', true, false);
-                            if(!file_exists($new_path)) {
-                                @mkdir($new_path, 0777, true);
+                        
+                        if($old_logo != $new_logo) {
+                            if($old_logo && !$oldLogoRemoved) {
+                                @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
                             }
-                            @copy($this->_tempDir.$this->view->directoryHash.'/'.$new_logo, $new_path.$new_file_name);
-                            $extension->setLogo($new_file_name);
+                            if($new_logo) {
+                                $new_file_name = $this->view->NiceString(substr_replace($new_logo, '-'.$extension_id, strrpos($new_logo, '.'), 0));
+                                $new_path = $this->view->ImagePath($new_file_name, 'extension/logo', true, false);
+                                if(!file_exists($new_path)) {
+                                    @mkdir($new_path, 0777, true);
+                                }
+                                @copy($this->_tempDir.$this->view->directoryHash.'/'.$new_logo, $new_path.$new_file_name);
+                                $extension->setLogo($new_file_name);
+                            }
+                        }
+                        $this->_saveImages($extension_id);
+                        $extension->save();
+                        
+                        $this->_helper->FlashMessenger($success_message);
+                        return $this->_helper->redirector->gotoRoute(array(
+                                'module'     => 'default',
+                                'controller' => 'extension',
+                                'action'     => 'index',
+                        ), 'default', true);
+                    } catch(Zend_Db_Exception $e) {
+                        if(stristr($e->getMessage(), 'extension_release')) {
+                            $form->version->addErrors(array('Version "' . $formData['version'] . '" for that extension already exists.'))
+                                 ->markAsError();
+                        } else {
+                            $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Unknown error: '.$e->getMessage()));
+                            return $this->_helper->redirector->gotoRoute(array(
+                                    'module'     => 'default',
+                                    'controller' => 'extension',
+                                    'action'     => 'index',
+                            ), 'default', true);
                         }
                     }
-                    $this->_saveImages($extension_id);
-                    $extension->save();
-
-                    $this->_helper->FlashMessenger($success_message);
-                    return $this->_helper->redirector->gotoRoute(array(
-                            'module'     => 'default',
-                            'controller' => 'extension',
-                            'action'     => 'index',
-                    ), 'default', true);
                 } else {
                     return $this->_helper->redirector->gotoRoute(array(
                             'module'     => 'default',
