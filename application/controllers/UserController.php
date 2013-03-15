@@ -25,14 +25,14 @@ class UserController extends Integration_Controller_Action
         );
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
-        
-        
+
+
         /* check expiry date for plan start */
         $planModel = new Application_Model_Plan();
-        
+        $planModel->find($this->auth->getIdentity()->plan_id);
+
+
         if ($this->auth->getIdentity()->group != 'admin'){
-   
-            $planModel->find($this->auth->getIdentity()->plan_id);
 
             $dateActive = new DateTime($this->auth->getIdentity()->plan_active_to);
             $dateToday = new DateTime();
@@ -46,10 +46,10 @@ class UserController extends Integration_Controller_Action
                 $message['message'] = 'You are using '.$planModel->getName().' plan and it will expire in '.$diff.' day'.$s;
                 $this->view->messages = array($message);
             }
-            
+
         }
         /* check expiry date for plan stop */
-        
+
         $this->view->planModel = $planModel;
         $this->view->user = $this->auth->getIdentity();
         $this->view->userGroup = $this->view->user->group;
