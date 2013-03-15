@@ -102,7 +102,7 @@
                     ?>
                         <div class="right-content pull-right inactive">
                             <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
-                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'login-to-store-backend','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
+                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
                             <?php if($item['status'] == 'ready'): ?>
                                 <a
                                     class="btn btn-mini admin-panel pull-right"
