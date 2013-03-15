@@ -3,13 +3,17 @@
 class QueueController extends Integration_Controller_Action {
 
     public function init() {
-        /* following two variables used during ftp credentials vlidation */
+        /* following two variables used during ftp credentials validation */
         $this->_ftpStream = '';
         $this->_sshStream = '';
         $this->_customHost = '';
         $this->_sshWebrootPath='';
-        
-        $this->_helper->sslSwitch();
+
+        $sslSwitch = true;
+        if('login-to-store-backend' == $this->getRequest()->getActionName()) {
+            $sslSwitch = false;
+        }
+        $this->_helper->sslSwitch($sslSwitch);
         parent::init();
     }
 
@@ -1004,6 +1008,56 @@ class QueueController extends Integration_Controller_Action {
         /* Prevent from going forward if max stores have been reached - stop */
     }
 
+    public function loginToStoreBackendAction() {
+        $request = $this->getRequest();
+        $domain = $request->getParam('store');
+        $store = new Application_Model_Store();
+        $server = new Application_Model_Server();
+        if($domain) {
+            $store = $store->findByDomain($domain);
+            if($store->server_id) {
+                $server = $server->find($store->server_id);
+            }
+        }
+        if($store->id && $this->auth->getIdentity()->id == $store->user_id && $server->getDomain()) {
+            $this->view->item = $store->toArray();
+            $this->view->user = $this->auth->getIdentity()->login;
+            $this->view->store_url = 'http://' . $this->view->user . '.' . $server->getDomain() . '/' . $domain . '/' . $store->backend_name;
+            $this->view->form = $this->_getStoreBackendLoginForm($this->view->store_url);
+        } else {
+            // not post or store does not exists or user does not have that store
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+            ), 'default', true);
+        }
+    }
+
+    protected function _getStoreBackendLoginForm($store_url) {
+        $store_url_parsed = parse_url($store_url); 
+        if(is_array($store_url_parsed) && stristr($store_url_parsed['host'], 'magetesting.com')) {
+            $client = new Zend_Http_Client();
+            $client->setAdapter(new Zend_Http_Client_Adapter_Curl());
+            $client->setUri($store_url);
+    
+            try {
+                $response = $client->request();
+                if($body = $response->getBody()) {
+                    preg_match('/(\<form.*\<\/form\>)/ims', $body, $match);
+                    if(2 == count($match)) {
+                        return $match[1];
+                    }
+                }
+            } catch(Exception $e) {
+                if ($log = $this->getLog()) {
+                    $log->log('Error while fetching backend form - ' . $e->getMessage(), LOG_ERR);
+                }
+            }
+        }
+        return '';
+    }
+
     /* FTP VALIDATION SECTION */
     // validate whether ftp credentials are valid and we can connect to server
     public function validateFtpCredentialsAction() {
@@ -1404,39 +1458,5 @@ class QueueController extends Integration_Controller_Action {
 
     protected function _prepareFlashMessage($data) {
         return '<a class="close" data-dismiss="alert" href="#">×</a><div class="popover-font-fix">'.$data['message'].'</div>';
-    }
-
-    public function getBackendFormAction() {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $result = new stdClass();
-        $result->type = 'error';
-        $result->message = '';
-
-        $request = $this->getRequest();
-        $store_url = parse_url($request->getParam('store_url'));
-        if($request->isPost() && is_array($store_url) && stristr($store_url['host'], 'magetesting.com')) {
-            $client = new Zend_Http_Client();
-            $client->setAdapter(new Zend_Http_Client_Adapter_Curl());
-            $client->setUri($request->getParam('store_url'));
-
-            try {
-                $response = $client->request();
-                if($body = $response->getBody()) {
-                    preg_match('/(\<form.*\<\/form\>)/ims', $body, $match);
-                    if(2 == count($match)) {
-                        $result->type = 'found';
-                        $result->message = $match[1];
-                    }
-                }
-            } catch(Exception $e) {
-                if ($log = $this->getLog()) {
-                    $log->log('Error while fetching backend form - ' . $e->getMessage(), LOG_ERR);
-                }
-            }
-        }
-
-        $this->getResponse()->setBody(json_encode($result));
     }
 }

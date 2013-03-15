@@ -1,0 +1,23 @@
+<?php if($this->form): ?>
+<h2>Logging into backend</h2>
+<div class="hidden magento-form">
+    <?php echo $this->form; ?>
+</div>
+<script>
+<?php $decryptor = new Application_Model_Store(); ?>
+$(document).ready(function() {
+    $('div.magento-form form')
+        .attr('action', '<?php echo $this->store_url; ?>')
+        .find(':text').val('<?php echo $this->user; ?>').end()
+        .find(':password').val('<?php echo $decryptor->setBackendPassword($this->item['backend_password'], false)->getBackendPassword(); ?>').end()
+        .submit();
+});
+</script>
+<?php else: ?>
+<h3>Redirecting.</h3>
+<script>
+$(document).ready(function() {
+    setTimeout(function() { window.location = '<?php echo $this->store_url; ?>'; }, 1000);
+});
+</script>
+<?php endif; ?>

@@ -308,40 +308,11 @@ $(document).ready(function () {
             var $this = $(this);
             if(!$this.hasClass('disabled')) {
                 $this.addClass('disabled');
-
-                $.ajax({
-                    url : siteRoot + '/queue/get-backend-form',
-                    type : 'POST',
-                    async: false,
-                    data : {
-                        store_url : $this.data('backend-url')
-                    },
-                    dataType : 'json',
-                    success : function(response) {
-                        var $form = $('<form>');
-                        $form.attr('target', '_blank');
-                        $form.attr('action', $this.data('backend-url'));
-                        $form.attr('method', ('error' == response.type ? 'GET' : 'POST'));
-
-                        if('found' == response.type) {
-                            var $hash_input = $(response.message).find('input:hidden').val();
-                            if($hash_input) {
-                                $form.append($('<input type="hidden" name="form_key"  value="'+ $hash_input +'"/>'));
-                                $form.append($('<input type="hidden" name="login[password]" value="'+ $this.data('backend-password') +'"/>'));
-                                $form.append($('<input type="hidden" name="login[username]" value="'+ $this.data('backend-login') +'"/>'));
-                            } else {
-                                $form.attr('method', 'GET');
-                            }
-                        }
-                        $form.submit();
-                    },
-                    complete : function() {
-                        $this.removeClass('disabled');
-                    }
-                });
+                window.open($this.attr('href'), '_blank');
+                $this.removeClass('disabled');
             }
             // stop bootstrap collapsing
-            e.stopPropagation();
+            return false;
         })
     }
 
