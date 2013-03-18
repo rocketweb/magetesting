@@ -409,7 +409,7 @@ class ExtensionController extends Integration_Controller_Action {
             $extension = $extension->find($id);
             if($extension->getName()) {
                 $response->status = 'ok';
-                $versions = $extension->findByNameForEdition($extension->getName(), $extension->getEdition());
+                $versions = $extension->findByNamespaceAndEdition($extension->getNamespaceModule(), $extension->getEdition());
                 foreach($versions as $version) {
                     $actions = '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $version->getId()), 'default', true) . '" class="btn btn-primary">Edit</a>';
                     $actions .= '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $version->getId()), 'default', true) . '" class="btn btn-danger">Delete</a>';

@@ -104,7 +104,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
             $this->select()
                  ->from(array('last_version' => $select_allowed_for_store), array('last_version.*'))
                  ->setIntegrityCheck(false)
-                 ->group('last_version.name');
+                 ->group('last_version.namespace_module');
 
         $select_all_extensions_sorted = 
             $this->select()
@@ -120,7 +120,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
                      'ec.id = all.category_id',
                      array('ec.class as category_class','ec.logo as category_logo')
                  )
-                 ->group('all.name')
+                 ->group('all.namespace_module')
                  ->order(array('installed DESC', 'price DESC'));
 
         return $this->fetchAll($select_all_extensions_sorted);
@@ -132,7 +132,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
             $this->select()
                  ->from($this->_name, array('name', 'edition', 'version' => new Zend_Db_Expr('max(version)')))
                  ->setIntegrityCheck(false)
-                 ->group(array('name', 'edition'));
+                 ->group(array('namespace_module', 'edition'));
         $identity = Zend_Auth::getInstance()->getIdentity();
         if(!is_object($identity) || 'admin' != $identity->group) {
             $sub_select->where('edition = ?', 'CE')
@@ -189,13 +189,13 @@ ORDER BY  `installed` DESC ,  `price` DESC
 	return $this->fetchRow($select);
     }
 
-    public function findByNameForEdition($name, $edition)
+    public function findByNamespaceAndEdition($namespace, $edition)
     {
         $select =
             $this->select()
                  ->setIntegrityCheck(false)
                  ->from($this->_name)
-                 ->where('name = ?', $name)
+                 ->where('namespace_module = ?', $namespace)
                  ->where('edition = ?', $edition)
                  ->order('version DESC');
 
