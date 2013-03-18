@@ -250,9 +250,9 @@ class Application_Model_Extension {
         return $this;
     }
 
-    public function findByNameForEdition($name, $edition)
+    public function findByNamespaceAndEdition($namespace, $edition)
     {
-        return $this->getMapper()->findByNameForEdition($name, $edition);
+        return $this->getMapper()->findByNamespaceAndEdition($namespace, $edition);
     }
 
     public function fetchAll()
