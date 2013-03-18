@@ -95,10 +95,10 @@ ORDER BY  `installed` DESC ,  `price` DESC
         // get also developer extensions for admins
         // get only CE extensions for non admin users
         if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
-            $select_allowed_for_store->where('edition = ?', 'CE');
             $select_allowed_for_store->where('is_dev IN (?)',array(0,1));
         } else {
-            $select_allowed_for_store->where('is_dev  = ? ',0);
+            $select_allowed_for_store->where('edition = ?', 'CE')
+                                     ->where('is_dev  = ? ',0);
         }
         $select_last_version_ids = 
             $this->select()
