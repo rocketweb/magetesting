@@ -250,6 +250,11 @@ class Application_Model_Extension {
         return $this;
     }
 
+    public function findByNamespaceAndEdition($namespace, $edition)
+    {
+        return $this->getMapper()->findByNamespaceAndEdition($namespace, $edition);
+    }
+
     public function fetchAll()
     {
         $extensions = array();
@@ -343,5 +348,75 @@ class Application_Model_Extension {
         }
         $model = new Application_Model_ExtensionScreenshot();
         return $model->fetchByExtensionId($id);
+    }
+
+    /**
+     * Clones extension and sets new version for cloned extension<br />
+     * You can specify id of extension to clone or just call that method on
+     * loaded extension
+     * @param int $id
+     * @param str $version - method requires version because it is important value
+     * @return boolean
+     */
+    public function addVersionToExtension($id = 0, $version) {
+        $id = (int)$id ? (int)$id : (int)$this->getId();
+        if(!$id) {
+            return false;
+        }
+
+        if((int)!$this->getId()) {
+            $this->find($id);
+        } else {
+            return false;
+        }
+
+        // reset id to create new record
+        $this->_id = NULL;
+        $this->setVersion($version);
+        $this->setExtension('');
+        $this->setExtensionEncoded('');
+        $this->save();
+
+        $new_extension_id = $this->getId();
+        // new version of given extension couldn't be saved
+        if(!$new_extension_id) {
+            return false;
+        }
+
+        try {
+            $image_path = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->getActionController()->view;
+            // copy logo image
+            $new_logo_filename = preg_replace('/\-(' . $id . ')\.(.*)$/i', '-'.$new_extension_id.'.$2', $this->getLogo());
+            if($new_logo_filename != $this->getLogo() && $new_logo_filename !== FALSE) {
+                $copy_from = $image_path->ImagePath($this->getLogo(), 'extension/logo');
+                $copy_to = $image_path->ImagePath($new_logo_filename, 'extension/logo');
+                if(copy($copy_from, $copy_to)) {
+                    $this->setLogo($new_logo_filename);
+                    $this->save();
+                }
+            }
+
+            // copy screenshots in table and in file structure
+            $screenshots = $this->fetchScreenshots($id);
+            foreach($screenshots as $screenshot) {
+                $new_screenshot_filename = preg_replace('/\-(' . $id . ')\.(.*)$/i', '-'.$new_extension_id.'.$2', $screenshot->getImage());
+                if($new_screenshot_filename != $screenshot->getImage() && $new_screenshot_filename !== FALSE) {
+                    $copy_from = $image_path->ImagePath($screenshot->getImage(), 'extension/screenshots');
+                    $copy_to = $image_path->ImagePath($new_screenshot_filename, 'extension/screenshots');
+                    if(copy($copy_from, $copy_to)) {
+                        $new_screenshot = new Application_Model_ExtensionScreenshot();
+                        $new_screenshot->setExtensionId($new_extension_id);
+                        $new_screenshot->setImage($new_screenshot_filename);
+                        $new_screenshot->save();
+                    }
+                }
+            }
+        }
+        catch(Exception $e) {
+            // revert changes
+            $this->delete($this->getId());
+            return false;
+        }
+        return true;
     }
 }
