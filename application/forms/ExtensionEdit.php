@@ -105,7 +105,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'required'   => false,
                 'allowEmpty' => true,
                 'validators' => array(
-                        array('Extension', false, 'gz')
+                        array('Extension', false, 'tgz,gz')
                 ),
                 'class'      => 'span4'
         ));
@@ -115,10 +115,13 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'required'   => false,
                 'allowEmpty' => true,
                 'validators' => array(
-                        array('Extension', false, 'gz')
+                        array('Extension', false, 'tgz,gz')
                 ),
                 'class'      => 'span4'
         ));
+        Zend_Validate_Abstract::setDefaultTranslator(new Zend_Translate('array', array(
+            Zend_Validate_File_Extension::FALSE_EXTENSION => 'File \'%value%\' has an invalid extension'
+        )));
 
         // Add logo element
         $this->addElement('hidden', 'logo', array(
