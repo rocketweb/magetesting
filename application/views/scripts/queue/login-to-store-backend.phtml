@@ -1,5 +1,6 @@
+<h2>Logging into backend...</h2>
+<h3>Please be patient while we are logging you into your store backend.</h3>
 <?php if($this->form): ?>
-<h2>Logging into backend</h2>
 <div class="hidden magento-form">
     <?php echo $this->form; ?>
 </div>
@@ -14,7 +15,6 @@ $(document).ready(function() {
 });
 </script>
 <?php else: ?>
-<h3>Redirecting.</h3>
 <script>
 $(document).ready(function() {
     setTimeout(function() { window.location = '<?php echo $this->store_url; ?>'; }, 1000);
