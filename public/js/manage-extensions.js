@@ -1,10 +1,32 @@
+(function($) {
+    $.fn.blink = function(blink_times, fade_time, target) {
+        if(blink_times === undefined || isNaN(fade_time)) {
+            blink_times = 1;
+        }
+        if(fade_time === undefined || isNaN(fade_time)) {
+            fade_time = 100;
+        }
+        if(target === undefined) {
+            target = this;
+        }
+        return target.each(function() {
+            var $this = $(this);
+            for(i = 0; i < blink_times; i++) {
+                $this.fadeOut(fade_time).fadeIn(fade_time);
+            }
+        });
+    }
+})(jQuery);
+
 $(document).ready(function() {
-    var $version_list_buttons = $('.version-list'),
+    var siteRoot = $('body').data('siteRoot'),
+        $version_list_buttons = $('.version-list'),
         $version_list_modal = $('.version-list-modal'),
         $version_list_modal_title = $version_list_modal.find('.modal-header h3'),
         $version_list_modal_table_body = $version_list_modal.find('tbody'),
         $version_list_modal_form = $version_list_modal.find('form'),
         $version_list_modal_version_field = $version_list_modal.find(':text'),
+        $version_list_modal_sync = $version_list_modal_version_field.next(),
         $version_list_modal_extension_field = $version_list_modal.find('input[type=hidden]');
 
     if($version_list_buttons.length) {
@@ -55,6 +77,37 @@ $(document).ready(function() {
         if(!$.trim($version_list_modal_extension_field.val()).length) {
             return false;
         }
+    });
+
+    $version_list_modal_sync.click(function() {
+        if(!$version_list_modal_sync.hasClass('disabled')) {
+            $version_list_modal_sync.addClass('disabled');
+            $.ajax({
+                url : siteRoot + '/extension/sync',
+                type : 'POST',
+                data : {
+                    extension_id : $version_list_modal_extension_field.val()
+                },
+                dataType : 'json',
+                success : function(result) {
+                    if(expectInObject(['status', 'message'], result)) {
+                        if('error' == result.status) {
+                            if(result.message) {
+                                alert(result.message);
+                            }
+                        } else {
+                            $version_list_modal_sync
+                                .blink(3, 100, $version_list_modal_version_field.val(result.message));
+                        }
+                    }
+                },
+                complete: function() {
+                    $version_list_modal_sync.removeClass('disabled');
+                }
+            });
+        }
+
+        return false;
     });
 });
 

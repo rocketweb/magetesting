@@ -8,6 +8,8 @@
  */
 class Application_Model_ExtensionVersionSynchronizer
 {
+    const EXTENSION_DOES_NOT_EXIST = -1;
+    const EXTENSION_IS_UP_TO_DATE = 0;
     protected $_extensions = array();
     protected $_extensions_cached_file = '';
 
@@ -61,7 +63,7 @@ class Application_Model_ExtensionVersionSynchronizer
     /**
      * @param string $extension - it should be namespace module from magento connect and not from extension file content
      * @param string $version - version of the actual extension
-     * @return false|string - false when extension version didn't change and new release version string when did
+     * @return int|string - self::EXTENSION_DOES_NOT_EXIST|self::EXTENSION_IS_UP_TO_DATE|new version string
      */
     public function checkVersion($extension, $version)
     {
@@ -72,7 +74,8 @@ class Application_Model_ExtensionVersionSynchronizer
             if($new_version != $version) {
                 return $new_version;
             }
+            return self::EXTENSION_IS_UP_TO_DATE;
         }
-        return false;
+        return self::EXTENSION_DOES_NOT_EXIST;
     }
 }

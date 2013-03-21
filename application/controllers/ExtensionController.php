@@ -457,6 +457,45 @@ class ExtensionController extends Integration_Controller_Action {
         );
     }
 
+    public function syncAction()
+    {
+        $this->_helper->viewRenderer->setNoRender(true);
+        $this->_helper->layout->disableLayout();
+
+        $request = $this->getRequest();
+        $response = new stdClass();
+        $response->status = 'error';
+        $response->message = '';
+
+        $extension_id = (int)$request->getParam('extension_id', 0);
+
+        if($request->isPost()) {
+            if($extension_id) {
+                $sync = new Application_Model_Extension();
+                $sync_message = $sync->synchronizeReleases($extension_id);
+                switch($sync_message) {
+                    case Application_Model_ExtensionVersionSynchronizer::EXTENSION_DOES_NOT_EXIST:
+                    case FALSE:
+                        $response->message = 'Extension does not exists.';
+                    break;
+                    case Application_Model_ExtensionVersionSynchronizer::EXTENSION_IS_UP_TO_DATE:
+                        $response->message = 'Extension is up to date.';
+                    break;
+                    default:
+                        $response->message = $sync_message;
+                    break;
+                }
+                if((int)$sync_message > 0) {
+                    $response->status = 'ok';
+                }
+            } else {
+                $response->message = 'No parameters.';
+            }
+        }
+
+        $this->getResponse()->setBody(json_encode($response));
+    }
+
     public function uploadAction()
     {
         $this->_helper->viewRenderer->setNoRender(true);
