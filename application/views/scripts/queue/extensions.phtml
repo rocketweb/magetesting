@@ -232,7 +232,10 @@
             <div class="control-group">
                 <div class="control-label">Fill version number to create new release based on the most recent one.</div>
                 <div class="controls">
-                    <input name="version" class="span2" type="text" placeholder="version number" />
+                    <div class="input-append">
+                        <input name="version" class="span2" type="text" placeholder="version number" />
+                        <button class="btn">Sync</button>
+                    </div>
                     <button type="submit" class="btn btn-success">Add release</button>
                 </div>
             </div>
