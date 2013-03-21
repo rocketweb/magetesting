@@ -476,7 +476,7 @@ class ExtensionController extends Integration_Controller_Action {
                 switch($sync_message) {
                     case Application_Model_ExtensionVersionSynchronizer::EXTENSION_DOES_NOT_EXIST:
                     case FALSE:
-                        $response->message = 'Extension does not exists.';
+                        $response->message = 'Extension does not exist.';
                     break;
                     case Application_Model_ExtensionVersionSynchronizer::EXTENSION_IS_UP_TO_DATE:
                         $response->message = 'Extension is up to date.';

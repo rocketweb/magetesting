@@ -4,7 +4,8 @@
  * Model fetches all magento extensions and caches them
  * also model has method which allows to check new version for given extension
  * @author Grzegorz <grzegorz@rocketweb.com>
- *
+ * in future it will be factory class which will choose whether load community
+ * synchronizer or dedicated for extension
  */
 class Application_Model_ExtensionVersionSynchronizer
 {
