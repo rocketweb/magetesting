@@ -3336,3 +3336,10 @@ label.error {
 .modal.version-list-modal .modal-footer .btn-success {
     margin-left: 5px;
 }
+
+/* manage extension new release came up */
+.new-release {
+    left: 5px;
+    position: absolute;
+    z-index: 10;
+}
