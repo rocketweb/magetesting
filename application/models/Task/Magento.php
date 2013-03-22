@@ -392,5 +392,12 @@ extends Application_Model_Task {
         
         
     }
+    
+    /**
+     * Sets Design -> Head -> Demo Notice to 'Yes'
+     */
+    protected function _activateDemoNotice(){
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'design/head/demonotice\',\'1\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
+    }
 }
         
