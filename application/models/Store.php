@@ -224,6 +224,9 @@ class Application_Model_Store {
         return $this;
     }
 
+    /**
+     * @return Application_Model_StoreMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

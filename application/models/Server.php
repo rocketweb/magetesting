@@ -95,6 +95,9 @@ class Application_Model_Server {
         return $this;
     }
 
+    /**
+     * @return Application_Model_ServerMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

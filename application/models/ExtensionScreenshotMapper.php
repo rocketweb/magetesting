@@ -16,6 +16,9 @@ class Application_Model_ExtensionScreenshotMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_ExtensionScreenshot
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

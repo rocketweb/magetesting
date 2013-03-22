@@ -117,6 +117,9 @@ class Application_Model_Coupon {
         return $this;
     }
     
+    /**
+     * @return Application_Model_CouponMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

@@ -125,6 +125,9 @@ class Application_Model_StoreExtension {
         return $this;
     }
 
+    /**
+     * @return Application_Model_StoreExtensionMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

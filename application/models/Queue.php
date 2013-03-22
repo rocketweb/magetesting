@@ -204,6 +204,9 @@ class Application_Model_Queue {
         return $this;
     }
 
+    /**
+     * @return Application_Model_QueueMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

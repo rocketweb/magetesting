@@ -445,6 +445,9 @@ class Application_Model_User {
         return $this;
     }
 
+    /**
+     * @return Application_Model_UserMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {
