@@ -111,7 +111,7 @@
                                 <a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
                             <?php endif; ?>
                             </div>
-                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''); ?>">
+                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''), ($item['status'] == 'downloading-magento' ? ' download-bar' : ''); ?>">
                                 <?php if($item['status'] == 'error'): ?>
                                 <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Please click on Help button above to submit a support ticket.'  ?>" data-trigger="hover">
                                 <?php endif; ?>
