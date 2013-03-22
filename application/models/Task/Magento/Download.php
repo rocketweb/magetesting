@@ -90,8 +90,7 @@ implements Application_Model_Task_Interface {
 
         // update backend admin password
         $this->_storeObject->setBackendPassword($this->_adminpass)->save();
-        //$set = array('backend_password' => $this->_adminpass);
-        //$where = array('domain = ?' => $this->_domain);
+        
         $this->logger->log('Changing store backend password.', Zend_Log::INFO);
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
 
@@ -102,6 +101,7 @@ implements Application_Model_Task_Interface {
         $this->_applyXmlRpcPatch();
 
         $this->logger->log('Changed owner of store directory tree.', Zend_Log::INFO);
+        $output=array();
         $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain;
         exec($command, $output);
         $message = var_export($output, true);
@@ -393,7 +393,15 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _createAdminUser(){
-               
+             
+        /* Update all current users with @example.com emails 
+         * this way, we wont duplicate emails 
+         * eg. when imported store has same email as MT user email
+         */
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
+                ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . 
+                ' -e "UPDATE admin_user SET email = CONCAT(\'user\',user_id,\'@example.com\');"');
+        
         /* add user */
         $password = $this->getHash($this->_adminpass,2);
         $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
