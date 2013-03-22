@@ -69,6 +69,9 @@ class Application_Model_Edition {
         return $this;
     }
 
+    /**
+     * @return Application_Model_EditionMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

@@ -226,6 +226,9 @@ class Application_Model_Extension {
         return $this;
     }
 
+    /**
+     * @return Application_Model_ExtensionMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

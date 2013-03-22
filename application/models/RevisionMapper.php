@@ -16,6 +16,9 @@ class Application_Model_RevisionMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Revision
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

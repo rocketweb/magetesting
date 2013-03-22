@@ -16,6 +16,9 @@ class Application_Model_StoreExtensionMapper{
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_StoreExtension
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

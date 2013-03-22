@@ -82,6 +82,9 @@ class Application_Model_Version {
         return $this;
     }
 
+    /**
+     * @return Application_Model_VersionMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

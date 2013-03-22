@@ -20,6 +20,9 @@ class Application_Model_PaymentMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Payment
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {
