@@ -16,6 +16,9 @@ class Application_Model_QueueMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Queue
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

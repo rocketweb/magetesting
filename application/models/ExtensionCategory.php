@@ -76,6 +76,9 @@ class Application_Model_ExtensionCategory {
         return $this;
     }
 
+    /**
+     * @return Application_Model_ExtensionCategoryMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

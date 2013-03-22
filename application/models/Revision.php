@@ -147,6 +147,9 @@ class Application_Model_Revision {
         return $this;
     }
 
+    /**
+     * @return Application_Model_RevisionMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

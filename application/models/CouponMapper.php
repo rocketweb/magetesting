@@ -17,6 +17,9 @@ class Application_Model_CouponMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Coupon
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

@@ -16,6 +16,9 @@ class Application_Model_VersionMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Version
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

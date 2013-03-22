@@ -17,6 +17,9 @@ class Application_Model_ExtensionCategoryMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_ExtensionCategory
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

@@ -191,6 +191,9 @@ class Application_Model_Plan {
         return $this;
     }
 
+    /**
+     * @return Application_Model_PlanMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

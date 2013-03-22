@@ -69,6 +69,9 @@ class Application_Model_ExtensionScreenshot {
         return $this;
     }
 
+    /**
+     * @return Application_Model_ExtensionScreenshotMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {

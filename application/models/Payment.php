@@ -216,6 +216,9 @@ class Application_Model_Payment {
         return $this;
     }
 
+    /**
+     * @return Application_Model_PaymentMapper
+     */
     public function getMapper()
     {
         if (null === $this->_mapper) {
