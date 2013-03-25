@@ -73,6 +73,10 @@ class QueueController extends Integration_Controller_Action {
                 }
             }
 
+            $user = $modelUser->find($this->auth->getIdentity()->id);
+            $modelPlan = new Application_Model_Plan();
+            $plan = $modelPlan->find($user->getPlanId());
+            
             if ($form->isValid($this->getRequest()->getParams())) {
                 //needs validation!
                 $storeModel = new Application_Model_Store();
@@ -88,10 +92,7 @@ class QueueController extends Integration_Controller_Action {
                             ->stores;
                 } else {
                     $modelUser = new Application_Model_User();
-                    $user = $modelUser->find($this->auth->getIdentity()->id);
-
-                    $modelPlan = new Application_Model_Plan();
-                    $plan = $modelPlan->find($user->getPlanId());
+                    
 
                     $maxStores = $plan->getStores();
                 }
