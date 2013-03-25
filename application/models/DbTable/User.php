@@ -21,12 +21,13 @@ class Application_Model_DbTable_User extends Zend_Db_Table_Abstract
         return $this->fetchRow($select);
     }
     
-    public function getStoreExtensionByUserId($extensionId, $userId) {
+    public function getStoreExtensionByUserId($storeDomain, $extensionId, $userId) {
         $select = $this->select()
                         ->setIntegrityCheck(false)
                         ->from(array('u' => $this->_name), array())
                         ->where('se.extension_id = ?', (int)$extensionId)
                         ->where('u.id = ?', (int)$userId)
+                        ->where('s.domain = ?', $storeDomain)
                         ->joinLeft(array('s' => 'store'), 'u.id = s.user_id', 's.id as store')
                         ->joinLeft(array('se' => 'store_extension'), 'se.store_id = s.id', array('se.reminder_sent', 'se.braintree_transaction_id'));
         

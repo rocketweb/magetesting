@@ -264,10 +264,12 @@ class UserController extends Integration_Controller_Action
 
                         // redirect back to page requested before login
                         $session = new Zend_Session_Namespace('after_login_redirect');
-                        if(isset($session->controller)) {
-                            $controller = $session->controller;
-                            $action = $session->action;
-                            unset($session->controller, $session->action);
+                        if(isset($session->url)) {
+                            $url = $session->url;
+                            // remove url from session
+                            unset($session->url);
+                            // redirect
+                            return $this->_helper->redirector->goToUrl($url);
                         }
 
                         return $this->_helper->redirector->gotoRoute(array(
