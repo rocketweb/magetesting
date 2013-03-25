@@ -473,19 +473,15 @@ class ExtensionController extends Integration_Controller_Action {
             if($extension_id) {
                 $sync = new Application_Model_Extension();
                 $sync_message = $sync->synchronizeReleases($extension_id);
-                switch($sync_message) {
-                    case Application_Model_ExtensionVersionSynchronizer::EXTENSION_DOES_NOT_EXIST:
-                    case FALSE:
-                        $response->message = 'Extension does not exist.';
-                    break;
-                    case Application_Model_ExtensionVersionSynchronizer::EXTENSION_IS_UP_TO_DATE:
-                        $response->message = 'Extension is up to date.';
-                    break;
-                    default:
-                        $response->message = $sync_message;
-                    break;
-                }
-                if((int)$sync_message > 0) {
+                if(
+                    $sync_message === Application_Model_ExtensionVersionSynchronizer::EXTENSION_DOES_NOT_EXIST ||
+                    $sync_message === FALSE
+                ) {
+                    $response->message = 'Extension does not exist.';
+                } elseif($sync_message === Application_Model_ExtensionVersionSynchronizer::EXTENSION_IS_UP_TO_DATE) {
+                    $response->message = 'Extension is up to date.';
+                } else {
+                    $response->message = $sync_message;
                     $response->status = 'ok';
                 }
             } else {
