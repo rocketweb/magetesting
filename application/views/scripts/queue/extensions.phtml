@@ -4,6 +4,10 @@
     // because we have extensions and extension controller
     // change extensions ( guest access ) to frontend
     $page_type = ('extensions' == $page_type ? 'frontend' : $page_type);
+    // new release synchroznicer
+    if('extension' == $page_type) {
+        $sync = new Application_Model_ExtensionVersionSynchronizer();
+    }
 ?>
 <div class="row">
     <div class="span12">
@@ -108,6 +112,9 @@
                             data-store-extension-id="<?php echo $extension['store_extension_id']; ?>"
                         <?php endif; ?>
                         >
+                        <?php if('extension' == $page_type && 1 == (int)$sync->checkVersion($extension['namespace_module'], $extension['version'])): ?>
+                            <div class="new-release"><i class="icon-retweet"></i></div>
+                        <?php endif; ?>
                             <div class="wrapper">
                                 <!-- removing this one for now until some workaround is found -->
                                     <!--<div class="hover_inner_shadow"></div>-->
@@ -232,7 +239,10 @@
             <div class="control-group">
                 <div class="control-label">Fill version number to create new release based on the most recent one.</div>
                 <div class="controls">
-                    <input name="version" class="span2" type="text" placeholder="version number" />
+                    <div class="input-append">
+                        <input name="version" class="span1" type="text" placeholder="version" />
+                        <button class="btn">Get latest</button>
+                    </div>
                     <button type="submit" class="btn btn-success">Add release</button>
                 </div>
             </div>
