@@ -104,6 +104,7 @@ class QueueController extends Integration_Controller_Action {
                             ->setUserId($userId)
                             ->setServerId($this->auth->getIdentity()->server_id)
                             ->setSampleData($form->sample_data->getValue())
+                            ->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue())
                             ->setStoreName($form->store_name->getValue())
                             ->setDomain(
                                     substr(

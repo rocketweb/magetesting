@@ -62,7 +62,8 @@ class Application_Model_PlanMapper {
               ->setBillingPeriod($row->billing_period)
               ->setBillingDescription($row->billing_description)
               ->setIsHidden($row->is_hidden)
-              ->setAutoRenew($row->auto_renew);
+              ->setAutoRenew($row->auto_renew)
+        	  ->setCanDoDbRevert($row->can_do_db_revert);
         
         return $plan;
     }
@@ -93,7 +94,8 @@ class Application_Model_PlanMapper {
                   ->setBillingPeriod($row->billing_period)
                   ->setBillingDescription($row->billing_description)
                   ->setIsHidden($row->is_hidden)
-                  ->setAutoRenew($row->auto_renew);
+                  ->setAutoRenew($row->auto_renew)
+            	  ->setCanDoDbRevert($row->can_do_db_revert);
             $entries[] = $entry;
         }
         return $entries;
@@ -116,7 +118,8 @@ class Application_Model_PlanMapper {
                   ->setBillingPeriod($row->billing_period)
                   ->setBillingDescription($row->billing_description)
                   ->setIsHidden($row->is_hidden)
-                  ->setAutoRenew($row->auto_renew);
+                  ->setAutoRenew($row->auto_renew)
+            	  ->setCanDoDbRevert($row->can_do_db_revert);
             $entries[] = $entry;
         }
         return $entries;
@@ -142,7 +145,8 @@ class Application_Model_PlanMapper {
               ->setBillingPeriod($row->billing_period)
               ->setBillingDescription($row->billing_description)
               ->setIsHidden($row->is_hidden)
-              ->setAutoRenew($row->auto_renew);
+              ->setAutoRenew($row->auto_renew)
+        	  ->setCanDoDbRevert($row->can_do_db_revert);
         return $entry;
 
     }

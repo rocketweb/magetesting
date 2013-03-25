@@ -29,6 +29,8 @@ class Application_Model_Plan {
     protected $_is_hidden;
 
     protected $_auto_renew;
+    
+    protected $_can_do_db_revert;
 
     protected $_mapper;
 
@@ -185,6 +187,17 @@ class Application_Model_Plan {
         return $this->_auto_renew;
     }
     
+    public function setCanDoDbRevert($value)
+    {
+    	$this->_auto_renew = ((int)$value ? 1 : 0);
+    	return $this;
+    }
+    
+    public function getCanDoDbRevert()
+    {
+    	return $this->_can_do_db_revert;
+    }
+    
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -240,7 +253,8 @@ class Application_Model_Plan {
             'price'     => $this->getPrice(),
             'price_description'     => $this->getPriceDescription(),
             'is_hidden' => $this->getIsHidden(),
-            'auto_renew' => $this->getAutoRenew()
+            'auto_renew' => $this->getAutoRenew(),
+        	'can_do_db_revert' => $this->getCanDoDbRevert() 	
         );
     }
     
