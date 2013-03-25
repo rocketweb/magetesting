@@ -18,18 +18,32 @@
                         <legend>Personal Details</legend>
                         <div class="row">
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['first_name']) ? 'error' : ''); ?>">
                                     <label for="customer_first_name" class="control-label required">First Name</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][first_name]" id="customer_first_name" value="<?php echo $this->address['first_name']; ?>" />
+                                        <?php if(isset($this->errors['first_name'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['first_name'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['last_name']) ? 'error' : ''); ?>">
                                     <label for="customer_last_name" class="control-label required">Last Name</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][last_name]" id="customer_last_name" value="<?php echo $this->address['last_name']; ?>" />
+                                        <?php if(isset($this->errors['last_name'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['last_name'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -38,28 +52,49 @@
                         <h4>Billing Address</h4>
                         <div class="row">
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['street_address']) ? 'error' : ''); ?>">
                                     <label for="billing_street_address" class="control-label required">Street Address</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][street_address]" id="billing_street_address" value="<?php echo $this->address['street']; ?>" />
+                                        <?php if(isset($this->errors['street_address'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['street_address'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['postal_code']) ? 'error' : ''); ?>">
                                     <label for="billing_postal_code" class="control-label required">Zip / Postal Code</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][postal_code]" id="billing_postal_code" value="<?php echo $this->address['postal_code']; ?>" />
+                                        <?php if(isset($this->errors['postal_code'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['postal_code'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['locality']) ? 'error' : ''); ?>">
                                     <label for="billing_locality" class="control-label required">City</label>
                                     <div class="controls">
                                         <input class="span4"  type="text" name="transaction[billing][locality]" id="billing_locality" value="<?php echo $this->address['city']; ?>" />
+                                        <?php if(isset($this->errors['locality'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['locality'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -85,16 +120,23 @@
                                 </div>
                             </div>
                             <div class="span4">
-                                <div class="control-group">
+                                <div class="control-group <?php echo (isset($this->errors['region']) ? 'error' : ''); ?>">
                                     <label for="billing_region" class="control-label required">State / Province</label>
                                     <div class="controls" id="region">
                                         <select name="transaction[billing][region]" id="billing_region" class="select-state span4">
-                                            <option value="Select State" label="Select State">Select State</option>
+                                            <option value="">Select State</option>
                                             <?php foreach (RocketWeb_List::getStatesOfAmerica() as $state): ?>
                                                 <option value="<?php echo $state; ?>" label="<?php echo $state; ?>" <?php echo $state == $this->address['state'] ? 'selected="selected"' :''; ?>><?php echo $state; ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                         <input class="input-state span4"  type="text" name="transaction[billing][region]" id="billing_region" value="<?php echo $this->address['state']; ?>" style="display: none" />
+                                        <?php if(isset($this->errors['region'])): ?>
+                                        <ul class="errors">
+                                            <?php foreach($this->errors['region'] as $error): ?>
+                                            <li><?php echo $error; ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -125,13 +167,13 @@
                                 <div class="control-group <?php echo (isset($this->errors['exp_date']) ? 'error' : ''); ?>">
                                     <label for="braintree_credit_card_exp" class="control-label required">Credit Card Expiration</label>
                                     <div class="controls">
-                                        <select class="span2" id="exp-date-month">
+                                        <select class="span2" id="exp-date-month" name="exp-date-month">
                                             <option value="">Month</option>
                                         <?php for($i = 1; $i < 13; $i++): ?>
                                             <option value="<?php echo ($i < 10 ? '0'.$i : $i); ?>"><?php echo ($i < 10 ? '0'.$i : $i), ' - ', date('F', mktime(0,0,0,$i,1));?></option>
                                         <?php endfor; ?>
                                         </select>
-                                        <select class="span1" id="exp-date-year">
+                                        <select class="span1" id="exp-date-year" name="exp-date-year">
                                             <option value="">Year</option>
                                         <?php for($i = date('Y'); $i < (int)date('Y')+11; $i++): ?>
                                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
@@ -170,7 +212,7 @@
                     <?php endif; ?>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-inverse pull-right">
-                            <i class="icon-white icon-ok"></i>&nbsp;Pay
+                            <i class="icon-white icon-ok"></i>&nbsp;Purchase
                         </button>
                     <?php if(!$this->show_billing_and_card): ?>
                         <p class="pull-right braintree-vault-note">

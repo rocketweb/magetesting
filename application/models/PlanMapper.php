@@ -20,6 +20,9 @@ class Application_Model_PlanMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Plan
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

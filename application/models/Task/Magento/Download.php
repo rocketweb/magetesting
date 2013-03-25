@@ -90,8 +90,7 @@ implements Application_Model_Task_Interface {
 
         // update backend admin password
         $this->_storeObject->setBackendPassword($this->_adminpass)->save();
-        //$set = array('backend_password' => $this->_adminpass);
-        //$where = array('domain = ?' => $this->_domain);
+        
         $this->logger->log('Changing store backend password.', Zend_Log::INFO);
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
 
@@ -102,6 +101,7 @@ implements Application_Model_Task_Interface {
         $this->_applyXmlRpcPatch();
 
         $this->logger->log('Changed owner of store directory tree.', Zend_Log::INFO);
+        $output=array();
         $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain;
         exec($command, $output);
         $message = var_export($output, true);
@@ -109,7 +109,7 @@ implements Application_Model_Task_Interface {
         unset($output);
 
         $this->_updateCoreConfigData();
-
+		$this->_updateStoreConfigurationEmails();
         $this->_createAdminUser();
 
         $this->_importAdminFrontname();
@@ -260,6 +260,13 @@ implements Application_Model_Task_Interface {
                 exec('sudo echo \''.$line.'\' >> '.$this->_storeFolder . '/' . $this->_domain . '/media/.htaccess');
             }
             
+            /**
+            * This line is here to prevent:
+            * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
+            * when vsftpd is set to use chroot list
+            */
+            exec('sudo chmod a-w '.$this->_storeFolder.'');
+            
         }
         
         
@@ -351,6 +358,7 @@ implements Application_Model_Task_Interface {
         }
         
         file_put_contents($this->_storeFolder.'/'.$this->_domain.'/downloader/connect.cfg', $header.serialize($connect_cfg));
+        $this->_updateConnectFiles();
     }
 
     protected function _updateCoreConfigData() {
@@ -382,7 +390,15 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _createAdminUser(){
-               
+             
+        /* Update all current users with @example.com emails 
+         * this way, we wont duplicate emails 
+         * eg. when imported store has same email as MT user email
+         */
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
+                ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . 
+                ' -e "UPDATE admin_user SET email = CONCAT(\'user\',user_id,\'@example.com\');"');
+        
         /* add user */
         $password = $this->getHash($this->_adminpass,2);
         $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
@@ -473,6 +489,8 @@ implements Application_Model_Task_Interface {
      
         $where = array('id = ?' => $this->_storeObject->getId());
         $this->db->update('store', $set, $where);
+        
+        $this->_storeObject->setBackendName($frontname)->save();
     }
     
     protected function _cleanLogTables(){
@@ -532,15 +550,26 @@ implements Application_Model_Task_Interface {
         }
         unset($output);
         if ($unpacked) {
-            exec('find . -type f -name "*.sql" -and -not -path "*lib*" -and -not -name "keyset*"', $output);
+            $command = 'find . -type f -name "*.sql" -and -not -path "*lib*" -and -not -name "keyset*"';
+            exec($command, $output);
+            $this->logger->log($command, Zend_Log::DEBUG);
             $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
             /* no matches found */
             if (count($output) == 0) {
-                throw new Application_Model_Task_Exception('sql file has not been found in given package');
+                
+                unset($output);
+                //there is no custom made sql, try to look for one that contains create statements:
+                $command = "sudo grep -lir 'CREATE TABLE `admin_role`' . | grep 'backups'";
+                exec($command, $output);
+                $this->logger->log($command, Zend_Log::DEBUG);
+                $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
+                if (count($output) == 0) {
+                    throw new Application_Model_Task_Exception('sql file has not been found in given package');
+                }
             }
 
-            foreach ($output as $line) {
-                if (substr($line, -4) == '.sql') {
+            foreach ($output as $line) {               
+                if (substr($line, -4) == '.sql' || strstr($line,'/var/backups/')) {
                     $this->_customSql = str_replace('./', '', $line);
                     break;
                 }

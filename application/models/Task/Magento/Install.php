@@ -52,17 +52,23 @@ implements Application_Model_Task_Interface {
 
         $this->_applyXmlRpcPatch();
 
+        $this->_updateStoreConfigurationEmails();
+        
         $this->_disableAdminNotifications();
         $this->_disableStoreCache();
         $this->_enableLogging();
-
-        $this->_createSymlink();
-        
+      
         chdir($startCwd);
 
         $this->_reindexStore();
         
         $this->_createLocalXml();
+        
+        if ($this->_storeObject->getEdition()=='EE'){
+            $this->_updateAdminAccount();
+        }
+        
+        $this->_fixUserHomeChmod();
         
         $this->_sendStoreReadyEmail();
     }
@@ -81,12 +87,14 @@ implements Application_Model_Task_Interface {
             throw new Application_Model_Task_Exception($message);
         }
 
-        $this->logger->log('Preparing store directory.', Zend_Log::INFO);
-        exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
-        $message = var_export($output, true);
-                
-        $this->logger->log($message, Zend_Log::DEBUG);
-        unset($output);
+        if (!file_exists($this->_storeFolder . '/' . $this->_domain)){
+            $this->logger->log('Preparing store directory.', Zend_Log::INFO);
+            exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
+            $message = var_export($output, true);
+
+            $this->logger->log($message, Zend_Log::DEBUG);
+            unset($output);
+        }
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain) || !is_dir($this->_storeFolder . '/' . $this->_domain)) {
             $message = 'Store directory does not exist, aborting.';
@@ -229,7 +237,6 @@ implements Application_Model_Task_Interface {
             unset($output);
         }
         
-        
     }
 
     protected function _setupMagentoConnect() {
@@ -276,6 +283,8 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         }
         file_put_contents($this->_storeFolder . '/' . $this->_domain . '/downloader/connect.cfg', $header . serialize($connect_cfg));
         // end
+        
+        $this->_updateConnectFiles();
     }
 
     protected function _disableAdminNotifications() {
@@ -329,9 +338,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
 
         // update backend admin password
         $this->logger->log('Changing store backend password.', Zend_Log::INFO);
-        $set = array('backend_password' => $this->_adminpass);
-        $where = array('domain = ?' => $this->_domain);
-        $this->db->update('store', $set, $where);
+        $this->_storeObject->setBackendPassword($this->_adminpass)->save();
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
         // end
         
@@ -369,6 +376,22 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         }
         
         file_put_contents($localXmlPath, $data, $flag);
+    }
+    
+    protected function _updateAdminAccount() {
+        $timestamp = strtotime('+1 year');
+        
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname 
+                . ' -e \'UPDATE enterprise_admin_passwords SET expires = \''.$timestamp.'\' \'');
+    }
+    
+    protected function _fixUserHomeChmod(){
+        /**
+         * This line is here to prevent:
+         * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
+         * when vsftpd is set to use chroot list
+         */
+        exec('sudo chmod a-w '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin().'');
     }
     
 }

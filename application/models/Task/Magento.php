@@ -74,6 +74,9 @@ extends Application_Model_Task {
         
     }
     
+    /**
+     * @deprecated: since we're having per-user-vhosts, we don't need symlinks
+     */
     protected function _createSymlink(){
         $domain = $this->_storeObject->getDomain();
         $this->logger->log('Added symbolic link for store directory.', Zend_Log::INFO);
@@ -84,7 +87,6 @@ extends Application_Model_Task {
     
     /**
      * Creates system account for user during store installation (in worker.php)
-     * TODO: Same Method exists in MgentoInstall And MagentoDownload, 
      */
     protected function _createSystemAccount() {
         if ($this->_userObject->getHasSystemAccount() == 0) {
@@ -149,6 +151,7 @@ extends Application_Model_Task {
             
             $this->_createUserTmpDir();
             $this->_createVirtualHost();
+            $this->_setUserQuota();
         }
     }
     
@@ -262,8 +265,12 @@ extends Application_Model_Task {
         exec('sudo chmod 644 /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini');
         
         $content = "<VirtualHost *:80>
+            SetEnv TMPDIR /home/".$this->config->magento->userprefix . $this->_dbuser."/tmp/
             ServerAdmin support@magetesting.com
             ServerName ".$this->_dbuser.".".$this->_serverObject->getDomain()."
+
+            ErrorLog /home/".$this->config->magento->userprefix . $this->_dbuser."/error.log
+            CustomLog /home/".$this->config->magento->userprefix . $this->_dbuser."/access.log combined
 
             Alias /fcgi-bin/ /home/www-data/".$this->config->magento->userprefix . $this->_dbuser."/
             SuexecUserGroup ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
@@ -275,12 +282,20 @@ extends Application_Model_Task {
                     Order allow,deny
                     allow from all
             </Directory>
+
         </VirtualHost>";
         
         file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
         
         exec('sudo a2ensite '.$this->_dbuser.'.'.$this->_serverObject->getDomain());
         exec('sudo /etc/init.d/apache2 reload');
+        
+        $redirector = '<?php '.
+        PHP_EOL.'header("Location: ' . $this->config->magento->storeUrl . '/user/dashboard");';
+        $fileLocation = '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/index.php';
+        file_put_contents($fileLocation, $redirector);
+        exec('sudo chmod a+x '.$fileLocation);
+        exec('sudo chown '.$this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser.' '.$fileLocation);
     }
     
     protected function _createUserTmpDir(){
@@ -324,7 +339,69 @@ extends Application_Model_Task {
 
     /* Running this prevents store from reindex requirement in admin */
     protected function _reindexStore(){
-        exec('php /home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php --reindex all');
+        exec('sudo -u '.$this->config->magento->userprefix . $this->_dbuser.' -s php /home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php --reindex all');
+    }
+    
+    protected function _setUserQuota(){
+        //4GB soft limit
+        //5GB hard limit
+        exec("sudo quotatool".
+        " -u ".$this->config->magento->userprefix . $this->_dbuser.
+        " -bq 4000M". //soft limit
+        " -l '5000 Mb'". //hard limit 
+        " /");
+        
+        //set grace time (0seconds mean instant)
+        exec("sudo quotatool -u ".$this->config->magento->userprefix . $this->_dbuser." -b -t '0 seconds' /");
+    }
+    
+    /**
+     * The purpose of this method is to replace calls to sys_get_temp dir()
+     * with calls to getenv('TMPDIR')
+     * Each user virtualhost was equipped with 
+     * SetEnv TMPDIR /home/$sysuser/tmp/
+     * to handle this correctly
+     */
+    protected function _updateConnectFiles(){
+       
+        if ($this->_versionObject->getVersion() > '1.4.2.0'){
+            $files_to_update = array(
+                'downloader/Maged/Model/Config/Abstract.php',
+                'downloader/Maged/Model/Connect.php',
+                'downloader/Maged/Controller.php',
+                'downloader/lib/Mage/Connect/Packager.php',
+                'downloader/lib/Mage/Connect/Command/Registry.php',
+                'downloader/lib/Mage/Connect/Config.php',
+                'downloader/lib/Mage/Connect/Loader/Ftp.php'
+            );
+
+            foreach ($files_to_update as $file){
+                $fileContents = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file);
+                $fileContents = str_replace("sys_get_temp_dir()", "getenv('TMPDIR')", $fileContents);
+                file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
+            }
+            
+            //fix cokie path and followlocation for our hosts, we dont need it here and it causes warnings
+            $file = $this->_storeFolder . '/' . $this->_domain.'/downloader/lib/Mage/HTTP/Client/Curl.php';
+            $fileContents = file_get_contents($file);
+            $fileContents = str_replace("const COOKIE_FILE = 'var/cookie';", "const COOKIE_FILE = '".$this->_storeFolder . "/" . $this->_domain."/var/cookie';", $fileContents);
+            $fileContents = str_replace('$this->curlOption(CURLOPT_FOLLOWLOCATION, 1);', '$this->curlOption(CURLOPT_FOLLOWLOCATION, 0);', $fileContents);
+            file_put_contents($file, $fileContents);
+            
+        } 
+        
+        
+    }
+    
+    protected function _updateStoreConfigurationEmails(){
+    	$userEmail = $this->_userObject->getEmail();
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_general/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_sales/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_support/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom1/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom2/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'contacts/email/recipient_email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	unset($userEmail);
     }
 }
         

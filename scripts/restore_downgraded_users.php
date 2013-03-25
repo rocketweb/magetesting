@@ -6,6 +6,7 @@ $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('user')
     ->joinLeft('store','user.id = store.user_id', 'domain')
+    ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->where('store.status = ?', 'ready')
     ->where('TIMESTAMPDIFF(SECOND, \''.date("Y-m-d H:i:s").'\', user.plan_active_to) > ?', 0)
     ->where('user.downgraded = ?', 1);
@@ -17,11 +18,11 @@ if($result) {
         if(!isset($restore_by_id[$store['id']])) {
             $restore_by_id[$store['id']] = null;
         }
-        if(!is_link(STORE_PATH.$store['domain'])) {
-            $storeFolder = $config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$store['login'].'/public_html';
-            exec('ln -s '.$storeFolder.'/'.$store['domain'].' '.STORE_PATH.$store['domain']);
-        }
+            
+        /* enable user vhost */
+        exec('sudo a2ensite '.$store['login'].'.'.$store['server_domain']);
     }
+    
     if($restore_by_id) {
         $set = array(
                 'group' => 'commercial-user',
@@ -31,7 +32,8 @@ if($result) {
         $user_ids = array_keys($restore_by_id);
         
         $where = array('id IN (?)' => $user_ids);
-        //echo 'Update: '.$db->update('user', $set, $where).PHP_EOL;
+        $result = $db->update('user', $set, $where);
+        echo 'Update: '.$result.PHP_EOL;
         $log->log('Restored '.count($restore_by_id).' users', Zend_Log::INFO);
         
         foreach($user_ids as $user_id){
@@ -51,6 +53,8 @@ if($result) {
                 $modelUser->enablePhpmyadmin();
             }
         }       
+        
+        exec('sudo /etc/init.d/apache2 reload');
     }
 } else {
     //$log->log('There is no downgraded user to restore.', Zend_Log::INFO);

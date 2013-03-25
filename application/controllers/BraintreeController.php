@@ -218,8 +218,7 @@ class BraintreeController extends Integration_Controller_Action
 
         $pay_for = $this->_getParam('pay-for');
         $id = (int)$this->_getParam('id', 0);
-        $this->view->domain = $domain = $this->_getParam('domain');
-
+        $this->view->domain = $domain = $this->_getParam('domain'); 
         try {
             // check whether GET params are ok
             if(!in_array($pay_for, array('plan', 'extension', 'change-plan'))) {
@@ -441,6 +440,30 @@ class BraintreeController extends Integration_Controller_Action
                 foreach($braintree_result->errors->deepAll() as $error) {
                     $field_key = '';
                     switch($error->code) {
+                        case 81805:
+                            $field_key = 'first_name';
+                        break;
+                        case 81806:
+                            $field_key = 'last_name';
+                        break;
+                        case 81807:
+                            $field_key = 'locality';
+                        break;
+                        case 81808:
+                        case 81809:
+                        case 81813:
+                            $field_key = 'postal_code';
+                        break;
+                        case 81813:
+                            $field_key = 'locality';
+                        break;
+                        case 81810:
+                            $field_key = 'region';
+                        break;
+                        case 81811:
+                        case 81812:
+                            $field_key = 'street_address';
+                        break;
                         case 81709:
                         case 81710:
                             $field_key = 'exp_date';

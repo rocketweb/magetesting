@@ -1,4 +1,70 @@
 $(document).ready(function () {
+    if($('#payment-form').length) {
+        $('#payment-form').validate({
+            errorClass: 'error',
+            rules: {
+                'transaction[billing][first_name]': { 
+                    required: true,
+                    maxlength: 254 
+                },
+                'transaction[billing][last_name]': { 
+                    required: true,
+                    maxlength: 254 
+                },
+                'transaction[billing][street_address]': { 
+                    required: true,
+                    maxlength: 254 
+                },
+                'transaction[billing][postal_code]': { 
+                    required: true 
+                },
+                'transaction[billing][locality]': { 
+                    required: true,
+                    maxlength: 254 
+                },
+                'transaction[billing][country_name]': {
+                    required: true
+                },
+                'transaction[billing][region]': {
+                    required: true
+                },
+                'transaction[credit_card][number]': {
+                    required: true,
+                    rangelength: [12, 19]
+                },
+                'transaction[credit_card][cvv]': {
+                    required: true,
+                    rangelength: [3, 4],
+                    number: true
+                },
+                'exp-date-month': {
+                    required: true
+                },
+                'exp-date-year': {
+                    required: true
+                }
+            },
+            errorPlacement: function(error, element) {
+                if(error.html()) {
+                    element.parents('.control-group').addClass("error");
+                } 
+                
+                if(element.attr("name") != "exp-date-month") {
+                    error.insertAfter(element);
+                }
+                
+            },
+            messages: {
+                'transaction[credit_card][number]': {
+                  rangelength: "Credit card number must be 12-19 digits."
+                }
+            },
+            unhighlight: function(element) {
+                $(element).parents('.control-group').removeClass("error");
+            }
+        });
+
+    }
 
     var siteRoot = $('body').data('siteRoot');
     /*
@@ -8,6 +74,7 @@ $(document).ready(function () {
      */
     var $braintree_billing_details = $('.braintree-billing-details'),
         $prefilled_data = $braintree_billing_details.find('#has-prefilled-data');
+
 
     if($braintree_billing_details.length) {
         $braintree_billing_details.parents('form:first').submit(function() {
@@ -22,17 +89,17 @@ $(document).ready(function () {
             }
 
             $process_form = true;
-            if(!$exp_date_month.val().length) {
-                $exp_date_month.focus();
-                $process_form = false;
-            }
-            if(!$exp_date_year.val().length) {
-                /* let month be focused first on error */
-                if($process_form) {
-                    $exp_date_year.focus();
-                }
-                $process_form = false;
-            }
+//            if(!$exp_date_month.val().length) {
+//                $exp_date_month.focus();
+//                $process_form = false;
+//            }
+//            if(!$exp_date_year.val().length) {
+//                /* let month be focused first on error */
+//                if($process_form) {
+//                    $exp_date_year.focus();
+//                }
+//                $process_form = false;
+//            }
 
             /* stop submitting if cc exp date is wrong */
             if(!$process_form) {
@@ -42,7 +109,7 @@ $(document).ready(function () {
                 $braintree_exp_date.val($exp_date_month.val() + '/' + $exp_date_year.val());
             }
 
-            $submit.addClass('disabled');
+//            $submit.addClass('disabled');
 
             // do not save address to my-account if form was prefilled using data from my-account
             if(!$prefilled_data.length) {
@@ -89,7 +156,10 @@ $(document).ready(function () {
         placement: 'left'
     });
     $('.tooltip-top').tooltip({
-        placement: 'top'
+        placement: 'top',
+        title: function() {
+            return $(this).data('tooltip-title');
+        }
     });
     
     /* prevent click event and init popover */
@@ -234,9 +304,15 @@ $(document).ready(function () {
     }
 
     if($admin_panel.length) { 
-        $admin_panel.click(function(e) { 
-        // stop bootstrap collapsing 
-        e.stopPropagation();
+        $admin_panel.click(function(e) {
+            var $this = $(this);
+            if(!$this.hasClass('disabled')) {
+                $this.addClass('disabled');
+                window.open($this.attr('href'), '_blank');
+                $this.removeClass('disabled');
+            }
+            // stop bootstrap collapsing
+            return false;
         })
     }
 
@@ -248,10 +324,25 @@ $(document).ready(function () {
         $extensions_filters = '',
         ElementPad        = 5,
         ElementWidth      = 135 + (ElementPad * 2),
-        ElementHeight     = 112,
-        ColumnWidth       = ElementWidth + ElementPad,
-        RowHeight         = ElementHeight + ElementPad;
+        ElementHeight     = 112;
+	
+	
+	/* MEDIA QUERIES HACK */
+	var wellWidth = $('.extensions_well').width();
+	if(wellWidth < 300){
+		ElementWidth = wellWidth - (ElementPad * 2);
+	} else if(wellWidth < 500){
+		ElementPad = 4;
+    	ElementWidth = 184;
+    } else if(wellWidth < 650){
+    	ElementWidth = 246;
+    } else if(wellWidth < 900){
+    	ElementWidth = 166;
+    }
 
+    var ColumnWidth       = ElementWidth + ElementPad,
+    	RowHeight         = ElementHeight + ElementPad;
+    	
     if($extensions_isotope.length) {
         $extensions_isotope.imagesLoaded(function() {
             $('.element.premium .wrapper div.icon').css({
@@ -283,6 +374,7 @@ $(document).ready(function () {
                 rowHeight : RowHeight * 2
               }
         });
+        
         $extensions_filter_options.click(function(e) {
             var $this = $(this);
             var $dropdown = $this.parent().parent();
@@ -380,7 +472,7 @@ $(document).ready(function () {
             }
         });
     }
-    
+
     // EVENT: On click "Install" button
     $('.install').click(function(event){
         "use strict";
@@ -392,7 +484,12 @@ $(document).ready(function () {
             type    : 'POST',
             data    : {extension_id : $this.data('install-extension')},
             success : function(response) {
-                $this.addClass('hidden').prev('.progress').removeClass('hidden');
+                if(response != 'error' && response != '') {
+                    var $replacement = $('<span class="label update-status label-info pull-right">Pending</span>');
+                    $this.replaceWith($replacement);
+                    $replacement.parents('.element:first').data('store-extension-id', response);
+                    f_update_status($replacement);
+                }
             }
         });
         
@@ -524,12 +621,7 @@ $(document).ready(function () {
         $extensions_isotope.isotope('reLayout');
     });
     /* STORE EXTENSIONS ISOTOPE */
-    
-    /* update progress bar when store extension is installing */
-    progressBarExtension('show');
-    setInterval(function(){ progressBarExtension('update') }, 30000);
-    
-    
+
     /* payment form - display dropdown for US and text field for all other countries */
     changeInputSelect();    
         
@@ -578,19 +670,44 @@ $(document).ready(function () {
                 0
         });
     });
-});
 
-function progressBarExtension(param) {
-    $('div.extras div.progress').each(function() {
-        if(!$(this).hasClass('hidden')) {
-            if(param == 'update')
-                location.reload();
-            
-            if(param == 'show')
-                $(this).parent().parent().click();
-        }
-    });
-}
+    /* Store extensions status updater */
+    var f_update_status = function($element) {
+        setTimeout(function() {
+            $.ajax({
+                url : siteRoot + '/queue/getstatus',
+                type : 'POST',
+                dataType : 'json',
+                data : { extension_id : $element.parents('.element:first').data('store-extension-id') },
+                success: function(response) {
+                    var $replacement = [];
+                    if(response == 'processing') {
+                        $replacement = $('<span class="label update-status label-important pull-right">Installing</span>');
+                        f_update_status($replacement);
+                    } else if(response == 'ready') {
+                        $replacement = $('<span class="label update-status label-success pull-right">Success</span>');
+                        setTimeout(function() { location.reload(); }, 500);
+                    } else {
+                        f_update_status($element);
+                    }
+
+                    if($replacement.length) {
+                        $element.replaceWith($replacement);
+                    }
+                }
+            });
+        }, 5000);
+    };
+    $status_labels = $('.update-status');
+    if($status_labels.length) {
+        $status_labels.each(function(k, e) {
+            $element = $(e);
+            $element.parents('.element').addClass('large').find('.extras').removeClass('hidden');
+            f_update_status($element);
+        });
+        $extensions_isotope.isotope('reLayout');
+    }
+});
 
 function changeInputSelect() {
     if( $('.form-stacked.form-input-select select.select-country').val() == 'United States' ) {

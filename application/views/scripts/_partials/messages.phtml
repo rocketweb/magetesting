@@ -14,9 +14,9 @@
             break;
         }
     ?>
-        <div class="alert <?php echo $class; ?> alert-login" data-dismiss="alert">
+        <div class="alert <?php echo $class; ?> alert-login">
             <?php if($this->url() !== '/user/login'):?>
-            <a class="close" href="#">&times;</a>
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
             <?php endif; ?>
             
             <?php if(isset($msg['from_scratch']) and $msg['from_scratch']): ?>

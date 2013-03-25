@@ -3,13 +3,17 @@
 class QueueController extends Integration_Controller_Action {
 
     public function init() {
-        /* following two variables used during ftp credentials vlidation */
+        /* following two variables used during ftp credentials validation */
         $this->_ftpStream = '';
         $this->_sshStream = '';
         $this->_customHost = '';
         $this->_sshWebrootPath='';
-        
-        $this->_helper->sslSwitch();
+
+        $sslSwitch = true;
+        if('login-to-store-backend' == $this->getRequest()->getActionName()) {
+            $sslSwitch = false;
+        }
+        $this->_helper->sslSwitch($sslSwitch);
         parent::init();
     }
 
@@ -390,7 +394,7 @@ class QueueController extends Integration_Controller_Action {
                     $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
                 }
             } else {
-                $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Form invalid'));
+                $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Form data is invalid. Please check fields below and correct them.'));
             }
         }
 
@@ -431,6 +435,14 @@ class QueueController extends Integration_Controller_Action {
                 $currentStore = $storeModel->findByDomain($domain);
 
                 $storeModel->find($currentStore->id);
+                
+                /**
+                 * Remove not yet finished 
+                 * and not yet started tasks for that store 
+                 */
+                $queueModel=  new Application_Model_Queue();
+                $queueModel->removePendingForStore($currentStore->id);
+                
                 $storeModel->setStatus('removing-magento')->save();
                 
                 //removing system from Papertrail
@@ -579,15 +591,22 @@ class QueueController extends Integration_Controller_Action {
 
                     /* Adding extension to queue */
                     try {
-                        
+                        $extensionId = $request->getParam('extension_id');
+
+                        //add row to store_extension
+                        $storeExtensionModel = new Application_Model_StoreExtension();
+                        $storeExtensionModel->setStoreId($store->id);
+                        $storeExtensionModel->setExtensionId($extensionId);
+                        $storeExtensionModel->setStatus('pending');
+                        $storeExtensionModel = $storeExtensionModel->save();
+
                         /** 
                          * Find if we have any other ExtensionInstall tasks 
                          * for this store 
                          */
                         $extensionQueueItem = new Application_Model_Queue();
                         $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($store->id);
-                        
-                        $extensionId = $request->getParam('extension_id');
+
                         $extensionQueueItem->setStoreId($store->id);
                         $extensionQueueItem->setStatus('pending');
                         $extensionQueueItem->setUserId($store->user_id);
@@ -618,13 +637,7 @@ class QueueController extends Integration_Controller_Action {
                         );
                         $queueModel->save();
 
-                        //add row to store_extension
-                        $storeExtensionModel = new Application_Model_StoreExtension();
-                        $storeExtensionModel->setStoreId($store->id);
-                        $storeExtensionModel->setExtensionId($extensionId);
-                        $storeExtensionModel->save();
-
-                        $this->_response->setBody('done');
+                        $this->_response->setBody($storeExtensionModel->getId());
                     } catch (Exception $e) {
                         if ($log = $this->getLog()) {
                             $log->log('Error while adding extension to queue - ' . $e->getMessage(), LOG_ERR);
@@ -646,12 +659,24 @@ class QueueController extends Integration_Controller_Action {
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
         $domain = $request->getParam('domain', null);
-        if ($request->isPost() && $domain!=null) {
-            $storeModel = new Application_Model_Store();
-            $storeItem = $storeModel->findByDomain($domain);
+        $extension_id = (int)$request->getParam('extension_id', null);
+        if ($request->isPost() && ($domain!=null || $extension_id)) {
+            if($extension_id) {
+                $model = new Application_Model_StoreExtension();
+                $model = (object)$model->find($extension_id)->__toArray();
+            } else {
+                $model = new Application_Model_Store();
+                $model = $model->findByDomain($domain);
+            }
             
-            $this->_response->setBody(Zend_Json_Encoder::encode($storeItem->status));
-        } 
+            $this->_response->setBody(Zend_Json_Encoder::encode($model->status));
+        } else {
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
     }
     
     public function gettimeleftAction() {
@@ -666,7 +691,13 @@ class QueueController extends Integration_Controller_Action {
             $this->_response->setBody(
                 Application_Model_Queue::getTimeLeftByUserAndId($userid,$queueid)
             );
-        } 
+        } else {
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
     }
     
     public function commitAction() {
@@ -888,6 +919,8 @@ class QueueController extends Integration_Controller_Action {
         if($domain) {
             $model = new Application_Model_Store();
             $store = $model->findByDomain($domain);
+            $serverModel = new Application_Model_Server();
+            $server = $serverModel->find($store->server_id);
         }
         $content = '';
         if(
@@ -908,7 +941,7 @@ class QueueController extends Integration_Controller_Action {
                 $content .= '<td>'.PHP_EOL;
                     //<button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
                 $download_button = '<a class="btn btn-primary download-deployment" href="'.
-                    $this->view->url(array('module' => 'default', 'controller' => 'store', 'action' => $domain), 'default', true).'/var/deployment/'.$revision['filename']
+                    'http://'.$this->auth->getIdentity()->login.'.'.$server->getDomain().'/'.$domain.'/var/deployment/'.$revision['filename']
                 .'">Download</a>'.PHP_EOL;
                                
                 if( (int)$revision['extension_id'] 
@@ -977,6 +1010,56 @@ class QueueController extends Integration_Controller_Action {
         /* Prevent from going forward if max stores have been reached - stop */
     }
 
+    public function loginToStoreBackendAction() {
+        $request = $this->getRequest();
+        $domain = $request->getParam('store');
+        $store = new Application_Model_Store();
+        $server = new Application_Model_Server();
+        if($domain) {
+            $store = $store->findByDomain($domain);
+            if($store->server_id) {
+                $server = $server->find($store->server_id);
+            }
+        }
+        if($store->id && $this->auth->getIdentity()->id == $store->user_id && $server->getDomain()) {
+            $this->view->item = $store->toArray();
+            $this->view->user = $this->auth->getIdentity()->login;
+            $this->view->store_url = 'http://' . $this->view->user . '.' . $server->getDomain() . '/' . $domain . '/' . $store->backend_name;
+            $this->view->form = $this->_getStoreBackendLoginForm($this->view->store_url);
+        } else {
+            // not post or store does not exists or user does not have that store
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+            ), 'default', true);
+        }
+    }
+
+    protected function _getStoreBackendLoginForm($store_url) {
+        $store_url_parsed = parse_url($store_url); 
+        if(is_array($store_url_parsed) && stristr($store_url_parsed['host'], 'magetesting.com')) {
+            $client = new Zend_Http_Client();
+            $client->setAdapter(new Zend_Http_Client_Adapter_Curl());
+            $client->setUri($store_url);
+    
+            try {
+                $response = $client->request();
+                if($body = $response->getBody()) {
+                    preg_match('/(\<form.*\<\/form\>)/ims', $body, $match);
+                    if(2 == count($match)) {
+                        return $match[1];
+                    }
+                }
+            } catch(Exception $e) {
+                if ($log = $this->getLog()) {
+                    $log->log('Error while fetching backend form - ' . $e->getMessage(), LOG_ERR);
+                }
+            }
+        }
+        return '';
+    }
+
     /* FTP VALIDATION SECTION */
     // validate whether ftp credentials are valid and we can connect to server
     public function validateFtpCredentialsAction() {
@@ -995,7 +1078,13 @@ class QueueController extends Integration_Controller_Action {
                     if(($response['value'] = $this->_findWebrootOnFtp())) {
                         $response['status'] = 'success';
                         $response['message'] = 'Webroot has been found successfully.';
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Credentials correct, but webroot couldn\'t be found.';
                     }
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Credentials are incorrect.';
                 }
             break;
             case 'ssh':
@@ -1004,7 +1093,13 @@ class QueueController extends Integration_Controller_Action {
                     if (($response['value'] = $this->_findWebrootOnSsh())) {
                         $response['status'] = 'success';
                         $response['message'] = 'Webroot has been found successfully.';
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Credentials correct, but webroot couldn\'t be found.';
                     }
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Credentials are incorrect.';
                 }
             break;
             default:
@@ -1016,14 +1111,28 @@ class QueueController extends Integration_Controller_Action {
     }
     
     protected function _validateFtpCredentials(){
-        
-        // set up a connection or die
+               
         $request = $this->getRequest();
+        
+        if (trim($request->getParam('custom_host',''))=='' 
+            || trim($request->getParam('custom_login',''))==''
+            || trim($request->getParam('custom_pass',''))=='' )
+        {
+            return false;
+        } 
+        
         $this->_customHost = $request->getParam('custom_host');
-        $this->_ftpStream = ftp_connect($this->_customHost,(int)$request->getParam('custom_port'),3600); 
+        if ($protocol = strstr($this->_customHost,'://',true)){
+            $this->_customHost = str_replace($protocol.'://','',$this->_customHost);
+        }
+        $this->_customHost = trim($this->_customHost,'/');
+        
+        $this->_ftpStream = @ftp_connect($this->_customHost,(int)$request->getParam('custom_port'),3600); 
         if ($this->_ftpStream){
             if (ftp_login($this->_ftpStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
+            } else {
+                return false;
             }
         } else {
             return false;
@@ -1032,17 +1141,30 @@ class QueueController extends Integration_Controller_Action {
     
     protected function _validateSshCredentials(){
         
-        // set up a connection or die
         $request = $this->getRequest();
+        if (trim($request->getParam('custom_host',''))=='' 
+            || trim($request->getParam('custom_login',''))==''
+            || trim($request->getParam('custom_pass',''))=='' )
+        {
+            return false;
+        } 
+               
         $this->_customHost = $request->getParam('custom_host');
+        if ($protocol = strstr($this->_customHost,'://',true)){
+            $this->_customHost = str_replace($protocol.'://','',$this->_customHost);
+        }
+        $this->_customHost = trim($this->_customHost,'/');
+        
         $customPort = (int)$request->getParam('custom_port',22);
         if (trim($customPort) == ''){
             $customPort = 22;
         }
-        $this->_sshStream = ssh2_connect($this->_customHost,$customPort); 
+        $this->_sshStream = @ssh2_connect($this->_customHost,$customPort); 
         if ($this->_sshStream){
             if (ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
+            } else {
+                return false;
             }
         } else {
             return false;
@@ -1168,9 +1290,7 @@ class QueueController extends Integration_Controller_Action {
 	  } else {
 	    return false;
 	  }
-	  
-	}
-	                  
+	}             
     }
     
     protected function _checkForMagentoFoldersOnFtp(){
@@ -1209,9 +1329,12 @@ class QueueController extends Integration_Controller_Action {
                         $response['message'] = 'Sql dump file has been found successfully.';
                     } else {
                         $response['status'] = 'error';
-                        $response['message'] = 'Sql dump file has not been found.';
+                        $response['message'] = 'Credentials are correct, but Sql dump file has not been found.';
                     }
                     //}
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Credentials are incorrect.';
                 }
             break;
             case 'ssh':
@@ -1224,38 +1347,42 @@ class QueueController extends Integration_Controller_Action {
                         $response['message'] = 'Sql dump file has been found successfully.';
                     } else {
                         $response['status'] = 'error';
-                        $response['message'] = 'Sql dump file has not been found.';
+                        $response['message'] = 'Credentials are correct, but Sql dump file has not been found.';
                     }
                     //}
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Credentials are incorrect.';
                 }
             break;
             default:
                 /*invalid response is already set before switch*/
         }
         
-        
         $response['message'] = $this->_prepareFlashMessage($response);
         $this->getResponse()->setBody(json_encode($response));
     }
 
     protected function _findSqlDumpOnFtp() {
-        $this->_validateFtpCredentials();
-
         $basePath = $this->_findWebrootOnFtp();
-        //return $basePath;
+
         $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
-if (!$raw){
-/* try passive mode */
-ftp_pasv($this->_ftpStream,true);
-$raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
-}
+        if (!$raw){
+            /* try passive mode */
+            ftp_pasv($this->_ftpStream,true);
+            $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
+        }
 
         $filetimes = array();
         if ($raw){
             foreach ($raw as $file){
+                
+                /* number of spaces is inconsistent among server, hence preg_replace */
+                $file = preg_replace('!\s\s+!', ' ', $file);
+
                 $parts = explode(" ",$file);
-                if (isset($parts[10])){
-                    $filetimes[$parts[10]]= strtotime($parts[7].' '.$parts[8].' '.$parts[9]);
+                if (isset($parts[8])){
+                    $filetimes[$parts[8]]= strtotime($parts[5].' '.$parts[6].' '.$parts[7]);
                 }
             }
         }
@@ -1277,9 +1404,7 @@ $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
         
     }
     
-    /** @TODO:implement */
     protected function _findSqlDumpOnSsh(){
-        $this->_validateSshCredentials();
         
         if ($this->_sshWebrootPath==''){
 	  $this->_sshWebrootPath = $this->_findWebrootOnSsh();
@@ -1294,8 +1419,7 @@ $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
         $backupPath = $this->_sshWebrootPath.'/var/backups/';
         
         $findbackups = 'ls -al '.$backupPath.'';
-	  //return $findmageapp;
-	  $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
+        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
                 .' -p'.$customPort." '".$findbackups."'";
@@ -1306,15 +1430,17 @@ $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
         $filetimes = array();
         if ($raw){
             foreach ($raw as $file){
-		
+                
+                /* number of spaces is inconsistent among server, hence preg_replace */
+		$file = preg_replace('!\s\s+!', ' ', $file);
                 $parts = explode(" ",$file);
-                if (isset($parts[11]) && $parts[11]!='.' && $parts[11]!='..'){
-	//	    $files[]= $parts;
-                    $filetimes[$parts[11]]= strtotime($parts[5].' '.$parts[7].' '.$parts[8]);
+                
+                if (isset($parts[8]) && $parts[8]!='.' && $parts[8]!='..'){
+                    $filetimes[$parts[8]]= strtotime($parts[5].' '.$parts[6].' '.$parts[7]);
                 }
             }
         }
-        //return $files;
+
         $maxtime = 0;
         $newestFile = '';
         if ($filetimes){
@@ -1333,15 +1459,6 @@ $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
     }
 
     protected function _prepareFlashMessage($data) {
-        if($data['message']) {
-            $this->view->messages = array(
-                array(
-                    'type' => $data['status'],
-                    'message' => $data['message']
-                )
-            );
-            return trim($this->view->partial('_partials/messages.phtml', 'default', array('messages' => $this->view->messages)));
-        }
-        return $data['message'];
+        return '<a class="close" data-dismiss="alert" href="#">×</a><div class="popover-font-fix">'.$data['message'].'</div>';
     }
 }

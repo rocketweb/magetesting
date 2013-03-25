@@ -6,6 +6,7 @@ $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('user')
     ->joinLeft('store','user.id = store.user_id', 'domain')
+    ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->where('store.status = ?', 'ready')
     ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, \''.date("Y-m-d H:i:s").'\') > ?', 3*60*60*24)
     ->where('(user.group IN (?)', array('awaiting-user', 'commercial-user'))
@@ -18,10 +19,12 @@ if($result) {
         if(!isset($downgrade_by_id[$store['id']])) {
             $downgrade_by_id[$store['id']] = null;
         }
-        if(is_link(STORE_PATH.$store['domain'])) {
-            exec('sudo rm '.STORE_PATH.$store['domain']);
-        }
+               
+        /* disable user vhost */
+        exec('sudo a2dissite '.$store['login'].'.'.$store['server_domain']);
+        exec('sudo /etc/init.d/apache2 reload');
     }
+    
     if($downgrade_by_id) {
         $set = array(
                 'group' => 'free-user',

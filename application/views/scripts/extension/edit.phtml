@@ -29,6 +29,11 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                             </div>
                         </div>
                         <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->namespace_module; ?>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="span8">
                                 <?php echo $this->form->description; ?>
                             </div>
@@ -44,9 +49,11 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                         <div class="row">
                             <div class="span4">
                                 <?php echo $this->form->extension_file; ?>
+                                <label class="file-name"><?php echo $this->extension_file ? $this->extension_file : ''; ?></label>
                             </div>
                             <div class="span4">
                                 <?php echo $this->form->extension_encoded_file; ?>
+                                <label class="file-name"><?php echo $this->extension_encoded_file ? $this->extension_encoded_file : ''; ?></label>
                             </div>
                         </div>
                     </fieldset>

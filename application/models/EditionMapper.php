@@ -16,6 +16,9 @@ class Application_Model_EditionMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Edition
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {

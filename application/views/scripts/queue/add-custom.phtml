@@ -1,7 +1,7 @@
 <div class="row">
     <div class="span12">
 	    <h1>Import your Magento store</h1>
-        <div class="form-box">
+        <div class="form-box custom-info">
             <div class="box">
             	<form action="<?php echo $this->form->getAction() ?>"
             	    enctype="<?php echo $this->form->getEnctype() ?>"
@@ -29,17 +29,17 @@
                                 <label for="version" class="control-label required">Version</label>
                                 <select name="version" id="version-CE" class="span4" style="display: none;">
                                     <?php foreach($this->versions as $version): if($version->getEdition() == 'CE'):?>
-                                        <option value="<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
+                                        <option value="CE<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
                                     <?php endif; endforeach; ?>
                                 </select>
                                 <select name="version" id="version-EE" class="span4" style="display: none;">
                                     <?php foreach($this->versions as $version): if($version->getEdition() == 'EE'): ?>
-                                        <option value="<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
+                                        <option value="EE<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
                                     <?php endif; endforeach; ?>
                                 </select>
                                 <select name="version" id="version-PE" class="span4" style="display: none;">
                                     <?php foreach($this->versions as $version): if($version->getEdition() == 'PE'): ?>
-                                        <option value="<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
+                                        <option value="PE<?php echo $version->getId(); ?>" class="<?php echo $version->getEdition(); ?>"><?php echo $version->getVersion(); ?></option>
                                     <?php endif; endforeach; ?>
                                 </select>
             	                <?php //echo $this->form->version ?>
@@ -74,11 +74,11 @@
             	                <?php echo $this->form->custom_pass ?>
             	            </div>
             	        </div>
-            	        <a class="btn tooltip-top validate-connection-details" data-title="We will check if connection details are correct and we will try to look for your store location.">Validate connection details</a>
+            	        <a class="btn tooltip-top validate-connection-details" data-loading-text="Loading..." data-tooltip-title="We will check if connection details are correct and we will try to look for your store location.">Validate connection details</a>
             	    </fieldset>
             	    
             	    <div class="tab-stripe"></div>
-            	    <fieldset>
+            	    <fieldset class="custom-files">
             	        <legend>Current Store Files and Database</legend>
             	        <div class="input-radio">
             	        	<div class="row">
@@ -104,9 +104,10 @@
             	        </div>
             	        <div class="row row-large">
                             <div class="span8">
-                                <div class="input-append">
-                                <?php echo $this->form->custom_sql ?>
-                                <span class="add-on tooltip-top find-sql-file" data-title="Find Latest Magento Admin Database Backup">Find database backup</span>
+                                <div class="input-append custom-sql-input">
+                                    <?php echo $this->form->custom_sql ?>
+                                    <span class="add-on tooltip-top find-sql-file btn" data-loading-text="Loading..." data-tooltip-title="Find Latest Magento Admin Database Backup">Find<span class="hidden-phone-portrait"> database</span> backup</span>
+                                </div>
                             </div>
                         </div>
             	    </fieldset>
@@ -126,4 +127,3 @@
 
 EOT;
     echo $this->partial('_partials/helpContext.phtml', array('data' => $data)); 
-?>

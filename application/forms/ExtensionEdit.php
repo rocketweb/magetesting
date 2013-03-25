@@ -27,6 +27,18 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'class'      => 'span4'
         ));
 
+        // Add module namespace element
+        $this->addElement('text', 'namespace_module', array(
+                'label'      => 'Namespace_Module',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(3, 255))
+                ),
+                'allowEmpty' => false,
+                'class'      => 'span4'
+        ));
+
         // Add description element
         $this->addElement('textarea', 'description', array(
                 'label'      => 'Description',
@@ -93,7 +105,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'required'   => false,
                 'allowEmpty' => true,
                 'validators' => array(
-                        array('Extension', false, 'gz')
+                        array('Extension', false, 'tgz,gz')
                 ),
                 'class'      => 'span4'
         ));
@@ -103,10 +115,13 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'required'   => false,
                 'allowEmpty' => true,
                 'validators' => array(
-                        array('Extension', false, 'gz')
+                        array('Extension', false, 'tgz,gz')
                 ),
                 'class'      => 'span4'
         ));
+        Zend_Validate_Abstract::setDefaultTranslator(new Zend_Translate('array', array(
+            Zend_Validate_File_Extension::FALSE_EXTENSION => 'File \'%value%\' has an invalid extension'
+        )));
 
         // Add logo element
         $this->addElement('hidden', 'logo', array(

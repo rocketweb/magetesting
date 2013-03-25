@@ -46,7 +46,7 @@ implements Application_Model_Task_Interface {
         $linesToLog[] = date("Y-m-d H:i:s").' - Reverting files from: '.$params['commit_comment'];
         $candumpnow=0;
         foreach ($output as $line){
-	    if(strstr($line,'git commit --amend --author=')){
+	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author')){
 	      $candumpnow=1;
 	      continue;
 	    }
@@ -56,7 +56,16 @@ implements Application_Model_Task_Interface {
 	    
 	    $linesToLog[] = $line;
         }
-	$this->revisionLogger->info(implode("\n",$linesToLog));
+        
+	/** 
+         * Split logger into parts and let it rest for a while 
+         * with each iteration. This lets rsyslog send all lines to papertrail 
+         */
+        $revLogs = array_chunk($linesToLog,10);
+        foreach($revLogs as $tenlines){
+            $this->revisionLogger->info(implode("\n",$tenlines));
+            usleep(3000);
+        }
 
         chdir($startCwd);
     }

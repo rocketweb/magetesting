@@ -23,8 +23,10 @@ implements Application_Model_Task_Interface {
         $this->_createDbBackup();
         if ($this->_commit()){
             $hash = $this->_revisionHash;
-            $this->_insertRevisionInfo();
-            $this->_updateRevisionCount('+1');
+            if('manual-commit' != $hash) {
+                $this->_insertRevisionInfo();
+                $this->_updateRevisionCount('+1');
+            }
         }
     }
 
@@ -43,7 +45,6 @@ implements Application_Model_Task_Interface {
         chdir($startCwd);
          
     }
-    
     
     /* For now just an alias */
     protected function _commitManual(){
@@ -67,16 +68,22 @@ implements Application_Model_Task_Interface {
             // but to avoid setting store status as error
             return false;
         }
+
+        // do nothing if there were no changes
+        if(stristr(implode($output), 'nothing to commit')) {
+            $this->_revisionHash = 'manual-commit';
+            return true;
+        }
+
         //get revision committed
         preg_match("#\[(.*?) ([a-z0-9]+)\]#is", $output[0],$matches);
-
 
 	/* log lines to revision log */
         $linesToLog = array();
         $linesToLog[] = date("Y-m-d H:i:s").' - '.$params['commit_comment'];
         $candumpnow=0;
         foreach ($output as $line){
-	    if(strstr($line,'git commit --amend --author=')){
+	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author')){
 	      $candumpnow=1;
 	      continue;
 	    }
@@ -86,10 +93,16 @@ implements Application_Model_Task_Interface {
 	    
 	    $linesToLog[] = $line;
         }
-        
-        $this->revisionLogger->info(implode("\n",$linesToLog));
 
-
+        /** 
+         * Split logger into parts and let it rest for a while 
+         * with each iteration. This lets rsyslog send all lines to papertrail 
+         */
+        $revLogs = array_chunk($linesToLog,10);
+        foreach($revLogs as $tenlines){
+            $this->revisionLogger->info(implode("\n",$tenlines));
+            usleep(3000);
+        }
                
         if (!isset($matches[2])){
             $message = 'Could not find revision information, aborting';
@@ -131,7 +144,7 @@ implements Application_Model_Task_Interface {
             $linesToLog[] = date("Y-m-d H:i:s").' - '.$params['commit_comment'];
             $candumpnow=0;
             foreach ($output as $line){
-                if(strstr($line,'git commit --amend --author=')){
+	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author')){
                   $candumpnow=1;
                   continue;
                 }
@@ -142,7 +155,16 @@ implements Application_Model_Task_Interface {
                 $linesToLog[] = $line;
             }
 
-            $this->revisionLogger->info(implode("\n",$linesToLog));
+            /** 
+             * Split logger into parts and let it rest for a while 
+             * with each iteration. This lets rsyslog send all lines to papertrail 
+             */
+            $revLogs = array_chunk($linesToLog,10);
+            foreach($revLogs as $tenlines){
+                $this->revisionLogger->info(implode("\n",$tenlines));
+                usleep(3000);
+            }
+            
         }
 
         if (count($output) < 3 && isset($output[2]) && trim($output[2])=='nothing to commit (working directory clean)'){

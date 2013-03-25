@@ -18,7 +18,7 @@
                         </div>
                         <div class="row">
                           	<strong>Who is it for?</strong>
-                           	<p>Anyone who wants to test extensions on any magento version from 1.4.2 to the latest stable version, test themes or custom code.</p>
+                           	<p>Anyone who wants to test extensions on any magento version from 1.4.0.0 to the latest stable version, test themes or custom code.</p>
                         </div>
     	            </fieldset>
     	        </div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="row">
                             <strong>Who is it for?</strong>
-                            <p>Anyone who already owns a 1.4.2 or greater Magento store and wants to test how new extensions will work with their current configuration and code.</p>
+                            <p>Anyone who already owns a 1.4.0.0 or greater Magento store and wants to test how new extensions will work with their current configuration and code.</p>
                         </div>
     	            </fieldset>
     	        </div>
@@ -83,9 +83,9 @@
     	                <hr />
     	                <div class="row">
     	                	<div class="span3"><strong>Who is it for?</strong></div>
-    	                	<div class="span4">Anyone who wants to test extensions on any magento version from 1.4.2 to the latest stable version, test themes or custom code.</div>
+    	                	<div class="span4">Anyone who wants to test extensions on any magento version from 1.4.0.0 to the latest stable version, test themes or custom code.</div>
     	                	<?php if ($this->userGroup != 'free-user' && $this->userPlan->getCanAddCustomStore()==1): ?>
-    	                    <div class="span4">Anyone who already owns a 1.4.2 or greater Magento store and wants to test how new extensions will work with their current configuration and code.</div>
+    	                    <div class="span4">Anyone who already owns a 1.4.0.0 or greater Magento store and wants to test how new extensions will work with their current configuration and code.</div>
     	                    <?php endif; ?>
     	                </div>
     	            </fieldset>
@@ -94,14 +94,8 @@
     	</div>
     </div>
 </div>
+<?php 
+    $data = <<<EOT
 
-<div id="wrap-context-help">
-    <div id="context-help">
-        <h2>Help</h2>
-        <ul>
-            <li>Submit a Ticket</li>
-            <li>Chat</li>
-            <li>Documentation</li>
-        </ul>
-    </div>
-</div>
+EOT;
+    echo $this->partial('_partials/helpContext.phtml', array('data' => $data));

@@ -66,14 +66,27 @@ $(document).ready(function(){
         $sql_field = $('#custom_sql'),
         $container = $('#main .container'),
         $remote_path_field = $('#custom_remote_path'),
-        f_create_flash_message = function(message, type) {
+        f_create_flash_message = function(message, type, $element) {
             if(type === undefined || (type !== 'success' && type !== 'error')) {
                 type = 'success';
             }
-            $('#show-flashmessage').remove();
-            $container.prepend($(message).attr('id', 'show-flashmessage'));
-            window.location.hash = '';
-            window.location.hash = '#show-flashmessage';
+
+            $element.popover({
+                'title' : 'Status',
+                'content' : message,
+                'html' : true,
+                'trigger' : 'manual',
+                'placement' : 'right'
+            }).popover('show');
+
+            // overwrite alert close event, by popover destroy
+            $element.data('popover').$tip.find('.close').click(function() {
+                // destroy popover on click
+                $element.popover('destroy');
+
+                // do not use alert data dismiss event
+                return false;
+            });
         };
 
     if($validate_connection.length) {
@@ -85,6 +98,8 @@ $(document).ready(function(){
                     $ftp_fields_data[$e.attr('name')] = $e.val();
                 });
 
+            // disable button
+            $this.button('loading');
             $.ajax({
                 url : siteRoot + '/queue/validate-ftp-credentials',
                 data : $ftp_fields_data,
@@ -93,12 +108,16 @@ $(document).ready(function(){
                 success : function(response) {
                     if(response.status !== undefined) {
                         if(response.message) {
-                            f_create_flash_message(response.message, response.status);
+                            f_create_flash_message(response.message, response.status, $validate_connection);
                         }
                         if(response.value) {
                             $remote_path_field.val(response.value);
                         }
                     }
+                },
+                complete : function() {
+                    // enable button
+                    $this.button('reset');
                 }
             });
             return false;
@@ -114,6 +133,8 @@ $(document).ready(function(){
                     $ftp_fields_data[$e.attr('name')] = $e.val();
                 });
 
+            // disable button
+            $this.button('loading');
             $.ajax({
                 url : siteRoot + '/queue/find-sql-file',
                 data : $ftp_fields_data,
@@ -122,12 +143,16 @@ $(document).ready(function(){
                 success : function(response) {
                     if(response.status !== undefined) {
                         if(response.message) {
-                            f_create_flash_message(response.message, response.status);
+                            f_create_flash_message(response.message, response.status, $find_sql_file);
                         }
                         if(response.value) {
                             $sql_field.val(response.value);
                         }
                     }
+                },
+                complete : function() {
+                    // enable button
+                    $this.button('reset');
                 }
             });
             return false;

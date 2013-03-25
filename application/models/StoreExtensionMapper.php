@@ -16,6 +16,9 @@ class Application_Model_StoreExtensionMapper{
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_StoreExtension
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {
@@ -58,7 +61,8 @@ class Application_Model_StoreExtensionMapper{
             ->setAddedDate($row->added_date)
             ->setBraintreeTransactionId($row->braintree_transaction_id)
             ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
-            ->setReminderSent($row->reminder_sent);
+            ->setReminderSent($row->reminder_sent)
+            ->setStatus($row->status);
 
         return $storeExtension;
     }
@@ -76,7 +80,8 @@ class Application_Model_StoreExtensionMapper{
                   ->setAddedDate($row->added_date)
                   ->setBraintreeTransactionId($row->braintree_transaction_id)
                   ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
-                  ->setReminderSent($row->reminder_sent);
+                  ->setReminderSent($row->reminder_sent)
+                  ->setStatus($row->status);
 
             $entries[] = $entry;
         }
@@ -96,7 +101,8 @@ class Application_Model_StoreExtensionMapper{
             ->setAddedDate($row->added_date)
             ->setBraintreeTransactionId($row->braintree_transaction_id)
             ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
-            ->setReminderSent($row->reminder_sent);
+            ->setReminderSent($row->reminder_sent)
+            ->setStatus($row->status);
 
         return $storeExtension;
     }

@@ -8,7 +8,7 @@
         <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add New Store</a>
         <?php endif; ?>
 
-        <h1>Your Magento Stores</h1>
+        <h1>Your Magento Store</h1>
         <!-- START ACCORDION -->
         <div class="accordion" id="accordion">
 
@@ -16,7 +16,7 @@
         <?php if($storeCount === 0): ?>
             <!-- START STORE -->
             <div class="accordion-group accordion-add-new" data-active="0">
-                <div class="accordion-heading">
+                <div class="accordion-heading hidden-phone">
                     <div class="accordion-toggle">
                         <div class="for-use ready pull-right">
                             <a target="_blank" href="#" class="btn btn-faded btn-mini view-store disabled"><i class="icon icon-white icon-home"></i> View Store</a>
@@ -31,13 +31,13 @@
                         <?php else: ?>
                             <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red btn-add-store"><i class="icon icon-white icon-plus-sign"></i> Add your first store</a>
                         <?php endif; ?>
-                        <div class="row version-info">
+                        <div class="row version-info hidden-phone">
                             <div class="span2 first"><strong>Edition:</strong></div>
                             <div class="span2"><strong>Version:</strong></div>
                             <div class="span2"><strong>Sample Data:</strong></div>
                         </div>
-                        <p class="description"></p>
-                        <div class="row">
+                        <p class="description hidden-phone"></p>
+                        <div class="row hidden-phone">
                             <!-- START DETAILS BOX -->
                             <div class="span4 panel details">
                                 <h5>Configuration</h5>
@@ -83,7 +83,7 @@
         <?php endif; ?>
 
         <?php /* IF USER HAS STORES */ ?>
-        <?php if($storeCount > 0): ?>
+        <?php if($storeCount > 0): $decryptor = new Application_Model_Store(); ?>
         <?php foreach ($this->queue as $key => $item): ?>
             <!-- START STORE -->
             <div class="accordion-group" data-active="0">
@@ -100,12 +100,22 @@
                                $progressClass = 'progress-info';
                         endswitch;
                     ?>
-                        <div class="span4 right-content pull-right">
-                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''); ?>">
+                        <div class="right-content pull-right inactive">
+                            <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
+                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
+                            <?php if($item['status'] == 'ready'): ?>
+                                <a
+                                    class="btn btn-mini admin-panel pull-right"
+                                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'login-to-store-backend', 'store' => $item['domain']), 'default', true); ?>"
+                                ><i class="icon icon-wrench"></i> Access Admin</a>
+                                <a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
+                            <?php endif; ?>
+                            </div>
+                            <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''), ($item['status'] == 'downloading-magento' ? ' download-bar' : ''); ?>">
                                 <?php if($item['status'] == 'error'): ?>
-                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Error occured. Please contact with administrator.'  ?>" data-trigger="hover">
+                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Please click on Help button above to submit a support ticket.'  ?>" data-trigger="hover">
                                 <?php endif; ?>
-                                    <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right" style="height:12px; margin-bottom: 0px" >
+                                    <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right active" style="height:12px; margin-bottom: 0px" >
                                         <span class="bar" style="width: 100%;"></span>
                                     </span>
                                     <?php if($item['status'] == 'downloading-magento'): ?>
@@ -119,7 +129,7 @@
                                     <?php else:*/ ?>
                                         <?php echo $this->niceStatus($item['status']); ?>
                                         <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
-                                        - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByUserAndId($item['user_id'],$item['queue_id'])); ?>
+                                        - please be patient as your request is being made.
                                         <?php endif; ?>
                                     </span>
                                     <?php endif; ?>
@@ -127,68 +137,10 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                            <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
-                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
-<?php
-/* For now, admin autologin feature will be disabled due to no secure content policy ( SSL )
-   I removed JS content from custom.js $admin_panel
-if($admin_panel.length) {
-    $admin_panel.click(function(e) {
-        // stop bootstrap collapsing
-        e.stopPropagation();
-
-        // create fake link to avoid popup closing
-        $('body').append('<a class="hidden" id="open_admin_panel">Fake click</a>');
-        var $this = $(this),
-        $created_link = $('#open_admin_panel');
-        $created_link.click(function(){
-            var $opened_window = window.open('http://'+window.location.host+$this.siblings('.view-store').attr('href')+'/'+$this.data('backend-name')),
-            $attempts = 0,
-            $fill_window_form = function() {
-                var $window_context = $($opened_window.document).contents();
-                var $login = $window_context.find('input:text'),
-                $password = $login.end().find('input:password');
-                if($login.length) {
-                    $login.val($this.data('admin-login'))
-                    .end().find('input:password').val($this.data('admin-password'))
-                    .parents('form:first').submit();
-                    $opened_window.focus();
-                } else if(!$window_context.find('body > *').length && $attempts < 100) {
-                    $attempts++;
-                    setTimeout($fill_window_form, 100);
-                }
-            }
-            setTimeout($fill_window_form, 100);
-            $created_link.remove();
-            return false;
-        });
-        $created_link.click();
-        e.preventDefault();
-    });
-}
-
-And this is button from autologin feature
-<a
-    href="#"
-    class="btn btn-mini admin-panel pull-right"
-    data-backend-name="<?php echo $item['backend_name']; ?>"
-    data-admin-login="<?php echo $this->user->login; ?>"
-    data-admin-password="<?php echo $item['backend_password']; ?>"
-><i class="icon icon-wrench"></i> Admin Panel</a>
-*/
-?>
-                            <?php if($item['status'] == 'ready'): ?>
-                                <a target="_blank"
-                                    href="<?php echo 'http://'.$this->user->login.'.'.$item['server_domain'].'/'.$item['domain'].'/'.$item['backend_name']; ?>"
-                                    class="btn btn-mini admin-panel pull-right"
-                                ><i class="icon icon-wrench"></i> Access Admin</a>
-                                <a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
-                            <?php endif; ?>
-                            </div>
                         </div>
-                        <div class="span6 left-content">
-                            <div class="arrow pull-left"><i class="icon-chevron-down icon-blue"></i></div>
-                            <div class="span5"><?php echo $this->escape($item['store_name']) ?></div>
+                        <div class="left-content">
+                            <div class="arrow pull-left"><i class="icon icon-chevron-down icon-blue"></i></div>
+                            <div class="store-name"><?php echo $this->escape($item['store_name']) ?></div>
                         </div>
                         <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                         <input type="hidden" class="queueval" value="<?php echo $this->escape($item['queue_id']) ?>" />
@@ -219,16 +171,16 @@ And this is button from autologin feature
                                 <div class="control-group">
                                     <div class="controls">
                                    	<?php if(in_array($item['status'], array('closed'))): ?>
-                                        <a href="#" class="btn btn-inverse disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                        <a href="#" class="btn btn-inverse extensions-button disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php else: ?>
                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'store' => $item['domain']), 'default', true); ?>"
-                                           class="btn btn-inverse"><i class="icon icon-white icon-cog"></i> Extensions</a>
+                                           class="btn btn-inverse extensions-button"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php endif; ?>
                                     <?php if($item['status']=='closed'): ?>
-                                        <a href="#" class="btn disabled"><i class="icon icon-pencil"></i> Edit Details</a>
+                                        <a href="#" class="btn edit-button disabled"><i class="icon icon-pencil"></i> Edit Details</a>
                                     <?php else: ?>
                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
-                                           class="btn"><i class="icon icon-pencil"></i> Edit Details</a>
+                                           class="btn edit-button"><i class="icon icon-pencil"></i> Edit Details</a>
                                     <?php endif; ?>
                                     </div>
                                 </div>
@@ -259,8 +211,8 @@ And this is button from autologin feature
                                 <h5>Troubleshooting</h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
-                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn "><i class="icon icon-question-sign"></i> Get Help</a>
+                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn log-button <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
+                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn help-button"><i class="icon icon-question-sign"></i> Get Help</a>
                                     </div>
                                 </div>
                             </div>

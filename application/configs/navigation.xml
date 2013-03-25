@@ -42,6 +42,17 @@
                         <privilege>index</privilege>
                         <icon>icon-white icon-th-list</icon>
                     </supportedExtensions>
+                    <coupons>
+                        <label>Coupons</label>
+                        <module>default</module>
+                        <controller>coupon</controller>
+                        <action>index</action>
+                        <route>default</route>
+                        <reset_params>true</reset_params>
+                        <resource>default_coupon</resource>
+                        <privilege>index</privilege>
+                        <icon>icon-white icon-tag</icon>
+                    </coupons>
                     <wholeQueue>
                         <label>Stores</label>
                         <module>default</module>
@@ -84,8 +95,8 @@
                 <action>our-plans</action>
                 <route>compare</route>
                 <reset_params>true</reset_params>
-                <resource>default_index</resource>
-                <privilege>our-plans</privilege>
+                <resource>default_user</resource>
+                <privilege>register</privilege>
                 <icon>glyphicons_044_keys_white_half.png</icon>
             </signUp>
             <userLogin>

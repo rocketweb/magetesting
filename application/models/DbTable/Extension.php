@@ -42,56 +42,110 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
     }
     
     public function fetchStoreExtensions($store) {
-        $select = $this->select()
-                        ->from(array('e' => $this->_name))
-                        ->setIntegrityCheck(false)
-                        ->where('e.edition = ?', $store['edition'])
-                        ->where('e.extension IS NOT NULL')
-                        ->where(' ? 
-                                 BETWEEN REPLACE(e.from_version,\'.\',\'\')
-                                 AND REPLACE(e.to_version,\'.\',\'\')',
-                            (int)str_replace('.','',$store['version'])
-                        );
-        $select->joinLeft(
-            array('se' => 'store_extension'),
-            new Zend_Db_Expr('e.id = se.extension_id AND ( se.store_id =  '.$this->getDefaultAdapter()->quote($store->id).' OR se.store_id IS NULL )'),
-            array('se.store_id', 'se.braintree_transaction_id')
-        );
-        $select->joinLeft(
-            array('q' => 'queue'),
-            'q.store_id = se.store_id AND q.extension_id = e.id',
-            'q.id as q_id'
-        );
-        $select->joinLeft(
-            array('ec' => 'extension_category'),
-            'ec.id = e.category_id',
-            array('ec.class as category_class','ec.logo as category_logo')
-            
-        );
-        $select->order(array('se.store_id DESC', 'q_id ASC', 'price DESC'));
-        $select->group(new Zend_Db_Expr('e.id DESC'));
-        //get also developr extensions for admins
-        if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
-            $select->where('e.is_dev IN (?)',array(0,1));
-        } else {
-            $select->where('e.is_dev  = ? ',0);
-        }
+        /*
+SELECT  `all` . * ,  `ec`.`class` AS  `category_class` ,  `ec`.`logo` AS  `category_logo` 
+FROM (
+    SELECT  `e` . * ,  ` , 1 AS  `installed` 
+    FROM  `store_extension` AS  `se` 
+    LEFT JOIN  `extension` AS  `e` ON e.id = se.extension_id
+    WHERE ( se.store_id =  '101' )
 
-        return $this->fetchAll($select);
+    UNION
+
+    SELECT  `last_version` . * 
+    FROM (
+        SELECT  `extension` . * ,  , 0 AS  `installed` 
+        FROM  `extension` 
+        WHERE
+            ( extension IS NOT NULL )
+            AND (
+                1411
+                BETWEEN REPLACE( from_version,  '.',  '' ) 
+                AND REPLACE( to_version,  '.',  '' )
+            ) 
+            AND ( edition =  'CE' )
+            AND ( is_dev IN ( 0, 1 ) )
+        ORDER BY  `name` ASC ,  `version` DESC
+    ) AS  `last_version` 
+    GROUP BY  `last_version`.`name`
+) AS  `all` 
+LEFT JOIN  `extension_category` AS  `ec` ON ec.id = all.category_id
+GROUP BY  `all`.`name` 
+ORDER BY  `installed` DESC ,  `price` DESC
+         */
+        $select_installed_for_store = 
+            $this->select()
+                 ->from(array('se' => 'store_extension'), array('e.*', 'se.braintree_transaction_id', 'se.braintree_transaction_confirmed', 'se.status', 'installed' => new Zend_Db_Expr('1')))
+                 ->setIntegrityCheck(false)
+                 ->joinLeft(array('e' => $this->_name), 'e.id = se.extension_id', '')
+                 ->where('se.store_id = ?', $store['id']);
+
+        $select_allowed_for_store = 
+            $this->select()
+                 ->from($this->_name, array('*', 'braintree_transaction_id' => new Zend_Db_Expr('NULL'), 'braintree_transaction_confirmed'  => new Zend_Db_Expr('NULL'), 'status'  => new Zend_Db_Expr('NULL'), 'installed' => new Zend_Db_Expr('0')))
+                 ->setIntegrityCheck(false)
+                 ->where('extension > ""')
+                 ->where(' ?
+                     BETWEEN REPLACE(from_version,\'.\',\'\')
+                     AND REPLACE(to_version,\'.\',\'\')',
+                     (int)str_replace('.','',$store['version'])
+                 )
+                 ->order(array('name', 'version DESC'));
+
+        // get also developer extensions for admins
+        // get only CE extensions for non admin users
+        if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
+            $select_allowed_for_store->where('is_dev IN (?)',array(0,1));
+        } else {
+            $select_allowed_for_store->where('edition = ?', 'CE')
+                                     ->where('is_dev  = ? ',0);
+        }
+        $select_last_version_ids = 
+            $this->select()
+                 ->from(array('last_version' => $select_allowed_for_store), array('last_version.*'))
+                 ->setIntegrityCheck(false)
+                 ->group('last_version.namespace_module');
+
+        $select_all_extensions_sorted = 
+            $this->select()
+                 // add alias for union
+                 ->from(array(
+                     'all' => $this->select()
+                                   ->setIntegrityCheck(false)
+                                   ->union(array($select_installed_for_store, $select_last_version_ids))
+                 ))
+                 ->setIntegrityCheck(false)
+                 ->joinLeft(
+                     array('ec' => 'extension_category'),
+                     'ec.id = all.category_id',
+                     array('ec.class as category_class','ec.logo as category_logo')
+                 )
+                 ->group('all.namespace_module')
+                 ->order(array('installed DESC', 'price DESC'));
+
+        return $this->fetchAll($select_all_extensions_sorted);
     }
 
     public function fetchFullListOfExtensions()
     {
+        $sub_select = 
+            $this->select()
+                 ->from($this->_name, array('name', 'edition', 'version' => new Zend_Db_Expr('max(version)')))
+                 ->setIntegrityCheck(false)
+                 ->group(array('namespace_module', 'edition'));
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        if(!is_object($identity) || 'admin' != $identity->group) {
+            $sub_select->where('edition = ?', 'CE')
+                       ->where('extension > ""');
+        }
         $select = 
             $this->select()
-                 ->from(array('e' => $this->_name))
+                 ->from(array('e1' => $sub_select), '')
                  ->setIntegrityCheck(false)
-                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e.category_id', array('ec.class as category_class','ec.logo as category_logo'))
-                 ->where('e.extension IS NOT NULL')
+                 ->joinInner(array('e2' => 'extension'), 'e2.name = e1.name AND e2.edition = e1.edition AND e2.version = e1.version')
+                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'))
                  ->order('price DESC');
-        if('admin' != Zend_Auth::getInstance()->getIdentity()->group) {
-            $select->where('e.edition = ?', 'CE');
-        }
+
         return $this->fetchAll($select);
     }
 
@@ -133,5 +187,18 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             }
                 
 	return $this->fetchRow($select);
+    }
+
+    public function findByNamespaceAndEdition($namespace, $edition)
+    {
+        $select =
+            $this->select()
+                 ->setIntegrityCheck(false)
+                 ->from($this->_name)
+                 ->where('namespace_module = ?', $namespace)
+                 ->where('edition = ?', $edition)
+                 ->order('version DESC');
+
+        return $this->fetchAll($select);
     }
 }

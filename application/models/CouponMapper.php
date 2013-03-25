@@ -17,6 +17,9 @@ class Application_Model_CouponMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Coupon
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {
@@ -36,6 +39,11 @@ class Application_Model_CouponMapper {
         }
         
         return $coupon;
+    }
+
+    public function delete($id)
+    {
+        $this->getDbTable()->delete(array('id = ?' => $id));
     }
 
     public function find($id, Application_Model_Coupon $coupon)
@@ -119,23 +127,7 @@ class Application_Model_CouponMapper {
     }
     
     public function fetchList(){
-        
-        $select = $this->getDbTable()
-                ->select()
-                ->setIntegrityCheck(false)
-                ->from(array('c'=>'coupon'),array(                             
-                    'id' => 'id',
-                    'code' => 'code',
-                    'used_date' => 'used_date',
-                    'user_id' => 'user_id',
-                    'plan_id' => 'plan_id',
-                    'duration' => 'duration',
-                    'active_to' => 'active_to',
-                    )
-                )
-                ->query();
-                
-        $adapter = new Zend_Paginator_Adapter_Array($select->fetchAll());
+        $adapter = new Zend_Paginator_Adapter_Array($this->getDbTable()->fetchList());
         
         return new Zend_Paginator($adapter);
     }

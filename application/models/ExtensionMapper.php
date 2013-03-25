@@ -17,6 +17,9 @@ class Application_Model_ExtensionMapper {
         return $this;
     }
 
+    /**
+     * @return Application_Model_DbTable_Extension
+     */
     public function getDbTable()
     {
         if (null === $this->_dbTable) {
@@ -60,6 +63,33 @@ class Application_Model_ExtensionMapper {
         ->setIsDev($row->is_dev)
         ->setPrice($row->price);
         return $extension;
+    }
+
+    public function findByNamespaceAndEdition($namespace, $edition)
+    {
+        $resultSet = $this->getDbTable()->findByNamespaceAndEdition($namespace, $edition);
+        $entries   = array();
+        foreach ($resultSet as $row) {
+            $entry = new Application_Model_Extension();
+            $entry->setId($row->id)
+                  ->setName($row->name)
+                  ->setDescription($row->description)
+                  ->setCategoryId($row->category_id)
+                  ->setAuthor($row->author)
+                  ->setLogo($row->logo)
+                  ->setVersion($row->version)
+                  ->setExtension($row->extension)
+                  ->setExtensionEncoded($row->extension_encoded)
+                  ->setNamespaceModule($row->namespace_module)
+                  ->setFromVersion($row->from_version)
+                  ->setToVersion($row->to_version)
+                  ->setEdition($row->edition)
+                  ->setIsDev($row->is_dev)
+                  ->setPrice($row->price);
+            $entries[] = $entry;
+        }
+
+        return $entries;
     }
 
     public function delete($id)

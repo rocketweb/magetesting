@@ -32,13 +32,24 @@ if($result) {
                 $config->papertrail->password    
             );
            
+            $removeUser = false;
             try { 
                 $responseExists = $service->getAccountUsage($id);
-                $responseRemove = $service->removeUser($id);
+                $removeUser = true;
             } catch(Zend_Service_Exception $e) {
                 $log->log($e->getMessage(), Zend_Log::CRIT);
-                //retry later
-                continue;
+                //retry later if error
+                $removeUser = false;
+            }
+            
+            //account exist
+            if ($removeUser){
+                try{
+                    $responseRemove = $service->removeUser($id);
+                } catch(Zend_Service_Exception $e) {
+                    //if remove failed in papertrail, retry later
+                    continue;
+                }
             }
 
             if(isset($responseRemove->status) && $responseRemove->status == 'ok') {
@@ -76,6 +87,13 @@ if($result) {
                 echo 'sh script was run without arguments';
             }
 
+            //just in case remove_user.sh didn't work
+            exec('sudo userdel -f ' . $config->magento->userprefix . $user->getLogin());
+    
+            if (file_exists('/home/' . $config->magento->userprefix . $user->getLogin())){
+                exec('sudo rm -R /home/' . $config->magento->userprefix . $user->getLogin());
+            }
+            
             unset($output);
             chdir($startcwd);
         }
@@ -99,6 +117,15 @@ if($result) {
         }
         //--------------SYSTEM/MYSQL PART END--------------
 
+        //--------------RSYSLOG FILES PART START-----------
+        exec('sudo rm '.$config->magento->userprefix.$user->getLogin().'_*');
+        //--------------RSYSLOG FILES PART END ------------
+        
+        //--------------SUEXEC PART START------------------
+        exec('sudo rm -R /home/www-data/'.$config->magento->userprefix.$user->getLogin().'');
+        //--------------SUEXEC PART END------------------
+        
+        
         //--------------VIRTUALHOST PART START-------------
         $serverModel = new Application_Model_Server();
         $serverModel->find($user->getServerId());
@@ -124,7 +151,7 @@ if($result) {
             continue;
         }
 
-
         //--------------MAGETESTING PART END---------------
+        
     }
 }
