@@ -56,6 +56,12 @@ class QueueController extends Integration_Controller_Action {
         $form->populate($this->getRequest()->getParams());
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
+        
+        $modelUser = new Application_Model_User();
+        $user = $modelUser->find($this->auth->getIdentity()->id);
+        $modelPlan = new Application_Model_Plan();
+        $plan = $modelPlan->find($user->getPlanId());
+        
         if ($request->isPost()) {
 
             $userGroup = $this->auth->getIdentity()->group;
@@ -73,9 +79,7 @@ class QueueController extends Integration_Controller_Action {
                 }
             }
 
-            $user = $modelUser->find($this->auth->getIdentity()->id);
-            $modelPlan = new Application_Model_Plan();
-            $plan = $modelPlan->find($user->getPlanId());
+
             
             if ($form->isValid($this->getRequest()->getParams())) {
                 //needs validation!
@@ -91,7 +95,7 @@ class QueueController extends Integration_Controller_Action {
                             ->standardUser
                             ->stores;
                 } else {
-                    $modelUser = new Application_Model_User();
+                    
                     
 
                     $maxStores = $plan->getStores();
