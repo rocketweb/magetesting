@@ -189,7 +189,7 @@ class Application_Model_Plan {
     
     public function setCanDoDbRevert($value)
     {
-    	$this->_auto_renew = ((int)$value ? 1 : 0);
+    	$this->_can_do_db_revert = ((int)$value ? 1 : 0);
     	return $this;
     }
     
