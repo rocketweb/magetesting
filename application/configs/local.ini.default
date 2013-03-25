@@ -46,7 +46,7 @@ cron.phpmyadminAccountCreated.subject = "Database account created for magetestin
 cron.phpmyadminAccountCreated.from.email = "support@magetesting.com"
 cron.phpmyadminAccountCreated.from.desc = "Mage Testing"
 
-cron.buyStoreExtension.subject = "Buy extension for magetesting.com"
+cron.buyStoreExtension.subject = "Buy %s at magetesting.com"
 cron.buyStoreExtension.from.email = "support@magetesting.com"
 cron.buyStoreExtension.from.desc = "Mage Testing"
 
