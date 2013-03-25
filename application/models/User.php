@@ -300,11 +300,12 @@ class Application_Model_User {
     /**
      * Checks the user has store extension by id
      * 
-     * @param int $id Extension Id
+     * @param string $storeDomain
+     * @param int $extensionId Extension Id
      * @return mixed False or array
      */
-    public function hasStoreExtension($id) {
-        $extension = $this->getMapper()->hasStoreExtension($id, $this);
+    public function hasStoreExtension($storeDomain, $extensionId) {
+        $extension = $this->getMapper()->hasStoreExtension($storeDomain, $extensionId, $this);
         
         if(is_null($extension)) {
             return false;

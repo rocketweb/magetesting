@@ -170,7 +170,7 @@ class BraintreeController extends Integration_Controller_Action
             } else {
                 // checks braintree errors and marks invalid fields in form, or throws Braintree_Controller_Exception
                 $this->_handleResponseErrors($result);
-                $this->_showPaymentForm(true);
+                $this->_showPaymentForm();
             }
         } catch(Braintree_Controller_Exception $e) {
             if($log = $this->getLog()) {
@@ -209,7 +209,7 @@ class BraintreeController extends Integration_Controller_Action
         }
     }
 
-    protected function _showPaymentForm($allow_without_post = false) {
+    protected function _showPaymentForm() {
         $user = new Application_Model_User();
         $user->find($this->auth->getIdentity()->id);
 
@@ -274,28 +274,26 @@ class BraintreeController extends Integration_Controller_Action
                     throw new Braintree_Controller_Exception($flash_message['message']);
                 }
 
-                $extension = $user->hasStoreExtension($id);
+                $extension = $user->hasStoreExtension($domain, $id);
                 // check whether extension belongs to user
                 if(!$extension) {
-                    $flash_message = array(
-                        'type' => 'error',
-                        'message' => 'It is not your extension.'
-                    );
+                    $flash_message = array();
                     $redirect = array(
-                        'controller' => 'my-account',
-                        'action' => 'compare'
+                        'controller' => 'user',
+                        'action' => 'dashboard',
                     );
-                    throw new Braintree_Controller_Exception($flash_message['message']);
+                    throw new Braintree_Controller_Exception('Hack attempt or extension is not installed in given store.');
                 }
-                // check whether given GET params are correct
-                if(!$allow_without_post AND $this->_request->isGet() AND ($extension->reminder_sent == 0 || !is_null($extension->braintree_transaction_id))) {
+
+                if(!is_null($extension->braintree_transaction_id)) {
                     $flash_message = array(
                         'type' => 'error',
-                        'message' => 'Wrong parameters in url.'
+                        'message' => 'Extension was already bought for that store.'
                     );
                     $redirect = array(
-                            'controller' => 'my-account',
-                            'action' => 'compare'
+                            'controller' => 'queue',
+                            'action' => 'extensions',
+                            'store' => $domain
                     );
                     throw new Braintree_Controller_Exception($flash_message['message']);
                 }
@@ -617,7 +615,7 @@ class BraintreeController extends Integration_Controller_Action
                                 } else {
                                     $this->_handleResponseErrors($result);
                                     $this->_setParam('pay-for', 'change-plan');
-                                    $this->_showPaymentForm(true);
+                                    $this->_showPaymentForm();
                                 }
                             } catch(Braintree_Exception $e) {
                                 if($log = $this->getLog()) {
