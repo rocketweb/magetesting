@@ -285,7 +285,7 @@ class BraintreeController extends Integration_Controller_Action
                     throw new Braintree_Controller_Exception('Hack attempt or extension is not installed in given store.');
                 }
 
-                if(!is_null($extension->braintree_transaction_id)) {
+                if(!empty($extension->braintree_transaction_id)) {
                     $flash_message = array(
                         'type' => 'error',
                         'message' => 'Extension was already bought for that store.'
