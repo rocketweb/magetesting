@@ -30,6 +30,17 @@ class Application_Form_StoreAddClean extends Integration_Form{
                 0 => 'No',
         ));
         
+        $this->addElement('radio', 'do_hourly_db_revert', array(
+        		'label'       => 'Revert database hourly',
+        		'required'    => true,
+        		'label_class' => 'radio inline'
+        ));
+        $this->do_hourly_db_revert->addMultiOptions(array(
+        		1 => 'Yes',
+        		0 => 'No',
+        ));
+        
+        
         $this->sample_data->setValue(0)
         ->setSeparator(' ');
 
