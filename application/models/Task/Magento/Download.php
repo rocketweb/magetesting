@@ -113,6 +113,9 @@ implements Application_Model_Task_Interface {
         $this->_createAdminUser();
 
         $this->_importAdminFrontname();
+        
+        $this->_updateDemoNotice();
+        $this->_activateDemoNotice();      
 
         $this->_cleanLogTables();
         
@@ -575,6 +578,14 @@ implements Application_Model_Task_Interface {
                 }
             }
         }
+    }
+    
+    protected function _updateDemoNotice(){
+        
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
+                ' -p' . $this->_dbpass . 
+                ' ' . $this->config->magento->storeprefix . $this->_dbname . 
+                ' -e "INSERT INTO core_translate (string, store_id, translate, locale) VALUES (\'This is a demo store. Any orders placed through this store will not be honored or fulfilled.\', \'0\', \'This is a development store imported into Mage Testing. Please review our documentation to find out what was changed in the store in order to import that\', \'en_US\');"');
     }
     
 }

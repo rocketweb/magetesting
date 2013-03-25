@@ -344,6 +344,21 @@ class Application_Model_Extension {
         return $this->getMapper()->findByFilters($filters,  $this);
     }
 
+    /**
+     * @param int $id
+     * @return int|string
+     * @see Application_Model_ExtensionVersionSynchronizer::checkVersion
+     */
+    public function synchronizeReleases($id = 0) {
+        $id = (int)$id ? (int)$id : (int)$this->getId();
+        if(!$id) {
+            return Application_Model_ExtensionVersionSynchronizer::EXTENSION_DOES_NOT_EXIST;
+        }
+        $this->find($id);
+        $sync = new Application_Model_ExtensionVersionSynchronizer();
+        return $sync->checkVersion($this->getNamespaceModule(), $this->getVersion());
+    }
+
     public function fetchScreenshots($id = 0) {
         $id = (int)$id ? (int)$id : (int)$this->getId();
         if(!$id) {
