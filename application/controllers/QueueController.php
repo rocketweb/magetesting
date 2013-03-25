@@ -573,6 +573,7 @@ class QueueController extends Integration_Controller_Action {
         $storeModel = new Application_Model_Store();
         $store = $storeModel->findByDomain($store_name);
         $this->view->store_name = $store->store_name;
+        $this->view->store_domain = $store->domain;
         if ($request->isPost()) {
             $not_installed = true;
             foreach($extensions as $extension) {
