@@ -215,6 +215,8 @@ class QueueController extends Integration_Controller_Action {
         $this->view->editions = $editionModel->fetchAll();
         $this->view->form = $form;
         
+        $this->view->userplan = $plan; 
+        
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-addclean.js'), 'text/javascript');
     }
 
