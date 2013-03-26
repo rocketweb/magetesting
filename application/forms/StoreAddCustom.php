@@ -30,7 +30,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         
         $this->addElement('radio', 'do_hourly_db_revert', array(
         		'label'       => 'Revert database hourly',
-        		'required'    => true,
+        		'required'    => false,
         		'label_class' => 'radio inline'
         ));
         $this->do_hourly_db_revert->addMultiOptions(array(
