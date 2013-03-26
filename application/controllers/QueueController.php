@@ -109,7 +109,6 @@ class QueueController extends Integration_Controller_Action {
                             ->setUserId($userId)
                             ->setServerId($this->auth->getIdentity()->server_id)
                             ->setSampleData($form->sample_data->getValue())
-                            ->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue())
                             ->setStoreName($form->store_name->getValue())
                             ->setDomain(
                                     substr(
@@ -125,6 +124,10 @@ class QueueController extends Integration_Controller_Action {
                             ->setBackendName('admin')
                             ->setStatus('installing-magento')
                             ->setType('clean');
+                    
+                    if($plan->getCanDoDbRevert()){
+                    	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
+                    }
                                        
                     $storeId = $storeModel->save();
                     
@@ -220,7 +223,7 @@ class QueueController extends Integration_Controller_Action {
         $this->view->editions = $editionModel->fetchAll();
         $this->view->form = $form;
         
-        $this->view->userplan = $plan; 
+        $this->view->userplan = $plan;
         
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-addclean.js'), 'text/javascript');
     }
@@ -249,6 +252,13 @@ class QueueController extends Integration_Controller_Action {
         $this->view->versions = $versions;
 
         $this->view->input_radio = 'remote_path';
+        
+        $modelUser = new Application_Model_User();
+        $user = $modelUser->find($this->auth->getIdentity()->id);
+        
+        $modelPlan = new Application_Model_Plan();
+        $plan = $modelPlan->find($user->getPlanId());
+        
         if ($request->isPost()) {
 
             $path_type = $this->_getParam('input-radio');
@@ -278,11 +288,7 @@ class QueueController extends Integration_Controller_Action {
                             ->standardUser
                             ->stores;
                 } else {
-                    $modelUser = new Application_Model_User();
-                    $user = $modelUser->find($this->auth->getIdentity()->id);
-
-                    $modelPlan = new Application_Model_Plan();
-                    $plan = $modelPlan->find($user->getPlanId());
+                    
 
                     $maxStores = $plan->getStores();
                 }
@@ -321,6 +327,11 @@ class QueueController extends Integration_Controller_Action {
                             ->setType('custom')
                             ->setBackendName('admin')
                             ->setCustomFile($form->custom_file->getValue());
+                    
+                    if($plan->getCanDoDbRevert()){
+                    	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
+                    }
+                    
                     $storeId = $storeModel->save();
                     
                     $queueModel = new Application_Model_Queue();
@@ -412,6 +423,8 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->FlashMessenger->clearCurrentMessages();
 
         $this->view->form = $form;
+        $this->view->userplan = $plan;
+        
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-addcustom.js'), 'text/javascript');
     }
 
