@@ -14,5 +14,5 @@ ALTER TABLE `store` CHANGE `status` `status` ENUM( \'ready\', \'removing-magento
 ';
 
 $sql[] = '
-ALTER TABLE `queue` CHANGE `task` `task` ENUM( \'ExtensionInstall\', \'ExtensionOpensource\', \'MagentoDownload\', \'MagentoInstall\', \'MagentoRemove\', \'RevisionCommit\', \'RevisionDeploy\', \'RevisionRollback\', \'RevisionInit\', \'PapertrailUserCreate\', \'PapertrailUserRemove\', \'PapertrailSystemCreate\', \'PapertrailSystemRemove\', \'MagentoHourlyRevert\' ) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL
+ALTER TABLE `queue` CHANGE `task` `task` ENUM( \'ExtensionInstall\', \'ExtensionOpensource\', \'MagentoDownload\', \'MagentoInstall\', \'MagentoRemove\', \'RevisionCommit\', \'RevisionDeploy\', \'RevisionRollback\', \'RevisionInit\', \'PapertrailUserCreate\', \'PapertrailUserRemove\', \'PapertrailSystemCreate\', \'PapertrailSystemRemove\', \'MagentoHourlyrevert\' ) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL
 ';
