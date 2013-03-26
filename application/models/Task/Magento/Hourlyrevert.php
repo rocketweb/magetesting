@@ -24,16 +24,11 @@ implements Application_Model_Task_Interface {
         $privilegeModel->createDatabase($dbName);
 
 		//get revision to know which file we revert to
-		$select = new Zend_Db_Select($this->db);
-        $sql = $select
-        ->from('revision')
-        ->where('store_id = ?', $this->_storeObject->getId())
-        ->order(array('id desc'))
-        ->limit(1);
-        $revision = $db->fetchRow($sql);
+		$revisionModel = new Application_Model_Revision();
+		$revision = $revisionModel->getLastForStore($this->_storeObject->getId());
 
     	//insert db dump from tar.gz one-liner
-        exec('tar xfzO '.$this->config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision['db_before_revision'].' | mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$dbName.'');
+        exec('tar xfzO '.$this->config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision->getDbBeforeRevision().' | mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$dbName.'');
 
     }
 

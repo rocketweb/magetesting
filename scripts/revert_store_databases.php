@@ -27,7 +27,7 @@ if($result) {
 		->setParentId(0)
 		->setServerId($row['server_id'])
 		->setTask('MagentoHourlyrevert')
-		->setRetryCount(2)
+		->setRetryCount(0)
 		->save();        
     }
 }
