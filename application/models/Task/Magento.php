@@ -392,5 +392,16 @@ extends Application_Model_Task {
         
         
     }
+    
+    protected function _updateStoreConfigurationEmails(){
+    	$userEmail = $this->_userObject->getEmail();
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_general/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_sales/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_support/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom1/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom2/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'contacts/email/recipient_email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	unset($userEmail);
+    }
 }
         

@@ -109,7 +109,7 @@ implements Application_Model_Task_Interface {
         unset($output);
 
         $this->_updateCoreConfigData();
-
+		$this->_updateStoreConfigurationEmails();
         $this->_createAdminUser();
 
         $this->_importAdminFrontname();
