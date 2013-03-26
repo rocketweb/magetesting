@@ -28,7 +28,7 @@ implements Application_Model_Task_Interface {
 		$revision = $revisionModel->getLastForStore($this->_storeObject->getId());
 
     	//insert db dump from tar.gz one-liner
-        exec('tar xfzO '.$this->config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision->getDbBeforeRevision().' | mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$dbName.'');
+        exec('tar xfzO '.$this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision->getDbBeforeRevision().' | mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$dbName.'');
 
     }
 
