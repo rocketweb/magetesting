@@ -19,25 +19,15 @@ if($result) {
         $storeModel = new Application_Model_Store(); 
         $storeObject = $storeModel->find($row['id']);
 
-
-        $select = new Zend_Db_Select($db);
-        $sql = $select
-        ->from('revision')
-        ->where('store_id = ?', $row['id'])
-        ->order(array('id desc'))
-        ->limit(1);
-
-        $revision = $db->fetchRow($sql);
-
-        //drop database
-        $privilegeModel = new Application_Model_DbTable_Privilege($db, $config);
-        $privilegeModel->dropDatabase($userModel->getLogin().'_'.$storeModel->getDomain());
-
-        //create database again
-        $privilegeModel->createDatabase($userModel->getLogin().'_'.$storeModel->getDomain());
-
-    	//insert db dump
-        exec('tar xfzO '.$config->magento->systemHomeFolder.'/'.$config->magento->userprefix.$userObject->getLogin().'/public_html/'.$storeModel->getDomain().'/var/db/'.$revision['db_before_revision'].' | mysql -u'.$config->resources->db->params->username.' -p'.$config->resources->db->params->password.' '.$config->magento->storeprefix.$userObject->getLogin().'_'.$storeObject->getDomain().'');
-        
+		$queueModel = new Application_Model_Queue();
+		$queueModel->setStoreId($row['id'])
+		->setStatus('pending')
+		->setUserId($row['user_id'])
+		->setExtensionId(0)
+		->setParentId(0)
+		->setServerId($row['server_id'])
+		->setTask('MagentoHourlyrevert')
+		->setRetryCount(2)
+		->save();        
     }
 }
