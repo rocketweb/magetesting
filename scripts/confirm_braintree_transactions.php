@@ -41,7 +41,7 @@ if($result) {
 } else {
     $log->log('There is no plan payment to process.', Zend_Log::INFO);
 }
-
+/*
 $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('store_extension')
@@ -118,4 +118,4 @@ if($result) {
 } else {
     $log->log('There is no extension payment to process.', Zend_Log::INFO);
 }
-
+*/

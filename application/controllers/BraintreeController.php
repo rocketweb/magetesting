@@ -154,7 +154,48 @@ class BraintreeController extends Integration_Controller_Action
                 }
 
                 if('extension' === $pay_for) {
-                    $flash_message = 'You have successfully bought extension. It will be uploaded in open source version into your store just after transaction is confirmed.';
+                    // raise plan for user with 7 days plan
+                    $plan = new Application_Model_Plan();
+                    $plan->find($user->getPlanId());
+                    if(stristr($plan->getBillingPeriod(), 'days')) {
+                        $user->setPlanActiveTo(date('Y-m-d', strtotime('+7 days', strtotime($user->getPlanActiveTo()))));
+                        $user->setPlanRaisedToDate(date('Y-m-d', strtotime('+7 days')));
+                        $user->setPlanIdBeforeRaising($user->getPlanId());
+                        $user->setPlanId(2);
+                        $user->save();
+                    }
+                    
+                    $extensionModel = new Application_Model_Extension();
+                    $extensionModel->find($store_extension->getExtensionId());
+                    
+                    $queueModel = new Application_Model_Queue();
+                    $queueModel->setStoreId($store->id);
+                    $queueModel->setTask('ExtensionOpensource');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($store->user_id);
+                    $queueModel->setServerId($store->server_id);
+                    $queueModel->setExtensionId($store_extension->getExtensionId());
+                    $queueModel->setParentId(0);
+                    $queueModel->save();
+                    $opensourceId = $queueModel->getId();
+                    unset($queueModel);
+                    
+                    $queueModel = new Application_Model_Queue();
+                    $queueModel->setStoreId($store->id);
+                    $queueModel->setTask('RevisionCommit');
+                    $queueModel->setTaskParams(
+                            array(
+                                    'commit_comment' => $extensionModel->getName() . ' (Open Source)',
+                                    'commit_type' => 'extension-decode'
+                            )
+                    );
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($store->user_id);
+                    $queueModel->setServerId($store->server_id);
+                    $queueModel->setExtensionId($store_extension->getExtensionId());
+                    $queueModel->setParentId($opensourceId);
+                    $queueModel->save();
+                    $flash_message = 'You have successfully bought extension. It will be uploaded in open source.';
                     $redirect = array(
                             'controller' => 'queue',
                             'action' => 'extensions',
