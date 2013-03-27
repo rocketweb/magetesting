@@ -866,17 +866,6 @@ class QueueController extends Integration_Controller_Action {
                                 'action' => 'dashboard',
                         ), 'default', true);
                     }
-
-                    // check whether payment was settled by gateway
-                    if(!(int)$extension->getBraintreeTransactionConfirmed()) {
-                        $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'We\'re still waiting for extension payment confirmation, please try again later.'));
-                    
-                        return $this->_helper->redirector->gotoRoute(array(
-                                'module' => 'default',
-                                'controller' => 'user',
-                                'action' => 'dashboard',
-                        ), 'default', true);
-                    }
                 }
             } 
             $domain = $this->_getParam('domain');        
@@ -950,17 +939,13 @@ class QueueController extends Integration_Controller_Action {
                     && $revision['price']>0
                 ) {
                     $request_button = '<button type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
-                } elseif($revision['braintree_transaction_id'] && !$revision['braintree_transaction_confirmed']) {
-                    $request_button = '<button 
-                        rel="tooltip" data-original-title="Your payment for extension is being processed now. You will be able to request deployment just after payment is settled."
-                        type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy disabled" name="revision">Buy To Request Deployment</a>'.PHP_EOL;
                 } else {
                     $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                 }
                 
                 $content .= (($revision['filename'] AND
                     (
-                        $revision['braintree_transaction_id'] AND (int) $revision['braintree_transaction_confirmed'] OR $revision['price'] == 0
+                        $revision['braintree_transaction_id'] OR $revision['price'] == 0
                     )
                 ) ? $download_button : $request_button) . PHP_EOL;
 
