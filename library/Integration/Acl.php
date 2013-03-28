@@ -29,6 +29,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_extensions'));
         $this->add(new Zend_Acl_Resource('default_my-account'));
         $this->add(new Zend_Acl_Resource('default_coupon'));
+        $this->add(new Zend_Acl_Resource('default_help'));
         /**
          * Deny for all (we use white list)
          */
@@ -53,6 +54,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('guest', 'default_user', array(
                 'login', 'password-recovery', 'register', 'activate', 'reset-password', 'set-new-password'
         ));
+        $this->allow('guest','default_help',array('index','category','page'));
 
         /**
          * Set up privileges for free-user
@@ -69,7 +71,8 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'default_my-account');
 
         $this->allow('free-user', 'default_braintree', array('payment', 'change-plan'));
-
+        $this->allow('free-user','default_help',array('index','category','page'));
+        
         /**
          * Set up privileges for commercial-user
          */
@@ -87,7 +90,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('commercial-user', 'default_my-account');
         $this->allow('commercial-user', 'default_braintree', array('payment', 'change-plan'));
-        
+        $this->allow('commercial-user','default_help',array('index','category','page'));
         /**
          * Set up privileges for awaiting-user
          */
@@ -105,7 +108,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('awaiting-user', 'default_my-account');
         $this->allow('awaiting-user', 'default_braintree', array('payment', 'change-plan'));
-        
+        $this->allow('awaiting-user','default_help',array('index','category','page'));
     }
 
     /**
