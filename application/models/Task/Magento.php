@@ -390,21 +390,5 @@ extends Application_Model_Task {
             
         } 
     }
-    
-    protected function _addDbRevertCode(){
-    	
-    	$storeIndexFile = $this->_storeFolder . '/' . $this->_domain.'/index.php';
-    	
-    	$dbRevertCode = "<?php".
-    	PHP_EOL."if (file_exists('db_revert_in_progress.lock')){".
-    	PHP_EOL."echo 'Store is currently under maintenance. Please try again in few seconds';".
-    	PHP_EOL."exit;".
-    	PHP_EOL."}";
-    	
-    	$contents = file_get_contents($storeIndexFile);
-    	
-    	$newContent = str_replace('<?php',$dbRevertCode,$contents);
-    	file_put_contents($storeIndexFile, $newContent);
-    }
 }
         

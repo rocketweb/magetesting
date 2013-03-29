@@ -68,8 +68,6 @@ implements Application_Model_Task_Interface {
         
         $this->_fixUserHomeChmod();
         
-        $this->_addDbRevertCode();
-        
         $this->_sendStoreReadyEmail();
     }
 

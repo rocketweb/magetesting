@@ -18,7 +18,7 @@ implements Application_Model_Task_Interface {
         $dbName = $this->_userObject->getLogin().'_'.$this->_storeObject->getDomain();
         
         //create mainteance flag
-        $lockfile = $this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/db_revert_in_progress.lock';
+        $lockfile = $this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/maintenance.flag';
         $command = 'touch '.$lockfile;
  		exec($command);
         

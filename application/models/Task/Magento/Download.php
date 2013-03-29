@@ -124,8 +124,6 @@ implements Application_Model_Task_Interface {
         $this->logger->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
 
         chdir($startCwd);
-
-        $this->_addDbRevertCode();
         
         /* send email to store owner start */
         $this->_sendStoreReadyEmail();
