@@ -1,9 +1,10 @@
 <h1>Need help?</h1>
 
-
+<div id="help-index" class="container-fluid">
 <div class="row-fluid">
     <div class="span6">
-        <h3>Some category</h3>
+        <div class="tab-stripe"></div>
+        <h3><a href="<?php echo $this->url(array('category' => 'some-category'), 'help-category') ?>">Some Category</a></h3>
         <ul>
             <li>
                 <a href="<?php echo $this->url(array('category' => 'some-category', 'page' => 'some-article'), 'help-page') ?>">Some article</a>
@@ -11,6 +12,7 @@
         </ul>
     </div>
     <div class="span6">
+        <div class="tab-stripe"></div>
         <h3>No Category here yet...</h3>
         <ul>
             <li>and no articles...</li>
@@ -19,15 +21,20 @@
 </div>
 <div class="row-fluid">
     <div class="span6">
+<div class="tab-stripe"></div>
         <h3>No Category here yet...</h3>
         <ul>
             <li>and no articles...</li>
         </ul>
     </div>
     <div class="span6">
+<div class="tab-stripe"></div>
         <h3>No Category here yet...</h3>
         <ul>
             <li>and no articles...</li>
         </ul>
     </div>
 </div>
+</div>
+
+

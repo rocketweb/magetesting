@@ -3353,3 +3353,12 @@ label.error {
     position: absolute;
     z-index: 10;
 }
+
+/*help pages*/
+#help-index h3{ 
+margin-left:20px; 
+}
+
+#help-index ul{ 
+list-style:none; 
+}
