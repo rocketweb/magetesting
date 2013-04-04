@@ -27,7 +27,7 @@ include 'init.console.php';
 try {
     $opts = new Zend_Console_Getopt(
         array(
-            'package|p=s'      => '(required) use format: Namespace_Module',
+            'package|p=s'      => '(required) use format: Extension_Key',
             'edition|e=s'       => "(required) possible values are: 'CE', 'EE' and 'PE'",
             'add_as|a-s'      => "(optional) if given, adds entry to allowed extensions table.Possible values are 'dev' and 'stable', only admins have access to dev, anyone has access to stable",
             'help'       => 'this list',
@@ -121,7 +121,7 @@ if(isset($opts->package)) {
 	try {
 	$extensionModel = new Application_Model_Extension();
 	
-	if ($newExt = $extensionModel->findByFilters(array('namespace_module'=>$devExtension->getName(),'edition'=>$devExtension->getEdition()))){
+	if ($newExt = $extensionModel->findByFilters(array('extension_key'=>$devExtension->getName(),'edition'=>$devExtension->getEdition()))){
 	
 	} else {
 	  $newExt = $extensionModel;
@@ -130,7 +130,7 @@ if(isset($opts->package)) {
 	$newExt->setName($devExtension->getName());
         $newExt->setVersion($version);
 	$newExt->setFileName($devExtension->getName().'-'.$version.'.tgz');
-	$newExt->setNamespaceModule($devExtension->getName());
+	$newExt->setExtensionKey($devExtension->getName());
 	$newExt->setFromVersion($devExtension->getFromVersion());
 	$newExt->setToVersion($devExtension->getToVersion());
 	$newExt->setEdition($devExtension->getEdition());
