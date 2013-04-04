@@ -52,7 +52,7 @@ class ExtensionController extends Integration_Controller_Action {
 
         $extension_data = array(
             'title'           => $this->_getParam('title', ''),
-            'namespace_module'=> $this->_getParam('namespace_module', ''),
+            'extension_key'   => $this->_getParam('extension_key', ''),
             'version'         => $this->_getParam('version', ''),
             'edition'         => $this->_getParam('edition', ''),
             'from_version'    => $this->_getParam('from_version', ''),
@@ -130,7 +130,7 @@ class ExtensionController extends Integration_Controller_Action {
                 }
                 $extension_entity_data = array(
                     'title'           => $extension->getName(),
-                    'namespace_module'=> $extension->getNamespaceModule(),
+                    'extension_key'   => $extension->getExtensionKey(),
                     'description'     => $extension->getDescription(),
                     'version'         => $extension->getVersion(),
                     'edition'         => $extension->getEdition(),
@@ -409,7 +409,7 @@ class ExtensionController extends Integration_Controller_Action {
             $extension = $extension->find($id);
             if($extension->getName()) {
                 $response->status = 'ok';
-                $versions = $extension->findByNamespaceAndEdition($extension->getNamespaceModule(), $extension->getEdition());
+                $versions = $extension->findByExtensionKeyAndEdition($extension->getExtensionKey(), $extension->getEdition());
                 foreach($versions as $version) {
                     $actions = '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $version->getId()), 'default', true) . '" class="btn btn-primary">Edit</a>';
                     $actions .= '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $version->getId()), 'default', true) . '" class="btn btn-danger">Delete</a>';

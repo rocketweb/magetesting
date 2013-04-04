@@ -25,7 +25,7 @@ public function findByFilters(array $filters){
         
          $allowed_keys = array(
              'name',
-             'namespace_module',           
+             'extension_key',
              'from_version',
              'to_version',
              'edition',

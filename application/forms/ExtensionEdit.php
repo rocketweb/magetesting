@@ -28,8 +28,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
         ));
 
         // Add module namespace element
-        $this->addElement('text', 'namespace_module', array(
-                'label'      => 'Namespace_Module',
+        $this->addElement('text', 'extension_key', array(
+                'label'      => 'Extension key',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(

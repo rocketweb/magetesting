@@ -53,7 +53,7 @@ class Application_Model_ExtensionMapper {
         ->setVersion($row->version)
         ->setExtension($row->extension)
         ->setExtensionEncoded($row->extension_encoded)
-        ->setNamespaceModule($row->namespace_module)
+        ->setExtensionKey($row->extension_key)
         ->setFromVersion($row->from_version)
         ->setToVersion($row->to_version)
         ->setEdition($row->edition)
@@ -62,9 +62,9 @@ class Application_Model_ExtensionMapper {
         return $extension;
     }
 
-    public function findByNamespaceAndEdition($namespace, $edition)
+    public function findByExtensionKeyAndEdition($extension_key, $edition)
     {
-        $resultSet = $this->getDbTable()->findByNamespaceAndEdition($namespace, $edition);
+        $resultSet = $this->getDbTable()->findByExtensionKeyAndEdition($extension_key, $edition);
         $entries   = array();
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Extension();
@@ -77,7 +77,7 @@ class Application_Model_ExtensionMapper {
                   ->setVersion($row->version)
                   ->setExtension($row->extension)
                   ->setExtensionEncoded($row->extension_encoded)
-                  ->setNamespaceModule($row->namespace_module)
+                  ->setExtensionKey($row->extension_key)
                   ->setFromVersion($row->from_version)
                   ->setToVersion($row->to_version)
                   ->setEdition($row->edition)
@@ -109,7 +109,7 @@ class Application_Model_ExtensionMapper {
             ->setVersion($row->version)
             ->setExtension($row->extension)
             ->setExtensionEncoded($row->extension_encoded)
-            ->setNamespaceModule($row->namespace_module)
+            ->setExtensionKey($row->extension_key)
             ->setFromVersion($row->from_version)
             ->setToVersion($row->to_version)
             ->setEdition($row->edition)
@@ -195,7 +195,7 @@ class Application_Model_ExtensionMapper {
                 ->setVersion($row->version)
                 ->setExtension($row->extension)
                 ->setExtensionEncoded($row->extension_encoded)
-                ->setNamespaceModule($row->namespace_module)
+                ->setExtensionKey($row->extension_key)
                 ->setFromVersion($row->from_version)
                 ->setToVersion($row->to_version)
                 ->setEdition($row->edition)
