@@ -44,6 +44,7 @@ $(document).ready(function() {
                                 $version_list_modal_title.text($this.parents('.wrapper:first').find('.info .info-main h5').text() + ' releases');
                                 $version_list_modal_table_body.html(result.message);
                                 $version_list_modal_extension_field.val($this.data('extension-id'));
+                                $version_list_modal_version_field.val('');
                                 $version_list_modal.modal('show');
                                 $this.removeClass('disabled');
                             } else {

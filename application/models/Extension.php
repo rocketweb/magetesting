@@ -20,7 +20,7 @@ class Application_Model_Extension {
     
     protected $_extension_encoded;
     
-    protected $_namespace_module;
+    protected $_extension_key;
     
     protected $_from_version;
     
@@ -144,15 +144,15 @@ class Application_Model_Extension {
         return $this->_extension_encoded;
     }
     
-    public function setNamespaceModule($value)
+    public function setExtensionKey($value)
     {
-        $this->_namespace_module = $value;
+        $this->_extension_key = $value;
         return $this;
     }
 
-    public function getNamespaceModule()
+    public function getExtensionKey()
     {
-        return $this->_namespace_module;
+        return $this->_extension_key;
     }
 
     public function setVersion($value)
@@ -253,9 +253,9 @@ class Application_Model_Extension {
         return $this;
     }
 
-    public function findByNamespaceAndEdition($namespace, $edition)
+    public function findByExtensionKeyAndEdition($extension_key, $edition)
     {
-        return $this->getMapper()->findByNamespaceAndEdition($namespace, $edition);
+        return $this->getMapper()->findByExtensionKeyAndEdition($extension_key, $edition);
     }
 
     public function fetchAll()
@@ -282,7 +282,7 @@ class Application_Model_Extension {
                 'logo' => $this->getLogo(),
                 'extension' => $this->getExtension(),
                 'extension_encoded' => $this->getExtensionEncoded(),
-                'namespace_module' => $this->getNamespaceModule(),
+                'extension_key' => $this->getExtensionKey(),
                 'from_version' => $this->getFromVersion(),
                 'to_version' => $this->getToVersion(),
                 'edition' => $this->getEdition(),
@@ -356,7 +356,7 @@ class Application_Model_Extension {
         }
         $this->find($id);
         $sync = new Application_Model_ExtensionVersionSynchronizer();
-        return $sync->checkVersion($this->getNamespaceModule(), $this->getVersion());
+        return $sync->checkVersion($this->getExtensionKey(), $this->getVersion());
     }
 
     public function fetchScreenshots($id = 0) {
@@ -428,6 +428,13 @@ class Application_Model_Extension {
                         $new_screenshot->save();
                     }
                 }
+            }
+            $extension_file = $this->getExtensionKey() . '-' . $this->getVersion() . '.tgz';
+            $http = new Zend_Http_Client('http://connect20.magentocommerce.com/community/' . $this->getExtensionKey() . '/' . $this->getVersion() . '/' . $extension_file);
+            $response = $http->request();
+            if(!$response->isError()) {
+                file_put_contents(APPLICATION_PATH.'/../data/extensions/'.$this->getEdition().'/open/' . $extension_file, $response->getBody());
+                $this->setExtension($extension_file)->save();
             }
         }
         catch(Exception $e) {
