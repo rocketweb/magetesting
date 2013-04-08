@@ -385,6 +385,13 @@ class UserController extends Integration_Controller_Action
                 try {
                     $mail->send();
                     $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
+                    if($formData['coupon']) {
+                        if(!$coupon) {
+                            $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'No coupon found!'));
+                        } elseif($modelCoupon->isUnused() === false) {
+                            $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'Coupon has already been used!'));
+                        }
+                    }
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');
                     $log->log('User Register - Unable to send email', Zend_Log::CRIT, json_encode($e->getTraceAsString()));
