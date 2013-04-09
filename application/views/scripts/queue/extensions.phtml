@@ -112,7 +112,7 @@
                             data-store-extension-id="<?php echo $extension['store_extension_id']; ?>"
                         <?php endif; ?>
                         >
-                        <?php if('extension' == $page_type && 1 == (int)$sync->checkVersion($extension['extension_key'], $extension['version'])): ?>
+                        <?php if('extension' == $page_type && is_string($sync->checkVersion($extension['extension_key'], $extension['version']))): ?>
                             <div class="new-release"><i class="icon-retweet"></i></div>
                         <?php endif; ?>
                             <div class="wrapper">
