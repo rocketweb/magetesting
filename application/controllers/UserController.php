@@ -336,28 +336,16 @@ class UserController extends Integration_Controller_Action
 
         $formData = $this->_request->getPost();
         if(count($formData) > 1) {
-
-            if($form->isValid($formData)) {
-                
-                $modelCoupon = new Application_Model_Coupon();
-                $coupon = $modelCoupon->findByCode($formData['coupon']);
-                if ($useCoupons) {
-                    if (!$coupon){
-                        $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'No coupon found!'));
-                        return $this->_helper->redirector->gotoRoute(array(
-                                'module'     => 'default',
-                                'controller' => 'user',
-                                'action'     => 'register',
-                        ), 'default', true);
-                    } elseif ($modelCoupon->isUnused() === false ){
-                        $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Coupon has already been used!'));
-                        return $this->_helper->redirector->gotoRoute(array(
-                                'module'     => 'default',
-                                'controller' => 'user',
-                                'action'     => 'register',
-                        ), 'default', true);
-                    }
+            $wrong_coupon = false;
+            $modelCoupon = new Application_Model_Coupon();
+            $coupon = $modelCoupon->findByCode($formData['coupon']);
+            if ($useCoupons || $formData['coupon']) {
+                if (!$coupon || $modelCoupon->isUnused() === false ){
+                    $wrong_coupon = true;
                 }
+            }
+
+            if($form->isValid($formData) && !$wrong_coupon) {
                 $user->setOptions($form->getValues());
                 $user->setPreselectedPlanId($plan_id);
                 $user = $user->save();
@@ -385,13 +373,6 @@ class UserController extends Integration_Controller_Action
                 try {
                     $mail->send();
                     $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
-                    if($formData['coupon']) {
-                        if(!$coupon) {
-                            $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'No coupon found!'));
-                        } elseif($modelCoupon->isUnused() === false) {
-                            $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'Coupon has already been used!'));
-                        }
-                    }
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');
                     $log->log('User Register - Unable to send email', Zend_Log::CRIT, json_encode($e->getTraceAsString()));
@@ -410,8 +391,14 @@ class UserController extends Integration_Controller_Action
                         'action'     => 'login',
                 ), 'default', true);
             }
+            if($wrong_coupon) {
+                if(!$coupon) {
+                    $form->coupon->addError('No coupon found!')->markAsError();
+                } elseif ($modelCoupon->isUnused() === false ){
+                    $form->coupon->addError('Coupon has already been used!')->markAsError();
+                }
+            }
         }
-        
         $this->view->useCoupons = $useCoupons;
         $this->view->form = $form;
     }
