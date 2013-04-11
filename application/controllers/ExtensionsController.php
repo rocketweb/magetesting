@@ -20,7 +20,7 @@ class ExtensionsController extends Integration_Controller_Action
 
         $extensionCategoryModel = new Application_Model_ExtensionCategory();
         $this->view->categories = $extensionCategoryModel->fetchAll();
-        $this->renderScript('queue/extensions.phtml');
+        $this->renderScript('extension/list.phtml');
     }
 	
 }
