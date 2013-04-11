@@ -1,4 +1,60 @@
 $(document).ready(function () {
+    $.Isotope.prototype.replace = function($elements) {
+        var $remove_elements = this.$allAtoms.not($elements), // atoms to be removed
+            // whether is something to remove and should be animated
+            $animate_remove = $remove_elements.filter( ':not(.' + this.options.hiddenClass + ')' ).length,
+            $add_elements = $elements.not(this.$allAtoms), // new atoms
+            instance = this; // scope helper
+
+        // save original order by replacing elements using existing in isotope
+        this.$allAtoms = $elements.map(function(k, e) {
+            var $the_same = e;
+            instance.$allAtoms.each(function(k1,e1) {
+                if($(e1).is(e)) {
+                    $the_same = e1;
+                }
+            });
+            return $the_same;
+        });
+        this.$filteredAtoms = this.$allAtoms;
+
+        // it should be called at the end
+        $remove_from_dom = function(a, instance) {
+            $remove_elements.deflate(); // removes element from dom but binded events still exists
+        }
+        // is there anything to add ?
+        if($add_elements.length) {
+            /* add isotope-item basic style */
+            atomStyle = { position: 'absolute' };
+            if ( this.usingTransforms ) {
+              atomStyle.left = 0;
+              atomStyle.top = 0;
+            }
+            $add_elements.css( atomStyle ).addClass( this.options.itemClass );
+            /* end */
+            this.element.append($add_elements);
+            /* hideAppended */
+            $add_elements.addClass('no-transition');
+            this._isInserting = true;
+            // apply hidden styles
+            this.styleQueue.push({ $el: $add_elements, style: this.options.hiddenStyle });
+            /* end */
+            this.reLayout();
+            /* _reveal fires reLayout */
+            this._revealAppended($add_elements);
+        }
+        // is there anything to remove ?
+        if($remove_elements.length) {
+            // animate removal of visible atoms
+            if($animate_remove) {
+                this.styleQueue.push({ $el: $remove_elements, style: this.options.hiddenStyle });
+                this.reLayout($remove_from_dom);
+            } else {
+                $remove_from_dom();
+            }
+        }
+    }
+
     if($('#payment-form').length) {
         $('#payment-form').validate({
             errorClass: 'error',
@@ -322,6 +378,9 @@ $(document).ready(function () {
         $extensions_filter_options = $extensions_filter_container.find('li a'),
         $extensions_filters_search = '',
         $extensions_filters = '',
+        $load_more = $('.load-more'),
+        $load_more_limit = $('.element:not(.hidden)').length,
+        $last_filtered_extensions = $([]),
         ElementPad        = 5,
         ElementWidth      = 135 + (ElementPad * 2),
         ElementHeight     = 112;
@@ -357,24 +416,7 @@ $(document).ready(function () {
         // Pre-toggle "All" buttons
         $('li a.btn-all').parent().addClass('active');
         //$('.btn-all').button('toggle');
-        
-        $extensions_isotope.isotope({
-            masonry : {
-                columnWidth : ColumnWidth
-              },
-              masonryHorizontal : {
-                rowHeight: RowHeight
-              },
-              cellsByRow : {
-                columnWidth : ColumnWidth * 2,
-                rowHeight : RowHeight * 2
-              },
-              cellsByColumn : {
-                columnWidth : ColumnWidth * 2,
-                rowHeight : RowHeight * 2
-              }
-        });
-        
+
         $extensions_filter_options.click(function(e) {
             var $this = $(this);
             var $dropdown = $this.parent().parent();
@@ -396,7 +438,14 @@ $(document).ready(function () {
                         $extensions_filters += $option;
                     }
                 });
-                $extensions_isotope.isotope({filter: $extensions_filters + $extensions_filters_search});
+
+                $last_filtered_extensions = $tiles.filter(($extensions_filters + $extensions_filters_search) || '*');
+                if($last_filtered_extensions.length <= $load_more_limit) {
+                    $load_more.hide();
+                } else {
+                    $load_more.show();
+                }
+                $extensions_isotope.isotope('replace', $last_filtered_extensions.filter(':lt('+$load_more_limit+')'));
             }
             
             // Bootstrap + isotope conflict fix
@@ -430,28 +479,34 @@ $(document).ready(function () {
             delayTime = 500, // pause between key pressing before we fire up filtering - default = 1000 ms = 1 second
             $search_input = $('.search-as-you-type-input'),
             lastValue_search_input = '',
-            lastTimeout,
-            $extensions = $('.element');
+            lastTimeout;
 
         var f_filterExtensionsByQuery = function f_filterExtensionsByQuery() {
             var queryString = $search_input.val().toLowerCase();
-            $extensions.each(function(k, e) {
+            if(!queryString) {
+                $extensions_filters_search = '';
+            } else {
+                $extensions_filters_search = '.matches';
+            }
+            $tiles.each(function(k, e) {
                 var $element = $(e);
-                if(!queryString ||
-                   (
-                     $element.find('.info').text().toLowerCase().match(queryString) ||
-                     $element.find('.description').text().toLowerCase().match(queryString)
-                   )
+                if(
+                    $element.find('.info').text().toLowerCase().match(queryString) ||
+                    $element.find('.description').text().toLowerCase().match(queryString)
                 ) {
                     $element.addClass('matches');
-                    $extensions_filters_search = '.matches';
                 } else {
                     $element.removeClass('matches');
-                    $extensions_filters_search = '';
                 }
             });
 
-            $extensions_isotope.isotope({ filter: $extensions_filters + '.matches' });
+            $last_filtered_extensions = $tiles.filter(($extensions_filters + $extensions_filters_search) || '*');
+            if($last_filtered_extensions.length <= $load_more_limit) {
+                $load_more.hide();
+            } else {
+                $load_more.show();
+            }
+            $extensions_isotope.isotope('replace', $last_filtered_extensions.filter(':lt('+$load_more_limit+')'));
         }
 
         // prevent form submitting for query search field
@@ -471,155 +526,233 @@ $(document).ready(function () {
                 lastTimeout = setTimeout(f_filterExtensionsByQuery, delayTime);
             }
         });
-    }
 
-    // EVENT: On click "Install" button
-    $('.install').click(function(event){
-        "use strict";
-        var $this = $(this);
 
-        $this.addClass('disabled');
-        $.ajax({
-            url     : $extensions_filter_container.data('form-action'),
-            type    : 'POST',
-            data    : {extension_id : $this.data('install-extension')},
-            success : function(response) {
-                if(response != 'error' && response != '') {
-                    var $replacement = $('<span class="label update-status label-info pull-right">Pending</span>');
-                    $this.replaceWith($replacement);
-                    $replacement.parents('.element:first').data('store-extension-id', response);
-                    f_update_status($replacement);
-                }
-            }
-        });
-        
-        
-        return false;
-    });
-    
-    var _screenshotCarousel = $('#screenshotCarousel');
-    var _screenshotModal = $('#screenshotModal').modal({show: false});
-    
-    // EVENT: On click homepage thumbnail
-    $('a.index-thumbnail').click(function(event){
-        var _this = $(this);
-        var _thumbs = _this.parent().parent();
-        var _carousel = $('#screenshotCarousel div.carousel-inner');
-        
-        _carousel.empty();
-        
-        var active = true;
-        
-        _thumbs.find('li').each(function(index){
-            var _screenshot = $(this);
+        // EVENT: On click "Install" button
+        $('.install').click(function(event){
+            "use strict";
+            var $this = $(this);
 
-            var _item = $('<div>').addClass('item');
-            
-            if(active){
-                _item.addClass('active');
-                active = false;
-            }
-            
-            _item.append($('<div>')
-                .addClass('modal-header')
-                .append($('<button>')
-                    .addClass('close')
-                    .attr('type', 'button')
-                    .attr('data-dismiss', 'modal')
-                    .html('&times;')
-                )
-                .append($('<h5>')
-                    .text(_screenshot.find('a').attr('data-title'))
-                )
-            ).append($('<div>')
-                .addClass('modal-body')
-                .css('max-height','100%')
-                .append($('<img>')
-                    .attr('src', _screenshot.find('a').attr('href'))
-                )
-            );
-            _carousel.append(_item);
-        });
-        
-        _screenshotModal.modal('show');
-        _screenshotCarousel.carousel({'interval': false});
-        $('.carousel-control').css('top', '56%');
-        
-        event.preventDefault();
-        event.stopPropagation();
-    });
-    
-    // EVENT: On click extension's "View screens" button
-    $('a.btn-screenshots').click(function(event){
-        "use strict";
-        
-        var _this = $(this);
-        var _extension = _this.parent().parent().parent();
-        var _carousel = $('#screenshotCarousel div.carousel-inner');
-        
-        _carousel.empty();
-        
-        var active = true;
-        
-        _extension.find('.screenshots li').each(function(){
-            var _screenshot = $(this);
-            
-            var _item = $('<div>').addClass('item');
-            if(active){
-                _item.addClass('active');
-                active = false;
-            }
-            _item.append($('<div>')
-                .addClass('modal-header')
-                .append($('<button>')
-                    .addClass('close')
-                    .attr('type', 'button')
-                    .attr('data-dismiss', 'modal')
-                    .html('&times;')
-                )
-                .append($('<h5>')
-                    .text(_screenshot.attr('data-id'))
-                )
-            ).append($('<div>')
-                .addClass('modal-body')
-                .css('max-height','100%')
-                .append($('<img>')
-                    // Preload function
-                    /*.load(function(){
-                    })*/
-                    .attr('src', _screenshot.text())
-                )
-            );
-            _carousel.append(_item);
-        });
-        
-        _screenshotModal.modal('show');
-        _screenshotCarousel.carousel({'interval': false});
-        
-        // Code for resizing and centering modal
-        /*_screenshotCarousel.bind('slid', function() {
-            _screenshotModal.css({
-                width: 'auto',
-                'margin-left': function(){
-                    return -($(this).width() / 2);
+            $this.addClass('disabled');
+            $.ajax({
+                url     : $extensions_filter_container.data('form-action'),
+                type    : 'POST',
+                data    : {extension_id : $this.data('install-extension')},
+                success : function(response) {
+                    if(response != 'error' && response != '') {
+                        var $replacement = $('<span class="label update-status label-info pull-right">Pending</span>');
+                        $this.replaceWith($replacement);
+                        $replacement.parents('.element:first').data('store-extension-id', response);
+                        f_update_status($replacement);
+                    }
                 }
             });
-        });*/
+            
+            
+            return false;
+        });
         
-        $('.carousel-control').css('top', '56%');
+        var _screenshotCarousel = $('#screenshotCarousel');
+        var _screenshotModal = $('#screenshotModal').modal({show: false});
         
-        event.preventDefault();
-        event.stopPropagation();
-    });
-    
-    // change size of clicked element
-    $extensions_isotope.find('.element').click(function() {
-        if( !($(this).hasClass('large'))){
-            $('.large').removeClass('large').find('div.extras').addClass('hidden');
+        // EVENT: On click homepage thumbnail
+        $('a.index-thumbnail').click(function(event){
+            var _this = $(this);
+            var _thumbs = _this.parent().parent();
+            var _carousel = $('#screenshotCarousel div.carousel-inner');
+            
+            _carousel.empty();
+            
+            var active = true;
+            
+            _thumbs.find('li').each(function(index){
+                var _screenshot = $(this);
+
+                var _item = $('<div>').addClass('item');
+                
+                if(active){
+                    _item.addClass('active');
+                    active = false;
+                }
+                
+                _item.append($('<div>')
+                    .addClass('modal-header')
+                    .append($('<button>')
+                        .addClass('close')
+                        .attr('type', 'button')
+                        .attr('data-dismiss', 'modal')
+                        .html('&times;')
+                    )
+                    .append($('<h5>')
+                        .text(_screenshot.find('a').attr('data-title'))
+                    )
+                ).append($('<div>')
+                    .addClass('modal-body')
+                    .css('max-height','100%')
+                    .append($('<img>')
+                        .attr('src', _screenshot.find('a').attr('href'))
+                    )
+                );
+                _carousel.append(_item);
+            });
+            
+            _screenshotModal.modal('show');
+            _screenshotCarousel.carousel({'interval': false});
+            $('.carousel-control').css('top', '56%');
+            
+            event.preventDefault();
+            event.stopPropagation();
+        });
+        
+        // EVENT: On click extension's "View screens" button
+        $('a.btn-screenshots').click(function(event){
+            "use strict";
+            
+            var _this = $(this);
+            var _extension = _this.parent().parent().parent();
+            var _carousel = $('#screenshotCarousel div.carousel-inner');
+            
+            _carousel.empty();
+            
+            var active = true;
+            
+            _extension.find('.screenshots li').each(function(){
+                var _screenshot = $(this);
+                
+                var _item = $('<div>').addClass('item');
+                if(active){
+                    _item.addClass('active');
+                    active = false;
+                }
+                _item.append($('<div>')
+                    .addClass('modal-header')
+                    .append($('<button>')
+                        .addClass('close')
+                        .attr('type', 'button')
+                        .attr('data-dismiss', 'modal')
+                        .html('&times;')
+                    )
+                    .append($('<h5>')
+                        .text(_screenshot.attr('data-id'))
+                    )
+                ).append($('<div>')
+                    .addClass('modal-body')
+                    .css('max-height','100%')
+                    .append($('<img>')
+                        // Preload function
+                        /*.load(function(){
+                        })*/
+                        .attr('src', _screenshot.text())
+                    )
+                );
+                _carousel.append(_item);
+            });
+            
+            _screenshotModal.modal('show');
+            _screenshotCarousel.carousel({'interval': false});
+            
+            // Code for resizing and centering modal
+            /*_screenshotCarousel.bind('slid', function() {
+                _screenshotModal.css({
+                    width: 'auto',
+                    'margin-left': function(){
+                        return -($(this).width() / 2);
+                    }
+                });
+            });*/
+            
+            $('.carousel-control').css('top', '56%');
+            
+            event.preventDefault();
+            event.stopPropagation();
+        });
+        
+        // change size of clicked element
+        $extensions_isotope.find('.element').click(function() {
+            if( !($(this).hasClass('large'))){
+                $('.large').removeClass('large').find('div.extras').addClass('hidden');
+            }
+            $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
+            $extensions_isotope.isotope('reLayout');
+        });
+
+        /* Store extensions status updater */
+        var f_update_status = function($element) {
+            setTimeout(function() {
+                $.ajax({
+                    url : siteRoot + '/queue/getstatus',
+                    type : 'POST',
+                    dataType : 'json',
+                    data : { extension_id : $element.parents('.element:first').data('store-extension-id') },
+                    success: function(response) {
+                        var $replacement = [];
+                        if(response == 'processing') {
+                            $replacement = $('<span class="label update-status label-important pull-right">Installing</span>');
+                            f_update_status($replacement);
+                        } else if(response == 'ready') {
+                            $replacement = $('<span class="label update-status label-success pull-right">Success</span>');
+                            setTimeout(function() { location.reload(); }, 500);
+                        } else {
+                            f_update_status($element);
+                        }
+
+                        if($replacement.length) {
+                            $element.replaceWith($replacement);
+                        }
+                    }
+                });
+            }, 5000);
+        };
+        $status_labels = $('.update-status');
+        if($status_labels.length) {
+            $status_labels.each(function(k, e) {
+                $element = $(e);
+                $element.parents('.element').addClass('large').find('.extras').removeClass('hidden');
+                f_update_status($element);
+            });
         }
-        $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
-        $extensions_isotope.isotope('reLayout');
-    });
+
+        // load more feature begins here
+        // remove not visible extensions from dom ( without destroying binded events )
+        $tiles = $('.element');
+        $tiles.filter('.hidden').removeClass('hidden').detach();
+        $last_filtered_extensions = $tiles;
+
+        $load_more.click(function() {
+            var $loaded_elements = $('.element').length,
+                $can_load_more = $last_filtered_extensions.length - $loaded_elements;
+
+            if($can_load_more >= 0) {
+                if($can_load_more < $load_more_limit) {
+                    $load_more.hide();
+                }
+                $extensions_isotope.isotope(
+                    'replace',
+                    $last_filtered_extensions.filter(
+                        ':lt(' + ($loaded_elements + $load_more_limit) + ')'
+                    )
+                );
+            }
+            return false;
+        });
+
+        $extensions_isotope.isotope({
+            masonry : {
+                columnWidth : ColumnWidth
+              },
+              masonryHorizontal : {
+                rowHeight: RowHeight
+              },
+              cellsByRow : {
+                columnWidth : ColumnWidth * 2,
+                rowHeight : RowHeight * 2
+              },
+              cellsByColumn : {
+                columnWidth : ColumnWidth * 2,
+                rowHeight : RowHeight * 2
+              }
+        });
+    }
     /* STORE EXTENSIONS ISOTOPE */
 
     /* payment form - display dropdown for US and text field for all other countries */
@@ -670,43 +803,6 @@ $(document).ready(function () {
                 0
         });
     });
-
-    /* Store extensions status updater */
-    var f_update_status = function($element) {
-        setTimeout(function() {
-            $.ajax({
-                url : siteRoot + '/queue/getstatus',
-                type : 'POST',
-                dataType : 'json',
-                data : { extension_id : $element.parents('.element:first').data('store-extension-id') },
-                success: function(response) {
-                    var $replacement = [];
-                    if(response == 'processing') {
-                        $replacement = $('<span class="label update-status label-important pull-right">Installing</span>');
-                        f_update_status($replacement);
-                    } else if(response == 'ready') {
-                        $replacement = $('<span class="label update-status label-success pull-right">Success</span>');
-                        setTimeout(function() { location.reload(); }, 500);
-                    } else {
-                        f_update_status($element);
-                    }
-
-                    if($replacement.length) {
-                        $element.replaceWith($replacement);
-                    }
-                }
-            });
-        }, 5000);
-    };
-    $status_labels = $('.update-status');
-    if($status_labels.length) {
-        $status_labels.each(function(k, e) {
-            $element = $(e);
-            $element.parents('.element').addClass('large').find('.extras').removeClass('hidden');
-            f_update_status($element);
-        });
-        $extensions_isotope.isotope('reLayout');
-    }
 });
 
 function changeInputSelect() {

@@ -651,6 +651,8 @@ class QueueController extends Integration_Controller_Action {
             }
             $this->_helper->layout()->disableLayout(); 
             $this->_helper->viewRenderer->setNoRender(true);
+        } else {
+            $this->renderScript('extension/list.phtml');
         }
     }
    
