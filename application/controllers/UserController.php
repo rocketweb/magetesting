@@ -392,10 +392,8 @@ class UserController extends Integration_Controller_Action
                 ), 'default', true);
             }
             if($wrong_coupon) {
-                if(!$coupon) {
-                    $form->coupon->addError('No coupon found!')->markAsError();
-                } elseif ($modelCoupon->isUnused() === false ){
-                    $form->coupon->addError('Coupon has already been used!')->markAsError();
+                if(!$coupon || ($modelCoupon->isUnused() === false )) {
+                    $form->coupon->addError('Provided coupon code is either not valid or was used already.')->markAsError();
                 }
             }
         }
