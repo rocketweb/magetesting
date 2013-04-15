@@ -336,28 +336,16 @@ class UserController extends Integration_Controller_Action
 
         $formData = $this->_request->getPost();
         if(count($formData) > 1) {
-
-            if($form->isValid($formData)) {
-                
-                $modelCoupon = new Application_Model_Coupon();
-                $coupon = $modelCoupon->findByCode($formData['coupon']);
-                if ($useCoupons) {
-                    if (!$coupon){
-                        $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'No coupon found!'));
-                        return $this->_helper->redirector->gotoRoute(array(
-                                'module'     => 'default',
-                                'controller' => 'user',
-                                'action'     => 'register',
-                        ), 'default', true);
-                    } elseif ($modelCoupon->isUnused() === false ){
-                        $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Coupon has already been used!'));
-                        return $this->_helper->redirector->gotoRoute(array(
-                                'module'     => 'default',
-                                'controller' => 'user',
-                                'action'     => 'register',
-                        ), 'default', true);
-                    }
+            $wrong_coupon = false;
+            $modelCoupon = new Application_Model_Coupon();
+            $coupon = $modelCoupon->findByCode($formData['coupon']);
+            if ($useCoupons || $formData['coupon']) {
+                if (!$coupon || $modelCoupon->isUnused() === false ){
+                    $wrong_coupon = true;
                 }
+            }
+
+            if($form->isValid($formData) && !$wrong_coupon) {
                 $user->setOptions($form->getValues());
                 $user->setPreselectedPlanId($plan_id);
                 $user = $user->save();
@@ -403,8 +391,12 @@ class UserController extends Integration_Controller_Action
                         'action'     => 'login',
                 ), 'default', true);
             }
+            if($wrong_coupon) {
+                if(!$coupon || ($modelCoupon->isUnused() === false )) {
+                    $form->coupon->addError('Provided coupon code is either not valid or was used already.')->markAsError();
+                }
+            }
         }
-        
         $this->view->useCoupons = $useCoupons;
         $this->view->form = $form;
     }
