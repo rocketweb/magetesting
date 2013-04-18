@@ -389,8 +389,6 @@ extends Application_Model_Task {
             file_put_contents($file, $fileContents);
             
         } 
-        
-        
     }
     
     protected function _updateStoreConfigurationEmails(){

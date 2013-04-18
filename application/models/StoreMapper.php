@@ -73,8 +73,10 @@ class Application_Model_StoreMapper {
                 ->setType($row->type)
                 ->setCustomFile($row->custom_file)
                 ->setPapertrailSyslogPort($row->papertrail_syslog_port)
-                ->setPapertrailSyslogHostname($row->papertrail_syslog_hostname);
+                ->setPapertrailSyslogHostname($row->papertrail_syslog_hostname)
+        		->setDoHourlyDbRevert($row->do_hourly_db_revert);
 
+        
         return $store;
     }
 
@@ -113,7 +115,8 @@ class Application_Model_StoreMapper {
                     ->setType($row->type)
                     ->setCustomFile($row->custom_file)
                     ->setPapertrailSyslogPort($row->papertrail_syslog_port)
-                    ->setPapertrailSyslogHostname($row->papertrail_syslog_hostname);
+                    ->setPapertrailSyslogHostname($row->papertrail_syslog_hostname)
+            		->setDoHourlyDbRevert($row->do_hourly_db_revert);
             $entries[] = $entry;
         }
         return $entries;

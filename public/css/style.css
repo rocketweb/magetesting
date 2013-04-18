@@ -3353,3 +3353,8 @@ label.error {
     position: absolute;
     z-index: 10;
 }
+
+/*fix db revert radio buttons on edit store page*/
+.db-revert-row .radio{
+    width:1.3em;
+}

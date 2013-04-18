@@ -27,6 +27,21 @@
         		        </div>
         		    </fieldset>
         		    
+        		    <div class="tab-stripe"></div>
+        		    <fieldset>
+        		        <legend>Store Files and Database</legend>
+	        	    	<div class="row db-revert-row">
+                                    <div class="span4">
+                                            <?php echo $this->form->do_hourly_db_revert ?>
+                                    </div>
+                                    <div class="span8">
+                                        <div class="alert alert-info">
+                                            Revert database hourly to latest version.  This lets you create an auto-cleaning demo site.
+                                        </div>
+                                    </div>
+	        	    	</div>
+        		    </fieldset>
+        		    
         		    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
         		    <?php
         		    /*

@@ -32,6 +32,20 @@ class Application_Form_StoreAddClean extends Integration_Form{
         
         $this->sample_data->setValue(0)
         ->setSeparator(' ');
+        
+        $this->addElement('radio', 'do_hourly_db_revert', array(
+        		'label'       => 'Revert database hourly',
+        		'required'    => false,
+        		'label_class' => 'radio inline'
+        ));
+        $this->do_hourly_db_revert->addMultiOptions(array(
+        		1 => 'Yes',
+        		0 => 'No',
+        ));
+        
+        $this->do_hourly_db_revert->setValue(0)
+        ->setSeparator(' ');
+        
 
         $this->addElement('text', 'store_name', array(
                 'label'      => 'Name',
@@ -62,8 +76,6 @@ class Application_Form_StoreAddClean extends Integration_Form{
                 'class'      => 'span4'
         ));
 
-
-         
         // Add the submit button
         $this->addElement('submit', 'storeAdd', array(
                 'ignore'   => true,

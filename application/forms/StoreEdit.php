@@ -89,6 +89,19 @@ class Application_Form_StoreEdit extends Integration_Form{
                 'allowEmpty' => false,
             ));
         }
+        
+        $this->addElement('radio', 'do_hourly_db_revert', array(
+        		'label'       => 'Revert database hourly',
+        		'required'    => false,
+        		'label_class' => 'radio inline'
+        ));
+        $this->do_hourly_db_revert->addMultiOptions(array(
+        		1 => 'Yes',
+        		0 => 'No',
+        ));
+        
+        $this->do_hourly_db_revert->setValue(0)
+        ->setSeparator(' ');
 
         $this->_setDecorators();
 

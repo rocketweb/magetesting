@@ -11,7 +11,7 @@ class Application_Model_Store {
     protected $_version_id;
 
     protected $_sample_data;
-
+    
     protected $_user_id;
     
     protected $_server_id;
@@ -43,8 +43,9 @@ class Application_Model_Store {
     protected $_custom_file;
     
     protected $_papertrail_syslog_hostname;
-    
     protected $_papertrail_syslog_port;
+    
+    protected $_do_hourly_db_revert;
 
     public function __construct(array $options = null)
     {
@@ -141,6 +142,17 @@ class Application_Model_Store {
     public function getSampleData()
     {
         return $this->_sample_data;
+    }
+    
+    public function getDoHourlyDbRevert()
+    {
+    	return $this->_do_hourly_db_revert;
+    }
+    
+    public function setDoHourlyDbRevert($value)
+    {
+    	$this->_do_hourly_db_revert = $value;
+    	return $this;
     }
 
     public function setDomain($domain)
@@ -284,6 +296,7 @@ class Application_Model_Store {
                 'custom_file'                => $this->_custom_file,
                 'papertrail_syslog_hostname' => $this->_papertrail_syslog_hostname,
                 'papertrail_syslog_port'     => $this->_papertrail_syslog_port,
+        		'do_hourly_db_revert'                => $this->_do_hourly_db_revert,
         );
     }
 
