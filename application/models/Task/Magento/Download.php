@@ -595,7 +595,7 @@ implements Application_Model_Task_Interface {
         $command = 'grep core_config_data '.$path_parts['basename'];
         exec($command,$output);
         if (!empty($output)){
-            preg_match_all('#(CREATE TABLE) `(.*?)(core\_config\_data|)`#',$output,$matches);
+            preg_match_all('#(CREATE TABLE) `(.*?)(core\_config\_data|)`#',$output[0],$matches);
             $this->_db_table_prefix = $matches[2][0];
         }
     }
