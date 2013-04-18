@@ -592,7 +592,7 @@ implements Application_Model_Task_Interface {
     protected function _detectTablePrefix(){
         $output = array();
         $path_parts = pathinfo($this->_customSql);
-        $command = 'grep _core_config_data '.$path_parts['basename'];
+        $command = 'grep core_config_data '.$path_parts['basename'];
         exec($command,$output);
         if (!empty($output)){
             preg_match_all('#(CREATE TABLE) `(.*?)(core\_config\_data|)`#',$output,$matches);
