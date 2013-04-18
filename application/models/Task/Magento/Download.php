@@ -114,6 +114,9 @@ implements Application_Model_Task_Interface {
         $this->_createAdminUser();
 
         $this->_importAdminFrontname();
+        
+        $this->_updateDemoNotice();
+        $this->_activateDemoNotice();      
 
         $this->_cleanLogTables();
         
@@ -577,16 +580,25 @@ implements Application_Model_Task_Interface {
             }
         }
     }
-    
+
+    protected function _updateDemoNotice(){
+        
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
+                ' -p' . $this->_dbpass . 
+                ' ' . $this->config->magento->storeprefix . $this->_dbname . 
+                ' -e "INSERT INTO '.$this->_db_table_prefix.'core_translate (string, store_id, translate, locale) VALUES (\'This is a demo store. Any orders placed through this store will not be honored or fulfilled.\', \'0\', \'This is a development store imported into Mage Testing. Please review our documentation to find out what was changed in the store in order to import that\', \'en_US\');"');
+    }
+
     protected function _detectTablePrefix(){
         $output = array();
         $path_parts = pathinfo($this->_customSql);
-        $command = 'grep core_config_data '.$path_parts['basename'];
+        $command = 'grep core_config_data '.$this->_storeFolder.'/'.$this->_storeObject->getDomain().'/'.$path_parts['basename'];
         exec($command,$output);
         if (!empty($output)){
-            preg_match_all('#(CREATE TABLE) `(.*?)(core\_config\_data|)`#',$output[0],$matches);
+            preg_match_all('#(.*?)`(.*?)(core\_config\_data|)`#',$output[0],$matches);
             $this->_db_table_prefix = $matches[2][0];
         }
     }
+
     
 }
