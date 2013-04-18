@@ -329,10 +329,10 @@ extends Application_Model_Task {
         $finalDisabled = array_filter(array_merge($currentlyDisabled,$functionsToBlock));
 
         //overwrite disable_functions option
-        $result = preg_replace('#disable_functions =(.*?)#is','disable_functions = '.implode(',',$finalDisabled),$text);
+        $result = preg_replace('#disable_functions =(.*?)([^\r\n]+)#is','disable_functions = '.implode(',',$finalDisabled),$text).PHP_EOL;
         
         //overwrite upload_tmp_dir option to users dir
-        $result = preg_replace('#(;)?upload_tmp_dir(.*)#is','upload_tmp_dir = /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp/',$result);
+        $result = preg_replace('#(;)?upload_tmp_dir(.*?)([^\r\n]+)#is','upload_tmp_dir = /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp/'.PHP_EOL,$result);
         
         file_put_contents($userPhpIni,$result);  
     }
