@@ -8,6 +8,7 @@ extends Application_Model_Task {
     protected $_dbhost = '';
     protected $_dbname = '';
     protected $_systempass = '';
+    protected $_db_table_prefix = '';
     
     public function setup(Application_Model_Queue $queueElement){
         
@@ -242,13 +243,13 @@ extends Application_Model_Task {
     
     protected function _disableStoreCache(){
         /* update cache setting - disable all */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`core_cache_option\` SET \`value\`=\'0\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`'.$this->_db_table_prefix.'core_cache_option\` SET \`value\`=\'0\'"');
     }
     
     protected function _enableLogging(){
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/active\',\'1\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/file\',\'system.log\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/exception_file\',\'exception.log\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/active\',\'1\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/file\',\'system.log\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/exception_file\',\'exception.log\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
     }
     
     protected function _createVirtualHost(){
@@ -390,15 +391,22 @@ extends Application_Model_Task {
             
         } 
     }
-    
+
+	 /**
+     * Sets Design -> Head -> Demo Notice to 'Yes'
+     */
+    protected function _activateDemoNotice(){
+        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'design/head/demonotice\',\'1\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
+    }    
+
     protected function _updateStoreConfigurationEmails(){
     	$userEmail = $this->_userObject->getEmail();
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_general/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_sales/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_support/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom1/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom2/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'contacts/email/recipient_email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_general/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_sales/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_support/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom1/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom2/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
+    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'contacts/email/recipient_email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
     	unset($userEmail);
     }
 }
