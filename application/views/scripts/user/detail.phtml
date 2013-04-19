@@ -1,0 +1,119 @@
+<div class="row">
+    <div class="span12">
+        <h1>Details Account</h1>
+        <div class="form-box">
+            <div class="box">
+
+
+                <div class="tab-stripe"></div>
+                <fieldset>
+                    <legend>User Details</legend>
+                    <div class="row">
+
+                            <dl class="dl-horizontal">
+                                <dt>Username</dt>
+                                <dd><?php echo $this->escape($this->user->getLogin()); ?></dd>
+                                <dt>Email</dt>
+                                <dd><?php echo $this->escape($this->user->getEmail()); ?></dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt>Name</dt>
+                                <dd><?php echo $this->escape($this->user->getFirstname()); ?> <?php echo $this->escape($this->user->getLastname()); ?></dd>
+                                <dt>Street</dt>
+                                <dd><?php echo $this->escape($this->user->getStreet()); ?></dd>
+                                <dt>Postal code</dt>
+                                <dd><?php echo $this->escape($this->user->getPostalCode()); ?></dd>
+                                <dt>City</dt>
+                                <dd><?php echo $this->escape($this->user->getCity()); ?></dd>
+                                <dt>State</dt>
+                                <dd><?php echo $this->escape($this->user->getState()); ?></dd>
+                                <dt>Country</dt>
+                                <dd><?php echo $this->escape($this->user->getCountry()); ?></dd>
+                                <dt>Server</dt>
+                                <dd><?php echo $this->escape($this->server->getName()); ?></dd>
+                                <dt>Group</dt>
+                                <dd><?php echo $this->escape($this->user->getGroup()); ?></dd>
+                                <dt>Added date</dt>
+                                <dd><?php echo $this->escape($this->user->getAddedDate()); ?></dd>
+                                <dt>Status</dt>
+                                <dd><?php echo $this->escape($this->user->getStatus()); ?></dd>
+                                <dt>Plan</dt>
+                                <dd><?php echo $this->escape($this->plan->getName()); ?></dd>
+                                <dt>Plan active to</dt>
+                                <dd><?php echo $this->escape($this->user->getPlanActiveTo()); ?></dd>
+                                <?php if ($this->user->getHasSystemAccount()): ?>
+                                    <dt>System account name</dt>
+                                    <dd><?php echo $this->escape($this->user->getSystemAccountName()); ?></dd>
+                                <?php endif; ?>
+                            </dl>
+                        </div>
+
+                </fieldset>
+
+                <div class="tab-stripe"></div>
+                <fieldset>
+                    <legend>Coupons</legend>
+                    <?php if ($this->coupon->getCode()): ?>
+                        <h4><?php echo $this->escape($this->coupon->getCode()); ?></h4>
+                        <div class="row">
+                            <dl class="dl-horizontal">
+                                <dt>Used date</dt>
+                                <dd><?php echo $this->escape($this->coupon->getUsedDate()); ?></dd>
+                                <dt>Plan</dt>
+                                <dd><?php echo $this->escape($this->plans[$this->coupon->getPlanId()]); ?></dd>
+                                <dt>Duration</dt>
+                                <dd><?php echo $this->escape($this->coupon->getDuration()); ?></dd>
+                                <dt>Active to</dt>
+                                <dd><?php echo $this->escape($this->coupon->getActiveTo()); ?></dd>
+                            </dl>
+                        </div>
+                    <?php else: ?>
+                        <div class="row">
+                            <div class="span4">Empty</div>
+                        </div>
+                    <?php endif; ?>
+                </fieldset>
+
+                <div class="tab-stripe"></div>
+                <fieldset>
+                    <legend>Payments</legend>
+                    <?php if ($this->payments): ?>
+                        <?php foreach ($this->payments as $payment): ?>
+                            <h4><?php echo $this->escape($payment->getTransactionName()); ?> <small>(<?php echo $this->escape($payment->getTransactionType()); ?>)</small></h4>
+                            
+                            <div class="row">
+                                <dl class="dl-horizontal">
+                                    <dt>Date</dt>
+                                    <dd><?php echo $this->escape($payment->getDate()); ?></dd>
+                                    <dt>Price</dt>
+                                    <dd>$<?php echo $this->escape($payment->getPrice()); ?></dd>
+                                </dl>
+                                <dl class="dl-horizontal">
+                                    <dt>Name</dt>
+                                    <dd><?php echo $this->escape($payment->getFirstname()); ?> <?php echo $this->escape($payment->getLastname()); ?></dd>
+                                    <dt>Street</dt>
+                                    <dd><?php echo $this->escape($payment->getStreet()); ?></dd>
+                                    <dt>Postal code</dt>
+                                    <dd><?php echo $this->escape($payment->getPostalCode()); ?></dd>
+                                    <dt>City</dt>
+                                    <dd><?php echo $this->escape($payment->getCity()); ?></dd>
+                                    <dt>State</dt>
+                                    <dd><?php echo $this->escape($payment->getState()); ?></dd>
+                                    <dt>Country</dt>
+                                    <dd><?php echo $this->escape($payment->getCountry()); ?></dd>
+                                </dl>
+                            </div>
+                    
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="row">
+                            <div class="span4">Empty</div>
+                        </div>
+                    <?php endif; ?>
+                </fieldset>
+
+
+            </div>
+        </div>
+    </div>
+</div>
