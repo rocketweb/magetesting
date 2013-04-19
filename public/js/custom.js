@@ -1,56 +1,58 @@
 $(document).ready(function () {
-    $.Isotope.prototype.replace = function($elements) {
-        var $remove_elements = this.$allAtoms.not($elements), // atoms to be removed
-            // whether is something to remove and should be animated
-            $animate_remove = $remove_elements.filter( ':not(.' + this.options.hiddenClass + ')' ).length,
-            $add_elements = $elements.not(this.$allAtoms), // new atoms
-            instance = this; // scope helper
-
-        // save original order by replacing elements using existing in isotope
-        this.$allAtoms = $elements.map(function(k, e) {
-            var $the_same = e;
-            instance.$allAtoms.each(function(k1,e1) {
-                if($(e1).is(e)) {
-                    $the_same = e1;
-                }
+    if(typeof $.Isotope == "function") {
+        $.Isotope.prototype.replace = function($elements) {
+            var $remove_elements = this.$allAtoms.not($elements), // atoms to be removed
+                // whether is something to remove and should be animated
+                $animate_remove = $remove_elements.filter( ':not(.' + this.options.hiddenClass + ')' ).length,
+                $add_elements = $elements.not(this.$allAtoms), // new atoms
+                instance = this; // scope helper
+    
+            // save original order by replacing elements using existing in isotope
+            this.$allAtoms = $elements.map(function(k, e) {
+                var $the_same = e;
+                instance.$allAtoms.each(function(k1,e1) {
+                    if($(e1).is(e)) {
+                        $the_same = e1;
+                    }
+                });
+                return $the_same;
             });
-            return $the_same;
-        });
-        this.$filteredAtoms = this.$allAtoms;
-
-        // it should be called at the end
-        $remove_from_dom = function(a, instance) {
-            $remove_elements.deflate(); // removes element from dom but binded events still exists
-        }
-        // is there anything to add ?
-        if($add_elements.length) {
-            /* add isotope-item basic style */
-            atomStyle = { position: 'absolute' };
-            if ( this.usingTransforms ) {
-              atomStyle.left = 0;
-              atomStyle.top = 0;
+            this.$filteredAtoms = this.$allAtoms;
+    
+            // it should be called at the end
+            $remove_from_dom = function(a, instance) {
+                $remove_elements.deflate(); // removes element from dom but binded events still exists
             }
-            $add_elements.css( atomStyle ).addClass( this.options.itemClass );
-            /* end */
-            this.element.append($add_elements);
-            /* hideAppended */
-            $add_elements.addClass('no-transition');
-            this._isInserting = true;
-            // apply hidden styles
-            this.styleQueue.push({ $el: $add_elements, style: this.options.hiddenStyle });
-            /* end */
-            this.reLayout();
-            /* _reveal fires reLayout */
-            this._revealAppended($add_elements);
-        }
-        // is there anything to remove ?
-        if($remove_elements.length) {
-            // animate removal of visible atoms
-            if($animate_remove) {
-                this.styleQueue.push({ $el: $remove_elements, style: this.options.hiddenStyle });
-                this.reLayout($remove_from_dom);
-            } else {
-                $remove_from_dom();
+            // is there anything to add ?
+            if($add_elements.length) {
+                /* add isotope-item basic style */
+                atomStyle = { position: 'absolute' };
+                if ( this.usingTransforms ) {
+                  atomStyle.left = 0;
+                  atomStyle.top = 0;
+                }
+                $add_elements.css( atomStyle ).addClass( this.options.itemClass );
+                /* end */
+                this.element.append($add_elements);
+                /* hideAppended */
+                $add_elements.addClass('no-transition');
+                this._isInserting = true;
+                // apply hidden styles
+                this.styleQueue.push({ $el: $add_elements, style: this.options.hiddenStyle });
+                /* end */
+                this.reLayout();
+                /* _reveal fires reLayout */
+                this._revealAppended($add_elements);
+            }
+            // is there anything to remove ?
+            if($remove_elements.length) {
+                // animate removal of visible atoms
+                if($animate_remove) {
+                    this.styleQueue.push({ $el: $remove_elements, style: this.options.hiddenStyle });
+                    this.reLayout($remove_from_dom);
+                } else {
+                    $remove_from_dom();
+                }
             }
         }
     }
@@ -668,12 +670,14 @@ $(document).ready(function () {
         });
         
         // change size of clicked element
-        $extensions_isotope.find('.element').click(function() {
-            if( !($(this).hasClass('large'))){
-                $('.large').removeClass('large').find('div.extras').addClass('hidden');
+        $extensions_isotope.find('.element').click(function(e) {
+            if(!$(e.target).hasClass('version-list')) {
+                if( !($(this).hasClass('large'))){
+                    $('.large').removeClass('large').find('div.extras').addClass('hidden');
+                }
+                $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
+                $extensions_isotope.isotope('reLayout');
             }
-            $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
-            $extensions_isotope.isotope('reLayout');
         });
 
         /* Store extensions status updater */
