@@ -39,6 +39,19 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'class'      => 'span4'
         ));
 
+        // Add sort order element
+        $this->addElement('text', 'sort', array(
+                'label'      => 'Release sort order',
+                'required'   => true,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(1, 2)),
+                        array('validator' => 'Int')
+                ),
+                'allowEmpty' => false,
+                'class'      => 'span4'
+        ));
+
         // Add description element
         $this->addElement('textarea', 'description', array(
                 'label'      => 'Description',

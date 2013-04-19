@@ -61,7 +61,8 @@ class Application_Model_ExtensionMapper {
         ->setToVersion($row->to_version)
         ->setEdition($row->edition)
         ->setIsDev($row->is_dev)
-        ->setPrice($row->price);
+        ->setPrice($row->price)
+        ->setSort($row->sort);
         return $extension;
     }
 
@@ -85,7 +86,8 @@ class Application_Model_ExtensionMapper {
                   ->setToVersion($row->to_version)
                   ->setEdition($row->edition)
                   ->setIsDev($row->is_dev)
-                  ->setPrice($row->price);
+                  ->setPrice($row->price)
+                  ->setSort($row->sort);
             $entries[] = $entry;
         }
 
@@ -117,7 +119,8 @@ class Application_Model_ExtensionMapper {
             ->setToVersion($row->to_version)
             ->setEdition($row->edition)
             ->setIsDev($row->is_dev)
-            ->setPrice($row->price);
+            ->setPrice($row->price)
+            ->setSort($row->sort);
             $entries[] = $entry;
         }
         return $entries;
@@ -203,7 +206,8 @@ class Application_Model_ExtensionMapper {
                 ->setToVersion($row->to_version)
                 ->setEdition($row->edition)
                 ->setIsDev($row->is_dev)
-                ->setPrice($row->price);
+                ->setPrice($row->price)
+                ->setSort($row->sort);
         ;
         return $extension;
     }
