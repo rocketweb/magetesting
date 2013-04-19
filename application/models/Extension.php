@@ -31,6 +31,8 @@ class Application_Model_Extension {
     protected $_is_dev;
     
     protected $_price;
+
+    protected $_sort;
     
     /* var Application_Model_ExtensionMapper */
     protected $_mapper;
@@ -226,6 +228,16 @@ class Application_Model_Extension {
         return $this;
     }
 
+    public function setSort($value)
+    {
+        $this->_sort= $value;
+        return $this;
+    }
+
+    public function getSort()
+    {
+        return $this->_sort;
+    }
     /**
      * @return Application_Model_ExtensionMapper
      */
@@ -288,6 +300,7 @@ class Application_Model_Extension {
                 'edition' => $this->getEdition(),
                 'is_dev' => $this->getIsDev(),
                 'price' => $this->getPrice(),
+                'sort' => $this->getSort()
         );
     }
 
@@ -393,6 +406,7 @@ class Application_Model_Extension {
         $this->setVersion($version);
         $this->setExtension('');
         $this->setExtensionEncoded('');
+        $this->setSort((int)$this->getSort() + 1);
         $this->save();
 
         $new_extension_id = $this->getId();
