@@ -63,7 +63,8 @@ class ExtensionController extends Integration_Controller_Action {
             'screenshots'     => $this->_getParam('screenshots', array()),
             'directory_hash'  => $this->_getParam('directory_hash', time().'-'.uniqid()),
             'category_id'     => $this->_getParam('category_id', ''),
-            'author'          => $this->_getParam('author', '')
+            'author'          => $this->_getParam('author', ''),
+            'sort'            => $this->_getParam('sort', '')
         );
         $name = 'Application_Form_Extension'.$action;
         $form = new $name;
@@ -140,7 +141,8 @@ class ExtensionController extends Integration_Controller_Action {
                     'logo'            => $extension->getLogo(),
                     'screenshots'     => $screenshots,
                     'author'          => $extension->getAuthor(),
-                    'category_id'     => $extension->getCategoryId()
+                    'category_id'     => $extension->getCategoryId(),
+                    'sort'            => $extension->getSort()
                 );
                 $success_message = 'Extension has been changed properly.';
             } else {

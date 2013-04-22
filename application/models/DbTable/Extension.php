@@ -45,33 +45,38 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         /*
 SELECT  `all` . * ,  `ec`.`class` AS  `category_class` ,  `ec`.`logo` AS  `category_logo` 
 FROM (
-    SELECT  `e` . * ,  ` , 1 AS  `installed` 
+    SELECT  `e` . * ,  `se`.`braintree_transaction_id` ,  `se`.`braintree_transaction_confirmed` ,  `se`.`status` , 1 AS  `installed`
+
     FROM  `store_extension` AS  `se` 
     LEFT JOIN  `extension` AS  `e` ON e.id = se.extension_id
-    WHERE ( se.store_id =  '101' )
+    WHERE (
+        se.store_id =  '311'
+    )
 
-    UNION
+    UNION SELECT  `last_version` . *
 
-    SELECT  `last_version` . * 
     FROM (
-        SELECT  `extension` . * ,  , 0 AS  `installed` 
+        SELECT  `extension` . * , NULL AS  `braintree_transaction_id` , NULL AS  `braintree_transaction_confirmed` , NULL AS  `status` , 0 AS `installed` 
         FROM  `extension` 
-        WHERE
-            ( extension IS NOT NULL )
-            AND (
-                1411
-                BETWEEN REPLACE( from_version,  '.',  '' ) 
-                AND REPLACE( to_version,  '.',  '' )
-            ) 
-            AND ( edition =  'CE' )
-            AND ( is_dev IN ( 0, 1 ) )
-        ORDER BY  `name` ASC ,  `version` DESC
+        WHERE (
+            extension >  ""
+        )
+        AND (
+            11120
+            BETWEEN REPLACE( from_version,  '.',  '' ) 
+            AND REPLACE( to_version,  '.',  '' )
+        )
+        AND (
+            is_dev
+            IN ( 0, 1 )
+        )
+        ORDER BY  `sort` DESC ,  `id` DESC
     ) AS  `last_version` 
-    GROUP BY  `last_version`.`name`
+    GROUP BY  `last_version`.`extension_key` ,  `last_version`.`edition`
 ) AS  `all` 
 LEFT JOIN  `extension_category` AS  `ec` ON ec.id = all.category_id
-GROUP BY  `all`.`name` 
-ORDER BY  `installed` DESC ,  `price` DESC
+GROUP BY  `all`.`extension_key` 
+ORDER BY  `installed` DESC ,  `price` DESC 
          */
         $select_installed_for_store = 
             $this->select()
@@ -90,7 +95,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
                      AND REPLACE(to_version,\'.\',\'\')',
                      (int)str_replace('.','',$store['version'])
                  )
-                 ->order(array('name', 'version DESC'));
+                 ->order(array('sort DESC', 'id DESC'));
 
         // get also developer extensions for admins
         // get only CE extensions for non admin users
@@ -104,7 +109,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
             $this->select()
                  ->from(array('last_version' => $select_allowed_for_store), array('last_version.*'))
                  ->setIntegrityCheck(false)
-                 ->group('last_version.extension_key');
+                 ->group(array('last_version.extension_key', 'last_version.edition'));
 
         $select_all_extensions_sorted = 
             $this->select()
@@ -128,16 +133,22 @@ ORDER BY  `installed` DESC ,  `price` DESC
 
     public function fetchFullListOfExtensions()
     {
-        $sub_select = 
+        $sub_select_inner = 
             $this->select()
-                 ->from($this->_name, array('name', 'edition', 'version' => new Zend_Db_Expr('max(version)')))
+                 ->from($this->_name, array('name', 'edition', 'version', 'extension_key'))
                  ->setIntegrityCheck(false)
-                 ->group(array('extension_key', 'edition'));
+                 ->order(array('sort DESC', 'id DESC'));
         $identity = Zend_Auth::getInstance()->getIdentity();
         if(!is_object($identity) || 'admin' != $identity->group) {
-            $sub_select->where('edition = ?', 'CE')
+            $sub_select_inner->where('edition = ?', 'CE')
                        ->where('extension > ""');
         }
+        $sub_select =
+            $this->select()
+                 ->setIntegrityCheck(false)
+                 ->from($sub_select_inner, array('name', 'edition', 'version'))
+                 ->group(array('extension_key', 'edition'));
+
         $select = 
             $this->select()
                  ->from(array('e1' => $sub_select), '')
@@ -197,7 +208,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
                  ->from($this->_name)
                  ->where('extension_key = ?', $extension_key)
                  ->where('edition = ?', $edition)
-                 ->order('version DESC');
+                 ->order(array('sort DESC', 'id DESC'));
 
         return $this->fetchAll($select);
     }
