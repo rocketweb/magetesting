@@ -15,7 +15,7 @@
     <tbody>
         <?php foreach($this->queue as $item): ?>
         <tr>
-            <td><?php echo $item['login']; ?></td>
+            <td><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'detail', 'id' => $item['user_id'])); ?>"><?php echo $item['login']; ?></a></td>
             <td><?php echo $item['store_name']?></td>
             <?php 
                 $progressClass = '';

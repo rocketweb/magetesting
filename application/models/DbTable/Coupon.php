@@ -18,7 +18,7 @@ class Application_Model_DbTable_Coupon extends Zend_Db_Table_Abstract
                                'active_to' => 'active_to',
                            )
                        )
-                       ->joinLeft(array('u' => 'user'), 'u.id = c.user_id', array('user' => 'u.login'))
+                       ->joinLeft(array('u' => 'user'), 'u.id = c.user_id', array('user' => 'u.login', 'user_id' => 'u.id'))
                        ->joinLeft(array('p' => 'plan'), 'p.id = c.plan_id', array('plan' => 'p.name'));
         return $select->query()->fetchAll();
     }
