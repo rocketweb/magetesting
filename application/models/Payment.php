@@ -282,4 +282,9 @@ class Application_Model_Payment {
     {
         return $this->getMapper()->fetchPaymentsByUser($id);
     }
+
+    public function fetchList()
+    {
+        return $this->getMapper()->fetchList();
+    }
 }

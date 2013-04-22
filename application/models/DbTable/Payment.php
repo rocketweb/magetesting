@@ -28,4 +28,13 @@ class Application_Model_DbTable_Payment extends Zend_Db_Table_Abstract
                        ->limit(1);
         return $this->fetchRow($select);
     }
+
+    public function fetchList() {
+        $select = $this->select()
+                       ->setIntegrityCheck(false)
+                       ->from($this->_name, array($this->_name.'.*'))
+                       ->joinLeft('user', 'user.id = '.$this->_name.'.user_id', array('login'))
+                       ->order($this->_name.'.date DESC');
+        return $select->query()->fetchAll();
+    }
 }
