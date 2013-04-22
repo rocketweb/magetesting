@@ -943,6 +943,9 @@ footer .links a {
 .accordion-group .accordion-inner .version-info .first {
     margin-left: 0;
 }
+.accordion-group .accordion-inner .version-info .auto-clean {
+    color: #F64135;
+}
 .accordion-group .accordion-inner .panel h5 {
     color: #34aae5;
 }
