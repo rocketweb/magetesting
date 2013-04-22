@@ -3358,3 +3358,11 @@ label.error {
 .db-revert-row .radio{
     width:1.3em;
 }
+
+.user-details .dl-horizontal dd {
+    margin-left: 200px;
+}
+
+.user-details .dl-horizontal dt {
+    width: 180px;
+}
