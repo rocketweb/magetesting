@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="span12">
+        <h1 class="pull-left">
+            plans
+        </h1>
+        <div class="pull-right btn-add-ext">
+            <a href="<?php echo $this->url(array('controller' => 'plan', 'action' => 'add'), 'default', true); ?>" class="btn btn-blue btn-large"><i class="icon-plus icon-white"></i> Add New Plan</a>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Plan name</th>
+            <th>Price</th>
+            <th>Is hiden</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->plans as $plan): ?>
+        <tr>
+            <td><?php echo $plan['name']; ?></td>
+            <td><?php echo $plan['price']; ?></td>
+            <td><?php echo ((int)$plan['is_hidden'] ? 'On' : 'Off'); ?></td>
+            <td>
+                <a href="<?php echo $this->url(array('module' => 'default', 
+                    'controller' => 'plan',
+                    'action' => 'edit',
+                    'id' => $plan['id'])); ?>" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 
+                    'controller' => 'plan',
+                    'action' => 'delete',
+                    'id' => $plan['id'])); ?>" role="button" class="btn btn-danger" data-toggle="modal" data-plan-id="<?php echo $plan['id']; ?>"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<?php echo $this->paginationControl($this->plans, 'Sliding', '_partials/paginationControl.phtml'); ?>
