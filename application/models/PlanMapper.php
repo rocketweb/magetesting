@@ -41,7 +41,6 @@ class Application_Model_PlanMapper {
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
-
     }
 
     public function find($id, Application_Model_Plan $plan)
@@ -70,7 +69,7 @@ class Application_Model_PlanMapper {
 
     public function delete($id)
     {
-        $this->getDbTable()->delete($id);
+        $this->getDbTable()->delete(array('id = ?' => $id));
     }
 
     public function fetchAll($fetch_hidden = false)
@@ -149,6 +148,11 @@ class Application_Model_PlanMapper {
         	  ->setCanDoDbRevert($row->can_do_db_revert);
         return $entry;
 
+    }
+
+    public function fetchList() {
+        $adapter = new Zend_Paginator_Adapter_Array($this->getDbTable()->fetchList());
+        return new Zend_Paginator($adapter);
     }
 
 }

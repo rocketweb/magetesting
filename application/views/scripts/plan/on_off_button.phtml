@@ -1,0 +1,11 @@
+<div class="control-group">
+    <label for="billing_period" class="control-label required"><?php echo $this->label; ?></label>
+    <div class="controls">
+        <div class="btn-group" data-toggle="buttons-radio">
+            <button type="button" class="btn btn-off<?php echo (!(int)$this->value) ? ' active' : '' ; ?>" data-value="0">Off</button>
+            <input type="radio" class="hidden" name="<?php echo $this->field; ?>" value="0" <?php echo (!(int)$this->value) ? 'checked="checked"' : '' ; ?>/>
+            <input type="radio" class="hidden" name="<?php echo $this->field; ?>" value="1" <?php echo ((int)$this->value) ? 'checked="checked"' : '' ; ?>/>
+            <button type="button" class="btn btn-on<?php echo ((int)$this->value) ? ' active' : '' ; ?>" data-value="1">On</button>
+        </div>
+    </div>
+</div>

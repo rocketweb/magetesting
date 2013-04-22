@@ -270,4 +270,8 @@ class Application_Model_Plan {
         return $this->getMapper()->findByBraintreeId($braintree_id);
     }
 
+    public function fetchList() {
+        return $this->getMapper()->fetchList();
+    }
+
 }

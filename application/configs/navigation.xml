@@ -42,6 +42,17 @@
                         <privilege>index</privilege>
                         <icon>icon-white icon-th-list</icon>
                     </supportedExtensions>
+                    <plans>
+                        <label>Plans</label>
+                        <module>default</module>
+                        <controller>plan</controller>
+                        <action>index</action>
+                        <route>default</route>
+                        <reset_params>true</reset_params>
+                        <resource>default_plan</resource>
+                        <privilege>index</privilege>
+                        <icon>icon-white icon-pencil</icon>
+                    </plans>
                     <coupons>
                         <label>Coupons</label>
                         <module>default</module>

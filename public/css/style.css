@@ -3358,3 +3358,13 @@ label.error {
 .db-revert-row .radio{
     width:1.3em;
 }
+
+/* on/off radio buttons */
+.btn-group .btn-on.active {
+    background-color: #51A351;
+    color: white;
+}
+.btn-group .btn-off.active {
+    background-color: #BD362F;
+    color: white;
+}
