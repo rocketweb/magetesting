@@ -3371,3 +3371,11 @@ label.error {
     background-color: #BD362F;
     color: white;
 }
+
+.user-details .dl-horizontal dd {
+    margin-left: 200px;
+}
+
+.user-details .dl-horizontal dt {
+    width: 180px;
+}
