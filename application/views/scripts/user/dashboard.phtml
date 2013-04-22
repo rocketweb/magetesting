@@ -152,7 +152,7 @@
                     <div class="accordion-inner">
                         <div class="row version-info">
                             <div class="span2 first"><strong>Edition:</strong> <?php echo $this->escape($item['edition']); ?></div>
-                            <div class="span2"><strong>Version:</strong> <?php echo $this->escape($item['version']); ?> </div>
+                            <div class="span2 first"><strong>Version:</strong> <?php echo $this->escape($item['version']); ?> </div>
                             <div class="span2">
                                 <strong>Sample Data:</strong>
                             <?php if($item['sample_data']): ?>
@@ -161,7 +161,8 @@
                                 No
                             <?php endif; ?>
                             </div>
-                            <div class="span3"><strong>Store Added:</strong> <?php echo date("M j, Y H:i A",strtotime($item['created_at'])); ?></div>
+                            <div class="span4"><strong>Store Added:</strong> <?php echo date("M j, Y H:i A",strtotime($item['created_at'])); ?></div>
+                            <div class="span2 first auto-clean"><strong>Auto-clean:</strong> <?php echo ((int)$item['do_hourly_db_revert'] ? 'Yes' : 'No'); ?></div>
                         </div>
                         <p class="description"><?php echo $item['description']; ?></p>
                         <div class="row">
