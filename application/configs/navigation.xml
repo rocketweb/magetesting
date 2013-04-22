@@ -53,6 +53,17 @@
                         <privilege>index</privilege>
                         <icon>icon-white icon-pencil</icon>
                     </plans>
+                    <payments>
+                        <label>Payments</label>
+                        <module>default</module>
+                        <controller>payment</controller>
+                        <action>index</action>
+                        <route>default</route>
+                        <reset_params>true</reset_params>
+                        <resource>default_payment</resource>
+                        <privilege>index</privilege>
+                        <icon>icon-white icon-briefcase</icon>
+                    </payments>
                     <coupons>
                         <label>Coupons</label>
                         <module>default</module>

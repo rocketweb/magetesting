@@ -170,4 +170,9 @@ class Application_Model_PaymentMapper {
         ->setBraintreeTransactionId($row->braintree_transaction_id);
         return $payment;
     }
+
+    public function fetchList() {
+        $adapter = new Zend_Paginator_Adapter_Array($this->getDbTable()->fetchList());
+        return new Zend_Paginator($adapter);
+    }
 }

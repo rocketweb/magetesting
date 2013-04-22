@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="span12">
+        <h1 class="pull-left">
+            Payments
+        </h1>
+    </div>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>User Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->payments as $payment): ?>
+        <tr>
+            <td><?php echo $payment['transaction_type']; ?></td>
+            <td><?php echo $payment['transaction_name']; ?></td>
+            <td><?php echo $payment['price']; ?></td>
+            <td><?php echo $payment['date']; ?></td>
+            <td>
+                <?php echo $payment['first_name'], ' ', $payment['last_name']; ?>
+                (<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'edit', 'id' => $payment['user_id']), 'default', true); ?>"><?php echo $payment['login']; ?></a>)
+                <br />
+                <?php echo $payment['street'], ', ', $payment['postal_code'], ' ', $payment['city']; ?>
+                <br />
+                <?php echo $payment['state'], ' ', $payment['city']; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<?php echo $this->paginationControl($this->payments, 'Sliding', '_partials/paginationControl.phtml'); ?>
