@@ -32,7 +32,7 @@
             </td>
             <td>$<?php echo $payment['price']; ?></td>
             <td><?php echo $payment['date']; ?></td>
-            <td><a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'edit', 'id' => $payment['user_id']), 'default', true); ?>"><?php echo $payment['login']; ?></a></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'detail', 'id' => $payment['user_id']), 'default', true); ?>"><?php echo $payment['login']; ?></a></td>
             <td>
                 <?php echo $payment['first_name'], ' ', $payment['last_name']; ?>
                 <br />
