@@ -61,6 +61,8 @@ implements Application_Model_Task_Interface {
             throw new Application_Model_Task_Exception($e->getMessage());
         }
         
+        $this->_fixOwnership();
+        
         try {
             $transportModel->downloadDatabase();
         } catch (Application_Model_Transport_Exception $e) {
@@ -599,6 +601,13 @@ implements Application_Model_Task_Interface {
             $this->_db_table_prefix = $matches[2][0];
         }
     }
-
     
+    protected function _fixOwnership(){
+        $user  = $this->config->magento->userprefix . $this->_dbuser;
+        $command = 'sudo chown '.$user.':'.$user.' '.$this->_storeFolder.'/'.$this->_storeObject->getDomain().'/';
+        exec($command,$output);
+        $this->logger->log($command, Zend_Log::DEBUG);
+        $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
+    }
+   
 }
