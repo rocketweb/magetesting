@@ -51,7 +51,12 @@ extends Application_Model_Task {
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
         
-        $html->assign('storeUrl', 'http://'.$this->_userObject->getLogin().'.'.$serverModel->getDomain());
+        //our store url
+        $html->assign('installedUrl', 'http://'.$this->_userObject->getLogin().'.'.$serverModel->getDomain());
+        
+        //storeUrl variable from local.ini
+        $html->assign('storeUrl', $this->config->magento->storeUrl);
+        
         $html->assign('backend_name', $this->_storeObject->getBackendName());
         $html->assign('admin_login', $this->_adminuser);
         $html->assign('admin_password', $this->_adminpass);
