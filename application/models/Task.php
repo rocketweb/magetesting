@@ -157,19 +157,7 @@ class Application_Model_Task {
      * 
      */
     protected function _generateAdminPass() {
-
-        $part1 = substr(
-                        str_shuffle(
-                                str_repeat('0123456789', 5)
-                        )
-        , 0, 5);
-        $part2 = substr(
-                        str_shuffle(
-                                str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 7)
-                        )
-        , 0, 7);
-        
-        return $part1.$part2;
+        return Integration_Generator::generateRandomString(7, 5, false);
     }
     
     protected function _clearStoreCache(){
