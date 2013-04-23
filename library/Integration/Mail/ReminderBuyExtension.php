@@ -6,14 +6,16 @@ class Integration_Mail_ReminderBuyExtension extends Integration_Mail
     
     protected $_config;
     protected $_data;
+    protected $_template_data;
 
     public function __construct(){
         parent::__construct();
     }
     
-    public function setup($config, $data){
+    public function setup($config, $data,$templateData){
         $this->_config = $config;
         $this->_data = $data;
+        $this->_template_data = $templateData;
         
         $this->_setHeaders();
         $this->_setView();
@@ -38,6 +40,7 @@ class Integration_Mail_ReminderBuyExtension extends Integration_Mail
     protected function _setView(){
         $this->view = Zend_Layout::getMvcInstance()->getView();
         $this->view->data = $this->_data;
+        $this->view->template_data = $this->_template_data;
     }
     
     protected function _setBody(){
