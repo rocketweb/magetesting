@@ -7,7 +7,7 @@
 <p>Please click the link(s) below to make a purchase.</p>
 
 <?php foreach($this->data as $record): $record = (object)$record; ?>
-    <p><a href="<?php echo $record->url ?>/braintree/payment/pay-for/extension/source/extension/domain/<?php echo $record->domain ?>/id/<?php echo $record->extension_id ?>">Buy <?php echo $record->name ?> extension</a></p>
+    <p><a href="<?php echo $record->url ?>/payment/payment/pay-for/extension/source/extension/domain/<?php echo $record->domain ?>/id/<?php echo $record->extension_id ?>">Buy <?php echo $record->name ?> extension</a></p>
 <?php endforeach; ?>
     
 <p>

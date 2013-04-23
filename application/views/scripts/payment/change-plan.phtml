@@ -2,7 +2,7 @@
     <div class="span12">
         <div class="form-box">
             <div class="box">
-                <form class="form-stacked" id="payment-form" method="POST" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'change-plan'), 'default', true); ?>">
+                <form class="form-stacked" id="payment-form" method="POST" action="<?php echo $this->url(array('controller' => 'payment', 'action' => 'change-plan'), 'default', true); ?>">
                     <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
                     <input type="hidden" name="confirm" value="1" />
                     <div class="tab-stripe tab-stripe-red"></div>

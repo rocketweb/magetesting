@@ -1,6 +1,6 @@
 <?php
 
-class BraintreeController extends Integration_Controller_Action
+class PaymentController extends Integration_Controller_Action
 {
     protected $_general_error_message = 'We had a problem contacting payment gateway. Please try again or contact with <a href="mailto:support@magetesting.com">support@magetesting.com</a>.';
 
@@ -411,7 +411,7 @@ class BraintreeController extends Integration_Controller_Action
                     $this->view->show_billing_and_card = false;
                 }
                 $url_segments = array(
-                        'controller' => 'braintree',
+                        'controller' => 'payment',
                         'action' => 'payment',
                         'pay-for' => $pay_for,
                         'id' => $id
@@ -426,7 +426,7 @@ class BraintreeController extends Integration_Controller_Action
                 ));
             }
             $this->view->specific_content = $this->view->partial(
-                    'braintree/'.$pay_for.'.phtml',
+                    'payment/'.$pay_for.'.phtml',
                     $data
             );
             $this->view->address = $address;

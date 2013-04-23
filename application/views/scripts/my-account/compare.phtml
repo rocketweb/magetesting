@@ -208,7 +208,7 @@
                                 <?php endif; ?>
                                 class="btn btn-large btn-success disabled subscribe-now">Subscribe Now</button>
                             <?php else: ?>
-                            <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment'), 'default', true); ?>">
+                            <form method="post" action="<?php echo $this->url(array('controller' => 'payment', 'action' => 'payment'), 'default', true); ?>">
                                 <input type="hidden" name="pay-for" value="<?php echo ($this->user->hasPlanActive() ? 'change-plan' : 'plan'); ?>" />
                                 <input type="hidden" name="source" value="plan" />
                                 <input type="hidden" name="id" value="<?php echo $plan->getId(); ?>" />
@@ -273,13 +273,13 @@
                                         Subscribe for $<?php echo $plan->getPrice(); ?>
                                     </a>
                                 <?php else: ?>
-                                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment', 'plan' => $plan->getBraintreeId())); ?>">
+                                    <a class="btn btn-success" href="<?php echo $this->url(array('controller' => 'payment', 'action' => 'payment', 'plan' => $plan->getBraintreeId())); ?>">
                                         Subscribe for $<?php echo $plan->getPrice(); ?>
                                     </a>
                                 <?php endif; ?>
                             <?php else: ?>
                                 <?php if ($this->user->getBraintreeSubscriptionId()): ?>
-                                    <a class="btn btn-warning" href="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'unsubscribe')); ?>">Unsubscribe</a>
+                                    <a class="btn btn-warning" href="<?php echo $this->url(array('controller' => 'payment', 'action' => 'unsubscribe')); ?>">Unsubscribe</a>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>

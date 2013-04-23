@@ -80,7 +80,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
              */
             if ($user->getGroup() != 'admin' AND !$user->hasPlanActive()
                 AND ($controller != 'my-account')
-                AND ($controller != 'braintree' || $action != 'payment')
+                AND ($controller != 'payment' || $action != 'payment')
                 AND ($controller != 'user' || $action != 'logout')
                 AND ($controller != 'index' || $action != 'index')
                 ) {
@@ -92,7 +92,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
                 if((int)$user->getPreselectedPlanId() AND $controller == 'user' AND $action == 'dashboard') {
                     return $this->_helper->redirector->gotoRoute(array(
                             'module' => 'default',
-                            'controller' => 'braintree',
+                            'controller' => 'payment',
                             'action' => 'payment',
                     ), 'default', true);
                 } else {
