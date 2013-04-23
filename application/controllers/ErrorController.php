@@ -3,7 +3,6 @@
 class ErrorController extends Integration_Controller_Action
 {
     public function init() {
-        $this->_helper->sslSwitch(false);
         parent::init();
     }
 
