@@ -8,23 +8,33 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Type</th>
+            <th>Invoice nr</th>
             <th>Name</th>
             <th>Price</th>
             <th>Date</th>
-            <th>User Details</th>
+            <th>User</th>
+            <th>Billing address</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach($this->payments as $payment): ?>
+        <?php
+            $types = array(
+                'subscription' => 'Plan',
+                'extension' => 'Extension'
+            );
+        ?>
         <tr>
-            <td><?php echo $payment['transaction_type']; ?></td>
-            <td><?php echo $payment['transaction_name']; ?></td>
-            <td><?php echo $payment['price']; ?></td>
+            <td><?php echo date('Ymd', strtotime($payment['date'])).$payment['user_id'].$payment['id']; ?></td>
+            <td>
+                <span class="label"><?php echo $types[$payment['transaction_type']]; ?></span>
+                <?php echo $payment['transaction_name']; ?>
+            </td>
+            <td>$<?php echo $payment['price']; ?></td>
             <td><?php echo $payment['date']; ?></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'edit', 'id' => $payment['user_id']), 'default', true); ?>"><?php echo $payment['login']; ?></a></td>
             <td>
                 <?php echo $payment['first_name'], ' ', $payment['last_name']; ?>
-                (<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'edit', 'id' => $payment['user_id']), 'default', true); ?>"><?php echo $payment['login']; ?></a>)
                 <br />
                 <?php echo $payment['street'], ', ', $payment['postal_code'], ' ', $payment['city']; ?>
                 <br />
