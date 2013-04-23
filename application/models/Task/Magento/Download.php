@@ -603,8 +603,9 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _fixOwnership(){
+        $output = array();
         $user  = $this->config->magento->userprefix . $this->_dbuser;
-        $command = 'sudo chown '.$user.':'.$user.' '.$this->_storeFolder.'/'.$this->_storeObject->getDomain().'/';
+        $command = 'sudo chown -R '.$user.':'.$user.' '.$this->_storeFolder.'/'.$this->_storeObject->getDomain().'/';
         exec($command,$output);
         $this->logger->log($command, Zend_Log::DEBUG);
         $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
