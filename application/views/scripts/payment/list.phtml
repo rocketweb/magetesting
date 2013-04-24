@@ -39,7 +39,7 @@
                 <br />
                 <?php echo $payment['street'], ', ', $payment['postal_code'], ' ', $payment['city']; ?>
                 <br />
-                <?php echo $payment['state'], ' ', $payment['city']; ?>
+                <?php echo $payment['state'], ' ', $payment['country']; ?>
             </td>
         </tr>
         <?php endforeach; ?>
@@ -48,5 +48,5 @@
 
 <?php echo $this->paginationControl($this->payments, 'Sliding', '_partials/paginationControl.phtml'); ?>
 <?php else: ?>
-<h3>No payments.</h3>
+<h4>No payments.</h4>
 <?php endif; ?>
