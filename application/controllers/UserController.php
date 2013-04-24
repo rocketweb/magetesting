@@ -686,4 +686,54 @@ class UserController extends Integration_Controller_Action
         $this->view->form = $form;
     }
     
+    public function detailAction()
+    {
+        $id = (int) $this->_getParam('id', 0);
+        
+        $user = new Application_Model_User();
+        $user = $user->find($id);
+
+        if(!$user->getLogin()) {
+            $this->_helper->flashMessenger(array('type' => 'error', 'message' => 'User with specified id does not exist.'));
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module'     => 'default',
+                    'controller' => 'user',
+                    'action'     => 'list',
+            ), 'default', true);
+        }
+
+        $server = new Application_Model_Server();
+        $server->find($user->getServerId());
+        
+        $plan = new Application_Model_Plan();
+        $plan->find($user->getPlanId());
+        
+        $coupon = new Application_Model_Coupon();
+        $coupon->findByUser($user->getId());
+        
+        $planModel = clone $plan;
+        $plans = array();
+
+        foreach($planModel->fetchAll() as $row) {
+            $plans[$row->getId()] = $row->getName();
+        }
+        
+        $payment = new Application_Model_Payment();
+        $payments = $payment->fetchUserPayments($user->getId());
+
+        $this->view->assign(
+            array(
+                'user'     => $user,
+                'server'   => $server,
+                'plan'     => $plan,
+                'coupon'   => $coupon,
+                'plans'    => $plans,
+                'payments' => $payments
+            )
+        );
+
+//        Zend_Debug::dump($user);
+//        Zend_Debug::dump($payments);
+    }
+    
 }

@@ -25,7 +25,7 @@
         <tr>
             <td><?php echo $coupon['code']; ?></td>
             <td><?php echo ('' != $coupon['used_date'] ? date('Y-m-d', strtotime($coupon['used_date'])) : ''); ?></td>
-            <td><?php echo $coupon['user']; ?></td>
+            <td><?php if ($coupon['user_id']):?><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'detail', 'id' => $coupon['user_id'])); ?>"><?php echo $coupon['user']; ?></a><?php endif; ?></td>
             <td><?php echo $coupon['plan']; ?></td>
             <td><?php echo $coupon['duration'] ?></td>
             <td><?php echo date('Y-m-d', strtotime($coupon['active_to'])); ?></td>

@@ -15,7 +15,7 @@
     <tbody>
         <?php foreach($this->users as $user): ?>
         <tr>
-            <td><?php echo $user['login']; ?></td>
+            <td><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'detail', 'id' => $user['id'])); ?>"><?php echo $user['login']; ?></a></td>
             <td><?php echo $user['status']; ?></td>
             <td><?php echo $user['firstname']; ?></td>
             <td><?php echo $user['lastname']; ?></td>
