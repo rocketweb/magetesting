@@ -91,7 +91,7 @@
             <?php if(!$extension['status']): ?>
                 <a href="#" class="btn btn-danger btn-mini pull-right install" data-install-extension="<?php echo $extension['id']; ?>"><i class="icon icon-white icon-cog"></i> Install</a>
             <?php elseif((float)$extension['price'] AND $extension['status'] == 'ready' AND !$extension['braintree_transaction_id']): ?>
-                <form method="post" action="<?php echo $this->url(array('controller' => 'braintree', 'action' => 'payment'), 'default', true); ?>">
+                <form method="post" action="<?php echo $this->url(array('controller' => 'payment', 'action' => 'payment'), 'default', true); ?>">
                     <input type="hidden" name="pay-for" value="extension" />
                     <input type="hidden" name="id" value="<?php echo $extension['id']; ?>" />
                     <input type="hidden" name="source" value="extension" />
