@@ -36,11 +36,8 @@ class Integration_Mail_Contact extends Integration_Mail
         $this->view->email = $this->_formData->sender_email;
         $this->view->message = $this->_formData->message;
         
-        /** 
-         * This field doesn't come from POST, 
-         * it is added in IndexController manually 
-         */
-        $this->view->storeUrl = $this->_formData->storeUrl;
+        $config = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('config');
+        $this->view->storeUrl = $config->magento->storeUrl;
     }
     
     protected function _setBody(){

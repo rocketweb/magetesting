@@ -45,6 +45,9 @@ class Integration_Mail_UserResetPassword extends Integration_Mail
         );
         $this->view->resetLink = $this->view->serverUrl().$resetUrl;
         $this->view->login  = $this->_userObject->getLogin();
+        
+        $config = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('config');
+        $this->view->storeUrl = $config->magento->storeUrl;
     }
     
     protected function _setBody(){
