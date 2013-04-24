@@ -20,7 +20,6 @@
 
 $(document).ready(function() {
     var siteRoot = $('body').data('siteRoot'),
-        $version_list_buttons = $('.version-list'),
         $version_list_modal = $('.version-list-modal'),
         $version_list_modal_title = $version_list_modal.find('.modal-header h3'),
         $version_list_modal_table_body = $version_list_modal.find('tbody'),
@@ -29,34 +28,32 @@ $(document).ready(function() {
         $version_list_modal_sync = $version_list_modal_version_field.next(),
         $version_list_modal_extension_field = $version_list_modal.find('input[type=hidden]');
 
-    if($version_list_buttons.length) {
-        $version_list_buttons.click(function() {
-            var $this = $(this);
-            if(!$this.hasClass('disabled')) {
-                $this.addClass('disabled');
-                $.ajax({
-                    url : $this.attr('href'),
-                    type : 'POST',
-                    dataType : 'json',
-                    success : function(result) {
-                        if(expectInObject(['status', 'message'], result)) {
-                            if('ok' == result.status) {
-                                $version_list_modal_title.text($this.parents('.wrapper:first').find('.info .info-main h5').text() + ' releases');
-                                $version_list_modal_table_body.html(result.message);
-                                $version_list_modal_extension_field.val($this.data('extension-id'));
-                                $version_list_modal_version_field.val('');
-                                $version_list_modal.modal('show');
-                                $this.removeClass('disabled');
-                            } else {
-                                window.location.reload();
-                            }
+    $('#container').delegate('.version-list', 'click', function(e) {
+        var $this = $(this);
+        if(!$this.hasClass('disabled')) {
+            $this.addClass('disabled');
+            $.ajax({
+                url : $this.attr('href'),
+                type : 'POST',
+                dataType : 'json',
+                success : function(result) {
+                    if(expectInObject(['status', 'message'], result)) {
+                        if('ok' == result.status) {
+                            $version_list_modal_title.text($this.parents('.wrapper:first').find('.info .info-main h5').text() + ' releases');
+                            $version_list_modal_table_body.html(result.message);
+                            $version_list_modal_extension_field.val($this.data('extension-id'));
+                            $version_list_modal_version_field.val('');
+                            $version_list_modal.modal('show');
+                            $this.removeClass('disabled');
+                        } else {
+                            window.location.reload();
                         }
                     }
-                });
-            }
-            return false;
-        });
-    }
+                }
+            });
+        }
+        return false;
+    });
 
     $version_list_modal_form.submit(function() {
         var found_version = false,
