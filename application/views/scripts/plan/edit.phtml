@@ -1,0 +1,73 @@
+<?php $this->headScript()->appendFile($this->baseUrl('public/js/bootstrap-datepicker.js')); ?>
+<?php $this->headScript()->appendFile($this->baseUrl('public/js/plan-form.js')); ?>
+<div class="row">
+    <div class="span12">
+        <h1><?php echo $this->form->getLegend(); ?></h1>
+        <div class="form-box">
+            <div class="box">
+                <form method="post" id="extension-form" enctype="multipart/form-data">
+                    <div class="tab-stripe"></div>
+                    <fieldset>
+                        <legend>Details</legend>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->name; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->stores; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->price; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->price_description; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->billing_period; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->billing_description; ?>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="tab-stripe"></div>
+                    <fieldset>
+                        <legend>Features</legend>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->partial('plan/on_off_button.phtml', array('label' => 'FTP Access', 'field' => 'ftp_access', 'value' => $this->ftp_access)); ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->partial('plan/on_off_button.phtml', array('label' => 'phpMyAdmin Access', 'field' => 'phpmyadmin_access', 'value' => $this->phpmyadmin_access)); ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->partial('plan/on_off_button.phtml', array('label' => 'Can add custom store', 'field' => 'can_add_custom_store', 'value' => $this->can_add_custom_store)); ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->partial('plan/on_off_button.phtml', array('label' => 'Is hidden', 'field' => 'is_hidden', 'value' => $this->is_hidden)); ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->partial('plan/on_off_button.phtml', array('label' => 'Auto renew', 'field' => 'auto_renew', 'value' => $this->auto_renew)); ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->partial('plan/on_off_button.phtml', array('label' => 'Can do db revert', 'field' => 'can_do_db_revert', 'value' => $this->can_do_db_revert)); ?>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-actions">
+                        <?php echo $this->form->submit; ?>
+                        <a href="<?php echo $this->url(array('cancel' => 1), 'default', false); ?>" class="btn">Cancel</a>
+                    </div>
+                </form>
+            </div><!-- /box -->
+        </div><!-- /form-box -->
+    </div><!-- /span12 -->
+</div><!-- /row -->

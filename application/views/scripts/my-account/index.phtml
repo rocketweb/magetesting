@@ -149,6 +149,53 @@
                     <?php else: ?>
                         <div class="row"><div class="span4">You don't have any invoices</div></div>
                     <?php endif; ?>
+                    <?php /* maybe in future someone change it to be responsive ?>
+                    <?php if($this->payments): ?>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                                <th>Billing address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($this->payments as $payment): ?>
+                            <?php
+                                $types = array(
+                                    'subscription' => array('label' => 'Plan', 'class' => 'label-success'),
+                                    'extension' => array('label' => 'Extension', 'class' => 'label-info')
+                                );
+                            ?>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId()), 'default', true); ?>">
+                                        <?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="label <?php echo $types[$payment->getTransactionType()]['class']; ?>"><?php echo $types[$payment->getTransactionType()]['label']; ?></span>
+                                    <?php echo $payment->getTransactionName(); ?>
+                                </td>
+                                <td>$<?php echo $payment->getPrice(); ?></td>
+                                <td><?php echo $payment->getDate(); ?></td>
+                                <td>
+                                    <?php echo $payment->getFirstName(), ' ', $payment->getLastName(); ?>
+                                    <br />
+                                    <?php echo $payment->getStreet(), ', ', $payment->getPostalCode(), ' ', $payment->getCity(); ?>
+                                    <br />
+                                    <?php echo $payment->getState(), ' ', $payment->getCountry(); ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php else: ?>
+                    <div class="row"><div class="span4">You don't have any invoices</div></div>
+                    <?php endif; ?>
+                    <?php */ ?>
                 </fieldset>
                 
             </div>

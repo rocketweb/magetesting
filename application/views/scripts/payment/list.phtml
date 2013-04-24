@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="span12">
+        <h1 class="pull-left">
+            Payments
+        </h1>
+    </div>
+</div>
+<?php if($this->payments): ?>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>User</th>
+            <th>Billing address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->payments as $payment): ?>
+        <?php
+            $types = array(
+                'subscription' => array('label' => 'Plan', 'class' => 'label-success'),
+                'extension' => array('label' => 'Extension', 'class' => 'label-info')
+            );
+        ?>
+        <tr>
+            <td><?php echo $payment['id']; ?></td>
+            <td>
+                <span class="label <?php echo $types[$payment['transaction_type']]['class']; ?>"><?php echo $types[$payment['transaction_type']]['label']; ?></span>
+                <?php echo $payment['transaction_name']; ?>
+            </td>
+            <td>$<?php echo $payment['price']; ?></td>
+            <td><?php echo $payment['date']; ?></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'detail', 'id' => $payment['user_id']), 'default', true); ?>"><?php echo $payment['login']; ?></a></td>
+            <td>
+                <?php echo $payment['first_name'], ' ', $payment['last_name']; ?>
+                <br />
+                <?php echo $payment['street'], ', ', $payment['postal_code'], ' ', $payment['city']; ?>
+                <br />
+                <?php echo $payment['state'], ' ', $payment['country']; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<?php echo $this->paginationControl($this->payments, 'Sliding', '_partials/paginationControl.phtml'); ?>
+<?php else: ?>
+<h4>No payments.</h4>
+<?php endif; ?>
