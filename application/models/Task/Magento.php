@@ -180,7 +180,7 @@ extends Application_Model_Task {
         $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
         $html->assign('ftppass', $user_details['systempass']);
         
-        $html->assign('storeUrl', 'http://'.$config->magento->storeUrl);
+        $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
         $bodyText = $html->render('ftp-account-credentials.phtml');
@@ -212,7 +212,7 @@ extends Application_Model_Task {
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
         
-        $html->assign('storeUrl', 'http://'.$serverModel->getDomain());
+        $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
         $bodyText = $html->render('phpmyadmin-credentials.phtml');

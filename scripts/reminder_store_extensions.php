@@ -44,8 +44,7 @@ if($result) {
 
 function sendEmail(array $mailData, $config, $log) {
     $mail = new Integration_Mail_ReminderBuyExtension();
-    $templateData = array('storeUrl' => $config->magento->storeUrl);
-    $mail->setup($config->cron->buyStoreExtension, $mailData, $templateData);
+    $mail->setup($config->cron->buyStoreExtension, $mailData);
 
     try {
         $mail->send();
