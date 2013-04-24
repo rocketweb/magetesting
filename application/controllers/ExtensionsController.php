@@ -15,12 +15,32 @@ class ExtensionsController extends Integration_Controller_Action
     }
     public function indexAction()
     {
-        $extension = new Application_Model_Extension();
-        $this->view->extensions = $extension->fetchFullListOfExtensions();
+        $extensionModel = new Application_Model_Extension();
+
+        $request = $this->getRequest();
+        $filter = $request->getParam('filter', array());
+        if(!is_array($filter)) {
+            $filter = array();
+        }
+        $order = $request->getParam('order', array());
+        if(!is_array($order)) {
+            $order = array();
+        }
+        $offset = $request->getParam('offset', 0);
+        $offset = !is_numeric($offset) ? 0 : (int)$offset;
+        $limit = 50;
+
+        $this->view->extensions = $extensionModel->fetchFullListOfExtensions($filter, $order, $offset, $limit);
 
         $extensionCategoryModel = new Application_Model_ExtensionCategory();
         $this->view->categories = $extensionCategoryModel->fetchAll();
-        $this->renderScript('extension/list.phtml');
+
+        if($request->isPost() && $request->isXmlHttpRequest()) {
+            $this->_helper->layout()->disableLayout();
+            $this->renderScript('extension/tiles.phtml');
+        } else {
+            $this->renderScript('extension/list.phtml');
+        }
     }
 	
 }

@@ -1,62 +1,4 @@
 $(document).ready(function () {
-    if(typeof $.Isotope == "function") {
-        $.Isotope.prototype.replace = function($elements) {
-            var $remove_elements = this.$allAtoms.not($elements), // atoms to be removed
-                // whether is something to remove and should be animated
-                $animate_remove = $remove_elements.filter( ':not(.' + this.options.hiddenClass + ')' ).length,
-                $add_elements = $elements.not(this.$allAtoms), // new atoms
-                instance = this; // scope helper
-    
-            // save original order by replacing elements using existing in isotope
-            this.$allAtoms = $elements.map(function(k, e) {
-                var $the_same = e;
-                instance.$allAtoms.each(function(k1,e1) {
-                    if($(e1).is(e)) {
-                        $the_same = e1;
-                    }
-                });
-                return $the_same;
-            });
-            this.$filteredAtoms = this.$allAtoms;
-    
-            // it should be called at the end
-            $remove_from_dom = function(a, instance) {
-                $remove_elements.deflate(); // removes element from dom but binded events still exists
-            }
-            // is there anything to add ?
-            if($add_elements.length) {
-                /* add isotope-item basic style */
-                atomStyle = { position: 'absolute' };
-                if ( this.usingTransforms ) {
-                  atomStyle.left = 0;
-                  atomStyle.top = 0;
-                }
-                $add_elements.css( atomStyle ).addClass( this.options.itemClass );
-                /* end */
-                this.element.append($add_elements);
-                /* hideAppended */
-                $add_elements.addClass('no-transition');
-                this._isInserting = true;
-                // apply hidden styles
-                this.styleQueue.push({ $el: $add_elements, style: this.options.hiddenStyle });
-                /* end */
-                this.reLayout();
-                /* _reveal fires reLayout */
-                this._revealAppended($add_elements);
-            }
-            // is there anything to remove ?
-            if($remove_elements.length) {
-                // animate removal of visible atoms
-                if($animate_remove) {
-                    this.styleQueue.push({ $el: $remove_elements, style: this.options.hiddenStyle });
-                    this.reLayout($remove_from_dom);
-                } else {
-                    $remove_from_dom();
-                }
-            }
-        }
-    }
-
     if($('#payment-form').length) {
         $('#payment-form').validate({
             errorClass: 'error',
@@ -378,16 +320,19 @@ $(document).ready(function () {
     var $extensions_isotope = $('.extensions_well > #container'),  // it should be change to #extensions_isotope or smth
         $extensions_filter_container = $('#options'),
         $extensions_filter_options = $extensions_filter_container.find('li a'),
-        $extensions_filters_search = '',
-        $extensions_filters = '',
+        $extensions_filter_search_input = $('.search-as-you-type-input'),
+        $extensions_tiles_limit = $extensions_isotope.find('.element').length 
+        $extensions_filter_load_data = {
+            filter : {},
+            order : {},
+            offset : $extensions_tiles_limit,
+            limit: $extensions_tiles_limit
+        },
         $load_more = $('.load-more'),
-        $load_more_limit = $('.element:not(.hidden)').length,
-        $last_filtered_extensions = $([]),
         ElementPad        = 5,
         ElementWidth      = 135 + (ElementPad * 2),
         ElementHeight     = 112;
-	
-	
+
 	/* MEDIA QUERIES HACK */
 	var wellWidth = $('.extensions_well').width();
 	if(wellWidth < 300){
@@ -419,102 +364,76 @@ $(document).ready(function () {
         $('li a.btn-all').parent().addClass('active');
         //$('.btn-all').button('toggle');
 
-        $extensions_filter_options.click(function(e) {
-            var $this = $(this);
-            var $dropdown = $this.parent().parent();
-            var $group = $dropdown.parent();
-            var selector = 'selected';
-            
-            if(! $this.hasClass(selector)) {
-            	$dropdown.find('li').removeClass('active');
-	    		$dropdown.find('li a').removeClass(selector);
-						
-            	$this.addClass(selector).parent().addClass('active');
-            	$title = $group.attr('data-title');
-            	$group.find('a.btn.dropdown-toggle').html($title + ": " + $this.html() + ' <span class="caret"></span>');
-            	
-            	$extensions_filters = '';
-            	$extensions_filter_container.find('.' + selector).each(function() {
-                    var $option = $(this).data('option-value');
+        /* ================================== */
+        /* ============= FILTER ============= */
+
+        $.extend( $.Isotope.prototype, {
+            load_more : function() {
+                this._fetch_data(this._load_more);
+            },
+            filter_elements : function() {
+                var last_filtered = JSON.stringify($extensions_filter_load_data);
+                this._collect_filter_options();
+                if(JSON.stringify($extensions_filter_load_data) != last_filtered) {
+                    $extensions_filter_load_data.offset = 0;
+                    this._fetch_data(this._filter_elements);
+                }
+            },
+            _filter_elements : function($atoms) {
+                $extensions_isotope.isotope('remove', $extensions_isotope.find('.element'));
+                $load_more.show();
+                this._load_more($atoms);
+            },
+            _load_more : function($atoms) {
+                if($atoms.length) {
+                    $extensions_filter_load_data.offset += $atoms.length;
+                    if($atoms.length < $extensions_filter_load_data.limit) {
+                        $load_more.hide();
+                    }
+                    $extensions_isotope.isotope('insert', $atoms);
+                } else {
+                    $load_more.hide();
+                }
+            },
+            _fetch_data : function(callback) {
+                var isotope_instance = this;
+                $.ajax({
+                    type : 'post',
+                    data : $extensions_filter_load_data,
+                    success : function(result) {
+                        callback.call(isotope_instance, $(result).filter('.element'));
+                    }
+                });
+            },
+            _collect_filter_options : function() {
+                $extensions_filter_load_data.filter = {};
+                $extensions_filter_container.find('.selected').each(function() {
+                    var $this = $(this);
+                    var $option = $this.data('option-value');
                     if($option != '*') {
-                        $extensions_filters += $option;
+                        $extensions_filter_load_data.filter[$this.parents('ul:first').data('option-key')] = ($option + '').replace('.', '');
                     }
                 });
 
-                $last_filtered_extensions = $tiles.filter(($extensions_filters + $extensions_filters_search) || '*');
-                if($last_filtered_extensions.length <= $load_more_limit) {
-                    $load_more.hide();
-                } else {
-                    $load_more.show();
+                var query = $extensions_filter_search_input.val();
+                if(query.length) {
+                    $extensions_filter_load_data.filter['query'] = query;
                 }
-                $extensions_isotope.isotope('replace', $last_filtered_extensions.filter(':lt('+$load_more_limit+')'));
+                /*if($extensions_order) {
+                    $extensions_filter_load_data.order = {};
+                }*/
             }
-            
-            // Bootstrap + isotope conflict fix
-            $('.btn-group.open').removeClass('open');
-            
-            /*
-             * Original filters code
-             * 
-             *if(! $this.hasClass(selector)) {
-                $this.siblings()
-                     .removeClass(selector)
-                     .removeClass('active')
-                     .end()
-                     .addClass(selector + ' active');
-                var $filter = '';
-                $extensions_filter_container.find('.' + selector).each(function() {
-                    var $option = $(this).data('option-value');
-                    if($option != '*') {
-                        $filter += $option;
-                    }
-                });
-                $extensions_isotope.isotope({filter: $filter});
-            }*/
-            
-            return false;
         });
-        
-        
+
         // Filter as you type functions
         var keyTime, // it informs keyup event when last key was pressed
             delayTime = 500, // pause between key pressing before we fire up filtering - default = 1000 ms = 1 second
-            $search_input = $('.search-as-you-type-input'),
             lastValue_search_input = '',
             lastTimeout;
-
-        var f_filterExtensionsByQuery = function f_filterExtensionsByQuery() {
-            var queryString = $search_input.val().toLowerCase();
-            if(!queryString) {
-                $extensions_filters_search = '';
-            } else {
-                $extensions_filters_search = '.matches';
-            }
-            $tiles.each(function(k, e) {
-                var $element = $(e);
-                if(
-                    $element.find('.info').text().toLowerCase().match(queryString) ||
-                    $element.find('.description').text().toLowerCase().match(queryString)
-                ) {
-                    $element.addClass('matches');
-                } else {
-                    $element.removeClass('matches');
-                }
-            });
-
-            $last_filtered_extensions = $tiles.filter(($extensions_filters + $extensions_filters_search) || '*');
-            if($last_filtered_extensions.length <= $load_more_limit) {
-                $load_more.hide();
-            } else {
-                $load_more.show();
-            }
-            $extensions_isotope.isotope('replace', $last_filtered_extensions.filter(':lt('+$load_more_limit+')'));
-        }
-
         // prevent form submitting for query search field
-        $search_input.parents('form:first').submit(function() { return false; })
-        $search_input.keyup(function(e) {
-            var newValue_search_input = $search_input.val();
+        $extensions_filter_search_input.parents('form:first').submit(function() { return false; })
+        $extensions_filter_search_input.keyup(function(e) {
+            var newValue_search_input = $extensions_filter_search_input.val();
             // allow filtering only when query input was filed or truncated
             if(lastValue_search_input.length != newValue_search_input.length || lastValue_search_input != newValue_search_input) {
                 // set lastValue to current value
@@ -525,9 +444,35 @@ $(document).ready(function () {
                     clearTimeout(lastTimeout);
                 }
                 // set new timeout execution
-                lastTimeout = setTimeout(f_filterExtensionsByQuery, delayTime);
+                lastTimeout = setTimeout(function() { $extensions_isotope.isotope('filter_elements'); }, delayTime);
             }
         });
+
+
+        $extensions_filter_options.click(function(e) {
+            var $this = $(this);
+            var $dropdown = $this.parent().parent();
+            var $group = $dropdown.parent();
+            var selector = 'selected';
+            
+            if(! $this.hasClass(selector)) {
+                $dropdown.find('li').removeClass('active');
+                $dropdown.find('li a').removeClass(selector);
+                        
+                $this.addClass(selector).parent().addClass('active');
+                $title = $group.attr('data-title');
+                $group.find('a.btn.dropdown-toggle').html($title + ": " + $this.html() + ' <span class="caret"></span>');
+
+                $extensions_isotope.isotope('filter_elements');
+            }
+
+            // Bootstrap + isotope conflict fix
+            $('.btn-group.open').removeClass('open');
+
+            return false;
+        });
+        /* ============= FILTER ============= */
+        /* ================================== */
 
 
         // EVENT: On click "Install" button
@@ -535,13 +480,12 @@ $(document).ready(function () {
             "use strict";
             var $this = $(this);
 
-            $this.addClass('disabled');
             $.ajax({
-                url     : $extensions_filter_container.data('form-action'),
+                url     : location.href.replace('/queue/extensions/store', '/queue/install-extension/store'),
                 type    : 'POST',
                 data    : {extension_id : $this.data('install-extension')},
                 success : function(response) {
-                    if(response != 'error' && response != '') {
+                    if(!isNaN(response)) {
                         var $replacement = $('<span class="label update-status label-info pull-right">Pending</span>');
                         $this.replaceWith($replacement);
                         $replacement.parents('.element:first').data('store-extension-id', response);
@@ -549,8 +493,6 @@ $(document).ready(function () {
                     }
                 }
             });
-            
-            
             return false;
         });
         
@@ -670,7 +612,7 @@ $(document).ready(function () {
         });
         
         // change size of clicked element
-        $extensions_isotope.find('.element').click(function(e) {
+        $extensions_isotope.delegate('.element', 'click', function(e) {
             if(!$(e.target).hasClass('version-list')) {
                 if( !($(this).hasClass('large'))){
                     $('.large').removeClass('large').find('div.extras').addClass('hidden');
@@ -718,25 +660,8 @@ $(document).ready(function () {
 
         // load more feature begins here
         // remove not visible extensions from dom ( without destroying binded events )
-        $tiles = $('.element');
-        $tiles.filter('.hidden').removeClass('hidden').detach();
-        $last_filtered_extensions = $tiles;
-
         $load_more.click(function() {
-            var $loaded_elements = $('.element').length,
-                $can_load_more = $last_filtered_extensions.length - $loaded_elements;
-
-            if($can_load_more >= 0) {
-                if($can_load_more < $load_more_limit) {
-                    $load_more.hide();
-                }
-                $extensions_isotope.isotope(
-                    'replace',
-                    $last_filtered_extensions.filter(
-                        ':lt(' + ($loaded_elements + $load_more_limit) + ')'
-                    )
-                );
-            }
+            $extensions_isotope.isotope('load_more');
             return false;
         });
 

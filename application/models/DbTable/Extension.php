@@ -41,7 +41,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
     
-    public function fetchStoreExtensions($store) {
+    public function fetchStoreExtensions($store, $filter, $order, $offset, $limit) {
         /*
 SELECT  `all` . * ,  `ec`.`class` AS  `category_class` ,  `ec`.`logo` AS  `category_logo` 
 FROM (
@@ -123,10 +123,35 @@ ORDER BY  `installed` DESC ,  `price` DESC
                  ->group('all.extension_key')
                  ->order(array('installed DESC', 'price DESC'));
 
+
+        // where
+        if(isset($filter['price'])) {
+            $select_all_extensions_sorted->where('price ' . (('premium' == $filter['price']) ? '>' : '=') .' ?', 0);
+        }
+        if(isset($filter['category'])) {
+            $select_all_extensions_sorted->where('category_id = ?', $filter['category']);
+        }
+        if(isset($filter['install'])) {
+            $select_all_extensions_sorted->having('installed = ?', ('installed' == strtolower($filter['install'])) ? 1 : 0);
+        }
+        if(isset($filter['query'])) {
+            $select_all_extensions_sorted->where('MATCH(name, description) AGAINST (?)', $filter['query']);
+        }
+
+        // order
+        if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
+            $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
+            $select_all_extensions_sorted->order($order['column']. ' ' . $direction);
+        } else {
+            $select_all_extensions_sorted->order('price DESC');
+        }
+
+        $select_all_extensions_sorted->limit($limit, $offset);
+
         return $this->fetchAll($select_all_extensions_sorted);
     }
 
-    public function fetchFullListOfExtensions()
+    public function fetchFullListOfExtensions($filter, $order, $offset, $limit)
     {
         $sub_select = 
             $this->select()
@@ -138,13 +163,37 @@ ORDER BY  `installed` DESC ,  `price` DESC
             $sub_select->where('edition = ?', 'CE')
                        ->where('extension > ""');
         }
+
+        // where
+        if(isset($filter['price'])) {
+            $sub_select->where('price ' . (('premium' == $filter['price']) ? '>' : '=') .' ?', 0);
+        }
+        if(isset($filter['category'])) {
+            $sub_select->where('category_id = ?', $filter['category']);
+        }
+        if(isset($filter['edition'])) {
+            $sub_select->where('edition = ?', strtoupper($filter['edition']));
+        }
+        if(isset($filter['query'])) {
+            $sub_select->where('MATCH(name, description) AGAINST (?)', $filter['query']);
+        }
+
         $select = 
             $this->select()
                  ->from(array('e1' => $sub_select), '')
                  ->setIntegrityCheck(false)
                  ->joinInner(array('e2' => 'extension'), 'e2.name = e1.name AND e2.edition = e1.edition AND e2.version = e1.version')
-                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'))
-                 ->order('price DESC');
+                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'));
+
+        // order
+        if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
+            $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
+            $select->order($order['column']. ' ' . $direction);
+        } else {
+            $select->order('price DESC');
+        }
+
+        $select->limit($limit, $offset);
 
         return $this->fetchAll($select);
     }
@@ -155,10 +204,8 @@ ORDER BY  `installed` DESC ,  `price` DESC
         ->setIntegrityCheck(false)
                 ->from($this->_name)
                 ->join('store_extension', $this->_name.'.id = store_extension.extension_id')
-                ->where('store_id = ?', $store['id'])
-                ;
-               
-               //var_dump($select->__toString());
+                ->where('store_id = ?', $store);
+
         return $this->fetchAll($select);
     }
     

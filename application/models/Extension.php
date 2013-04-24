@@ -309,8 +309,8 @@ class Application_Model_Extension {
      * fetches available and installed extensions for given store
      * @param string $store_name
      */
-    public function fetchStoreExtensions($store_name){
-        $extensions = $this->getMapper()->fetchStoreExtensions($store_name)->toArray();
+    public function fetchStoreExtensions($store_name, $filter, $order, $offset, $limit) {
+        $extensions = $this->getMapper()->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit)->toArray();
         foreach($extensions as $key => $extension) {
             $extensions[$key]['screenshots'] = array();
             $screenshots = $this->fetchScreenshots($extension['id']);
@@ -323,8 +323,8 @@ class Application_Model_Extension {
         return $extensions;
     }
 
-    public function fetchFullListOfExtensions(){
-        $extensions = $this->getMapper()->fetchFullListOfExtensions()->toArray();
+    public function fetchFullListOfExtensions($filter, $order, $offset, $limit) {
+        $extensions = $this->getMapper()->fetchFullListOfExtensions($filter, $order, $offset, $limit)->toArray();
         foreach($extensions as $key => $extension) {
             $extensions[$key]['screenshots'] = array();
             $screenshots = $this->fetchScreenshots($extension['id']);
@@ -336,8 +336,8 @@ class Application_Model_Extension {
         }
         return $extensions;
     }
-    public function getInstalledForStore($store_name){
-        return $this->getMapper()->getInstalledForStore($store_name);
+    public function getInstalledForStore($store) {
+        return $this->getMapper()->getInstalledForStore($store);
     }
     
     public function findByFilters($filters){

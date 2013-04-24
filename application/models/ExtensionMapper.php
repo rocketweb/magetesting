@@ -159,12 +159,7 @@ class Application_Model_ExtensionMapper {
         
     }
     
-    public function getInstalledForStore($store_name){
-        
-        //find store by name 
-        $storeModel = new Application_Model_Store();
-        $store = $storeModel->findByDomain($store_name);
-        
+    public function getInstalledForStore($store){
         //find extensions that match version and edition
         $installedExtensions = $this->getDbTable()->findInstalled($store);
 
@@ -172,16 +167,16 @@ class Application_Model_ExtensionMapper {
         
     }
     
-    public function fetchStoreExtensions($store_name) {
+    public function fetchStoreExtensions($store_name, $filter, $order, $offset, $limit) {
         //find store by name
         $storeModel = new Application_Model_Store();
         $store = $storeModel->findByDomain($store_name);
 
-        return $this->getDbTable()->fetchStoreExtensions($store);
+        return $this->getDbTable()->fetchStoreExtensions($store, $filter, $order, $offset, $limit);
     }
 
-    public function fetchFullListOfExtensions() {
-        return $this->getDbTable()->fetchFullListOfExtensions();
+    public function fetchFullListOfExtensions($filter, $order, $offset, $limit) {
+        return $this->getDbTable()->fetchFullListOfExtensions($filter, $order, $offset, $limit);
     }
 
     public function findByFilters(array $filters, Application_Model_Extension $extension){
