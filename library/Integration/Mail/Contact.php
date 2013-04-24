@@ -6,7 +6,7 @@ class Integration_Mail_Contact extends Integration_Mail
     
     protected $_data;
     protected $_config;
-    
+
     public function __construct() {
         parent::__construct();
     }
@@ -35,6 +35,12 @@ class Integration_Mail_Contact extends Integration_Mail
         $this->view->name = $this->_formData->sender_name;
         $this->view->email = $this->_formData->sender_email;
         $this->view->message = $this->_formData->message;
+        
+        /** 
+         * This field doesn't come from POST, 
+         * it is added in IndexController manually 
+         */
+        $this->view->storeUrl = $this->_formData->storeUrl;
     }
     
     protected function _setBody(){
