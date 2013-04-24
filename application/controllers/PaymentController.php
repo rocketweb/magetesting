@@ -745,4 +745,21 @@ class PaymentController extends Integration_Controller_Action
             'new_plan_end' => $new_plan_end
         );
     }
+    
+    /* Methods from payment manager */
+    public function indexAction() {
+        # display grid of all payments
+        /* index action is only alias for list extensions action */
+        $this->listAction();
+    }
+
+    public function listAction() {
+        $planModel = new Application_Model_Payment();
+        $paginator = $planModel->fetchList();
+        $page = (int) $this->_getParam('page', 0);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(10);
+        $this->view->payments = $paginator;
+        $this->render('list');
+    }
 }
