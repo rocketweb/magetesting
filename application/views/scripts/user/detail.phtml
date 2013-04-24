@@ -76,44 +76,46 @@
                 <div class="tab-stripe"></div>
                 <fieldset>
                     <legend>Payments</legend>
-                    <?php if ($this->payments): ?>
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Price</th>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th>Date</th>
-                                    <th>Customer</th>
-                                    <th>Street</th>
-                                    <th>Code</th>
-                                    <th>City</th>
-                                    <th>Coutry</th>
-                                    <th>State</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($this->payments as $payment): ?>
-                                <tr>
-                                    <td><strong>$<?php echo $this->escape($payment->getPrice()); ?></strong></td>
-                                    <td><?php echo $this->escape($payment->getTransactionName()); ?></td>
-                                    <td><?php echo $this->escape($payment->getTransactionType()); ?></td>
-                                    <td><?php echo $this->escape($payment->getDate()); ?></td>
-
-                                    <td><?php echo $this->escape($payment->getFirstname()); ?> <?php echo $this->escape($payment->getLastname()); ?></td>
-                                    <td><?php echo $this->escape($payment->getStreet()); ?></td>
-                                    <td><?php echo $this->escape($payment->getPostalCode()); ?></td>
-                                    <td><?php echo $this->escape($payment->getCity()); ?></td>
-                                    <td><?php echo $this->escape($payment->getState()); ?></td>
-                                    <td><?php echo $this->escape($payment->getCountry()); ?></td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                    <?php if($this->payments): ?>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                                <th>Billing address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($this->payments as $payment): ?>
+                            <?php
+                                $types = array(
+                                    'subscription' => array('label' => 'Plan', 'class' => 'label-success'),
+                                    'extension' => array('label' => 'Extension', 'class' => 'label-info')
+                                );
+                            ?>
+                            <tr>
+                                <td><?php echo $payment->getId(); ?></td>
+                                <td>
+                                    <span class="label <?php echo $types[$payment->getTransactionType()]['class']; ?>"><?php echo $types[$payment->getTransactionType()]['label']; ?></span>
+                                    <?php echo $payment->getTransactionName(); ?>
+                                </td>
+                                <td>$<?php echo $payment->getPrice(); ?></td>
+                                <td><?php echo $payment->getDate(); ?></td>
+                                <td>
+                                    <?php echo $payment->getFirstName(), ' ', $payment->getLastName(); ?>
+                                    <br />
+                                    <?php echo $payment->getStreet(), ', ', $payment->getPostalCode(), ' ', $payment->getCity(); ?>
+                                    <br />
+                                    <?php echo $payment->getState(), ' ', $payment->getCountry(); ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                     <?php else: ?>
-                        <div class="row">
-                            <div class="span4">User has not made any payments.</div>
-                        </div>
+                    <h4>User has not made any payments.</h4>
                     <?php endif; ?>
                 </fieldset>
             </div>
