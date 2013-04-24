@@ -5,6 +5,7 @@
         </h1>
     </div>
 </div>
+<?php if($this->payments): ?>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -46,3 +47,6 @@
 </table>
 
 <?php echo $this->paginationControl($this->payments, 'Sliding', '_partials/paginationControl.phtml'); ?>
+<?php else: ?>
+<h3>No payments.</h3>
+<?php endif; ?>
