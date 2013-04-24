@@ -110,17 +110,7 @@ class QueueController extends Integration_Controller_Action {
                             ->setServerId($this->auth->getIdentity()->server_id)
                             ->setSampleData($form->sample_data->getValue())
                             ->setStoreName($form->store_name->getValue())
-                            ->setDomain(
-                                    substr(
-                                            str_shuffle(
-                                                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 5)
-                                            )
-                                            , 0, 5) . substr(
-                                            str_shuffle(
-                                                    str_repeat('0123456789', 5)
-                                            )
-                                            , 0, 4)
-                            )
+                            ->setDomain(Integration_Generator::generateRandomString(5, 4))
                             ->setBackendName('admin')
                             ->setStatus('installing-magento')
                             ->setType('clean');
@@ -305,17 +295,7 @@ class QueueController extends Integration_Controller_Action {
                             ->setStoreName($form->store_name->getValue())
                             ->setUserId($userId)
                             ->setServerId($this->auth->getIdentity()->server_id)
-                            ->setDomain(
-                                    substr(
-                                            str_shuffle(
-                                                    str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 5)
-                                            )
-                                            , 0, 5) . substr(
-                                            str_shuffle(
-                                                    str_repeat('0123456789', 5)
-                                            )
-                                            , 0, 4)
-                            )
+                            ->setDomain(Integration_Generator::generateRandomString(5, 4))
                             ->setStatus('downloading-magento')
                             ->setCustomProtocol($form->custom_protocol->getValue())
                             ->setCustomHost($form->custom_host->getValue())
