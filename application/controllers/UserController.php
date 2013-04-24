@@ -692,7 +692,16 @@ class UserController extends Integration_Controller_Action
         
         $user = new Application_Model_User();
         $user = $user->find($id);
-        
+
+        if(!$user->getLogin()) {
+            $this->_helper->flashMessenger(array('type' => 'error', 'message' => 'User with specified id does not exist.'));
+            return $this->_helper->redirector->gotoRoute(array(
+                    'module'     => 'default',
+                    'controller' => 'user',
+                    'action'     => 'list',
+            ), 'default', true);
+        }
+
         $server = new Application_Model_Server();
         $server->find($user->getServerId());
         
