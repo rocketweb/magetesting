@@ -8,7 +8,7 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Invoice nr</th>
+            <th>ID</th>
             <th>Name</th>
             <th>Price</th>
             <th>Date</th>
@@ -20,14 +20,14 @@
         <?php foreach($this->payments as $payment): ?>
         <?php
             $types = array(
-                'subscription' => 'Plan',
-                'extension' => 'Extension'
+                'subscription' => array('label' => 'Plan', 'class' => 'label-success'),
+                'extension' => array('label' => 'Extension', 'class' => 'label-info')
             );
         ?>
         <tr>
-            <td><?php echo date('Ymd', strtotime($payment['date'])).$payment['user_id'].$payment['id']; ?></td>
+            <td><?php echo $payment['id']; ?></td>
             <td>
-                <span class="label"><?php echo $types[$payment['transaction_type']]; ?></span>
+                <span class="label <?php echo $types[$payment['transaction_type']]['class']; ?>"><?php echo $types[$payment['transaction_type']]['label']; ?></span>
                 <?php echo $payment['transaction_name']; ?>
             </td>
             <td>$<?php echo $payment['price']; ?></td>
