@@ -134,6 +134,23 @@
                 <fieldset>
                     <legend>Invoices</legend>
                     <?php if($this->payments): ?>
+                        <?php foreach($this->payments as $payment): ?>
+                        <div class="row">
+                            <div class="span10">
+                                <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId()), 'default', true); ?>">
+                                    <?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?>
+                                </a>
+                                 - <?php echo $payment->getTransactionName(); ?>
+                                 - <?php echo date('m/d/Y', strtotime($payment->getDate())); ?>
+                                 - $<?php echo $payment->getPrice(); ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="row"><div class="span4">You don't have any invoices</div></div>
+                    <?php endif; ?>
+                    <?php /* maybe in future someone change it to be responsive ?>
+                    <?php if($this->payments): ?>
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -178,6 +195,7 @@
                     <?php else: ?>
                     <div class="row"><div class="span4">You don't have any invoices</div></div>
                     <?php endif; ?>
+                    <?php */ ?>
                 </fieldset>
                 
             </div>
