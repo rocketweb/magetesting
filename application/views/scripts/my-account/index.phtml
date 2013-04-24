@@ -137,7 +137,7 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Invoice nr</th>
+                                <th>Invoice #</th>
                                 <th>Name</th>
                                 <th>Price</th>
                                 <th>Date</th>
@@ -148,14 +148,18 @@
                             <?php foreach($this->payments as $payment): ?>
                             <?php
                                 $types = array(
-                                    'subscription' => 'Plan',
-                                    'extension' => 'Extension'
+                                    'subscription' => array('label' => 'Plan', 'class' => 'label-success'),
+                                    'extension' => array('label' => 'Extension', 'class' => 'label-info')
                                 );
                             ?>
                             <tr>
-                                <td><?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?></td>
                                 <td>
-                                    <span class="label"><?php echo $types[$payment->getTransactionType()]; ?></span>
+                                    <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'invoice', 'id' => $payment->getId()), 'default', true); ?>">
+                                        <?php echo date('Ymd', strtotime($payment->getDate())).$payment->getUserId().$payment->getId(); ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="label <?php echo $types[$payment->getTransactionType()]['class']; ?>"><?php echo $types[$payment->getTransactionType()]['label']; ?></span>
                                     <?php echo $payment->getTransactionName(); ?>
                                 </td>
                                 <td>$<?php echo $payment->getPrice(); ?></td>
