@@ -3359,15 +3359,6 @@ label.error {
     width:1.3em;
 }
 
-/* on/off radio buttons */
-.btn-group .btn-on.active {
-    background-color: #51A351;
-    color: white;
-}
-.btn-group .btn-off.active {
-    background-color: #BD362F;
-    color: white;
-}
 
 .user-details .dl-horizontal dd {
     margin-left: 200px;
@@ -3376,3 +3367,16 @@ label.error {
 .user-details .dl-horizontal dt {
     width: 180px;
 }
+
+/* on/off radio buttons */
+.btn-group .btn-on.active {
+    background-color: #51A351;
+    color: white;
+}
+.btn-group .btn-off.active {
+    background-color: #BD362F;
+    color: white;
+
+}
+
+

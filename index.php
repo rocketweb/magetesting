@@ -1,11 +1,10 @@
 <?php
-error_reporting( E_ALL );
+error_reporting( -1 );
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/application'));
 
 // Define application environment
-define( 'APPLICATION_ENV', 'development' );
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 

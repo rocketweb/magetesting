@@ -1,5 +1,5 @@
 [production]
-;Magento nstallation Stuff
+;Magento installation Stuff
 magento.adminEmail = "jan@rocketweb.com"
 magento.storeUrl = "http://magetesting.dev"
 
@@ -95,3 +95,12 @@ mcrypt.vector = "79t1e2s4"
 [testing : production]
 
 [development : production]
+user.activationEmail.subject = "[DEV]Activate your account for magetesting.com"
+user.resetPassword.subject = "[DEV][DEV]Password reset for magetesting.com"
+cron.queueItemReady.subject = "[DEV]Your Magento store is ready at magetesting.com"
+cron.ftpAccountCreated.subject = "[DEV]FTP account created for magetesting.com"
+cron.phpmyadminAccountCreated.subject = "[DEV]Database account created for magetesting.com"
+cron.buyStoreExtension.subject = "[DEV]Buy %s at magetesting.com"
+admin.errorEmail.subject = "[DEV]Errors with Magetesting.com"
+contact.message.subject = "[DEV]Message form Contact Form"
+
