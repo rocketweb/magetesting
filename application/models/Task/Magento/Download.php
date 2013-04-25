@@ -529,9 +529,12 @@ implements Application_Model_Task_Interface {
         $output = array();
 
         /* check for gz */
-        $path_parts = pathinfo($this->_customSql);
+
+$path_parts = pathinfo($this->_customSql);
         $sqlname = $path_parts['basename'];
-        exec('gunzip -t ' . $sqlname . ' 2>&1', $output);
+
+        $command = 'gunzip -t ' . $sqlname . ' 2>&1';
+        exec($command, $output);
 
         $this->logger->log($sqlname, Zend_Log::DEBUG);
         $unpacked = 0;
@@ -541,18 +544,19 @@ implements Application_Model_Task_Interface {
             $unpacked = 1;
         } else {
             /* file is tar.gz or gz */
-            exec('tar -ztvf ' . $sqlname . '', $output);
-            if (empty($output)) {
+            /* note: somehow, tar doesn't put anything in $output variable */
+            exec('tar -ztvf ' . $sqlname . '', $output,$return_var);
+            if ($return_var==2) {
                 /* is gz */
                 exec('gunzip ' . $sqlname . '', $output);
                 $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
-                
+
                 /*get filename from output - gz only packs filename*/
                 $output = array();
                 $command = 'gzip -l '.$sqlname;
                 exec($command, $output);
                 foreach ($output as $line) {
-                    
+
                     /**
                      * Example output of gzip -l to understand the explode
                      * '         compressed        uncompressed  ratio uncompressed_name'
@@ -564,14 +568,14 @@ implements Application_Model_Task_Interface {
                         return true;
                     }
                 }
-                
+
                 $unpacked = 1;
             } else {
-                /* is tar.gz */
+		/* is tar.gz */
                 exec('tar -zxvf ' . $sqlname . '', $output);
                 $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
                 $unpacked = 1;
-                
+
                 /**
                  * Sample output:
                  * array (size=2)
@@ -583,7 +587,7 @@ implements Application_Model_Task_Interface {
                     if (is_file($path)){
                         $command = "sudo grep -lir 'CREATE TABLE `".$this->_db_table_prefix."admin_role`' ".$path;
                         exec($command, $output2);
-                        
+
                         if (!empty($output2)){
                             $this->_customSql = $output2[0];            
                             return true;
