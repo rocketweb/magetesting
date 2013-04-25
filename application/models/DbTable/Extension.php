@@ -64,8 +64,8 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
             $filter['query'] = str_replace('-', '\-', $filter['query']);
             $filter['query'] = '*' . $filter['query'] . '*';
-            $select_installed_for_store->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
-            $select_allowed_for_store->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+            $select_installed_for_store->where('MATCH(name, description, author, extension_key) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+            $select_allowed_for_store->where('MATCH(name, description, author, extension_key) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
         }
 
         // get also developer extensions for admins
@@ -150,7 +150,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
             $filter['query'] = str_replace('-', '\-', $filter['query']);
             $filter['query'] = '*' . $filter['query'] . '*';
-            $sub_select_inner->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+            $sub_select_inner->where('MATCH(name, description, author, extension_key) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
         }
         $sub_select =
             $this->select()
