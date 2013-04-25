@@ -580,16 +580,16 @@ class QueueController extends Integration_Controller_Action {
         $this->view->extensions = $extensionModel->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit);
         $this->view->categories = $extensionCategoryModel->fetchAll();
 
+        //fetch store data
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->findByDomain($store_name);
+        $this->view->store_name = $store->store_name;
+        $this->view->store_domain = $store->domain;
+
         if($request->isPost() && $request->isXmlHttpRequest()) {
             $this->_helper->layout()->disableLayout();
             $this->renderScript('extension/tiles.phtml');
         } else {
-            //fetch queue data
-            $storeModel = new Application_Model_Store();
-            $store = $storeModel->findByDomain($store_name);
-            $this->view->store_name = $store->store_name;
-            $this->view->store_domain = $store->domain;
-
             $this->renderScript('extension/list.phtml');
         }
     }

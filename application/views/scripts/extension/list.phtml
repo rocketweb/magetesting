@@ -99,7 +99,7 @@
                 </div>
                 <div class="extensions_well">
                     <div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
-                    <?php echo $this->partial('extension/tiles.phtml', array('extensions' => $this->extensions)); ?>
+                    <?php echo $this->partial('extension/tiles.phtml', array('extensions' => $this->extensions, 'store_domain' => $this->store_domain)); ?>
                     </div>
                     <div class="form-actions load-more" style="
                         background-color: whiteSmoke;

@@ -91,6 +91,13 @@ ORDER BY  `installed` DESC ,  `price` DESC
                      (int)str_replace('.','',$store['version'])
                  )
                  ->order(array('name', 'version DESC'));
+        if(isset($filter['query'])) {
+            $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
+            $filter['query'] = str_replace('-', '\-', $filter['query']);
+            $filter['query'] = '*' . $filter['query'] . '*';
+            $select_installed_for_store->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+            $select_allowed_for_store->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+        }
 
         // get also developer extensions for admins
         // get only CE extensions for non admin users
@@ -133,9 +140,6 @@ ORDER BY  `installed` DESC ,  `price` DESC
         }
         if(isset($filter['install'])) {
             $select_all_extensions_sorted->having('installed = ?', ('installed' == strtolower($filter['install'])) ? 1 : 0);
-        }
-        if(isset($filter['query'])) {
-            $select_all_extensions_sorted->where('MATCH(name, description) AGAINST (?)', $filter['query']);
         }
 
         // order
