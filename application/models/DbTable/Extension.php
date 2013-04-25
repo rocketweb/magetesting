@@ -41,43 +41,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
     
-    public function fetchStoreExtensions($store) {
-        /*
-SELECT  `all` . * ,  `ec`.`class` AS  `category_class` ,  `ec`.`logo` AS  `category_logo` 
-FROM (
-    SELECT  `e` . * ,  `se`.`braintree_transaction_id` ,  `se`.`braintree_transaction_confirmed` ,  `se`.`status` , 1 AS  `installed`
-
-    FROM  `store_extension` AS  `se` 
-    LEFT JOIN  `extension` AS  `e` ON e.id = se.extension_id
-    WHERE (
-        se.store_id =  '311'
-    )
-
-    UNION SELECT  `last_version` . *
-
-    FROM (
-        SELECT  `extension` . * , NULL AS  `braintree_transaction_id` , NULL AS  `braintree_transaction_confirmed` , NULL AS  `status` , 0 AS `installed` 
-        FROM  `extension` 
-        WHERE (
-            extension >  ""
-        )
-        AND (
-            11120
-            BETWEEN REPLACE( from_version,  '.',  '' ) 
-            AND REPLACE( to_version,  '.',  '' )
-        )
-        AND (
-            is_dev
-            IN ( 0, 1 )
-        )
-        ORDER BY  `sort` DESC ,  `id` DESC
-    ) AS  `last_version` 
-    GROUP BY  `last_version`.`extension_key` ,  `last_version`.`edition`
-) AS  `all` 
-LEFT JOIN  `extension_category` AS  `ec` ON ec.id = all.category_id
-GROUP BY  `all`.`extension_key` 
-ORDER BY  `installed` DESC ,  `price` DESC 
-         */
+    public function fetchStoreExtensions($store, $filter, $order, $offset, $limit) {
         $select_installed_for_store = 
             $this->select()
                  ->from(array('se' => 'store_extension'), array('e.*', 'se.braintree_transaction_id', 'se.braintree_transaction_confirmed', 'se.status', 'installed' => new Zend_Db_Expr('1')))
@@ -96,6 +60,13 @@ ORDER BY  `installed` DESC ,  `price` DESC
                      (int)str_replace('.','',$store['version'])
                  )
                  ->order(array('sort DESC', 'id DESC'));
+        if(isset($filter['query'])) {
+            $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
+            $filter['query'] = str_replace('-', '\-', $filter['query']);
+            $filter['query'] = '*' . $filter['query'] . '*';
+            $select_installed_for_store->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+            $select_allowed_for_store->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+        }
 
         // get also developer extensions for admins
         // get only CE extensions for non admin users
@@ -109,7 +80,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
             $this->select()
                  ->from(array('last_version' => $select_allowed_for_store), array('last_version.*'))
                  ->setIntegrityCheck(false)
-                 ->group(array('last_version.extension_key', 'last_version.edition'));
+                 ->group('last_version.extension_key');
 
         $select_all_extensions_sorted = 
             $this->select()
@@ -128,10 +99,32 @@ ORDER BY  `installed` DESC ,  `price` DESC
                  ->group('all.extension_key')
                  ->order(array('installed DESC', 'price DESC'));
 
+
+        // where
+        if(isset($filter['price'])) {
+            $select_all_extensions_sorted->where('price ' . (('premium' == $filter['price']) ? '>' : '=') .' ?', 0);
+        }
+        if(isset($filter['category'])) {
+            $select_all_extensions_sorted->where('category_id = ?', $filter['category']);
+        }
+        if(isset($filter['install'])) {
+            $select_all_extensions_sorted->having('installed = ?', ('installed' == strtolower($filter['install'])) ? 1 : 0);
+        }
+
+        // order
+        if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
+            $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
+            $select_all_extensions_sorted->order($order['column']. ' ' . $direction);
+        } else {
+            $select_all_extensions_sorted->order('price DESC');
+        }
+
+        $select_all_extensions_sorted->limit($limit, $offset);
+
         return $this->fetchAll($select_all_extensions_sorted);
     }
 
-    public function fetchFullListOfExtensions()
+    public function fetchFullListOfExtensions($filter, $order, $offset, $limit)
     {
         $sub_select_inner = 
             $this->select()
@@ -141,7 +134,23 @@ ORDER BY  `installed` DESC ,  `price` DESC
         $identity = Zend_Auth::getInstance()->getIdentity();
         if(!is_object($identity) || 'admin' != $identity->group) {
             $sub_select_inner->where('edition = ?', 'CE')
-                       ->where('extension > ""');
+                             ->where('extension > ""');
+        }
+        // where
+        if(isset($filter['price'])) {
+            $sub_select_inner->where('price ' . (('premium' == $filter['price']) ? '>' : '=') .' ?', 0);
+        }
+        if(isset($filter['category'])) {
+            $sub_select_inner->where('category_id = ?', $filter['category']);
+        }
+        if(isset($filter['edition'])) {
+            $sub_select_inner->where('edition = ?', strtoupper($filter['edition']));
+        }
+        if(isset($filter['query'])) {
+            $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
+            $filter['query'] = str_replace('-', '\-', $filter['query']);
+            $filter['query'] = '*' . $filter['query'] . '*';
+            $sub_select_inner->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
         }
         $sub_select =
             $this->select()
@@ -154,8 +163,17 @@ ORDER BY  `installed` DESC ,  `price` DESC
                  ->from(array('e1' => $sub_select), '')
                  ->setIntegrityCheck(false)
                  ->joinInner(array('e2' => 'extension'), 'e2.name = e1.name AND e2.edition = e1.edition AND e2.version = e1.version')
-                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'))
-                 ->order('price DESC');
+                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'));
+
+        // order
+        if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
+            $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
+            $select->order($order['column']. ' ' . $direction);
+        } else {
+            $select->order('price DESC');
+        }
+
+        $select->limit($limit, $offset);
 
         return $this->fetchAll($select);
     }
@@ -166,10 +184,8 @@ ORDER BY  `installed` DESC ,  `price` DESC
         ->setIntegrityCheck(false)
                 ->from($this->_name)
                 ->join('store_extension', $this->_name.'.id = store_extension.extension_id')
-                ->where('store_id = ?', $store['id'])
-                ;
-               
-               //var_dump($select->__toString());
+                ->where('store_id = ?', $store);
+
         return $this->fetchAll($select);
     }
     

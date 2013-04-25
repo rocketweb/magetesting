@@ -563,19 +563,55 @@ class QueueController extends Integration_Controller_Action {
     public function extensionsAction() {
 
         $request = $this->getRequest();
+        $filter = $request->getParam('filter', array());
+        if(!is_array($filter)) {
+            $filter = array();
+        }
+        $order = $request->getParam('order', array());
+        if(!is_array($order)) {
+            $order = array();
+        }
+        $offset = $request->getParam('offset', 0);
+        $offset = !is_numeric($offset) ? 0 : (int)$offset;
+        $limit = 50;
+
         $store_name = $request->getParam('store');
         $extensionModel = new Application_Model_Extension();
         $extensionCategoryModel = new Application_Model_ExtensionCategory();
-        $this->view->extensions = $extensions = $extensionModel->fetchStoreExtensions($store_name);
+        $this->view->extensions = $extensionModel->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit);
         $this->view->categories = $extensionCategoryModel->fetchAll();
 
-        
-        //fetch queue data
+        //fetch store data
         $storeModel = new Application_Model_Store();
         $store = $storeModel->findByDomain($store_name);
         $this->view->store_name = $store->store_name;
         $this->view->store_domain = $store->domain;
+
+        if($request->isPost() && $request->isXmlHttpRequest()) {
+            $this->_helper->layout()->disableLayout();
+            $this->renderScript('extension/tiles.phtml');
+        } else {
+            $this->renderScript('extension/list.phtml');
+        }
+    }
+
+    public function installExtensionAction() {
+        $request = $this->getRequest();
         if ($request->isPost()) {
+            $store_name = $request->getParam('store');
+            $storeModel = new Application_Model_Store();
+            $storeRow = $storeModel->findByDomain($store_name)->toArray();
+            // do not use encrypt for these fields
+            $backend_password = $storeRow['backend_password'];
+            $custom_password = $storeRow['custom_pass'];
+            unset($storeRow['backend_password']);
+            unset($storeRow['custom_pass']);
+            $storeRow = $storeModel->setOptions($storeRow);
+            $storeRow->setBackendPassword($backend_password, false);
+            $storeRow->setCustomPass($custom_password, false);
+
+            $extensionModel = new Application_Model_Extension();
+            $extensions = $extensionModel->getInstalledForStore($storeRow->getId());
             $not_installed = true;
             foreach($extensions as $extension) {
                 if($extension['id'] == $request->getParam('extension_id') AND (int)$extension['store_id']) {
@@ -583,62 +619,60 @@ class QueueController extends Integration_Controller_Action {
                 }
             }
             if($not_installed) {
-
                 if ((int)$request->getParam('extension_id') > 0) {
-                    $storeRow = $storeModel->find($store->id);
                     if ($storeRow->getStatus() == 'ready') {
                         $storeRow->setStatus('installing-extension');
                         $storeRow->save();
                     }
-
+        
                     /* Adding extension to queue */
                     try {
                         $extensionId = $request->getParam('extension_id');
-
+        
                         //add row to store_extension
                         $storeExtensionModel = new Application_Model_StoreExtension();
-                        $storeExtensionModel->setStoreId($store->id);
+                        $storeExtensionModel->setStoreId($storeRow->getId());
                         $storeExtensionModel->setExtensionId($extensionId);
                         $storeExtensionModel->setStatus('pending');
                         $storeExtensionModel = $storeExtensionModel->save();
-
-                        /** 
-                         * Find if we have any other ExtensionInstall tasks 
-                         * for this store 
-                         */
+        
+                        /**
+                         * Find if we have any other ExtensionInstall tasks
+                         * for this store
+                        */
                         $extensionQueueItem = new Application_Model_Queue();
-                        $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($store->id);
-
-                        $extensionQueueItem->setStoreId($store->id);
+                        $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($storeRow->getId());
+        
+                        $extensionQueueItem->setStoreId($storeRow->getId());
                         $extensionQueueItem->setStatus('pending');
-                        $extensionQueueItem->setUserId($store->user_id);
+                        $extensionQueueItem->setUserId($storeRow->getUserId());
                         $extensionQueueItem->setExtensionId($extensionId);
                         $extensionQueueItem->setParentId($extensionParent);
-                        $extensionQueueItem->setServerId($store->server_id);
+                        $extensionQueueItem->setServerId($storeRow->getServerId());
                         $extensionQueueItem->setTask('ExtensionInstall');
                         $extensionQueueItem->save();
-
+        
                         /* Get extension data and add commit task */
                         $extensionModel = new Application_Model_Extension();
                         $extensionModel->find($request->getParam('extension_id'));
-
+        
                         $queueId = $extensionQueueItem->getId();
                         $queueModel = new Application_Model_Queue();
-                        $queueModel->setStoreId($store->id);
+                        $queueModel->setStoreId($storeRow->getId());
                         $queueModel->setStatus('pending');
-                        $queueModel->setUserId($store->user_id);
+                        $queueModel->setUserId($storeRow->getUserId());
                         $queueModel->setExtensionId($extensionId);
                         $queueModel->setParentId($queueId);
-                        $queueModel->setServerId($store->server_id);
+                        $queueModel->setServerId($storeRow->getServerId());
                         $queueModel->setTask('RevisionCommit');
                         $queueModel->setTaskParams(
                                 array(
-                                    'commit_comment' => 'Adding ' . $extensionModel->getName() . ' (' . $extensionModel->getVersion() . ')',
-                                    'commit_type' => 'extension-install'
+                                        'commit_comment' => 'Adding ' . $extensionModel->getName() . ' (' . $extensionModel->getVersion() . ')',
+                                        'commit_type' => 'extension-install'
                                 )
                         );
                         $queueModel->save();
-
+        
                         $this->_response->setBody($storeExtensionModel->getId());
                     } catch (Exception $e) {
                         if ($log = $this->getLog()) {
@@ -650,13 +684,17 @@ class QueueController extends Integration_Controller_Action {
             } else {
                 $this->_response->setBody('already_installed');
             }
-            $this->_helper->layout()->disableLayout(); 
+            $this->_helper->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
         } else {
-            $this->renderScript('extension/list.phtml');
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
         }
     }
-   
+
     public function getstatusAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
