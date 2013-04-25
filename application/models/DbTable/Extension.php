@@ -42,37 +42,6 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
     }
     
     public function fetchStoreExtensions($store, $filter, $order, $offset, $limit) {
-        /*
-SELECT  `all` . * ,  `ec`.`class` AS  `category_class` ,  `ec`.`logo` AS  `category_logo` 
-FROM (
-    SELECT  `e` . * ,  ` , 1 AS  `installed` 
-    FROM  `store_extension` AS  `se` 
-    LEFT JOIN  `extension` AS  `e` ON e.id = se.extension_id
-    WHERE ( se.store_id =  '101' )
-
-    UNION
-
-    SELECT  `last_version` . * 
-    FROM (
-        SELECT  `extension` . * ,  , 0 AS  `installed` 
-        FROM  `extension` 
-        WHERE
-            ( extension IS NOT NULL )
-            AND (
-                1411
-                BETWEEN REPLACE( from_version,  '.',  '' ) 
-                AND REPLACE( to_version,  '.',  '' )
-            ) 
-            AND ( edition =  'CE' )
-            AND ( is_dev IN ( 0, 1 ) )
-        ORDER BY  `name` ASC ,  `version` DESC
-    ) AS  `last_version` 
-    GROUP BY  `last_version`.`name`
-) AS  `all` 
-LEFT JOIN  `extension_category` AS  `ec` ON ec.id = all.category_id
-GROUP BY  `all`.`name` 
-ORDER BY  `installed` DESC ,  `price` DESC
-         */
         $select_installed_for_store = 
             $this->select()
                  ->from(array('se' => 'store_extension'), array('e.*', 'se.braintree_transaction_id', 'se.braintree_transaction_confirmed', 'se.status', 'installed' => new Zend_Db_Expr('1')))
@@ -90,7 +59,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
                      AND REPLACE(to_version,\'.\',\'\')',
                      (int)str_replace('.','',$store['version'])
                  )
-                 ->order(array('name', 'version DESC'));
+                 ->order(array('sort DESC', 'id DESC'));
         if(isset($filter['query'])) {
             $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
             $filter['query'] = str_replace('-', '\-', $filter['query']);
@@ -157,30 +126,37 @@ ORDER BY  `installed` DESC ,  `price` DESC
 
     public function fetchFullListOfExtensions($filter, $order, $offset, $limit)
     {
-        $sub_select = 
+        $sub_select_inner = 
             $this->select()
-                 ->from($this->_name, array('name', 'edition', 'version' => new Zend_Db_Expr('max(version)')))
+                 ->from($this->_name, array('name', 'edition', 'version', 'extension_key'))
                  ->setIntegrityCheck(false)
-                 ->group(array('extension_key', 'edition'));
+                 ->order(array('sort DESC', 'id DESC'));
         $identity = Zend_Auth::getInstance()->getIdentity();
         if(!is_object($identity) || 'admin' != $identity->group) {
-            $sub_select->where('edition = ?', 'CE')
-                       ->where('extension > ""');
+            $sub_select_inner->where('edition = ?', 'CE')
+                             ->where('extension > ""');
         }
-
         // where
         if(isset($filter['price'])) {
-            $sub_select->where('price ' . (('premium' == $filter['price']) ? '>' : '=') .' ?', 0);
+            $sub_select_inner->where('price ' . (('premium' == $filter['price']) ? '>' : '=') .' ?', 0);
         }
         if(isset($filter['category'])) {
-            $sub_select->where('category_id = ?', $filter['category']);
+            $sub_select_inner->where('category_id = ?', $filter['category']);
         }
         if(isset($filter['edition'])) {
-            $sub_select->where('edition = ?', strtoupper($filter['edition']));
+            $sub_select_inner->where('edition = ?', strtoupper($filter['edition']));
         }
         if(isset($filter['query'])) {
-            $sub_select->where('MATCH(name, description) AGAINST (?)', $filter['query']);
+            $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
+            $filter['query'] = str_replace('-', '\-', $filter['query']);
+            $filter['query'] = '*' . $filter['query'] . '*';
+            $sub_select_inner->where('MATCH(name, description) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
         }
+        $sub_select =
+            $this->select()
+                 ->setIntegrityCheck(false)
+                 ->from($sub_select_inner, array('name', 'edition', 'version'))
+                 ->group(array('extension_key', 'edition'));
 
         $select = 
             $this->select()
@@ -248,7 +224,7 @@ ORDER BY  `installed` DESC ,  `price` DESC
                  ->from($this->_name)
                  ->where('extension_key = ?', $extension_key)
                  ->where('edition = ?', $edition)
-                 ->order('version DESC');
+                 ->order(array('sort DESC', 'id DESC'));
 
         return $this->fetchAll($select);
     }

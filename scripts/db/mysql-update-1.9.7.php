@@ -28,3 +28,4 @@ ALTER TABLE `extension`
 $sql[] = 'ALTER TABLE `extension` CHANGE  `name`  `name` VARCHAR( 45 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL';
 $sql[] = 'ALTER TABLE `extension` CHANGE  `description`  `description` VARCHAR( 500 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL';
 $sql[] = 'ALTER TABLE extension ADD FULLTEXT(name, description)';
+$sql[] = 'ALTER TABLE  `extension` CHANGE  `id`  `id` INT( 11 ) NOT NULL DEFAULT NULL AUTO_INCREMENT';
