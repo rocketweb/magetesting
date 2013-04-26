@@ -43,23 +43,71 @@
         		    </fieldset>
         		    
         		    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
-                            <?php if (in_array($this->store->getStatus(),array('downloading-magento','error'))): ?>
+                            <?php if ($this->has_download_task && in_array($this->store->getStatus(),array('downloading-magento','error'))): ?>
         		    <div class="tab-stripe"></div>
-        		    <fieldset>
-        		        <legend>Remote details</legend>
-        		        <div class="row">
-        		            <div class="span4"><?php echo $this->form->custom_host; ?></div>
-        		            <div class="span4"><?php echo $this->form->custom_login; ?></div>
-        		        </div>
-        		        <div class="row">
-        		            <div class="span4"><?php echo $this->form->custom_pass; ?></div>
-        		            <div class="span4"><?php echo $this->form->custom_pass_confirm; ?></div>
-        		        </div>
-        		        <div class="row">
-        		            <div class="span4"><?php echo $this->form->custom_remote_path; ?></div>
-        		            <div class="span4"><?php echo $this->form->custom_sql; ?></div>
-        		        </div>
-        		    </fieldset>
+                                <fieldset>
+                                    <legend>Current Store Connection Details</legend>
+                                    <div class="row">
+                                        <div class="span4">
+                                            <?php echo $this->form->custom_protocol ?>
+                                        </div>
+                                        <div class="span4">
+                                            <?php echo $this->form->custom_host ?>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span4">
+
+                                        </div>
+                                        <div class="span4">
+                                            <?php echo $this->form->custom_port ?>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span4">
+                                            <?php echo $this->form->custom_login ?>
+                                        </div>
+                                        <div class="span4">
+                                            <?php echo $this->form->custom_pass ?>
+                                        </div>
+                                    </div>
+                                    <a class="btn tooltip-top validate-connection-details" data-loading-text="Loading..." data-tooltip-title="We will check if connection details are correct and we will try to look for your store location.">Validate connection details</a>
+                                </fieldset>
+
+                                <div class="tab-stripe"></div>
+                                <fieldset class="custom-files">
+                                    <legend>Current Store Files and Database</legend>
+                                    <div class="input-radio">
+                                            <div class="row">
+                                                <div class="span1 input-radio-button">
+                                                    <input type="radio" <?php echo ($this->input_radio == 'remote_path' ? 'checked="checked"' : ''); ?> name="input-radio" value="remote_path" class="span1 pull-right">
+                                                </div>
+                                                <div class="span7 input-radio-option">
+                                                    <div class="input-radio-alert alert alert-<?php echo ($this->input_radio == 'remote_path' ? 'info' : 'blank'); ?>">
+                                                        <?php echo $this->form->custom_remote_path ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="span1 input-radio-button">
+                                                <input type="radio" <?php echo ($this->input_radio == 'file' ? 'checked="checked"' : ''); ?> name="input-radio" value="file" class="span1 pull-right">
+                                                </div>
+                                                <div class="span7 input-radio-option">
+                                                    <div class="input-radio-alert alert alert-<?php echo ($this->input_radio == 'file' ? 'info' : 'blank'); ?>">
+                                                        <?php echo $this->form->custom_file ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="row row-large">
+                                        <div class="span8">
+                                            <div class="input-append custom-sql-input">
+                                                <?php echo $this->form->custom_sql ?>
+                                                <span class="add-on tooltip-top find-sql-file btn" data-loading-text="Loading..." data-tooltip-title="Find Latest Magento Admin Database Backup">Find<span class="hidden-phone-portrait"> database</span> backup</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>                                
                             <?php endif; ?>
         		    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
         		    

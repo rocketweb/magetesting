@@ -175,6 +175,8 @@ class Application_Model_QueueMapper {
     public function findMagentoTaskForStore($storeId){
         
         $row = $this->getDbTable()->findMagentoTaskForStore($storeId);
+        
+        if ($row){       
         $entry = new Application_Model_Queue();
             $entry->setId($row->id)
             ->setStoreId($row->store_id)
@@ -188,5 +190,8 @@ class Application_Model_QueueMapper {
             ->setParentId($row->parent_id)
             ->setAddedDate($row->added_date);
             return $entry;
+        } else {
+            return false;
+        }
     }
 }
