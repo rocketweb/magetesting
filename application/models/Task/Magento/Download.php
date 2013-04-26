@@ -529,8 +529,7 @@ implements Application_Model_Task_Interface {
         $output = array();
 
         /* check for gz */
-
-$path_parts = pathinfo($this->_customSql);
+        $path_parts = pathinfo($this->_customSql);
         $sqlname = $path_parts['basename'];
 
         $command = 'gunzip -t ' . $sqlname . ' 2>&1';
@@ -548,10 +547,14 @@ $path_parts = pathinfo($this->_customSql);
             exec('tar -ztvf ' . $sqlname . '', $output,$return_var);
             if ($return_var==2) {
                 /* is gz */
-                exec('gunzip ' . $sqlname . '', $output);
-                $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
 
-                /*get filename from output - gz only packs filename*/
+                $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
+                
+                /**
+                 * get filename from output - gz only packs one filename 
+                 * this needs to be done BEFORE unpacking otherise we lose file
+                 */
+                
                 $output = array();
                 $command = 'gzip -l '.$sqlname;
                 exec($command, $output);
@@ -565,13 +568,17 @@ $path_parts = pathinfo($this->_customSql);
                     $parts = explode("% ", $line);
                     if (isset($parts[1])) {
                         $this->_customSql = $parts[1];
-                        return true;
                     }
                 }
-
+                
+                /* is gz */
+                exec('gunzip ' . $sqlname . '', $output);
+                $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
+                
+                return true;
                 $unpacked = 1;
             } else {
-		/* is tar.gz */
+                /* is tar.gz */
                 exec('tar -zxvf ' . $sqlname . '', $output);
                 $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
                 $unpacked = 1;
