@@ -197,7 +197,7 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($localXmlPath)) {
             $message = 'Store local.xml config file does not exist.';
-            $this->logger->log($message, Zend_Log::EMERG);
+            $this->logger->log($message, Zend_Log::ERR);
             throw new Application_Model_Task_Exception($message);
         }
 
@@ -524,41 +524,54 @@ implements Application_Model_Task_Interface {
     /**
      * If database dump is a gz
      */
-    protected function _prepareDatabaseDump() {
+    protected function _prepareDatabaseDump() 
+    {
 
         $output = array();
+        $sqlfound = false;
+        $unpacked = 0;
 
         /* check for gz */
         $path_parts = pathinfo($this->_customSql);
         $sqlname = $path_parts['basename'];
 
+        $this->logger->log($sqlname, Zend_Log::DEBUG);
+
         $command = 'gunzip -t ' . $sqlname . ' 2>&1';
         exec($command, $output);
 
-        $this->logger->log($sqlname, Zend_Log::DEBUG);
-        $unpacked = 0;
-        if (isset($output[1])
-                && $output[1] == 'gzip: ' . $sqlname . ': not in gzip format'
+        $this->logger->log($command, Zend_Log::DEBUG);
+        $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
+
+        if (isset($output[1]) && $output[1] == 'gzip: ' . $sqlname . ': not in gzip format'
         ) {
+            $sqlfound = true;
             $unpacked = 1;
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
             $command = 'tar -ztvf ' . $sqlname . '';
-            exec($command, $output,$return_var);
-            if ($return_var==2) {
+            exec($command, $output, $return_var);
+            $this->logger->log($command, Zend_Log::DEBUG);
+            $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
+            $this->logger->log($return_var, Zend_Log::DEBUG);
+
+            if ($return_var == 2) {
                 /* is gz */
 
                 $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
-                
+
                 /**
                  * get filename from output - gz only packs one filename 
                  * this needs to be done BEFORE unpacking otherise we lose file
                  */
-                
                 $output = array();
-                $command = 'gzip -l '.$sqlname;
+                $command = 'gzip -l ' . $sqlname;
                 exec($command, $output);
+
+                $this->logger->log($command, Zend_Log::DEBUG);
+                $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
+
                 foreach ($output as $line) {
 
                     /**
@@ -569,74 +582,57 @@ implements Application_Model_Task_Interface {
                     $parts = explode("% ", $line);
                     if (isset($parts[1])) {
                         $this->_customSql = $parts[1];
+                        $sqlfound = true;
                     }
                 }
-                
+
                 /* is gz */
                 $command = 'gunzip ' . $sqlname . '';
                 exec($command, $output);
-                $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
-                
-                return true;
+
+                $this->logger->log($command, Zend_Log::DEBUG);
+                $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
                 $unpacked = 1;
             } else {
                 /* is tar.gz */
+                $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
+
                 $command = 'tar -zxvf ' . $sqlname . '';
                 exec($command, $output);
-                $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
+
+                $this->logger->log($command, Zend_Log::DEBUG);
+                $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
+
                 $unpacked = 1;
 
                 /**
                  * Sample output:
                  * array (size=2)
-                    0 => string 'somedir/' (length=8)
-                    1 => string 'somedir/somefile.sql' (length=20)
+                  0 => string 'somedir/' (length=8)
+                  1 => string 'somedir/somefile.sql' (length=20)
                  */
-                foreach ($output as $path){
+                foreach ($output as $path) {
                     $output2 = array();
-                    if (is_file($path)){
-                        $command = "sudo grep -lir 'CREATE TABLE `".$this->_db_table_prefix."admin_role`' ".$path;
+                    if (is_file($path)) {
+                        $command = "sudo grep -lir 'CREATE TABLE `" . $this->_db_table_prefix . "admin_role`' " . $path;
                         exec($command, $output2);
+                        $this->logger->log($command, Zend_Log::DEBUG);
+                        $this->logger->log(var_export($output2,true), Zend_Log::DEBUG);
 
-                        if (!empty($output2)){
-                            $this->_customSql = $output2[0];            
-                            return true;
+                        if (!empty($output2)) {
+                            $sqlfound = true;
+                            $this->_customSql = $output2[0];
                         }
                     }
                 }
             }
-        }
-        
-        /**
-         * @deprecated
-         * [jan] We shouldn't get here, but leaving this code here
-         */
-        $this->logger->log('We got to the place we should not when parsing sql package', Zend_Log::DEBUG);
-        
-        if ($unpacked) {
-            $command = 'find . -type f -name "*.sql" -and -not -path "*lib*" -and -not -name "keyset*"';
-            exec($command, $output);
-            $this->logger->log($command, Zend_Log::DEBUG);
-            $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
-            /* no matches found */
-            if (count($output) == 0) {
-                                
-                unset($output);
-                //there is no custom made sql, try to look for one that contains create statements:
-                $command = "sudo grep -lir 'CREATE TABLE `".$this->_db_table_prefix."admin_role` . | grep backups'";
-                exec($command, $output);
-                $this->logger->log($command, Zend_Log::DEBUG);
-                $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
-                if (count($output) == 0) {
-                    throw new Application_Model_Task_Exception('sql file has not been found in given package');
-                }
-            }
 
-            foreach ($output as $line) {               
-                if (substr($line, -4) == '.sql' || strstr($line,'/var/backups/')) {
-                    $this->_customSql = str_replace('./', '', $line);
-                    break;
-                }
+            if ($sqlfound === true && $unpacked == 1) {
+                return true;
+            } else {
+                $message = 'sql file has not been found in given package';
+                $this->logger->log($message, Zend_Log::ERR);
+                throw new Application_Model_Task_Exception($message);
             }
         }
     }
