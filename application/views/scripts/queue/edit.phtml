@@ -43,8 +43,7 @@
         		    </fieldset>
         		    
         		    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
-        		    <?php
-        		    /*
+                            <?php if ($this->store->getStatus()=='error'): ?>
         		    <div class="tab-stripe"></div>
         		    <fieldset>
         		        <legend>Remote details</legend>
@@ -61,8 +60,7 @@
         		            <div class="span4"><?php echo $this->form->custom_sql; ?></div>
         		        </div>
         		    </fieldset>
-        						 */
-        		    ?>
+                            <?php endif; ?>
         		    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
         		    
         		    <div class="form-actions">
