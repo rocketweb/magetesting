@@ -43,7 +43,7 @@
         		    </fieldset>
         		    
         		    <!-- DO NOT RENDER THIS WHOLE BLOCK IF NOT NEEDED -->
-                            <?php if ($this->store->getStatus()=='error'): ?>
+                            <?php if (in_array($this->store->getStatus(),array('downloading-magento','error'))): ?>
         		    <div class="tab-stripe"></div>
         		    <fieldset>
         		        <legend>Remote details</legend>
