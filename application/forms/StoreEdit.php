@@ -67,21 +67,20 @@ class Application_Form_StoreEdit extends Integration_Form{
         ));
         
         
-
             $this->addElement('text', 'custom_host', array(
                 'label'    => 'Host',
                 'required' => true,
                 'filters'    => array('StripTags', 'StringTrim'),
             ));
-            
+
             $this->addElement('text', 'custom_port', array(
                 'label'       => 'Port',
                 'required'    => false,
                 'label_class' => 'radio inline',
                 'placeholder' => 'leave blank for default',
                 'class'      => 'span4'
-        ));
-            
+            ));
+
             $this->addElement('text', 'custom_login', array(
                 'label'    => 'Login',
                 'required' => true,
@@ -93,29 +92,21 @@ class Application_Form_StoreEdit extends Integration_Form{
                 'renderPassword' => true,
                 'filters'    => array('StripTags', 'StringTrim'),
             ));
-            $this->addElement('password', 'custom_pass_confirm', array(
-                'label'    => 'Password Confirmation',
-                'required' => true,
-                'renderPassword' => true,
-                'filters'    => array('StripTags', 'StringTrim'),
-                'validators' => array(
-                        new Zend_Validate_Identical('custom_pass'),
-                ),
-            ));
+
             $this->addElement('text', 'custom_remote_path', array(
                 'label'    => 'Remote Path',
                 'filters'    => array('StripTags', 'StringTrim'),
                 'allowEmpty' => true,
             ));
-            
+
             $this->addElement('text', 'custom_sql', array(
                 'label'    => 'SQL Backup',
                 'required' => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'allowEmpty' => false,
             ));
-            
-                        $this->addElement('text', 'custom_file', array(
+
+            $this->addElement('text', 'custom_file', array(
                 'label'    => 'Remote Path',
                 'filters'    => array('StripTags', 'StringTrim'),
                 'allowEmpty' => true,
