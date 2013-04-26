@@ -6,7 +6,7 @@ class Integration_Mail_Contact extends Integration_Mail
     
     protected $_data;
     protected $_config;
-    
+
     public function __construct() {
         parent::__construct();
     }
@@ -35,6 +35,9 @@ class Integration_Mail_Contact extends Integration_Mail
         $this->view->name = $this->_formData->sender_name;
         $this->view->email = $this->_formData->sender_email;
         $this->view->message = $this->_formData->message;
+        
+        $config = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('config');
+        $this->view->storeUrl = $config->magento->storeUrl;
     }
     
     protected function _setBody(){

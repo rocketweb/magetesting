@@ -49,6 +49,9 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
         );
 
         $this->view->activationLink = $this->view->serverUrl().$activationUrl;
+        
+        $config = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('config');
+        $this->view->storeUrl = $config->magento->storeUrl;
     }
 
     protected function _setBody(){
