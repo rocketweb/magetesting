@@ -532,6 +532,10 @@ class QueueController extends Integration_Controller_Action {
         /* still support to display fields on two statuses */
         $form = new Application_Form_StoreEdit(in_array($store->getStatus(),array('downloading-magento','error')));
         
+        if (in_array($store->getStatus(),array('downloading-magento','error'))){
+            $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-edit-connection.js'), 'text/javascript');
+        }
+        
         $populate = array_merge(
             $store->__toArray(),
             array(
@@ -543,7 +547,9 @@ class QueueController extends Integration_Controller_Action {
         );
 
         $form->populate($populate);
-
+        
+        $queueModel = new Application_Model_Queue();
+        $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
         if ($this->_request->isPost()) {
 
             if ($form->isValid($this->_request->getPost())) {
@@ -551,14 +557,13 @@ class QueueController extends Integration_Controller_Action {
                 
                 /* updateQueueItem to try once again if it failed before edit */
                 if ($store->getStatus()=='error'){
-                    $queueModel = new Application_Model_Queue();
-                    $queueItem = $queueModel->findMagentoTaskForStore($store->getId());
-                    $queueItem->setStatus('pending');
-                    $queueItem->setRetryCount(0);
-                    $queueItem->save();
+                    $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
+                    $magentoQueueItem->setStatus('pending');
+                    $magentoQueueItem->setRetryCount(0);
+                    $magentoQueueItem->save();
 
                     /*also update store to reflect change on dashboard*/
-                    $store->setStatus($storeModel->getStatusFromTask($queueItem->getTask()));
+                    $store->setStatus($storeModel->getStatusFromTask($magentoQueueItem->getTask()));
                 }
 
                 $store->save();
@@ -571,6 +576,20 @@ class QueueController extends Integration_Controller_Action {
                                 ), 'default', true);
             }
         }
+        
+        if($store->getCustomRemotePath()!=''){
+            $this->view->input_radio = 'remote_path';
+        } else {
+            $this->view->input_radio = 'file';
+        }
+        
+        
+        if ($magentoQueueItem){
+            $this->view->has_download_task = true;
+        } else {
+            $this->view->has_download_task = false;
+        }
+        
         $this->view->form = $form;
     }
 
