@@ -531,7 +531,9 @@ implements Application_Model_Task_Interface {
         /* check for gz */
         $path_parts = pathinfo($this->_customSql);
         $sqlname = $path_parts['basename'];
-        exec('gunzip -t ' . $sqlname . ' 2>&1', $output);
+
+        $command = 'gunzip -t ' . $sqlname . ' 2>&1';
+        exec($command, $output);
 
         $this->logger->log($sqlname, Zend_Log::DEBUG);
         $unpacked = 0;
@@ -541,20 +543,76 @@ implements Application_Model_Task_Interface {
             $unpacked = 1;
         } else {
             /* file is tar.gz or gz */
-            exec('tar -ztvf ' . $sqlname . '', $output);
-            if (empty($output)) {
+            /* note: somehow, tar doesn't put anything in $output variable */
+            $command = 'tar -ztvf ' . $sqlname . '';
+            exec($command, $output,$return_var);
+            if ($return_var==2) {
                 /* is gz */
-                exec('gunzip ' . $sqlname . '', $output);
+
                 $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
+                
+                /**
+                 * get filename from output - gz only packs one filename 
+                 * this needs to be done BEFORE unpacking otherise we lose file
+                 */
+                
+                $output = array();
+                $command = 'gzip -l '.$sqlname;
+                exec($command, $output);
+                foreach ($output as $line) {
+
+                    /**
+                     * Example output of gzip -l to understand the explode
+                     * '         compressed        uncompressed  ratio uncompressed_name'
+                     * '                989                3995  76.0% somefile.sql'
+                     */
+                    $parts = explode("% ", $line);
+                    if (isset($parts[1])) {
+                        $this->_customSql = $parts[1];
+                    }
+                }
+                
+                /* is gz */
+                $command = 'gunzip ' . $sqlname . '';
+                exec($command, $output);
+                $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
+                
+                return true;
                 $unpacked = 1;
             } else {
                 /* is tar.gz */
-                exec('tar -zxvf ' . $sqlname . '', $output);
+                $command = 'tar -zxvf ' . $sqlname . '';
+                exec($command, $output);
                 $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
                 $unpacked = 1;
+
+                /**
+                 * Sample output:
+                 * array (size=2)
+                    0 => string 'somedir/' (length=8)
+                    1 => string 'somedir/somefile.sql' (length=20)
+                 */
+                foreach ($output as $path){
+                    $output2 = array();
+                    if (is_file($path)){
+                        $command = "sudo grep -lir 'CREATE TABLE `".$this->_db_table_prefix."admin_role`' ".$path;
+                        exec($command, $output2);
+
+                        if (!empty($output2)){
+                            $this->_customSql = $output2[0];            
+                            return true;
+                        }
+                    }
+                }
             }
         }
-        unset($output);
+        
+        /**
+         * @deprecated
+         * [jan] We shouldn't get here, but leaving this code here
+         */
+        $this->logger->log('We got to the place we should not when parsing sql package', Zend_Log::DEBUG);
+        
         if ($unpacked) {
             $command = 'find . -type f -name "*.sql" -and -not -path "*lib*" -and -not -name "keyset*"';
             exec($command, $output);
@@ -562,10 +620,10 @@ implements Application_Model_Task_Interface {
             $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
             /* no matches found */
             if (count($output) == 0) {
-                
+                                
                 unset($output);
                 //there is no custom made sql, try to look for one that contains create statements:
-                $command = "sudo grep -lir 'CREATE TABLE `admin_role`' . | grep 'backups'";
+                $command = "sudo grep -lir 'CREATE TABLE `".$this->_db_table_prefix."admin_role` . | grep backups'";
                 exec($command, $output);
                 $this->logger->log($command, Zend_Log::DEBUG);
                 $this->logger->log(var_export($output, true), Zend_Log::DEBUG);

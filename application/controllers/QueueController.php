@@ -1432,7 +1432,7 @@ class QueueController extends Integration_Controller_Action {
         $newestFile = '';
         if ($filetimes){
             foreach ($filetimes as $file => $filetime){
-                if ($filetime > $maxtime){
+                if ($filetime > $maxtime && $file!='.htaccess'){
                     $newestFile = $file;
                     $maxtime = $filetime;
                 }
