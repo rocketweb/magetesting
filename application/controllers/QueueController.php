@@ -529,7 +529,8 @@ class QueueController extends Integration_Controller_Action {
             }
         }
         
-        $form = new Application_Form_StoreEdit(in_array($store->getStatus(),array('pending','error')));
+        /* still support to display fields on two statuses */
+        $form = new Application_Form_StoreEdit(in_array($store->getStatus(),array('downloading-magento','error')));
         
         $populate = array_merge(
             $store->__toArray(),
