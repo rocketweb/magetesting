@@ -541,7 +541,7 @@ implements Application_Model_Task_Interface {
         exec($command, $output);
 
         $this->logger->log($command, Zend_Log::DEBUG);
-        $this->logger->log($output, Zend_Log::DEBUG);
+        $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
 
         if (isset($output[1]) && $output[1] == 'gzip: ' . $sqlname . ': not in gzip format'
         ) {
@@ -553,7 +553,7 @@ implements Application_Model_Task_Interface {
             $command = 'tar -ztvf ' . $sqlname . '';
             exec($command, $output, $return_var);
             $this->logger->log($command, Zend_Log::DEBUG);
-            $this->logger->log($output, Zend_Log::DEBUG);
+            $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
             $this->logger->log($return_var, Zend_Log::DEBUG);
 
             if ($return_var == 2) {
@@ -570,7 +570,7 @@ implements Application_Model_Task_Interface {
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
-                $this->logger->log($output, Zend_Log::DEBUG);
+                $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
 
                 foreach ($output as $line) {
 
@@ -591,7 +591,7 @@ implements Application_Model_Task_Interface {
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
-                $this->logger->log($output, Zend_Log::DEBUG);
+                $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
                 $unpacked = 1;
             } else {
                 /* is tar.gz */
@@ -601,7 +601,7 @@ implements Application_Model_Task_Interface {
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
-                $this->logger->log($output, Zend_Log::DEBUG);
+                $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
 
                 $unpacked = 1;
 
@@ -617,7 +617,7 @@ implements Application_Model_Task_Interface {
                         $command = "sudo grep -lir 'CREATE TABLE `" . $this->_db_table_prefix . "admin_role`' " . $path;
                         exec($command, $output2);
                         $this->logger->log($command, Zend_Log::DEBUG);
-                        $this->logger->log($output2, Zend_Log::DEBUG);
+                        $this->logger->log(var_export($output2,true), Zend_Log::DEBUG);
 
                         if (!empty($output2)) {
                             $sqlfound = true;
