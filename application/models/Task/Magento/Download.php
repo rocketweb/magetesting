@@ -544,7 +544,8 @@ implements Application_Model_Task_Interface {
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
-            exec('tar -ztvf ' . $sqlname . '', $output,$return_var);
+            $command = 'tar -ztvf ' . $sqlname . '';
+            exec($command, $output,$return_var);
             if ($return_var==2) {
                 /* is gz */
 
@@ -572,14 +573,16 @@ implements Application_Model_Task_Interface {
                 }
                 
                 /* is gz */
-                exec('gunzip ' . $sqlname . '', $output);
+                $command = 'gunzip ' . $sqlname . '';
+                exec($command, $output);
                 $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
                 
                 return true;
                 $unpacked = 1;
             } else {
                 /* is tar.gz */
-                exec('tar -zxvf ' . $sqlname . '', $output);
+                $command = 'tar -zxvf ' . $sqlname . '';
+                exec($command, $output);
                 $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
                 $unpacked = 1;
 
