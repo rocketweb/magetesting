@@ -529,7 +529,7 @@ class QueueController extends Integration_Controller_Action {
             }
         }
         
-        $form = new Application_Form_StoreEdit($store->getStatus() == 'pending');
+        $form = new Application_Form_StoreEdit(in_array($store->getStatus(),array('pending','error')));
         
         $populate = array_merge(
             $store->__toArray(),
@@ -547,6 +547,19 @@ class QueueController extends Integration_Controller_Action {
 
             if ($form->isValid($this->_request->getPost())) {
                 $store->setOptions($form->getValues());
+                
+                /* updateQueueItem to try once again if it failed before edit */
+                if ($store->getStatus()=='error'){
+                    $queueModel = new Application_Model_Queue();
+                    $queueItem = $queueModel->findMagentoTaskForStore($store->getId());
+                    $queueItem->setStatus('pending');
+                    $queueItem->setRetryCount(0);
+                    $queueItem->save();
+
+                    /*also update store to reflect change on dashboard*/
+                    $store->setStatus($storeModel->getStatusFromTask($queueItem->getTask()));
+                }
+
                 $store->save();
 
                 $this->_helper->FlashMessenger('Store data has been changed successfully');

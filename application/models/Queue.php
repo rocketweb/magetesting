@@ -311,4 +311,8 @@ class Application_Model_Queue {
     public function removePendingForStore($storeId){
         return $this->getMapper()->removePendingForStore($storeId);
     }
+    
+    public function findMagentoTaskForStore($storeId){
+        return $this->getMapper()->findMagentoTaskForStore($storeId);
+    }
 }
