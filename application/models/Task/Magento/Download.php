@@ -197,7 +197,7 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($localXmlPath)) {
             $message = 'Store local.xml config file does not exist.';
-            $this->logger->log($message, Zend_Log::EMERG);
+            $this->logger->log($message, Zend_Log::ERR);
             throw new Application_Model_Task_Exception($message);
         }
 
