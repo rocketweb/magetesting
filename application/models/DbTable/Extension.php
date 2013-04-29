@@ -61,11 +61,18 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  )
                  ->order(array('sort DESC', 'id DESC'));
         if(isset($filter['query'])) {
-            $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
+            $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*', '%'), '', $filter['query']);
             $filter['query'] = str_replace('-', '\-', $filter['query']);
-            $filter['query'] = '*' . $filter['query'] . '*';
-            $select_installed_for_store->where('MATCH(name, description, author, extension_key) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
-            $select_allowed_for_store->where('MATCH(name, description, author, extension_key) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+            $filter['query'] = '%' . $filter['query'] . '%';
+            $select_installed_for_store->where('name LIKE ?', $filter['query']);
+            $select_installed_for_store->orWhere('description LIKE ?', $filter['query']);
+            $select_installed_for_store->orWhere('extension_key LIKE ?', $filter['query']);
+            $select_installed_for_store->orWhere('author LIKE ?', $filter['query']);
+
+            $select_allowed_for_store->where('name LIKE ?', $filter['query']);
+            $select_allowed_for_store->orWhere('description LIKE ?', $filter['query']);
+            $select_allowed_for_store->orWhere('extension_key LIKE ?', $filter['query']);
+            $select_allowed_for_store->orWhere('author LIKE ?', $filter['query']);
         }
 
         // get also developer extensions for admins
@@ -147,10 +154,13 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $sub_select_inner->where('edition = ?', strtoupper($filter['edition']));
         }
         if(isset($filter['query'])) {
-            $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*'), '', $filter['query']);
+            $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*', '%'), '', $filter['query']);
             $filter['query'] = str_replace('-', '\-', $filter['query']);
-            $filter['query'] = '*' . $filter['query'] . '*';
-            $sub_select_inner->where('MATCH(name, description, author, extension_key) AGAINST (? IN BOOLEAN MODE)', $filter['query']);
+            $filter['query'] = '%' . $filter['query'] . '%';
+            $sub_select_inner->where('name LIKE ?', $filter['query']);
+            $sub_select_inner->orWhere('description LIKE ?', $filter['query']);
+            $sub_select_inner->orWhere('extension_key LIKE ?', $filter['query']);
+            $sub_select_inner->orWhere('author LIKE ?', $filter['query']);
         }
         $sub_select =
             $this->select()
