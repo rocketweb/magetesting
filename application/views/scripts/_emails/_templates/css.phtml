@@ -7,14 +7,12 @@
   #mt_email_header {
     margin: 0;
     padding: 0;
-    height: 80px;
+    height: 60px;
   }
-  <?php 
-  /*#mt_email_header div.line {
+  #mt_email_header div.line {
     min-height: 5px;
     background: none repeat scroll 0 0 #F64135;
-  }*/
-  ?>
+  }
   #mt_email_header div.logo {
     margin: 20px 40px;
   }
@@ -22,22 +20,31 @@
     margin: 0 20px;
     padding: 20px;
     font-size: 12px;
-    background: none repeat scroll 0 0 #F1F1F1;
-    border: 1px solid #dddddd;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    -o-border-radius: 6px;
-    border-radius: 6px;
+    background: none repeat scroll 0 0 #FFFFFF;
   }
   #mt_email_content p {
     margin-bottom: 20px;
+    padding: 0 20px;
   }
   #mt_email_content p .greeting {
     color: #F64135;
     font-size: 24px;
     font-weight: bold;
   }
-
+  #mt_email_content div.box {
+    border: 1px solid #E5E5E5;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 8px 6px -6px #888888;
+    margin-bottom: 20px;
+    margin-top: 10px;
+  }
+  #mt_email_content .tab-stripe {
+      background: none repeat scroll 0 0 #34AAE5;
+      float: left;
+      min-height: 60px;
+      min-width: 5px;
+      border-top-left-radius: 6px;
+  }
   #mt_email_footer p a {
     color: #F64135;
     text-decoration: underline;
