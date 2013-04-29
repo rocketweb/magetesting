@@ -329,6 +329,7 @@ $(document).ready(function () {
             limit: $extensions_tiles_limit
         },
         $load_more = $('.load-more'),
+        $load_more_label = $load_more.children(':first'),
         ElementPad        = 5,
         ElementWidth      = 135 + (ElementPad * 2),
         ElementHeight     = 112;
@@ -369,6 +370,7 @@ $(document).ready(function () {
 
         $.extend( $.Isotope.prototype, {
             load_more : function() {
+                $load_more_label.show();
                 this._fetch_data(this._load_more);
             },
             filter_elements : function() {
@@ -381,19 +383,23 @@ $(document).ready(function () {
             },
             _filter_elements : function($atoms) {
                 $extensions_isotope.isotope('remove', $extensions_isotope.find('.element'));
-                $load_more.show();
+                $load_more_label.show();
+                $load_more.data('load-more', true);
                 this._load_more($atoms);
             },
             _load_more : function($atoms) {
                 if($atoms.length) {
                     $extensions_filter_load_data.offset += $atoms.length;
                     if($atoms.length < $extensions_filter_load_data.limit) {
-                        $load_more.hide();
+                        $load_more.data('load-more', false);
+                    } else {
+                        $load_more.data('load-more', true);
                     }
                     $extensions_isotope.isotope('insert', $atoms);
                 } else {
-                    $load_more.hide();
+                    $load_more.data('load-more', false);
                 }
+                $load_more_label.hide();
             },
             _fetch_data : function(callback) {
                 var isotope_instance = this;
@@ -660,9 +666,16 @@ $(document).ready(function () {
 
         // load more feature begins here
         // remove not visible extensions from dom ( without destroying binded events )
-        $load_more.click(function() {
-            $extensions_isotope.isotope('load_more');
-            return false;
+        $load_more.data('load-more', true);
+        $(window).scroll(function() {
+            if(
+                $(window).scrollTop() >= $load_more.position().top - $(window).height()
+                &&
+                $load_more.data('load-more')
+            ) {
+                $load_more.data('load-more', false);
+                $extensions_isotope.isotope('load_more');
+            }
         });
 
         $extensions_isotope.isotope({
