@@ -41,7 +41,7 @@ class IndexController extends Integration_Controller_Action
                 }
                 
                 $this->_helper->FlashMessenger(array(
-                    'message' => 'You succeffully sent your message.',
+                    'message' => 'You successfully sent your message.',
                     'type'    => 'success',
                 ));
                 
