@@ -27,15 +27,11 @@ class IndexController extends Integration_Controller_Action
 
             if ($form->isValid($formData)) {
 
-                $config = $this->getInvokeArg('bootstrap')
+                $appConfig = $this->getInvokeArg('bootstrap')
                                  ->getResource('config');
-                $mailConfigData = $config
-                                 ->contact
-                                 ->message;
                 
                 $mail = new Integration_Mail_Contact();
-                $formData['storeUrl'] = $config->magento->storeUrl;
-                $mail->setup($mailConfigData, array('formData' => (object)$formData));
+                $mail->setup($appConfig, array('formData' => (object)$formData));
 
                 try {
                     $mail->send();
@@ -45,7 +41,7 @@ class IndexController extends Integration_Controller_Action
                 }
                 
                 $this->_helper->FlashMessenger(array(
-                    'message' => 'You succeffully sent your message.',
+                    'message' => 'You successfully sent your message.',
                     'type'    => 'success',
                 ));
                 

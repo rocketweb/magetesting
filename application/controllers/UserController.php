@@ -93,15 +93,12 @@ class UserController extends Integration_Controller_Action
 
                 if($newPassword) {
                     // send activation email to the specified user
-                    $mailData = $this->getInvokeArg('bootstrap')
-                                     ->getResource('config')
-                                     ->user
-                                     ->resetPassword;
+                    $appConfig = $this->getInvokeArg('bootstrap')
+                                     ->getResource('config');
                     
-                     
                     try {
                         $mail = new Integration_Mail_UserResetPassword();
-                        $mail->setup($mailData, array('user'=>$user));
+                        $mail->setup($appConfig, array('user'=>$user));
                         $mail->send();
                     } catch (Exception $e){
                         $message['type']    = 'error';
@@ -364,12 +361,10 @@ class UserController extends Integration_Controller_Action
                 }
 
                 // send activation email to the specified user
-                $mailConfigData = $this->getInvokeArg('bootstrap')
-                                 ->getResource('config')
-                                 ->user
-                                 ->activationEmail;
+                $appConfig = $this->getInvokeArg('bootstrap')
+                                 ->getResource('config');
                 $mail = new Integration_Mail_UserRegisterActivation();
-                $mail->setup($mailConfigData, array('user' => $user));
+                $mail->setup($appConfig, array('user' => $user));
                 try {
                     $mail->send();
                     $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
