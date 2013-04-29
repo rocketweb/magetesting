@@ -57,7 +57,7 @@ admin.errorEmail.to.email = "wojtek@rocketweb.com"
 register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
 
 contact.message.email = "wojtek@rocketweb.com"
-contact.message.subject = "Message form Contact Form"
+contact.message.subject = "Message from Contact Form"
 contact.message.from.email = "support@magetesting.com"
 contact.message.from.desc = "Mage Testing"
 
@@ -102,5 +102,5 @@ cron.ftpAccountCreated.subject = "[DEV]FTP account created for magetesting.com"
 cron.phpmyadminAccountCreated.subject = "[DEV]Database account created for magetesting.com"
 cron.buyStoreExtension.subject = "[DEV]Buy %s at magetesting.com"
 admin.errorEmail.subject = "[DEV]Errors with Magetesting.com"
-contact.message.subject = "[DEV]Message form Contact Form"
+contact.message.subject = "[DEV]Message from Contact Form"
 
