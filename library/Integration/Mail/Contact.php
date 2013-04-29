@@ -11,8 +11,8 @@ class Integration_Mail_Contact extends Integration_Mail
         parent::__construct();
     }
     
-    public function setup($mailConfig, $data){
-        $this->_config = $mailConfig;
+    public function setup($appConfig, $data){
+        $this->_config = $appConfig;
         $this->_formData = $data['formData'];
         
         $this->_setHeaders();
@@ -21,10 +21,10 @@ class Integration_Mail_Contact extends Integration_Mail
     } 
     
     protected function _setHeaders(){     
-        $from = $this->_config->from;
+        $from = $this->_config->contact->message->from;
         $this->mail->setFrom($from->email, $from->desc);
-        $this->mail->addTo($this->_config->email);
-        $this->mail->setSubject($this->_config->subject);
+        $this->mail->addTo($this->_config->contact->message->email);
+        $this->mail->setSubject($this->_config->contact->message->subject);
         $this->mail->setReplyTo( $from->email, $from->desc );
         $this->mail->setReturnPath($from->email);
     }
@@ -36,8 +36,7 @@ class Integration_Mail_Contact extends Integration_Mail
         $this->view->email = $this->_formData->sender_email;
         $this->view->message = $this->_formData->message;
         
-        $config = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('config');
-        $this->view->storeUrl = $config->magento->storeUrl;
+        $this->view->storeUrl = $this->_config->magento->storeUrl;
     }
     
     protected function _setBody(){

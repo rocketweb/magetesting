@@ -10,8 +10,8 @@ class Integration_Mail_UserResetPassword extends Integration_Mail
         parent::__construct();
     }
     
-    public function setup($mailConfig, $data){
-        $this->_config = $mailConfig;
+    public function setup($appConfig, $data){
+        $this->_config = $appConfig;
         $this->_userObject = $data['user'];
         
         $this->_setHeaders();
@@ -20,10 +20,10 @@ class Integration_Mail_UserResetPassword extends Integration_Mail
     }
     
     protected function _setHeaders(){
-        $from = $this->_config->from;
+        $from = $this->_config->user->resetPassword->from;
         $this->mail->setFrom( $from->email, $from->desc );
         $this->mail->addTo($this->_userObject->getEmail());
-        $this->mail->setSubject($this->_config->subject);
+        $this->mail->setSubject($this->_config->user->resetPassword->subject);
         $this->mail->setReplyTo( $from->email, $from->desc );
         $this->mail->setReturnPath($from->email);
     }
@@ -46,8 +46,7 @@ class Integration_Mail_UserResetPassword extends Integration_Mail
         $this->view->resetLink = $this->view->serverUrl().$resetUrl;
         $this->view->login  = $this->_userObject->getLogin();
         
-        $config = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('config');
-        $this->view->storeUrl = $config->magento->storeUrl;
+        $this->view->storeUrl = $this->_config->magento->storeUrl;
     }
     
     protected function _setBody(){
