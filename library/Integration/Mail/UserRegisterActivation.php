@@ -13,8 +13,8 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
         parent::__construct();
     }
     
-    public function setup($mailConfig, $data){
-        $this->_config = $mailConfig;
+    public function setup($appConfig, $data){
+        $this->_config = $appConfig;
         
         $this->_userObject = $data['user'];
                  
@@ -24,11 +24,13 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
     }
     
     protected function _setHeaders(){
-        $from = $this->_config->from;
+        $from = $this->_config->user
+                                 ->activationEmail->from;
         
         $this->mail->setFrom( $from->email, $from->desc );
         $this->mail->addTo($this->_userObject->getEmail());
-        $this->mail->setSubject($this->_config->subject);
+        $this->mail->setSubject($this->_config->user
+                                 ->activationEmail->subject);
         $this->mail->setReplyTo( $from->email, $from->desc );
         $this->mail->setReturnPath($from->email);
     }
@@ -50,8 +52,7 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
 
         $this->view->activationLink = $this->view->serverUrl().$activationUrl;
         
-        $config = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('config');
-        $this->view->storeUrl = $config->magento->storeUrl;
+        $this->view->storeUrl = $this->_config->magento->storeUrl;
     }
 
     protected function _setBody(){
