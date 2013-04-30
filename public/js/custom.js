@@ -482,7 +482,7 @@ $(document).ready(function () {
 
 
         // EVENT: On click "Install" button
-        $('.install').click(function(event){
+        $('#container').delegate('.install', 'click', function(event){
             "use strict";
             var $this = $(this);
 
@@ -555,7 +555,7 @@ $(document).ready(function () {
         });
         
         // EVENT: On click extension's "View screens" button
-        $('a.btn-screenshots').click(function(event){
+        $('#container').delegate('a.btn-screenshots', 'click', function(event){
             "use strict";
             
             var _this = $(this);
