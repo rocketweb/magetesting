@@ -82,7 +82,7 @@ class Integration_Acl extends Zend_Acl
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
                 'commit', 'deploy','gettimeleft', 'request-deployment',
-                'validate-ftp-credentials', 'find-sql-file', 'login-to-store-backend'
+                'validate-ftp-credentials', 'find-sql-file', 'login-to-store-backend', 'install-extension'
         ));
         $this->allow('commercial-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit', 'papertrail'
@@ -100,7 +100,7 @@ class Integration_Acl extends Zend_Acl
                 'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
                 'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
                 'commit', 'deploy','gettimeleft', 'request-deployment',
-                'validate-ftp-credentials', 'find-sql-file', 'login-to-store-backend'
+                'validate-ftp-credentials', 'find-sql-file', 'login-to-store-backend', 'install-extension'
         ));
         $this->allow('awaiting-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit'

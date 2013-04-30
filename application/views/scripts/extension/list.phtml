@@ -34,7 +34,7 @@
                             
                             <div class="btn-group" data-title="Price filter">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Price filter <span class="caret"></span></a>
-                                <ul class="dropdown-menu option-set" data-option-key="filter" style="width:100%">
+                                <ul class="dropdown-menu option-set" data-option-key="price" style="width:100%">
                                     <li><a class="btn-all" tabindex="-1" href="#" data-option-value="*">All</a></li>
                                     <li class="divider"></li>
                                     <li><a class="btn-goldd" tabindex="-1" href="#" data-option-value=".premium">Premium</a></li>
@@ -44,18 +44,18 @@
                             
                             <div class="btn-group" data-title="Categories">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Categories <span class="caret"></span></a>
-                                <ul class="dropdown-menu option-set" data-option-key="filter">
+                                <ul class="dropdown-menu option-set" data-option-key="category">
                                     <li><a class="btn-all" tabindex="-1" href="#" data-option-value="*">All</a></li>
                                     <li class="divider"></li>
                                     <?php foreach($this->categories as $category): ?>
-                                    <li><a tabindex="-1" href="#" data-option-value=".<?php echo $category->getClass(); ?>"><?php echo $category->getName(); ?></a></li>
+                                    <li><a tabindex="-1" href="#" data-option-value="<?php echo $category->getId(); ?>"><?php echo $category->getName(); ?></a></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
                             <?php if('queue' == $page_type): ?>
                             <div class="btn-group" data-title="My store">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">My store <span class="caret"></span></a>
-                                <ul class="dropdown-menu option-set" data-option-key="filter">
+                                <ul class="dropdown-menu option-set" data-option-key="install">
                                     <li><a class="btn-all" tabindex="-1" href="#" data-option-value="*">All</a></li>
                                     <li class="divider"></li>
                                     <li><a tabindex="-1" href="#" data-option-value=".installed">Installed</a></li>
@@ -66,7 +66,7 @@
                             <?php if('extension' == $page_type): ?>
                             <div class="btn-group" data-title="Edition">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Edition <span class="caret"></span></a>
-                                <ul class="dropdown-menu option-set" data-option-key="filter">
+                                <ul class="dropdown-menu option-set" data-option-key="edition">
                                     <li><a class="btn-all" tabindex="-1" href="#" data-option-value="*">All</a></li>
                                     <li class="divider"></li>
                                     <li><a tabindex="-1" href="#" data-option-value=".ce">CE</a></li>
@@ -99,14 +99,10 @@
                 </div>
                 <div class="extensions_well">
                     <div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
-                    <?php echo $this->partial('extension/tiles.phtml', array('page_type' => $page_type, 'extensions' => $this->extensions)); ?>
+                    <?php echo $this->partial('extension/tiles.phtml', array('extensions' => $this->extensions, 'store_domain' => $this->store_domain)); ?>
                     </div>
-                    <div class="form-actions load-more" style="
-                        background-color: whiteSmoke;
-                        padding: 19px 20px 20px;
-                        text-align: center;
-                    ">
-                        <a class="btn btn-primary btn-large">LOAD MORE</a>
+                    <div class="load-more">
+                        <a class="btn btn-large disabled hidden">LOADING MORE EXTENSIONS...</a>
                     </div>
                 </div>
             </div>
