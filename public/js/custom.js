@@ -370,7 +370,7 @@ $(document).ready(function () {
 
         $.extend( $.Isotope.prototype, {
             load_more : function() {
-                $load_more_label.show();
+                $load_more_label.removeClass('hidden');
                 this._fetch_data(this._load_more);
             },
             filter_elements : function() {
@@ -383,7 +383,7 @@ $(document).ready(function () {
             },
             _filter_elements : function($atoms) {
                 $extensions_isotope.isotope('remove', $extensions_isotope.find('.element'));
-                $load_more_label.show();
+                $load_more_label.removeClass('hidden');
                 $load_more.data('load-more', true);
                 this._load_more($atoms);
             },
@@ -399,7 +399,7 @@ $(document).ready(function () {
                 } else {
                     $load_more.data('load-more', false);
                 }
-                $load_more_label.hide();
+                $load_more_label.addClass('hidden');
             },
             _fetch_data : function(callback) {
                 var isotope_instance = this;

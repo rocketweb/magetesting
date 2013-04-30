@@ -3354,6 +3354,12 @@ label.error {
     z-index: 10;
 }
 
+/* load more button */
+.load-more {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
 /*fix db revert radio buttons on edit store page*/
 .db-revert-row .radio{
     width:1.3em;
