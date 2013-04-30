@@ -243,7 +243,7 @@ $(document).ready(function () {
         e.stopPropagation();
         e.preventDefault();
         var $this = $(this);
-        form_string = '<form id="buy_request" method="post" action="' + siteRoot + '/braintree/payment">';
+        form_string = '<form id="buy_request" method="post" action="' + siteRoot + '/payment/payment">';
         form_string += '<input type="hidden" name="domain" value="'+$this.data('store-domain')+'" />';
         form_string += '<input type="hidden" name="source" value="deployment-request" />';
         form_string += '<input type="hidden" name="pay-for" value="extension" /><input type="hidden" name="id" value="'+$this.val()+'" /></form>';
