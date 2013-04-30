@@ -44,14 +44,14 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
     public function fetchStoreExtensions($store, $filter, $order, $offset, $limit) {
         $select_installed_for_store = 
             $this->select()
-                 ->from(array('se' => 'store_extension'), array('e.*', 'se.braintree_transaction_id', 'se.braintree_transaction_confirmed', 'se.status', 'installed' => new Zend_Db_Expr('1')))
+                 ->from(array('se' => 'store_extension'), array('e.*', 'se.braintree_transaction_id', 'se.braintree_transaction_confirmed', 'se.status', 'store_extension_id' => 'se.id', 'installed' => new Zend_Db_Expr('1')))
                  ->setIntegrityCheck(false)
                  ->joinLeft(array('e' => $this->_name), 'e.id = se.extension_id', '')
                  ->where('se.store_id = ?', $store['id']);
 
         $select_allowed_for_store = 
             $this->select()
-                 ->from($this->_name, array('*', 'braintree_transaction_id' => new Zend_Db_Expr('NULL'), 'braintree_transaction_confirmed'  => new Zend_Db_Expr('NULL'), 'status'  => new Zend_Db_Expr('NULL'), 'installed' => new Zend_Db_Expr('0')))
+                 ->from($this->_name, array('*', 'braintree_transaction_id' => new Zend_Db_Expr('NULL'), 'braintree_transaction_confirmed'  => new Zend_Db_Expr('NULL'), 'status'  => new Zend_Db_Expr('NULL'), 'store_extension_id' => new Zend_Db_Expr('NULL'), 'installed' => new Zend_Db_Expr('0')))
                  ->setIntegrityCheck(false)
                  ->where('extension > ""')
                  ->where(' ?
