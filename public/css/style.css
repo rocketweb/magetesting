@@ -3353,3 +3353,9 @@ label.error {
     position: absolute;
     z-index: 10;
 }
+
+/* load more button */
+.load-more {
+    text-align: center;
+    margin-bottom: 15px;
+}
