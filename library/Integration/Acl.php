@@ -20,7 +20,6 @@ class Integration_Acl extends Zend_Acl
         /**
          * Set up resources
          */
-        $this->add(new Zend_Acl_Resource('default_payment'));
         $this->add(new Zend_Acl_Resource('default_error'));
         $this->add(new Zend_Acl_Resource('default_index'));
         $this->add(new Zend_Acl_Resource('default_user'));
