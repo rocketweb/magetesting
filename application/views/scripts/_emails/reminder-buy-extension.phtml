@@ -1,15 +1,31 @@
-<p>Hi <?php $v = current($this->data); echo $v['firstname']; ?>,</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->render('_emails/_templates/css.phtml'); ?>
+    </head>
+    <body>
+        <div id="mt_email">
+            <?php echo $this->render('_emails/_templates/header.phtml'); ?>
 
-<p>Thanks for installing a new extension!  We hope this meets the needs for your store.  Please be sure to thoroughly test this extension and check the Papertrail web based log files to make sure there are no new errors.</p>
+            <div id="mt_email_content">
+                <div class="box">
+                    <div class="tab-stripe"></div>
+                    <p><span class="greeting">Hi <?php $v = current($this->data); echo $v['firstname']; ?>,</span><br>
 
-<p>Once you purchase this extension you will have access to the code for any changes you would like to make before putting the extension on your live store.</p>
+                    Thanks for installing a new extension!  We hope this meets the needs for your store.  Please be sure to thoroughly test this extension and check the Papertrail web based log files to make sure there are no new errors.</p>
 
-<p>Please click the link(s) below to make a purchase.</p>
+                    <p>Once you purchase this extension you will have access to the code for any changes you would like to make before putting the extension on your live store.</p>
 
-<?php foreach($this->data as $record): $record = (object)$record; ?>
-    <p><a href="<?php echo $record->url ?>/braintree/payment/pay-for/extension/source/extension/domain/<?php echo $record->domain ?>/id/<?php echo $record->extension_id ?>">Buy <?php echo $record->name ?> extension</a></p>
-<?php endforeach; ?>
-    
-<p>
-    -- <br /> <a href="<?php echo $this->storeUrl ?>">magetesting.com</a>
-</p>
+                    <p>Please click the link(s) below to make a purchase.</p>
+
+                    <?php foreach($this->data as $record): $record = (object)$record; ?>
+                        <p><a href="<?php echo $record->url ?>/braintree/payment/pay-for/extension/source/extension/domain/<?php echo $record->domain ?>/id/<?php echo $record->extension_id ?>">Buy <?php echo $record->name ?> extension</a></p>
+                    <?php endforeach; ?>
+
+                    <?php echo $this->render('_emails/_templates/footer.phtml'); ?>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
