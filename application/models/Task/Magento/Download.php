@@ -65,6 +65,7 @@ implements Application_Model_Task_Interface {
         }
 
         $this->_fixOwnership();
+        $this->_updateMagentoVersion();
         
         try {
             $transportModel->downloadDatabase();
@@ -79,7 +80,7 @@ implements Application_Model_Task_Interface {
         $this->_customRemotePath = $transportModel->getCustomRemotePath();
 
         /* end of transport usage */
-
+        
 	$this->_prepareDatabaseDump();
         //let's load sql to mysql database
         $this->_importDatabaseDump();
@@ -675,6 +676,32 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log($command, Zend_Log::DEBUG);
         $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
+    }
+    
+    protected function _updateMagentoVersion(){
+        
+        $matches=array();
+        $major=array();
+        $minor=array();
+        $revision=array();
+        $patch=array();
+        
+        $mageFile = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/Mage.php';
+        
+        $text = file_get_contents('test.txt');
+
+        preg_match('#getVersionInfo\(\)(.*?)}#is',$mageFile,$matches);
+
+        preg_match("#'major'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$major);
+        preg_match("#'minor'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$minor);
+        preg_match("#'revision'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$revision);
+        preg_match("#'patch'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$patch);
+       
+        $downloadedVersion = $major[3].'.'.$minor[3].'.'.$revision[3].'.'.$patch[3];
+        
+        $closestVersion = $this->_versionObject->getClosestVersion($downloadedVersion);
+        
+        $this->_storeObject->setVersionId($closestVersion['id'])->save();
     }
    
 }

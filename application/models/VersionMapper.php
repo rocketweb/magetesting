@@ -99,5 +99,9 @@ class Application_Model_VersionMapper {
         return $temp;
 
     }
+    
+    public function getClosestVersion($versionString){
+        return $this->getDbTable()->getClosestVersion($versionString);
+    }
 
 }
