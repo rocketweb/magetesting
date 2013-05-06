@@ -347,9 +347,17 @@ class UserController extends Integration_Controller_Action
                 $user->setPreselectedPlanId($plan_id);
                 $user = $user->save();
 
+                $adminNotification = new Integration_Mail_AdminNotification();
+                $adminNotificationData = array('user' => $user);
+                $plan = new Application_Model_Plan();
+                $plan->find($user->getPreselectedPlanId());
+                if($plan->getName()) {
+                    $adminNotificationData['preselected_plan'] = $plan->getName();
+                }
                 if ($useCoupons || $coupon) {
                     $result = $modelCoupon->apply($modelCoupon->getId(), $user->getId());
                     if ($result) {
+                        $adminNotificationData['used_coupon'] = $modelCoupon->getCode();
                         //coupon->apply changed user so we need to fetch it again
                         $modelUser = new Application_Model_User();
                         $user = $modelUser->find($user->getId());
@@ -360,12 +368,14 @@ class UserController extends Integration_Controller_Action
                     }
                 }
 
+                $adminNotification->setup('userCreated', $adminNotificationData);
                 // send activation email to the specified user
                 $appConfig = $this->getInvokeArg('bootstrap')
                                  ->getResource('config');
                 $mail = new Integration_Mail_UserRegisterActivation();
                 $mail->setup($appConfig, array('user' => $user));
                 try {
+                    $adminNotification->send();
                     $mail->send();
                     $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
                 } catch (Zend_Mail_Transport_Exception $e){

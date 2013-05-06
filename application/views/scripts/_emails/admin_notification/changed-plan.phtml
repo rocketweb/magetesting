@@ -1,0 +1,24 @@
+<h3>User 
+<?php
+$url = $this->serverUrl(
+    $this->url(
+        array(
+            'controller' => 'user',
+            'action' => 'detail',
+            'id' => $this->user->getId()
+        ),
+        'default',
+        true
+    )
+);
+?>
+'<a href="<?php echo $url; ?>"><?php echo $this->user->getLogin(); ?></a>'
+ changed plan to '<?php echo $this->plan->getName(); ?>'.
+</h3>
+<?php
+$operation =
+    $this->amount < 0
+        ? 'refunded $' . ($this->amount * -1)
+        : 'charged $' . $this->amount;
+?>
+Operation: <?php echo $operation;?>

@@ -1,0 +1,25 @@
+<h3>User 
+<?php
+$url = $this->serverUrl(
+    $this->url(
+        array(
+            'controller' => 'user',
+            'action' => 'detail',
+            'id' => $this->user->getId()
+        ),
+        'default',
+        true
+    )
+);
+?>
+'<a href="<?php echo $url; ?>"><?php echo $this->user->getLogin(); ?></a>'
+ created.</h3>
+
+<?php if($this->preselected_plan): ?>
+<br />
+Preselected plan: <?php echo $this->preselected_plan; ?>
+<?php endif; ?>
+<?php if($this->used_coupon): ?>
+<br />
+Used coupon: <?php echo $this->used_coupon; ?>
+<?php endif; ?>

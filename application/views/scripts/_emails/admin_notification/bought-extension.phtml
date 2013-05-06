@@ -1,0 +1,31 @@
+<h3>User 
+<?php
+$url = $this->serverUrl(
+    $this->url(
+        array(
+            'controller' => 'user',
+            'action' => 'detail',
+            'id' => $this->user->getId()
+        ),
+        'default',
+        true
+    )
+);
+?>
+'<a href="<?php echo $url; ?>"><?php echo $this->user->getLogin(); ?></a>'
+ bought extension 
+<?php
+$url = $this->serverUrl(
+    $this->url(
+        array(
+            'controller' => 'extension',
+            'action' => 'edit',
+            'id' => $this->user->getId()
+        ),
+        'default',
+        true
+    )
+);
+?>
+'<a href="<?php echo $url; ?>"><?php echo $this->extension->getName(); ?></a>'
+ for $<?php echo $this->extension->getPrice(); ?>.</h3>
