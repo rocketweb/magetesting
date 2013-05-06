@@ -64,8 +64,7 @@ class Integration_Mail_AdminNotification extends Integration_Mail
          * TODO: check if it is faster than 
          * $this->view = Zend_Layout::getMvcInstance()->getView();
          */
-        $this->view = Zend_Controller_Front::getInstance()
-                        ->getParam('bootstrap')->getResource('view');
+        $this->view = Zend_Layout::getMvcInstance()->getView();
         if(is_array($data)) {
             foreach($data as $key => $value) {
                 if(is_string($key)) {
@@ -76,6 +75,7 @@ class Integration_Mail_AdminNotification extends Integration_Mail
     }
     
     protected function _setBody(){
+        $this->view->addScriptPath(APPLICATION_PATH. '/views/scripts');
         $msg = $this->view->render($this->_template);
 
         $this->mail->setBodyHtml($msg);
