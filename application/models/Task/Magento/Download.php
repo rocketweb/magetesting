@@ -688,9 +688,9 @@ implements Application_Model_Task_Interface {
         
         $mageFile = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/Mage.php';
         
-        $text = file_get_contents('test.txt');
+        $text = file_get_contents($mageFile);
 
-        preg_match('#getVersionInfo\(\)(.*?)}#is',$mageFile,$matches);
+        preg_match('#function getVersionInfo\(\)(.*?)}#is',$text,$matches);
 
         preg_match("#'major'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$major);
         preg_match("#'minor'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$minor);

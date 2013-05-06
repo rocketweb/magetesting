@@ -17,7 +17,7 @@ class Application_Model_DbTable_Version extends Zend_Db_Table_Abstract
     
     public function getClosestVersion($versionString){
         
-        $versionString = (int)$versionString;
+        $versionString = (int) str_replace('.','',$versionString);
         
         $select = $this->select()
                 ->from(

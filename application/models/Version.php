@@ -141,7 +141,7 @@ class Application_Model_Version {
      * @return array
      */
     public function getClosestVersion($versionString){
-        return $this->getDbTable()->getClosestVersion($versionString);
+        return $this->getMapper()->getClosestVersion($versionString);
     }
 
 }
