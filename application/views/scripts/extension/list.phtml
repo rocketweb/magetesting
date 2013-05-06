@@ -142,7 +142,16 @@
                         <input name="version" class="span1" type="text" placeholder="version" />
                         <button class="btn">Get latest</button>
                     </div>
-                    <button type="submit" class="btn btn-success">Add release</button>
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            Add release
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Add release</a><input type="submit" class="hide" /></li>
+                            <li><a href="#">Add and edit release</a><input type="submit" name="edit_release" value="1" class="hide" /></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </form>
