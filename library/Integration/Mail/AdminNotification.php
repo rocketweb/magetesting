@@ -5,6 +5,7 @@ class Integration_Mail_AdminNotification extends Integration_Mail
     protected $_template;
     protected $_mailType;
     protected $_config;
+    protected $_serverUrl;
 
     public function __construct() {
         parent::__construct();
@@ -15,6 +16,7 @@ class Integration_Mail_AdminNotification extends Integration_Mail
                 APPLICATION_PATH . '/configs/local.ini',
                 APPLICATION_ENV
         );
+        $this->_serverUrl = $config->magento->storeUrl;
         $this->_config =
             $config->adminNotification;
         unset($config);
@@ -65,6 +67,7 @@ class Integration_Mail_AdminNotification extends Integration_Mail
          * $this->view = Zend_Layout::getMvcInstance()->getView();
          */
         $this->view = Zend_Layout::getMvcInstance()->getView();
+        $this->view->serverUrl = $this->_serverUrl;
         if(is_array($data)) {
             foreach($data as $key => $value) {
                 if(is_string($key)) {
