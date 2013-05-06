@@ -204,7 +204,7 @@ class PaymentController extends Integration_Controller_Action
                             'store' => $domain
                     );
                     $adminNotificationEmailType = 'boughtExtension';
-                    $adminNotificationData['extension'] = extensionModel;
+                    $adminNotificationData['extension'] = $extensionModel;
                 } else {
                     $flash_message = 'You have successfully paid for your plan.';
                     $redirect = array(
