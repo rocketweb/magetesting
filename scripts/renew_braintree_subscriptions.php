@@ -59,6 +59,19 @@ if($result) {
                     $last_payment->setTransactionType('subscription');
                     // save new payment
                     $last_payment->save();
+
+                    $adminNotification = new Integration_Mail_AdminNotification();
+                    $user = new Application_Model_User();
+                    $user->find($row['id']);
+                    $adminNotificationData = array('user' => $user, 'plan' => $plan);
+                    $adminNotification->setup('renewedPlan', $adminNotificationData);
+                    try {
+                        $adminNotification->send();
+                    } catch(Exception $e) {
+                        if($log) {
+                            $log->log('Braintree - admin notification email', Zend_Log::DEBUG, $e->getMessage());
+                        }
+                    }
                 } else {
                     $log->log('Plan has not been renewed for user: ' . $row['id'], Zend_Log::INFO);
                 }

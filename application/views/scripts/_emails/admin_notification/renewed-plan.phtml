@@ -1,0 +1,17 @@
+<h3>User 
+<?php
+$url = $this->serverUrl(
+    $this->url(
+        array(
+            'controller' => 'user',
+            'action' => 'detail',
+            'id' => $this->user->getId()
+        ),
+        'default',
+        true
+    )
+);
+?>
+'<a href="<?php echo $url; ?>"><?php echo $this->user->getLogin(); ?></a>'
+ renewed plan '<?php echo $this->plan->getName(); ?>'
+ for $<?php echo $this->plan->getPrice(); ?>.</h3>
