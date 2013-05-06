@@ -29,6 +29,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_my-account'));
         $this->add(new Zend_Acl_Resource('default_coupon'));
         $this->add(new Zend_Acl_Resource('default_plan'));
+        $this->add(new Zend_Acl_Resource('default_payment'));
         /**
          * Deny for all (we use white list)
          */
