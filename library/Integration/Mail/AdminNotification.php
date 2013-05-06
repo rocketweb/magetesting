@@ -11,11 +11,13 @@ class Integration_Mail_AdminNotification extends Integration_Mail
     }
     
     public function setup($mailType, $data){
+        $config = new Zend_Config_Ini(
+                APPLICATION_PATH . '/configs/local.ini',
+                APPLICATION_ENV
+        );
         $this->_config =
-            Zend_Controller_Front::getInstance()
-                ->getParam('bootstrap')
-                ->getResource('config')
-                ->adminNotification;
+            $config->adminNotification;
+        unset($config);
 
         $this->_mailType = $mailType;
         $this->_template = '_emails/admin_notification/'
