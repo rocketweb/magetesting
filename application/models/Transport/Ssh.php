@@ -21,7 +21,7 @@ extends Application_Model_Transport {
 
         // error suppression added here intentionally as this function
         // throws warning if it can't connect using given host and port (wojtek)
-        $this->_connection = @ssh2_connect($store->getCustomHost(), $store->getCustomPort());
+        $this->_connection = @ssh2_connect($this->_customHost, $this->_customPort);
 
         if ($this->_connection === FALSE) {
             throw new Application_Model_Transport_Exception('Can not connect with ssh server.');
@@ -45,11 +45,6 @@ extends Application_Model_Transport {
     protected function _prepareCustomVars(Application_Model_Store $storeObject){
         //HOST
         $customHost = $this->_storeObject->getCustomHost();
-        //make sure custom host have slash at the end
-        if(substr($customHost,-1)!="/"){
-            $customHost .= '/';
-        }
-        
         $this->_customHost = $customHost;
         
         //PORT

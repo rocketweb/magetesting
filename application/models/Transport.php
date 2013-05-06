@@ -12,6 +12,7 @@ class Application_Model_Transport {
     protected $_pass = '';
     protected $_errorMessage = '';
     
+    protected $_storeObject ='';
     protected $logger = NULL;
     
     public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
