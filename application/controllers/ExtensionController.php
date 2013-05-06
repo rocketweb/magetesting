@@ -469,6 +469,10 @@ class ExtensionController extends Integration_Controller_Action {
             if($extension_id && $extension_version) {
                 $extension = new Application_Model_Extension();
                 if($extension->addVersionToExtension($extension_id, $extension_version)) {
+                    if($request->getParam('edit_release')) {
+                        $redirect['action'] = 'edit';
+                        $redirect['id'] = $extension->getId();
+                    }
                     $this->_helper->FlashMessenger('Succesfully added version to extension.');
                 }
             }
