@@ -1,16 +1,6 @@
 <h3>User 
 <?php
-$url = $this->serverUrl(
-    $this->url(
-        array(
-            'controller' => 'user',
-            'action' => 'detail',
-            'id' => $this->user->getId()
-        ),
-        'default',
-        true
-    )
-);
+$url = $this->serverUrl . '/user/detail/id/' . $this->user->getId();
 ?>
 '<a href="<?php echo $url; ?>"><?php echo $this->user->getLogin(); ?></a>'
  renewed plan '<?php echo $this->plan->getName(); ?>'
