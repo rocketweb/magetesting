@@ -123,13 +123,6 @@ implements Application_Model_Task_Interface {
 
         $this->_cleanLogTables();
         
-        $store_path = str_replace('/application/../store/', '/store/', STORE_PATH);
-
-        $this->logger->log('Added symbolic link for store directory.', Zend_Log::INFO);
-        $command = 'ln -s ' . $this->_storeFolder . '/' . $this->_domain . ' ' . $store_path . $this->_domain;
-        exec($command);
-        $this->logger->log(PHP_EOL . $command . PHP_EOL, Zend_Log::DEBUG);
-
         chdir($startCwd);
         
         /* send email to store owner start */

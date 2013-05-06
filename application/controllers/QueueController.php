@@ -541,9 +541,9 @@ class QueueController extends Integration_Controller_Action {
             array(
                 'store_name' => $store->getStoreName(),
                 'backend_password' => $store->getBackendPassword(),
-                'backend_login' => $this->auth->getIdentity()->login
-            ),
-            array('custom_pass_confirm' => $store->getCustomPass())
+                'backend_login' => $this->auth->getIdentity()->login,
+                'custom_pass' => $store->getCustomPass(),
+            )
         );
 
         $form->populate($populate);
