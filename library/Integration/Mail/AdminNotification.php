@@ -79,7 +79,8 @@ class Integration_Mail_AdminNotification extends Integration_Mail
     
     protected function _setBody(){
         $this->view->addScriptPath(APPLICATION_PATH. '/views/scripts');
-        $msg = $this->view->render($this->_template);
+        $this->view->content = $this->view->render($this->_template);
+        $msg = $this->view->render('_emails/admin_notification/layout.phtml');
 
         $this->mail->setBodyHtml($msg);
         $this->mail->setBodyText(strip_tags($msg));
