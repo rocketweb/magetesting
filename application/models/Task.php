@@ -100,8 +100,11 @@ class Application_Model_Task {
         $mail = new Zend_Mail();
         $mail->setFrom($this->config->admin->errorEmail->from->email);
         
-        $emails = $this->config->admin->errorEmail->to->email;
-        $emails->toArray();
+        $email = $this->config->admin->errorEmail->to->email;
+        
+        /* $email is Zend_Config Object */
+        $emails = $email->toArray();
+        
         if (!is_array($emails)){
             $emails = array($emails);
         }
