@@ -62,7 +62,11 @@ extends Application_Model_Task {
         $html->assign('admin_password', $this->_adminpass);
 
         // render view
-        $bodyText = $html->render('_emails/queue-item-ready.phtml');
+        try{
+            $bodyText = $html->render('_emails/queue-item-ready.phtml');
+        } catch(Zend_View_Exception $e) {
+            $this->logger->log('Store ready mail could not be rendered.', Zend_Log::CRIT, $e->getTraceAsString());
+        }
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
@@ -172,7 +176,12 @@ extends Application_Model_Task {
         $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
-        $bodyText = $html->render('_emails/ftp-account-credentials.phtml');
+        try{
+            $bodyText = $html->render('_emails/ftp-account-credentials.phtml');
+        } catch(Zend_View_Exception $e) {
+            $this->logger->log('FTP mail could not be rendered.', Zend_Log::CRIT, $e->getTraceAsString());
+        }
+        
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
@@ -181,7 +190,11 @@ extends Application_Model_Task {
         $mail->setSubject($this->config->cron->ftpAccountCreated->subject);
         $mail->setFrom($this->config->cron->ftpAccountCreated->from->email, $this->config->cron->ftpAccountCreated->from->desc);
         $mail->setBodyHtml($bodyText);
-        $mail->send();
+        try {
+          $mail->send();
+        } catch (Zend_Mail_Transport_Exception $e){
+          $this->logger->log('FTP mail could not be sent.', Zend_Log::CRIT, $e->getTraceAsString());
+        }
         /* send email with account details stop */
     }
     
@@ -204,7 +217,11 @@ extends Application_Model_Task {
         $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
-        $bodyText = $html->render('_emails/phpmyadmin-credentials.phtml');
+        try{
+            $bodyText = $html->render('_emails/phpmyadmin-credentials.phtml');
+        } catch(Zend_View_Exception $e) {
+            $this->logger->log('phpMyAdmin mail could not be rendered.', Zend_Log::CRIT, $e->getTraceAsString());
+        }
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
@@ -213,8 +230,11 @@ extends Application_Model_Task {
         $mail->setSubject($this->config->cron->phpmyadminAccountCreated->subject);
         $mail->setFrom($this->config->cron->phpmyadminAccountCreated->from->email, $this->config->cron->phpmyadminAccountCreated->from->desc);
         $mail->setBodyHtml($bodyText);
-        $mail->send();
-        /* send email with account details stop */
+        try {
+          $mail->send();
+        } catch (Zend_Mail_Transport_Exception $e){
+          $this->logger->log('phpMyAdmin mail could not be sent.', Zend_Log::CRIT, $e->getTraceAsString());
+        }
     }
     
     protected function _prepareDatabase(){
@@ -386,7 +406,7 @@ extends Application_Model_Task {
         } 
     }
 
-	 /**
+    /**
      * Sets Design -> Head -> Demo Notice to 'Yes'
      */
     protected function _activateDemoNotice(){
