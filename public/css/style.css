@@ -3337,6 +3337,9 @@ label.error {
 .modal.version-list-modal .modal-footer .form {
     margin-bottom: 0px;
 }
+.modal.version-list-modal .modal-footer .dropdown-menu a {
+    text-align: left;
+}
 .modal.version-list-modal .modal-footer .control-group {
     margin-bottom: 0px;
 }

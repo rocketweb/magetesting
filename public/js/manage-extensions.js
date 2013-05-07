@@ -24,9 +24,15 @@ $(document).ready(function() {
         $version_list_modal_title = $version_list_modal.find('.modal-header h3'),
         $version_list_modal_table_body = $version_list_modal.find('tbody'),
         $version_list_modal_form = $version_list_modal.find('form'),
+        $version_list_modal_release_buttons = $version_list_modal_form.find('.dropdown-menu a'),
         $version_list_modal_version_field = $version_list_modal.find(':text'),
         $version_list_modal_sync = $version_list_modal_version_field.next(),
         $version_list_modal_extension_field = $version_list_modal.find('input[type=hidden]');
+
+    $version_list_modal_release_buttons.click(function() {
+        $(this).next('input').click();
+        return false;
+    });
 
     $('#container').delegate('.version-list', 'click', function(e) {
         var $this = $(this);
