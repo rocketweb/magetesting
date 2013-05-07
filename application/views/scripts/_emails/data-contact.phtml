@@ -2,11 +2,11 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <?php echo $this->render('_templates/css.phtml'); ?>
+        <?php echo $this->render('_emails/_templates/css.phtml'); ?>
     </head>
     <body>
         <div id="mt_email">
-            <?php echo $this->render('_templates/header.phtml'); ?>
+            <?php echo $this->render('_emails/_templates/header.phtml'); ?>
 
             <div id="mt_email_content">
                 <div class="box">
@@ -20,7 +20,7 @@
                         <br />Message: <?php echo $this->message ?>
                     </p>
 
-                    <?php echo $this->render('_templates/footer.phtml'); ?>
+                    <?php echo $this->render('_emails/_templates/footer.phtml'); ?>
                 </div>
             </div>
         </div>
