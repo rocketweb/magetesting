@@ -184,6 +184,7 @@ class Application_Model_StoreMapper {
             'MagentoDownload' => 'downloading-magento',
             'MagentoInstall' => 'installing-magento',
             'MagentoRemove' => 'removing-magento',
+            'MagentoHourlyrevert' => 'hourly-reverting-magento',
             'RevisionCommit' => 'committing-revision',
             'RevisionDeploy' => 'deploying-revision',
             'RevisionRollback' => 'rolling-back-revision',
