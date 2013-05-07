@@ -43,7 +43,7 @@ extends Application_Model_Task {
     protected function _sendStoreReadyEmail(){
         
         $html = new Zend_View();
-        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/');
     
         // assign values
         $html->assign('domain', $this->_storeObject->getDomain());
@@ -160,7 +160,7 @@ extends Application_Model_Task {
         /* send email with account details start */
         $config = $this->config;
         $html = new Zend_View();
-        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/');
         
         // assign values
         $serverModel = new Application_Model_Server();
@@ -192,7 +192,7 @@ extends Application_Model_Task {
         $config = $this->config;
         /* send email with account details start */
         $html = new Zend_View();
-        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/');
         // assign valeues
         $html->assign('dbhost', $config->magento->dbhost);
         $html->assign('dbuser', $config->magento->userprefix . $user_details['dbuser']);
