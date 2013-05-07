@@ -1,24 +1,40 @@
-<p>Hi,</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->render('_templates/css.phtml'); ?>
+    </head>
+    <body>
+        <div id="mt_email">
+            <?php echo $this->render('_templates/header.phtml'); ?>
 
-<p>Your Magento store on Mage Testing is ready to use!</p>
+            <div id="mt_email_content">
+                <div class="box">
+                    <div class="tab-stripe"></div>
+                    <p><span class="greeting">Hi,</span></p>
 
-<p>You can view the customer side of the site here:</p>
+                    <p>Your Magento store on Mage Testing is ready to use!</p>
 
-<p><a href="<?php echo $this->installedUrl.'/'.$this->domain; ?>">
-    <?php echo $this->installedUrl.'/'.$this->domain; ?>
-</a></p>
+                    <p>You can view the customer side of the site here:</p>
 
-<p>Or login to the administrator here:</p>
+                    <p><a href="<?php echo $this->installedUrl.'/'.$this->domain; ?>">
+                        <?php echo $this->installedUrl.'/'.$this->domain; ?>
+                    </a></p>
 
-<p><a href="<?php echo $this->installedUrl.'/'.$this->domain. '/' . $this->backend_name . '/'; ?>">
-    <?php echo $this->installedUrl.'/'.$this->domain . '/' . $this->backend_name . '/'; ?>
-</a></p>
+                    <p>Or login to the administrator here:</p>
 
-<p>
-Your admin store login: <?php echo $this->admin_login ?><br>
-Your admin store password: <?php echo $this->admin_password ?>
-</p>
+                    <p><a href="<?php echo $this->installedUrl.'/'.$this->domain. '/' . $this->backend_name . '/'; ?>">
+                        <?php echo $this->installedUrl.'/'.$this->domain . '/' . $this->backend_name . '/'; ?>
+                    </a></p>
 
-<p>
-    -- <br /> <a href="<?php echo $this->storeUrl ?>">magetesting.com</a>
-</p>
+                    <p>
+                    Your admin store login: <?php echo $this->admin_login ?><br>
+                    Your admin store password: <?php echo $this->admin_password ?>
+                    </p>
+
+                    <?php echo $this->render('_templates/footer.phtml'); ?>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

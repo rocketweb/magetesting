@@ -1,12 +1,28 @@
-<p>Message from Mage Testing Contact Form</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->render('_templates/css.phtml'); ?>
+    </head>
+    <body>
+        <div id="mt_email">
+            <?php echo $this->render('_templates/header.phtml'); ?>
 
-<p>
-    Subject: <?php echo $this->subject ?>
-    <br />Name: <?php echo $this->name ?>
-    <br />Email: <?php echo $this->email ?>
-    <br />Message: <?php echo $this->message ?>
-</p>
+            <div id="mt_email_content">
+                <div class="box">
+                    <div class="tab-stripe"></div>
+                    <p>Message from Mage Testing Contact Form</p>
 
-<p>
-    -- <br /> <a href="<?php echo $this->storeUrl ?>">magetesting.com</a>
-</p>
+                    <p>
+                        Subject: <?php echo $this->subject ?>
+                        <br />Name: <?php echo $this->name ?>
+                        <br />Email: <?php echo $this->email ?>
+                        <br />Message: <?php echo $this->message ?>
+                    </p>
+
+                    <?php echo $this->render('_templates/footer.phtml'); ?>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>                    
