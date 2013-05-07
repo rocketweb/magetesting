@@ -98,8 +98,23 @@ class Application_Model_Task {
 
         // setup mail writer
         $mail = new Zend_Mail();
-        $mail->setFrom($this->config->admin->errorEmail->from->email)
-             ->addTo($this->config->admin->errorEmail->to->email);
+        $mail->setFrom($this->config->admin->errorEmail->from->email);
+        
+        $emails = $this->config->admin->errorEmail->to->email;
+        
+        if (!is_array($emails)){
+            $emails = array($emails);
+        }
+        
+        if($emails) {
+            $mail->addTo(array_shift($emails));
+        }
+        
+        if($emails) {
+            foreach($emails as $ccEmail) {
+                $mail->addCc($ccEmail);
+            }
+        }
 
         $writerMail = new Zend_Log_Writer_Mail($mail);
         $writerMail->setSubjectPrependText($this->config->admin->errorEmail->subject);
