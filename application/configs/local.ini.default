@@ -52,7 +52,7 @@ cron.buyStoreExtension.from.desc = "Mage Testing"
 
 admin.errorEmail.subject = "Errors with Magetesting.com"
 admin.errorEmail.from.email = "support@magetesting.com"
-admin.errorEmail.to.email = "wojtek@rocketweb.com"
+admin.errorEmail.to.email[] = "wojtek@rocketweb.com"
 
 register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
 
