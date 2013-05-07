@@ -62,7 +62,7 @@ extends Application_Model_Task {
         $html->assign('admin_password', $this->_adminpass);
 
         // render view
-        $bodyText = $html->render('queue-item-ready.phtml');
+        $bodyText = $html->render('_emails/queue-item-ready.phtml');
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
@@ -172,7 +172,7 @@ extends Application_Model_Task {
         $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
-        $bodyText = $html->render('ftp-account-credentials.phtml');
+        $bodyText = $html->render('_emails/ftp-account-credentials.phtml');
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
@@ -204,7 +204,7 @@ extends Application_Model_Task {
         $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
-        $bodyText = $html->render('phpmyadmin-credentials.phtml');
+        $bodyText = $html->render('_emails/phpmyadmin-credentials.phtml');
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
