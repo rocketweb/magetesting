@@ -101,7 +101,7 @@ class Application_Model_Task {
         $mail->setFrom($this->config->admin->errorEmail->from->email);
         
         $emails = $this->config->admin->errorEmail->to->email;
-        $emails->__toArray();
+        $emails->toArray();
         if (!is_array($emails)){
             $emails = array($emails);
         }
