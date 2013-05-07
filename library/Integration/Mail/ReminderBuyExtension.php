@@ -46,7 +46,13 @@ class Integration_Mail_ReminderBuyExtension extends Integration_Mail
         /*TODO: check if this line is necessary*/
         $this->view->addScriptPath(APPLICATION_PATH. '/views/scripts');
         
-        $msg = $this->view->render($this->_template);
+        
+        try{
+            $msg = $this->view->render($this->_template);
+        } catch(Zend_View_Exception $e) {
+            $this->logger->log('Extension Buy Reminder mail could not be rendered.', Zend_Log::CRIT, $e->getTraceAsString());
+        }
+                
         $this->mail->setBodyHtml($msg);
         $this->mail->setBodyText(strip_tags($msg));
     }
