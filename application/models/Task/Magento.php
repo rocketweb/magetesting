@@ -43,7 +43,7 @@ extends Application_Model_Task {
     protected function _sendStoreReadyEmail(){
         
         $html = new Zend_View();
-        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/');
     
         // assign values
         $html->assign('domain', $this->_storeObject->getDomain());
@@ -62,7 +62,7 @@ extends Application_Model_Task {
         $html->assign('admin_password', $this->_adminpass);
 
         // render view
-        $bodyText = $html->render('queue-item-ready.phtml');
+        $bodyText = $html->render('_emails/queue-item-ready.phtml');
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
@@ -160,7 +160,7 @@ extends Application_Model_Task {
         /* send email with account details start */
         $config = $this->config;
         $html = new Zend_View();
-        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/');
         
         // assign values
         $serverModel = new Application_Model_Server();
@@ -172,7 +172,7 @@ extends Application_Model_Task {
         $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
-        $bodyText = $html->render('ftp-account-credentials.phtml');
+        $bodyText = $html->render('_emails/ftp-account-credentials.phtml');
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
@@ -192,7 +192,7 @@ extends Application_Model_Task {
         $config = $this->config;
         /* send email with account details start */
         $html = new Zend_View();
-        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/_emails/');
+        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/');
         // assign valeues
         $html->assign('dbhost', $config->magento->dbhost);
         $html->assign('dbuser', $config->magento->userprefix . $user_details['dbuser']);
@@ -204,7 +204,7 @@ extends Application_Model_Task {
         $html->assign('storeUrl', $config->magento->storeUrl);
 
         // render view
-        $bodyText = $html->render('phpmyadmin-credentials.phtml');
+        $bodyText = $html->render('_emails/phpmyadmin-credentials.phtml');
 
         // create mail object
         $mail = new Zend_Mail('utf-8');
