@@ -1,0 +1,13 @@
+<p><b>New user with username 
+<?php
+$url = $this->serverUrl . '/user/detail/id/' . $this->user->getId();
+?>
+'<a href="<?php echo $url; ?>"><?php echo $this->user->getLogin(); ?></a>'
+ has just registered.</b></p>
+
+<?php if($this->preselected_plan): ?>
+<p>Preselected plan: <?php echo $this->preselected_plan; ?></p>
+<?php endif; ?>
+<?php if($this->used_coupon): ?>
+<p>Used coupon: <?php echo $this->used_coupon; ?></p>
+<?php endif; ?>

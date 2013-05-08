@@ -153,6 +153,8 @@ class PaymentController extends Integration_Controller_Action
                     $user->save();
                 }
 
+                $adminNotificationData = array('user' => $user);
+                $adminNotificationEmailType = '';
                 if('extension' === $pay_for) {
                     // raise plan for user with 7 days plan
                     $plan = new Application_Model_Plan();
@@ -201,12 +203,28 @@ class PaymentController extends Integration_Controller_Action
                             'action' => 'extensions',
                             'store' => $domain
                     );
+                    $adminNotificationEmailType = 'boughtExtension';
+                    $adminNotificationData['extension'] = $extensionModel;
                 } else {
                     $flash_message = 'You have successfully paid for your plan.';
                     $redirect = array(
                             'controller' => 'my-account',
                             'action' => 'index'
                     );
+                    $adminNotificationEmailType = 'boughtPlan';
+                    $adminNotificationData['plan'] = $plan;
+                }
+                // send admin email
+                if($adminNotificationEmailType) {
+                    $adminNotification = new Integration_Mail_AdminNotification();
+                    $adminNotification->setup($adminNotificationEmailType, $adminNotificationData);
+                    try {
+                        $adminNotification->send();
+                    } catch(Exception $e) {
+                        if($log = $this->getLog()) {
+                            $log->log('Braintree - admin notification email', Zend_Log::DEBUG, $e->getMessage());
+                        }
+                    }
                 }
             } else {
                 // checks braintree errors and marks invalid fields in form, or throws Braintree_Controller_Exception
@@ -653,6 +671,11 @@ class PaymentController extends Integration_Controller_Action
                                             'controller' => 'my-account',
                                             'action' => 'index'
                                     );
+
+                                    $adminNotification = new Integration_Mail_AdminNotification();
+                                    $adminNotificationData = array('user' => $user, 'plan' => $plan, 'amount' => $amount);
+                                    $adminNotification->setup('changedPlan', $adminNotificationData);
+                                    $adminNotification->send();
                                 } else {
                                     $this->_handleResponseErrors($result);
                                     $this->_setParam('pay-for', 'change-plan');
@@ -668,6 +691,10 @@ class PaymentController extends Integration_Controller_Action
                                     'controller' => 'my-account',
                                     'action' => 'compare'
                                 );
+                            } catch(Exception $e) {
+                                if($log = $this->getLog()) {
+                                    $log->log('Braintree - admin notification email', Zend_Log::DEBUG, $e->getMessage());
+                                }
                             }
                         }
                     } else {

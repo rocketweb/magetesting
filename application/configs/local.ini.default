@@ -26,6 +26,30 @@ magento.storeDumpByteLimit = 1073741824
 
 google.analyticsId = ""
 
+; ADMIN EMAIL NOTIFICATION
+adminNotification.from.email = "support@magetesting.com"
+adminNotification.from.desc = "Mage Testing"
+adminNotification.globalEmails[] = "info@rocketweb.com"
+adminNotification.globalEmails[] = "wojtek@rocketweb.com"
+
+adminNotification.userCreated.subject = "New user registered"
+adminNotification.userCreated.template = "user-created.phtml"
+;adminNotification.userCreated.emails[] = "info@rocketweb.com"
+;adminNotification.userCreated.emails[] = "wojtek@rocketweb.com"
+
+adminNotification.boughtPlan.subject = "User bought a plan"
+adminNotification.boughtPlan.template = "bought-plan.phtml"
+
+adminNotification.renewedPlan.subject = "User renewed a plan"
+adminNotification.renewedPlan.template = "renewed-plan.phtml"
+
+adminNotification.boughtExtension.subject = "User bought an extension"
+adminNotification.boughtExtension.template = "bought-extension.phtml"
+
+adminNotification.changedPlan.subject = "User changed a plan"
+adminNotification.changedPlan.template = "changed-plan.phtml"
+; END
+
 user.activationEmail.subject = "Activate your account for magetesting.com"
 user.activationEmail.from.email = "support@magetesting.com"
 user.activationEmail.from.desc = "Mage Testing"

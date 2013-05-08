@@ -39,7 +39,7 @@ class Integration_Mail_ReminderBuyExtension extends Integration_Mail
         $this->view = Zend_Layout::getMvcInstance()->getView();
         $this->view->data = $this->_data;
         
-        $this->view->storeUrl = $this->_config->magento->storeUrl;
+        $this->view->storeUrl = rtrim($this->_config->magento->storeUrl, '/');
     }
     
     protected function _setBody(){
