@@ -276,6 +276,28 @@ class ExtensionController extends Integration_Controller_Action {
                         
                         if($this->_getParam('remove_logo', null)) {
                             @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
+                            @unlink(
+                                $this
+                                    ->view
+                                    ->getHelper('Thumbnail')
+                                    ->getThumbnailPath(
+                                        $old_logo,
+                                        $this->view->ImagePath($old_logo, 'extension/logo', false, false),
+                                        null,
+                                        110
+                                    )
+                            );
+                            @unlink(
+                                $this
+                                    ->view
+                                    ->getHelper('Thumbnail')
+                                    ->getThumbnailPath(
+                                        $old_logo,
+                                        $this->view->ImagePath($old_logo, 'extension/logo', false, false),
+                                        null,
+                                        38
+                                    )
+                            );
                             $extension->setLogo(NULL);
                             $oldLogoRemoved = true;
                         }
