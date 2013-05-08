@@ -1,14 +1,14 @@
-<h3>User 
+<p><b>User 
 <?php
 $url = $this->serverUrl . '/user/detail/id/' . $this->user->getId();
 ?>
 '<a href="<?php echo $url; ?>"><?php echo $this->user->getLogin(); ?></a>'
  changed plan to '<?php echo $this->plan->getName(); ?>'.
-</h3>
+</b></p>
 <?php
 $operation =
     $this->amount < 0
         ? 'refunded $' . ($this->amount * -1)
         : 'charged $' . $this->amount;
 ?>
-Operation: <?php echo $operation;?>
+<p>Operation: <?php echo $operation;?></p>
