@@ -113,12 +113,14 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         }
 
         // order
+        $orders = array('extension_key ASC', 'edition DESC');
         if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
             $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
-            $select_all_extensions_sorted->order($order['column']. ' ' . $direction);
+            array_unshift($orders, $order['column']. ' ' . $direction);
         } else {
-            $select_all_extensions_sorted->order('price DESC');
+            array_unshift($orders, 'price DESC');
         }
+        $select_all_extensions_sorted->order($orders);
 
         $select_all_extensions_sorted->limit($limit, $offset);
 
@@ -167,12 +169,14 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'));
 
         // order
+        $orders = array('extension_key ASC', 'edition DESC');
         if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
             $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
-            $select->order($order['column']. ' ' . $direction);
+            array_unshift($orders, $order['column']. ' ' . $direction);
         } else {
-            $select->order('price DESC');
+            array_unshift($orders, 'price DESC');
         }
+        $select->order($orders);
 
         $select->limit($limit, $offset);
 
