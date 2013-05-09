@@ -1408,7 +1408,7 @@ class QueueController extends Integration_Controller_Action {
                 $file = preg_replace('!\s\s+!', ' ', $file);
 
                 $parts = explode(" ",$file);
-                if (isset($parts[8])){
+                if (isset($parts[8]) && $parts[8]!='.' && $parts[8]!='..'){
                     $filetimes[$parts[8]]= strtotime($parts[5].' '.$parts[6].' '.$parts[7]);
                 }
             }
