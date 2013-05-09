@@ -7,16 +7,20 @@ class Application_Form_UserEdit extends Application_Form_EditAccount
     {
         parent::init();
         
-        
+        $this->setAttrib('label', 'Edit account');
         $this->setAttrib('id', 'user-edit-form');
         $this->removeElement('submit');
         $this->getElement('email')->setAttrib('disabled', null);
-        $this->getElement('country')->setAttrib('required', false);
-        $this->getElement('city')->setAttrib('required', false);
-        $this->getElement('state')->setAttrib('required', false);
-        $this->getElement('postal_code')->setAttrib('required', false);
-        $this->getElement('street')->setAttrib('required', false);
-        
+        $this->getElement('country')->setRequired(false);
+        $this->getElement('city')->setRequired(false);
+        $this->getElement('state')->setRequired(false);
+        $this->getElement('postal_code')->setRequired(false);
+        $this->getElement('street')->setRequired(false);
+
+        $unique = new Zend_Validate_Db_NoRecordExists(array('table' => 'user', 'field' => 'email'));
+        $unique->setMessage('This email is already registered.');
+        $this->email->addValidator($unique);
+
         // Add a server element
         $this->addElement('select', 'server_id', array(
                 'label'      => 'Server',
@@ -37,7 +41,9 @@ class Application_Form_UserEdit extends Application_Form_EditAccount
         $this->submit->removeDecorator('HtmlTag');
         $this->submit->removeDecorator('overall');
         
-        
+        $this->state->removeDecorator('Label');
+        $this->state->removeDecorator('overall');
+        $this->state->removeDecorator('HtmlTag');
 
     }
 
