@@ -29,7 +29,7 @@ resources.frontController.actionHelperPaths.RocketWeb_Controller_Action_Helper =
 
 ; Layout
 resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/"
-resources.view.basePath = APPLICATION_PATH "/views/"
+resources.view[] = 
 
 ;Helpers
 resources.view.helperPath.Integration_View_Helper_Navigation = "Integration/View/Helper/Navigation"
