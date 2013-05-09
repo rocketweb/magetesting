@@ -76,7 +76,10 @@ class MyAccountController extends Integration_Controller_Action
 
             if ($this->_request->isPost()) {
                 $formData = $this->_request->getPost();
-            
+                $state_options = $form->state->getMultiOptions();
+                if('United States' != $formData['country']) {
+                    $form->state->setMultiOptions(array($formData['state'] => $formData['state']));
+                }
                 if($form->isValid($formData)) {
                     $auth = $this->auth->getIdentity();
                     
@@ -110,6 +113,12 @@ class MyAccountController extends Integration_Controller_Action
                         $redirect['action'] = 'compare';
                     }
                     return $this->_helper->redirector->gotoRoute($redirect, 'default', true);
+                } else {
+                    if('United States' != $formData['country']) {
+                        $form->state->setMultiOptions($state_options);
+                    }
+                    $form->login->setValue($user->getLogin());
+                    $form->email->setValue($user->getEmail());
                 }
             }
 
