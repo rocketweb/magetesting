@@ -45,7 +45,9 @@ $(document).ready(function (){
                 $.each(data.result, function(i, file) {
                     if(typeof file.error == "undefined") {
                         if(file.as_logo == 1) {
-                            $logo_container.children().remove();
+                            $remove_logo = $logo_container.children('[name="remove_logo"]');
+                            $logo_container.children().not($remove_logo).remove();
+                            $remove_logo.hide().prop('checked', true).parent().contents().filter(function() { return this.nodeType == 3; }).remove();
                             $logo_container.append(
                                 $('<input type="hidden" name="logo" value="'+file.name+'" />')
                                 .add($('<img src="'+file.url+'" />'))

@@ -68,15 +68,20 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
 //        $parts = pathinfo($path);
         $this->_file_name = $name;
         $this->_image_dir_path = $path;
-        $this->_thumb_dir_path = $this->_image_dir_path . 'thumbs';
+        $this->_thumb_dir_path = str_replace('assets/img/', 'assets/img/thumbs/', $this->_image_dir_path);
         $this->_thumb_file_name = $this->_width . 'x' . $this->_height . '_' . $this->_file_name;
 
         $this->_img_src = $this->view->baseUrl() . $this->_image_dir_path . '/' . $this->_file_name;
         $this->_thumb_src = $this->view->baseUrl() . $this->_thumb_dir_path . '/' . $this->_thumb_file_name;
     }
-    
+    public function getThumbnailPath($name, $path, $width = null, $height = null) {
+        $this->_height = (!is_null($height)) ? (string)$height : '';
+        $this->_width = (!is_null($width)) ? (string)$width : '';
+        $this->_setPaths($name, $path);
+        return $full_thumb_path = rtrim($this->_filesystem_path, '/') . '/' . trim($this->_thumb_dir_path, '/') . '/' . ltrim($this->_thumb_file_name, '/');
+    }
     protected function _generateThumbnail() {
-        $full_thumb_path = $this->_filesystem_path . '/' . $this->_thumb_dir_path . '/' . $this->_thumb_file_name;
+        $full_thumb_path = rtrim($this->_filesystem_path, '/') . '/' . trim($this->_thumb_dir_path, '/') . '/' . ltrim($this->_thumb_file_name, '/');
 
         umask(0);
         //make sure the thumbnail directory exists. 
