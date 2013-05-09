@@ -203,6 +203,14 @@ class Api_StoreController extends Integration_Controller_Action
 
                 $this->_response_object['type'] = 'success';
                 $this->_response_object['message'] = 'Store added to queue';
+                $server = new Application_Model_Server();
+                $server = $server->find($storeModel->getServerId());
+                $this->_response_object['store_frontend_url'] = 
+                    'http://' . $params['username'] . '.' .
+                    $server->getDomain() . '/' . $storeModel->getDomain();
+                $this->_response_object['store_backend_url'] = 
+                    $this->_response_object['store_frontend_url'] . ' / ' .
+                    $storeModel->getBackendName();
             } catch(Exception $e) {
                 if($log = $this->getLog()) {
                     $log->log('Api module add custom store', LOG_ERR, $e->getMessage());
