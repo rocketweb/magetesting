@@ -218,7 +218,6 @@ class Api_StoreController extends Integration_Controller_Action
                 $this->_response_object['message'] = 'Couldn\'t add store';
             }
         } else {
-            var_dump($form->getMessages());die;
             $this->_response_object['message'] = 'Invalid data';
         }
         $this->auth->getStorage()->clear();
