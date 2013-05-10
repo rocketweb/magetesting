@@ -482,14 +482,19 @@ class UserController extends Integration_Controller_Action
         $this->view->users = $paginator;
     }
 
-    public function editAction()
+    public function addAction()
     {
-        
+        $this->editAction('add');
+        $this->render('edit');
+    }
+    public function editAction($type = 'edit')
+    {
+        $user = new Application_Model_User();
         $id = (int) $this->_getParam('id', 0);
-        
         if ($id == $this->auth->getIdentity()->id){
             //its ok to edit
-        } else {
+            $user = $user->find($id);
+        } elseif('edit' == $type) {
             if($this->auth->getIdentity()->group != 'admin'){
                 //you have no right to be here,redirect
                 return $this->_helper->redirector->gotoRoute(array(
@@ -497,20 +502,13 @@ class UserController extends Integration_Controller_Action
                         'controller' => 'user',
                         'action'     => 'dashboard',
                 ), 'default', true);
+            } else {
+                $user = $user->find($id);
             }
         }
-        
-        $user = new Application_Model_User();
-        $user = $user->find($id);
-        $server_model = new Application_Model_Server();
-        $servers = array();
-        $servers[0] = '';
-        foreach($server_model->fetchAll() as $row) {
-            $servers[$row->getId()] = $row->getName();
-        }
 
-        $form = new Application_Form_UserEdit();
-        $form->server_id->setMultiOptions($servers);
+        $form = 'Application_Form_User'.ucfirst($type);
+        $form = new $form();
         $form->populate($user->__toArray());
         
         if(!$user->getState()) {
@@ -522,30 +520,13 @@ class UserController extends Integration_Controller_Action
         }
         
         if ($this->_request->isPost()) {
-            $form->removeElement('login');
-            
-            if(!strlen($this->_request->getParam('street'))) {
-                $form->removeElement('street');
-            }
-            
-            if(!strlen($this->_request->getParam('postal_code'))) {
-                $form->removeElement('postal_code');
-            }
-            
-            if(!strlen($this->_request->getParam('state'))) {
-                $form->removeElement('state');
-            }
-            
-            if(!strlen($this->_request->getParam('city'))) {
-                $form->removeElement('city');
-            }
-            
-            if(!strlen($this->_request->getParam('country'))) {
-                $form->removeElement('country');
-            }
             
             $formData = $this->_request->getPost();
-            if(strlen($this->_request->getParam('password'))) {
+
+            if($user->getEmail() == $formData['email']) {
+                $form->removeElement('email');
+            }
+            if(strlen($this->_request->getParam('password')) || 'add' == $type) {
                 $form->password->setRequired(true);
                 $form->password_repeat->setRequired(true);
             } else {
@@ -558,10 +539,8 @@ class UserController extends Integration_Controller_Action
                 }
                 if(strlen($formData['password'])) {
                     unset($formData['password_repeat']);
-                    $formData['password'] = sha1($formData['password']);
                 }
                 $user->setOptions($formData);
-                
                 $user->save((is_null($user->getPassword())) ? false : true);
 
                 $this->_helper->FlashMessenger('User data has been changed successfully');
@@ -570,6 +549,10 @@ class UserController extends Integration_Controller_Action
                         'controller' => 'user',
                         'action'     => 'list',
                 ), 'default', true);
+            } else {
+                if('edit' == $type) {
+                    $form->login->setValue($user->getLogin());
+                }
             }
         }
         $this->view->form = $form;

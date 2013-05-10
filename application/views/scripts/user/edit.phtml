@@ -1,9 +1,10 @@
 <div class="row">
     <div class="span12">
-        <h1>Edit Account</h1>
+        <h1><?php echo $this->form->getAttrib('label')?></h1>
         <div class="form-box">
 	        <div class="box">
 	           <form
+	               id="<?php echo $this->form->getId() ?>"
 	               enctype="<?php echo $this->form->getEnctype() ?>"
 	               method="<?php echo $this->form->getMethod() ?>"
 	               class="<?php echo $this->form->getAttrib('class') ?>">
@@ -55,8 +56,13 @@
 	        	        </div>
 	        	        <div class="row">
 	        	            <div class="span4">
-	        	                <?php echo $this->form->state; ?>
-	        	            </div>
+                                <div class="control-group">
+                                <label for="state" class="state-label required">State / Province</label>
+                                    <?php echo $this->form->state; ?>
+                                    <input class="input-state span4"type="text" name="state" value="<?php echo $this->form->getValue('state') != 'Select State' ? $this->form->getValue('state') : ''; ?>" style="display: none" />
+    	            
+                                </div>
+                            </div>
 	        	            <div class="span4">
 	        	                <?php echo $this->form->country; ?>
 	        	            </div>
@@ -69,6 +75,9 @@
 	        	        <div class="row">
 	        	            <div class="span4">
 	        	                <?php echo $this->form->server_id; ?>
+	        	            </div>
+	        	            <div class="span4">
+	        	                <?php echo $this->form->status; ?>
 	        	            </div>
 	        	        </div>
 	        	    </fieldset>
