@@ -30,7 +30,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         if (!isset($output[0])){
-            throw new Application_Model_Transport_Exception('Couldn\'t log in with given ftp credentials');
+            throw new Application_Model_Transport_Exception('Couldn\'t log in with given ftp credentials. Please change them to try again.');
         }
         return true;
     }
