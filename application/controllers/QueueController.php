@@ -22,6 +22,7 @@ class QueueController extends Integration_Controller_Action {
         $storeModel = new Application_Model_Store();
 
         $page = (int) $this->_getParam('page', 0);
+        $this->view->page = $page;
         $paginator = $storeModel->getWholeQueue();
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
@@ -516,7 +517,9 @@ class QueueController extends Integration_Controller_Action {
 
         $storeModel = new Application_Model_Store();
         $this->view->store = $store = $storeModel->find($id);
-        
+
+        /* still support to display fields on two statuses */
+        $form = new Application_Form_StoreEdit(in_array($store->getStatus(),array('downloading-magento','error')));
         if ($store->getUserId() == $this->auth->getIdentity()->id) {
             //its ok to edit
         } else {
@@ -527,21 +530,21 @@ class QueueController extends Integration_Controller_Action {
                             'action' => 'dashboard',
                                 ), 'default', true);
             }
+            $form->setAttrib('label', 'Edit Magento Store');
         }
-        
-        /* still support to display fields on two statuses */
-        $form = new Application_Form_StoreEdit(in_array($store->getStatus(),array('downloading-magento','error')));
-        
+
         if (in_array($store->getStatus(),array('downloading-magento','error'))){
             $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-edit-connection.js'), 'text/javascript');
         }
-        
+
+        $user = new Application_Model_user();
+        $user = $user->find($store->getUserId());
         $populate = array_merge(
             $store->__toArray(),
             array(
                 'store_name' => $store->getStoreName(),
                 'backend_password' => $store->getBackendPassword(),
-                'backend_login' => $this->auth->getIdentity()->login,
+                'backend_login' => $user->getLogin(),
                 'custom_pass' => $store->getCustomPass(),
             )
         );
@@ -569,11 +572,21 @@ class QueueController extends Integration_Controller_Action {
                 $store->save();
 
                 $this->_helper->FlashMessenger('Store data has been changed successfully');
-                return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'dashboard',
-                                ), 'default', true);
+                $queue_pagination_index = (int)$this->_getParam('admin-edit', 0);
+                if($queue_pagination_index) {
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'queue',
+                        'action' => 'index',
+                        'page' => $queue_pagination_index
+                    ), 'default', true);
+                } else {
+                    return $this->_helper->redirector->gotoRoute(array(
+                                'module' => 'default',
+                                'controller' => 'user',
+                                'action' => 'dashboard',
+                                    ), 'default', true);
+                }
             }
         }
         

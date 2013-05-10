@@ -14,6 +14,7 @@ class Application_Form_StoreEdit extends Integration_Form{
         // Set the method for the display form to POST
         $this->setMethod('post');
         $this->setAttrib('class', 'form-stacked');
+        $this->setAttrib('label', 'Edit Your Magento Store');
 
         $this->addElement('text', 'store_name', array(
                 'label'      => 'Name',
