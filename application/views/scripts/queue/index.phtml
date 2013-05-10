@@ -1,4 +1,4 @@
-<h1>Queue</h1>
+<h1>Stores</h1>
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -76,10 +76,12 @@
             </td>
             <td>
             <?php if(in_array($item['status'], array('closed','pending','installing'))): ?>
-                <a class="btn btn-success disabled"><i class="icon-white icon-eye-close"></i>&nbsp;Visit</a>
+                <a class="btn btn-success disabled"><i class="icon-white icon-home"></i>&nbsp;View</a>
+                <a class="btn btn-info disabled"><i class="icon-white icon-wrench"></i> Admin</a>
                 <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php else: ?>
-                <a href="<?php echo 'http://'.$item['login'].'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-success"><i class="icon-white icon-eye-open"></i>&nbsp;Visit</a>
+                <a href="<?php echo 'http://'.$item['login'].'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-success" target="_blank"><i class="icon-white icon-home"></i>&nbsp;View</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'login-to-store-backend', 'store' => $item['domain']), 'default', true); ?>" class="btn btn-info"><i class="icon-white icon-wrench"></i> Admin</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger delete-store admin"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php endif;?>
             </td>
