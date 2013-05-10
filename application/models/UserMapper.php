@@ -34,7 +34,9 @@ class Application_Model_UserMapper {
         if (null === ($id = $user->getId())) {
             unset($data['id']);
             unset($data['has_system_account']);
-            unset($data['status']);
+            if(!$data['status']) {
+                unset($data['status']);
+            }
             unset($data['plan_id']);
             unset($data['group']);
             unset($data['downgraded']);
@@ -44,12 +46,14 @@ class Application_Model_UserMapper {
             $data['password'] = sha1($user->getPassword());
             $data['apikey'] = sha1(microtime() . ' ' . $data['login']);
             $server = new Application_Model_Server();
-            $data['server_id'] = $server->fetchMostEmptyServerId();
+            if(!is_numeric($data['server_id'])) {
+                $data['server_id'] = $server->fetchMostEmptyServerId();
+            }
             $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
             if($savePassword) {
-                $data['password'] = $user->getPassword();
+                $data['password'] = sha1($user->getPassword());
             }
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
@@ -90,8 +94,7 @@ class Application_Model_UserMapper {
              ->setPlanIdBeforeRaising($row->plan_id_before_raising)
              ->setHasPapertrailAccount($row->has_papertrail_account)
              ->setPapertrailApiToken($row->papertrail_api_token)
-             ->setPreselectedPlanId($row->preselected_plan_id)
-             ->setApikey($row->apikey);
+             ->setPreselectedPlanId($row->preselected_plan_id);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -136,8 +139,7 @@ class Application_Model_UserMapper {
                   ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
                   ->setHasPapertrailAccount($row->has_papertrail_account)
                   ->setPapertrailApiToken($row->papertrail_api_token)
-                  ->setPreselectedPlanId($row->preselected_plan_id)
-                  ->setApikey($row->apikey);
+                  ->setPreselectedPlanId($row->preselected_plan_id);
 
             $entries[] = $entry;
         }
@@ -265,19 +267,6 @@ class Application_Model_UserMapper {
     public function delete($id)
     {
         $this->getDbTable()->delete($id);
-    }
-
-    public function authenticateApiCall($user, $key, Application_Model_User $object) {
-        $result = $this->getDbTable()->fetchUserByNameAndApikey($user, $key);
-        if($result) {
-            $object->setId($result->id)
-                   ->setServerId($result->server_id)
-                   ->setHasPapertrailAccount($result->has_papertrail_account)
-                   ->setGroup($result->group)
-                   ->setPlanId($result->plan_id);
-            return true;
-        }
-        return false;
     }
   
 }
