@@ -507,16 +507,8 @@ class UserController extends Integration_Controller_Action
             }
         }
 
-        $server_model = new Application_Model_Server();
-        $servers = array();
-        $servers[0] = '';
-        foreach($server_model->fetchAll() as $row) {
-            $servers[$row->getId()] = $row->getName();
-        }
-
         $form = 'Application_Form_User'.ucfirst($type);
         $form = new $form();
-        $form->server_id->setMultiOptions($servers);
         $form->populate($user->__toArray());
         
         if(!$user->getState()) {
