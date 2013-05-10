@@ -1,4 +1,7 @@
-var siteRoot = $('body').data('siteRoot');
+var siteRoot = location.origin;
+$(document).ready(function() {
+    siteRoot = $('body').data('siteRoot');
+});
 /* status auto-update start*/
 //define globals
 var requests = [],
