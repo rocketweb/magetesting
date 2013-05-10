@@ -1,4 +1,4 @@
-<h1>Queue</h1>
+<h1>Stores</h1>
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -43,26 +43,22 @@
             $chunk = strpos($item['status'], '-');
             $chunk = ($chunk === false ? strlen($item['status']) : $chunk);
             switch(substr($item['status'], 0, $chunk)):
-                case 'pending':
-                case 'installing':
-                case 'installing-extension':
-                case 'installing-magento':
-                case 'installing-samples':
-                case 'installing-user':
-                case 'installing-files':
-                case 'installing-date':
+                case 'ready':
+                case 'error':
+                    
+                break;
             ?>
-                <div class="progress progress-striped install-bar active" data-domain="<?php echo $item['domain']; ?>" style="margin-bottom:0px;margin-top:5px;">
+                <span class="label <?php echo $progressClass; ?>"><?php echo ucwords(str_replace('-', ' ', $item['status'])); ?></span>
+            <?php break; default: ?>
+                <div class="progress progress-striped install-bar active" data-domain="<?php echo $item['domain']; ?>" style="margin-bottom:0px;margin-top:5px;" data-status="<?php echo ($item['status']) ?>">
                     <div class="bar" style="width: 100%;">
                     <?php if($item['status'] == 'pending'): ?>
                         In Queue - <?php echo $this->leftTime(Application_Model_Queue::getTimeLeftByUserAndId($item['user_id'],$item['queue_id'])); ?>
                     <?php else: ?>
-                        <?php echo ucwords(str_replace('-', ' ', $item['status'])); ?>
+                        <?php echo $this->NiceStatus($item['status']);; ?>
                     <?php endif; ?>
                     </div>
                 </div>
-            <?php break; default: ?>
-                <span class="label <?php echo $progressClass; ?>"><?php echo ucwords(str_replace('-', ' ', $item['status'])); ?></span>
             <?php endswitch; ?>
             </td>
             <td><?php echo $item['edition']?></td>
@@ -76,10 +72,12 @@
             </td>
             <td>
             <?php if(in_array($item['status'], array('closed','pending','installing'))): ?>
-                <a class="btn btn-success disabled"><i class="icon-white icon-eye-close"></i>&nbsp;Visit</a>
+                <a class="btn btn-success disabled"><i class="icon-white icon-home"></i>&nbsp;View</a>
+                <a class="btn btn-info disabled"><i class="icon-white icon-wrench"></i> Admin</a>
                 <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php else: ?>
-                <a href="<?php echo 'http://'.$item['login'].'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-success"><i class="icon-white icon-eye-open"></i>&nbsp;Visit</a>
+                <a href="<?php echo 'http://'.$item['login'].'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-success" target="_blank"><i class="icon-white icon-home"></i>&nbsp;View</a>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'login-to-store-backend', 'store' => $item['domain']), 'default', true); ?>" class="btn btn-info" target="_blank"><i class="icon-white icon-wrench"></i> Admin</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger delete-store admin"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php endif;?>
             </td>
