@@ -1219,9 +1219,15 @@ class QueueController extends Integration_Controller_Action {
         if (trim($customPort) == ''){
             $customPort = 22;
         }
+        
+        /**
+         * [jan] I had to add erro supression, 
+         * otherwise ajax actions returns errors from these functions 
+         * and cannot display error message
+         */
         $this->_sshStream = @ssh2_connect($this->_customHost,$customPort); 
         if ($this->_sshStream){
-            if (ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
+            if (@ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
             } else {
                 return false;

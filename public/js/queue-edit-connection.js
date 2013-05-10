@@ -62,7 +62,7 @@ $(document).ready(function(){
 
     var $validate_connection = $('.validate-connection-details'),
         $find_sql_file = $find_sql_file = $('.find-sql-file'),
-        $ftp_fields = $('fieldset:eq(1)').find('select, input'),
+        $ftp_fields = $('fieldset:eq(3)').find('select, input'),
         $sql_field = $('#custom_sql'),
         $container = $('#main .container'),
         $remote_path_field = $('#custom_remote_path'),
@@ -108,6 +108,7 @@ $(document).ready(function(){
                 success : function(response) {
                     if(response.status !== undefined) {
                         if(response.message) {
+                            console.log($validate_connection);
                             f_create_flash_message(response.message, response.status, $validate_connection);
                         }
                         if(response.value) {
