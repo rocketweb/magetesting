@@ -34,7 +34,9 @@ class Application_Model_UserMapper {
         if (null === ($id = $user->getId())) {
             unset($data['id']);
             unset($data['has_system_account']);
-            unset($data['status']);
+            if(!$data['status']) {
+                unset($data['status']);
+            }
             unset($data['plan_id']);
             unset($data['group']);
             unset($data['downgraded']);
@@ -43,12 +45,14 @@ class Application_Model_UserMapper {
             $user->setAddedDate($data['added_date']);
             $data['password'] = sha1($user->getPassword());
             $server = new Application_Model_Server();
-            $data['server_id'] = $server->fetchMostEmptyServerId();           
+            if(!is_numeric($data['server_id'])) {
+                $data['server_id'] = $server->fetchMostEmptyServerId();
+            }
             $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
             if($savePassword) {
-                $data['password'] = $user->getPassword();
+                $data['password'] = sha1($user->getPassword());
             }
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }

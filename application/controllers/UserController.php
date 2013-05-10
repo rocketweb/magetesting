@@ -539,13 +539,8 @@ class UserController extends Integration_Controller_Action
                 }
                 if(strlen($formData['password'])) {
                     unset($formData['password_repeat']);
-                    $formData['password'] = sha1($formData['password']);
                 }
                 $user->setOptions($formData);
-                if('add' == $type) {
-                    $user->setStatus('active');
-                }
-                
                 $user->save((is_null($user->getPassword())) ? false : true);
 
                 $this->_helper->FlashMessenger('User data has been changed successfully');
