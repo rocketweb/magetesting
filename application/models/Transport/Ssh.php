@@ -36,7 +36,7 @@ extends Application_Model_Transport {
     public function checkProtocolCredentials(){
 
         if (!$this->_connection){
-            throw new Application_Model_Transport_Exception('Checking ssh credentials failed');
+            throw new Application_Model_Transport_Exception('Couldn\'t log in with given ssh credentials. Please change them to try again.');
         }
         else return true;
     }

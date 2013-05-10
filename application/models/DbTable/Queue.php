@@ -173,4 +173,21 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
         );
         
     }
+    
+    /**
+     * For now only MagentoDownload is supported because it is meant only for it.
+     * @param type $storeId
+     * @return type queue row
+     */
+    public function findMagentoTaskForStore($storeId){
+
+        $select = $this->select()
+                       ->from($this->_name)
+                       ->where($this->_name.'.store_id = ?',$storeId)
+                ->where('task IN (?)',array('MagentoDownload'))
+                       ->order(array($this->_name.'.id ASC', 'parent_id asc'))
+                       ->limit(1);
+
+        return $this->fetchRow($select);
+    }
 }

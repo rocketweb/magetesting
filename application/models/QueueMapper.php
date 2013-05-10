@@ -171,4 +171,27 @@ class Application_Model_QueueMapper {
         
         return $this->getDbTable()->removePendingForStore($storeId);
     }
+    
+    public function findMagentoTaskForStore($storeId){
+        
+        $row = $this->getDbTable()->findMagentoTaskForStore($storeId);
+        
+        if ($row){       
+        $entry = new Application_Model_Queue();
+            $entry->setId($row->id)
+            ->setStoreId($row->store_id)
+            ->setStatus($row->status)
+            ->setUserId($row->user_id)
+            ->setExtensionId($row->extension_id)
+            ->setTask($row->task)
+            ->setTaskParams($row->task_params,false)
+            ->setRetryCount($row->retry_count)
+            ->setServerId($row->server_id)
+            ->setParentId($row->parent_id)
+            ->setAddedDate($row->added_date);
+            return $entry;
+        } else {
+            return false;
+        }
+    }
 }

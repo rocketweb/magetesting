@@ -529,7 +529,12 @@ class QueueController extends Integration_Controller_Action {
             }
         }
         
-        $form = new Application_Form_StoreEdit($store->getStatus() == 'pending');
+        /* still support to display fields on two statuses */
+        $form = new Application_Form_StoreEdit(in_array($store->getStatus(),array('downloading-magento','error')));
+        
+        if (in_array($store->getStatus(),array('downloading-magento','error'))){
+            $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-edit-connection.js'), 'text/javascript');
+        }
         
         $populate = array_merge(
             $store->__toArray(),
@@ -542,11 +547,25 @@ class QueueController extends Integration_Controller_Action {
         );
 
         $form->populate($populate);
-
+        
+        $queueModel = new Application_Model_Queue();
+        $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
         if ($this->_request->isPost()) {
 
             if ($form->isValid($this->_request->getPost())) {
                 $store->setOptions($form->getValues());
+                
+                /* updateQueueItem to try once again if it failed before edit */
+                if ($store->getStatus()=='error'){
+                    $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
+                    $magentoQueueItem->setStatus('pending');
+                    $magentoQueueItem->setRetryCount(0);
+                    $magentoQueueItem->save();
+
+                    /*also update store to reflect change on dashboard*/
+                    $store->setStatus($storeModel->getStatusFromTask($magentoQueueItem->getTask()));
+                }
+
                 $store->save();
 
                 $this->_helper->FlashMessenger('Store data has been changed successfully');
@@ -557,6 +576,20 @@ class QueueController extends Integration_Controller_Action {
                                 ), 'default', true);
             }
         }
+        
+        if($store->getCustomRemotePath()!=''){
+            $this->view->input_radio = 'remote_path';
+        } else {
+            $this->view->input_radio = 'file';
+        }
+        
+        
+        if ($magentoQueueItem){
+            $this->view->has_download_task = true;
+        } else {
+            $this->view->has_download_task = false;
+        }
+        
         $this->view->form = $form;
     }
 
@@ -1158,7 +1191,7 @@ class QueueController extends Integration_Controller_Action {
         
         $this->_ftpStream = @ftp_connect($this->_customHost,(int)$request->getParam('custom_port'),3600); 
         if ($this->_ftpStream){
-            if (ftp_login($this->_ftpStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
+            if (@ftp_login($this->_ftpStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
             } else {
                 return false;
@@ -1188,9 +1221,15 @@ class QueueController extends Integration_Controller_Action {
         if (trim($customPort) == ''){
             $customPort = 22;
         }
+        
+        /**
+         * [jan] I had to add erro supression, 
+         * otherwise ajax actions returns errors from these functions 
+         * and cannot display error message
+         */
         $this->_sshStream = @ssh2_connect($this->_customHost,$customPort); 
         if ($this->_sshStream){
-            if (ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
+            if (@ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
             } else {
                 return false;
