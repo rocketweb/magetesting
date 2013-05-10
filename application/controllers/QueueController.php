@@ -1048,7 +1048,7 @@ class QueueController extends Integration_Controller_Action {
                 $server = $server->find($store->server_id);
             }
         }
-        if($store->id && $this->auth->getIdentity()->id == $store->user_id && $server->getDomain()) {
+        if($store->id && ($this->auth->getIdentity()->id == $store->user_id || 'admin' == $this->auth->getIdentity()->group) && $server->getDomain()) {
             $this->view->item = $store->toArray();
             $this->view->user = $this->auth->getIdentity()->login;
             $this->view->store_url = 'http://' . $this->view->user . '.' . $server->getDomain() . '/' . $domain . '/' . $store->backend_name;
