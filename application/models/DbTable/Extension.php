@@ -183,13 +183,18 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    public function findInstalled($store)
+    public function findInstalled($store, $price_type)
     {
         $select = $this->select()
         ->setIntegrityCheck(false)
                 ->from($this->_name)
                 ->join('store_extension', $this->_name.'.id = store_extension.extension_id')
                 ->where('store_id = ?', $store);
+        if('free' == $price_type) {
+            $select->where('price == 0');
+        } elseif('premium' == $price_type) {
+            $select->where('price > 0');
+        }
 
         return $this->fetchAll($select);
     }

@@ -349,8 +349,8 @@ class Application_Model_Extension {
         }
         return $extensions;
     }
-    public function getInstalledForStore($store) {
-        return $this->getMapper()->getInstalledForStore($store);
+    public function getInstalledForStore($store, $price_type = '*') {
+        return $this->getMapper()->getInstalledForStore($store, $price_type);
     }
     
     public function findByFilters($filters){

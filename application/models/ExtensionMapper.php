@@ -162,9 +162,9 @@ class Application_Model_ExtensionMapper {
         
     }
     
-    public function getInstalledForStore($store){
+    public function getInstalledForStore($store, $price_type = '*'){
         //find extensions that match version and edition
-        $installedExtensions = $this->getDbTable()->findInstalled($store);
+        $installedExtensions = $this->getDbTable()->findInstalled($store, $price_type);
 
         return $installedExtensions;
         

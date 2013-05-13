@@ -174,4 +174,13 @@ class Application_Model_StoreExtension {
             'status' => $this->getStatus()
         );
     }
+
+    public function markAsPaid($paid, $id = 0) {
+        $id = (int)$id ? (int)$id : (int)$this->getId();
+        if(!$id) {
+            return false;
+        }
+        $this->getMapper()->markAsPaid($paid, $id);
+        return true;
+    }
 }
