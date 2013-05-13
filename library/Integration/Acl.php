@@ -42,7 +42,6 @@ class Integration_Acl extends Zend_Acl
         $this->deny('admin', 'default_user', array(
                 'login', 'register'
         ));
-        $this->deny('admin', 'default_my-account');
         $this->deny('admin', 'default_index', 'our-plans');
 
         /**
