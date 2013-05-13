@@ -32,6 +32,23 @@ class Application_Form_UserEdit extends Application_Form_EditAccount
         $this->status->addMultiOptions($status_options);
         $this->status->setValue('active');
 
+        $group_options = array(
+            'admin' => 'admin',
+            'free-user' => 'free-user',
+            'awaiting-user' => 'awaiting-user',
+            'commercial-user' => 'commercial-user'
+        );
+        $this->addElement('select', 'group', array(
+            'label'       => 'Group',
+            'required'    => true,
+            'validators' => array(
+                new Zend_Validate_InArray(array_keys($group_options))
+            ),
+            'class'      => 'span4'
+        ));
+        $this->group->addMultiOptions($group_options);
+        $this->group->setValue('free-user');
+
         $unique = new Zend_Validate_Db_NoRecordExists(array('table' => 'user', 'field' => 'email'));
         $unique->setMessage('This email is already registered.');
         $this->email->addValidator($unique);
