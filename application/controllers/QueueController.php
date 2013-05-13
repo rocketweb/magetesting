@@ -710,8 +710,11 @@ class QueueController extends Integration_Controller_Action {
                 $model = new Application_Model_Store();
                 $model = $model->findByDomain($domain);
             }
-            
-            $this->_response->setBody(Zend_Json_Encoder::encode($model->status));
+            if(is_object($model)) {
+                $this->_response->setBody(Zend_Json_Encoder::encode($model->status));
+            } else {
+                $this->_response->setBody('"error"');
+            }
         } else {
             return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
