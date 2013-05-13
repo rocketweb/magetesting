@@ -32,8 +32,8 @@
                     'controller' => 'user',
                     'action' => 'edit',
                     'id' => $user['id'])); ?>" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>
-            <?php if($user['status']=='deleted' || $user['group']=='admin'): ?>
-                <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
+            <?php if($user['status']=='deleted'): ?>
+                <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
             <?php else: ?>
                     <a href="#user-deletion" role="button" class="btn btn-danger user-remove" data-toggle="modal" data-user-id="<?php echo $user['id']; ?>"><i class="icon-white icon-trash"></i>&nbsp;Remove</a>
             <?php endif;?>

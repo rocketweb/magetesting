@@ -38,7 +38,9 @@ class Application_Model_UserMapper {
                 unset($data['status']);
             }
             unset($data['plan_id']);
-            unset($data['group']);
+            if(!$data['group']) {
+                unset($data['group']);
+            }
             unset($data['downgraded']);
             unset($data['braintree_transaction_confirmed']);
             $data['added_date'] = date('Y-m-d H:i:s');
