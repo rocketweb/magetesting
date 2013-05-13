@@ -9,7 +9,7 @@ class Integration_Acl extends Zend_Acl
     public function __construct()
     {
         /**
-         * Set up rolesz
+         * Set up roles
          */
         $this->addRole(new Zend_Acl_Role('guest'))
         ->addRole(new Zend_Acl_Role('free-user'))
@@ -29,10 +29,11 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_extensions'));
         $this->add(new Zend_Acl_Resource('default_my-account'));
         $this->add(new Zend_Acl_Resource('default_coupon'));
+        $this->add(new Zend_Acl_Resource('default_help'));
         $this->add(new Zend_Acl_Resource('default_plan'));
         $this->add(new Zend_Acl_Resource('default_payment'));
         /**
-         * Deny for all (we use white list)
+		 * Deny for all (we use white list)
          */
         $this->deny();
 
@@ -60,6 +61,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('guest', 'default_user', array(
                 'login', 'password-recovery', 'register', 'activate', 'reset-password', 'set-new-password'
         ));
+        $this->allow('guest','default_help',array('index','category','page'));
 
         /**
          * Set up privileges for free-user
@@ -76,7 +78,8 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'default_my-account');
 
         $this->allow('free-user', 'default_payment', array('payment', 'change-plan'));
-
+        $this->allow('free-user','default_help',array('index','category','page'));
+        
         /**
          * Set up privileges for commercial-user
          */
@@ -94,7 +97,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('commercial-user', 'default_my-account');
         $this->allow('commercial-user', 'default_payment', array('payment', 'change-plan'));
-        
+        $this->allow('commercial-user','default_help',array('index','category','page'));
         /**
          * Set up privileges for awaiting-user
          */
@@ -112,7 +115,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('awaiting-user', 'default_my-account');
         $this->allow('awaiting-user', 'default_payment', array('payment', 'change-plan'));
-        
+        $this->allow('awaiting-user','default_help',array('index','category','page'));
     }
 
     /**
@@ -128,6 +131,7 @@ class Integration_Acl extends Zend_Acl
         if (is_null($role)) {
             $role = 'guest';
         }
+
 
         return parent::isAllowed($role, $resource, $privilege);
     }

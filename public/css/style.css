@@ -1773,6 +1773,69 @@ div.form-box div.tab-stripe.tab-stripe-outside {
 div.form-box div.form-actions {
     padding: 20px 20px 0 20px;
 }
+
+div.help div.help-main {
+    margin-left: 0;
+}
+div.help div.help-side {
+    margin-top: 10px;
+}
+div.help div.help-side div.well {
+    background-color: #FAFAFA;
+}
+div.help div.help-side div.well {
+    -webkit-box-shadow: 0 8px 6px -6px #888888;
+    -moz-box-shadow: 0 8px 6px -6px #888888;
+    box-shadow: 0 8px 6px -6px #888888;
+}
+div.help div.help-side div.well ul.nav.nav-list li.nav-header {
+    color: #F64135;
+}
+
+div.help div.help-side .nav-list > .active > a,
+div.help div.help-side .nav-list > .active > a:hover {
+    background-color: #34aae5;
+}
+
+div.help div.form-box div.box h3 {
+    padding: 10px 0;
+    border: 0;
+    font-family: "pragmatica-web-condensed",Helvetica,Arial,sans-serif;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 24px;
+}
+div.help div.form-box div.box h3 a {
+    text-decoration: underline;
+}
+div.help div.form-box div.box ul {
+    margin-bottom: 20px;
+    margin-left: 0;
+}
+div.help div.form-box div.box ul li {
+    margin: 10px 20px 10px 12px;
+}
+div.help div.form-box div.box ul li:last-of-type {
+    margin-bottom: 25px;
+}
+div.help div.form-box div.content p {
+    margin: 12px 25px;
+}
+div.help div.form-box div.content p:last-of-type {
+    margin-bottom: 37px;
+}
+ul.help-breadcrumb {
+    background-color: #FAFAFA;
+}
+ul.help-breadcrumb li a {
+    color: #34aae5;
+    text-decoration: underline;
+}
+ul.help-breadcrumb li span.divider {
+    color: #F64135;
+}
+
 form#payment-form fieldset h3{
     margin-top: 0;
 }
@@ -2511,6 +2574,17 @@ form#extension-filter-form {
     div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
        width: 64%;
     }
+    
+    div.help div.help-side.pull-right {
+        float: none;
+    }
+    div.help div.form-box div.box h3 {
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+    div.help div.form-box div.box ul li {
+        margin: 10px 20px 20px 38px;
+    }
 }
 
 @media only screen and (max-width: 480px) {
@@ -2751,7 +2825,7 @@ form#extension-filter-form {
         padding: 10px 0;
     }
     div.form-box.custom-info div.box fieldset.custom-files .alert-info {
-    	float: left;
+        float: left;
         margin-left: 12px;
         padding-right: 0;
         width: 80%;
@@ -2896,9 +2970,9 @@ form#extension-filter-form {
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width: 348px) {
-	.hidden-phone-portrait {
-	    display: none;
-	}
+    .hidden-phone-portrait {
+        display: none;
+    }
     
     .logo {
         width: 71%;
@@ -3366,6 +3440,15 @@ label.error {
 /*fix db revert radio buttons on edit store page*/
 .db-revert-row .radio{
     width:1.3em;
+}
+
+/*help pages*/
+#help-index h3{ 
+margin-left:20px; 
+}
+
+#help-index ul{ 
+list-style:none; 
 }
 
 .user-details .dl-horizontal dd {
