@@ -525,10 +525,10 @@ class QueueController extends Integration_Controller_Action {
         } else {
             if ($this->auth->getIdentity()->group != 'admin') {
                 return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'dashboard',
-                                ), 'default', true);
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+                ), 'default', true);
             }
             $form->setAttrib('label', 'Edit Magento Store');
         }
@@ -550,14 +550,14 @@ class QueueController extends Integration_Controller_Action {
         );
 
         $form->populate($populate);
-        
+
         $queueModel = new Application_Model_Queue();
         $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
         if ($this->_request->isPost()) {
 
             if ($form->isValid($this->_request->getPost())) {
                 $store->setOptions($form->getValues());
-                
+
                 /* updateQueueItem to try once again if it failed before edit */
                 if ($store->getStatus()=='error'){
                     $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
@@ -582,28 +582,56 @@ class QueueController extends Integration_Controller_Action {
                     ), 'default', true);
                 } else {
                     return $this->_helper->redirector->gotoRoute(array(
-                                'module' => 'default',
-                                'controller' => 'user',
-                                'action' => 'dashboard',
-                                    ), 'default', true);
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard',
+                    ), 'default', true);
                 }
             }
         }
-        
+
         if($store->getCustomRemotePath()!=''){
             $this->view->input_radio = 'remote_path';
         } else {
             $this->view->input_radio = 'file';
         }
-        
-        
+
+
         if ($magentoQueueItem){
             $this->view->has_download_task = true;
         } else {
             $this->view->has_download_task = false;
         }
-        
+
+
+        $this->view->render_extension_grid = false;
+        if('admin' == $this->auth->getIdentity()->group) {
+            $this->view->render_extension_grid = true;
+            $extensions = new Application_Model_Extension();
+            $this->view->extensions = $extensions->getInstalledForStore($store->getId(), 'premium');
+        }
+
         $this->view->form = $form;
+    }
+
+    public function setPaymentForExtensionAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $store_extension_id = (int)$this->_getParam('store_extension_id', 0);
+        $paid = (int)$this->_getParam('payment', 0);
+        if($store_extension_id > 0 && $this->getRequest()->isPost()) {
+            $storeExtension = new Application_Model_StoreExtension();
+            $storeExtension->markAsPaid($paid, $store_extension_id);
+            $this->getResponse()->setBody('done');
+        } else {
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
     }
 
     public function extensionsAction() {

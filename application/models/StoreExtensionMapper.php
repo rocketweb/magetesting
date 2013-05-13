@@ -106,4 +106,22 @@ class Application_Model_StoreExtensionMapper{
 
         return $storeExtension;
     }
+
+    public function markAsPaid($paid, $id) {
+        $data = array();
+        if($paid) {
+            $data = array(
+                'braintree_transaction_id' => -1,
+                'braintree_transaction_confirmed' => 1
+            );
+        } else {
+            $data = array(
+                'braintree_transaction_id' => new Zend_Db_Expr('NULL'),
+                'braintree_transaction_confirmed' => new Zend_Db_Expr('NULL')
+            );
+        }
+        if((int)$id) {
+            $this->getDbTable()->update($data, array('id = ?' => $id));
+        }
+    }
 }
