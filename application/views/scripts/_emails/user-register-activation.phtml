@@ -1,26 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <?php echo $this->render('_emails/_templates/css.phtml'); ?>
-    </head>
-    <body>
-        <div id="mt_email">
-            <?php echo $this->render('_emails/_templates/header.phtml'); ?>
+<?php echo $this->render('_emails/_templates/email_top.phtml'); ?>
+    <p style="margin-bottom: 20px; padding: 0 20px;"><span class="greeting" style="color: #F64135; font-size: 24px; font-weight: bold;">Hi,</span></p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">Thanks for registering with Mage Testing!</p>
 
-            <div id="mt_email_content">
-                <div class="box">
-                    <div class="tab-stripe"></div>
-					<p><span class="greeting">Hi,</span></p>
-                    <p>Thanks for registering with Mage Testing!</p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">Please click this link to confirm your registration so you can start setting up your site:</p>
 
-					<p>Please click this link to confirm your registration so you can start setting up your site:</p>
+    <p style="margin-bottom: 20px; padding: 0 20px;"><a href="<?php echo $this->activationLink; ?>"><?php echo $this->activationLink; ?></a></p>
 
-					<p><a href="<?php echo $this->activationLink; ?>"><?php echo $this->activationLink; ?></a></p>
-
-					<?php echo $this->render('_emails/_templates/footer.phtml'); ?>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
+<?php echo $this->render('_emails/_templates/email_bottom.phtml'); ?>
