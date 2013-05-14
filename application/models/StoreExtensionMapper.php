@@ -91,9 +91,9 @@ class Application_Model_StoreExtensionMapper{
     public function fetchStoreExtension($store_id, $extension_id, Application_Model_StoreExtension $storeExtension) {
         $result = $this->getDbTable()->fetchStoreExtension($store_id, $extension_id);
         if (0 == count($result)) {
-            return;
+            return $storeExtension;
         }
-        $row = $result->current();       
+        $row = $result->current();
         
         $storeExtension->setId($row->id)
             ->setStoreId($row->store_id)
