@@ -17,8 +17,8 @@ class HelpController extends Integration_Controller_Action
     {
         $request = $this->getRequest();
         $category = $request->getParam('category');
-
-        if (file_exists(APPLICATION_PATH . '/views/scripts/help/' . $category . '/' . $page)) {
+        
+        if (file_exists(APPLICATION_PATH . '/views/scripts/help/' . $category . '.phtml')) {
             $this->renderScript('help/' . $category . '.phtml');
         }
     }
@@ -31,7 +31,7 @@ class HelpController extends Integration_Controller_Action
 
         if (file_exists(APPLICATION_PATH . '/views/scripts/help/' . $category . '/' . $page.'.phtml')) {
             $this->renderScript('help/' . $category . '/' . $page . '.phtml');
-        }
+        } 
     }
     
 }
