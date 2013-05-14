@@ -1,15 +1,15 @@
 <?php echo $this->render('_emails/_templates/email_top.phtml'); ?>
 
-    <p><span class="greeting" style="color: #F64135; font-size: 24px; font-weight: bold;">Hi <?php $v = current($this->data); echo $v['firstname']; ?>,</span></p>
+    <p style="margin-bottom: 20px; padding: 0 20px;"><span class="greeting" style="color: #F64135; font-size: 24px; font-weight: bold;">Hi <?php $v = current($this->data); echo $v['firstname']; ?>,</span></p>
 
-    <p>Thanks for installing a new extension!  We hope this meets the needs for your store.  Please be sure to thoroughly test this extension and check the Papertrail web based log files to make sure there are no new errors.</p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">Thanks for installing a new extension!  We hope this meets the needs for your store.  Please be sure to thoroughly test this extension and check the Papertrail web based log files to make sure there are no new errors.</p>
 
-    <p>Once you purchase this extension you will have access to the code for any changes you would like to make before putting the extension on your live store.</p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">Once you purchase this extension you will have access to the code for any changes you would like to make before putting the extension on your live store.</p>
 
-    <p>Please click the link(s) below to make a purchase.</p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">Please click the link(s) below to make a purchase.</p>
 
     <?php foreach($this->data as $record): $record = (object)$record; ?>
-        <p><a href="<?php echo $record->url ?>/braintree/payment/pay-for/extension/source/extension/domain/<?php echo $record->domain ?>/id/<?php echo $record->extension_id ?>">Buy <?php echo $record->name ?> extension</a></p>
+        <p style="margin-bottom: 20px; padding: 0 20px;"><a href="<?php echo $record->url ?>/braintree/payment/pay-for/extension/source/extension/domain/<?php echo $record->domain ?>/id/<?php echo $record->extension_id ?>">Buy <?php echo $record->name ?> extension</a></p>
     <?php endforeach; ?>
 
 <?php echo $this->render('_emails/_templates/email_bottom.phtml'); ?>

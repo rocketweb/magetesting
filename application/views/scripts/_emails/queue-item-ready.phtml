@@ -1,22 +1,22 @@
 <?php echo $this->render('_emails/_templates/email_top.phtml'); ?>
 
-    <p><span class="greeting" style="color: #F64135; font-size: 24px; font-weight: bold;">Hi,</span></p>
+    <p style="margin-bottom: 20px; padding: 0 20px;"><span class="greeting" style="color: #F64135; font-size: 24px; font-weight: bold;">Hi,</span></p>
 
-    <p>Your Magento store on Mage Testing is ready to use!</p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">Your Magento store on Mage Testing is ready to use!</p>
 
-    <p>You can view the customer side of the site here:</p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">You can view the customer side of the site here:</p>
 
-    <p><a href="<?php echo $this->installedUrl.'/'.$this->domain; ?>">
+    <p style="margin-bottom: 20px; padding: 0 20px;"><a href="<?php echo $this->installedUrl.'/'.$this->domain; ?>">
         <?php echo $this->installedUrl.'/'.$this->domain; ?>
     </a></p>
 
-    <p>Or login to the administrator here:</p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">Or login to the administrator here:</p>
 
-    <p><a href="<?php echo $this->installedUrl.'/'.$this->domain. '/' . $this->backend_name . '/'; ?>">
+    <p style="margin-bottom: 20px; padding: 0 20px;"><a href="<?php echo $this->installedUrl.'/'.$this->domain. '/' . $this->backend_name . '/'; ?>">
         <?php echo $this->installedUrl.'/'.$this->domain . '/' . $this->backend_name . '/'; ?>
     </a></p>
 
-    <p>
+    <p style="margin-bottom: 20px; padding: 0 20px;">
     Your admin store login: <?php echo $this->admin_login ?><br>
     Your admin store password: <?php echo $this->admin_password ?>
     </p>
