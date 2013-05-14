@@ -109,19 +109,97 @@ class Application_Model_StoreExtensionMapper{
 
     public function markAsPaid($paid, $id) {
         $data = array();
-        if($paid) {
-            $data = array(
-                'braintree_transaction_id' => -1,
-                'braintree_transaction_confirmed' => 1
-            );
-        } else {
-            $data = array(
-                'braintree_transaction_id' => new Zend_Db_Expr('NULL'),
-                'braintree_transaction_confirmed' => new Zend_Db_Expr('NULL')
-            );
-        }
         if((int)$id) {
+            if($paid) {
+                $data = array(
+                    'braintree_transaction_id' => -1,
+                    'braintree_transaction_confirmed' => 1
+                );
+
+                // add OpenSource task
+                $store_extension = new Application_Model_StoreExtension();
+                $store_extension->find($id);
+                $store = new Application_Model_Store();
+                $store->find($store_extension->getStoreId());
+                $extensionModel = new Application_Model_Extension();
+                $extensionModel->find($store_extension->getExtensionId());
+
+                $queueModel = new Application_Model_Queue();
+                if(!$queueModel->alreadyExists('ExtensionOpensource', $store->getId(), $extensionModel->getId(), $store->getServerId())) {
+                    $queueModel->setStoreId($store->getId());
+                    $queueModel->setTask('ExtensionOpensource');
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($store->getUserId());
+                    $queueModel->setServerId($store->getServerId());
+                    $queueModel->setExtensionId($store_extension->getExtensionId());
+                    $queueModel->setParentId(0);
+                    $queueModel->save();
+                    $opensourceId = $queueModel->getId();
+                    unset($queueModel);
+                    
+                    $queueModel = new Application_Model_Queue();
+                    $queueModel->setStoreId($store->getId());
+                    $queueModel->setTask('RevisionCommit');
+                    $queueModel->setTaskParams(
+                            array(
+                                'commit_comment' => $extensionModel->getName() . ' (Open Source)',
+                                'commit_type' => 'extension-decode'
+                            )
+                    );
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($store->getUserId());
+                    $queueModel->setServerId($store->getServerId());
+                    $queueModel->setExtensionId($store_extension->getExtensionId());
+                    $queueModel->setParentId($opensourceId);
+                    $queueModel->save();
+                } else {
+                    return false;
+                }
+            } else {
+                $data = array(
+                    'braintree_transaction_id' => new Zend_Db_Expr('NULL'),
+                    'braintree_transaction_confirmed' => new Zend_Db_Expr('NULL')
+                );
+
+                // add rollback revision task
+                $store_extension = new Application_Model_StoreExtension();
+                $store_extension->find($id);
+                $store = new Application_Model_Store();
+                $store->find($store_extension->getStoreId());
+                $extensionModel = new Application_Model_Extension();
+                $extensionModel->find($store_extension->getExtensionId());
+
+                $queueModel = new Application_Model_Queue();
+                $revisionModel = new Application_Model_Revision();
+                $revisionModel->getLastForStore($store->getId());
+                if(
+                    $revisionModel->getExtensionId() == $store_extension->getExtensionId()
+                    && 'extension-decode' == $revisionModel->getType()
+                    && !$queueModel->alreadyExists('RevisionRollback', $store->getId(), $extensionModel->getId(), $store->getServerId())
+                ) {
+                    $queueModel->setStoreId($store->getId());
+                    $queueModel->setStatus('pending');
+                    $queueModel->setUserId($store->getUserId());
+                    $queueModel->setExtensionId($extensionModel->getId());
+                    $queueModel->setParentId(0);
+                    $queueModel->setServerId($store->getServerId());
+                    $queueModel->setTask('RevisionRollback');
+                    $queueModel->setTaskParams(
+                            array(
+                                'rollback_files_to' => $revisionModel->getHash(),
+                                'rollback_db_to' => $revisionModel->getDbBeforeRevision(),
+                            )
+                    
+                    );
+                    $queueModel->save();
+
+                    $store->setStatus('rolling-back-revision')->save();
+                } else {
+                    return false;
+                }
+            }
             $this->getDbTable()->update($data, array('id = ?' => $id));
+            return true;
         }
     }
 }

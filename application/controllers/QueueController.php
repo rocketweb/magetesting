@@ -623,8 +623,15 @@ class QueueController extends Integration_Controller_Action {
         $paid = (int)$this->_getParam('payment', 0);
         if($store_extension_id > 0 && $this->getRequest()->isPost()) {
             $storeExtension = new Application_Model_StoreExtension();
-            $storeExtension->markAsPaid($paid, $store_extension_id);
-            $this->getResponse()->setBody('done');
+            try {
+                $storeExtension->markAsPaid($paid, $store_extension_id);
+                $this->getResponse()->setBody('done');
+            } catch(Exception $e) {
+                if ($log = $this->getLog()) {
+                    $log->log('Set extension payment- ', LOG_ERR, $e->getMessage());
+                }
+                $this->getResponse()->setBody('error');
+            }
         } else {
             return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
