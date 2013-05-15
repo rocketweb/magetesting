@@ -165,7 +165,7 @@ class UserController extends Integration_Controller_Action
 
         if($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
-                $user->setPassword(sha1($form->password->getValue()));
+                $user->setPassword($form->password->getValue());
                 $user->save(true);
                 $this->_helper->flashMessenger(array(
                         'type'    => 'success',
