@@ -55,7 +55,9 @@ class Application_Model_UserMapper {
         } else {
             unset($data['added_date']);
             if($savePassword) {
-                $data['password'] = sha1($user->getPassword());
+                $user->setPassword(
+                    $data['password'] = sha1($user->getPassword())
+                );
             }
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
@@ -211,7 +213,7 @@ class Application_Model_UserMapper {
         $newPassword = '';
         if($row) {
             $userObject->setOptions($row->toArray());
-            $newPassword = sha1(time().$userObject->getLogin().$userObject->getId());
+            $newPassword = time().$userObject->getLogin().$userObject->getId();
             $userObject->setPassword($newPassword);
             $userObject->save(true);
         }
