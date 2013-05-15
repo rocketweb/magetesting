@@ -884,6 +884,7 @@ footer .links a {
 }
 .accordion-group .accordion-heading .accordion-toggle .left-content {
     width: 70%;
+    position: absolute;
 }
 .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
     overflow: hidden;
@@ -897,6 +898,7 @@ footer .links a {
 }
 .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
     display: block;
+    width: 100%;
 }
 .accordion-group .accordion-heading .accordion-toggle .arrow {
     margin-right: 4px;
@@ -922,16 +924,20 @@ footer .links a {
     color: #f64135;
     font-size: 11px;
     text-transform: none;
+    text-align: right;
     display: block;
-    width: 430px;
+    clear: right;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     padding-top: 4px;
 }
-.accordion-group .accordion-heading .accordion-toggle .in-use .popover {
-    font-size: 14px;
+.accordion-group.mt_shadow .accordion-heading .accordion-toggle .pending {
+    text-overflow: clip;
+    white-space: normal
 }
+
 .accordion-group .accordion-body.collapse {
     clear: both;
 }
@@ -2197,9 +2203,6 @@ form#extension-filter-form {
     div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
        width: 64%;
     }
-    .accordion-group .accordion-heading .accordion-toggle .pending {
-        width: 330px;
-    }
 }
 @media (max-width: 767px) {
     h1.pull-left {
@@ -2379,13 +2382,13 @@ form#extension-filter-form {
         width: 26%;
     }
     .accordion-group .accordion-heading .accordion-toggle .left-content {
+        position: absolute;
         width: 100%;
     }
     .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
         font-size: 14px;
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content {
-        position: absolute;
         margin-top: 32px;
     }
     /*.accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
@@ -2394,7 +2397,6 @@ form#extension-filter-form {
     .accordion-group .accordion-heading .accordion-toggle .pending {
         float: right;
         clear: right;
-        width: 90%;
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
         width: 230px;
@@ -2486,7 +2488,6 @@ form#extension-filter-form {
         margin-top: 0;
         width:auto;
         right: 0;
-        margin-right: 20px;
     }
     
     /* Add custom store - radio input fix */
@@ -2737,8 +2738,7 @@ form#extension-filter-form {
     }
     /* fix for close button when error during installation occured */
     .accordion-group .accordion-heading .accordion-toggle .right-content {
-        margin-top: 32px;
-        position: absolute;
+        margin-top: 30px;
         margin-right: 0;
     }
     .accordion-group .accordion-heading .accordion-toggle .in-use.error-bar,
@@ -2746,12 +2746,17 @@ form#extension-filter-form {
         /*max-width: 100%; */
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right {
-        float: none;
+        float: right;
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
-        display: none;
     }
     
+    .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
+        display: none;
+    }
+    .accordion-group.mt_shadow .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
+        display: block;
+    }
     .accordion-group.mt_shadow .accordion-heading {
         height: 110px;
     }
@@ -2899,10 +2904,7 @@ form#extension-filter-form {
     
     /* fix for close button when error during installation occured */
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
-        width: 310px;
-    }
-    .accordion-group .accordion-heading .accordion-toggle .pending {
-        max-width: 360px;
+        width: 300px;
     }
     
     /* Add custom store - radio input fix */
@@ -2914,10 +2916,6 @@ form#extension-filter-form {
        width: 51%;
    }
    
-   .accordion-group .accordion-heading .accordion-toggle .pending {
-       width: 320px;
-       white-space: normal;
-   }
 }
 
 /* Smartphones (portrait) ----------- */

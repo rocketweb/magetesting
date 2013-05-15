@@ -99,7 +99,10 @@
                            default:
                                $progressClass = 'progress-info';
                         endswitch;
-                    ?>
+                    ?>  <div class="left-content">
+                            <div class="arrow pull-left"><i class="icon icon-chevron-down icon-blue"></i></div>
+                            <div class="store-name"><?php echo $this->escape($item['store_name']) ?></div>
+                        </div>      
                         <div class="right-content pull-right inactive">
                             <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
                             <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
@@ -137,10 +140,6 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="left-content">
-                            <div class="arrow pull-left"><i class="icon icon-chevron-down icon-blue"></i></div>
-                            <div class="store-name"><?php echo $this->escape($item['store_name']) ?></div>
                         </div>
                         <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                         <input type="hidden" class="queueval" value="<?php echo $this->escape($item['queue_id']) ?>" />
