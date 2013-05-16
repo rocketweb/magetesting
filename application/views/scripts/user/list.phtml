@@ -10,6 +10,7 @@
     <thead>
         <tr>
             <th>User</th>
+            <th>Group</th>
             <th>Status</th>
             <th>First Name</th>
             <th>Last Name</th>
@@ -22,6 +23,7 @@
         <?php foreach($this->users as $user): ?>
         <tr>
             <td><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'detail', 'id' => $user['id'])); ?>"><?php echo $user['login']; ?></a></td>
+            <td><?php echo $user['group']; ?></td>
             <td><?php echo $user['status']; ?></td>
             <td><?php echo $user['firstname']; ?></td>
             <td><?php echo $user['lastname']; ?></td>
