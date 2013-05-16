@@ -199,7 +199,7 @@ class PaymentController extends Integration_Controller_Action
                     $queueModel->save();
 
                     $storeModel = new Application_Model_Store();
-                    $storeModel->setOptions((array)$store);
+                    $storeModel = $storeModel->find($store->id);
                     $storeModel->setStatus('installing-extension')->save();
 
                     $flash_message = 'You have successfully bought extension. It will be uploaded in open source.';
