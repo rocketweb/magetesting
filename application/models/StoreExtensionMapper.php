@@ -152,6 +152,8 @@ class Application_Model_StoreExtensionMapper{
                     $queueModel->setExtensionId($store_extension->getExtensionId());
                     $queueModel->setParentId($opensourceId);
                     $queueModel->save();
+
+                    $store->setStatus('installing-extension')->save();
                 } else {
                     return false;
                 }
