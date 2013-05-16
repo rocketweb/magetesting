@@ -1044,9 +1044,9 @@ class QueueController extends Integration_Controller_Action {
             $store->user_id == $this->auth->getIdentity()->id
         ) {
             $model = new Application_Model_Revision();
-            //var_dump($model->getAllForStore($store->id)->toArray());die;
             $deployment_list = $model->getAllForStore($store->id);
             foreach($deployment_list as $revision) {
+                var_dump($revision->toArray());
                 if($revision['type']=='magento-init'){
                     continue;
                 }
@@ -1064,7 +1064,7 @@ class QueueController extends Integration_Controller_Action {
                     // and do not display old revision if open source exists
                     if(!preg_match('/\(Open Source\)\s*$/', $revision['comment'])) {
                         $open_source = false;
-                        foreach($deployment_list as $deployment) {
+                        foreach(clone $deployment_list as $deployment) {
                             if($deployment['extension_id'] == $revision['extension_id']
                                && $deployment['id'] != $revision['id']
                                && preg_match('/\(Open Source\)\s*$/', $deployment['comment'])
