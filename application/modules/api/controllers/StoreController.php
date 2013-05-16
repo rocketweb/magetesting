@@ -7,11 +7,30 @@ class Api_StoreController extends Integration_Controller_Action
             'message' => 'Wrong REST api call'
     );
 
+    protected $_map_api_keys = array(
+        'name'         => 'store_name',
+        'host'         => 'custom_host',
+        'login'        => 'custom_login',
+        'password'     => 'custom_pass',
+        'path_sql'     => 'custom_sql',
+        'path_store'   => 'custom_remote_path',
+        'path_backup'  => 'custom_file',
+        'port'         => 'custom_port',
+        'protocol'     => 'custom_protocol'
+    );
+    protected $_map_form_keys = array();
+
     public function init()
     {
         parent::init();
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
+
+        $this->_map_form_keys = 
+            array_combine(
+                array_values($this->_map_api_keys),
+                array_keys($this->_map_api_keys)
+            );
     }
 
     public function indexAction()
@@ -51,7 +70,7 @@ class Api_StoreController extends Integration_Controller_Action
     {
         $authenticated = $userObject->authenticateApiCall($username, $apikey);
         if(!$authenticated) {
-            $this->_response_object['message'] = 'Wrong username or apikey';
+            $this->_response_object['message'] = 'Username or apikey is invalid.';
         }
         return $authenticated;
     }
@@ -74,7 +93,7 @@ class Api_StoreController extends Integration_Controller_Action
             $storeModel = new Application_Model_Store();
             $userStores = $storeModel->countUserStores($userObject->getId());
             if($userStores >= $maxStores) {
-                $this->_response_object['message'] = 'Reached store limit';
+                $this->_response_object['message'] = 'You have reached number of stores limit, please remove any store in Mage Testing and try again.';
                 return true;
             }
         }
@@ -86,7 +105,7 @@ class Api_StoreController extends Integration_Controller_Action
         $form = new Application_Form_StoreAddCustom();
 
         // change api field names to add-custom form fields
-        $params = $this->_mapAddStoreFormFields($this->_getAllParams());
+        $params = $this->_mapApiKeys($this->_getAllParams());
 
         // set custom_file as required field
         $form->custom_remote_path->setRequired(false);
@@ -193,7 +212,7 @@ class Api_StoreController extends Integration_Controller_Action
                 $queueModel->save();
 
                 $this->_response_object['type'] = 'success';
-                $this->_response_object['message'] = 'Store added to queue';
+                $this->_response_object['message'] = 'Store has been added successfully, you will receive e-mail confirmaton when import is complete.';
                 $server = new Application_Model_Server();
                 $server = $server->find($storeModel->getServerId());
                 $this->_response_object['store_frontend_url'] = 
@@ -206,31 +225,37 @@ class Api_StoreController extends Integration_Controller_Action
                 if($log = $this->getLog()) {
                     $log->log('Api module add custom store', LOG_ERR, $e->getMessage());
                 }
-                $this->_response_object['message'] = 'Couldn\'t add store';
+                $this->_response_object['message'] = 'There was a problem adding store, please contact with our support team.';
             }
         } else {
-            $this->_response_object['message'] = 'Invalid data';
+            $fields = $form->getMessages();
+            if(!$fields) { $fields == array(); }
+            $fields = $this->_mapFormKeys($fields);
+            $fields = array_keys($fields);
+            if(!$fields) { $fields == array(); }
+            $this->_response_object['message'] = 'Following field values are invalid: '. implode(', ',$fields).'. Please fix them and try again.';
         }
         $this->auth->getStorage()->clear();
     }
 
-    protected function _mapAddStoreFormFields($array)
+    protected function _mapApiKeys($array)
     {
-        $map = array(
-            'name'         => 'store_name',
-            'host'         => 'custom_host',
-            'login'        => 'custom_login',
-            'password'     => 'custom_pass',
-            'path_sql'     => 'custom_sql',
-            'path_store'   => 'custom_remote_path',
-            'path_backup'  => 'custom_file',
-            'port'         => 'custom_port',
-            'protocol'     => 'custom_protocol'
-        );
         $mapped_array = array();
         foreach($array as $key => $value) {
-            if(isset($map[$key])) {
-                $mapped_array[$map[$key]] = $value;
+            if(isset($this->_map_api_keys[$key])) {
+                $mapped_array[$this->_map_api_keys[$key]] = $value;
+            } else {
+                $mapped_array[$key] = $value;
+            }
+        }
+        return $mapped_array;
+    }
+    protected function _mapFormKeys($array)
+    {
+        $mapped_array = array();
+        foreach($array as $key => $value) {
+            if(isset($this->_map_form_keys[$key])) {
+                $mapped_array[$this->_map_form_keys[$key]] = $value;
             } else {
                 $mapped_array[$key] = $value;
             }
