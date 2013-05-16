@@ -881,6 +881,7 @@ footer .links a {
     background: #e5e5e5;
 }
 .accordion-group .accordion-heading .accordion-toggle {
+    position: relative;
     height: 30px;
     padding: 15px;
     color: #6d6d6d;
@@ -889,6 +890,7 @@ footer .links a {
 }
 .accordion-group .accordion-heading .accordion-toggle .left-content {
     width: 70%;
+    position: absolute;
 }
 .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
     overflow: hidden;
@@ -902,6 +904,7 @@ footer .links a {
 }
 .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
     display: block;
+    width: 100%;
 }
 .accordion-group .accordion-heading .accordion-toggle .arrow {
     margin-right: 4px;
@@ -927,14 +930,20 @@ footer .links a {
     color: #f64135;
     font-size: 11px;
     text-transform: none;
+    text-align: right;
+    display: block;
+    clear: right;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding-top: 8px;
+    padding-top: 4px;
 }
-.accordion-group .accordion-heading .accordion-toggle .in-use .popover {
-    font-size: 14px;
+.accordion-group.mt_shadow .accordion-heading .accordion-toggle .pending {
+    text-overflow: clip;
+    white-space: normal
 }
+
 .accordion-group .accordion-body.collapse {
     clear: both;
 }
@@ -973,6 +982,9 @@ footer .links a {
 }
 .accordion-group .mt_store {
     background: #fff;
+}
+span.progress.progress-info{
+    margin-top: 6px;
 }
 /* Start: Recommended Isotope styles */
 /**** Isotope Filtering ****/
@@ -1893,12 +1905,10 @@ form#extension-filter-form {
 .accordion-group .accordion-heading .accordion-toggle .in-use.error-bar {
     float: none;
     margin-right: 35px;
-    max-width: 200px;
 }
 
 .accordion-group .accordion-heading .accordion-toggle .in-use.download-bar {
     float: none;
-    max-width: 200px;
 }
 
 /* fast fix for custom mangento installation */
@@ -2378,17 +2388,21 @@ form#extension-filter-form {
         width: 26%;
     }
     .accordion-group .accordion-heading .accordion-toggle .left-content {
+        position: absolute;
         width: 100%;
     }
     .accordion-group .accordion-heading .accordion-toggle .left-content .store-name {
         font-size: 14px;
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content {
-        position: absolute;
         margin-top: 32px;
     }
-    .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
+    /*.accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
         display: none;
+    }*/
+    .accordion-group .accordion-heading .accordion-toggle .pending {
+        float: right;
+        clear: right;
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
         width: 230px;
@@ -2402,7 +2416,6 @@ form#extension-filter-form {
         position: inherit;
         top: 0;
     }
-
     #footer {
         text-align: center;
     }
@@ -2479,8 +2492,8 @@ form#extension-filter-form {
      /* fix for close button when error during installation occured */
     .accordion-group .accordion-heading .accordion-toggle .right-content {
         margin-top: 0;
-        position: inherit;
         width:auto;
+        right: 0;
     }
     
     /* Add custom store - radio input fix */
@@ -2731,17 +2744,28 @@ form#extension-filter-form {
     }
     /* fix for close button when error during installation occured */
     .accordion-group .accordion-heading .accordion-toggle .right-content {
-        margin-top: 32px;
-        position: absolute;
+        margin-top: 30px;
+        margin-right: 0;
     }
     .accordion-group .accordion-heading .accordion-toggle .in-use.error-bar,
     .accordion-group .accordion-heading .accordion-toggle .in-use.download-bar {
         /*max-width: 100%; */
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right {
-        float: none;
+        float: right;
+    }
+    .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
     }
     
+    .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
+        display: none;
+    }
+    .accordion-group.mt_shadow .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
+        display: block;
+    }
+    .accordion-group.mt_shadow .accordion-heading {
+        height: 110px;
+    }
     /* Add custom store - radio input fix */
     div.form-box.custom-info .input-radio {
         clear: both;
@@ -2886,10 +2910,7 @@ form#extension-filter-form {
     
     /* fix for close button when error during installation occured */
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
-        width: 360px;
-    }
-    .accordion-group .accordion-heading .accordion-toggle .pending {
-        max-width: 360px;
+        width: 300px;
     }
     
     /* Add custom store - radio input fix */
@@ -2900,6 +2921,7 @@ form#extension-filter-form {
     div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
        width: 51%;
    }
+   
 }
 
 /* Smartphones (portrait) ----------- */
