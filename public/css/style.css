@@ -1968,12 +1968,10 @@ form#extension-filter-form {
 .accordion-group .accordion-heading .accordion-toggle .in-use.error-bar {
     float: none;
     margin-right: 35px;
-    max-width: 200px;
 }
 
 .accordion-group .accordion-heading .accordion-toggle .in-use.download-bar {
     float: none;
-    max-width: 200px;
 }
 
 /* fast fix for custom mangento installation */
