@@ -1045,37 +1045,54 @@ class QueueController extends Integration_Controller_Action {
         ) {
             $model = new Application_Model_Revision();
             //var_dump($model->getAllForStore($store->id)->toArray());die;
-            foreach($model->getAllForStore($store->id) as $revision) {
+            $deployment_list = $model->getAllForStore($store->id);
+            foreach($deployment_list as $revision) {
                 if($revision['type']=='magento-init'){
                     continue;
                 }
-                
-                
-                $content .= '<tr>'.PHP_EOL;
-                $content .= '<td>'.$revision['comment'].'</td>'.PHP_EOL;
-                $content .= '<td>'.PHP_EOL;
+
+                $row = '';
+                $row .= '<tr>'.PHP_EOL;
+                $row .= '<td>'.$revision['comment'].'</td>'.PHP_EOL;
+                $row .= '<td>'.PHP_EOL;
                     //<button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
                 $download_button = '<a class="btn btn-primary download-deployment" href="'.
                     'http://'.$this->auth->getIdentity()->login.'.'.$server->getDomain().'/'.$domain.'/var/deployment/'.$revision['filename']
                 .'">Download</a>'.PHP_EOL;
-                               
-                if( (int)$revision['extension_id'] 
-                    AND !$revision['braintree_transaction_id']
-                    && $revision['price']>0
-                ) {
-                    $request_button = '<button type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
-                } else {
-                    $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
+                if((int)$revision['extension_id']) {
+                    // check whether extension has open source revision
+                    // and do not display old revision if open source exists
+                    if(!preg_match('/\(Open Source\)\s*$/', $revision['comment'])) {
+                        $open_source = false;
+                        foreach($deployment_list as $deployment) {
+                            if($deployment['extension_id'] == $revision['extension_id']
+                               && $deployment['id'] != $revision['id']
+                               && preg_match('/\(Open Source\)\s*$/', $deployment['comment'])
+                            ) {
+                                $open_source = true;
+                            }
+                        }
+                        if($open_source) {
+                            continue;
+                        }
+                    }
+                    if(!$revision['braintree_transaction_id'] && $revision['price']>0) {
+                        $request_button = '<button type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
+                    } else {
+                        $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
+                    }
                 }
-                
-                $content .= (($revision['filename'] AND
+
+                $row .= (($revision['filename'] AND
                     (
                         $revision['braintree_transaction_id'] OR $revision['price'] == 0
                     )
                 ) ? $download_button : $request_button) . PHP_EOL;
 
-                $content .= '</td>'.PHP_EOL;
-                $content .= '</tr>'.PHP_EOL;
+                $row .= '</td>'.PHP_EOL;
+                $row .= '</tr>'.PHP_EOL;
+
+                $content .= $row;
             }
         }
         $this->_response->setBody($content);

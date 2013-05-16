@@ -197,6 +197,11 @@ class PaymentController extends Integration_Controller_Action
                     $queueModel->setExtensionId($store_extension->getExtensionId());
                     $queueModel->setParentId($opensourceId);
                     $queueModel->save();
+
+                    $storeModel = new Application_Model_Store();
+                    $storeModel->setOptions((array)$store);
+                    $storeModel->setStatus('installing-extension')->save();
+
                     $flash_message = 'You have successfully bought extension. It will be uploaded in open source.';
                     $redirect = array(
                             'controller' => 'queue',
