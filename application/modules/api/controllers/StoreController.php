@@ -88,18 +88,9 @@ class Api_StoreController extends Integration_Controller_Action
         // change api field names to add-custom form fields
         $params = $this->_mapAddStoreFormFields($this->_getAllParams());
 
-        // check whether use path_backup or path_store to download store
-        $path_type = $this->_getParam('backup_type');
-        if(!in_array($path_type, array('remote_path', 'file'))) {
-            $path_type = 'remote_path';
-        }
-        if($path_type == 'remote_path') {
-            $form->custom_remote_path->setRequired(true);
-            $form->custom_file->setRequired(false);
-        } elseif($path_type == 'file') {
-            $form->custom_remote_path->setRequired(false);
-            $form->custom_file->setRequired(true);
-        }
+        // set custom_file as required field
+        $form->custom_remote_path->setRequired(false);
+        $form->custom_file->setRequired(true);
 
         $params['do_hourly_db_revert'] = 0;
 
