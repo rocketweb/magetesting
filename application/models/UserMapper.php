@@ -279,5 +279,5 @@ class Application_Model_UserMapper {
         }
         return false;
     }
-  
+
 }
