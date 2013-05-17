@@ -35,6 +35,7 @@ try {
                 $existing_extension = $mc_extension;
             }
         }
+        $last_without_change = $without_change;
         if(!$existing_extension) {
             if(isset($mt_extension_v['s'])) {
                 $new_extension++;
@@ -89,7 +90,12 @@ try {
             }
         }
 
-        sleep(1);
+        // it will skeep sleeping for extension without sleep
+        // thanks to that checking 4k extensions without change will not execute
+        // for 4k seconds
+        if($last_without_change == $without_change) {
+            sleep(1);
+        }
     }
 
     $sync_info = array(
