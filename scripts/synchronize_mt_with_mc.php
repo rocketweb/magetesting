@@ -4,6 +4,7 @@ include 'init.console.php';
 
 Zend_Auth::getInstance()->getStorage()->write((object)array('group' => 'admin'));
 try {
+    include_once APPLICATION_PATH . '/views/helpers/ImagePath.php';
     $mt_extensions = new Application_Model_ExtensionVersionSynchronizer();
     $mt_extensions = $mt_extensions->getExtensionList();
 
@@ -26,6 +27,7 @@ try {
     if(!$category_id) {
         throw new Exception('There is no "other" extension category.');
     }
+
     foreach($mt_extensions as $mt_extension => $mt_extension_v) {
         $existing_extension = false;
         foreach($mc_extensions as $mc_extension) {
@@ -42,6 +44,7 @@ try {
                 $http = new Zend_Http_Client($extension_url . 'package.xml');
                 $response = $http->request();
                 if(!$response->isError()) {
+                    sleep(mt_rand(2, 3));
                     $xml = new SimpleXMLElement($response->getBody());
                     $extensionModel->setName(ucwords(str_replace('_', ' ', $mt_extension)));
                     $extensionModel->setExtensionKey($mt_extension);
@@ -77,6 +80,7 @@ try {
             natsort($compare);
             $new_version = array_pop($compare);
             if($existing_extension->version != $new_version) {
+                sleep(mt_rand(2, 3));
                 $new_release++;
                 $extensionModel = new Application_Model_Extension();
                 $extensionModel->addVersionToExtension($existing_extension->id, $new_version);
@@ -84,6 +88,8 @@ try {
                 $without_change++;
             }
         }
+
+        sleep(1);
     }
 
     $sync_info = array(
@@ -93,7 +99,7 @@ try {
         'Checked extensions' => ($new_extension+$new_release+$without_change),
         'MT extensions' => count($mt_extensions)
     );
-    $log->log('Syncing MT with MC', Zend_Log::INFO, $e->getMessage(), $sync_info);
+    $log->log('Syncing MT with MC', Zend_Log::INFO, var_export($sync_info, true));
 } catch(Exception $e) {
     $log->log('Syncing MT with MC', Zend_Log::ERR, $e->getMessage());
 }
