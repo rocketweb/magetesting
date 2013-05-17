@@ -95,15 +95,6 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _cleanup(){
-        //remove extension id from store_extension if there was extension in this commit.
-        if ($this->_queueObject->getExtensionId()!=0){
-            $this->db->delete('store_extension',array(
-                'store_id = ' . $this->_queueObject->getStoreId(),
-                'extension_id  ='. $this->_queueObject->getExtensionId()
-                )
-            );
-        }
-
         //remove last entry from revision table
         $revisionModel = new Application_Model_Revision();
         $revisionModel->getLastForStore($this->_storeObject->getId());
@@ -122,6 +113,20 @@ implements Application_Model_Task_Interface {
         /* remove database file */
         if (file_exists($storeDir.'/var/db/'.$revisionModel->getDbBeforeRevision())){
             unlink($storeDir.'/var/db/'.$revisionModel->getDbBeforeRevision());
+        }
+
+        //remove extension id from store_extension if there was extension in this commit.
+        if ($this->_queueObject->getExtensionId()!=0){
+            // remove from store_extension if reverted commit was not
+            // open source extension
+            if(!preg_match('/\(Open Source\)\s*$/', $revisionModel->getComment())) {
+                $this->db->delete('store_extension',
+                    array(
+                        'store_id = ' . $this->_queueObject->getStoreId(),
+                        'extension_id  ='. $this->_queueObject->getExtensionId()
+                    )
+                );
+            }
         }
 
         /* remove database entry */
