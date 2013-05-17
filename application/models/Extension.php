@@ -416,7 +416,7 @@ class Application_Model_Extension {
         }
 
         try {
-            $image_path = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->getActionController()->view;
+            $image_path = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer')->view;
             // copy logo image
             $new_logo_filename = preg_replace('/\-(' . $id . ')\.(.*)$/i', '-'.$new_extension_id.'.$2', $this->getLogo());
             if($new_logo_filename != $this->getLogo() && $new_logo_filename !== FALSE) {
@@ -447,7 +447,11 @@ class Application_Model_Extension {
             $http = new Zend_Http_Client('http://connect20.magentocommerce.com/community/' . $this->getExtensionKey() . '/' . $this->getVersion() . '/' . $extension_file);
             $response = $http->request();
             if(!$response->isError()) {
-                file_put_contents(APPLICATION_PATH.'/../data/extensions/'.$this->getEdition().'/open/' . $extension_file, $response->getBody());
+                $dir_path = APPLICATION_PATH.'/../data/extensions/'.$this->getEdition().'/open/';
+                if(!file_exists($dir_path)) {
+                    mkdir($dir_path, 0777, true);
+                }
+                file_put_contents($dir_path . $extension_file, $response->getBody());
                 $this->setExtension($extension_file)->save();
             }
         }
