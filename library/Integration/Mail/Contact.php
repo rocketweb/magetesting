@@ -23,7 +23,17 @@ class Integration_Mail_Contact extends Integration_Mail
     protected function _setHeaders(){     
         $from = $this->_config->contact->message->from;
         $this->mail->setFrom($from->email, $from->desc);
-        $this->mail->addTo($this->_config->contact->message->email);
+        $emails = $this->_config->contact->message->emails;
+        $emails = !is_object($emails)
+                  ? array()
+                  : $emails->toArray();
+        $this->mail->addTo(array_shift($emails));
+        if($emails) {
+            foreach($emails as $ccEmail) {
+                $this->mail->addCC($ccEmail);
+            }
+        }
+
         $this->mail->setSubject($this->_config->contact->message->subject);
         $this->mail->setReplyTo( $from->email, $from->desc );
         $this->mail->setReturnPath($from->email);
