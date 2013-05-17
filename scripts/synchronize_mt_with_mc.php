@@ -53,7 +53,7 @@ try {
                     $extensionModel->setAuthor((string)$xml->authors->author->user[0]);
                     $extensionModel->setEdition('CE');
                     $extensionModel->setFromVersion('1.4.0.0');
-                    $extensionModel->setToVersion('1.7.0.2');
+                    $extensionModel->setToVersion('1.8.0.0');
                     $extensionModel->setVersion($mt_extension_v['s']);
                     $extensionModel->setPrice(0);
                     $extensionModel->setIsDev(0);
