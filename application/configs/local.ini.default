@@ -80,10 +80,11 @@ admin.errorEmail.to.email[] = "wojtek@rocketweb.com"
 
 register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
 
-contact.message.email = "wojtek@rocketweb.com"
 contact.message.subject = "Message from Contact Form"
 contact.message.from.email = "support@magetesting.com"
 contact.message.from.desc = "Mage Testing"
+contact.message.emails[] = "wojtek@rocketweb.com"
+contact.message.emails[] = "matt@rocketweb.com"
 
 ;SQL Updater
 ; remember that this must be absolute path
