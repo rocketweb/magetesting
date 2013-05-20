@@ -215,7 +215,7 @@ class Application_Model_UserMapper {
         $newPassword = '';
         if($row) {
             $userObject->setOptions($row->toArray());
-            $newPassword = sha1(time().$userObject->getLogin().$userObject->getId());
+            $newPassword = time().$userObject->getLogin().$userObject->getId();
             $userObject->setPassword($newPassword);
             $userObject->save(true);
         }
