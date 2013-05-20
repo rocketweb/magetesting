@@ -24,7 +24,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
         $this->_helper->layout()->showDashboard =
         $this->acl->isAllowed(
                 $type,
-                $module . '_' . 'user',
+                'default_user',
                 'dashboard'
         );
     }

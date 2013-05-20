@@ -46,6 +46,7 @@ class Application_Model_UserMapper {
             $data['added_date'] = date('Y-m-d H:i:s');
             $user->setAddedDate($data['added_date']);
             $data['password'] = sha1($user->getPassword());
+            $data['apikey'] = sha1(microtime() . ' ' . $data['login']);
             $server = new Application_Model_Server();
             if(!is_numeric($data['server_id'])) {
                 $data['server_id'] = $server->fetchMostEmptyServerId();
@@ -97,7 +98,8 @@ class Application_Model_UserMapper {
              ->setPlanIdBeforeRaising($row->plan_id_before_raising)
              ->setHasPapertrailAccount($row->has_papertrail_account)
              ->setPapertrailApiToken($row->papertrail_api_token)
-             ->setPreselectedPlanId($row->preselected_plan_id);
+             ->setPreselectedPlanId($row->preselected_plan_id)
+             ->setApikey($row->apikey);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -142,7 +144,8 @@ class Application_Model_UserMapper {
                   ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
                   ->setHasPapertrailAccount($row->has_papertrail_account)
                   ->setPapertrailApiToken($row->papertrail_api_token)
-                  ->setPreselectedPlanId($row->preselected_plan_id);
+                  ->setPreselectedPlanId($row->preselected_plan_id)
+                  ->setApikey($row->apikey);
 
             $entries[] = $entry;
         }
@@ -212,7 +215,7 @@ class Application_Model_UserMapper {
         $newPassword = '';
         if($row) {
             $userObject->setOptions($row->toArray());
-            $newPassword = time().$userObject->getLogin().$userObject->getId();
+            $newPassword = sha1(time().$userObject->getLogin().$userObject->getId());
             $userObject->setPassword($newPassword);
             $userObject->save(true);
         }
@@ -271,5 +274,18 @@ class Application_Model_UserMapper {
     {
         $this->getDbTable()->delete($id);
     }
-  
+
+    public function authenticateApiCall($user, $key, Application_Model_User $object) {
+        $result = $this->getDbTable()->fetchUserByNameAndApikey($user, $key);
+        if($result) {
+            $object->setId($result->id)
+                   ->setServerId($result->server_id)
+                   ->setHasPapertrailAccount($result->has_papertrail_account)
+                   ->setGroup($result->group)
+                   ->setPlanId($result->plan_id);
+            return true;
+        }
+        return false;
+    }
+
 }

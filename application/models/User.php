@@ -60,6 +60,8 @@ class Application_Model_User {
 
     protected $_preselected_plan_id;
 
+    protected $_apikey;
+
     public function __construct(array $options = null)
     {
         if (is_array($options)) {
@@ -440,6 +442,17 @@ class Application_Model_User {
         return $this->_preselected_plan_id;
     }
 
+    public function setApikey($value)
+    {
+        $this->_apikey = $value;
+        return $this;
+    }
+
+    public function getApikey()
+    {
+        return $this->_apikey;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -596,6 +609,10 @@ class Application_Model_User {
      */
     public function disablePhpmyadmin(){
         $this->_rebuildPhpmyadminRules();
+    }
+
+    public function authenticateApiCall($user, $key) {
+        return $this->getMapper()->authenticateApiCall($user, $key, $this);
     }
        
     /**

@@ -33,4 +33,11 @@ class Application_Model_DbTable_User extends Zend_Db_Table_Abstract
         
         return $this->fetchRow($select);
     }
+
+    public function fetchUserByNameAndApikey($user, $key) {
+        $select = $this->select()
+                       ->where('login = ?', $user)
+                       ->where('apikey = ?', $key);
+        return $this->fetchRow($select);
+    }
 }
