@@ -99,7 +99,7 @@
                 </div>
                 <div class="extensions_well">
                     <div id="container" class="clickable clearfix" data-form-action="<?php echo $this->baseUrl() ?>">
-                    <?php echo $this->partial('extension/tiles.phtml', array('extensions' => $this->extensions, 'store_domain' => $this->store_domain)); ?>
+                    <?php echo $this->partial('extension/tiles.phtml', array('extensions' => $this->extensions, 'store_domain' => $this->store_domain, 'categories' => $this->categories)); ?>
                     </div>
                     <div class="load-more">
                         <a class="btn btn-large disabled hidden">LOADING MORE EXTENSIONS...</a>

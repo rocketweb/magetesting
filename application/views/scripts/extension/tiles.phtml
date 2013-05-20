@@ -54,7 +54,13 @@
                     <?php echo $this->Thumbnail($extension['category_logo'], null, 38, array('alt' => $extension['category_logo']), $this->ImagePath($extension['category_logo'], 'extension_category', false, false)); ?>
                 </div>
             <?php else: ?>
-                <img src="<?php echo $this->baseUrl('/public/img/extensions/icon_free_'.mt_rand(1,2).'.png'); ?>" alt="logo"/>
+                <?php $random_logo = $this->categories[mt_rand(0,2)]->getLogo(); ?>
+                <div class="icon big">
+                    <?php echo $this->Thumbnail($random_logo, null, 110, array('alt' => $random_logo), $this->ImagePath($random_logo, 'extension_category', false, false)); ?>
+                </div>
+                <div class="icon small">
+                    <?php echo $this->Thumbnail($random_logo, null, 38, array('alt' => $random_logo), $this->ImagePath($random_logo, 'extension_category', false, false)); ?>
+                </div>
             <?php endif; ?>
             
         <?php endif; ?>
