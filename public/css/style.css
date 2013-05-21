@@ -3497,3 +3497,8 @@ list-style:none;
     background-color: #BD362F;
     color: white;
 }
+
+/* cancel subscription modal */
+#cancel-subscription form {
+    margin: 0px;
+}
