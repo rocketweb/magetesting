@@ -69,13 +69,10 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $select_allowed_for_store->where('name LIKE ? OR description LIKE ? OR extension_key LIKE ? OR author LIKE ?', $filter['query']);
         }
 
-        // get also developer extensions for admins
         // get only CE extensions for non admin users
-        if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
-            $select_allowed_for_store->where('is_dev IN (?)',array(0,1));
-        } else {
+        if (Zend_Auth::getInstance()->getIdentity()->group != 'admin') {
             $select_allowed_for_store->where('edition = ?', 'CE')
-                                     ->where('is_dev  = ? ',0);
+                                     ->where('is_visible = ?', 1);
         }
         $select_last_version_ids = 
             $this->select()
@@ -137,7 +134,8 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $identity = Zend_Auth::getInstance()->getIdentity();
         if(!is_object($identity) || 'admin' != $identity->group) {
             $sub_select_inner->where('edition = ?', 'CE')
-                             ->where('extension > ""');
+                             ->where('extension > ""')
+                             ->where('is_visible = ?', 1);
         }
         // where
         if(isset($filter['price'])) {
