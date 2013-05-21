@@ -82,6 +82,7 @@ class ExtensionController extends Integration_Controller_Action {
             'screenshots'     => $this->_getParam('screenshots', array()),
             'directory_hash'  => $this->_getParam('directory_hash', time().'-'.uniqid()),
             'category_id'     => $this->_getParam('category_id', ''),
+            'is_visible'      => $this->_getParam('is_visible', ''),
             'author'          => $this->_getParam('author', ''),
             'sort'            => $this->_getParam('sort', '')
         );
@@ -160,6 +161,7 @@ class ExtensionController extends Integration_Controller_Action {
                     'logo'            => $extension->getLogo(),
                     'screenshots'     => $screenshots,
                     'author'          => $extension->getAuthor(),
+                    'is_visible'      => $extension->getIsVisible(),
                     'category_id'     => $extension->getCategoryId(),
                     'sort'            => $extension->getSort()
                 );
@@ -200,8 +202,6 @@ class ExtensionController extends Integration_Controller_Action {
                 if($extension->getId()) {
                     unset($formData['logo']);
                 }
-                
-                $extension->setIsDev(0);
 
                 $extension_new_name = (isset($_FILES["extension_file"]) && $_FILES["extension_file"]["name"] ? $_FILES["extension_file"]["name"] : '');
                 $extension_encoded_new_name = (isset($_FILES["extension_encoded_file"]) && $_FILES["extension_encoded_file"]["name"] ? $_FILES["extension_encoded_file"]["name"] : '');
