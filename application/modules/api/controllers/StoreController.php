@@ -219,7 +219,7 @@ class Api_StoreController extends Integration_Controller_Action
                     'http://' . $params['username'] . '.' .
                     $server->getDomain() . '/' . $storeModel->getDomain();
                 $this->_response_object['store_backend_url'] = 
-                    $this->_response_object['store_frontend_url'] . ' / ' .
+                    $this->_response_object['store_frontend_url'] . '/' .
                     $storeModel->getBackendName();
             } catch(Exception $e) {
                 if($log = $this->getLog()) {
