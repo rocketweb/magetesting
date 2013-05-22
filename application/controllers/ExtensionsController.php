@@ -30,6 +30,8 @@ class ExtensionsController extends Integration_Controller_Action
         $offset = !is_numeric($offset) ? 0 : (int)$offset;
         $limit = 50;
 
+        unset($filter['restricted']);
+        $filter['restricted'] = true;
         $this->view->extensions = $extensionModel->fetchFullListOfExtensions($filter, $order, $offset, $limit);
 
         $extensionCategoryModel = new Application_Model_ExtensionCategory();
