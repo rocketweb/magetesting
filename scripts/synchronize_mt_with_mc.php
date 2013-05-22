@@ -56,7 +56,7 @@ try {
                     $extensionModel->setToVersion('1.8.0.0');
                     $extensionModel->setVersion($mt_extension_v['s']);
                     $extensionModel->setPrice(0);
-                    $extensionModel->setIsDev(0);
+                    $extensionModel->setIsVisible(0);
                     $extensionModel->setSort(0);
                     $extensionModel->setCategoryId($category_id);
 
