@@ -193,6 +193,18 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'label'    => 'Save changes'
         ));
 
+        $this->addElement('select', 'is_visible', array(
+            'label'       => 'Is visible',
+            'required'    => true,
+            'class'       => 'span4'
+        ));
+        $this->is_visible->addMultiOptions(array(
+            1 => 'Yes',
+            0 => 'No',
+        ));
+        
+        $this->is_visible->setValue(1);
+
         $this->title->setAttrib('class', 'span4');
         $this->description->setAttrib('class', 'span8');
         $this->description->setAttrib('rows', '5');

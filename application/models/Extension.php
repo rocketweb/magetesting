@@ -28,7 +28,7 @@ class Application_Model_Extension {
     
     protected $_edition;
 
-    protected $_is_dev;
+    protected $_is_visible;
     
     protected $_price;
 
@@ -201,14 +201,15 @@ class Application_Model_Extension {
         return $this->_edition;
     }
     
-    public function setIsDev($value)    {
-        $this->_is_dev = $value;
+    public function setIsVisible($value)
+    {
+        $this->_is_visible = $value;
         return $this;
     }
 
-    public function getIsDev()
+    public function getIsVisible()
     {
-        return $this->_is_dev;
+        return $this->_is_visible;
     }   
 
     public function setPrice($price)
@@ -298,7 +299,7 @@ class Application_Model_Extension {
                 'from_version' => $this->getFromVersion(),
                 'to_version' => $this->getToVersion(),
                 'edition' => $this->getEdition(),
-                'is_dev' => $this->getIsDev(),
+                'is_visible' => $this->getIsVisible(),
                 'price' => $this->getPrice(),
                 'sort' => $this->getSort()
         );
