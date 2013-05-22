@@ -21,6 +21,7 @@ class Integration_Acl extends Zend_Acl
          * Set up resources
          */
         $this->add(new Zend_Acl_Resource('api_store'));
+        $this->add(new Zend_Acl_Resource('api_users'));
         $this->add(new Zend_Acl_Resource('default_error'));
         $this->add(new Zend_Acl_Resource('default_index'));
         $this->add(new Zend_Acl_Resource('default_user'));
@@ -36,11 +37,18 @@ class Integration_Acl extends Zend_Acl
          */
         $this->deny();
 
+        /* allow api calls for all */
         $this->allow('admin', 'api_store');
         $this->allow('guest', 'api_store');
         $this->allow('free-user', 'api_store');
         $this->allow('awaiting-user', 'api_store');
         $this->allow('commercial-user', 'api_store');
+
+        $this->allow('admin', 'api_users');
+        $this->allow('guest', 'api_users');
+        $this->allow('free-user', 'api_users');
+        $this->allow('awaiting-user', 'api_users');
+        $this->allow('commercial-user', 'api_users');
         /**
          * Set up privileges for admin
          */
