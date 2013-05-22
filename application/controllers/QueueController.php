@@ -659,6 +659,13 @@ class QueueController extends Integration_Controller_Action {
         $store_name = $request->getParam('store');
         $extensionModel = new Application_Model_Extension();
         $extensionCategoryModel = new Application_Model_ExtensionCategory();
+
+        unset($filter['restricted']);
+        $group = $this->auth->getIdentity();
+        $group = is_object($group) ? $group->group : '';
+        if('admin' != $group) {
+            $filter['restricted'] = true;
+        }
         $this->view->extensions = $extensionModel->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit);
         $this->view->categories = $extensionCategoryModel->fetchAll();
 

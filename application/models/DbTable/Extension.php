@@ -70,10 +70,12 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         }
 
         // get only CE extensions for non admin users
-        if (Zend_Auth::getInstance()->getIdentity()->group != 'admin') {
-            $select_allowed_for_store->where('edition = ?', 'CE')
-                                     ->where('is_visible = ?', 1);
+        if(isset($filter['restricted']) && $filter['restricted']) {
+            $select_allowed_for_store
+                ->where('edition = ?', 'CE')
+                ->where('is_visible = ?', 1);
         }
+
         $select_last_version_ids = 
             $this->select()
                  ->from(array('last_version' => $select_allowed_for_store), array('last_version.*'))
@@ -131,12 +133,14 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  ->from($this->_name, array('name', 'edition', 'version', 'extension_key'))
                  ->setIntegrityCheck(false)
                  ->order(array('sort DESC', 'id DESC'));
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        if(!is_object($identity) || 'admin' != $identity->group) {
-            $sub_select_inner->where('edition = ?', 'CE')
-                             ->where('extension > ""')
-                             ->where('is_visible = ?', 1);
+
+        if(isset($filter['restricted']) && $filter['restricted']) {
+            $sub_select_inner
+                ->where('edition = ?', 'CE')
+                ->where('extension > ""')
+                ->where('is_visible = ?', 1);
         }
+
         // where
         if(isset($filter['price'])) {
             $sub_select_inner->where('price ' . (('premium' == $filter['price']) ? '>' : '=') .' ?', 0);
