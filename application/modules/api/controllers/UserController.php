@@ -16,11 +16,6 @@ class Api_UserController extends Integration_Controller_Action
 
     public function indexAction()
     {
-        /* render getAction because we don't use action/:id route */
-        $this->getAction();
-    }
-    public function getAction()
-    {
         $login = $this->getParam('login', '');
         $apikey = $this->getParam('apikey', '');
         $userObject = new Application_Model_User();
@@ -77,6 +72,10 @@ class Api_UserController extends Integration_Controller_Action
         }
     }
 
+    public function getAction()
+    {
+        $this->postAction();
+    }
     public function putAction()
     {
         $this->postAction();
