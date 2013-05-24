@@ -367,7 +367,9 @@ class UserController extends Integration_Controller_Action
             if($form->isValid($formData) && !$wrong_coupon) {
                 $user->setOptions($form->getValues());
                 $apply_coupon_from = 0;
-                if('free-trial' == $plan_id) {
+                $adminNotificationData = array();
+                if('free-trial' === $plan_id) {
+                    $adminNotificationData['free_trial'] = true;
                     if($modelCoupon->createNewFreeTrial($nextFreeTrialDate)) {
                         $coupon = true;
                         $user->setActiveFrom($nextFreeTrialDate);
@@ -387,7 +389,7 @@ class UserController extends Integration_Controller_Action
                 $user = $user->save();
 
                 $adminNotification = new Integration_Mail_AdminNotification();
-                $adminNotificationData = array('user' => $user);
+                $adminNotificationData['user'] = $user;
                 $plan = new Application_Model_Plan();
                 $plan->find($user->getPreselectedPlanId());
                 if($plan->getName()) {
