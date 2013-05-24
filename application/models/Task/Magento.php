@@ -169,7 +169,7 @@ extends Application_Model_Task {
         // assign values
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
-        $html->assign('ftphost', 'http://'.$this->_userObject->getLogin().'.'.$serverModel->getDomain());
+        $html->assign('ftphost', 'ftp://'.$this->_userObject->getLogin().'.'.$serverModel->getDomain());
         $html->assign('ftpuser', $config->magento->userprefix . $user_details['dbuser']);
         $html->assign('ftppass', $user_details['systempass']);
         
