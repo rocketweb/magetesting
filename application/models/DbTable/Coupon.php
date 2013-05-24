@@ -22,4 +22,19 @@ class Application_Model_DbTable_Coupon extends Zend_Db_Table_Abstract
                        ->joinLeft(array('p' => 'plan'), 'p.id = c.plan_id', array('plan' => 'p.name'));
         return $select->query()->fetchAll();
     }
+
+    public function fetchNextFreeTrialDate($couponsPerDay) {
+        $select =
+            $this->select()
+                 ->setIntegrityCheck(false)
+                 ->from(
+                     $this->_name,
+                     array('coupons' => new Zend_Db_Expr('count(id)'), 'date' => new Zend_Db_Expr('date(active_to)'))
+                 )
+                 ->where('code LIKE ?', 'free-trial-%')
+                 ->where('date(active_to) >= ?', new Zend_Db_Expr('date(CURRENT_TIMESTAMP)'))
+                 ->group('date')
+                 ->order('date DESC');
+        return $this->fetchRow($select);
+    }
 }

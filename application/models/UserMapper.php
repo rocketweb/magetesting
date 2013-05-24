@@ -45,6 +45,11 @@ class Application_Model_UserMapper {
             unset($data['braintree_transaction_confirmed']);
             $data['added_date'] = date('Y-m-d H:i:s');
             $user->setAddedDate($data['added_date']);
+            if(NULL === $data['active_from_reminded']) {
+                $data['active_from_reminded'] = 1;
+                $data['active_from'] = $data['added_date'];
+                $user->setActiveFrom($data['added_date']);
+            }
             $data['password'] = sha1($user->getPassword());
             $data['apikey'] = sha1(microtime() . ' ' . $data['login']);
             $server = new Application_Model_Server();
@@ -99,7 +104,9 @@ class Application_Model_UserMapper {
              ->setHasPapertrailAccount($row->has_papertrail_account)
              ->setPapertrailApiToken($row->papertrail_api_token)
              ->setPreselectedPlanId($row->preselected_plan_id)
-             ->setApikey($row->apikey);
+             ->setApikey($row->apikey)
+             ->setActiveFrom($row->active_from)
+             ->setActiveFromReminded($row->active_from_reminded);
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -145,7 +152,9 @@ class Application_Model_UserMapper {
                   ->setHasPapertrailAccount($row->has_papertrail_account)
                   ->setPapertrailApiToken($row->papertrail_api_token)
                   ->setPreselectedPlanId($row->preselected_plan_id)
-                  ->setApikey($row->apikey);
+                  ->setApikey($row->apikey)
+                  ->setActiveFrom($row->active_from)
+                  ->setActiveFromReminded($row->active_from_reminded);
 
             $entries[] = $entry;
         }
@@ -286,6 +295,47 @@ class Application_Model_UserMapper {
             return true;
         }
         return false;
+    }
+    public function fetchReadyActiveFromUsers() {
+        $resultSet = $this->getDbTable()->fetchReadyActiveFromUsers();
+        $entries   = array();
+        if($resultSet) {
+            foreach ($resultSet as $row) {
+                $entry = new Application_Model_User();
+                $entry->setId($row->id)
+                      ->setFirstname($row->firstname)
+                      ->setLastname($row->lastname)
+                      ->setEmail($row->email)
+                      ->setLogin($row->login)
+                      ->setStreet($row->street)
+                      ->setPostalCode($row->postal_code)
+                      ->setCity($row->city)
+                      ->setState($row->state)
+                      ->setCountry($row->country)
+                      ->setGroup($row->group)
+                      ->setAddedDate($row->added_date)
+                      ->setStatus($row->status)
+                      ->setPlanId($row->plan_id)
+                      ->setPlanActiveTo($row->plan_active_to)
+                      ->setHasSystemAccount($row->has_system_account)
+                      ->setSystemAccountName($row->system_account_name)
+                      ->setDowngraded($row->downgraded)
+                      ->setPlanRaisedToDate($row->plan_raised_to_date)
+                      ->setPlanIdBeforeRaising($row->plan_id_before_raising)
+                      ->setBraintreeVaultId($row->braintree_vault_id)
+                      ->setBraintreeTransactionId($row->braintree_transaction_id)
+                      ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
+                      ->setHasPapertrailAccount($row->has_papertrail_account)
+                      ->setPapertrailApiToken($row->papertrail_api_token)
+                      ->setPreselectedPlanId($row->preselected_plan_id)
+                      ->setApikey($row->apikey)
+                      ->setActiveFrom($row->active_from)
+                      ->setActiveFromReminded($row->active_from_reminded);
+
+                $entries[] = $entry;
+            }
+        }
+        return $entries;
     }
 
 }

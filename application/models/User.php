@@ -62,6 +62,10 @@ class Application_Model_User {
 
     protected $_apikey;
 
+    protected $_active_from;
+
+    protected $_active_from_reminded;
+
     public function __construct(array $options = null)
     {
         if (is_array($options)) {
@@ -453,6 +457,28 @@ class Application_Model_User {
         return $this->_apikey;
     }
 
+    public function setActiveFrom($value)
+    {
+        $this->_active_from = $value;
+        return $this;
+    }
+
+    public function getActiveFrom()
+    {
+        return $this->_active_from;
+    }
+
+    public function setActiveFromReminded($value)
+    {
+        $this->_active_from_reminded = $value;
+        return $this;
+    }
+
+    public function getActiveFromReminded()
+    {
+        return $this->_active_from_reminded;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -544,7 +570,10 @@ class Application_Model_User {
             'plan_id_before_raising' => $this->getPlanIdBeforeRaising(),
             'has_papertrail_account' =>$this->getHasPapertrailAccount(),
             'papertrail_api_token' => $this->getPapertrailApiToken(),
-            'preselected_plan_id' => $this->getPreselectedPlanId()
+            'preselected_plan_id' => $this->getPreselectedPlanId(),
+            'apikey' => $this->getApikey(),
+            'active_from' => $this->getActiveFrom(),
+            'active_from_reminded' => $this->getActiveFromReminded()
         );
     }
     
@@ -614,7 +643,10 @@ class Application_Model_User {
     public function authenticateApiCall($user, $key) {
         return $this->getMapper()->authenticateApiCall($user, $key, $this);
     }
-       
+
+    public function fetchReadyActiveFromUsers() {
+        return $this->getMapper()->fetchReadyActiveFromUsers();
+    }
     /**
      * Rebuild deny list in phpmyadmin custom configuration file.
      * @param object $config - Application config

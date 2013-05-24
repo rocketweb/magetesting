@@ -212,9 +212,8 @@ class UserController extends Integration_Controller_Action
                 if($result->isValid()) {
 
                     $userData = $adapter->getResultRowObject();
-
                     unset($userData->password);
-                    if ($userData->status == 'inactive') {
+                    if ($userData->status == 'inactive' || (int)strtotime((string)$userData->active_from) > time()) {
                         $this->_helper->FlashMessenger('Your account is inactive');
                         return $this->_helper->redirector->gotoRoute(array(
                                 'module' => 'default',
@@ -312,7 +311,6 @@ class UserController extends Integration_Controller_Action
                               ->getResource('config')
                               ->register
                               ->useCoupons;
-                              
 
 	    $form->addElement('text', 'coupon', array(
             'label'      => 'Coupon code',
@@ -325,16 +323,40 @@ class UserController extends Integration_Controller_Action
 	    ));
 
 	    // add to form preselected plan id if chosen
+	    // check free trial dates if was requested
 	    $this->view->preselected_plan_id = NULL;
-	    $plan_id = (int)$this->_getParam('preselected_plan_id', 0);
+	    $plan_id = $this->_getParam('preselected_plan_id', 0);
+	    $modelCoupon = new Application_Model_Coupon();
+	    if('free-trial' === $plan_id) {
+	        $config = Zend_Registry::get('config');
+	        $freeTrialsPerDay = $config->register->freeTrialCouponsPerDay;
+	        $nextFreeTrialDate = $modelCoupon->getNextFreeTrialDate($freeTrialsPerDay);
+	        $flashMessages = $this->view->messages;
+	        if(!$flashMessages) {
+	            $flashMessages = array();
+	        }
+	        if($nextFreeTrialDate != date('Y-m-d')) {
+	            $flashMessages = array_merge($flashMessages, array(
+	                array(
+	                    'type' => 'notice',
+	                    'message' => 'Sorry we reached the maximum number of free trial customers for today. If you complete this signup form we will send you a confirmation email as soon as your trial account is ready.'
+	                )
+	            ));
+	        }
+	        $this->view->messages = $flashMessages;
+	    } else {
+	        $plan_id = (int)$plan_id;
+	    }
 	    if($plan_id) {
 	        $this->view->preselected_plan_id = $plan_id;
 	    }
 
         $formData = $this->_request->getPost();
         if(count($formData) > 1) {
+            if(!isset($formData['coupon'])) {
+                $formData['coupon'] = '';
+            }
             $wrong_coupon = false;
-            $modelCoupon = new Application_Model_Coupon();
             $coupon = $modelCoupon->findByCode($formData['coupon']);
             if ($useCoupons || $formData['coupon']) {
                 if (!$coupon || $modelCoupon->isUnused() === false ){
@@ -344,7 +366,24 @@ class UserController extends Integration_Controller_Action
 
             if($form->isValid($formData) && !$wrong_coupon) {
                 $user->setOptions($form->getValues());
-                $user->setPreselectedPlanId($plan_id);
+                $apply_coupon_from = 0;
+                if('free-trial' == $plan_id) {
+                    if($modelCoupon->createNewFreeTrial($nextFreeTrialDate)) {
+                        $coupon = true;
+                        $user->setActiveFrom($nextFreeTrialDate);
+                        if(date('Y-m-d') != $nextFreeTrialDate) {
+                            $user->setActiveFromReminded(0);
+                        } else {
+                            $user->setActiveFromReminded(1);
+                        }
+                        $apply_coupon_from = strtotime($nextFreeTrialDate . ' ' . date('H:i:s'));
+                    } else {
+                        $user->setActiveFromReminded(1);
+                    }
+                } else {
+                    $user->setPreselectedPlanId($plan_id);
+                    $user->setActiveFromReminded(1);
+                }
                 $user = $user->save();
 
                 $adminNotification = new Integration_Mail_AdminNotification();
@@ -355,7 +394,7 @@ class UserController extends Integration_Controller_Action
                     $adminNotificationData['preselected_plan'] = $plan->getName();
                 }
                 if ($useCoupons || $coupon) {
-                    $result = $modelCoupon->apply($modelCoupon->getId(), $user->getId());
+                    $result = $modelCoupon->apply($modelCoupon->getId(), $user->getId(), $apply_coupon_from);
                     if ($result) {
                         $adminNotificationData['used_coupon'] = $modelCoupon->getCode();
                         //coupon->apply changed user so we need to fetch it again
@@ -376,8 +415,14 @@ class UserController extends Integration_Controller_Action
                 $mail->setup($appConfig, array('user' => $user));
                 try {
                     $adminNotification->send();
-                    $mail->send();
-                    $this->_helper->FlashMessenger('You have been registered successfully. Please check your mail box for instructions to activate account.');
+                    $successMessage = 'You have been registered successfully.';
+                    if('free-trial' === $plan_id && $nextFreeTrialDate != date('Y-m-d')) {
+                        $successMessage .= ' We will send you an email when your free trial account will be ready.';
+                    } else {
+                        $mail->send();
+                        $successMessage .= ' Please check your mail box for instructions to activate account.';
+                    }
+                    $this->_helper->FlashMessenger($successMessage);
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');
                     $log->log('User Register - Unable to send email', Zend_Log::CRIT, json_encode($e->getTraceAsString()));

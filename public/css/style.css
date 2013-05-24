@@ -3414,3 +3414,10 @@ label.error {
     background-color: #BD362F;
     color: white;
 }
+
+/* free trial button */
+.free-trial {
+    display: block;
+    font-size: 12px;
+    margin-top: 3px;
+}

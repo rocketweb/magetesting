@@ -745,6 +745,14 @@ $(document).ready(function () {
                 0
         });
     });
+
+    var $free_trial = $('.free-trial');
+    $free_trial.click(function() {
+        $free_trial
+            .siblings('input:hidden').val('free-trial')
+            .parent().submit();
+        return false;
+    });
 });
 
 function changeInputSelect() {
