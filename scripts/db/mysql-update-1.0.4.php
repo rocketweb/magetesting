@@ -1,7 +1,7 @@
 <?php
 
 $sql[] = '
-ALTER TABLE  `user` ADD  `active_from` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+ALTER TABLE  `user` ADD  `active_from` DATETIME NULL
 ';
 $sql[] = '
 ALTER TABLE  `user` ADD  `active_from_reminded` INT(1) UNSIGNED NOT NULL DEFAULT 0
