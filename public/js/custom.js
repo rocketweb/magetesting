@@ -747,12 +747,18 @@ $(document).ready(function () {
     });
 
     var $free_trial = $('.free-trial');
-    $free_trial.click(function() {
-        $free_trial
-            .siblings('input:hidden').val('free-trial')
-            .parent().submit();
-        return false;
-    });
+    if($free_trial.length) {
+        $free_trial.click(function() {
+            $free_trial
+                .siblings('input:hidden').val('free-trial')
+                .parent().submit();
+            return false;
+        });
+        $free_trial.siblings('button:submit').click(function() {
+            $free_trial
+                .siblings('input:hidden').val(1);
+        });
+    }
 });
 
 function changeInputSelect() {
