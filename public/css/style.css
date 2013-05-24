@@ -3502,3 +3502,10 @@ list-style:none;
 #cancel-subscription form {
     margin: 0px;
 }
+
+/* free trial button */
+.free-trial {
+    display: block;
+    font-size: 12px;
+    margin-top: 3px;
+}

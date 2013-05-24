@@ -132,7 +132,7 @@ class Application_Model_CouponMapper {
         return new Zend_Paginator($adapter);
     }
 
-    public function apply($coupon_id, $user_id)
+    public function apply($coupon_id, $user_id, $start_time = 0)
     {
         $modelUser = new Application_Model_User();
         $user = $modelUser->find($user_id);
@@ -140,10 +140,13 @@ class Application_Model_CouponMapper {
         
         if ($coupon){
             if (!$coupon->getUserId()){
-                if(strtotime($coupon->getActiveTo()) > time()){
+                if(strtotime(date('Y-m-d', strtotime($coupon->getActiveTo()))) > date('Y-m-d')){
                     
                     //update user with new data
-                    $user->setPlanActiveTo(date("Y-m-d H:i:s",strtotime("now " . $coupon->getDuration() . "")));
+                    if(!$start_time) {
+                        $start_time = time();
+                    }
+                    $user->setPlanActiveTo(date("Y-m-d H:i:s",strtotime("now " . $coupon->getDuration() . "", $start_time)));
                     $user->setPlanId($coupon->getPlanId());
                     $user->save();
                    
@@ -174,5 +177,18 @@ class Application_Model_CouponMapper {
     
     public function getError(){
         return $this->_error;
+    }
+
+    public function getNextFreeTrialDate($couponsPerDay) {
+        $result = $this->getDbTable()->fetchNextFreeTrialDate($couponsPerDay);
+        if($result) {
+            if($result['coupons'] < $couponsPerDay) {
+                return $result['date'];
+            } else {
+                return date('Y-m-d', strtotime('+1 day', strtotime($result['date'])));
+            }
+        } else {
+            return date('Y-m-d');
+        }
     }
 }

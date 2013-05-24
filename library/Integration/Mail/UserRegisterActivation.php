@@ -15,7 +15,7 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
     
     public function setup($appConfig, $data){
         $this->_config = $appConfig;
-        
+
         $this->_userObject = $data['user'];
                  
         $this->_setHeaders();
@@ -36,26 +36,19 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
     }
     
     protected function _setView(){
-        $this->view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
-        $activationUrlParams = array();
-        $string_to_hash = $this->_userObject->getLogin().$this->_userObject->getEmail().$this->_userObject->getAddedDate();
+        $this->view = Zend_Layout::getMvcInstance()->getView();
 
-        $activationUrlParams += array(
-            'controller' => 'user',
-            'action'     => 'activate',
-            'id'         => $this->_userObject->getId(),
-            'hash'       => substr(sha1($string_to_hash),0,20)
-        );
-        $activationUrl = $this->view->url(
-            $activationUrlParams
-        );
-
-        $this->view->activationLink = $this->view->serverUrl().$activationUrl;
-        
         $this->view->storeUrl = $this->_config->magento->storeUrl;
+
+        $string_to_hash = $this->_userObject->getLogin().$this->_userObject->getEmail().$this->_userObject->getAddedDate();
+        $activationUrl = '/user/activate/id/'.$this->_userObject->getId();
+        $activationUrl .= '/hash/'.substr(sha1($string_to_hash),0,20);
+
+        $this->view->activationLink = $this->view->storeUrl.$activationUrl;
     }
 
     protected function _setBody(){
+        $this->view->addScriptPath(APPLICATION_PATH. '/views/scripts');
         $msg = $this->view->render($this->_template);
         $this->mail->setBodyHtml($msg);
         $this->mail->setBodyText(strip_tags($msg));

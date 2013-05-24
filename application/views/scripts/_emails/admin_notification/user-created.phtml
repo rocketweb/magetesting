@@ -11,3 +11,6 @@ $url = $this->serverUrl . '/user/detail/id/' . $this->user->getId();
 <?php if($this->used_coupon): ?>
 <p style="margin-bottom: 20px; padding: 0 20px;">Used coupon: <?php echo $this->used_coupon; ?></p>
 <?php endif; ?>
+<?php if(0 == (int)$this->user->getActiveFromReminded()): ?>
+<p style="margin-bottom: 20px; padding: 0 20px;">User has requested free trial</p>
+<?php endif; ?>

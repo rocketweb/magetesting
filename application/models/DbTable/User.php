@@ -40,4 +40,14 @@ class Application_Model_DbTable_User extends Zend_Db_Table_Abstract
                        ->where('apikey = ?', $key);
         return $this->fetchRow($select);
     }
+
+    public function fetchReadyActiveFromUsers() {
+        $select =
+            $this->select()
+                 ->setIntegrityCheck(false)
+                 ->from($this->_name)
+                 ->where('date(active_from) = ?', date('Y-m-d'))
+                 ->where('active_from_reminded = 0');
+        return $this->fetchAll($select);
+    }
 }
