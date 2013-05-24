@@ -203,7 +203,7 @@
                             </form>
                             <?php endif; ?>
                         <?php else: ?>
-                            <?php $this->getHelper('ServerUrl')->setScheme('http'); ?>
+                            <?php $this->getHelper('ServerUrl')->setScheme('https'); ?>
                             <form method="post" action="<?php echo $this->serverUrl($this->url(array('controller' => 'user', 'action' => 'register'), 'default', true)); ?>">
                                 <input type="hidden" name="preselected_plan_id" value="<?php echo $plan->getId(); ?>" />
                                 <button type="submit" class="btn btn-large btn-success">Get Started</button>
