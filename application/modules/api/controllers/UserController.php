@@ -16,7 +16,7 @@ class Api_UserController extends Integration_Controller_Action
 
     public function indexAction()
     {
-        $login = $this->getParam('login', '');
+        $login = $this->getParam('username', '');
         $apikey = $this->getParam('apikey', '');
         $userObject = new Application_Model_User();
         if($this->_authenticate($login, $apikey, $userObject)) {
