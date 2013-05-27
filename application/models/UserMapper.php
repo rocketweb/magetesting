@@ -282,7 +282,10 @@ class Application_Model_UserMapper {
                    ->setServerId($result->server_id)
                    ->setHasPapertrailAccount($result->has_papertrail_account)
                    ->setGroup($result->group)
-                   ->setPlanId($result->plan_id);
+                   ->setPlanId($result->plan_id)
+                   ->setPlanActiveTo($result->plan_active_to)
+                   ->setFirstname($result->firstname)
+                   ->setLastname($result->lastname);
             return true;
         }
         return false;
