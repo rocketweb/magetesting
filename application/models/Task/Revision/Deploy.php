@@ -18,6 +18,8 @@ implements Application_Model_Task_Interface {
                     && preg_match('/\(Open Source\)\s*$/', $revision->comment)
                 ) {
                     $revisionModel->setOptions($revision->toArray());
+                    $revisionModel->setStoreId($this->_queueObject->getStoreId());
+                    break;
                 }
             }
         }
