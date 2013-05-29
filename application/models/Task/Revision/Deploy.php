@@ -9,8 +9,19 @@ implements Application_Model_Task_Interface {
         
         $params = $this->_queueObject->getTaskParams();
         $revisionModel = new Application_Model_Revision;
-        $revisionModel->find($params['revision_id']);
-        
+        if((int)$params['revision_id']) {
+            $revisionModel->find($params['revision_id']);
+        } elseif($params['revision_id'] === 'paid_open_source') {
+            foreach($revisionModel->getAllForStore($this->_queueObject->getStoreId()) as $revision) {
+                if(
+                    (int)$revision->extension_id === (int)$this->_queueObject->getExtensionId()
+                    && preg_match('/\(Open Source\)\s*$/', $revision->comment)
+                ) {
+                    $revisionModel->setOptions($revision->toArray());
+                }
+            }
+        }
+
         $this->_revisionObject  = $revisionModel;
     }
     
