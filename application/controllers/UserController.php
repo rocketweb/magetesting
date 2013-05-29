@@ -339,7 +339,7 @@ class UserController extends Integration_Controller_Action
 	            $flashMessages = array_merge($flashMessages, array(
 	                array(
 	                    'type' => 'notice',
-	                    'message' => 'Sorry we reached the maximum number of free trial customers for today. If you complete this signup form we will send you a confirmation email as soon as your trial account is ready.'
+	                    'message' => 'Sorry we reached the maximum number of free trial customers for today. If you complete this signup form we can add you to the queue and will send a confirmation email when your free trial is activated on ' . date('l F mS\.', strtotime($nextFreeTrialDate))
 	                )
 	            ));
 	        }
@@ -419,7 +419,7 @@ class UserController extends Integration_Controller_Action
                     $adminNotification->send();
                     $successMessage = 'You have been registered successfully.';
                     if('free-trial' === $plan_id && $nextFreeTrialDate != date('Y-m-d')) {
-                        $successMessage .= ' If you complete this signup form we can add you to the queue and will send a confirmation email when your free trial is activated on '.date('l F mS\.', strtotime($nextFreeTrialDate));
+                        $successMessage .= ' We will send you an email when your free trial account will be ready.';
                     } else {
                         $mail->send();
                         $successMessage .= ' Please check your mail box for instructions to activate account.';
