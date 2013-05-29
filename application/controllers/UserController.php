@@ -339,7 +339,7 @@ class UserController extends Integration_Controller_Action
 	            $flashMessages = array_merge($flashMessages, array(
 	                array(
 	                    'type' => 'notice',
-	                    'message' => 'Sorry we reached the maximum number of free trial customers for today. If you complete this signup form we can add you to the queue and will send a confirmation email when your free trial is activated on ' . date('l F mS\.', strtotime($nextFreeTrialDate))
+	                    'message' => 'Sorry we reached the maximum number of free trial customers for today. If you complete this signup form we can add you to the queue and will send a confirmation email when your free trial is activated on ' . date('l F dS\.', strtotime($nextFreeTrialDate))
 	                )
 	            ));
 	        }
