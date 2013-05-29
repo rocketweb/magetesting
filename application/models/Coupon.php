@@ -211,7 +211,7 @@ class Application_Model_Coupon {
         $plan = $plan->find(1);
 
         $couponExists = new Application_Model_Coupon();
-        $freeTrialCode = 'free-trial-'.date('Y-m-d');
+        $freeTrialCode = 'free-trial-'.$date;
 
         $this->_id = NULL;
         $this->setDuration($plan->getBillingPeriod())
