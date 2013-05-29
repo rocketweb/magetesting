@@ -17,8 +17,7 @@ implements Application_Model_Task_Interface {
                     (int)$revision->extension_id === (int)$this->_queueObject->getExtensionId()
                     && preg_match('/\(Open Source\)\s*$/', $revision->comment)
                 ) {
-                    $revisionModel->setOptions($revision->toArray());
-                    $revisionModel->setStoreId($this->_queueObject->getStoreId());
+                    $revisionModel->find($revision->id);
                     break;
                 }
             }
