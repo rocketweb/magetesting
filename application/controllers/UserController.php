@@ -543,6 +543,30 @@ class UserController extends Integration_Controller_Action
                 $user->setOptions($formData);
                 $user->save((is_null($user->getPassword())) ? false : true);
 
+                $planModel = new Application_Model_Plan();
+                // set admin plan for users with group admin
+                if('admin' === $user->getGroup()) {
+                    $admin_plan = $planModel;
+                    foreach($planModel->fetchAll(true) as $plan) {
+                        if($plan->getIsHidden()) {
+                            $admin_plan = $plan;
+                            break;
+                        }
+                    }
+                    if((int)$admin_plan->getId()) {
+                        $user->setPlanId($admin_plan->getId())->save();
+                    }
+                }
+                // remove admin plan for users other than admin
+                if('admin' !== $user->getGroup()) {
+                    if((int)$user->getPlanId()) {
+                        $planModel = $planModel->find($user->getPlanId());
+                        if((int)$planModel->getId() && (int)$planModel->getIsHidden()) {
+                            $user->setPlanId(NULL)->save();
+                        }
+                    }
+                }
+
                 $this->_helper->FlashMessenger('User data has been changed successfully');
                 return $this->_helper->redirector->gotoRoute(array(
                         'module'     => 'default',
