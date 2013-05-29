@@ -1000,30 +1000,84 @@ class QueueController extends Integration_Controller_Action {
                     }
                 }
             } 
-            $domain = $this->_getParam('domain');        
-            $storeModel=  new Application_Model_Store();
-            $store = $storeModel->findByDomain($domain);      
+
+            $parent_id = 0;
+            $is_paid_encoded_extension = false;
+            if(isset($extension)) {
+                if(!preg_match('/\(Open Source\)\s*$/', $revisionModel->getComment())) {
+                    $found_open_source = false;
+                    foreach($revisionModel->getAllForStore($store->id) as $store_revision) {
+                        if(
+                            $store_revision->extension_id = $extension->getId()
+                            && preg_match('/\(Open Source\)\s*$/', $store_revision->comment)
+                        ) {
+                            $found_open_source = true;
+                            break;
+                        }
+                    }
+                    if(!$found_open_source) {
+                        $is_paid_encoded_extension = true;
+                    }
+                }
+            }
+            // request deployement for paid extension but without opened source
+            // in that case add task to open it first
+            if($is_paid_encoded_extension) {
+                $extensionModel = new Application_Model_Extension();
+                $extensionModel->find($store_extension->getExtensionId());
+
+                $queueModel = new Application_Model_Queue();
+                $queueModel->setStoreId($store->id);
+                $queueModel->setTask('ExtensionOpensource');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($store->user_id);
+                $queueModel->setServerId($store->server_id);
+                $queueModel->setExtensionId($extension->getExtensionId());
+                $queueModel->setParentId(0);
+                $queueModel->save();
+                $parent_id = $queueModel->getId();
+                unset($queueModel);
+
+                $queueModel = new Application_Model_Queue();
+                $queueModel->setStoreId($store->id);
+                $queueModel->setTask('RevisionCommit');
+                $queueModel->setTaskParams(
+                    array(
+                        'commit_comment' => $extension_data->getName() . ' (Open Source)',
+                        'commit_type' => 'extension-decode'
+                    )
+                );
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($store->user_id);
+                $queueModel->setServerId($store->server_id);
+                $queueModel->setExtensionId($extension->getExtensionId());
+                $queueModel->setParentId($parent_id);
+                $queueModel->save();
+                $parent_id = $queueModel->getId();
+
+            }
 
             $queueModel = new Application_Model_Queue();
             $queueModel->setTask('RevisionDeploy');
             $queueModel->setTaskParams(
                 array(
-                    'revision_id'=> $this->_getParam('revision')
+                    'revision_id' => $is_paid_encoded_extension ? 'paid_open_source' : $this->_getParam('revision')
                 )
             );
-           
+
             $queueModel->setStoreId($store->id);
             $queueModel->setServerId($store->server_id);
-            $queueModel->setParentId(0);
+            $queueModel->setParentId($parent_id);
             $queueModel->setExtensionId($revisionModel->getExtensionId());
             $queueModel->setAddedDate(date("Y-m-d H:i:s"));
             $queueModel->setStatus('pending');
             $queueModel->setUserId($this->auth->getIdentity()->id);
             $queueModel->save();
-            
+
+            $storeModel = new Application_Model_Store();
             $storeModel->find($store->id);
             $storeModel->setStatus('deploying-revision')->save();
-            
+
             $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'Deployment package will be created soon and will be available to download on Deployment list.'));
         }
         return $this->_helper->redirector->gotoRoute(array(
