@@ -419,7 +419,7 @@ class UserController extends Integration_Controller_Action
                     $adminNotification->send();
                     $successMessage = 'You have been registered successfully.';
                     if('free-trial' === $plan_id && $nextFreeTrialDate != date('Y-m-d')) {
-                        $successMessage .= ' We will send you an email when your free trial account will be ready.';
+                        $successMessage .= ' If you complete this signup form we can add you to the queue and will send a confirmation email when your free trial is activated on '.date('l F mS\.', strtotime($nextFreeTrialDate));
                     } else {
                         $mail->send();
                         $successMessage .= ' Please check your mail box for instructions to activate account.';
