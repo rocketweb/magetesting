@@ -1014,7 +1014,7 @@ class QueueController extends Integration_Controller_Action {
             // in that case add task to open it first
             if($is_paid_encoded_extension) {
                 $extensionModel = new Application_Model_Extension();
-                $extensionModel->find($store_extension->getExtensionId());
+                $extensionModel->find($revisionModel->getExtensionId());
 
                 $queueModel = new Application_Model_Queue();
                 $queueModel->setStoreId($store->id);
