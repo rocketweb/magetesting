@@ -22,6 +22,7 @@ class QueueController extends Integration_Controller_Action {
         $storeModel = new Application_Model_Store();
 
         $page = (int) $this->_getParam('page', 0);
+        $this->view->page = $page;
         $paginator = $storeModel->getWholeQueue();
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
@@ -516,48 +517,128 @@ class QueueController extends Integration_Controller_Action {
 
         $storeModel = new Application_Model_Store();
         $this->view->store = $store = $storeModel->find($id);
-        
+
+        /* still support to display fields on two statuses */
+        $form = new Application_Form_StoreEdit(in_array($store->getStatus(),array('downloading-magento','error')));
         if ($store->getUserId() == $this->auth->getIdentity()->id) {
             //its ok to edit
         } else {
             if ($this->auth->getIdentity()->group != 'admin') {
                 return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'dashboard',
-                                ), 'default', true);
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+                ), 'default', true);
             }
+            $form->setAttrib('label', 'Edit Magento Store');
         }
-        
-        $form = new Application_Form_StoreEdit($store->getStatus() == 'pending');
-        
+
+        if (in_array($store->getStatus(),array('downloading-magento','error'))){
+            $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-edit-connection.js'), 'text/javascript');
+        }
+
+        $user = new Application_Model_user();
+        $user = $user->find($store->getUserId());
         $populate = array_merge(
             $store->__toArray(),
             array(
                 'store_name' => $store->getStoreName(),
                 'backend_password' => $store->getBackendPassword(),
-                'backend_login' => $this->auth->getIdentity()->login,
+                'backend_login' => $user->getLogin(),
                 'custom_pass' => $store->getCustomPass(),
             )
         );
 
         $form->populate($populate);
 
+        $queueModel = new Application_Model_Queue();
+        $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
         if ($this->_request->isPost()) {
 
             if ($form->isValid($this->_request->getPost())) {
                 $store->setOptions($form->getValues());
+
+                /* updateQueueItem to try once again if it failed before edit */
+                if ($store->getStatus()=='error'){
+                    $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
+                    $magentoQueueItem->setStatus('pending');
+                    $magentoQueueItem->setRetryCount(0);
+                    $magentoQueueItem->save();
+
+                    /*also update store to reflect change on dashboard*/
+                    $store->setStatus($storeModel->getStatusFromTask($magentoQueueItem->getTask()));
+                }
+
                 $store->save();
 
                 $this->_helper->FlashMessenger('Store data has been changed successfully');
-                return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'dashboard',
-                                ), 'default', true);
+                $queue_pagination_index = (int)$this->_getParam('admin-edit', 0);
+                if($queue_pagination_index) {
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'queue',
+                        'action' => 'index',
+                        'page' => $queue_pagination_index
+                    ), 'default', true);
+                } else {
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard',
+                    ), 'default', true);
+                }
             }
         }
+
+        if($store->getCustomRemotePath()!=''){
+            $this->view->input_radio = 'remote_path';
+        } else {
+            $this->view->input_radio = 'file';
+        }
+
+
+        if ($magentoQueueItem){
+            $this->view->has_download_task = true;
+        } else {
+            $this->view->has_download_task = false;
+        }
+
+
+        $this->view->render_extension_grid = false;
+        if('admin' == $this->auth->getIdentity()->group) {
+            $this->view->render_extension_grid = true;
+            $extensions = new Application_Model_Extension();
+            $this->view->extensions = $extensions->getInstalledForStore($store->getId(), 'premium');
+        }
+
         $this->view->form = $form;
+    }
+
+    public function setPaymentForExtensionAction()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $store_extension_id = (int)$this->_getParam('store_extension_id', 0);
+        $paid = (int)$this->_getParam('payment', 0);
+        if($store_extension_id > 0 && $this->getRequest()->isPost()) {
+            $storeExtension = new Application_Model_StoreExtension();
+            try {
+                $storeExtension->markAsPaid($paid, $store_extension_id);
+                $this->getResponse()->setBody('done');
+            } catch(Exception $e) {
+                if ($log = $this->getLog()) {
+                    $log->log('Set extension payment- ', LOG_ERR, $e->getMessage());
+                }
+                $this->getResponse()->setBody('error');
+            }
+        } else {
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
     }
 
     public function extensionsAction() {
@@ -919,30 +1000,84 @@ class QueueController extends Integration_Controller_Action {
                     }
                 }
             } 
-            $domain = $this->_getParam('domain');        
-            $storeModel=  new Application_Model_Store();
-            $store = $storeModel->findByDomain($domain);      
+
+            $parent_id = 0;
+            $is_paid_encoded_extension = false;
+            if(isset($extension)) {
+                if(!preg_match('/\(Open Source\)\s*$/', $revisionModel->getComment())) {
+                    $found_open_source = false;
+                    foreach($revisionModel->getAllForStore($store->id) as $store_revision) {
+                        if(
+                            $store_revision->extension_id = $extension->getId()
+                            && preg_match('/\(Open Source\)\s*$/', $store_revision->comment)
+                        ) {
+                            $found_open_source = true;
+                            break;
+                        }
+                    }
+                    if(!$found_open_source) {
+                        $is_paid_encoded_extension = true;
+                    }
+                }
+            }
+            // request deployement for paid extension but without opened source
+            // in that case add task to open it first
+            if($is_paid_encoded_extension) {
+                $extensionModel = new Application_Model_Extension();
+                $extensionModel->find($revisionModel->getExtensionId());
+
+                $queueModel = new Application_Model_Queue();
+                $queueModel->setStoreId($store->id);
+                $queueModel->setTask('ExtensionOpensource');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($store->user_id);
+                $queueModel->setServerId($store->server_id);
+                $queueModel->setExtensionId($extension->getExtensionId());
+                $queueModel->setParentId(0);
+                $queueModel->save();
+                $parent_id = $queueModel->getId();
+                unset($queueModel);
+
+                $queueModel = new Application_Model_Queue();
+                $queueModel->setStoreId($store->id);
+                $queueModel->setTask('RevisionCommit');
+                $queueModel->setTaskParams(
+                    array(
+                        'commit_comment' => $extension_data->getName() . ' (Open Source)',
+                        'commit_type' => 'extension-decode'
+                    )
+                );
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($store->user_id);
+                $queueModel->setServerId($store->server_id);
+                $queueModel->setExtensionId($extension->getExtensionId());
+                $queueModel->setParentId($parent_id);
+                $queueModel->save();
+                $parent_id = $queueModel->getId();
+
+            }
 
             $queueModel = new Application_Model_Queue();
             $queueModel->setTask('RevisionDeploy');
             $queueModel->setTaskParams(
                 array(
-                    'revision_id'=> $this->_getParam('revision')
+                    'revision_id' => $is_paid_encoded_extension ? 'paid_open_source' : $this->_getParam('revision')
                 )
             );
-           
+
             $queueModel->setStoreId($store->id);
             $queueModel->setServerId($store->server_id);
-            $queueModel->setParentId(0);
+            $queueModel->setParentId($parent_id);
             $queueModel->setExtensionId($revisionModel->getExtensionId());
             $queueModel->setAddedDate(date("Y-m-d H:i:s"));
             $queueModel->setStatus('pending');
             $queueModel->setUserId($this->auth->getIdentity()->id);
             $queueModel->save();
-            
+
+            $storeModel = new Application_Model_Store();
             $storeModel->find($store->id);
             $storeModel->setStatus('deploying-revision')->save();
-            
+
             $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'Deployment package will be created soon and will be available to download on Deployment list.'));
         }
         return $this->_helper->redirector->gotoRoute(array(
@@ -970,38 +1105,55 @@ class QueueController extends Integration_Controller_Action {
             $store->user_id == $this->auth->getIdentity()->id
         ) {
             $model = new Application_Model_Revision();
-            //var_dump($model->getAllForStore($store->id)->toArray());die;
-            foreach($model->getAllForStore($store->id) as $revision) {
+            $deployment_list = $model->getAllForStore($store->id);
+            foreach($deployment_list as $revision) {
+                var_dump($revision->toArray());
                 if($revision['type']=='magento-init'){
                     continue;
                 }
-                
-                
-                $content .= '<tr>'.PHP_EOL;
-                $content .= '<td>'.$revision['comment'].'</td>'.PHP_EOL;
-                $content .= '<td>'.PHP_EOL;
+
+                $row = '';
+                $row .= '<tr>'.PHP_EOL;
+                $row .= '<td>'.$revision['comment'].'</td>'.PHP_EOL;
+                $row .= '<td>'.PHP_EOL;
                     //<button class="btn" type="submit" name="deploy" value="'.$revision['id'].'">Deploy</button>
                 $download_button = '<a class="btn btn-primary download-deployment" href="'.
                     'http://'.$this->auth->getIdentity()->login.'.'.$server->getDomain().'/'.$domain.'/var/deployment/'.$revision['filename']
                 .'">Download</a>'.PHP_EOL;
-                               
-                if( (int)$revision['extension_id'] 
-                    AND !$revision['braintree_transaction_id']
-                    && $revision['price']>0
-                ) {
-                    $request_button = '<button type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
-                } else {
-                    $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
+                if((int)$revision['extension_id']) {
+                    // check whether extension has open source revision
+                    // and do not display old revision if open source exists
+                    if(!preg_match('/\(Open Source\)\s*$/', $revision['comment'])) {
+                        $open_source = false;
+                        foreach(clone $deployment_list as $deployment) {
+                            if($deployment['extension_id'] == $revision['extension_id']
+                               && $deployment['id'] != $revision['id']
+                               && preg_match('/\(Open Source\)\s*$/', $deployment['comment'])
+                            ) {
+                                $open_source = true;
+                            }
+                        }
+                        if($open_source) {
+                            continue;
+                        }
+                    }
+                    if(!$revision['braintree_transaction_id'] && $revision['price']>0) {
+                        $request_button = '<button type="submit" data-store-domain="'.$domain.'" class="btn request-deployment request-buy" name="revision" value="'.$revision['extension_id'].'">Buy To Request Deployment</a>'.PHP_EOL;
+                    } else {
+                        $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
+                    }
                 }
-                
-                $content .= (($revision['filename'] AND
+
+                $row .= (($revision['filename'] AND
                     (
                         $revision['braintree_transaction_id'] OR $revision['price'] == 0
                     )
                 ) ? $download_button : $request_button) . PHP_EOL;
 
-                $content .= '</td>'.PHP_EOL;
-                $content .= '</tr>'.PHP_EOL;
+                $row .= '</td>'.PHP_EOL;
+                $row .= '</tr>'.PHP_EOL;
+
+                $content .= $row;
             }
         }
         $this->_response->setBody($content);
@@ -1168,7 +1320,7 @@ class QueueController extends Integration_Controller_Action {
         
         $this->_ftpStream = @ftp_connect($this->_customHost,(int)$request->getParam('custom_port'),3600); 
         if ($this->_ftpStream){
-            if (ftp_login($this->_ftpStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
+            if (@ftp_login($this->_ftpStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
             } else {
                 return false;
@@ -1198,9 +1350,15 @@ class QueueController extends Integration_Controller_Action {
         if (trim($customPort) == ''){
             $customPort = 22;
         }
+        
+        /**
+         * [jan] I had to add erro supression, 
+         * otherwise ajax actions returns errors from these functions 
+         * and cannot display error message
+         */
         $this->_sshStream = @ssh2_connect($this->_customHost,$customPort); 
         if ($this->_sshStream){
-            if (ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
+            if (@ssh2_auth_password($this->_sshStream,$request->getParam('custom_login'),$request->getParam('custom_pass'))){
                 return true;
             } else {
                 return false;
