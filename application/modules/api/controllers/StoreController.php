@@ -233,7 +233,11 @@ class Api_StoreController extends Integration_Controller_Action
             $fields = $this->_mapFormKeys($fields);
             $fields = array_keys($fields);
             if(!$fields) { $fields == array(); }
-            $this->_response_object['message'] = 'Following field values are invalid: '. implode(', ',$fields).'. Please fix them and try again.';
+            if(in_array('version', $fields, true)) {
+                $this->_response_object['message'] = 'We are sorry, Enterprise Edition is not currently supported on your Mage Testing account.';
+            } else {
+                $this->_response_object['message'] = 'Following field values are invalid: '. implode(', ',$fields).'. Please fix them and try again.';
+            }
         }
         $this->auth->getStorage()->clear();
     }
