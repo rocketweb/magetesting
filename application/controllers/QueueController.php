@@ -1119,7 +1119,7 @@ class QueueController extends Integration_Controller_Action {
                         $response['message'] = 'Webroot has been found successfully.';
                     } else {
                         $response['status'] = 'error';
-                        $response['message'] = 'Credentials correct, but webroot couldn\'t be found.';
+                        $response['message'] = 'Credentials are correct. We haven\'t been able to find magento root path, please fill fields below then';
                     }
                 } else {
                     $response['status'] = 'error';
@@ -1134,7 +1134,7 @@ class QueueController extends Integration_Controller_Action {
                         $response['message'] = 'Webroot has been found successfully.';
                     } else {
                         $response['status'] = 'error';
-                        $response['message'] = 'Credentials correct, but webroot couldn\'t be found.';
+                        $response['message'] = 'Credentials are correct. We haven\'t been able to find magento root path, please fill fields below then';
                     }
                 } else {
                     $response['status'] = 'error';
