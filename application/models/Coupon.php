@@ -169,9 +169,9 @@ class Application_Model_Coupon {
         return $this->getMapper()->fetchList();
     }
 
-    public function apply($coupon_id, $user_id)
+    public function apply($coupon_id, $user_id, $start_time = 0)
     {
-        return $this->getMapper()->apply($coupon_id, $user_id);
+        return $this->getMapper()->apply($coupon_id, $user_id, $start_time);
     }
 
     public function findByUser($user_id) {
@@ -201,6 +201,28 @@ class Application_Model_Coupon {
             'active_to' => $this->getActiveTo(),
         );
     }
-    
-    
+
+    public function getNextFreeTrialDate($couponsPerDay) {
+        return $this->getMapper()->getNextFreeTrialDate($couponsPerDay);
+    }
+
+    public function createNewFreeTrial($date) {
+        $plan = new Application_Model_Plan();
+        $plan = $plan->find(1);
+
+        $couponExists = new Application_Model_Coupon();
+        $freeTrialCode = 'free-trial-'.$date;
+
+        $this->_id = NULL;
+        $this->setDuration($plan->getBillingPeriod())
+             ->setPlanId(1)
+             ->setActiveTo($date)
+             ->setCode($freeTrialCode)
+             ->save();
+
+        if($this->getId()) {
+            return true;
+        }
+        return false;
+    }
 }
