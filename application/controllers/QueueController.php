@@ -1113,7 +1113,6 @@ class QueueController extends Integration_Controller_Action {
         switch($request->getParam('custom_protocol')){
             case 'ftp':
                 if($this->_validateFtpCredentials()) {
-                    $response['message'] = 'Webroot couldn\'t be found.';
                     if(($response['value'] = $this->_findWebrootOnFtp())) {
                         $response['status'] = 'success';
                         $response['message'] = 'Webroot has been found successfully.';
@@ -1128,7 +1127,6 @@ class QueueController extends Integration_Controller_Action {
             break;
             case 'ssh':
                 if ($this->_validateSshCredentials()) {
-                    $response['message'] = 'Webroot couldn\'t be found.';
                     if (($response['value'] = $this->_findWebrootOnSsh())) {
                         $response['status'] = 'success';
                         $response['message'] = 'Webroot has been found successfully.';
