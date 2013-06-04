@@ -50,7 +50,7 @@ try {
                     $extensionModel->setName(ucwords(str_replace('_', ' ', $mt_extension)));
                     $extensionModel->setExtensionKey($mt_extension);
                     $extensionModel->setDescription((string)$xml->summary[0]);
-                    $extensionModel->setAuthor((string)$xml->authors->author->user[0]);
+                    $extensionModel->setAuthor((string)$xml->authors->author->name[0]);
                     $extensionModel->setEdition('CE');
                     $extensionModel->setFromVersion('1.4.0.0');
                     $extensionModel->setToVersion('1.8.0.0');
@@ -111,3 +111,50 @@ try {
 }
 
 Zend_Auth::getInstance()->getStorage()->clear();
+
+
+/* script which was used to update extensions with author "auto-converted"
+
+include 'init.console.php';
+
+$select = new Zend_Db_Select($db);
+$sql = $select
+->from('extension')
+->where('author = ?', 'auto-converted');
+
+$update_info = array(
+        'updated' => 0,
+        'extensions_to_update' => 0,
+        'errors' => 0,
+);
+$result = $db->fetchAll($sql);
+if($result) {
+    $update_info['extensions_to_update'] = count($result);
+    $magento_url = 'http://connect20.magentocommerce.com/community/';
+    foreach($result as $row) {
+        try {
+            $http = new Zend_Http_Client($magento_url . $row['extension_key'] . '/' . $row['version'] . '/package.xml');
+            $response = $http->request();
+            if(!$response->isError()) {
+                $xml = new SimpleXMLElement($response->getBody());
+                $set = array(
+                    'author' => (string)$xml->authors->author->name[0]
+                );
+                $where = array(
+                    'id = ?' => $row['id']
+                );
+                $db->update('extension', $set, $where);
+                $update_info['updated'] += 1;
+            }
+            $rand = array(500000,740000, 1000000);
+            shuffle($rand);
+            usleep(array_pop($rand));
+        } catch(Exception $e) {
+            $log->log('Fixing "auto-converted" author in extensions', Zend_Log::ERR, $e->getMessage());
+            $update_info['errors'] += 1;
+        }
+    }
+}
+
+$log->log('Fixing "auto-converted" author in extensions', Zend_Log::INFO, var_export($update_info, true));
+*/
