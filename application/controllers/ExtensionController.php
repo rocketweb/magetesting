@@ -404,7 +404,24 @@ class ExtensionController extends Integration_Controller_Action {
                     $extension = new Application_Model_Extension();
                     // set news id to the one passed by get param
                     try {
-                        $extension->delete($request->getParam('id'));
+                        $extension->find($request->getParam('id'));
+                        if($extension->getName()) {
+                            $duplicates = $extension->fetchDuplicatedFilesCount((string)$extension->getExtension(), (string)$extension->getExtensionEncoded());
+                            $extensions_path = APPLICATION_PATH . '/data/extensions/' . strtoupper($extension->getEdition());
+                            if(1 === (int)$duplicates['open']) {
+                                $file_path = $extensions_path . '/open/' . $extension->getExtension();
+                                if(file_exists($file_path)) {
+                                    unlink($file_path);
+                                }
+                            }
+                            if($extension->getExtensionEncoded() && 1 === (int)$duplicates['encoded']) {
+                            $file_path = $extensions_path . '/encoded/' . $extension->getExtensionEncoded();
+                                if(file_exists($file_path)) {
+                                    unlink($file_path);
+                                }
+                            }
+                            $extension->delete($request->getParam('id'));
+                        }
                     } catch(Exception $e) {
                         $this->getLog()->log('Admin - extension delete', Zend_Log::ERR, $e->getMessage());
                         $flash_message = array(
