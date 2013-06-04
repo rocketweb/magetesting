@@ -240,4 +240,17 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($select);
     }
+
+    public function fetchDuplicatedFilesCount($open, $encoded)
+    {
+        $main_select = 
+            $this->select()
+                 ->setIntegrityCheck(false);
+        $open_select = $this->select()->setIntegrityCheck(false)->from($this->_name, new Zend_Db_Expr('count(*)'));
+        $encoded_select = clone $open_select;;
+        $open_select->where('extension = ?', $open);
+        $encoded_select->where('extension_encoded = ?', $encoded);
+        $main_select->from(NULL, array('open' => $open_select, 'encoded' => $encoded_select));
+        return $this->fetchRow($main_select);
+    }
 }
