@@ -274,7 +274,16 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
          * becasue we have only downloaded file without filepath 
          */
         $pathinfo  = pathinfo($this->_customFile);
-        exec('tar -zxf '.$pathinfo['basename'].' -C temporarystoredir/');
+        $output = array();
+        exec('tar -zxvf '.$pathinfo['basename'].' -C temporarystoredir/', $output);
+        foreach($output as $line) {
+            if(
+                stristr($line, 'not in gzip format')
+                || stristr($line, 'This does not look like a tar archive')
+            ) {
+                throw new Application_Model_Transport_Exception('Provided archive containing store files is not valid tar.gz file.');
+            }
+        }
         
         $this->_moveFiles();
         
