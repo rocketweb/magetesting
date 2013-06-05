@@ -48,18 +48,18 @@
         <?php else: ?>
             <?php if($extension['category_logo']): ?>
                 <div class="icon big">
-                    <?php echo $this->Thumbnail($extension['category_logo'], null, 110, array('alt' => $extension['category_logo']), $this->ImagePath($extension['category_logo'], 'extension_category', false, false)); ?>
+                    <?php echo $this->Thumbnail($extension['category_logo'], null, 110, array('alt' => $extension['category_logo']), '/public/img/extensions/'); ?>
                 </div>
                 <div class="icon small">
-                    <?php echo $this->Thumbnail($extension['category_logo'], null, 38, array('alt' => $extension['category_logo']), $this->ImagePath($extension['category_logo'], 'extension_category', false, false)); ?>
+                    <?php echo $this->Thumbnail($extension['category_logo'], null, 38, array('alt' => $extension['category_logo']), '/public/img/extensions/'); ?>
                 </div>
             <?php else: ?>
                 <?php $random_logo = $this->categories[mt_rand(0,2)]->getLogo(); ?>
                 <div class="icon big">
-                    <?php echo $this->Thumbnail($random_logo, null, 110, array('alt' => $random_logo), $this->ImagePath($random_logo, 'extension_category', false, false)); ?>
+                    <?php echo $this->Thumbnail($random_logo, null, 110, array('alt' => $random_logo), '/public/img/extensions/'); ?>
                 </div>
                 <div class="icon small">
-                    <?php echo $this->Thumbnail($random_logo, null, 38, array('alt' => $random_logo), $this->ImagePath($random_logo, 'extension_category', false, false)); ?>
+                    <?php echo $this->Thumbnail($random_logo, null, 38, array('alt' => $random_logo), '/public/img/extensions/'); ?>
                 </div>
             <?php endif; ?>
             
