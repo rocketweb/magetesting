@@ -279,6 +279,7 @@ extends Application_Model_Transport {
             if(
                 stristr($line, 'not in gzip format')
                 || stristr($line, 'This does not look like a tar archive')
+                || stristr($line, 'unexpected end of file')
             ) {
                 throw new Application_Model_Transport_Exception('Provided archive containing store files is not valid tar.gz file.');
             }
