@@ -275,7 +275,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
          */
         $pathinfo  = pathinfo($this->_customFile);
         $output = array();
-        exec('tar -zxvf '.$pathinfo['basename'].' -C temporarystoredir/', $output);
+        exec('tar -zxvf '.$pathinfo['basename'].' -C temporarystoredir/ 2>&1', $output);
         foreach($output as $line) {
             if(
                 stristr($line, 'not in gzip format')

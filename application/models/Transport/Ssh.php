@@ -270,7 +270,7 @@ extends Application_Model_Transport {
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
                 .' -p'.$this->_customPort.' "cat '.$this->_customFile.'"'
-                .' | sudo tar -xzvf - -C .';
+                .' | sudo tar -xzvf - -C . 2>&1';
         exec($command,$output);
         $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
         $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
