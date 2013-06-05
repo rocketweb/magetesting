@@ -207,4 +207,13 @@ class Application_Model_ExtensionMapper {
         return $extension;
     }
 
+    public function fetchDuplicatedFilesCount($open, $encoded) {
+        $result = $this->getDbTable()->fetchDuplicatedFilesCount($open, $encoded);
+        if(!$result) {
+            $result = array('open' => 0, 'encoded' => 0);
+        } else {
+            $result = $result->toArray();
+        }
+        return $result;
+    }
 }

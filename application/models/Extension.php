@@ -463,4 +463,11 @@ class Application_Model_Extension {
         }
         return true;
     }
+
+    /*
+     * returns number of extensions which has files with the same name as passed to method
+     */
+    public function fetchDuplicatedFilesCount($open, $encoded) {
+        return $this->getMapper()->fetchDuplicatedFilesCount($open, $encoded);
+    }
 }
