@@ -305,7 +305,9 @@ ALTER TABLE `store_log`
 ";
 
 
-function _remove_empty($element) {
-    return strlen(trim((string)$element));
+if (!function_exists('_remove_empty')) {
+    function _remove_empty($element) {
+        return strlen(trim((string)$element));
+    }
 }
 $sql = array_filter(explode(';', $schema), '_remove_empty');

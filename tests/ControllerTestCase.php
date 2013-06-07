@@ -2,10 +2,10 @@
 require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
 require_once 'Braintree/Braintree.php';
 
-//require_once 'Zend/Db.php';
-//require_once 'Zend/Config/Ini.php';
-//require_once 'Zend/Test/PHPUnit/Db/Connection.php';
-//require_once 'Zend/Test/PHPUnit/Db/SimpleTester.php';
+require_once 'Zend/Db.php';
+require_once 'Zend/Config/Ini.php';
+require_once 'Zend/Test/PHPUnit/Db/Connection.php';
+require_once 'Zend/Test/PHPUnit/Db/SimpleTester.php';
 /**
  * Abstract Class for Test Controllers
  * Define setUp method
@@ -16,7 +16,7 @@ abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
     public function setUp()
     {   
-//        $this->setupDatabase();
+        //$this->setupDatabase();
         $this->bootstrap = new Zend_Application(
             'testing',
             APPLICATION_PATH . '/configs/application.ini'
