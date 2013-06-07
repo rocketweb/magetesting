@@ -92,7 +92,7 @@ class Application_Model_CouponMapper {
             'user_id = ?' => $user_id,
             new Zend_Db_Expr('date(CURRENT_TIMESTAMP) <= date(active_to)')
         );
-        $result = $this->getDbTable()->fetchAll($where, 'id DESC');
+        $result = $this->getDbTable()->fetchAll($where, 'used_date DESC');
         if (0 == count($result)) {
             return false;
         }
