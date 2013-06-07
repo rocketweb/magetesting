@@ -716,51 +716,91 @@ class QueueController extends Integration_Controller_Action {
                     /* Adding extension to queue */
                     try {
                         $extensionId = $request->getParam('extension_id');
-        
+                        /* Get extension data and add commit task */
+                        $extensionModel = new Application_Model_Extension();
+                        $extensionModel->find($request->getParam('extension_id'));
+
                         //add row to store_extension
                         $storeExtensionModel = new Application_Model_StoreExtension();
                         $storeExtensionModel->setStoreId($storeRow->getId());
                         $storeExtensionModel->setExtensionId($extensionId);
                         $storeExtensionModel->setStatus('pending');
                         $storeExtensionModel = $storeExtensionModel->save();
-        
-                        /**
-                         * Find if we have any other ExtensionInstall tasks
-                         * for this store
-                        */
-                        $extensionQueueItem = new Application_Model_Queue();
-                        $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($storeRow->getId());
-        
-                        $extensionQueueItem->setStoreId($storeRow->getId());
-                        $extensionQueueItem->setStatus('pending');
-                        $extensionQueueItem->setUserId($storeRow->getUserId());
-                        $extensionQueueItem->setExtensionId($extensionId);
-                        $extensionQueueItem->setParentId($extensionParent);
-                        $extensionQueueItem->setServerId($storeRow->getServerId());
-                        $extensionQueueItem->setTask('ExtensionInstall');
-                        $extensionQueueItem->save();
-        
-                        /* Get extension data and add commit task */
-                        $extensionModel = new Application_Model_Extension();
-                        $extensionModel->find($request->getParam('extension_id'));
-        
-                        $queueId = $extensionQueueItem->getId();
-                        $queueModel = new Application_Model_Queue();
-                        $queueModel->setStoreId($storeRow->getId());
-                        $queueModel->setStatus('pending');
-                        $queueModel->setUserId($storeRow->getUserId());
-                        $queueModel->setExtensionId($extensionId);
-                        $queueModel->setParentId($queueId);
-                        $queueModel->setServerId($storeRow->getServerId());
-                        $queueModel->setTask('RevisionCommit');
-                        $queueModel->setTaskParams(
+
+                        $coupon = new Application_Model_Coupon();
+                        $coupon->findByUser($storeRow->getUserId());
+                        $freeExtensionKey = $coupon->getExtensionKey();
+                        if(
+                            $coupon->getId()
+                            && $freeExtensionKey
+                            && $extensionModel->getExtensionEncoded()
+                            && $extensionModel->getExtensionKey() === $freeExtensionKey
+                        ) {
+                            $storeExtensionModel
+                                ->setBraintreeTransactionId(-1)
+                                ->setBraintreeTransactionConfirmed(1)
+                                ->save();
+                            $queueModel = new Application_Model_Queue();
+                            $queueModel->setStoreId($storeRow->getId());
+                            $queueModel->setTask('ExtensionOpensource');
+                            $queueModel->setStatus('pending');
+                            $queueModel->setUserId($storeRow->getUserId());
+                            $queueModel->setServerId($storeRow->getServerId());
+                            $queueModel->setExtensionId($extensionModel->getId());
+                            $queueModel->setParentId($queueModel->getParentIdForExtensionInstall($storeRow->getId()));
+                            $queueModel->save();
+                            $parent_id = $queueModel->getId();
+                            
+                            $queueModel = new Application_Model_Queue();
+                            $queueModel->setStoreId($storeRow->getId());
+                            $queueModel->setTask('RevisionCommit');
+                            $queueModel->setTaskParams(
                                 array(
-                                        'commit_comment' => 'Adding ' . $extensionModel->getName() . ' (' . $extensionModel->getVersion() . ')',
-                                        'commit_type' => 'extension-install'
+                                    'commit_comment' => $extensionModel->getName() . ' (Open Source)',
+                                    'commit_type' => 'extension-decode'
                                 )
-                        );
-                        $queueModel->save();
-        
+                            );
+                            $queueModel->setStatus('pending');
+                            $queueModel->setUserId($storeRow->getUserId());
+                            $queueModel->setServerId($storeRow->getServerId());
+                            $queueModel->setExtensionId($extensionModel->getId());
+                            $queueModel->setParentId($parent_id);
+                            $queueModel->save();
+                        } else {
+                            /**
+                             * Find if we have any other ExtensionInstall tasks
+                             * for this store
+                             */
+                            $extensionQueueItem = new Application_Model_Queue();
+                            $extensionParent = $extensionQueueItem->getParentIdForExtensionInstall($storeRow->getId());
+            
+                            $extensionQueueItem->setStoreId($storeRow->getId());
+                            $extensionQueueItem->setStatus('pending');
+                            $extensionQueueItem->setUserId($storeRow->getUserId());
+                            $extensionQueueItem->setExtensionId($extensionId);
+                            $extensionQueueItem->setParentId($extensionParent);
+                            $extensionQueueItem->setServerId($storeRow->getServerId());
+                            $extensionQueueItem->setTask('ExtensionInstall');
+                            $extensionQueueItem->save();
+
+                            $queueId = $extensionQueueItem->getId();
+                            $queueModel = new Application_Model_Queue();
+                            $queueModel->setStoreId($storeRow->getId());
+                            $queueModel->setStatus('pending');
+                            $queueModel->setUserId($storeRow->getUserId());
+                            $queueModel->setExtensionId($extensionId);
+                            $queueModel->setParentId($queueId);
+                            $queueModel->setServerId($storeRow->getServerId());
+                            $queueModel->setTask('RevisionCommit');
+                            $queueModel->setTaskParams(
+                                    array(
+                                            'commit_comment' => 'Adding ' . $extensionModel->getName() . ' (' . $extensionModel->getVersion() . ')',
+                                            'commit_type' => 'extension-install'
+                                    )
+                            );
+                            $queueModel->save();
+                        }
+
                         $this->_response->setBody($storeExtensionModel->getId());
                     } catch (Exception $e) {
                         if ($log = $this->getLog()) {

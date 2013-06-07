@@ -61,6 +61,7 @@ class Application_Model_CouponMapper {
              ->setPlanId($row->plan_id)
              ->setDuration($row->duration)
              ->setActiveTo($row->active_to)
+             ->setExtensionKey($row->extension_key)
              ;
         return $coupon;
     }
@@ -80,13 +81,18 @@ class Application_Model_CouponMapper {
              ->setPlanId($row->plan_id)
              ->setDuration($row->duration)
              ->setActiveTo($row->active_to)
+             ->setExtensionKey($row->extension_key)
              ;
         return true;
     }
 
     public function findByUser($user_id, Application_Model_Coupon $coupon)
     {
-        $result = $this->getDbTable()->fetchAll($this->getDbTable()->select()->where('user_id = ?', $user_id));
+        $where = array(
+            'user_id = ?' => $user_id,
+            new Zend_Db_Expr('date(CURRENT_TIMESTAMP) <= date(active_to)')
+        );
+        $result = $this->getDbTable()->fetchAll($where, 'id DESC');
         if (0 == count($result)) {
             return false;
         }
@@ -98,7 +104,9 @@ class Application_Model_CouponMapper {
                ->setUserId($row->user_id)
                ->setPlanId($row->plan_id)
                ->setDuration($row->duration)
-               ->setActiveTo($row->active_to);
+               ->setActiveTo($row->active_to)
+               ->setExtensionKey($row->extension_key)
+                ;
         return $coupon;
     }
 
@@ -120,6 +128,7 @@ class Application_Model_CouponMapper {
              ->setPlanId($row->plan_id)
              ->setDuration($row->duration)
              ->setActiveTo($row->active_to)
+             ->setExtensionKey($row->extension_key)
                 ;
             $entries[] = $entry;
         }
