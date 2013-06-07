@@ -205,6 +205,14 @@ implements Application_Model_Task_Interface {
 
         $localXml = file_get_contents($localXmlPath);
         $localXml = preg_replace("#<connection>(.*?)</connection>#is",$connectionString,$localXml);
+
+        // revert cache and session type of storage to file type
+        $localXml = preg_replace(
+            '/\<(cache|session)\>(.*)\<type\>(.*)\<\/type\>(.*)\<\/\1\>/is',
+            '<$1>$2<type></type>$4</$1>',
+            $localXml
+        );
+
         file_put_contents($this->_storeFolder .'/'. $this->_domain.'/app/etc/local.xml',$localXml);
         unset($localXml);
     }
