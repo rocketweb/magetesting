@@ -802,11 +802,18 @@ $(document).ready(function () {
     
     $("#iconmenu-help, #context-help i").click(function () {
         var $helpBlock = $('#wrap-context-help');
+
+        if ($helpBlock.length == 0) {
+            return;
+        }
+
         $helpBlock.animate({
             right: parseInt($helpBlock.css('right'), 10) == 0 ?
                 -$helpBlock.outerWidth() :
                 0
         });
+
+        return false;
     });
 
     var $free_trial = $('.free-trial');

@@ -39,7 +39,7 @@ class Zend_View_Helper_IconMenu extends Zend_View_Helper_Navigation_Menu
 		
 		// is a dropdown?
 		$dropDownCaret = '';
-		if(count($page->pages)){
+		if($page->dropdown) {
 			$attribs['data-toggle'] = 'dropdown';
 			$dropDownCaret = ' <b class="caret caret-white"></b>';
 		}

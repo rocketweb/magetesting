@@ -19,8 +19,9 @@
         if($index === $allPages - 1){ $class[] = 'last'; }
         
         $class = implode(' ',$class);
+            
         ?>
-        	<?php if(count($subpage->pages)): ?>
+        	<?php if(count($subpage->pages) && $subpage->dropdown): ?>
         	<li class="<?php echo $class; ?>">
         		<?php echo $this->iconMenu()->htmlify($subpage); ?>
 				<ul class="dropdown-menu">

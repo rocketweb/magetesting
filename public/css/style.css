@@ -1822,16 +1822,25 @@ div.help div.form-box div.box h3 a {
     text-decoration: underline;
 }
 div.help div.form-box div.box ul {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-left: 0;
 }
 div.help div.form-box div.box ul li {
-    margin: 10px 20px 10px 12px;
+    margin: 0px 20px 0px 40px;
 }
 div.help div.form-box div.box ul li:last-of-type {
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 div.help div.form-box div.content p {
+    margin: 12px 25px;
+}
+div.help div.form-box div.content h4 {
+    margin: 22px 25px;
+}
+div.help div.form-box div.content h5 {
+    margin: 22px 25px;
+}
+div.help div.form-box div.content dl {
     margin: 12px 25px;
 }
 div.help div.form-box div.content p:last-of-type {
