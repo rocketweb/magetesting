@@ -33,7 +33,6 @@ class PaymentController extends Integration_Controller_Action
     protected function _response() {
         $user = new Application_Model_User();
         $user->find($this->auth->getIdentity()->id);
-        
         try {
             $flash_message = NULL;
             $redirect = NULL;
@@ -54,6 +53,9 @@ class PaymentController extends Integration_Controller_Action
                     $id = null;
                 }
 
+                // used when user purchased extra stores to pass it to admin notification email
+                $additional_stores = 0;
+
                 // Handle payment response by type
                 if($pay_for == 'plan') {
                     $plan = new Application_Model_Plan();
@@ -72,7 +74,7 @@ class PaymentController extends Integration_Controller_Action
                         $transaction_name = $plan->getName();
                         $transaction_type = 'subscription';
                     }
-                } else { // if $pay_for == 'extension'
+                } elseif($pay_for === 'extension') {
                     $store = new Application_Model_Store();
                     $store = $store->findByDomain($domain);
                     if(is_object($store) AND (int)$store->id AND $user->getId() == $store->user_id) {
@@ -101,6 +103,16 @@ class PaymentController extends Integration_Controller_Action
                         }
                     } else { // wrong domain name or user does not have given store
                         throw new Braintree_Controller_Exception('Store('.$domain.') does not belong to user('.$user->getId().') or store does not exist.');
+                    }
+                } else { // if $pay_for == 'additional-stores'
+                    if(preg_match('/^.*\-(\d+)$/i', $transaction_data->orderId, $match)) {
+                        $additional_stores = (int)$match[1];
+                        $user->setAdditionalStores((int)$user->getAdditionalStores()+$additional_stores);
+                        $user->save();
+                        $transaction_name = '+'.$additional_stores.' stores';
+                        $transaction_type = 'additional-stores';
+                    } else {
+                        throw new Braintree_Controller_Exception('Number of additionals stores to add not found for user '.$user->getId());
                     }
                 }
 
@@ -210,7 +222,7 @@ class PaymentController extends Integration_Controller_Action
                     );
                     $adminNotificationEmailType = 'boughtExtension';
                     $adminNotificationData['extension'] = $extensionModel;
-                } else {
+                } elseif('plan' === $pay_for) {
                     $flash_message = 'You have successfully paid for your plan.';
                     $redirect = array(
                             'controller' => 'my-account',
@@ -218,6 +230,14 @@ class PaymentController extends Integration_Controller_Action
                     );
                     $adminNotificationEmailType = 'boughtPlan';
                     $adminNotificationData['plan'] = $plan;
+                } else {
+                    $flash_message = 'You have successfully bought additional store(s).';
+                    $redirect = array(
+                        'controller' => 'user',
+                        'action' => 'dashboard'
+                    );
+                    $adminNotificationEmailType = 'additionalStores';
+                    $adminNotificationData['additional_stores'] = $additional_stores;
                 }
                 // send admin email
                 if($adminNotificationEmailType) {
@@ -414,6 +434,7 @@ class PaymentController extends Integration_Controller_Action
             } else {
                 $data = $plan->__toArray();
                 $data['additional_stores'] = $additional_stores;
+                $data['price'] = (float)$data['store_price']*100*$additional_stores/100;
             }
             if(is_object($model)) {
                 $row = $model->find($id);
@@ -447,7 +468,15 @@ class PaymentController extends Integration_Controller_Action
                 $this->view->show_billing_and_card = true;
                 if($user->getBraintreeVaultId()) {
                     $transaction['customerId'] = $user->getBraintreeVaultId();
-                    $transaction['orderId'] = $domain.'-ext-'.$id;
+                    if($pay_for === 'extension') {
+                        $order_type = '-ext-';
+                    } elseif($pay_for === 'plan') {
+                        $order_type = '-plan-';
+                    } else {
+                        $order_type = '-additional_store-'.$user->getId().'-'.time().'-';
+                        $id = $additional_stores;
+                    }
+                    $transaction['orderId'] = $domain.$order_type.$id;
                     $transaction['options']['storeInVaultOnSuccess'] = false;
                     $transaction['options']['addBillingAddressToPaymentMethod'] = false;
                     $this->view->show_billing_and_card = false;
