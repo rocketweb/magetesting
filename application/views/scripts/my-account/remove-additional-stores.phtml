@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="span12">
+        <h1>Your Mage Testing Account Details</h1>
+        <div class="form-box">
+            <div class="box">
+                <form class="form-stacked" id="payment-form" method="POST">
+                    <div class="tab-stripe"></div>
+                    <fieldset>
+                        <legend>Basic Info</legend>
+                        <div class="span8">
+                            <p>
+                                Remember that when you remove additional stores from your plan
+                            </p>
+                            <p>
+                                You will also have to remove stores from dashboard before
+                                next billing period come
+                            </p>
+                            <p>Additional Stores: <b><?php echo $this->user->getAdditionalStores(); ?></b></p>
+                            <p>Canceled Stores: <b><?php echo $this->user->getAdditionalStoresRemoved(); ?></b></p>
+                        </div>
+                    </fieldset>
+                    <div class="tab-stripe"></div>
+                    <fieldset>
+                        <legend>Remove Additional Stores</legend>
+                        <p>Stores: <input class="span1" type="number" name="additional-stores-quantity" min="1" max="<?php echo $this->left_stores; ?>" value="1" /></p>
+                    </fieldset>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-inverse pull-right">
+                            <i class="icon-white icon-ok"></i>&nbsp;Remove
+                        </button>
+    
+                        <a href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'index'), 'default', true)
+                        ?>" class="btn">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

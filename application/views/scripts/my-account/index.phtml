@@ -128,6 +128,17 @@
                     </div>
                     <hr />
                     */ ?>
+                    <?php if((int)$this->user->getAdditionalStores()): ?>
+                    <p>You have <?php echo $this->user->getAdditionalStores(); ?> additional store(s)
+                    <?php if((int)$this->user->getAdditionalStoresRemoved()): ?>
+                    and <?php echo $this->user->getAdditionalStoresRemoved(); ?> of them will be removed on next billing period
+                    - you will be prompted to choose which one
+                    <?php endif; ?>
+                    </p>
+                    <?php if((int)$this->user->getAdditionalStores() > (int)$this->user->getAdditionalStoresRemoved()): ?>
+                    <a class="btn" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'remove-additional-stores')); ?>">Remove additional stores</a>
+                    <?php endif; ?>
+                    <?php endif; ?>
                 </fieldset>
                 
                 <div class="tab-stripe"></div>
