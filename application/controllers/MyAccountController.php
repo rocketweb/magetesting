@@ -262,4 +262,29 @@ class MyAccountController extends Integration_Controller_Action
         }
         $this->view->couponform = $couponForm;
     }
+
+    public function cancelSubscriptionAction()
+    {
+        if($this->getRequest()->isPost()) {
+            $user = new Application_Model_User();
+            $user->find($this->auth->getIdentity()->id);
+            $plan = new Application_Model_Plan();
+            $plan->find($user->getPlanId());
+            if($user->hasPlanActive()
+               && 1 == (int)$user->getBraintreeTransactionConfirmed()
+               && strlen($user->getBraintreeTransactionId())
+               && (int)$plan->getId()
+               && 1 == (int)$plan->getAutoRenew()
+            ) {
+                $user->setBraintreeTransactionConfirmed(-1)->save();
+                $this->_helper->flashMessenger(array('type'=>'success','message' => 'Your subscription has been successfully cancelled.'));
+            }
+        }
+
+        return $this->_helper->redirector->gotoRoute(array(
+            'module' => 'default',
+            'controller' => 'my-account',
+            'action' => 'index',
+        ), 'default', true);
+    }
 }

@@ -72,7 +72,30 @@
                                 <?php elseif(!(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                                     Your account is pending payment. It could take up to 24 hours to confirm your payment. Please enjoy using Mage Testing while we settle your payment details.
                                 <?php elseif((int)$this->user->getPlanId() && $this->plan->getAutoRenew()): ?>
+                                    <?php if(-1 == (int)$this->user->getBraintreeTransactionConfirmed()): ?>
+                                    You have cancelled you subscription, but you can still use your plan till <?php echo date("F j, Y", strtotime($this->user->getPlanActiveTo())); ?>
+                                    <?php else: ?>
                                     Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y", strtotime($this->user->getPlanActiveTo())) ?>
+                                </div>
+                                <div>
+                                    <a href="#cancel-subscription" class="btn" data-toggle="modal">Cancel subscription</a>
+                                    <div class="modal hide fade" id="cancel-subscription">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h3>Subscription</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Do you really want to cancel your subscription? There is no undo<p>
+                                            <p>You will keep your current plan till <?php echo date("F j, Y", strtotime($this->user->getPlanActiveTo())); ?>.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="/my-account/cancel-subscription" method="post">
+                                                <a href="#" class="btn" data-dismiss="modal">Close</a>
+                                                <button type="submit" class="btn btn-danger">Cancel Subscription</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <?php endif; ?>
                                 <?php elseif((int)$this->user->getPlanId()): ?>
                                     Your plan ends on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
                                 <?php endif; ?>
