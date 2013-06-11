@@ -282,10 +282,11 @@ class PaymentController extends Integration_Controller_Action
 
         $pay_for = $this->_getParam('pay-for');
         $id = (int)$this->_getParam('id', 0);
+        $additional_stores = (int)$this->_getParam('additional-stores-quantity', 0);
         $this->view->domain = $domain = $this->_getParam('domain'); 
         try {
             // check whether GET params are ok
-            if(!in_array($pay_for, array('plan', 'extension', 'change-plan'))) {
+            if(!in_array($pay_for, array('plan', 'extension', 'change-plan', 'additional-stores'))) {
                 $pay_for = NULL;
                 $flash_message = array('type' => 'error', 'message' => 'Wrong form type.');
             }
@@ -303,18 +304,33 @@ class PaymentController extends Integration_Controller_Action
             }
 
             // if form type or entity id is wrong, throw exception to help in redirecting
-            if(!$pay_for OR !$id) {
+            if(!$pay_for OR (!$id && $pay_for !== 'additional-stores')) {
                 $redirect = array('controller' => 'my-account', 'action' => 'compare');
                 throw new Braintree_Controller_Exception($flash_message['message']);
             }
 
-            // if user already has given plan, redirect him to compare page
-            if($user->hasPlanActive() AND $id == $user->getPlanId()) {
-                $redirect = array('controller' => 'my-account', 'action' => 'compare');
-                $flash_message = array('type' => 'notice', 'message' => 'You already have this plan.');
-                throw new Braintree_Controller_Exception($flash_message['message']);
+            if($pay_for === 'plan') {
+                // if user already has given plan, redirect him to compare page
+                if($user->hasPlanActive() AND $id == $user->getPlanId()) {
+                    $redirect = array('controller' => 'my-account', 'action' => 'compare');
+                    $flash_message = array('type' => 'notice', 'message' => 'You already have this plan.');
+                    throw new Braintree_Controller_Exception($flash_message['message']);
+                }
             }
 
+            if($pay_for === 'additional-stores') {
+                $plan = new Application_Model_Plan();
+                $plan->find($user->getPlanId());
+                if(
+                    $additional_stores <= 0
+                    || (int)$user->getAdditionalStores() >= $plan->getMaxStores()
+                    || (int)$user->getAdditionalStores()+$additional_stores > $plan->getMaxStores()
+                ) {
+                    $redirect = array('controller' => 'user', 'action' => 'dashboard');
+                    $flash_message = array('type' => 'notice', 'message' => 'You cannot purchase more additional stores.');
+                    throw new Braintree_Controller_Exception($flash_message['message']);
+                }
+            }
             /*
              * display chosen form
              */
@@ -393,8 +409,11 @@ class PaymentController extends Integration_Controller_Action
             $model = null;
             if($pay_for == 'plan' OR $pay_for == 'change-plan') {
                 $model = new Application_Model_Plan();
-            } else {
+            } elseif($pay_for === 'extension') {
                 $model = new Application_Model_Extension();
+            } else {
+                $data = $plan->__toArray();
+                $data['additional_stores'] = $additional_stores;
             }
             if(is_object($model)) {
                 $row = $model->find($id);
@@ -406,7 +425,7 @@ class PaymentController extends Integration_Controller_Action
             // create braintree gateway data
             $transaction = array(
                 'type' => 'sale',
-                'amount' => $row->getPrice(),
+                'amount' => $data['price'],
                 'options' => array(
                     'storeInVaultOnSuccess' => true,
                     'addBillingAddressToPaymentMethod' => true,
@@ -436,9 +455,11 @@ class PaymentController extends Integration_Controller_Action
                 $url_segments = array(
                         'controller' => 'payment',
                         'action' => 'payment',
-                        'pay-for' => $pay_for,
-                        'id' => $id
+                        'pay-for' => $pay_for
                 );
+                if($pay_for !== 'additional-stores') {
+                    $url_segments['id'] = $id;
+                }
                 if($pay_for == 'extension') {
                     $url_segments['domain'] = $domain;
                 }
@@ -793,5 +814,21 @@ class PaymentController extends Integration_Controller_Action
         $paginator->setItemCountPerPage(10);
         $this->view->payments = $paginator;
         $this->render('list');
+    }
+
+    public function additionalStoresAction() {
+        $user = new Application_Model_User();
+        $user->find($this->auth->getIdentity()->id);
+        if((int)$user->getPlanId()) {
+            $plan = new Application_Model_Plan();
+            $plan->find($user->getPlanId());
+            $stores = new Application_Model_Store();
+            $stores = $stores->getAllForUser($user->getId());
+            $this->view->left_stores = (int)$plan->getStores()+(int)$plan->getMaxStores()-(int)$user->getAdditionalStores()-count($stores);
+            $this->view->price = $plan->getStorePrice();
+            if($this->view->left_stores > 0) {
+                $this->render('additional-stores-quantity');
+            }
+        }
     }
 }
