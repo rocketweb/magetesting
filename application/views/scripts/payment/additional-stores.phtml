@@ -8,12 +8,10 @@
 
   <div id="ext-r">
       <h3 style="display: inline;">Additional Stores: <?php echo $this->additional_stores; ?>
-        <h4 class="ext-price">Price: $<?php printf("%d", (float)$this->store_price*100*(int)$this->additional_stores/100); ?></h4>
+        <h4 class="ext-price">Price: $<?php echo $this->price; ?></h4>
 
-        <?php if($this->description): ?>
-            <h5>Description:</h5>
-            <p><?php echo $this->description; ?></p>
-        <?php endif; ?>
+        <h5>Notes:</h5>
+        <p>Final price is calculated as follows: (Stores Quantity * Store Price) * (Plan left days / Plan full period)</p>
         
   </div>
 </div>

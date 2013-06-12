@@ -431,10 +431,11 @@ class PaymentController extends Integration_Controller_Action
                 $model = new Application_Model_Plan();
             } elseif($pay_for === 'extension') {
                 $model = new Application_Model_Extension();
-            } else {
+            } else { // $pay_for === 'additional-stores'
                 $data = $plan->__toArray();
                 $data['additional_stores'] = $additional_stores;
-                $data['price'] = (float)$data['store_price']*100*$additional_stores/100;
+                $payment_data = $this->_calculatePayment($user->getPlanActiveTo(), $plan->getBillingPeriod(), (float)$data['store_price']*$additional_stores);
+                $data['price'] = $payment_data['price'];
             }
             if(is_object($model)) {
                 $row = $model->find($id);
@@ -859,5 +860,17 @@ class PaymentController extends Integration_Controller_Action
                 $this->render('additional-stores-quantity');
             }
         }
+    }
+
+    protected function _calculatePayment($plan_end, $plan_period, $price)
+    {
+        $data = array(
+            'plan_end' => strtotime($plan_end),
+        );
+        $data['plan_start'] = strtotime('-'.$plan_period, $data['plan_end']);
+        $data['plan_range'] = (($data['plan_end']-$data['plan_start'])/3600/24)+1;
+        $data['plan_left_days'] = ceil(($data['plan_end']-strtotime(date('Y-m-d')))/3600/24)+1;
+        $data['price'] = number_format($price*$data['plan_left_days']/$data['plan_range'], 2);
+        return $data;
     }
 }
