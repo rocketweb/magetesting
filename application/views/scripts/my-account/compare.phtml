@@ -138,6 +138,28 @@
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Additional Stores" data-content="You can purchase additional stores to be used.">
+                            <i class="icon icon-blue icon-info-sign"></i> Additional Stores
+                        </div>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                            <td class="compare-table-data"><?php echo $plan->getMaxStores(); ?></td>
+                            <td class="compare-table-empty"></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Store Price" data-content="Standard price for one additional store. That price can differ with time left for your plan or during renewing subscription but with plan diffrent than current.">
+                            <i class="icon icon-blue icon-info-sign"></i> Store Price
+                        </div>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                            <td class="compare-table-data">$<?php echo $plan->getStorePrice(); ?></td>
+                            <td class="compare-table-empty"></td>
+                    <?php endforeach; ?>
+                </tr>
                 <?php /*
                 <tr class="compare-table-row-title">
                     <td class="compare-table-row-title">
