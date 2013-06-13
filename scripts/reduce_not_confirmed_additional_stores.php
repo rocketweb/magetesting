@@ -14,6 +14,13 @@ if($result) {
             if((int)$user->getAdditionalStoresRemoved() > (int)$user->getAdditionalStores()) {
                 $user->setAdditionalStoresRemoved($user->getAdditionalStores());
             }
+            $stores = new Application_Model_Store();
+            $stores = count($stores->getAllForUser($user->getId()));
+            $plan = new Application_Model_Plan();
+            $plan->find($user->getPlanId());
+            if($stores > ((int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved())+(int)$plan->getStores()) {
+                $user->setDowngraded(3);
+            }
             $user->save();
             $row->setDowngraded(1)->save();
         }

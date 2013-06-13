@@ -64,6 +64,20 @@ if($result) {
                     $adminNotification = new Integration_Mail_AdminNotification();
                     $user = new Application_Model_User();
                     $user->find($row['id']);
+                    if((int)$user->getAdditionalStoresRemoved()) {
+                        $plan = new Application_Model_Plan();
+                        $plan->find($user->getPlanId());
+                        $stores = new Application_Model_Stores();
+                        $stores = count($stores->getAllForUser($user->getId()));
+                        if($stores > ((int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved())+(int)$plan->getStores()) {
+                            $user->setDowngraded(3);
+                        }
+                        $user->setAdditionalStores((int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved());
+                        if($user->getAdditionalStores() < 0) {
+                            $user->setAdditionalStores(0);
+                        }
+                        $user->save();
+                    }
                     $adminNotificationData = array('user' => $user, 'plan' => $plan);
                     $adminNotification->setup('renewedPlan', $adminNotificationData);
                     try {
