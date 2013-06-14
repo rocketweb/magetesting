@@ -24,6 +24,12 @@ if($result) {
     foreach($result as $row) {
         if($row['braintree_vault_id'] AND $row['price']) {
             try {
+                $plan = new Application_Model_Plan();
+                $plan->find($row['plan_id']);
+                $extra_stores = (int)$row['additional_stores']-(int)$row['additional_stores_removed'];
+                if($extra_stores) {
+                    $row['price'] = number_format((float)$row['price']+($extra_stores*(float)$plan->getStorePrice()), 2);
+                }
                 $braintree = Braintree_Transaction::sale(array(
                     'amount' => $row['price'],
                     'customerId' => $row['braintree_vault_id'],
@@ -68,15 +74,19 @@ if($result) {
                         $plan = new Application_Model_Plan();
                         $plan->find($user->getPlanId());
                         $stores = new Application_Model_Stores();
-                        $stores = count($stores->getAllForUser($user->getId()));
-                        if($stores > ((int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved())+(int)$plan->getStores()) {
+                        $stores = $stores->getAllForUser($user->getId())->getCurrentItemCount();
+                        if($stores > $extra_stores+(int)$plan->getStores()) {
+                            // downgraded because of too many stores installed
                             $user->setDowngraded(3);
-                        }
-                        $user->setAdditionalStores((int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved());
-                        if($user->getAdditionalStores() < 0) {
-                            $user->setAdditionalStores(0);
+                        } else {
+                            $user->setAdditionalStores($extra_stores);
+                            if($user->getAdditionalStores() < 0) {
+                                $user->setAdditionalStores(0);
+                            }
+                            $user->setAdditionalStoresRemoved(0);
                         }
                         $user->save();
+                        include 'force_user_to_remove_stores.php';
                     }
                     $adminNotificationData = array('user' => $user, 'plan' => $plan);
                     $adminNotification->setup('renewedPlan', $adminNotificationData);

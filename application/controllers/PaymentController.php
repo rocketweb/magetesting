@@ -109,7 +109,16 @@ class PaymentController extends Integration_Controller_Action
                         $additional_stores = (int)$match[1];
                         $user->setAdditionalStores((int)$user->getAdditionalStores()+$additional_stores);
                         $user->save();
-                        $transaction_name = '+'.$additional_stores.' stores';
+                        $store_payment = new Application_Model_PaymentAdditionalStore();
+                        $store_payment
+                            ->setBraintreeTransactionConfirmed(0)
+                            ->setBraintreeTransactionId($transaction_data->id)
+                            ->setDowngraded(0)
+                            ->setUserId($user->getId())
+                            ->setPurchasedDate(date('Y-m-d'))
+                            ->setStores($additional_stores)
+                            ->save();
+                        $transaction_name = '+'.$additional_stores.' store(s)';
                         $transaction_type = 'additional-stores';
                     } else {
                         throw new Braintree_Controller_Exception('Number of additionals stores to add not found for user '.$user->getId());
@@ -854,10 +863,20 @@ class PaymentController extends Integration_Controller_Action
             $plan->find($user->getPlanId());
             $stores = new Application_Model_Store();
             $stores = $stores->getAllForUser($user->getId());
-            $this->view->left_stores = (int)$plan->getStores()+(int)$plan->getMaxStores()-(int)$user->getAdditionalStores()-count($stores);
+            $this->view->left_stores = (int)$plan->getMaxStores()-(int)$user->getAdditionalStores();
             $this->view->price = $plan->getStorePrice();
             if($this->view->left_stores > 0) {
                 $this->render('additional-stores-quantity');
+            } else {
+                $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot purchase more stores.'));
+                return $this->_helper->redirector->gotoRoute(
+                    array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard'
+                    )
+                    , 'default', true
+                );
             }
         }
     }

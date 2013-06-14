@@ -17,9 +17,7 @@ class Application_Model_PaymentAdditionalStore {
     protected $_active_to;
 
     protected $_mapper;
-    
-    protected $_error;
-    
+
     public function __construct(array $options = null)
     {
         if (is_array($options)) {
@@ -154,10 +152,15 @@ class Application_Model_PaymentAdditionalStore {
     {
         return $this->getMapper()->fetchAll();
     }
-    
+
     public function fetchWaitingForConfirmation()
     {
         return $this->getMapper()->fetchWaitingForConfirmation();
+    }
+
+    public function fetchStoresToReduce()
+    {
+        return $this->getMapper()->fetchStoresToReduce();
     }
 
     public function __toArray()

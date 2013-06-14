@@ -28,17 +28,17 @@ class Application_Model_PaymentAdditionalStoreMapper {
         return $this->_dbTable;
     }
 
-    public function save(Application_Model_Coupon $coupon)
+    public function save(Application_Model_PaymentAdditionalStore $payment)
     {
-        $data = $coupon->__toArray();
+        $data = $payment->__toArray();
 
-        if (null === ($id = $coupon->getId())) {
-            $coupon->setId($this->getDbTable()->insert($data));
+        if (null === ($id = $payment->getId())) {
+            $payment->setId($this->getDbTable()->insert($data));
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
         
-        return $coupon;
+        return $payment;
     }
 
     public function delete($id)
@@ -105,4 +105,23 @@ class Application_Model_PaymentAdditionalStoreMapper {
         return $entries;
     }
 
+    public function fetchStoresToReduce()
+    {
+        $resultSet = $this->getDbTable()->fetchStoresToReduce();
+    
+        $entries   = array();
+        foreach ($resultSet as $row) {
+            $entry = new Application_Model_PaymentAdditionalStore();
+            $entry
+            ->setId($row->id)
+            ->setUserId($row->user_id)
+            ->setBraintreeTransactionId($row->braintree_transaction_id)
+            ->setBraintreeTransactionConfirmed($row->braintree_transaction_confirmed)
+            ->setPurchasedDate($row->purchased_date)
+            ->setStores($row->stores)
+            ->setDowngraded($row->downgraded);
+            $entries[] = $entry;
+        }
+        return $entries;
+    }
 }

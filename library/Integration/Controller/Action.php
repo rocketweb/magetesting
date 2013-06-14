@@ -76,7 +76,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
             /*
              * if user was downgraded because of additional stores to reduce
              */
-            if((int)$user->getDowngraded() === 3) {
+            if(in_array((int)$user->getDowngraded(), array(3,4))) {
                 $message_exists = false;
                 foreach($this->view->messages as $message) {
                     if(is_string($message)) {
@@ -91,8 +91,9 @@ class Integration_Controller_Action extends Zend_Controller_Action
                 }
                 if(
                     ($controller != 'user' || !in_array($action, array('dashboard', 'logout', 'login')))
-                 && ($controller != 'payment')
+                 && ($controller != 'payment' || $action == 'index')
                  && ($controller != 'queue' || $action != 'close')
+                 && ($controller != 'my-account' || !in_array($action, array('index', 'remove-additional-stores')))
                 ) {
                     // keep flash messages
                     foreach($this->view->messages as $flash_message) {
