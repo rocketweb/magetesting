@@ -1,6 +1,11 @@
 <?php
 if(!defined('APPLICATION_PATH')) {
     include 'init.console.php';
+} elseif(Zend_Controller_Front::getInstance()->getParam('bootstrap')) {
+    // fetch application db adapter
+    $db = new Application_Model_DbTable_User();
+    $db = $db->getAdapter();
+    $log = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('Log');
 }
 
 $select = new Zend_Db_Select($db);
@@ -9,9 +14,10 @@ $sql = $select
     ->joinLeft('store','user.id = store.user_id', 'domain')
     ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->where('store.status = ?', 'ready')
-    ->orwhere('user.downgraded = ?)', 5);
+    ->orwhere('user.downgraded = ?', 5);
 
 $result = $db->fetchAll($sql);
+
 if($result) {
     $downgrade_by_id = array();
     foreach($result as $store) {

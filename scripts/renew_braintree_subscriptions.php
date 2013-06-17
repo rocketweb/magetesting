@@ -86,7 +86,7 @@ if($result) {
                             $user->setAdditionalStoresRemoved(0);
                         }
                         $user->save();
-                        include 'force_user_to_remove_stores.php';
+                        include APPLICATION_PATH . '/../scripts/force_user_to_remove_stores.php';
                     }
                     $adminNotificationData = array('user' => $user, 'plan' => $plan);
                     $adminNotification->setup('renewedPlan', $adminNotificationData);

@@ -470,6 +470,7 @@ class PaymentController extends Integration_Controller_Action
                 $this->_helper->viewRenderer->setRender('change-plan');
                 $this->view->id = $id;
                 $this->view->plan_change_calculation = $this->_calculatePlanChange($user, $model);
+                $data['price'] = $data['price'] + $this->view->plan_change_calculation['amount'];
                 $pay_for = 'plan';
                 $this->view->new_plan_name = $data['name'];
             } else {
@@ -805,35 +806,27 @@ class PaymentController extends Integration_Controller_Action
         $old_plan = $old_plan->find($user->getPlanId());
 
         $subscription_end = explode(' ', $user->getPlanActiveTo());
-        $subscription_end = strtotime($subscription_end[0]);
-        $subscription_start = strtotime('-' . $old_plan->getBillingPeriod(), $subscription_end);
-        $today = strtotime(date('Y-m-d'));
-        $subscription_range_days = ($subscription_end-$subscription_start)/3600/24;
-        $subscription_used_days = (($today-$subscription_start)/3600/24)+1;
-        $subscription_not_used_days = $subscription_range_days-$subscription_used_days;
-        $refund = round($subscription_not_used_days/$subscription_range_days*(float)$old_plan->getPrice(), 2);
+        $old_plan_data = $this->_calculatePayment($subscription_end[0], $old_plan->getBillingPeriod(), $old_plan->getPrice());
 
-        $new_plan_start = $subscription_start;
+        $new_plan_start = $old_plan_data['plan_start'];
         $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
-        $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
+        $new_plan_price = $plan->getPrice() + ((float)$plan->getStorePrice()*((int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved()));
+        $new_plan_data = $this->_calculatePayment($new_plan_end, $plan->getBillingPeriod(), $new_plan_price);
+        // if new plan ends earlier than the current subscription, move payment day to today
+        $today = strtotime(date('Y-m-d'));
 
-        if($today >= $new_plan_end-(3600*24) AND $new_plan_range_days < $subscription_range_days) {
+        if($today >= $new_plan_end-(3600*24) AND $new_plan_data['plan_range'] < $old_plan_data['plan_range']) {
             $new_plan_start = $today;
             $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
-            $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
+            $new_plan_data = $this->_calculatePayment($new_plan_end, $plan->getBillingPeriod(), $new_plan_price);
         }
-        $new_plan_used_days = (($today-$new_plan_start)/3600/24)+1;
-        $new_plan_not_used_days = $new_plan_range_days-$new_plan_used_days;
-        $extra_charge = round($new_plan_not_used_days/$new_plan_range_days*(float)$plan->getPrice(), 2);
-        // if new plan ends earlier than the old one, move payment day to today
-        $result = null;
-        $amount = (float)$extra_charge-$refund;
 
+        $amount = number_format($new_plan_data['price']-$old_plan_data['price'], 2);
         return array(
             'amount' => $amount,
             'billing_period' => $old_plan->getBillingPeriod(),
             'plan_name' => $old_plan->getName(),
-            'used_days' => $subscription_used_days,
+            'used_days' => $old_plan_data['plan_used_days'],
             'new_plan_end' => $new_plan_end
         );
     }
@@ -884,11 +877,12 @@ class PaymentController extends Integration_Controller_Action
     protected function _calculatePayment($plan_end, $plan_period, $price)
     {
         $data = array(
-            'plan_end' => strtotime($plan_end),
+            'plan_end' => is_string($plan_end) ? strtotime($plan_end) : $plan_end,
         );
         $data['plan_start'] = strtotime('-'.$plan_period, $data['plan_end']);
         $data['plan_range'] = (($data['plan_end']-$data['plan_start'])/3600/24)+1;
         $data['plan_left_days'] = ceil(($data['plan_end']-strtotime(date('Y-m-d')))/3600/24)+1;
+        $data['plan_used_days'] = $data['plan_range']-$data['plan_left_days'];
         $data['price'] = number_format($price*$data['plan_left_days']/$data['plan_range'], 2);
         return $data;
     }

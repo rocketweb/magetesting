@@ -1,6 +1,11 @@
 <?php
 if(!defined('APPLICATION_PATH')) {
     include 'init.console.php';
+} elseif(Zend_Controller_Front::getInstance()->getParam('bootstrap')) {
+    // fetch application db adapter
+    $db = new Application_Model_DbTable_User();
+    $db = $db->getAdapter();
+    $log = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('Log');
 }
 
 $select = new Zend_Db_Select($db);

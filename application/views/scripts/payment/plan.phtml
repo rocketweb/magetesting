@@ -1,5 +1,5 @@
 <h3><?php echo $this->name; ?></h3>
-<h4 class="ext-price">Price: $<?php printf("%d", $this->price); ?>
+<h4 class="ext-price">Price: $<?php echo number_format($this->price, 2); ?>
 <?php if (isset($this->price_description) && strlen($this->price_description)): ?>
 , <?php echo $this->escape($this->price_description); ?>
 <?php endif; ?>

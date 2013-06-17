@@ -71,8 +71,11 @@
                                     You have been granted access for <?php echo str_replace('+', '', $coupon->getDuration()); ?> of Mage Testing. Your account will be active until <?php echo date('F j, Y', strtotime($this->user->getPlanActiveTo())); ?>.
                                 <?php elseif(!(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                                     Your account is pending payment. It could take up to 24 hours to confirm your payment. Please enjoy using Mage Testing while we settle your payment details.
-                                <?php elseif((int)$this->user->getPlanId() && $this->plan->getAutoRenew()): ?>
-                                    Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y", strtotime($this->user->getPlanActiveTo())) ?>
+                                <?php
+                                    elseif((int)$this->user->getPlanId() && $this->plan->getAutoRenew()):
+                                    $next_price = (float)$this->plan->getPrice()+((int)$this->user->getAdditionalStores()-(int)$this->user->getAdditionalStoresRemoved())*(float)$this->plan->getStorePrice();
+                                ?>
+                                    Your next charge is $<?php echo number_format($next_price, 2);?> on <?php echo date("F j, Y", strtotime($this->user->getPlanActiveTo())) ?>
                                 <?php elseif((int)$this->user->getPlanId()): ?>
                                     Your plan ends on <?php echo date("F j, Y",strtotime($this->user->getPlanActiveTo())) ?>
                                 <?php endif; ?>

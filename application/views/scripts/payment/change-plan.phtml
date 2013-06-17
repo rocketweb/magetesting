@@ -10,9 +10,13 @@
                         <legend>Note</legend>
                         <p>
                             You have used your "<?php echo $this->plan_change_calculation['plan_name']; ?>" plan for <?php echo $this->plan_change_calculation['used_days']; ?> days from <?php echo $this->plan_change_calculation['billing_period']; ?> available.
+                            <?php if(0.0 !== $this->plan_change_calculation['amount']): ?>
                             To change plan to "<?php echo $this->new_plan_name; ?>" we will need to
-                            <?php if((float)$this->plan_change_calculation['amount'] > 0): ?>bill<?php else: ?>refund<?php endif;?>
+                            <?php if($this->plan_change_calculation['amount'] > 0): ?>bill<?php else: ?>refund<?php endif;?>
                             you for <?php echo $this->plan_change_calculation['amount']; ?>$ and plan will be active to <?php echo date('F jS, Y', $this->plan_change_calculation['new_plan_end']); ?>.
+                            <?php else: ?>
+                            Changed plan will be active to <?php echo date('F jS, Y', $this->plan_change_calculation['new_plan_end']); ?>.
+                            <?php endif; ?>
                         </p>
                     </fieldset>
                     <div class="tab-stripe tab-stripe-red"></div>
