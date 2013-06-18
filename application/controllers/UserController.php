@@ -227,14 +227,15 @@ class UserController extends Integration_Controller_Action
                                 $userData
                         );
 
+                        $plan_active_to = explode(' ', $userData->plan_active_to);
+                        $today_date_timestamp = strtotime(date('Y-m-d'));
                         // if user has subscription or waiting for confirmation
-                        if(in_array($userData->group, array('awaiting-user', 'commercial-user'))) {
+                        if(in_array($userData->group, array('awaiting-user', 'commercial-user')) && $today_date_timestamp >= $plan_active_to[0]) {
                             $user = new Application_Model_User();
                             $user->find($userData->id);
 
                             $plan = new Application_Model_Plan();
                             $plan->find($user->getPlanId());
-                            $plan_active_to = explode(' ', $userData->plan_active_to);
                             $timeAfterLastPayment = strtotime(date('Y-m-d'))-strtotime('-' . $plan->getBillingPeriod(), strtotime($plan_active_to[0]));
                             // if between active to date and active to date+3days
                             // notify user about payment
