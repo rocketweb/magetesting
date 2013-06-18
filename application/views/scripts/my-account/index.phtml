@@ -35,11 +35,11 @@
                                 ?>
                             </div>
                             <div class="span3 offset1">
-                            <?php if((int)$this->user->getPlanId() AND $this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
+                            <?php if((int)$this->user->getPlanId() AND $this->user->hasPlanActive() AND (!(int)$this->user->getBraintreeTransactionConfirmed()) || $this->not_settled_stores): ?>
                                 <button
                                     type="button"
                                     <?php if($this->user->getBraintreeTransactionId()): ?>
-                                    title="Your payment for plan is being processed now. You will be able to change plan just after payment is settled."
+                                    title="Your payment for <?php echo $this->not_settled_stores ? 'store(s)' : 'plan'; ?> is being processed now. You will be able to change plan just after payment is settled."
                                     <?php endif; ?>
                                     class="btn btn-large btn-block btn-inverse change-plan disabled"
                                 >

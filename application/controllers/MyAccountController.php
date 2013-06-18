@@ -33,7 +33,17 @@ class MyAccountController extends Integration_Controller_Action
             $raisedPlanData = false;
         }
 
+        $not_settled_stores = false;
+        $additional_stores = (int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved();
+        if($additional_stores) {
+            $additional_stores = new Application_Model_PaymentAdditionalStore();
+            if(count($additional_stores->fetchWaitingForConfirmation())) {
+                $not_settled_stores = true;
+            }
+        }
+
         $this->view->plan = $planData;
+        $this->view->not_settled_stores = $not_settled_stores;
         $this->view->raisedPlan = $raisedPlanData;
         $this->view->payments = $payments->fetchUserPayments($user->getId());
         $this->view->user = $user;

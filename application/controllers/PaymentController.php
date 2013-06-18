@@ -408,8 +408,18 @@ class PaymentController extends Integration_Controller_Action
                 }
             }
 
+            $not_settled_stores = false;
+            if($pay_for == 'change-plan') {
+                $additional_stores = (int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved();
+                if($additional_stores) {
+                    $additional_stores = new Application_Model_PaymentAdditionalStore();
+                    if(count($additional_stores->fetchWaitingForConfirmation())) {
+                        $not_settled_stores = true;
+                    }
+                }
+            }
             // Do not allow user to change his plan before braintree settle last transaction
-            if(($pay_for == 'plan' OR $pay_for == 'change-plan') AND $user->hasPlanActive() AND !(int)$user->getBraintreeTransactionConfirmed()) {
+            if(($pay_for == 'plan' OR $pay_for == 'change-plan') AND $user->hasPlanActive() AND (!(int)$user->getBraintreeTransactionConfirmed() || $not_settled_stores)) {
                 $flash_message = array(
                         'type' => 'error',
                         'message' => 'You can\'t change plan before your last transaction will not be settled.'
