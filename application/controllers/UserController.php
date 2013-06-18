@@ -9,11 +9,6 @@ class UserController extends Integration_Controller_Action
         $this->_helper->sslSwitch();
     }
 
-    public function indexAction()
-    {
-        // action body
-    }
-
     public function dashboardAction()
     {
         $storeModel = new Application_Model_Store();
@@ -228,19 +223,22 @@ class UserController extends Integration_Controller_Action
                                 'action' => 'login',
                         ), 'default', true);
                     } else {
-                        $user = new Application_Model_User();
-                        $user->find($userData->id);
-
                         $auth->getStorage()->write(
                                 $userData
                         );
 
                         // if user has subscription or waiting for confirmation
                         if(in_array($userData->group, array('awaiting-user', 'commercial-user'))) {
-                            $timeAfterLastPayment = time()-strtotime($userData->plan_active_to);
+                            $user = new Application_Model_User();
+                            $user->find($userData->id);
+
+                            $plan = new Application_Model_Plan();
+                            $plan->find($user->getPlanId());
+                            $plan_active_to = explode(' ', $userData->plan_active_to);
+                            $timeAfterLastPayment = strtotime(date('Y-m-d'))-strtotime('-' . $plan->getBillingPeriod(), strtotime($plan_active_to[0]));
                             // if between active to date and active to date+3days
                             // notify user about payment
-                            if( $timeAfterLastPayment < 3*60*60*24 AND $timeAfterLastPayment > 0) {
+                            if( $timeAfterLastPayment <= 3*60*60*24 AND $timeAfterLastPayment > 0) {
                                 $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'We have not received payment for your subscription yet.'));
                             } elseif($timeAfterLastPayment > 3*60*60*24) {
                                 // if date is farther than 3 days
