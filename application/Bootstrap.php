@@ -46,8 +46,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Translate::setCache($cache);
         Zend_Locale::setCache($cache);
 
-        Zend_Registry::set('cache', $cache);
-
         return $cache;
     }
 

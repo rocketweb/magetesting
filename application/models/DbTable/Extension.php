@@ -195,7 +195,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         if(!isset($filter['restricted']) || $filter['restricted'] === false) {
             $result = $this->fetchAll($select);
         } else {
-            $cache = Zend_Registry::get('cache');
+            $cache = $this->getDefaultMetadataCache();
             if(($result = $cache->load($cache_name)) === false) {
                 $result = $this->fetchAll($select);
                 $cache->save($result, $cache_name, array('extension', 'frontend'));
