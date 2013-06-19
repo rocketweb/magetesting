@@ -128,6 +128,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
 
     public function fetchFullListOfExtensions($filter, $order, $offset, $limit)
     {
+        $cache_name = 'frontend_extension';
         $sub_select_inner = 
             $this->select()
                  ->from($this->_name, array('name', 'edition', 'version', 'extension_key'))
@@ -135,6 +136,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  ->order(array('sort DESC', 'id DESC'));
 
         if(isset($filter['restricted']) && $filter['restricted']) {
+            $cache_name .= '_restricted_true';
             $sub_select_inner
                 ->where('edition = ?', 'CE')
                 ->where('extension > ""')
@@ -143,17 +145,21 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
 
         // where
         if(isset($filter['price'])) {
+            $cache_name .= '_price_'.$filter['price'];
             $sub_select_inner->where('price ' . (('premium' == $filter['price']) ? '>' : '=') .' ?', 0);
         }
         if(isset($filter['category'])) {
+            $cache_name .= '_category_'.$filter['category'];
             $sub_select_inner->where('category_id = ?', $filter['category']);
         }
         if(isset($filter['edition'])) {
+            $cache_name .= '_edition_'.$filter['edition'];
             $sub_select_inner->where('edition = ?', strtoupper($filter['edition']));
         }
         if(isset($filter['query'])) {
             $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*', '%'), '', $filter['query']);
             $filter['query'] = str_replace('-', '\-', $filter['query']);
+            $cache_name .= '_query_'.preg_replace('/[^a-z0-9]/i', '_', $filter['query']);
             $filter['query'] = '%' . $filter['query'] . '%';
             $sub_select_inner->where('name LIKE ? OR description LIKE ? OR extension_key LIKE ? OR author LIKE ?', $filter['query']);
         }
@@ -178,11 +184,24 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         } else {
             array_unshift($orders, 'price DESC');
         }
+        foreach($orders as $order) {
+            $cache_name .= '_' . str_replace(' ', '', $order);
+        }
         $select->order($orders);
 
+        $cache_name .= '_' . $limit . '_' . $offset;
         $select->limit($limit, $offset);
 
-        return $this->fetchAll($select);
+        if(!isset($filter['restricted']) || $filter['restricted'] === false) {
+            $result = $this->fetchAll($select);
+        } else {
+            $cache = $this->getDefaultMetadataCache();
+            if(($result = $cache->load($cache_name)) === false) {
+                $result = $this->fetchAll($select);
+                $cache->save($result, $cache_name, array('extension', 'frontend'));
+            }
+        }
+        return $result;
     }
 
     public function findInstalled($store, $price_type)

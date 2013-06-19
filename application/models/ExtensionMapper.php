@@ -37,6 +37,12 @@ class Application_Model_ExtensionMapper {
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
+
+        $cache = $this->getDbTable()->getDefaultMetadataCache();
+        $cache->clean(
+            Zend_Cache::CLEANING_MODE_MATCHING_TAG,
+            array('extension', 'frontend')
+        );
         return $extension;
     }
 

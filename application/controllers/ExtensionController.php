@@ -318,7 +318,7 @@ class ExtensionController extends Integration_Controller_Action {
                         }
                         $this->_saveImages($extension_id);
                         $extension->save();
-                        
+
                         $this->_helper->FlashMessenger($success_message);
                         return $this->_helper->redirector->gotoRoute(array(
                                 'module'     => 'default',
