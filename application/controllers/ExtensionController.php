@@ -318,7 +318,13 @@ class ExtensionController extends Integration_Controller_Action {
                         }
                         $this->_saveImages($extension_id);
                         $extension->save();
-                        
+
+                        $cache = Zend_Registry::get('cache');
+                        $cache->clean(
+                            Zend_Cache::CLEANING_MODE_MATCHING_TAG,
+                            array('extension', 'frontend')
+                        );
+
                         $this->_helper->FlashMessenger($success_message);
                         return $this->_helper->redirector->gotoRoute(array(
                                 'module'     => 'default',
