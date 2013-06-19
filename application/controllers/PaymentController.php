@@ -480,7 +480,6 @@ class PaymentController extends Integration_Controller_Action
                 $this->_helper->viewRenderer->setRender('change-plan');
                 $this->view->id = $id;
                 $this->view->plan_change_calculation = $this->_calculatePlanChange($user, $model);
-                $data['price'] = $data['price'] + $this->view->plan_change_calculation['amount'];
                 $pay_for = 'plan';
                 $this->view->new_plan_name = $data['name'];
             } else {
