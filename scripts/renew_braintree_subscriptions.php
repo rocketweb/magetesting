@@ -108,5 +108,5 @@ if($result) {
     }
     $log->log('All plan renewals has been processed.', Zend_Log::INFO);
 } else {
-    $log->log('There is no plan to renewal.', Zend_Log::INFO);
+    #$log->log('There is no plan to renewal.', Zend_Log::INFO);
 }

@@ -14,9 +14,10 @@ $sql = $select
     ->joinLeft('store','user.id = store.user_id', 'domain')
     ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->where('store.status = ?', 'ready')
-    ->orwhere('user.downgraded = ?', 3);
+    ->where('user.downgraded = ?', 3);
 
 $result = $db->fetchAll($sql);
+
 if($result) {
     $downgrade_by_id = array();
     foreach($result as $store) {

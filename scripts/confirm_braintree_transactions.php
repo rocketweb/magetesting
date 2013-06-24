@@ -39,7 +39,7 @@ if($result) {
     }
     $log->log('All plan payments processed.', Zend_Log::INFO);
 } else {
-    $log->log('There is no plan payment to process.', Zend_Log::INFO);
+    #$log->log('There is no plan payment to process.', Zend_Log::INFO);
 }
 
 $payment = new Application_Model_PaymentAdditionalStore();
@@ -63,7 +63,7 @@ if($result) {
     }
     $log->log('All store purchases processed.', Zend_Log::INFO);
 } else {
-    $log->log('There is no store purchase to process.', Zend_Log::INFO);
+    #$log->log('There is no store purchase to process.', Zend_Log::INFO);
 }
 
 /*
