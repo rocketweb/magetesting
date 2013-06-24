@@ -780,6 +780,15 @@ class UserController extends Integration_Controller_Action
         $payment = new Application_Model_Payment();
         $payments = $payment->fetchUserPayments($user->getId());
 
+        $storeModel = new Application_Model_Store();
+        $stores_view =
+            $this->view->partial(
+                'queue/index.phtml',
+                array(
+                    'user_details' => true,
+                    'queue' => $storeModel->getAllForUser($user->getId())
+                )
+            );
         $this->view->assign(
             array(
                 'user'     => $user,
@@ -787,7 +796,8 @@ class UserController extends Integration_Controller_Action
                 'plan'     => $plan,
                 'coupon'   => $coupon,
                 'plans'    => $plans,
-                'payments' => $payments
+                'payments' => $payments,
+                'stores' => $stores_view
             )
         );
 

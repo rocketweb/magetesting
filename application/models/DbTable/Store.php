@@ -40,6 +40,7 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
                        )
                 ->joinLeft('server','server.id = '.$this->_name.'.server_id',array('server_domain'=>'domain'))
                 ->joinLeft('queue','queue.server_id = '.$this->_name.'.server_id AND store.id = queue.store_id',array('queue_id'=>'id'))
+                ->joinLeft('user', 'user.id = store.user_id', 'login')
                        ->where('store.user_id = ?', $user_id)
                        ->where('store.status != ?', 'removing-magento')
                        ->group(array('store.id'))
