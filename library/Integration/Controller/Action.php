@@ -73,6 +73,40 @@ class Integration_Controller_Action extends Zend_Controller_Action
             $this->view->loggedUser = $user;
             $auth->getStorage()->write((object)$user->__toArray());
 
+            /*
+             * if user was downgraded because of additional stores to reduce
+             */
+            if(in_array((int)$user->getDowngraded(), array(3,4))) {
+                $message_exists = false;
+                foreach($this->view->messages as $message) {
+                    if(is_string($message)) {
+                        $message = array('message' => $message);
+                    }
+                    if(stristr($message['message'], 'You have too many stores')) {
+                        $message_exists = true;
+                    }
+                }
+                if(!$message_exists) {
+                    $this->view->messages[] = array('type' => 'error', 'message' => 'You have too many stores, please remove few or purchase additional stores.');
+                }
+                if(
+                    ($controller != 'user' || !in_array($action, array('dashboard', 'logout', 'login')))
+                 && ($controller != 'payment' || $action == 'index')
+                 && ($controller != 'queue' || $action != 'close')
+                 && ($controller != 'my-account' || !in_array($action, array('index', 'remove-additional-stores')))
+                ) {
+                    // keep flash messages
+                    foreach($this->view->messages as $flash_message) {
+                        $this->_helper->FlashMessenger($flash_message);
+                    }
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard',
+                    ), 'default', true);
+                }
+            }
+
             /* if user:
              * - haven't choose plan yet or
              * - his 7 days plan expired

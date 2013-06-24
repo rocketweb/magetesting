@@ -33,7 +33,17 @@ class MyAccountController extends Integration_Controller_Action
             $raisedPlanData = false;
         }
 
+        $not_settled_stores = false;
+        $additional_stores = (int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved();
+        if($additional_stores) {
+            $additional_stores = new Application_Model_PaymentAdditionalStore();
+            if(count($additional_stores->fetchWaitingForConfirmation())) {
+                $not_settled_stores = true;
+            }
+        }
+
         $this->view->plan = $planData;
+        $this->view->not_settled_stores = $not_settled_stores;
         $this->view->raisedPlan = $raisedPlanData;
         $this->view->payments = $payments->fetchUserPayments($user->getId());
         $this->view->user = $user;
@@ -286,5 +296,39 @@ class MyAccountController extends Integration_Controller_Action
             'controller' => 'my-account',
             'action' => 'index',
         ), 'default', true);
+    }
+
+    public function removeAdditionalStoresAction()
+    {
+        $this->view->user = new Application_Model_User();
+        $this->view->user->find($this->auth->getIdentity()->id);
+        $this->view->left_stores = (int)$this->view->user->getAdditionalStores()-(int)$this->view->user->getAdditionalStoresRemoved();
+
+        if(!$this->view->left_stores) {
+            $flashMessage = 'You cannot remove more stores.';
+            $this->_helper->flashMessenger(array('type'=>'error','message' => $flashMessage));
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'my-account',
+                'action' => 'coupon',
+            ), 'default', true);
+        }
+
+        if($this->getRequest()->isPost()) {
+            $stores = (int)$this->_getParam('additional-stores-quantity', 0);
+            $flashMessage = array('type'=>'error','message' => 'You cannot remove more stores.');
+            if($stores && (int)$this->view->user->getAdditionalStores() >= (int)$this->view->user->getAdditionalStoresRemoved()+$stores) {
+                $this->view->user->setAdditionalStoresRemoved(
+                    (int)$this->view->user->getAdditionalStoresRemoved()+$stores
+                )->save();
+                $flashMessage = array('type'=>'success','message' => 'You removed '.$stores.' additional store from your plan.');
+            }
+            $this->_helper->flashMessenger($flashMessage);
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'my-account',
+                'action' => 'index',
+            ), 'default', true);
+        }
     }
 }

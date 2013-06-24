@@ -66,6 +66,17 @@ $(document).ready(function () {
 
     }
 
+    var $price = $('.price'),
+        $summary = $('.summary'),
+        $quantity = $price.parent().siblings().find('input[type=number]'),
+        $additional_stores = $summary.siblings('b');
+    if($summary.length) {
+        $quantity.change(function() {
+            $summary.text($price.text()*100*$quantity.val()/100);
+            $additional_stores.text($quantity.val());
+        });
+    }
+
     var siteRoot = $('body').data('siteRoot');
     /*
      * Code below, saves user my-account details before request leave us to braintree

@@ -11,6 +11,9 @@
     <div class="span12">
         <h1>Plan Comparison and Pricing</h1>
         <?php $user = $this->user; ?>
+        <?php if($user->hasPlanActive() && (int)$user->getBraintreeTransactionConfirmed() && (int)$user->getAdditionalStores()): ?>
+            <div class="alert alert-notice"><a class="close" data-dismiss="alert" href="#">&times;</a>You have additional stores purchased. During plan changing keep in mind that stores can have diffrent price in other plans.</div>
+        <?php endif; ?>
         <table class="compare-table" style="margin-bottom: 20px">
             <thead>
                 <tr class="compare-table-title-row">
@@ -136,6 +139,28 @@
                             <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
                             <td class="compare-table-empty"></td>
                         <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Additional Stores" data-content="You can purchase additional stores to be used.">
+                            <i class="icon icon-blue icon-info-sign"></i> Additional Stores
+                        </div>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                            <td class="compare-table-data"><?php echo $plan->getMaxStores(); ?></td>
+                            <td class="compare-table-empty"></td>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
+                        <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Store Price" data-content="Standard price for one additional store. That price can differ with time left for your plan or during renewing subscription but with plan diffrent than current.">
+                            <i class="icon icon-blue icon-info-sign"></i> Store Price
+                        </div>
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                            <td class="compare-table-data">$<?php echo $plan->getStorePrice(); ?></td>
+                            <td class="compare-table-empty"></td>
                     <?php endforeach; ?>
                 </tr>
                 <?php /*

@@ -4,8 +4,10 @@
     <div class="span12">
         <input id="base-url" type="hidden" value="<?php echo $this->baseUrl(); ?>" />
 
-        <?php if($storeCount > 0 AND $storeCount < $this->planModel->getStores()): ?>
+        <?php if($storeCount > 0 AND $storeCount < (int)$this->planModel->getStores()+(int)$this->user->additional_stores-(int)$this->user->additional_stores_removed): ?>
         <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add New Store</a>
+        <?php elseif((int)$this->user->braintree_transaction_confirmed && $storeCount > 0 && (int)$storeCount < (int)$this->planModel->getStores()+(int)$this->planModel->getMaxStores() && (int)$this->planModel->getStores()+(int)$this->user->additional_stores < (int)$this->planModel->getStores()+(int)$this->planModel->getMaxStores()): ?>
+        <a href="<?php echo $this->url(array('controller'=>'payment', 'action' => 'additional-stores'))?>" class="btn btn-success pull-right"><i class="icon icon-white icon-plus-sign"></i> Purchase Additional Stores</a>
         <?php endif; ?>
 
         <h1>Your Magento Store</h1>

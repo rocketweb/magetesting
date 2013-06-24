@@ -433,7 +433,7 @@ class QueueController extends Integration_Controller_Action {
                         ->group == 'admin' ? true : false;
 
                 $storeModel->changeStatusToClose($byAdmin);
-                              
+
                 $currentStore = $storeModel->findByDomain($domain);
 
                 $storeModel->find($currentStore->id);
@@ -476,6 +476,29 @@ class QueueController extends Integration_Controller_Action {
                         ->setStatus('pending')
                         ->save();
 
+                $user = new Application_Model_User();
+                $user->find($storeModel->getUserId());
+                if(in_array((int)$user->getDowngraded(), array(3, 4))) {
+                    $plan = new Application_Model_Plan();
+                    $plan->find($user->getPlanId());
+                    $user_max_stores = (int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved()+(int)$plan->getStores();
+                    $user_stores =  new Application_Model_Store();
+
+                    $user->setAdditionalStores((int)$user->getAdditionalStores()-1);
+                    if(0 > $user->getAdditionalStores()) {
+                        $user->getAdditionalStores(0);
+                    }
+                    $user->setAdditionalStoresRemoved((int)$user->getAdditionalStoresRemoved()-1);
+                    if(0 > $user->getAdditionalStoresRemoved()) {
+                        $user->getAdditionalStoresRemoved(0);
+                    }
+
+                    if($user_stores->getAllForUser($user->getId())->count() <= $user_max_stores) {
+                        $user->setDowngraded(5);
+                    }
+                    $user->save();
+                    include APPLICATION_PATH . '/../scripts/restore_user_from_forced_removing_stores.php';
+                }
                 $this->_helper->FlashMessenger('Store has been removed.');
             }
         }

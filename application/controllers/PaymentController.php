@@ -33,7 +33,6 @@ class PaymentController extends Integration_Controller_Action
     protected function _response() {
         $user = new Application_Model_User();
         $user->find($this->auth->getIdentity()->id);
-        
         try {
             $flash_message = NULL;
             $redirect = NULL;
@@ -54,6 +53,9 @@ class PaymentController extends Integration_Controller_Action
                     $id = null;
                 }
 
+                // used when user purchased extra stores to pass it to admin notification email
+                $additional_stores = 0;
+
                 // Handle payment response by type
                 if($pay_for == 'plan') {
                     $plan = new Application_Model_Plan();
@@ -72,7 +74,7 @@ class PaymentController extends Integration_Controller_Action
                         $transaction_name = $plan->getName();
                         $transaction_type = 'subscription';
                     }
-                } else { // if $pay_for == 'extension'
+                } elseif($pay_for === 'extension') {
                     $store = new Application_Model_Store();
                     $store = $store->findByDomain($domain);
                     if(is_object($store) AND (int)$store->id AND $user->getId() == $store->user_id) {
@@ -101,6 +103,25 @@ class PaymentController extends Integration_Controller_Action
                         }
                     } else { // wrong domain name or user does not have given store
                         throw new Braintree_Controller_Exception('Store('.$domain.') does not belong to user('.$user->getId().') or store does not exist.');
+                    }
+                } else { // if $pay_for == 'additional-stores'
+                    if(preg_match('/^.*\-(\d+)$/i', $transaction_data->orderId, $match)) {
+                        $additional_stores = (int)$match[1];
+                        $user->setAdditionalStores((int)$user->getAdditionalStores()+$additional_stores);
+                        $user->save();
+                        $store_payment = new Application_Model_PaymentAdditionalStore();
+                        $store_payment
+                            ->setBraintreeTransactionConfirmed(0)
+                            ->setBraintreeTransactionId($transaction_data->id)
+                            ->setDowngraded(0)
+                            ->setUserId($user->getId())
+                            ->setPurchasedDate(date('Y-m-d'))
+                            ->setStores($additional_stores)
+                            ->save();
+                        $transaction_name = '+'.$additional_stores.' store(s)';
+                        $transaction_type = 'additional-stores';
+                    } else {
+                        throw new Braintree_Controller_Exception('Number of additionals stores to add not found for user '.$user->getId());
                     }
                 }
 
@@ -210,7 +231,7 @@ class PaymentController extends Integration_Controller_Action
                     );
                     $adminNotificationEmailType = 'boughtExtension';
                     $adminNotificationData['extension'] = $extensionModel;
-                } else {
+                } elseif('plan' === $pay_for) {
                     $flash_message = 'You have successfully paid for your plan.';
                     $redirect = array(
                             'controller' => 'my-account',
@@ -218,6 +239,14 @@ class PaymentController extends Integration_Controller_Action
                     );
                     $adminNotificationEmailType = 'boughtPlan';
                     $adminNotificationData['plan'] = $plan;
+                } else {
+                    $flash_message = 'You have successfully bought additional store(s).';
+                    $redirect = array(
+                        'controller' => 'user',
+                        'action' => 'dashboard'
+                    );
+                    $adminNotificationEmailType = 'additionalStores';
+                    $adminNotificationData['additional_stores'] = $additional_stores;
                 }
                 // send admin email
                 if($adminNotificationEmailType) {
@@ -282,10 +311,11 @@ class PaymentController extends Integration_Controller_Action
 
         $pay_for = $this->_getParam('pay-for');
         $id = (int)$this->_getParam('id', 0);
+        $additional_stores = (int)$this->_getParam('additional-stores-quantity', 0);
         $this->view->domain = $domain = $this->_getParam('domain'); 
         try {
             // check whether GET params are ok
-            if(!in_array($pay_for, array('plan', 'extension', 'change-plan'))) {
+            if(!in_array($pay_for, array('plan', 'extension', 'change-plan', 'additional-stores'))) {
                 $pay_for = NULL;
                 $flash_message = array('type' => 'error', 'message' => 'Wrong form type.');
             }
@@ -303,18 +333,38 @@ class PaymentController extends Integration_Controller_Action
             }
 
             // if form type or entity id is wrong, throw exception to help in redirecting
-            if(!$pay_for OR !$id) {
+            if(!$pay_for OR (!$id && $pay_for !== 'additional-stores')) {
                 $redirect = array('controller' => 'my-account', 'action' => 'compare');
                 throw new Braintree_Controller_Exception($flash_message['message']);
             }
 
-            // if user already has given plan, redirect him to compare page
-            if($user->hasPlanActive() AND $id == $user->getPlanId()) {
-                $redirect = array('controller' => 'my-account', 'action' => 'compare');
-                $flash_message = array('type' => 'notice', 'message' => 'You already have this plan.');
-                throw new Braintree_Controller_Exception($flash_message['message']);
+            if($pay_for === 'plan') {
+                // if user already has given plan, redirect him to compare page
+                if($user->hasPlanActive() AND $id == $user->getPlanId()) {
+                    $redirect = array('controller' => 'my-account', 'action' => 'compare');
+                    $flash_message = array('type' => 'notice', 'message' => 'You already have this plan.');
+                    throw new Braintree_Controller_Exception($flash_message['message']);
+                }
             }
 
+            if($pay_for === 'additional-stores') {
+                if(!(int)$user->getBraintreeTransactionConfirmed()) {
+                    $redirect = array('controller' => 'user', 'action' => 'dashboard');
+                    $flash_message = array('type' => 'notice', 'message' => 'You cannot purchase additional stores until your plan payment will not be settled.');
+                    throw new Braintree_Controller_Exception($flash_message['message']);
+                }
+                $plan = new Application_Model_Plan();
+                $plan->find($user->getPlanId());
+                if(
+                    $additional_stores <= 0
+                    || (int)$user->getAdditionalStores() >= $plan->getMaxStores()
+                    || (int)$user->getAdditionalStores()+$additional_stores > $plan->getMaxStores()
+                ) {
+                    $redirect = array('controller' => 'user', 'action' => 'dashboard');
+                    $flash_message = array('type' => 'notice', 'message' => 'You cannot purchase more additional stores.');
+                    throw new Braintree_Controller_Exception($flash_message['message']);
+                }
+            }
             /*
              * display chosen form
              */
@@ -363,8 +413,18 @@ class PaymentController extends Integration_Controller_Action
                 }
             }
 
+            $not_settled_stores = false;
+            if($pay_for == 'change-plan') {
+                $additional_stores = (int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved();
+                if($additional_stores) {
+                    $additional_stores = new Application_Model_PaymentAdditionalStore();
+                    if(count($additional_stores->fetchWaitingForConfirmation())) {
+                        $not_settled_stores = true;
+                    }
+                }
+            }
             // Do not allow user to change his plan before braintree settle last transaction
-            if(($pay_for == 'plan' OR $pay_for == 'change-plan') AND $user->hasPlanActive() AND !(int)$user->getBraintreeTransactionConfirmed()) {
+            if(($pay_for == 'plan' OR $pay_for == 'change-plan') AND $user->hasPlanActive() AND (!(int)$user->getBraintreeTransactionConfirmed() || $not_settled_stores)) {
                 $flash_message = array(
                         'type' => 'error',
                         'message' => 'You can\'t change plan before your last transaction will not be settled.'
@@ -393,8 +453,13 @@ class PaymentController extends Integration_Controller_Action
             $model = null;
             if($pay_for == 'plan' OR $pay_for == 'change-plan') {
                 $model = new Application_Model_Plan();
-            } else {
+            } elseif($pay_for === 'extension') {
                 $model = new Application_Model_Extension();
+            } else { // $pay_for === 'additional-stores'
+                $data = $plan->__toArray();
+                $data['additional_stores'] = $additional_stores;
+                $payment_data = $this->_calculatePayment($user->getPlanActiveTo(), $plan->getBillingPeriod(), (float)$data['store_price']*$additional_stores);
+                $data['price'] = $payment_data['price'];
             }
             if(is_object($model)) {
                 $row = $model->find($id);
@@ -406,7 +471,7 @@ class PaymentController extends Integration_Controller_Action
             // create braintree gateway data
             $transaction = array(
                 'type' => 'sale',
-                'amount' => $row->getPrice(),
+                'amount' => $data['price'],
                 'options' => array(
                     'storeInVaultOnSuccess' => true,
                     'addBillingAddressToPaymentMethod' => true,
@@ -428,7 +493,15 @@ class PaymentController extends Integration_Controller_Action
                 $this->view->show_billing_and_card = true;
                 if($user->getBraintreeVaultId()) {
                     $transaction['customerId'] = $user->getBraintreeVaultId();
-                    $transaction['orderId'] = $domain.'-ext-'.$id;
+                    if($pay_for === 'extension') {
+                        $order_type = '-ext-';
+                    } elseif($pay_for === 'plan') {
+                        $order_type = '-plan-';
+                    } else {
+                        $order_type = '-additional_store-'.$user->getId().'-'.time().'-';
+                        $id = $additional_stores;
+                    }
+                    $transaction['orderId'] = $domain.$order_type.$id;
                     $transaction['options']['storeInVaultOnSuccess'] = false;
                     $transaction['options']['addBillingAddressToPaymentMethod'] = false;
                     $this->view->show_billing_and_card = false;
@@ -436,9 +509,11 @@ class PaymentController extends Integration_Controller_Action
                 $url_segments = array(
                         'controller' => 'payment',
                         'action' => 'payment',
-                        'pay-for' => $pay_for,
-                        'id' => $id
+                        'pay-for' => $pay_for
                 );
+                if($pay_for !== 'additional-stores') {
+                    $url_segments['id'] = $id;
+                }
                 if($pay_for == 'extension') {
                     $url_segments['domain'] = $domain;
                 }
@@ -745,35 +820,27 @@ class PaymentController extends Integration_Controller_Action
         $old_plan = $old_plan->find($user->getPlanId());
 
         $subscription_end = explode(' ', $user->getPlanActiveTo());
-        $subscription_end = strtotime($subscription_end[0]);
-        $subscription_start = strtotime('-' . $old_plan->getBillingPeriod(), $subscription_end);
-        $today = strtotime(date('Y-m-d'));
-        $subscription_range_days = ($subscription_end-$subscription_start)/3600/24;
-        $subscription_used_days = (($today-$subscription_start)/3600/24)+1;
-        $subscription_not_used_days = $subscription_range_days-$subscription_used_days;
-        $refund = round($subscription_not_used_days/$subscription_range_days*(float)$old_plan->getPrice(), 2);
+        $old_plan_data = $this->_calculatePayment($subscription_end[0], $old_plan->getBillingPeriod(), $old_plan->getPrice());
 
-        $new_plan_start = $subscription_start;
+        $new_plan_start = $old_plan_data['plan_start'];
         $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
-        $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
+        $new_plan_price = $plan->getPrice() + ((float)$plan->getStorePrice()*((int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved()));
+        $new_plan_data = $this->_calculatePayment($new_plan_end, $plan->getBillingPeriod(), $new_plan_price);
+        // if new plan ends earlier than the current subscription, move payment day to today
+        $today = strtotime(date('Y-m-d'));
 
-        if($today >= $new_plan_end-(3600*24) AND $new_plan_range_days < $subscription_range_days) {
+        if($today >= $new_plan_end-(3600*24) AND $new_plan_data['plan_range'] < $old_plan_data['plan_range']) {
             $new_plan_start = $today;
             $new_plan_end = strtotime('+' . $plan->getBillingPeriod(), $new_plan_start);
-            $new_plan_range_days = ($new_plan_end-$new_plan_start)/3600/24;
+            $new_plan_data = $this->_calculatePayment($new_plan_end, $plan->getBillingPeriod(), $new_plan_price);
         }
-        $new_plan_used_days = (($today-$new_plan_start)/3600/24)+1;
-        $new_plan_not_used_days = $new_plan_range_days-$new_plan_used_days;
-        $extra_charge = round($new_plan_not_used_days/$new_plan_range_days*(float)$plan->getPrice(), 2);
-        // if new plan ends earlier than the old one, move payment day to today
-        $result = null;
-        $amount = (float)$extra_charge-$refund;
 
+        $amount = number_format($new_plan_data['price']-$old_plan_data['price'], 2);
         return array(
             'amount' => $amount,
             'billing_period' => $old_plan->getBillingPeriod(),
             'plan_name' => $old_plan->getName(),
-            'used_days' => $subscription_used_days,
+            'used_days' => $old_plan_data['plan_used_days'],
             'new_plan_end' => $new_plan_end
         );
     }
@@ -793,5 +860,44 @@ class PaymentController extends Integration_Controller_Action
         $paginator->setItemCountPerPage(10);
         $this->view->payments = $paginator;
         $this->render('list');
+    }
+
+    public function additionalStoresAction() {
+        $user = new Application_Model_User();
+        $user->find($this->auth->getIdentity()->id);
+        if((int)$user->getPlanId()) {
+            $plan = new Application_Model_Plan();
+            $plan->find($user->getPlanId());
+            $stores = new Application_Model_Store();
+            $stores = $stores->getAllForUser($user->getId());
+            $this->view->left_stores = (int)$plan->getMaxStores()-(int)$user->getAdditionalStores();
+            $this->view->price = $plan->getStorePrice();
+            if($this->view->left_stores > 0) {
+                $this->render('additional-stores-quantity');
+            } else {
+                $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot purchase more stores.'));
+                return $this->_helper->redirector->gotoRoute(
+                    array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard'
+                    )
+                    , 'default', true
+                );
+            }
+        }
+    }
+
+    protected function _calculatePayment($plan_end, $plan_period, $price)
+    {
+        $data = array(
+            'plan_end' => is_string($plan_end) ? strtotime($plan_end) : $plan_end,
+        );
+        $data['plan_start'] = strtotime('-'.$plan_period, $data['plan_end']);
+        $data['plan_range'] = (($data['plan_end']-$data['plan_start'])/3600/24)+1;
+        $data['plan_left_days'] = ceil(($data['plan_end']-strtotime(date('Y-m-d')))/3600/24)+1;
+        $data['plan_used_days'] = $data['plan_range']-$data['plan_left_days'];
+        $data['price'] = number_format($price*$data['plan_left_days']/$data['plan_range'], 2);
+        return $data;
     }
 }

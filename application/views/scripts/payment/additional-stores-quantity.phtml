@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="span12">
+        <div class="form-box">
+            <div class="box">
+                <form class="form-stacked" id="payment-form" method="POST" action="<?php echo $this->url(array('controller' => 'payment', 'action' => 'payment'), 'default', true); ?>">
+                    <input type="hidden" name="pay-for" value="additional-stores" />
+                    <input type="hidden" name="source" value="additional-stores" />
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Note</legend>
+                        <p>
+                            You will add purchased stores to your subscription billing - that means you will be extra charged each billing period for that stores.
+                            Of course you can remove your additional stores from future charges. In that case, you will be able to use your additional stores until next billing period
+                            and will be asked to remove extra stores from user dashboard after your additional stores number decrease.
+                        </p>
+                    </fieldset>
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Payment Details</legend>
+                        <p>One additional store price: $<span class="price"><?php echo $this->price; ?></span></p>
+                        <p>Stores to buy: <input class="span1" type="number" name="additional-stores-quantity" min="1" max="<?php echo $this->left_stores; ?>" value="1" /></p>
+                    </fieldset>
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Summary</legend>
+                        <p>You will purchase <b>1</b> additional store(s) for $<b class="summary"><?php echo $this->price; ?></b></p>
+                    </fieldset>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-inverse pull-right">
+                            <i class="icon-white icon-ok"></i>&nbsp;Pay
+                        </button>
+                        <p class="pull-right braintree-vault-note">
+                            Your Credit Card saved in the secure Braintree Payment Gateway Vault will be used for payment.
+                        </p>
+
+                        <a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'dashboard'), 'default', true)
+                        ?>" class="btn">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

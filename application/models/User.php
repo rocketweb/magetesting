@@ -66,6 +66,10 @@ class Application_Model_User {
 
     protected $_active_from_reminded;
 
+    protected $_additional_stores;
+
+    protected $_additional_stores_removed;
+
     public function __construct(array $options = null)
     {
         if (is_array($options)) {
@@ -479,6 +483,28 @@ class Application_Model_User {
         return $this->_active_from_reminded;
     }
 
+    public function setAdditionalStores($value)
+    {
+        $this->_additional_stores = $value;
+        return $this;
+    }
+
+    public function getAdditionalStores()
+    {
+        return $this->_additional_stores;
+    }
+
+    public function setAdditionalStoresRemoved($value)
+    {
+        $this->_additional_stores_removed = $value;
+        return $this;
+    }
+
+    public function getAdditionalStoresRemoved()
+    {
+        return $this->_additional_stores_removed;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -573,7 +599,9 @@ class Application_Model_User {
             'preselected_plan_id' => $this->getPreselectedPlanId(),
             'apikey' => $this->getApikey(),
             'active_from' => $this->getActiveFrom(),
-            'active_from_reminded' => $this->getActiveFromReminded()
+            'active_from_reminded' => $this->getActiveFromReminded(),
+            'additional_stores' => $this->getAdditionalStores(),
+            'additional_stores_removed' => $this->getAdditionalStoresRemoved(),
         );
     }
     

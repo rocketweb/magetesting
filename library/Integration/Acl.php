@@ -35,7 +35,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_plan'));
         $this->add(new Zend_Acl_Resource('default_payment'));
         /**
-		 * Deny for all (we use white list)
+         * Deny for all (we use white list)
          */
         $this->deny();
 
@@ -91,7 +91,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('free-user', 'default_my-account');
 
-        $this->allow('free-user', 'default_payment', array('payment', 'change-plan'));
+        $this->allow('free-user', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
         $this->allow('free-user','default_help',array('index','category','page'));
         
         /**
@@ -110,7 +110,7 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit', 'papertrail'
         ));
         $this->allow('commercial-user', 'default_my-account');
-        $this->allow('commercial-user', 'default_payment', array('payment', 'change-plan'));
+        $this->allow('commercial-user', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
         $this->allow('commercial-user','default_help',array('index','category','page'));
         /**
          * Set up privileges for awaiting-user
@@ -128,7 +128,7 @@ class Integration_Acl extends Zend_Acl
                 'index', 'logout', 'dashboard', 'edit'
         ));
         $this->allow('awaiting-user', 'default_my-account');
-        $this->allow('awaiting-user', 'default_payment', array('payment', 'change-plan'));
+        $this->allow('awaiting-user', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
         $this->allow('awaiting-user','default_help',array('index','category','page'));
     }
 
@@ -145,7 +145,6 @@ class Integration_Acl extends Zend_Acl
         if (is_null($role)) {
             $role = 'guest';
         }
-
 
         return parent::isAllowed($role, $resource, $privilege);
     }
