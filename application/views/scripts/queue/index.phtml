@@ -4,7 +4,9 @@
     <thead>
         <tr>
             <th>ID</th>
+            <?php if(!$this->user_details): ?>
             <th>User</th>
+            <?php endif; ?>
             <th>Name</th>
             <th>Status</th>
             <th>Edition</th>
@@ -17,7 +19,9 @@
         <?php foreach($this->queue as $item): ?>
         <tr>
             <td><?php echo $item['id']; ?></td>
+            <?php if(!$this->user_details): ?>
             <td><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'detail', 'id' => $item['user_id'])); ?>"><?php echo $item['login']; ?></a></td>
+            <?php endif; ?>
             <td><?php echo $item['store_name']?></td>
             <?php 
                 $progressClass = '';
@@ -47,8 +51,6 @@
             switch(substr($item['status'], 0, $chunk)):
                 case 'ready':
                 case 'error':
-                    
-                break;
             ?>
                 <span class="label <?php echo $progressClass; ?>"><?php echo ucwords(str_replace('-', ' ', $item['status'])); ?></span>
             <?php break; default: ?>
