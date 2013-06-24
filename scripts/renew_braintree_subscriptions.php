@@ -73,7 +73,7 @@ if($result) {
                     if((int)$user->getAdditionalStoresRemoved()) {
                         $plan = new Application_Model_Plan();
                         $plan->find($user->getPlanId());
-                        $stores = new Application_Model_Stores();
+                        $stores = new Application_Model_Store();
                         $stores = $stores->getAllForUser($user->getId())->getCurrentItemCount();
                         if($stores > $extra_stores+(int)$plan->getStores()) {
                             // downgraded because of too many stores installed
