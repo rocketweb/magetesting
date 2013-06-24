@@ -364,21 +364,30 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
     
     protected function _createLocalXml() {
         $localXmlPath = $this->_storeFolder . '/' . $this->_domain.'/app/design/adminhtml/default/default/layout/local.xml';
-        $data = '<layout> 
-                   <default> 
-                        <remove name="notification_security" /> 
-                        <remove name="notification_survey" /> 
-                    </default> 
-                 </layout> ';
-        $flag = 0;
-        
+        $data = '<layout>
+                   <default>
+                        <remove name="notification_security" />
+                    </default>
+                 </layout>';
+
         if (file_exists($localXmlPath)) {
-            $flag = FILE_APPEND;
+            $layout = file_get_contents($localXmlPath);
+            if(preg_match('/\<default\>/i', $layout)) {
+                $data = preg_replace('/\<default\>/i', '<default> 
+                        <remove name="notification_security" />', $layout);
+            } elseif(preg_match('/\<layout\>/i', $layout)) {
+                $data = preg_replace('/\<layout\>/i', '<layout>
+                    <default> 
+                        <remove name="notification_security" /> 
+                    </default> ', $layout);
+            } else {
+                $data = '<?xml version="1.0"?>' . $data;
+            }
         } else {
             $data = '<?xml version="1.0"?>' . $data;
         }
         
-        file_put_contents($localXmlPath, $data, $flag);
+        file_put_contents($localXmlPath, $data);
     }
     
     protected function _updateAdminAccount() {
