@@ -166,14 +166,14 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $sub_select =
             $this->select()
                  ->setIntegrityCheck(false)
-                 ->from($sub_select_inner, array('name', 'edition', 'version'))
+                 ->from($sub_select_inner, array('extension_key', 'edition', 'version'))
                  ->group(array('extension_key', 'edition'));
 
         $select = 
             $this->select()
                  ->from(array('e1' => $sub_select), '')
                  ->setIntegrityCheck(false)
-                 ->joinInner(array('e2' => 'extension'), 'e2.name = e1.name AND e2.edition = e1.edition AND e2.version = e1.version')
+                 ->joinInner(array('e2' => 'extension'), 'e2.extension_key = e1.extension_key AND e2.edition = e1.edition AND e2.version = e1.version')
                  ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'));
 
         // order
