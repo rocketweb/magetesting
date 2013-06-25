@@ -23,6 +23,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('api_store'));
         $this->add(new Zend_Acl_Resource('api_user'));
         $this->add(new Zend_Acl_Resource('api_coupon'));
+        $this->add(new Zend_Acl_Resource('api_store-status'));
         $this->add(new Zend_Acl_Resource('default_error'));
         $this->add(new Zend_Acl_Resource('default_index'));
         $this->add(new Zend_Acl_Resource('default_user'));
@@ -57,6 +58,13 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'api_coupon');
         $this->allow('awaiting-user', 'api_coupon');
         $this->allow('commercial-user', 'api_coupon');
+
+        $this->allow('admin', 'api_store-status');
+        $this->allow('guest', 'api_store-status');
+        $this->allow('free-user', 'api_store-status');
+        $this->allow('awaiting-user', 'api_store-status');
+        $this->allow('commercial-user', 'api_store-status');
+        
         /**
          * Set up privileges for admin
          */
