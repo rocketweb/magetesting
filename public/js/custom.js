@@ -330,6 +330,8 @@ $(document).ready(function () {
         },
         $load_more = $('.load-more'),
         $load_more_label = $load_more.children(':first'),
+        $extension_counter_load_more = $('.extension-counter .label-info'),
+        $extension_counter_counter = $('.extension-counter .label-important'),
         ElementPad        = 5,
         ElementWidth      = 135 + (ElementPad * 2),
         ElementHeight     = 112;
@@ -403,11 +405,16 @@ $(document).ready(function () {
             },
             _fetch_data : function(callback) {
                 var isotope_instance = this;
+                $extension_counter_counter.hide();
+                $extension_counter_load_more.show();
                 $.ajax({
                     type : 'post',
+                    dataType : 'json',
                     data : $extensions_filter_load_data,
                     success : function(result) {
-                        callback.call(isotope_instance, $(result).filter('.element'));
+                        $extension_counter_load_more.hide();
+                        $extension_counter_counter.find('span').html(result.count).parent().show();
+                        callback.call(isotope_instance, $(result.tiles).filter('.element'));
                     }
                 });
             },

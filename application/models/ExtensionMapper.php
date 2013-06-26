@@ -176,16 +176,16 @@ class Application_Model_ExtensionMapper {
         
     }
     
-    public function fetchStoreExtensions($store_name, $filter, $order, $offset, $limit) {
+    public function fetchStoreExtensions($store_name, $filter, $order, $offset, $limit, $return_count = false) {
         //find store by name
         $storeModel = new Application_Model_Store();
         $store = $storeModel->findByDomain($store_name);
 
-        return $this->getDbTable()->fetchStoreExtensions($store, $filter, $order, $offset, $limit);
+        return $this->getDbTable()->fetchStoreExtensions($store, $filter, $order, $offset, $limit, $return_count);
     }
 
-    public function fetchFullListOfExtensions($filter, $order, $offset, $limit) {
-        return $this->getDbTable()->fetchFullListOfExtensions($filter, $order, $offset, $limit);
+    public function fetchFullListOfExtensions($filter, $order, $offset, $limit, $return_count = false) {
+        return $this->getDbTable()->fetchFullListOfExtensions($filter, $order, $offset, $limit, $return_count);
     }
 
     public function findByFilters(array $filters, Application_Model_Extension $extension){

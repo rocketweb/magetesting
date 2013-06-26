@@ -667,6 +667,7 @@ class QueueController extends Integration_Controller_Action {
             $filter['restricted'] = true;
         }
         $this->view->extensions = $extensionModel->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit);
+        $this->view->extensions_counter = $extensionModel->getMapper()->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit, true);
         $this->view->categories = $extensionCategoryModel->fetchAll();
 
         //fetch store data
@@ -677,7 +678,15 @@ class QueueController extends Integration_Controller_Action {
 
         if($request->isPost() && $request->isXmlHttpRequest()) {
             $this->_helper->layout()->disableLayout();
-            $this->renderScript('extension/tiles.phtml');
+            $this->_helper->viewRenderer->setNoRender(true);
+            $this->getResponse()->setBody(
+                json_encode(
+                    array(
+                        'count' => $this->view->extensions_counter,
+                        'tiles' => $this->view->render('extension/tiles.phtml')
+                    )
+                )
+            );
         } else {
             $this->renderScript('extension/list.phtml');
         }
