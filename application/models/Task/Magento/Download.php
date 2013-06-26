@@ -395,8 +395,6 @@ implements Application_Model_Task_Interface {
         /* clear cache to apply new cache settings  */
         $this->_clearStoreCache();
         
-        $this->_disableStoreCache();
-        
         $this->_enableLogging();
     }
     
