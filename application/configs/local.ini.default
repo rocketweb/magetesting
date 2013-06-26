@@ -119,6 +119,14 @@ ssl.active = 0
 mcrypt.key = "0af717633ca0419bacde2628d81c127c"
 mcrypt.vector = "79t1e2s4" 
 
+; QUEUE RETRY COUNT SYSTEM
+; UNITS: MICROSECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, or YEAR
+queueRetry.global.delay.unit = "MINUTE"
+queueRetry.global.delay.interval = 10
+queueRetry.global.retries = 5
+
+queueRetry.ExtensionInstall.retries = 3
+
 [staging : production]
 
 [testing : production]

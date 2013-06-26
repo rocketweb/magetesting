@@ -23,7 +23,9 @@ class Application_Model_Queue {
     protected $_retry_count;
 
     protected $_added_date;
-    
+
+    protected $_next_execution_time;
+
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -197,7 +199,16 @@ class Application_Model_Queue {
     public function getAddedDate(){
         return $this->_added_date;
     }
-    
+
+    public function setNextExecutionTime($value){
+        $this->_next_execution_time = $value;
+        return $this;
+    }
+
+    public function getNextExecutionTime(){
+        return $this->_next_execution_time;
+    }
+
     public function setMapper($mapper)
     {
         $this->_mapper = $mapper;
@@ -249,6 +260,7 @@ class Application_Model_Queue {
                 'retry_count' => $this->getRetryCount(),
                 'parent_id' => $this->getParentId(),
                 'server_id' => $this->getServerId(),
+                'next_execution_time' => $this->getNextExecutionTime()
         );
     }
     
