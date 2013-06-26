@@ -47,6 +47,7 @@ class Application_Model_QueueMapper {
         if (!($id = (int)$queue->getId())) {
             $config = Zend_Registry::get('config');
             $data['retry_count'] = (int)@$config->queueRetry->{$data['task']}->retries;
+            $data['next_execution_time'] = new Zend_Db_Expr('NULL');
             if(!$data['retry_count']) {
                 $data['retry_count'] = (int)$config->queueRetry->global->retries;
             }
