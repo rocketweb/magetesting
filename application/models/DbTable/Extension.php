@@ -41,7 +41,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
     
-    public function fetchStoreExtensions($store, $filter, $order, $offset, $limit) {
+    public function fetchStoreExtensions($store, $filter, $order, $offset, $limit, $return_count = false) {
         $select_installed_for_store = 
             $this->select()
                  ->from(array('se' => 'store_extension'), array('e.*', 'se.braintree_transaction_id', 'se.braintree_transaction_confirmed', 'se.status', 'store_extension_id' => 'se.id', 'installed' => new Zend_Db_Expr('1')))
@@ -90,14 +90,18 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                                    ->setIntegrityCheck(false)
                                    ->union(array($select_installed_for_store, $select_last_version_ids))
                  ))
-                 ->setIntegrityCheck(false)
-                 ->joinLeft(
-                     array('ec' => 'extension_category'),
-                     'ec.id = all.category_id',
-                     array('ec.class as category_class','ec.logo as category_logo')
-                 )
-                 ->group('all.extension_key')
-                 ->order(array('installed DESC', 'price DESC'));
+                 ->setIntegrityCheck(false);
+
+        if(!$return_count) {
+            $select_all_extensions_sorted
+                ->joinLeft(
+                    array('ec' => 'extension_category'),
+                    'ec.id = all.category_id',
+                    array('ec.class as category_class','ec.logo as category_logo')
+                )
+                ->group('all.extension_key')
+                ->order(array('installed DESC', 'price DESC'));
+        }
 
 
         // where
@@ -111,22 +115,32 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $select_all_extensions_sorted->having('installed = ?', ('installed' == strtolower($filter['install'])) ? 1 : 0);
         }
 
-        // order
-        $orders = array('extension_key ASC', 'edition DESC');
-        if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
-            $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
-            array_unshift($orders, $order['column']. ' ' . $direction);
+        if(!$return_count) {
+            // order
+            $orders = array('extension_key ASC', 'edition DESC');
+            if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
+                $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
+                array_unshift($orders, $order['column']. ' ' . $direction);
+            } else {
+                array_unshift($orders, 'price DESC');
+            }
+            $select_all_extensions_sorted->order($orders);
+    
+            $select_all_extensions_sorted->limit($limit, $offset);
         } else {
-            array_unshift($orders, 'price DESC');
+            $select_all_extensions_sorted->reset('columns');
+            $select_all_extensions_sorted->columns(array('count' => 'count(*)', 'installed'));
+            $result = $this->fetchRow($select_all_extensions_sorted);
+            if(!$result) {
+                return 0;
+            }
+            return $result->count;
         }
-        $select_all_extensions_sorted->order($orders);
-
-        $select_all_extensions_sorted->limit($limit, $offset);
 
         return $this->fetchAll($select_all_extensions_sorted);
     }
 
-    public function fetchFullListOfExtensions($filter, $order, $offset, $limit)
+    public function fetchFullListOfExtensions($filter, $order, $offset, $limit, $return_count = false)
     {
         $cache_name = 'frontend_extension';
         $sub_select_inner = 
@@ -169,28 +183,40 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  ->from($sub_select_inner, array('extension_key', 'edition', 'version'))
                  ->group(array('extension_key', 'edition'));
 
-        $select = 
-            $this->select()
-                 ->from(array('e1' => $sub_select), '')
-                 ->setIntegrityCheck(false)
-                 ->joinInner(array('e2' => 'extension'), 'e2.extension_key = e1.extension_key AND e2.edition = e1.edition AND e2.version = e1.version')
-                 ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'));
+        if(!$return_count) {
+            $select = 
+                $this->select()
+                     ->from(array('e1' => $sub_select), '')
+                     ->setIntegrityCheck(false)
+                     ->joinInner(array('e2' => 'extension'), 'e2.extension_key = e1.extension_key AND e2.edition = e1.edition AND e2.version = e1.version')
+                     ->joinLeft(array('ec' => 'extension_category'), 'ec.id = e2.category_id', array('ec.class as category_class','ec.logo as category_logo'));
 
-        // order
-        $orders = array('extension_key ASC', 'edition DESC');
-        if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
-            $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
-            array_unshift($orders, $order['column']. ' ' . $direction);
+            // order
+            $orders = array('e2.extension_key ASC', 'e2.edition DESC');
+            if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
+                $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
+                array_unshift($orders, 'e2.'.$order['column']. ' ' . $direction);
+            } else {
+                array_unshift($orders, 'e2.price DESC');
+            }
+            foreach($orders as $order) {
+                $cache_name .= '_' . str_replace(array(' ', '.'), '', $order);
+            }
+            $select->order($orders);
+            $cache_name .= '_' . $limit . '_' . $offset;
+            $select->limit($limit, $offset);
         } else {
-            array_unshift($orders, 'price DESC');
+            $select =
+                $this
+                    ->select()
+                    ->setIntegrityCheck(false)
+                    ->from(array('temp' => $sub_select), array('count' => 'count(*)'));
+            $result = $this->fetchRow($select);
+            if(!$result) {
+                return 0;
+            }
+            return $result->count;
         }
-        foreach($orders as $order) {
-            $cache_name .= '_' . str_replace(' ', '', $order);
-        }
-        $select->order($orders);
-
-        $cache_name .= '_' . $limit . '_' . $offset;
-        $select->limit($limit, $offset);
 
         if(!isset($filter['restricted']) || $filter['restricted'] === false) {
             $result = $this->fetchAll($select);

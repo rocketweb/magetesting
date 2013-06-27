@@ -33,13 +33,22 @@ class ExtensionController extends Integration_Controller_Action {
         $limit = 50;
 
         $this->view->extensions = $extensionModel->fetchFullListOfExtensions($filter, $order, $offset, $limit);
+        $this->view->extensions_counter = $extensionModel->getMapper()->fetchFullListOfExtensions($filter, $order, $offset, $limit, true);
 
         $extensionCategoryModel = new Application_Model_ExtensionCategory();
         $this->view->categories = $extensionCategoryModel->fetchAll();
 
         if($request->isPost() && $request->isXmlHttpRequest()) {
             $this->_helper->layout()->disableLayout();
-            $this->renderScript('extension/tiles.phtml');
+            $this->_helper->viewRenderer->setNoRender(true);
+            $this->getResponse()->setBody(
+                json_encode(
+                    array(
+                        'count' => $this->view->extensions_counter,
+                        'tiles' => $this->view->render('extension/tiles.phtml')
+                    )
+                )
+            );
         } else {
             $this->renderScript('extension/list.phtml');
         }
