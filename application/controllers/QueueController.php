@@ -576,6 +576,18 @@ class QueueController extends Integration_Controller_Action {
 
         $queueModel = new Application_Model_Queue();
         $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
+
+        if ($magentoQueueItem){
+            $this->view->has_download_task = true;
+        } else {
+            $this->view->has_download_task = false;
+            $form->removeElement('custom_protocol');
+            $form->removeElement('custom_host');
+            $form->removeElement('custom_login');
+            $form->removeElement('custom_pass');
+            $form->removeElement('custom_sql');
+        }
+
         if ($this->_request->isPost()) {
 
             if ($form->isValid($this->_request->getPost())) {
@@ -584,12 +596,21 @@ class QueueController extends Integration_Controller_Action {
                 /* updateQueueItem to try once again if it failed before edit */
                 if ($store->getStatus()=='error'){
                     $magentoQueueItem = $queueModel->findMagentoTaskForStore($store->getId());
-                    $magentoQueueItem->setStatus('pending');
-                    $magentoQueueItem->setRetryCount(0);
-                    $magentoQueueItem->save();
+                    if($magentoQueueItem) {
+                        $magentoQueueItem->setStatus('pending');
+                        $config = Zend_Registry::get('config');
+                        $queueTypeConfig = $config->queueRetry->{$magentoQueueItem->getTask()};
+                        if(isset($queueTypeConfig->retries)) {
+                            $magentoQueueItem->setRetryCount($queueTypeConfig->retries);
+                        } else {
+                            $magentoQueueItem->setRetryCount($config->queueRetry->global->retries);
+                        }
+                        /*also update store to reflect change on dashboard*/
+                        $store->setStatus($storeModel->getStatusFromTask($magentoQueueItem->getTask()));
+                        $magentoQueueItem->setNextExecutionTime(new Zend_Db_Expr('CURRENT_TIMESTAMP'));
+                        $magentoQueueItem->save();
+                    }
 
-                    /*also update store to reflect change on dashboard*/
-                    $store->setStatus($storeModel->getStatusFromTask($magentoQueueItem->getTask()));
                 }
 
                 $store->save();
@@ -618,14 +639,6 @@ class QueueController extends Integration_Controller_Action {
         } else {
             $this->view->input_radio = 'file';
         }
-
-
-        if ($magentoQueueItem){
-            $this->view->has_download_task = true;
-        } else {
-            $this->view->has_download_task = false;
-        }
-
 
         $this->view->render_extension_grid = false;
         if('admin' == $this->auth->getIdentity()->group) {
