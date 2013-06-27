@@ -283,7 +283,7 @@ $(document).ready(function () {
             $store_name,
             $modal_store_name_container = $modal_close_store.find('.close-store-name');
         if($this.hasClass('admin')) {
-            $store_name = $this.parent().parent().children('td:eq(1)').text();
+            $store_name = $this.parent().parent().children('td.store-name').text();
         } else {
             $store_name = $this.parent().nextAll('.title').text();
         }

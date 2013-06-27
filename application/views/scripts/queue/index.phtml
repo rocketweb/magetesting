@@ -22,7 +22,7 @@
             <?php if(!$this->user_details): ?>
             <td><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'detail', 'id' => $item['user_id'])); ?>"><?php echo $item['login']; ?></a></td>
             <?php endif; ?>
-            <td><?php echo $item['store_name']?></td>
+            <td class="store-name"><?php echo $item['store_name']?></td>
             <?php 
                 $progressClass = '';
                 switch($item['status']): 
