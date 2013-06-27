@@ -111,7 +111,7 @@ extends Application_Model_Transport {
          */
         $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
+                .escapeshellarg($this->_storeObject->getCustomLogin()).'@'.trim($this->_customHost,'/')
                 .' -p'.$this->_customPort.' "cd /;tar -zcf - '.ltrim($this->_customRemotePath,'/').' --exclude='.$this->_customRemotePath.'var --exclude='.$this->_customRemotePath.'media"'
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
@@ -171,7 +171,7 @@ extends Application_Model_Transport {
          */
         $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
+                .escapeshellarg($this->_storeObject->getCustomLogin()).'@'.trim($this->_customHost,'/')
                 .' -p'.$this->_customPort.' "cd /;tar -zcf - '.ltrim($this->_customSql,'/').'"'
                 .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
         exec($command,$output);
@@ -250,7 +250,7 @@ extends Application_Model_Transport {
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
         $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$this->_storeObject->getCustomLogin().'@'.trim($this->_customHost,'/')
+                .escapeshellarg($this->_storeObject->getCustomLogin()).'@'.trim($this->_customHost,'/')
                 .' -p'.$this->_customPort.' "cat '.$this->_customFile.'"'
                 .' | sudo tar -xzvf - -C .';
         exec($command,$output);
