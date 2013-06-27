@@ -201,7 +201,7 @@ class Application_Model_Store {
 
     public function setBackendPassword($password, $encrypt = true)
     {
-        if($encrypt === true) {
+        if($encrypt === true && $password) {
             $key = Zend_Registry::get('config')->mcrypt->key;
             $vector = Zend_Registry::get('config')->mcrypt->vector;
 
