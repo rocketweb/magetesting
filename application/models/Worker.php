@@ -51,13 +51,17 @@ class Application_Model_Worker {
             }
         } catch (Application_Model_Task_Exception $e){
             $queueType = $queueElement->getTask();
-            $unit = @$this->config->queueRetry->$queueType->delay->unit;
-            $interval = @$this->config->queueRetry->$queueType->delay->interval;
-            if(!$unit) {
-                $unit = $this->config->queueRetry->global->delay->unit;
+            $retryConfig = $this->config->queueRetry;
+            $queueTypeConfig = $retryConfig->$queueType;
+            if(isset($queueTypeConfig->delay->unit)) {
+                $unit = $queueTypeConfig->delay->unit;
+            } else {
+                $unit = $retryConfig->global->delay->unit;
             }
-            if(!$interval) {
-                $interval = $this->config->queueRetry->global->delay->interval;
+            if(isset($queueTypeConfig->delay->unit)) {
+                $interval = $queueTypeConfig->delay->interval;
+            } else {
+                $interval = $retryConfig->global->delay->interval;
             }
             if(!in_array(strtoupper($unit), array('MICROSECOND', 'SECOND', 'MINUTE', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'QUARTER', 'YEAR'))) {
                 $unit = 'MINUTE';
