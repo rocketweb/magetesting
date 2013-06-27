@@ -780,13 +780,17 @@ class UserController extends Integration_Controller_Action
         $payment = new Application_Model_Payment();
         $payments = $payment->fetchUserPayments($user->getId());
 
+        $page = (int) $this->_getParam('page', 0);
         $storeModel = new Application_Model_Store();
+        $paginator = $storeModel->getWholeQueue();
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(10);
         $stores_view =
             $this->view->partial(
                 'queue/index.phtml',
                 array(
                     'user_details' => true,
-                    'queue' => $storeModel->getAllForUser($user->getId())
+                    'queue' => $paginator
                 )
             );
         $this->view->assign(
