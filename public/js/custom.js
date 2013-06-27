@@ -712,6 +712,9 @@ $(document).ready(function () {
                 rowHeight : RowHeight * 2
               }
         });
+        if($extensions_filter_search_input && $extensions_filter_search_input.val().length) {
+            $extensions_filter_search_input.keyup();
+        }
     }
     /* STORE EXTENSIONS ISOTOPE */
 
