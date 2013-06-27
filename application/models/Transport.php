@@ -61,17 +61,10 @@ class Application_Model_Transport {
     }
     
     /**
-     * Checks if username is in valid alphanumeric format
      * @param type $value
      * @return boolean
      */
     protected function setUser($value){
-        
-        $regex = new Zend_Validate_Alnum();
-        if (!$regex->isValid($value)){
-            return false;
-        }
-        
         $this->_user = $value;
         return true;
     }

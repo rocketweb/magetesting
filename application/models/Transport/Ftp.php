@@ -19,7 +19,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     public function checkProtocolCredentials(){
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort." ".
              "--passive-ftp ".
-             "--user='".$this->_storeObject->getCustomLogin()."' ".
+             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
              "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
              "".$this->_customHost.":".$this->_customPort." 2>&1 | grep 'Logged in!'";
         
@@ -102,7 +102,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         //do a sample connection, and check for index.php, if it works, start fetching
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."app/Mage.php 2>&1 ".
             "--passive-ftp ".
-            "--user='".$this->_storeObject->getCustomLogin()."' ".
+            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command, $output);
@@ -136,7 +136,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
                     $this->_customRemotePath."pkginfo,".
                     $this->_customRemotePath."shell,".
                     $this->_customRemotePath."skin' " .
-             "--user='".$this->_storeObject->getCustomLogin()."' ".
+             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
              "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
              "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."";
         exec($command, $output);
@@ -157,7 +157,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     public function checkDatabaseDump(){
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customSql." 2>&1 ".
             "--passive-ftp ".
-            "--user='".$this->_storeObject->getCustomLogin()."' ".
+            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command,$output);
@@ -186,7 +186,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         protected function _checkStoreDump(){
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customFile." 2>&1 ".
             "--passive-ftp ".
-            "--user='".$this->_storeObject->getCustomLogin()."' ".
+            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
         exec($command,$output);
@@ -217,7 +217,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $command = "wget  ".$this->_customHost.":".$this->_customPort."".$this->_customSql." ".
             "--passive-ftp ".
             "-N ".  
-            "--user='".$this->_storeObject->getCustomLogin()."' ".
+            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
@@ -251,7 +251,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $command = "wget  ".$this->_customHost.":".$this->_customPort."".$this->_customFile." ".
             "--passive-ftp ".
             "-N ".  
-            "--user='".$this->_storeObject->getCustomLogin()."' ".
+            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
         exec($command,$output);
