@@ -172,7 +172,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
 
        //limit is in bytes!
-        if (isset($sqlSizeInfo[1]) && $sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){                       
+        if (isset($sqlSizeInfo[1]) && ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0)) {
             $this->_errorMessage = 'Couldn\'t find sql data file.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
@@ -186,7 +186,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         return true;
     }
     
-        protected function _checkStoreDump(){
+    protected function _checkStoreDump(){
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customFile." 2>&1 ".
             "--passive-ftp ".
             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
@@ -201,7 +201,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
 
        //limit is in bytes!
-        if ($packageSizeInfo[1] == 'done' || $packageSizeInfo[1] == 0){                       
+        if (isset($packageSizeInfo[1]) && ($packageSizeInfo[1] == 'done' || $packageSizeInfo[1] == 0)) {
             $this->_errorMessage = 'Couldn\'t find store package file.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
