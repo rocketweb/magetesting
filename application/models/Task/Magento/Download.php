@@ -588,6 +588,8 @@ implements Application_Model_Task_Interface {
                         $sqlfound = true;
                     }
                 }
+                
+                $output = array();
 
                 /* is gz */
                 $command = 'gunzip ' . $sqlname . '';

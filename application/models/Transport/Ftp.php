@@ -155,6 +155,9 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
 
     public function checkDatabaseDump(){
+        
+        $sqlSizeInfo = '';
+        
         $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customSql." 2>&1 ".
             "--passive-ftp ".
             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
@@ -169,7 +172,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
 
        //limit is in bytes!
-        if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){                       
+        if (isset($sqlSizeInfo[1]) && $sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){                       
             $this->_errorMessage = 'Couldn\'t find sql data file.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
@@ -317,7 +320,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         */
         echo $this->_customRemotePath;
         $parts = explode('/', $this->_customRemotePath);
-        if (isset($parts[1]) && trim($part) != '') {
+        if (isset($parts[1]) && trim($parts[1]) != '') {
             exec('sudo rm ' . $parts[1] . ' -R', $output);
         }
         unset($parts);
