@@ -171,7 +171,9 @@ implements Application_Model_Task_Interface {
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         if($output) {
-            throw new Application_Model_Task_Exception('We couldn\'t import your database correctly. Check your sql dump file.');
+            $error = 'We couldn\'t import your database correctly. Check your sql dump file.';
+            $this->logger->log($error, Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($error);
         }
     }
     
