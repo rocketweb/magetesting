@@ -164,11 +164,14 @@ implements Application_Model_Task_Interface {
     protected function _importDatabaseDump() {
         $this->logger->log('Importing custom db dump.', Zend_Log::INFO);
         $path_parts = pathinfo($this->_customSql);
-        $command = 'sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < '.$path_parts['basename'].'';
+        $command = 'sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < '.$path_parts['basename'].' 2>&1';
+        $output = array();
         exec($command, $output);
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
-        unset($output);
+        if($output) {
+            throw new Application_Model_Task_Exception('We couldn\'t import your database correctly. Check your sql dump file.');
+        }
     }
     
     /**
