@@ -553,7 +553,7 @@ implements Application_Model_Task_Interface {
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
-            $command = 'tar -ztvf ' . $sqlname . '';
+            $command = 'tar -ztvf ' . $sqlname . ' 2>&1';
             exec($command, $output, $return_var);
             $this->logger->log($command, Zend_Log::DEBUG);
             $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
@@ -569,7 +569,7 @@ implements Application_Model_Task_Interface {
                  * this needs to be done BEFORE unpacking otherise we lose file
                  */
                 $output = array();
-                $command = 'gzip -l ' . $sqlname;
+                $command = 'gzip -l ' . $sqlname . ' 2>&1';
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
@@ -592,7 +592,7 @@ implements Application_Model_Task_Interface {
                 $output = array();
 
                 /* is gz */
-                $command = 'gunzip ' . $sqlname . '';
+                $command = 'gunzip ' . $sqlname . ' 2>&1';
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
@@ -602,7 +602,7 @@ implements Application_Model_Task_Interface {
                 /* is tar.gz */
                 $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
 
-                $command = 'tar -zxvf ' . $sqlname . '';
+                $command = 'tar -zxvf ' . $sqlname . ' 2>&1';
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
