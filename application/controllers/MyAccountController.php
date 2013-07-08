@@ -197,6 +197,9 @@ class MyAccountController extends Integration_Controller_Action
             $plan_model = new Application_Model_Plan();
             $this->view->plans = $plan_model->fetchAll();
 
+            $versions = new Application_Model_Version();
+            $this->view->versions = $versions->fetchAll();
+
             if($user->getCity() AND $user->getStreet()) {
                 $this->view->renderPayPal = true;
             }
