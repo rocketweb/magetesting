@@ -149,8 +149,11 @@ class Application_Model_StoreMapper {
         $select = $this->getDbTable()
                        ->findAllByUser($user_id);
         $adapter = new Zend_Paginator_Adapter_DbSelect($select);
-        
-        return new Zend_Paginator($adapter);
+
+        $paginator = new Zend_Paginator($adapter);
+        $paginator->setFilter(new Application_Model_Filter_StoreUserDashboard());
+
+        return $paginator;
     }
 
     public function countUserStores( $user_id )

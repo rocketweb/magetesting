@@ -16,36 +16,30 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
 
     public function findAllByUser($user_id)
     {
-        $select = $this->select()
-                       ->from($this->_name)
-                       ->setIntegrityCheck(false)
-                       ->join('version', 'store.version_id = version.id', array('version'))
-                       ->joinLeft(array('r' => new Zend_Db_Expr(
-                                   '(SELECT r.comment, r.store_id 
-                                   FROM revision r 
-                                   WHERE user_id = '.$this->_db->quote($user_id).' ORDER BY ID DESC)'
-                               )
-                           ),
-                           'r.store_id = '.$this->_name.'.id', 
-                           array('r.comment')
-                       )
-                       ->joinLeft(array('l' => new Zend_Db_Expr(
-                                   '(SELECT l.msg, l.store_id
-                                   FROM store_log l 
-                                   WHERE l.lvl = 3 ORDER BY l.time DESC LIMIT 1)'
-                               )
-                           ),
-                           'l.store_id = '.$this->_name.'.id', 
-                           array('l.msg')
-                       )
+        $select =
+            $this
+                ->select()
+                ->from($this->_name)
+                ->setIntegrityCheck(false)
+                ->join('version', 'store.version_id = version.id', array('version'))
+                ->joinLeft(
+                    array('r' => new Zend_Db_Expr(
+                        '(SELECT r.comment, r.store_id 
+                        FROM revision r 
+                        WHERE user_id = '.$this->_db->quote($user_id).' ORDER BY ID DESC)'
+                        )
+                    ),
+                    'r.store_id = '.$this->_name.'.id', 
+                    array('r.comment')
+                )
                 ->joinLeft('server','server.id = '.$this->_name.'.server_id',array('server_domain'=>'domain'))
                 ->joinLeft('queue','queue.server_id = '.$this->_name.'.server_id AND store.id = queue.store_id',array('queue_id'=>'id'))
                 ->joinLeft('user', 'user.id = store.user_id', 'login')
-                       ->where('store.user_id = ?', $user_id)
-                       ->where('store.status != ?', 'removing-magento')
-                       ->group(array('store.id'))
-                        ->order(array('queue.id asc'));
-                       //->order(array('status asc', 'store.id asc'));
+                ->where('store.user_id = ?', $user_id)
+                ->where('store.status != ?', 'removing-magento')
+                ->group(array('store.id'))
+                ->order(array('queue.id asc'));
+                //->order(array('status asc', 'store.id asc'));
 
         return $select;
     }
