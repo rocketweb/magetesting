@@ -348,9 +348,9 @@ class PaymentController extends Integration_Controller_Action
             }
 
             if($pay_for === 'additional-stores') {
-                if(!(int)$user->getBraintreeTransactionConfirmed()) {
+                if(!$user->hasPlanActive()) {
                     $redirect = array('controller' => 'user', 'action' => 'dashboard');
-                    $flash_message = array('type' => 'notice', 'message' => 'You cannot purchase additional stores until your plan payment will not be settled.');
+                    $flash_message = array('type' => 'notice', 'message' => 'You cannot purchase additional stores before purchasing any plan.');
                     throw new Braintree_Controller_Exception($flash_message['message']);
                 }
                 $plan = new Application_Model_Plan();

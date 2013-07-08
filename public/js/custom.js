@@ -174,7 +174,7 @@ $(document).ready(function () {
     });
     
     /* prevent click event and init popover */
-    $('[rel=popover]').click(function(){return false;}).popover();
+    $('[rel=popover]').click(function(){return false;}).popover({html: true});
     $('[rel=popover]').mouseover(function(){
         $(this).find('i.icon').removeClass('icon-blue').addClass('icon-white');
     });

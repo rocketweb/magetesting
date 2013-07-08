@@ -144,7 +144,7 @@
                 <tr class="compare-table-row-title">
                     <td class="compare-table-row-title">
                         <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Additional Stores" data-content="You can purchase additional stores to be used.">
-                            <i class="icon icon-blue icon-info-sign"></i> Additional Stores
+                            <i class="icon icon-blue icon-info-sign"></i> Max Additional Stores
                         </div>
                     </td>
                     <?php foreach($this->plans as $plan): ?>
@@ -154,8 +154,8 @@
                 </tr>
                 <tr class="compare-table-row-title">
                     <td class="compare-table-row-title">
-                        <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Store Price" data-content="Standard price for one additional store. That price can differ with time left for your plan or during renewing subscription but with plan diffrent than current.">
-                            <i class="icon icon-blue icon-info-sign"></i> Store Price
+                        <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Store Price" data-content="Standard price for one additional store for 10 days or 1 month depending on your selected plan.">
+                            <i class="icon icon-blue icon-info-sign"></i> Price Per Additional Store
                         </div>
                     </td>
                     <?php foreach($this->plans as $plan): ?>
@@ -313,6 +313,28 @@
             	<li><i class="icon icon-blue icon-ok"></i> Single domain</li>
             	<li><i class="icon icon-blue icon-ok"></i> Free extension store</li>
             	<li><i class="icon icon-blue icon-ok"></i> Premium extension store</li>
+            	<div class="clearfix"></div>
+            	<?php
+            	    $versions = array();
+            	    foreach($this->versions as $version) {
+                        if('CE' === strtoupper($version->getEdition())) {
+                            $versions[] = $version->getVersion();
+                        }
+                    }
+            	?>
+            	<li class="supported-magento-versions"><a rel="popover" data-trigger="hover" data-placement="top" data-original-title="CE versions" data-content="<?php echo implode('<br />', $versions); ?>"><i class="icon-blue icon-eye-open"></i> Currently Supported Versions of Magento</a></li>
+            	<?php
+            	/*
+            	 <h3 class='popover-title' style='margin: 9px -15px;border-top: 1px solid #ebebeb;border-radius: 0px;-webkit-border-radius: 0px;'>EE versions</h3><div class='popover-content' style='margin: -9px -14px;'>1.4.0.0<br>1.5.1.0</div>
+            	  inner popover title
+            	  margin: 8px -15px;
+                    border-top: 1px solid #ebebeb;
+                    border-radius: 0px;
+                    -webkit-border-radius: 0px;
+                    inner popover content
+                    margin: -9px -14px;
+            	 */
+            	?>
             </ul>
         </div>
     </div>
