@@ -192,7 +192,6 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
-                    $queueModel->setTaskParams(array('send_store_ready_email' => true));
                     $queueModel->save();
                     
                     $this->_helper->FlashMessenger('New installation added to queue');
@@ -347,7 +346,8 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setTaskParams(
                             array(
                                 'commit_comment' => 'Initial Magento Commit',
-                                'commit_type' => 'magento-init'                               
+                                'commit_type' => 'magento-init',
+                                'send_store_ready_email' => true
                                 )
                     );
                     $queueModel->setStatus('pending');
