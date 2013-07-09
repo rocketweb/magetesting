@@ -116,7 +116,7 @@
                             </div>
                             <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''), ($item['status'] == 'downloading-magento' ? ' download-bar' : ''); ?>">
                                 <?php if($item['status'] == 'error'): ?>
-                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['msg']) ? $item['msg'] : 'Please click on Help button above to submit a support ticket.'  ?>" data-trigger="hover">
+                                <span id="popover-error-dashboard" rel="popover" data-placement="bottom" data-original-title="Error" data-content="<?php echo ($item['error_message']) ? $item['error_message'] : 'Please click on Help button above to submit a support ticket.'  ?>" data-trigger="hover">
                                 <?php endif; ?>
                                     <span class="span3 progress <?php echo $progressClass ?> progress-striped pull-right active" style="height:12px;" >
                                         <span class="bar" style="width: 100%;"></span>

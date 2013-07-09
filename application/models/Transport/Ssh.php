@@ -126,7 +126,30 @@ extends Application_Model_Transport {
          * TODO: validate output
          */
 
-        unset($output);
+        //locate mage file
+        $output = array();
+        $mageroot = '';
+        $command = 'find -L -name Mage.php';
+        exec($command,$output);
+        $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
+        
+        
+        /* no matchees found */
+        if ( count($output) == 0 ){
+            throw new Application_Model_Transport_Exception('/app/Mage has not been found');
+        }
+        
+        foreach ($output as $line){
+            if(substr($line,-13) == '/app/Mage.php'){
+                $mageroot = substr($line,0,strpos($line,'/app/Mage.php'));
+                break;
+            }
+        }
+        
+        /* no /app/Mage.php found */
+        if ($mageroot == ''){
+            throw new Application_Model_Transport_Exception('/app/Mage has not been found');
+        }
 
         return true;
     }
@@ -252,11 +275,21 @@ extends Application_Model_Transport {
                 .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
                 .escapeshellarg($this->_storeObject->getCustomLogin()).'@'.trim($this->_customHost,'/')
                 .' -p'.$this->_customPort.' "cat '.$this->_customFile.'"'
-                .' | sudo tar -xzvf - -C .';
+                .' | sudo tar -xzvf - -C . 2>&1';
         exec($command,$output);
         $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
         $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
-                     
+
+        foreach($output as $line) {
+            if(
+                stristr($line, 'not in gzip format')
+                || stristr($line, 'This does not look like a tar archive')
+                || stristr($line, 'unexpected end of file')
+            ) {
+                throw new Application_Model_Transport_Exception('Provided archive containing store files is not valid tar.gz file.');
+            }
+        }
+
         //locate mage file 
         $output = array();
         $mageroot = '';
