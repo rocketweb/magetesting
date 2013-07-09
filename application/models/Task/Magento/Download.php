@@ -220,7 +220,7 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _disableRWMageTestingExtension() {
-        $file = $this->_storeFolder . '/' . $this->domain . '/app/etc/RocketWeb_MageTesting.xml';
+        $file = $this->_storeFolder . '/' . $this->domain . '/app/etc/modules/RocketWeb_MageTesting.xml';
         if(file_exists($file)) {
             $replaced = preg_replace('/<active>.*<\/active>/is', '<active>false</active>', file_get_contents($file));
             if($replaced) {
