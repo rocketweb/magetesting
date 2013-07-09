@@ -192,6 +192,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
+                    $queueModel->setTaskParams(array('send_store_ready_email' => true));
                     $queueModel->save();
                     
                     $this->_helper->FlashMessenger('New installation added to queue');
