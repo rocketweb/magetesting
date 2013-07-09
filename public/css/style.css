@@ -904,7 +904,6 @@ footer .links a {
 }
 .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
     display: block;
-    width: 100%;
 }
 .accordion-group .accordion-heading .accordion-toggle .arrow {
     margin-right: 4px;
