@@ -179,7 +179,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
         unset($output);
 
-        if ($sqlSizeInfo[1] > $this->_sqlFileLimit){
+        if (isset($sqlSizeInfo[1]) && $sqlSizeInfo[1] > $this->_sqlFileLimit){
             $this->_errorMessage = 'Sql file is too big.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
@@ -188,6 +188,9 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     protected function _checkStoreDump(){
+        
+        $packageSizeInfo = '';
+        
         $command = "wget --timeout=".$this->_wgetTimeout." -t 1 --spider ".$this->_customHost.":".$this->_customPort."".$this->_customFile." 2>&1 ".
             "--passive-ftp ".
             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
@@ -208,7 +211,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
         unset($output);
 
-        if ($packageSizeInfo[1] > $this->_storeFileLimit){
+        if (isset($packageSizeInfo[1]) && $packageSizeInfo[1] > $this->_storeFileLimit){
             $this->_errorMessage = 'Store file is too big.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
