@@ -123,10 +123,6 @@ implements Application_Model_Task_Interface {
         $this->_cleanLogTables();
         
         chdir($startCwd);
-        
-        /* send email to store owner start */
-        $this->_sendStoreReadyEmail();
-        /* send email to store owner stop */
 
         /* update revision count */
         $this->db->update('store', array('revision_count' => '0'), 'id=' . $this->_storeObject->getId());
