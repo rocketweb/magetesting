@@ -160,11 +160,16 @@ implements Application_Model_Task_Interface {
     protected function _importDatabaseDump() {
         $this->logger->log('Importing custom db dump.', Zend_Log::INFO);
         $path_parts = pathinfo($this->_customSql);
-        $command = 'sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < '.$path_parts['basename'].'';
+        $command = 'sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < '.$path_parts['basename'].' 2>&1';
+        $output = array();
         exec($command, $output);
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
-        unset($output);
+        if($output) {
+            $error = 'We couldn\'t import your database correctly. Check your sql dump file.';
+            $this->logger->log($error, Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($error);
+        }
     }
     
     /**
@@ -549,7 +554,7 @@ implements Application_Model_Task_Interface {
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
-            $command = 'tar -ztvf ' . $sqlname . '';
+            $command = 'tar -ztvf ' . $sqlname . ' 2>&1';
             exec($command, $output, $return_var);
             $this->logger->log($command, Zend_Log::DEBUG);
             $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
@@ -565,7 +570,7 @@ implements Application_Model_Task_Interface {
                  * this needs to be done BEFORE unpacking otherise we lose file
                  */
                 $output = array();
-                $command = 'gzip -l ' . $sqlname;
+                $command = 'gzip -l ' . $sqlname . ' 2>&1';
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
@@ -584,9 +589,11 @@ implements Application_Model_Task_Interface {
                         $sqlfound = true;
                     }
                 }
+                
+                $output = array();
 
                 /* is gz */
-                $command = 'gunzip ' . $sqlname . '';
+                $command = 'gunzip ' . $sqlname . ' 2>&1';
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
@@ -596,7 +603,7 @@ implements Application_Model_Task_Interface {
                 /* is tar.gz */
                 $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
 
-                $command = 'tar -zxvf ' . $sqlname . '';
+                $command = 'tar -zxvf ' . $sqlname . ' 2>&1';
                 exec($command, $output);
 
                 $this->logger->log($command, Zend_Log::DEBUG);
