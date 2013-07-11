@@ -6,7 +6,8 @@ class Application_Model_Transport {
     protected $_sqlFileLimit = ''; 
     protected $_storeFileLimit = ''; 
 
-    protected $_wgetTimeout = 3600; // default one hour
+    protected $_wgetTimeout = 300; // default 5 minutes
+    protected $_wgetTries = 3; // default 3 tries
     protected $_protocol = '';
     protected $_host = '';
     protected $_user = '';
@@ -22,8 +23,11 @@ class Application_Model_Transport {
         $this->_sqlFileLimit = $config->magento->sqlDumpByteLimit;
         $this->_storeFileLimit = $config->magento->storeDumpByteLimit;
 
-        if(isset($config->wgetTimeout)) {
-            $this->_wgetTimeout = $config->wgetTimeout;
+        if(isset($config->wget) && isset($config->wget->timeout)) {
+            $this->_wgetTimeout = $config->wget->timeout;
+        }
+        if(isset($config->wget) && isset($config->wget->tries)) {
+            $this->_wgetTries = $config->wget->tries;
         }
 
         if ($logger instanceof Zend_Log) {
