@@ -41,11 +41,20 @@ class Application_Model_QueueMapper {
             'server_id' => $queue->getServerId(),
             'parent_id' => $queue->getParentId(),
             'added_date' => $queue->getAddedDate(),
+            'next_execution_time' => $queue->getNextExecutionTime(),
         );
-        
+
         if (!($id = (int)$queue->getId())) {
+            $config = Zend_Registry::get('config');
+            $queueTypeConfig = $config->queueRetry->{$data['task']};
+            if(isset($queueTypeConfig->retries)) {
+                $data['retry_count'] = (int)$queueTypeConfig->retries;
+            }
+            $data['next_execution_time'] = new Zend_Db_Expr('NULL');
+            if(!$data['retry_count']) {
+                $data['retry_count'] = (int)$config->queueRetry->global->retries;
+            }
             unset($data['id']);
-            unset($data['retry_count']);
             $queue->setId($this->getDbTable()->insert($data));
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
@@ -72,7 +81,8 @@ class Application_Model_QueueMapper {
         ->setRetryCount($row->retry_count)
         ->setServerId($row->server_id)
         ->setParentId($row->parent_id)
-        ->setAddedDate($row->added_date);
+        ->setAddedDate($row->added_date)
+        ->setNextExecutionTime($row->next_execution_time);
         return $queue;
     }
 
@@ -97,7 +107,8 @@ class Application_Model_QueueMapper {
             ->setRetryCount($row->retry_count)
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
-            ->setAddedDate($row->added_date);
+            ->setAddedDate($row->added_date)
+            ->setNextExecutionTime($row->next_execution_time);
             $entries[] = $entry;
         }
         return $entries;
@@ -117,7 +128,8 @@ class Application_Model_QueueMapper {
             ->setRetryCount($row->retry_count)
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
-            ->setAddedDate($row->added_date);
+            ->setAddedDate($row->added_date)
+            ->setNextExecutionTime($row->next_execution_time);
             return $entry;
        } else {
            return false;
@@ -163,7 +175,8 @@ class Application_Model_QueueMapper {
             ->setRetryCount($row->retry_count)
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
-            ->setAddedDate($row->added_date);
+            ->setAddedDate($row->added_date)
+            ->setNextExecutionTime($row->next_execution_time);
             return $entry;
     }
     
@@ -188,7 +201,8 @@ class Application_Model_QueueMapper {
             ->setRetryCount($row->retry_count)
             ->setServerId($row->server_id)
             ->setParentId($row->parent_id)
-            ->setAddedDate($row->added_date);
+            ->setAddedDate($row->added_date)
+            ->setNextExecutionTime($row->next_execution_time);
             return $entry;
         } else {
             return false;

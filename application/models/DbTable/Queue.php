@@ -6,60 +6,32 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
     protected $_name = 'queue';
 
     public function getForServer($server_id,$type)
-    {  
+    {
+        $select =
+            $this
+                ->select()
+                ->setIntegrityCheck(false)
+                ->from($this->_name)
+                ->join('store', 'store.id = queue.store_id',array('edition','domain','store_name'))
+                ->join('user', 'user.id = store.user_id', 'login')
+                ->join('version', 'store.version_id = version.id', 'version')
+                ->where('queue.server_id = ?',$server_id)
+                ->where('queue.status = ?','pending')
+                ->where('retry_count > 0')
+                ->where('next_execution_time <= CURRENT_TIMESTAMP')
+                ->where('parent_id = ?',0)
+                ->order(array('queue.id ASC', 'parent_id asc'))
+                ->limit(1);
         switch($type){
-            
             case 'allbutdownload':
-                $select = $this->select()
-                    ->setIntegrityCheck(false)
-                    ->from($this->_name)
-                    ->join('store', 'store.id = queue.store_id',array('edition','domain','store_name'))
-                    ->join('user', 'user.id = store.user_id', 'login')
-                    ->join('version', 'store.version_id = version.id', 'version')
-                    ->where('queue.server_id = ?',$server_id)
-                    ->where('task <> ?','MagentoDownload')
-                    ->where('queue.status = ?','pending')
-                    ->where('retry_count <= ?','3')
-                    ->where('parent_id = ?',0)
-                    ->order(array('queue.id ASC', 'parent_id asc'))
-                    ->limit(1);
+                $select->where('task <> ?','MagentoDownload');
             break;
-            
             case 'download':
-                $select = $this->select()
-                    ->setIntegrityCheck(false)
-                    ->from($this->_name)
-                    ->join('store', 'store.id = queue.store_id',array('edition','domain','store_name'))
-                    ->join('user', 'user.id = store.user_id', 'login')
-                    ->join('version', 'store.version_id = version.id', 'version')
-                    ->where('queue.server_id = ?',$server_id)
-                    ->where('task = ?','MagentoDownload')
-                    ->where('queue.status = ?','pending')
-                    ->where('retry_count <= ?','3')
-                    ->where('parent_id = ?',0)
-                    ->order(array('queue.id ASC', 'parent_id asc'))
-                    ->limit(1);
+                $select->where('task = ?','MagentoDownload');
             break;
-            
-            case 'all':
-            default:
-                $select = $this->select()
-                    ->setIntegrityCheck(false)
-                    ->from($this->_name)
-                    ->join('store', 'store.id = queue.store_id',array('edition','domain','store_name'))
-                    ->join('user', 'user.id = store.user_id', 'login')
-                    ->join('version', 'store.version_id = version.id', 'version')
-                    ->where('queue.server_id = ?',$server_id)
-                    ->where('queue.status = ?','pending')
-                    ->where('retry_count <= ?','3')
-                    ->where('parent_id = ?',0)
-                    ->order(array('queue.id ASC', 'parent_id asc'))
-                    ->limit(1);
-            break;
-            
-                
-        }       
+        }
         $result = $this->fetchRow($select);
+
         if (count($result)){
             return $result;
         } else {
@@ -117,7 +89,8 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                         ->from($this->_name, array('num' => 'count(store_id)'))
                         ->where("store_id <= (SELECT id FROM store WHERE domain = '".$store_name."')")
                         ->where('status != ?', 'ready')
-                        ->where('retry_count < ?', 4);
+                        ->where('retry_count > 0')
+                        ->where('next_execution_time <= CURRENT_TIMESTAMP');
 
         return $this->fetchRow($select);
     }
@@ -130,7 +103,8 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
                     ->where("id <= '".$queue_id."' ")
                     ->where("user_id <= '".$user_id."' ")
                     ->where('status != ?', 'ready')
-                    ->where('retry_count < ?', 4);
+                    ->where('retry_count > 0')
+                    ->where('next_execution_time <= CURRENT_TIMESTAMP');
 
         return $this->fetchRow($select);
     }

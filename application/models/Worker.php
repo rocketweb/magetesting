@@ -15,12 +15,11 @@ class Application_Model_Worker {
 
         $className = 'Application_Model_Task_'.$classSuffix; 
 
-        $newRetryCount = $queueElement->getRetryCount() + 1;
+        $newRetryCount = (int)$queueElement->getRetryCount() - 1;
         $this->db->update('queue', array('retry_count' => $newRetryCount), 'id = ' . $queueElement->getId());
         $queueElement->setRetryCount($newRetryCount)->save();
         $customTaskModel = new $className($this->config,$this->db);
 
-        
         try {
             $customTaskModel->setup($queueElement);
             $this->db->update('queue', array('status' => 'processing'), 'id = ' . $queueElement->getId());
@@ -51,7 +50,32 @@ class Application_Model_Worker {
                         );
             }
         } catch (Application_Model_Task_Exception $e){
-            $this->db->update('queue', array('status' => 'pending'), 'id = ' . $queueElement->getId());
+            $queueType = $queueElement->getTask();
+            $retryConfig = $this->config->queueRetry;
+            $queueTypeConfig = $retryConfig->$queueType;
+            if(isset($queueTypeConfig->delay->unit)) {
+                $unit = $queueTypeConfig->delay->unit;
+            } else {
+                $unit = $retryConfig->global->delay->unit;
+            }
+            if(isset($queueTypeConfig->delay->unit)) {
+                $interval = $queueTypeConfig->delay->interval;
+            } else {
+                $interval = $retryConfig->global->delay->interval;
+            }
+            if(!in_array(strtoupper($unit), array('MICROSECOND', 'SECOND', 'MINUTE', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'QUARTER', 'YEAR'))) {
+                $unit = 'MINUTE';
+            }
+            $interval = $this->db->quote($interval);
+            $this->db->update(
+                'queue',
+                array(
+                    'status' => 'pending',
+                    'next_execution_time'
+                        => new Zend_Db_Expr('TIMESTAMPADD('.$unit.','.$interval.', CURRENT_TIMESTAMP)')
+                ),
+                'id = ' . $queueElement->getId()
+            );
             $this->db->update('store', array('error_message' => $e->getMessage(),'status' => 'error'), 'id = ' . $queueElement->getStoreId());
         } catch (Exception $e){
             $log = $this->log;
