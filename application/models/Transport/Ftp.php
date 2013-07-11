@@ -17,7 +17,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     public function checkProtocolCredentials(){
-        $command = "wget --spider ".$this->_customHost.":".$this->_customPort." ".
+        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' --spider '.$this->_customHost.":".$this->_customPort." ".
              "--passive-ftp ".
              "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
              "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
@@ -100,7 +100,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     /* todo: make this protected */
     protected function _downloadStoreFiles(){
         //do a sample connection, and check for index.php, if it works, start fetching
-        $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."app/Mage.php 2>&1 ".
+        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' --spider '.$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."app/Mage.php 2>&1 ".
             "--passive-ftp ".
             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
@@ -119,7 +119,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         unset($output);
 
         $command = "wget ".
-             "--passive-ftp ".
+             "--timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.
+             " --passive-ftp ".
              "-nH ".
              "-Q300m ".
              "-m ".
@@ -158,7 +159,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         
         $sqlSizeInfo = '';
         
-        $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customSql." 2>&1 ".
+        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' --spider '.$this->_customHost.":".$this->_customPort."".$this->_customSql." 2>&1 ".
             "--passive-ftp ".
             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
@@ -178,7 +179,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
         unset($output);
 
-        if ($sqlSizeInfo[1] > $this->_sqlFileLimit){
+        if (isset($sqlSizeInfo[1]) && $sqlSizeInfo[1] > $this->_sqlFileLimit){
             $this->_errorMessage = 'Sql file is too big.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
@@ -187,7 +188,10 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     protected function _checkStoreDump(){
-        $command = "wget --spider ".$this->_customHost.":".$this->_customPort."".$this->_customFile." 2>&1 ".
+        
+        $packageSizeInfo = '';
+        
+        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' --spider '.$this->_customHost.":".$this->_customPort."".$this->_customFile." 2>&1 ".
             "--passive-ftp ".
             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
@@ -207,7 +211,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         }
         unset($output);
 
-        if ($packageSizeInfo[1] > $this->_storeFileLimit){
+        if (isset($packageSizeInfo[1]) && $packageSizeInfo[1] > $this->_storeFileLimit){
             $this->_errorMessage = 'Store file is too big.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
@@ -217,7 +221,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     
     public function downloadDatabase(){
         
-        $command = "wget  ".$this->_customHost.":".$this->_customPort."".$this->_customSql." ".
+        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' '.$this->_customHost.":".$this->_customPort."".$this->_customSql." ".
             "--passive-ftp ".
             "-N ".  
             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
@@ -251,7 +255,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $this->_checkStoreDump();
         
         //download file
-        $command = "wget  ".$this->_customHost.":".$this->_customPort."".$this->_customFile." ".
+        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' '.$this->_customHost.":".$this->_customPort."".$this->_customFile." ".
             "--passive-ftp ".
             "-N ".  
             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".

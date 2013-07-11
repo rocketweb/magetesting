@@ -3,6 +3,9 @@
 magento.adminEmail = "jan@rocketweb.com"
 magento.storeUrl = "http://magetesting.dev"
 
+wget.timeout = 300;
+wget.tries = 3;
+
 ;this addresses go to account email notifications
 magento.ftphost = "ftp://magetesting.com"
 magento.dbhost = "http://four.rocketweb.com/phpdb"
