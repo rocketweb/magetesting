@@ -170,6 +170,16 @@ implements Application_Model_Task_Interface {
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         if($output) {
             $error = 'We couldn\'t import your database correctly. Check your sql dump file.';
+            $sql_error = '';
+            foreach($output as $line) {
+                if(preg_match('/^(ERROR .* at line \d+\: .*)$/is', $s, $match)) {
+                    $sql_error = $match[1];
+                }
+                unset($match);
+            }
+            if($sql_error) {
+                $error .= "\n(".$sql_error.')';
+            }
             $this->logger->log($error, Zend_Log::ERR);
             throw new Application_Model_Task_Exception($error);
         }
