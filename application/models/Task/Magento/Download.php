@@ -87,6 +87,8 @@ implements Application_Model_Task_Interface {
         //now lets configure our local xml file
         $this->_updateLocalXml();
 
+        $this->_disableRWMageTestingExtension();
+
         $this->_setupMagentoConnect();
         
         $this->_cleanupFilesystem();
@@ -215,6 +217,17 @@ implements Application_Model_Task_Interface {
 
         file_put_contents($this->_storeFolder .'/'. $this->_domain.'/app/etc/local.xml',$localXml);
         unset($localXml);
+
+    }
+
+    protected function _disableRWMageTestingExtension() {
+        $file = $this->_storeFolder . '/' . $this->_domain . '/app/etc/modules/RocketWeb_MageTesting.xml';
+        if(file_exists($file)) {
+            $replaced = preg_replace('/<active>.*<\/active>/is', '<active>false</active>', file_get_contents($file));
+            if($replaced) {
+                file_put_contents($file, $replaced);
+            }
+        }
     }
 
     protected function _cleanupFilesystem() {
