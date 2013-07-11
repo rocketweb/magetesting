@@ -172,7 +172,7 @@ implements Application_Model_Task_Interface {
             $error = 'We couldn\'t import your database correctly. Check your sql dump file.';
             $sql_error = '';
             foreach($output as $line) {
-                if(preg_match('/^(ERROR .* at line \d+\: .*)$/is', $s, $match)) {
+                if(preg_match('/^(ERROR .* at line \d+\: .*)$/is', $line, $match)) {
                     $sql_error = $match[1];
                 }
                 unset($match);
