@@ -432,10 +432,18 @@ $(document).ready(function () {
             _collect_filter_options : function() {
                 $extensions_filter_load_data.filter = {};
                 $extensions_filter_container.find('.selected').each(function() {
-                    var $this = $(this);
-                    var $option = $this.data('option-value');
+                    var $this = $(this),
+                        $option = $this.data('option-value'),
+                        $parent = $this.parents('ul:first');
                     if($option != '*') {
                         $extensions_filter_load_data.filter[$this.parents('ul:first').data('option-key')] = ($option + '').replace('.', '');
+                        if('sort' === $parent.data('option-key')) {
+                            var $option = $option.split('-');
+                            $extensions_filter_load_data.order.column = $option[0];
+                            $extensions_filter_load_data.order.dir = $option[1];
+                        } else {
+                            $extensions_filter_load_data.filter[$parent.data('option-key')] = ($option + '').replace('.', '');
+                        }
                     }
                 });
 
