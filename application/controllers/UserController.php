@@ -223,25 +223,22 @@ class UserController extends Integration_Controller_Action
                                 'action' => 'login',
                         ), 'default', true);
                     } else {
-                        $auth->getStorage()->write(
-                                $userData
-                        );
-
-                        $plan_active_to = explode(' ', $userData->plan_active_to);
-                        $today_date_timestamp = strtotime(date('Y-m-d'));
+                        $user = new Application_Model_User();
+                        $user->find($userData->id);
                         // if user has subscription or waiting for confirmation
-                        if(in_array($userData->group, array('awaiting-user', 'commercial-user')) && $today_date_timestamp >= $plan_active_to[0]) {
-                            $user = new Application_Model_User();
-                            $user->find($userData->id);
-
+                        if(
+                            in_array($userData->group, array('awaiting-user', 'commercial-user')) &&
+                            is_numeric($user->getBraintreeTransactionConfirmed()) &&
+                            0 === (int)$user->getBraintreeTransactionConfirmed() &&
+                            (int)$user->getPlanId()
+                        ) {
                             $plan = new Application_Model_Plan();
                             $plan->find($user->getPlanId());
-                            $timeAfterLastPayment = strtotime(date('Y-m-d'))-strtotime('-' . $plan->getBillingPeriod(), strtotime($plan_active_to[0]));
-                            // if between active to date and active to date+3days
-                            // notify user about payment
-                            if( $timeAfterLastPayment <= 3*60*60*24 AND $timeAfterLastPayment > 0) {
+                            $boughtDate = strtotime('-'.$plan->getBillingPeriod(), strtotime($user->getPlanActiveTo()));
+                            $timeAfterLastPayment = time()-$boughtDate;
+                            if($timeAfterLastPayment < 3*60*60*24 && $timeAfterLastPayment >= 60*60*24) {
                                 $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'We have not received payment for your subscription yet.'));
-                            } elseif($timeAfterLastPayment > 3*60*60*24) {
+                            } elseif($timeAfterLastPayment >= 3*60*60*24) {
                                 // if date is farther than 3 days
                                 // inform that we downgraded user account
                                 $user->setGroup('free-user')
@@ -249,8 +246,13 @@ class UserController extends Integration_Controller_Action
                                      ->save();
                                 $this->_helper->FlashMessenger(array('type'=> 'error', 'message' => 'We downgraded your account to free user.'));
                                 $userData->group = 'free-user';
+                                $userData->downgraded = 2;
                             }
                         }
+
+                        $auth->getStorage()->write(
+                            $userData
+                        );
 
                         $this->_helper->FlashMessenger('You have been logged in successfully');
 
