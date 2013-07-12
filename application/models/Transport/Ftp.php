@@ -323,9 +323,11 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
 
         /* move files from unpacked dir into our store location */
         $output = array();
-        $command = 'sudo mv '.$mageroot.'/* '.$mageroot.'/.??* .';
+        #$command = 'sudo mv -f '.$mageroot.'/* '.$mageroot.'/.??* .';
+        $command = 'sudo rsync -a '.$mageroot.'/ .';
         exec($command,$output);
         unset($output);
+        exec('rm -r '.$mageroot);
         
         /**
         * Remove main fetched folder 
