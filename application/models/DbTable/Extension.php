@@ -193,8 +193,8 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
 
             // order
             $orders = array('e2.extension_key ASC', 'e2.edition DESC');
-            if(isset($order['column']) && in_array(strtolower($order['column']), array('date'))) {
-                $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc')));
+            if(isset($order['column']) && in_array(strtolower($order['column']), array('id'))) {
+                $direction = (isset($order['dir']) && in_array(strtolower($order['dir']), array('asc', 'desc'))) ? $order['dir'] : 'asc';
                 array_unshift($orders, 'e2.'.$order['column']. ' ' . $direction);
             } else {
                 array_unshift($orders, 'e2.price DESC');
