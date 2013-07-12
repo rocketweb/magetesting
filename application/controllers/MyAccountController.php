@@ -243,6 +243,8 @@ class MyAccountController extends Integration_Controller_Action
                     $applyResult = $modelCoupon->apply($modelCoupon->getId(), $user->getId());
                     $user->setBraintreeTransactionConfirmed(NULL);
                     $user->setBraintreeTransactionId(NULL);
+                    $user->setAdditionalStores(0);
+                    $user->setAdditionalStoresRemoved(0);
                     $user->save();
 
                     if ($applyResult === true) {

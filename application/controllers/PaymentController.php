@@ -65,6 +65,8 @@ class PaymentController extends Integration_Controller_Action
                         $user->setBraintreeTransactionId($transaction_data->id);
                         $user->setPlanId($id);
                         $user->setGroup('commercial-user');
+                        $user->setAdditionalStores(0);
+                        $user->setAdditionalStoresRemoved(0);
                         $user->setPlanActiveTo(
                                 date('Y-m-d', strtotime('+' . $plan->getBillingPeriod()))
                         );
