@@ -3424,3 +3424,6 @@ label.error {
     font-size: 12px;
     margin-top: 3px;
 }
+.supported-magento-releases {
+    margin-top: 30px;
+}
