@@ -87,124 +87,102 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
 
-                $userStores = $storeModel->countUserStores($userId);
-
-                if ($userGroup == 'free-user') {
-                    $maxStores = (int) $this->getInvokeArg('bootstrap')
-                                    ->getResource('config')
-                            ->magento
-                            ->standardUser
-                            ->stores;
-                } else {
-                    
-                    
-
-                    $maxStores = $plan->getStores();
+                $storeModel->setVersionId($form->version->getValue())
+                        ->setEdition($form->edition->getValue())
+                        ->setUserId($userId)
+                        ->setServerId($this->auth->getIdentity()->server_id)
+                        ->setSampleData($form->sample_data->getValue())
+                        ->setStoreName($form->store_name->getValue())
+                        ->setDomain(Integration_Generator::generateRandomString(5, 4))
+                        ->setBackendName('admin')
+                        ->setStatus('installing-magento')
+                        ->setType('clean');
+                
+                if($plan->getCanDoDbRevert()){
+                	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
                 }
-
-
-                if ($userStores < $maxStores || $userGroup == 'admin') {
-
-                    $storeModel->setVersionId($form->version->getValue())
-                            ->setEdition($form->edition->getValue())
-                            ->setUserId($userId)
-                            ->setServerId($this->auth->getIdentity()->server_id)
-                            ->setSampleData($form->sample_data->getValue())
-                            ->setStoreName($form->store_name->getValue())
-                            ->setDomain(Integration_Generator::generateRandomString(5, 4))
-                            ->setBackendName('admin')
-                            ->setStatus('installing-magento')
-                            ->setType('clean');
-                    
-                    if($plan->getCanDoDbRevert()){
-                    	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
-                    }
-                                       
-                    $storeId = $storeModel->save();
-                    
-                    unset($queueModel);
-                    //Add queue item with MagentoInstall
+                                   
+                $storeId = $storeModel->save();
+                
+                unset($queueModel);
+                //Add queue item with MagentoInstall
+                $queueModel = new Application_Model_Queue();                    
+                $queueModel->setStoreId($storeId);
+                $queueModel->setTask('MagentoInstall');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setExtensionId(0);  
+                $queueModel->setParentId(0);  
+                $queueModel->save();
+                
+                $installId = $queueModel->getId();
+                
+                unset($queueModel);
+                //Add queue item with RevisionInit
+                $queueModel = new Application_Model_Queue();                    
+                $queueModel->setStoreId($storeId);
+                $queueModel->setTask('RevisionInit');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setExtensionId(0);  
+                $queueModel->setParentId($installId);  
+                $queueModel->save();
+                $initId = $queueModel->getId();
+                
+                //Add queue item with RevisionCommit
+                $queueModel = new Application_Model_Queue();                    
+                $queueModel->setStoreId($storeId);
+                $queueModel->setTask('RevisionCommit');
+                $queueModel->setTaskParams(
+                        array(
+                            'commit_comment' => 'Initial Magento Commit',
+                            'commit_type' => 'magento-init'                               
+                            )
+                    );
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setExtensionId(0);  
+                $queueModel->setParentId($initId);  
+                $queueModel->save();
+                
+                unset($queueModel);
+                //Add queue create user in Papertrail
+                if(!$this->auth->getIdentity()->has_papertrail_account) {
                     $queueModel = new Application_Model_Queue();                    
                     $queueModel->setStoreId($storeId);
-                    $queueModel->setTask('MagentoInstall');
+                    $queueModel->setTask('PapertrailUserCreate');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
                     $queueModel->setServerId($this->auth->getIdentity()->server_id); 
                     $queueModel->setExtensionId(0);  
-                    $queueModel->setParentId(0);  
+                    $queueModel->setParentId($installId);  
                     $queueModel->save();
                     
                     $installId = $queueModel->getId();
-                    
-                    unset($queueModel);
-                    //Add queue item with RevisionInit
-                    $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setStoreId($storeId);
-                    $queueModel->setTask('RevisionInit');
-                    $queueModel->setStatus('pending');
-                    $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
-                    $queueModel->setExtensionId(0);  
-                    $queueModel->setParentId($installId);  
-                    $queueModel->save();
-                    $initId = $queueModel->getId();
-                    
-                    //Add queue item with RevisionCommit
-                    $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setStoreId($storeId);
-                    $queueModel->setTask('RevisionCommit');
-                    $queueModel->setTaskParams(
-                            array(
-                                'commit_comment' => 'Initial Magento Commit',
-                                'commit_type' => 'magento-init'                               
-                                )
-                        );
-                    $queueModel->setStatus('pending');
-                    $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
-                    $queueModel->setExtensionId(0);  
-                    $queueModel->setParentId($initId);  
-                    $queueModel->save();
-                    
-                    unset($queueModel);
-                    //Add queue create user in Papertrail
-                    if(!$this->auth->getIdentity()->has_papertrail_account) {
-                        $queueModel = new Application_Model_Queue();                    
-                        $queueModel->setStoreId($storeId);
-                        $queueModel->setTask('PapertrailUserCreate');
-                        $queueModel->setStatus('pending');
-                        $queueModel->setUserId($this->auth->getIdentity()->id);
-                        $queueModel->setServerId($this->auth->getIdentity()->server_id); 
-                        $queueModel->setExtensionId(0);  
-                        $queueModel->setParentId($installId);  
-                        $queueModel->save();
-                        
-                        $installId = $queueModel->getId();
-                    }
-                    
-                    
-                    unset($queueModel);
-                    $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setStoreId($storeId);
-                    $queueModel->setTask('PapertrailSystemCreate');
-                    $queueModel->setStatus('pending');
-                    $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
-                    $queueModel->setExtensionId(0);  
-                    $queueModel->setParentId($installId);  
-                    $queueModel->save();
-                    
-                    $this->_helper->FlashMessenger('New installation added to queue');
-
-                } else {
-                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You can not add more stores.'));
                 }
+                
+                
+                unset($queueModel);
+                $queueModel = new Application_Model_Queue();                    
+                $queueModel->setStoreId($storeId);
+                $queueModel->setTask('PapertrailSystemCreate');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setExtensionId(0);  
+                $queueModel->setParentId($installId);  
+                $queueModel->save();
+                
+                $this->_helper->FlashMessenger('New installation added to queue');
 
                 return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'dashboard',
-                                ), 'default', true);
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+                ), 'default', true);
             } else {
                 $this->_helper->FlashMessenger('Form needs verification');
             }
@@ -270,113 +248,80 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
 
-                $userStores = $storeModel->countUserStores($userId);
-
-                if ($userGroup == 'free-user') {
-                    $maxStores = (int) $this->getInvokeArg('bootstrap')
-                                    ->getResource('config')
-                            ->magento
-                            ->standardUser
-                            ->stores;
-                } else {
-                    
-
-                    $maxStores = $plan->getStores();
+                //start adding store
+                $storeModel->setVersionId($form->version->getValue())
+                        ->setEdition($form->edition->getValue())
+                        ->setSampleData(1)
+                        ->setStoreName($form->store_name->getValue())
+                        ->setUserId($userId)
+                        ->setServerId($this->auth->getIdentity()->server_id)
+                        ->setDomain(Integration_Generator::generateRandomString(5, 4))
+                        ->setStatus('downloading-magento')
+                        ->setCustomProtocol($form->custom_protocol->getValue())
+                        ->setCustomHost($form->custom_host->getValue())
+                        ->setCustomPort($form->custom_port->getValue())
+                        ->setCustomRemotePath($form->custom_remote_path->getValue())
+                        ->setCustomLogin($form->custom_login->getValue())
+                        ->setCustomPass($form->custom_pass->getValue())
+                        ->setCustomSql($form->custom_sql->getValue())
+                        ->setType('custom')
+                        ->setBackendName('admin')
+                        ->setCustomFile($form->custom_file->getValue());
+                
+                if($plan->getCanDoDbRevert()){
+                	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
                 }
+                
+                $storeId = $storeModel->save();
+                
+                $queueModel = new Application_Model_Queue();
+                //TODO: Add queue item with MagentoDownload
+                $queueModel->setStoreId($storeId);
+                $queueModel->setTask('MagentoDownload');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setParentId(0);
+                $queueModel->setExtensionId(0);
+                $queueModel->save();
+                $installId = $queueModel->getId();
+                
+                unset($queueModel);
+                
+                $queueModel = new Application_Model_Queue();                    
+                $queueModel->setStoreId($storeId);
+                $queueModel->setTask('RevisionInit');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setExtensionId(0);  
+                $queueModel->setParentId($installId);  
+                $queueModel->save();
+                unset($queueModel);
+                
+                $queueModel = new Application_Model_Queue();                    
+                $queueModel->setStoreId($storeId);
+                $queueModel->setTask('RevisionCommit');
+                $queueModel->setTaskParams(
+                        array(
+                            'commit_comment' => 'Initial Magento Commit',
+                            'commit_type' => 'magento-init',
+                            'send_store_ready_email' => true
+                            )
+                );
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setExtensionId(0);  
+                $queueModel->setParentId($installId);  
+                $queueModel->save();
 
-
-                if ($userStores < $maxStores || $userGroup == 'admin') {
-
-                    
-                    
-                    //start adding store
-                    $storeModel->setVersionId($form->version->getValue())
-                            ->setEdition($form->edition->getValue())
-                            ->setSampleData(1)
-                            ->setStoreName($form->store_name->getValue())
-                            ->setUserId($userId)
-                            ->setServerId($this->auth->getIdentity()->server_id)
-                            ->setDomain(Integration_Generator::generateRandomString(5, 4))
-                            ->setStatus('downloading-magento')
-                            ->setCustomProtocol($form->custom_protocol->getValue())
-                            ->setCustomHost($form->custom_host->getValue())
-                            ->setCustomPort($form->custom_port->getValue())
-                            ->setCustomRemotePath($form->custom_remote_path->getValue())
-                            ->setCustomLogin($form->custom_login->getValue())
-                            ->setCustomPass($form->custom_pass->getValue())
-                            ->setCustomSql($form->custom_sql->getValue())
-                            ->setType('custom')
-                            ->setBackendName('admin')
-                            ->setCustomFile($form->custom_file->getValue());
-                    
-                    if($plan->getCanDoDbRevert()){
-                    	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
-                    }
-                    
-                    $storeId = $storeModel->save();
-                    
-                    $queueModel = new Application_Model_Queue();
-                    //TODO: Add queue item with MagentoDownload
-                    $queueModel->setStoreId($storeId);
-                    $queueModel->setTask('MagentoDownload');
-                    $queueModel->setStatus('pending');
-                    $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
-                    $queueModel->setParentId(0);
-                    $queueModel->setExtensionId(0);
-                    $queueModel->save();
-                    $installId = $queueModel->getId();
-                    
-                    unset($queueModel);
-                    
-                    $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setStoreId($storeId);
-                    $queueModel->setTask('RevisionInit');
-                    $queueModel->setStatus('pending');
-                    $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
-                    $queueModel->setExtensionId(0);  
-                    $queueModel->setParentId($installId);  
-                    $queueModel->save();
-                    unset($queueModel);
-                    
-                    $queueModel = new Application_Model_Queue();                    
-                    $queueModel->setStoreId($storeId);
-                    $queueModel->setTask('RevisionCommit');
-                    $queueModel->setTaskParams(
-                            array(
-                                'commit_comment' => 'Initial Magento Commit',
-                                'commit_type' => 'magento-init',
-                                'send_store_ready_email' => true
-                                )
-                    );
-                    $queueModel->setStatus('pending');
-                    $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
-                    $queueModel->setExtensionId(0);  
-                    $queueModel->setParentId($installId);  
-                    $queueModel->save();
-
-                    unset($queueModel);
-                    //Add queue create user in Papertrail
-                    if(!$this->auth->getIdentity()->has_papertrail_account) {
-                        $queueModel = new Application_Model_Queue();
-                        $queueModel->setStoreId($storeId);
-                        $queueModel->setTask('PapertrailUserCreate');
-                        $queueModel->setStatus('pending');
-                        $queueModel->setUserId($this->auth->getIdentity()->id);
-                        $queueModel->setServerId($this->auth->getIdentity()->server_id);
-                        $queueModel->setExtensionId(0);
-                        $queueModel->setParentId($installId);
-                        $queueModel->save();
-
-                        $installId = $queueModel->getId();
-                    }
-
-                    unset($queueModel);
+                unset($queueModel);
+                //Add queue create user in Papertrail
+                if(!$this->auth->getIdentity()->has_papertrail_account) {
                     $queueModel = new Application_Model_Queue();
                     $queueModel->setStoreId($storeId);
-                    $queueModel->setTask('PapertrailSystemCreate');
+                    $queueModel->setTask('PapertrailUserCreate');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
                     $queueModel->setServerId($this->auth->getIdentity()->server_id);
@@ -384,16 +329,32 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setParentId($installId);
                     $queueModel->save();
 
-                    //stop adding store
-                    $this->_helper->FlashMessenger(array('type' => 'success', 'message' => 'You have successfully added your custom store to queue.'));
-                    return $this->_helper->redirector->gotoRoute(array(
-                                'module' => 'default',
-                                'controller' => 'user',
-                                'action' => 'dashboard',
-                                    ), 'default', true);
-                } else {
-                    $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
+                    $installId = $queueModel->getId();
                 }
+
+                unset($queueModel);
+                $queueModel = new Application_Model_Queue();
+                $queueModel->setStoreId($storeId);
+                $queueModel->setTask('PapertrailSystemCreate');
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setServerId($this->auth->getIdentity()->server_id);
+                $queueModel->setExtensionId(0);
+                $queueModel->setParentId($installId);
+                $queueModel->save();
+
+                //stop adding store
+                $this->_helper->FlashMessenger(
+                    array(
+                        'type' => 'success',
+                        'message' => 'You have successfully added your custom store to queue.'
+                    )
+                );
+                return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+                ), 'default', true);
             } else {
                 $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Form data is invalid. Please check fields below and correct them.'));
             }
@@ -1257,7 +1218,7 @@ class QueueController extends Integration_Controller_Action {
         $storeModel = new Application_Model_Store();
         $userStores = $storeModel->countUserStores($userId);
 
-        if ($userGroup == 'free-user') {
+        if('free-user' === $userGroup) {
             $maxStores = (int) $this->getInvokeArg('bootstrap')
                             ->getResource('config')
                     ->magento
@@ -1270,10 +1231,10 @@ class QueueController extends Integration_Controller_Action {
             $modelPlan = new Application_Model_Plan();
             $plan = $modelPlan->find($user->getPlanId());
 
-            $maxStores = $plan->getStores();
+            $maxStores = (int)$plan->getStores() + (int)$user->getAdditionalStores();
         }
 
-        if ($userStores >= $maxStores && $userGroup != 'admin') {
+        if($userStores >= $maxStores && 'admin' !== $userGroup) {
 
             $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
             return $this->_helper->redirector->gotoRoute(array(

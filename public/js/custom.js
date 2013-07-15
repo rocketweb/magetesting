@@ -69,9 +69,13 @@ $(document).ready(function () {
     var $price = $('.price'),
         $summary = $('.summary'),
         $quantity = $price.parent().siblings().find('input[type=number]'),
-        $additional_stores = $summary.siblings('b');
+        $additional_stores = $summary.siblings('b'),
+        $additional_stores_form = $summary.parents('form:first');
     if($summary.length) {
         $quantity.change(function() {
+            $quantity.val(
+                parseInt($quantity.val()) || 1
+            );
             $summary.text($price.text()*100*$quantity.val()/100);
             $additional_stores.text($quantity.val());
         });
