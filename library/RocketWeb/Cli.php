@@ -2,9 +2,41 @@
 
 class RocketWeb_Cli
 {
-    public function query($string, $values = null)
+    protected $_kit_mapper = array(
+        'file' => 'File',
+    );
+    /**
+     * Returns query object
+     * @param string $string - full command ( with arguments )
+     * @param string $values - values to bind into the '?' sign
+     * @return RocketWeb_Cli_Query
+     */
+    public function createQuery($string = '', $values = null)
     {
         return new RocketWeb_Cli_Query($string, $values);
+    }
+
+    /**
+     * returns specific query object which contains predefined commands
+     * @param string $type
+     * @throws RocketWeb_Cli_Exception
+     * @return RocketWeb_Cli_Query
+     */
+    public function getCommandsKit($type)
+    {
+        if(!is_string($type)) {
+            throw new RocketWeb_Cli_Exception('Kit type has to be string.');
+        }
+        if(
+            !isset($this->_kit_mapper[$type])
+            || !class_exists(
+                ($kit = 'RocketWeb_Cli_Type_'.$this->_kit_mapper[$type])
+            )
+        ) {
+            throw new RocketWeb_Cli_Exception($kit . ' kit does not exist.');
+        }
+
+        return new $kit();
     }
 
     /**

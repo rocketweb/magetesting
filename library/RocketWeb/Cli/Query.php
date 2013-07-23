@@ -4,9 +4,8 @@ class RocketWeb_Cli_Query
 {
     protected $_query = '';
     protected $_super_user = false;
-    protected $_bind = array();
 
-    public function __construct($string, $values = null)
+    public function __construct($string = '', $values = null)
     {
         if(!is_string($string)) {
             throw new RocketWeb_Cli_Exception('No query string passed.');
@@ -19,18 +18,24 @@ class RocketWeb_Cli_Query
         }
     }
 
-    public function type($string)
+    /**
+     * clears query string
+     * @return RocketWeb_Cli_Query
+     */
+    public function clear()
     {
-        
+        $this->_query = '';
+        return $this;
     }
 
+    /**
+     * @return RocketWeb_Cli_Query
+     */
     final public function arg($name, $values = null)
     {
         if(!is_string($name)) {
             throw new RocketWeb_Cli_Exception('Argument name has to be string.');
         }
-
-        $arg = $name;
 
         $this->_query .= ' '.$this->_bindValues($name, $values);
         return $this;
@@ -44,7 +49,6 @@ class RocketWeb_Cli_Query
 
         foreach($values as $value) {
             $position = strpos($string, '?');
-            var_dump($position);
             if(false !== $position) {
                 $string = substr_replace($string, escapeshellarg($value), $position, 1);
             }
@@ -53,6 +57,9 @@ class RocketWeb_Cli_Query
         return $string;
     }
 
+    /**
+     * @return RocketWeb_Cli_Query
+     */
     final public function asSuperUser($value)
     {
         $this->_super_user = ((int)$value ? true : false);
