@@ -41,7 +41,7 @@ if($result) {
         foreach ($user_ids as $user_id){
             $modelUser = new Application_Model_User();
             $modelUser->find($user_id);
-            $this->log('Downgraded '.json_encode($modelUser->__toArray()), Zend_Log::INFO);
+            $log->log('Downgraded '.json_encode($modelUser->__toArray()), Zend_Log::INFO);
             
             $modelUser->disableFtp();
             $modelUser->disablePhpmyadmin();
