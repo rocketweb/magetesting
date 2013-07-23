@@ -4,6 +4,7 @@ class RocketWeb_Cli
 {
     protected $_kit_mapper = array(
         'file' => 'File',
+        'ssh' => 'Ssh',
     );
     /**
      * Returns query object
