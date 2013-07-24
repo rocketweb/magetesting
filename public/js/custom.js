@@ -441,7 +441,6 @@ $(document).ready(function () {
                         $option = $this.data('option-value'),
                         $parent = $this.parents('ul:first');
                     if($option != '*') {
-                        $extensions_filter_load_data.filter[$this.parents('ul:first').data('option-key')] = ($option + '').replace('.', '');
                         if('sort' === $parent.data('option-key')) {
                             var $option = $option.split('-');
                             $extensions_filter_load_data.order.column = $option[0];
@@ -456,9 +455,6 @@ $(document).ready(function () {
                 if(query.length) {
                     $extensions_filter_load_data.filter['query'] = query;
                 }
-                /*if($extensions_order) {
-                    $extensions_filter_load_data.order = {};
-                }*/
             }
         });
 
