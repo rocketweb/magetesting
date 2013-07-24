@@ -9,7 +9,7 @@ try {
     $mt_extensions = $mt_extensions->getExtensionList();
 
     $mc_extensions = new Application_Model_Extension();
-    $mc_extensions = $mc_extensions->getMapper()->fetchFullListOfExtensions(array('edition' => 'CE'),array(),array(),array());
+    $mc_extensions = $mc_extensions->getMapper()->fetchFullListOfExtensions(array('price' => 'free'),array(),0,0);
 
     $new_extension = 0;
     $new_release = 0;
