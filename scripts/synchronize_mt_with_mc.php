@@ -49,7 +49,7 @@ try {
                     $xml = new SimpleXMLElement($response->getBody());
                     $extensionModel->setName(ucwords(str_replace('_', ' ', $mt_extension)));
                     $extensionModel->setExtensionKey($mt_extension);
-                    $extensionModel->setDescription((string)$xml->summary[0]);
+                    $extensionModel->setDescription(preg_replace('/\&lt\;[^\&]*\&gt\;/i', '', (string)$xml->summary[0]));
                     $extensionModel->setAuthor((string)$xml->authors->author->name[0]);
                     $extensionModel->setEdition('CE');
                     $extensionModel->setFromVersion('1.4.0.0');
@@ -157,4 +157,26 @@ if($result) {
 }
 
 $log->log('Fixing "auto-converted" author in extensions', Zend_Log::INFO, var_export($update_info, true));
+*/
+
+/* script which was used to remove html tags from description
+
+include 'init.console.php';
+
+$select = new Zend_Db_Select($db);
+$sql =
+    $select
+        ->from('extension', array('id', 'description'))
+        ->where('description REGEXP ?', '\&[a-z0-9A-Z]+\;');
+
+$result = $db->fetchAll($sql);
+if($result) {
+    foreach($result as $row) {
+        $db->update(
+            'extension',
+            array('description' => preg_replace('/\&lt\;[^\&]*\&gt\;/i', '', $row['description'])),
+            array('id = ?' => $row['id'])
+        );
+    }
+}
 */
