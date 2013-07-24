@@ -421,10 +421,18 @@ $(document).ready(function () {
             _collect_filter_options : function() {
                 $extensions_filter_load_data.filter = {};
                 $extensions_filter_container.find('.selected').each(function() {
-                    var $this = $(this);
-                    var $option = $this.data('option-value');
+                    var $this = $(this),
+                        $option = $this.data('option-value'),
+                        $parent = $this.parents('ul:first');
                     if($option != '*') {
                         $extensions_filter_load_data.filter[$this.parents('ul:first').data('option-key')] = ($option + '').replace('.', '');
+                        if('sort' === $parent.data('option-key')) {
+                            var $option = $option.split('-');
+                            $extensions_filter_load_data.order.column = $option[0];
+                            $extensions_filter_load_data.order.dir = $option[1];
+                        } else {
+                            $extensions_filter_load_data.filter[$parent.data('option-key')] = ($option + '').replace('.', '');
+                        }
                     }
                 });
 
@@ -473,8 +481,15 @@ $(document).ready(function () {
                 $dropdown.find('li a').removeClass(selector);
                         
                 $this.addClass(selector).parent().addClass('active');
-                $title = $group.attr('data-title');
-                $group.find('a.btn.dropdown-toggle').html($title + ": " + $this.html() + ' <span class="caret"></span>');
+                $title = $.trim($group.attr('data-title'));
+                $label = $.trim($this.text());
+
+                if('All' === $label || 'None' === $label) {
+                    $label = '';
+                } else {
+                    $title = '';
+                }
+                $group.find('a.btn.dropdown-toggle').html($title + $label + ' <span class="caret"></span>');
 
                 $extensions_isotope.isotope('filter_elements');
             }
