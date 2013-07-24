@@ -935,7 +935,6 @@ footer .links a {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
     padding-top: 4px;
 }
 .accordion-group.mt_shadow .accordion-heading .accordion-toggle .pending {
@@ -2755,10 +2754,6 @@ form#extension-filter-form {
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
     }
-    
-    .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
-        display: none;
-    }
     .accordion-group.mt_shadow .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
         display: block;
     }
@@ -2909,7 +2904,7 @@ form#extension-filter-form {
     
     /* fix for close button when error during installation occured */
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
-        width: 300px;
+        width: 260px;
     }
     
     /* Add custom store - radio input fix */
