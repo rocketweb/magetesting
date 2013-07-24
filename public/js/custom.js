@@ -481,8 +481,15 @@ $(document).ready(function () {
                 $dropdown.find('li a').removeClass(selector);
                         
                 $this.addClass(selector).parent().addClass('active');
-                $title = $group.attr('data-title');
-                $group.find('a.btn.dropdown-toggle').html($title + ": " + $this.html() + ' <span class="caret"></span>');
+                $title = $.trim($group.attr('data-title'));
+                $label = $.trim($this.text());
+
+                if('All' === $label || 'None' === $label) {
+                    $label = '';
+                } else {
+                    $title = '';
+                }
+                $group.find('a.btn.dropdown-toggle').html($title + $label + ' <span class="caret"></span>');
 
                 $extensions_isotope.isotope('filter_elements');
             }
