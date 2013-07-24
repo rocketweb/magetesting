@@ -420,6 +420,7 @@ $(document).ready(function () {
             },
             _collect_filter_options : function() {
                 $extensions_filter_load_data.filter = {};
+                $extensions_filter_load_data.order = {};
                 $extensions_filter_container.find('.selected').each(function() {
                     var $this = $(this),
                         $option = $this.data('option-value'),
