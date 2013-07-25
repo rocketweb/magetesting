@@ -1,8 +1,3 @@
-/* @override 
-    http://dev.magetesting.com/public/css/style.css
-    http://magetesting:8888/public/css/style.css
-	http://magetesting.com/public/css/style.css */
-
 /* FONTS
 
 -- PRAGMATICA WEB --
@@ -2747,6 +2742,7 @@ form#extension-filter-form {
         float: right;
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
+        margin-bottom: 20px;
     }
     
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
