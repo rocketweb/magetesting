@@ -4,12 +4,45 @@ class RocketWeb_Cli_Query
 {
     protected $_query = '';
     protected $_super_user = false;
+    protected $_cli_object = false;
 
-    public function __construct($string = '', $values = null)
+    public function __construct($string = '', $values = null, $cli_object = false)
     {
+        if(is_object($cli_object) && $cli_object instanceof RocketWeb_Cli) {
+            $this->_cli_object = $cli_object;
+        } else {
+            $this->_cli_object = new RocketWeb_Cli();
+        }
         $this->pipe($string, $values);
     }
 
+    public function call()
+    {
+        return $this->_cli_object->exec((string)$this);
+    }
+    /**
+     *
+     * @param string $name - name of the kit to load
+     * @param boolean $clean - whether append current query to the returned kit
+     * @return RocketWeb_Cli_Query
+     */
+    public function kit($name, $clean = true)
+    {
+        $kit = $this->_cli_object->kit($name);
+        if(!$clean) {
+            $kit->append((string)$this);
+        }
+        return $kit;
+    }
+
+    public function sortNatural()
+    {
+        return $this->pipe('sort -u');
+    }
+    public function force()
+    {
+        return $this->append('-f');
+    }
     /**
      * method clones and clears current object
      * @param string $string
@@ -49,7 +82,10 @@ class RocketWeb_Cli_Query
         if(!is_string($string)) {
             throw new RocketWeb_Cli_Exception('No query string passed.');
         }
-        
+
+        if(null !== $values && !is_array($values)) {
+            $values = array($values);
+        }
         $append = $this->_query;
         if(null === $values) {
             $this->_query = trim($string);
@@ -89,9 +125,15 @@ class RocketWeb_Cli_Query
     }
 
     /**
+     * Binds value to the given name already after method call,<br />
+     * so if name does not exist in current query string,<br />
+     * value will not be binded in the future
+     * @param string $name - name to be find
+     * @param mixed $value - value to pass in place of name
+     * @param boolean $escape - whether escapeshellarg or not
      * @return RocketWeb_Cli_Query
      */
-    final public function bindAssoc($name, $value = null, $escape = true)
+    final public function bindAssoc($name, $value, $escape = true)
     {
         if(!is_string($name)) {
             throw new RocketWeb_Cli_Exception('Argument name has to be string.');

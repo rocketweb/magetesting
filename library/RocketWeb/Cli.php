@@ -5,6 +5,10 @@ class RocketWeb_Cli
     protected $_kit_mapper = array(
         'file' => 'File',
         'ssh' => 'Ssh',
+        'apache' => 'Apache',
+        'service' => 'Service',
+        'wget' => 'Wget',
+        'compression' => 'Compression'
     );
     /**
      * Returns query object
@@ -23,7 +27,7 @@ class RocketWeb_Cli
      * @throws RocketWeb_Cli_Exception
      * @return RocketWeb_Cli_Query
      */
-    public function getCommandsKit($type)
+    public function kit($type)
     {
         if(!is_string($type)) {
             throw new RocketWeb_Cli_Exception('Kit type has to be string.');
@@ -31,7 +35,7 @@ class RocketWeb_Cli
         if(
             !isset($this->_kit_mapper[$type])
             || !class_exists(
-                ($kit = 'RocketWeb_Cli_Type_'.$this->_kit_mapper[$type])
+                ($kit = 'RocketWeb_Cli_Kit_'.$this->_kit_mapper[$type])
             )
         ) {
             throw new RocketWeb_Cli_Exception($kit . ' kit does not exist.');

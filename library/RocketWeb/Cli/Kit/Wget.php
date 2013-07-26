@@ -1,6 +1,6 @@
 <?php
 
-class RocketWeb_Cli_Type_Ssh
+class RocketWeb_Cli_Kit_Wget
     extends RocketWeb_Cli_Query
 {
     public function connect($user, $host, $port)
@@ -12,7 +12,7 @@ class RocketWeb_Cli_Type_Ssh
              ->bindAssoc(':port', $port, false);
         return $this;
     }
-    public function passPassword($password)
+    public function addPassword($password)
     {
         $this->append('sshpass -p ?', $password);
         return $this;
