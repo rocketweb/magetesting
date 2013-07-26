@@ -138,7 +138,8 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setTaskParams(
                         array(
                             'commit_comment' => 'Initial Magento Commit',
-                            'commit_type' => 'magento-init'                               
+                            'commit_type' => 'magento-init',
+                            'send_store_ready_email' => true
                             )
                     );
                 $queueModel->setStatus('pending');
