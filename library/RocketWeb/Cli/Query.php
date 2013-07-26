@@ -30,7 +30,7 @@ class RocketWeb_Cli_Query
     {
         $kit = $this->_cli_object->kit($name);
         if(!$clean) {
-            $kit->append((string)$this);
+            $kit->append($this);
         }
         return $kit;
     }
@@ -71,26 +71,23 @@ class RocketWeb_Cli_Query
 
     /**
      * 
-     * @param string $string
+     * @param mixed $string - string | RocketWeb_Cli_Query
      * @param string $values
      * @param string $pipe - whether append using ' ' or ' | '
      * @throws RocketWeb_Cli_Exception
      * @return RocketWeb_Cli_Query
      */
-    final protected function _append($string = '', $values = null, $pipe = false)
+    final protected function _append($query = '', $values = null, $pipe = false)
     {
-        if(!is_string($string)) {
-            throw new RocketWeb_Cli_Exception('No query string passed.');
-        }
-
+        $query = (string)$query;
         if(null !== $values && !is_array($values)) {
             $values = array($values);
         }
         $append = $this->_query;
         if(null === $values) {
-            $this->_query = trim($string);
+            $this->_query = trim($query);
         } else {
-            $this->_query = $this->_bindValues(trim($string), $values);
+            $this->_query = $this->_bindValues(trim($query), $values);
         }
 
         if($append) {
