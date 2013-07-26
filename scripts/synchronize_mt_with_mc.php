@@ -61,7 +61,7 @@ try {
                     $extensionModel->setCategoryId($category_id);
 
                     // download extension file
-                    $extension_file = $mt_extension . '-' . $mc_extension_v['s'] . '.tgz';
+                    $extension_file = $mc_extension_key . '-' . $mc_extension_v['s'] . '.tgz';
                     $http = new Zend_Http_Client($extension_url . $extension_file);
                     $response = $http->request();
                     if(!$response->isError()) {
