@@ -70,9 +70,6 @@ implements Application_Model_Task_Interface {
         $this->_fixUserHomeChmod();
         
         $this->_activateDemoNotice();
-
-        
-        $this->_sendStoreReadyEmail();
     }
 
     protected function _prepareFileSystem() {
