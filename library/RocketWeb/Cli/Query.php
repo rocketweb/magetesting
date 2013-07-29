@@ -170,7 +170,7 @@ class RocketWeb_Cli_Query
         return $this;
     }
 
-    final public function toString()
+    public function toString()
     {
         if($this->_super_user) {
             $replaced = preg_replace('/^sudo\s*/i', '', $this->_query);

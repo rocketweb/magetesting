@@ -8,7 +8,8 @@ class RocketWeb_Cli
         'apache' => 'Apache',
         'service' => 'Service',
         'wget' => 'Wget',
-        'compression' => 'Compression'
+        'compression' => 'Compression',
+        'git' => 'Git'
     );
     /**
      * Returns query object

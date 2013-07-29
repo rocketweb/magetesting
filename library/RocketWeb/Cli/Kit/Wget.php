@@ -3,18 +3,84 @@
 class RocketWeb_Cli_Kit_Wget
     extends RocketWeb_Cli_Query
 {
-    public function connect($user, $host, $port)
+    protected $_asSpider = true;
+    public function ftpConnect($user, $password, $host, $port)
     {
-        $this->append('ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no');
-        $this->append(':user@:host -p :port');
-        $this->bindAssoc(':user', $user)
-             ->bindAssoc(':host', $host, false)
-             ->bindAssoc(':port', $port, false);
+        $this->append('wget :$spider--passive-ftp :host::port:$ftp-path');
+        $this->bindAssoc(':host', $host);
+        $this->bindAssoc(':port', $port);
+        $this->append('--user=? --password=?', array($user, $password));
+
         return $this;
     }
-    public function addPassword($password)
+
+    /**
+     * method adds timeout and tries options to wget query
+     * @param int $seconds
+     * @param int $tries
+     * @return RocketWeb_Cli_Kit_Wget
+     */
+    public function addLimits($seconds = 60, $tries = 1)
     {
-        $this->append('sshpass -p ?', $password);
+        $this->append('--timeout=? --tries=?', array($seconds, $tries));
         return $this;
+    }
+
+    public function setRootPath($path)
+    {
+        $this->bindAssoc(':$ftp-path', $path);
+        return $this;
+    }
+
+    public function downloadRecursive($include = array(), $exclude = array('.htaccess'))
+    {
+        if(!is_array($exclude)) {
+            $exclude = array($exclude);
+        }
+        if(!is_array($include)) {
+            $include = array($include);
+        }
+
+        $this->append('-nH -Q300m -m -np -R \'sql,tar,gz,zip,rar\' -N');
+
+        if($exclude) {
+            $this->append('-X ?', implode(',', $exclude));
+        }
+        if($include) {
+            $this->append('-I ?', implode(',', $include));
+        }
+
+        $this->checkOnly(false);
+
+        return $this;
+    }
+    public function downloadFile($path)
+    {
+        $this->append('-N');
+        $this->setRootPath($path);
+
+        return $this;
+    }
+    /**
+     * whether only check paths/files existence or download them
+     * @param bool $value
+     */
+    public function checkOnly($value = true)
+    {
+        $this->_asSpider = (bool) $value;
+    }
+
+    protected function _clearPathifNotSet()
+    {
+        $this->bindAssoc(':$ftp-path', '', false);
+        return $this;
+    }
+
+    public function toString()
+    {
+        $this->bindAssoc(':$spider', ((bool)$this->_asSpider ? '-spider ' : ''), false);
+        $this->_clearPathifNotSet();
+
+        return parent::toString();
     }
 }
