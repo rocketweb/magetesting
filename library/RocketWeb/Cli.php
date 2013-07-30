@@ -2,13 +2,17 @@
 
 class RocketWeb_Cli
 {
+    protected $_last_status = NULL;
+    protected $_last_output = array();
+
     protected $_kit_mapper = array(
         'file' => 'File',
         'ssh' => 'Ssh',
         'apache' => 'Apache',
         'service' => 'Service',
         'wget' => 'Wget',
-        'compression' => 'Compression',
+        'gzip' => 'Compression_Gzip',
+        'tar' => 'Compression_Tar',
         'git' => 'Git'
     );
     /**
@@ -56,12 +60,28 @@ class RocketWeb_Cli
         if(!$query) {
             throw new RocketWeb_Cli_Exception('Wrong query to execute.');
         }
-        $output = array();
+
+        $this->_last_output = array();
+        $this->_last_exec_status = NULL;
+
         try {
-            exec($query, $output);
+            exec($query, $this->_last_output, $this->_last_exec_status);
         } catch(Exception $e) {
             throw new RocketWeb_Cli_Exception($e->getMessage(), $query, $e->getCode(), $e);
         }
-        return $output;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed - NULL on no execution and INT value returned by executed command
+     */
+    public function getLastStatus()
+    {
+        return $this->_last_exec_status;
+    }
+    public function getLastOutput()
+    {
+        return $this->_last_output;
     }
 }

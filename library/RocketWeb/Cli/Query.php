@@ -139,7 +139,7 @@ class RocketWeb_Cli_Query
         $this->_query =
             str_replace(
                 $name,
-                ($escape ? escapeshellarg($value) : $value),
+                ($escape ? $this->escape($value) : $value),
                 $this->_query
             );
         return $this;
@@ -154,7 +154,7 @@ class RocketWeb_Cli_Query
         foreach($values as $value) {
             $position = strpos($string, '?');
             if(false !== $position) {
-                $string = substr_replace($string, escapeshellarg($value), $position, 1);
+                $string = substr_replace($string, $this->escape($value), $position, 1);
             }
         }
 
@@ -196,5 +196,9 @@ class RocketWeb_Cli_Query
         }
 
         return $replaced . ' 2>&1';
+    }
+    public function escape($string)
+    {
+        return escapeshellarg($string);
     }
 }
