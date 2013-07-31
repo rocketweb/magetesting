@@ -73,6 +73,17 @@ class Application_Form_CouponEdit extends Integration_Form
                 'allowEmpty' => false,
                 'class'      => 'span4'
         ));
+        
+        $planModel = new Application_Model_Plan();
+        $plans = array();
+        foreach($planModel->fetchAll() as $plan) {
+            $plans[$plan->getId()] = $plan->getName();
+        }
+        $this->plan_id->addValidator(
+            new Zend_Validate_InArray(array_keys($plans))
+        );
+
+        $this->plan_id->addMultiOptions(array('' => '') + $plans);
 
         $check_duration_callback = new Zend_Validate_Callback(array('callback' => array($this, 'check_duration')));
         $check_duration_callback->setMessage('\'%value%\' is not valid duration format.', Zend_Validate_Callback::INVALID_VALUE);

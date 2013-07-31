@@ -52,17 +52,6 @@ class CouponController extends Integration_Controller_Action {
         $couponModel = new Application_Model_Coupon();
         $coupon_data = $couponModel->__toArray();
 
-        $planModel = new Application_Model_Plan();
-        $plans = array();
-        foreach($planModel->fetchAll() as $plan) {
-            $plans[$plan->getId()] = $plan->getName();
-        }
-        $form->plan_id->addValidator(
-            new Zend_Validate_InArray(array_keys($plans))
-        );
-
-        $form->plan_id->addMultiOptions(array('' => '') + $plans);
-
         if($id) {
             $couponModel = $couponModel->find($id);
             if($couponModel->getId()) {
