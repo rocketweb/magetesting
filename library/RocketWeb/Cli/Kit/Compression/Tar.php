@@ -13,12 +13,21 @@ class RocketWeb_Cli_Kit_Compression_Tar
     {
         return
             $this
-                ->tar('tar :$gzipxvf ?:$move')
+                ->tar('tar :$gzipxvf :$path:$move')
                 ->bindAssoc(
                     ':$move',
                     ($move ? ' -C '.$this->escape($move) : ''),
                     false
+                )
+                ->bindAssoc(
+                    ':$path',
+                    $path,
+                    ('-' === $path) ? false : true // whether read from stdin instead of file
                 );
+    }
+    public function strip($number)
+    {
+        return $this->append('--strip-components=?', (int)$number);
     }
     public function isCompressed($value)
     {

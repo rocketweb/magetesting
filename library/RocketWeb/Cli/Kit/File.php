@@ -59,6 +59,10 @@ class RocketWeb_Cli_Kit_File
         $this->bindAssoc(':recursive', ($recursive ? ' -R' : ''), false);
         return $this;
     }
+    public function listAll($path)
+    {
+        return $this->append('ls -al ?', $path);
+    }
     /**
      * @param string $path
      * @return RocketWeb_Cli_Kit_File
