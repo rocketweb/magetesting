@@ -16,6 +16,9 @@ class RocketWeb_Cli_Query
         $this->pipe($string, $values);
     }
 
+    /**
+     * @return RocketWeb_Cli
+     */
     public function call()
     {
         return $this->_cli_object->exec((string)$this);
@@ -47,7 +50,6 @@ class RocketWeb_Cli_Query
      * method clones and clears current object
      * @param string $string
      * @param string $values
-     * @return RocketWeb_Cli_Query
      */
     public function newQuery($string = '', $values = null)
     {
@@ -113,7 +115,6 @@ class RocketWeb_Cli_Query
     }
     /**
      * clears query string
-     * @return RocketWeb_Cli_Query
      */
     final public function clear()
     {

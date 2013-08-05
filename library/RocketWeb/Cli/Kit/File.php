@@ -65,41 +65,56 @@ class RocketWeb_Cli_Kit_File
     }
     /**
      * @param string $path
+     * @param string $destination
+     * @param boolean $recursive
+     * @param boolean $preserve - whether keep filemode/owners/etc after copy
      * @return RocketWeb_Cli_Kit_File
      */
-    public function copy($path)
+    public function copy($path, $destination, $recursive = true, $preserve = false)
     {
-        return $this->append('cp ?', $path);
+        return
+            $this
+                ->append('cp :recursive:preserve? ?', array($path, $destination))
+                ->bindAssoc(':recursive', ($recursive ? '-R ' : ''), false)
+                ->bindAssoc(':preserve', ($preserve ? '-p ' : ''), false);
     }
     /**
      * @param string $path
-     * @param boolean $recursive
      * @return RocketWeb_Cli_Kit_File
      */
-    public function delete($path, $recursive = false)
+    public function delete($path)
     {
-        return $this->append('rm ? ?', array(($recursive ? '-R' : ''),$path));
+        return $this->append('rm -R ?', $path);
     }
     /**
      * 
      * @param string $name name of file|directory to find
      * @param int $type - self::TYPE_FILE | self::TYPE_DIR
-     * @param string $printf - format of how find should printf results
+     * @param string $path - start path
      * @return RocketWeb_Cli_Kit_File
      */
-    public function find($name, $type, $printf = '')
+    public function find($name, $type, $path = '')
     {
-        $values = array($name);
-
-        $print = '';
-        if($printf && is_string($printf)) {
-            $print = ' -printf ?';
-            $values[] = $printf;
-        }
         return
             $this
-                ->append('find -type :type -name ?' . $print, $values)
-                ->bindAssoc(':type', (($type === self::TYPE_DIR) ? 'd' : 'f'), false);
+                ->append('find :path -type :type -name :name', $name)
+                ->bindAssoc(':path', $path, ($path ? true : false))
+                ->bindAssoc(':type', (($type === self::TYPE_DIR) ? 'd' : 'f'), false)
+                ->bindAssoc(':name', $name);
+    }
+    public function printPaths($absolute = false)
+    {
+        return
+            $this
+                ->append('-printf ":absolute%h\n"')
+                ->bindAssoc(':absolute', ($absolute ? '`pwd`/' : ''), false);
+    }
+    public function printFiles($safeEscape = false)
+    {
+        return
+            $this
+                ->append('-print:safe')
+                ->bindAssoc(':safe', ($safeEscape ? '0' : ''), false);
     }
     public function followSymlinks()
     {

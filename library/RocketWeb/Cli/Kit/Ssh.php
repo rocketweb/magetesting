@@ -3,18 +3,18 @@
 class RocketWeb_Cli_Kit_Ssh
     extends RocketWeb_Cli_Query
 {
-    public function connect($user, $host, $port)
+    public function connect($user, $password, $host, $port)
     {
-        $this->append('ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no');
+        $this->append('sshpass -p :password ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no');
         $this->append(':user@:host -p :port');
         $this->bindAssoc(':user', $user)
-             ->bindAssoc(':host', $host, false)
-             ->bindAssoc(':port', $port, false);
+             ->bindAssoc(':password', $password)
+             ->bindAssoc(':host', $host)
+             ->bindAssoc(':port', $port);
         return $this;
     }
-    public function addPassword($password)
+    public function remoteCall($query)
     {
-        $this->append('sshpass -p ?', $password);
-        return $this;
+        return $this->append('?', (string)$query);
     }
 }

@@ -13,7 +13,8 @@ class RocketWeb_Cli
         'wget' => 'Wget',
         'gzip' => 'Compression_Gzip',
         'tar' => 'Compression_Tar',
-        'git' => 'Git'
+        'git' => 'Git',
+        'mysql' => 'Mysql'
     );
     /**
      * Returns query object
@@ -43,7 +44,7 @@ class RocketWeb_Cli
                 ($kit = 'RocketWeb_Cli_Kit_'.$this->_kit_mapper[$type])
             )
         ) {
-            throw new RocketWeb_Cli_Exception($kit . ' kit does not exist.');
+            throw new RocketWeb_Cli_Exception($type . ' kit does not exist.');
         }
 
         return new $kit();

@@ -7,13 +7,13 @@ class RocketWeb_Cli_Kit_Compression_Tar
 
     public function pack($path, $files)
     {
-        return $this->tar('tar :$gzipcvf ? ?', array($path, $files));
+        return $this->append('tar :$gzipcvf ? ?', array($path, $files));
     }
     public function unpack($path, $move = '')
     {
         return
             $this
-                ->tar('tar :$gzipxvf :$path:$move')
+                ->append('tar :$gzipxvf :$path:$move')
                 ->bindAssoc(
                     ':$move',
                     ($move ? ' -C '.$this->escape($move) : ''),
