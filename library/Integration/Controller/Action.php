@@ -77,18 +77,34 @@ class Integration_Controller_Action extends Zend_Controller_Action
              * if user was downgraded because of additional stores to reduce
              */
             if(in_array((int)$user->getDowngraded(), array(3,4))) {
-                $message_exists = false;
-                foreach($this->view->messages as $message) {
+                foreach($this->view->messages as $key => $message) {
                     if(is_string($message)) {
                         $message = array('message' => $message);
                     }
-                    if(stristr($message['message'], 'You have too many stores')) {
-                        $message_exists = true;
+                    if(stristr($message['message'], 'Your account is allowed to have')) {
+                        unset($this->view->message[$key]);
                     }
                 }
-                if(!$message_exists) {
-                    $this->view->messages[] = array('type' => 'error', 'message' => 'You have too many stores, please remove few or purchase additional stores.');
-                }
+                $plan = new Application_Model_Plan();
+                $plan->find($user->getPlanId());
+
+                $accountStores = (int)$plan->getStores();
+                $accountStores += (int)$user->getAdditionalStores();
+                $accountStores -= (int)$user->getAdditionalStoresRemoved();
+
+                $userStores = new Application_Model_Store();
+                $userStores = $userStores->countUserStores($user->getId());
+
+                $this->view->messages[] = array(
+                    'type' => 'error',
+                    'message' =>
+                        str_replace(
+                            array(':x',':y',':z'),
+                            array($accountStores, $userStores, (int)$userStores-(int)$accountStores),
+                            'Your account is allowed to have :x store(s), You now have :y store(s).'
+                            .' Please remove :z store(s) to restore access to your remaining stores.'
+                        )
+                );
                 if(
                     ($controller != 'user' || !in_array($action, array('dashboard', 'logout', 'login')))
                  && ($controller != 'payment' || $action == 'index')
