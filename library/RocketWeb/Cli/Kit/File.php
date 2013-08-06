@@ -45,18 +45,18 @@ class RocketWeb_Cli_Kit_File
 
     public function fileMode($path, $mode, $recursive = true)
     {
-        $this->append('chmod :mode :path:recursive');
+        $this->append('chmod :recursive:mode :path');
         $this->bindAssoc(':mode', $mode);
         $this->bindAssoc(':path', $path, ($path ? true : false));
-        $this->bindAssoc(':recursive', ($recursive ? ' -R' : ''), false);
+        $this->bindAssoc(':recursive', ($recursive ? '-R ' : ''), false);
         return $this;
     }
     public function fileOwner($path, $owner, $recursive = true)
     {
-        $this->append('chown :owner :path:recursive');
+        $this->append('chown :recursive:owner :path');
         $this->bindAssoc(':owner', $owner);
         $this->bindAssoc(':path', $path, ($path ? true : false));
-        $this->bindAssoc(':recursive', ($recursive ? ' -R' : ''), false);
+        $this->bindAssoc(':recursive', ($recursive ? '-R ' : ''), false);
         return $this;
     }
     public function listAll($path)

@@ -4,6 +4,7 @@ class RocketWeb_Cli_Kit_Compression_Tar
     extends RocketWeb_Cli_Query
 {
     protected $_is_compressed = false;
+    protected $_redirect_to_output = false;
 
     public function pack($path, $files)
     {
@@ -13,7 +14,7 @@ class RocketWeb_Cli_Kit_Compression_Tar
     {
         return
             $this
-                ->append('tar :$gzipxvf :$path:$move')
+                ->append('tar :$gzipxvf :$path:$move:$output')
                 ->bindAssoc(
                     ':$move',
                     ($move ? ' -C '.$this->escape($move) : ''),
@@ -44,9 +45,16 @@ class RocketWeb_Cli_Kit_Compression_Tar
     {
         return $this->append('tar tf ?', $path);
     }
+
+    public function redirectToOutput($value = true)
+    {
+        $this->_redirect_to_output = (bool)$value;
+        return $this;
+    }
     public function toString()
     {
         $this->bindAssoc(':$gzip',($this->_is_compressed ? 'z' : ''), false);
+        $this->bindAssoc(':$output', ($this->_redirect_to_output ? ' -O' : ''), false);
         return parent::toString();
     }
 }

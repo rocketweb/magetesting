@@ -147,6 +147,119 @@ $mysql = $cli->kit('mysql');
 $mysql->connect('user', 'password', 'database');
 $query = $mysql->cloneObject()->import('file_to_import');
 $queries[] = $query->toString();
+# 248
+$query = $file->clear()->create('var', $file::TYPE_DIR);
+$queries[] = $query->toString();
+# 249
+$query = $file->clear()->create('.htaccecss', $file::TYPE_FILE);
+$queries[] = $query->toString();
+# 254
+# consider using only echo content > file instead of touch before
+$query = $cli->createQuery('echo ? >> ?', array('file content', '.htaccess'));
+$queries[] = $query->toString();
+# 259
+$query = $file->clear()->create('downloader', $file::TYPE_DIR);
+$queries[] = $query->toString();
+# 263
+# consider  creating dirs all at once by appending to mkdir
+$query = $file->clear()->create('media', $file::TYPE_DIR);
+$queries[] = $query->toString();
+# 264
+$query = $file->clear()->create('.htaccecss', $file::TYPE_FILE);
+$queries[] = $query->toString();
+# 291
+# consider using only echo content > file instead of touch before
+$query = $cli->createQuery('echo ? >> ?', array('file content', '.htaccess'));
+$queries[] = $query->toString();
+# 299
+$query = $file->clear()->fileMode('storeFolder', 'a-w');
+$queries[] = $query->toString();
+# 306, 312, 319, 326
+$query = $file->clear()->fileMode('media', '0777', true)->append('? ? ?', array('downloader', 'var', 'app/etc'));
+$queries[] = $query->toString();
+# 333
+$query = $file->clear()->delete('.git/');
+$queries[] = $query->toString();
+# 337
+$query = $file->clear()->delete('.gitignore');
+$queries[] = $query->toString();
+# 341
+$query = $cli->createQuery('rm -rf `:subquery`')->asSuperUser(true)->bindAssoc(
+    ':subquery',
+    $file->clear()->find('.svn', $file::TYPE_FILE, '.')->asSuperUser(false),
+    false
+);
+$queries[] = $query->toString();
+# 568
+/* @var $gzip RocketWeb_Cli_Kit_Compression_Gzip */
+$gzip = $cli->kit('gzip');
+$query = $gzip->test('sqlfile');
+$queries[] = $query->toString();
+# 568
+$query = $tar->clear()->test('sqlfile');
+$queries[] = $query->toString(); # and test status
+# 620
+$query = $gzip->clear()->getPackedFilename('filename');
+$queries[] = $query->toString();
+# 647
+$query = $cli->createQuery('sudo grep -lir ? ?', array('CREATE TABLE', 'sqlfile'));
+$queries[] = $query->toString();
+# 680
+$query = $cli->createQuery('grep core_config_data ?', 'filename');
+$queries[] = $query->toString();
+# 681
+$query = $cli->createQuery('grep -i -e \'[a-z0-9$_]*core_config_data\' ? -o | head -n 1 | sed s/core_config_data//', 'file');
+$queries[] = $query->toString();
+# 692
+$query = $file->clear()->fileOwner('domain', 'user:user');
+$queries[] = $query->toString();
+
+# -------- application/models/Task/Magento/Hourlyrevert.php
+# 18
+$query = $file->clear()->create('lockfile', $file::TYPE_FILE);
+$queries[] = $query->toString();
+# 35
+$query = $tar->clear()->redirectToOutput()->unpack('asd')->pipe(
+    $mysql->clear()->connect('user', 'pass', 'database')->import()
+);
+$queries[] = $query->toString();
+# 39
+$query = $file->clear()->delete('somefile');
+$queries[] = $query->toString();
+
+# -------- application/models/Task/Magento/Install.php
+# 48
+$query = $file->clear()->fileMode('', '777', true)->append('?*', 'some/path');
+$queries[] = $query->toString();
+# 91
+$query = $file->clear()->create('domain', $file::TYPE_DIR);
+$queries[] = $query->toString();
+# 105
+$query = $file->clear()->fileMode('domain', '+x');
+$queries[] = $query->toString();
+# 120, 125, 127, 132
+$query = $file->clear()->copy('keyset0.sql', 'domain');
+$queries[] = $query->toString();
+# 146
+$query = $file->clear()->create('domain', $file::TYPE_DIR);
+$queries[] = $query->toString();
+
+# -------- application/models/Task/Revision/Commit.php
+/* @var $git RocketWeb_Cli_Kit_Git */
+$git = $cli->kit('git');
+# 59
+$query = $git->addAll();
+$queries[] = $query->toString();
+# 68
+$query = $git->commit('commit message');
+$queries[] = $query->toString();
+# 211
+$query = $mysql->clear()->connect('user', 'login', 'database')
+               ->export($mysql::EXPORT_DATA_AND_SCHEMA, array('a','b','c'));
+$queries[] = $query->toString();
+
+
+
 
 echo '<pre>';
 var_dump($queries);

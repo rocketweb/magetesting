@@ -85,7 +85,7 @@ class RocketWeb_Cli_Query
         if(null !== $values && !is_array($values)) {
             $values = array($values);
         }
-        $append = $this->_query;
+        $append = trim($this->_query);
         if(null === $values) {
             $this->_query = trim($query);
         } else {

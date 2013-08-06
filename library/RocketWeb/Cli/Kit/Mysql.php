@@ -7,10 +7,12 @@ class RocketWeb_Cli_Kit_Mysql
     const EXPORT_DATA = 1;
     const EXPORT_DATA_AND_SCHEMA = 2;
 
+    protected $_export = false;
+
     public function connect($user, $password, $database)
     {
         return $this->append(
-            'mysql -u ? -p? ?',
+            ':$mysql -u ? -p? ?',
             array($user, $password, $database)
         );
     }
@@ -25,6 +27,8 @@ class RocketWeb_Cli_Kit_Mysql
      */
     public function export($type, $tables = array())
     {
+        $this->_export = true;
+
         if(!is_array($tables)) {
             $tables = array($tables);
         }
@@ -46,10 +50,20 @@ class RocketWeb_Cli_Kit_Mysql
                 // no need to append anything
             break;
         }
+        return $this;
     }
 
-    public function import($path)
+    public function import($path = '')
     {
-        return $this->append('< ?', $path);
+        if($path) {
+            $this->append('> ?', $path);
+        }
+        return $this;
+    }
+
+    public function toString()
+    {
+        $this->bindAssoc(':$mysql', ($this->_export ? 'mysqldump' : 'mysql'), false);
+        return parent::toString();
     }
 }
