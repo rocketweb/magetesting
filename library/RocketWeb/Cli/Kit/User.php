@@ -15,10 +15,10 @@ class RocketWeb_Cli_Kit_User
     {
         $this->_runScript('create_user.sh');
         $this->append(':login :password :salt :homeDir');
-        $this->_bindValues(':login', $login);
-        $this->_bindValues(':password', $password);
-        $this->_bindValues(':salt', $salt);
-        $this->_bindValues(':homeDir', $homeDir);
+        $this->bindAssoc(':login', $login);
+        $this->bindAssoc(':password', $password);
+        $this->bindAssoc(':salt', $salt);
+        $this->bindAssoc(':homeDir', $homeDir);
         return $this;
     }
     public function delete($login)

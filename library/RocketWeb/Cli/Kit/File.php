@@ -43,10 +43,10 @@ class RocketWeb_Cli_Kit_File
         return $this->bindAssoc(':name', $name);
     }
 
-    public function fileMode($path, $mode, $recursive = true)
+    public function fileMode($path, $mode = '', $recursive = true)
     {
         $this->append('chmod :recursive:mode :path');
-        $this->bindAssoc(':mode', $mode);
+        $this->bindAssoc(':mode', $mode, ($mode ? true : false));
         $this->bindAssoc(':path', $path, ($path ? true : false));
         $this->bindAssoc(':recursive', ($recursive ? '-R ' : ''), false);
         return $this;

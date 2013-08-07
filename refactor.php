@@ -208,7 +208,9 @@ $queries[] = $query->toString();
 $query = $cli->createQuery('grep core_config_data ?', 'filename');
 $queries[] = $query->toString();
 # 681
-$query = $cli->createQuery('grep -i -e \'[a-z0-9$_]*core_config_data\' ? -o | head -n 1 | sed s/core_config_data//', 'file');
+$query = $cli->createQuery('grep -i -e \'[a-z0-9$_]*core_config_data\' ? -o', 'file')
+             ->pipe('head -n 1')
+             ->pipe('sed s/core_config_data//');
 $queries[] = $query->toString();
 # 692
 $query = $file->clear()->fileOwner('domain', 'user:user');
@@ -244,6 +246,15 @@ $queries[] = $query->toString();
 $query = $file->clear()->create('domain', $file::TYPE_DIR);
 $queries[] = $query->toString();
 
+# -------- application/models/Task/Papertrail/Create.php
+/* @var $service RocketWeb_Cli_Kit_Service */
+$service = $cli->kit('service');
+# 58
+$query = $file->clear()->create('filename', $file::TYPE_FILE);
+# 101
+$query = $service->restart('rsyslog')->asSuperUser(true);
+$queries[] = $query->toString();
+
 # -------- application/models/Task/Revision/Commit.php
 /* @var $git RocketWeb_Cli_Kit_Git */
 $git = $cli->kit('git');
@@ -258,7 +269,25 @@ $query = $mysql->clear()->connect('user', 'login', 'database')
                ->export($mysql::EXPORT_DATA_AND_SCHEMA, array('a','b','c'));
 $queries[] = $query->toString();
 
+# -------- application/models/Task/Revision/Deploy.php
+# 48
+$query = $file->clear()->fileMode('var/deployment');
+$queries[] = $query->toString();
+# 61
+$query = $git->clear()->deploy('revision_hash', 'var/deployement/revision_hash.zip');
+$queries[] = $query->toString();
 
+# -------- application/models/Task/Revision/Rollback.php
+# 34
+$query = $git->clear()->rollback('revision_hash');
+$queries[] = $query->toString();
+
+# -------- application/models/Task/Magento.php
+/* @var $user RocketWeb_Cli_Kit_User */
+$user = $cli->kit('user');
+# 119
+$query = $user->create('user', 'password', 'salt', 'mi_user');
+$queries[] = $query->toString();
 
 
 echo '<pre>';

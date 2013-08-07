@@ -14,7 +14,8 @@ class RocketWeb_Cli
         'gzip' => 'Compression_Gzip',
         'tar' => 'Compression_Tar',
         'git' => 'Git',
-        'mysql' => 'Mysql'
+        'mysql' => 'Mysql',
+        'user' => 'User'
     );
     /**
      * Returns query object

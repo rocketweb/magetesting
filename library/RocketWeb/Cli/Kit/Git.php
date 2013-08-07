@@ -25,7 +25,7 @@ class RocketWeb_Cli_Kit_Git
     public function deploy($revision, $output)
     {
         $this->append(
-            'git archive --format zip --output ? ? `:subqury`',
+            'git archive --format zip --output ? ? `:subquery`',
             array($output, $revision)
         );
         $this->bindAssoc(
