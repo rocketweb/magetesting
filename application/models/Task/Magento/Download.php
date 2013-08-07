@@ -162,7 +162,7 @@ implements Application_Model_Task_Interface {
     protected function _importDatabaseDump() {
         $this->logger->log('Importing custom db dump.', Zend_Log::INFO);
         $path_parts = pathinfo($this->_customSql);
-        $command = 'sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < '.$path_parts['basename'].' 2>&1';
+        $command = 'sudo cat ' . $path_parts['basename'] . ' | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname .' 2>&1';
         $output = array();
         exec($command, $output);
         $message = var_export($output, true);
