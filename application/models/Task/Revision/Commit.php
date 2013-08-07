@@ -207,7 +207,7 @@ implements Application_Model_Task_Interface {
         exec('sudo mkdir -p '.$dbDir);
         chdir($dbDir);
         $dbFileName = 'db_backup_'.date("Y_m_d_H_i_s");
-        $command = 'sudo mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().' | sed -e \'s/DEFINER=[^*]*\*/\*/\' > '.$dbFileName;
+        $command = 'sudo mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().' | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' > '.$dbFileName;
         exec($command);
         
         //pack it up
