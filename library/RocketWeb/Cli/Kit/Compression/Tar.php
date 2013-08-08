@@ -8,7 +8,10 @@ class RocketWeb_Cli_Kit_Compression_Tar
 
     public function pack($path, $files)
     {
-        return $this->append('tar :$gzipcvf ? ?', array($path, $files));
+        return
+            $this
+                ->append('tar :$gzipcvf :path ?', $files)
+                ->bindAssoc(':path', $path, ('-' === $path) ? false : true); // whether wrote to stdout instead of file
     }
     public function unpack($path, $move = '')
     {
@@ -50,6 +53,22 @@ class RocketWeb_Cli_Kit_Compression_Tar
     {
         $this->_redirect_to_output = (bool)$value;
         return $this;
+    }
+    public function exclude($paths)
+    {
+        if(is_string($paths)) {
+            $paths = array($paths);
+        }
+        foreach($paths as $path) {
+            $this->append('--exclude=?', $path);
+        }
+        return $this;
+    }
+    public function clear()
+    {
+        $this->_is_compressed = false;
+        $this->_redirect_to_output = false;
+        return parent::clear();
     }
     public function toString()
     {

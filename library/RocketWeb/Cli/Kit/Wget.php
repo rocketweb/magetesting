@@ -68,6 +68,7 @@ class RocketWeb_Cli_Kit_Wget
     public function checkOnly($value = true)
     {
         $this->_asSpider = (bool) $value;
+        return $this;
     }
 
     protected function _clearPathifNotSet()
@@ -76,9 +77,17 @@ class RocketWeb_Cli_Kit_Wget
         return $this;
     }
 
+    public function getFileSize()
+    {
+        $this->checkOnly(true);
+        $this->pipe('grep ?', 'SIZE');
+        $this->pipe('awk ?', '$5 ~ /[0-9]+/ {print $5}');
+        return $this;
+    }
+
     public function toString()
     {
-        $this->bindAssoc(':$spider', ((bool)$this->_asSpider ? '-spider ' : ''), false);
+        $this->bindAssoc(':$spider', ((bool)$this->_asSpider ? '--spider ' : ''), false);
         $this->_clearPathifNotSet();
 
         return parent::toString();

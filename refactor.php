@@ -288,7 +288,62 @@ $user = $cli->kit('user');
 # 119
 $query = $user->create('user', 'password', 'salt', 'mi_user');
 $queries[] = $query->toString();
+# 357
+$query = $cli->createQuery('-u ? -s ', 'user')->asSuperUser(true);
+$query->append('php ? --reindex all', '/shell/indexer.php');
+$queries[] = $query->toString();
+# 363
+$query = $cli->createQuery('quotatool -u :user -b -q :softLimit -l :hardLimit /');
+$query->asSuperUser(true);
+$query->bindAssoc(array(
+    ':user' => 'user',
+    ':softLimit' => '4000M',
+    ':hardLimit' => '5000M'
+));
+$queries[] = $query->toString();
+# 370
+$query = $cli->createQuery('quotatool -u :user -b -t ?', '0 seconds');
+$query->bindAssoc(':user', 'user')->asSuperUser(true);
+$queries[] = $query->toString();
 
+# -------- application/models/Transport/Ftp.php
+/* @var $wget RocketWeb_Cli_Kit_Wget */
+$wget = $cli->kit('wget');
+$wget->ftpConnect('user', 'password', 'http://somewhere.com', 22);
+$wget->addLimits(30, 2);
+# 26
+$query = $wget->cloneObject()->checkOnly(true);
+$queries[] = $query->toString();
+# 108
+$query = $wget->cloneObject()->downloadFile('public_html/index.php');
+$query->getFileSize();
+$queries[] = $query->toString();
+# 143
+$query = $wget->cloneObject()->downloadRecursive('a,b,c,dsa');
+$queries[] = $query->toString();
+
+# -------- application/models/Transport/Ssh.php
+# 117
+$query = $sshConnection->cloneObject()->remoteCall(
+    $cli->createQuery('cd /;')->append($tar->clear()->pack('-', 'customPath')->exclude(array('media', 'var'))->toString())
+)->pipe(
+    $tar->clear()->unpack('-', '.')->strip(5)->isCompressed(true)
+);
+$queries[] = $query->toString();
+# 247
+$query = $file->clear()->getSize('custom_file');
+$queries[] = $query->toString();
+
+# -------- application/models/User.php
+# 597
+$query = $user->clear()->addFtp('userlogin');
+$queries[] = $query->toString();
+# 619
+$query = $user->clear()->removeFtp('userlogin');
+$queries[] = $query->toString();
+# 686
+$query = $user->clear()->rebuildPhpMyAdmin('list');
+$queries[] = $query->toString();
 
 echo '<pre>';
 var_dump($queries);

@@ -120,4 +120,9 @@ class RocketWeb_Cli_Kit_File
     {
         return $this->append('-L');
     }
+    public function getSize($path)
+    {
+        $this->append('du -b ?', $path)->pipe('awk ?', '$1 ~ /[0-9]+/ {print $1}');
+        return $this;
+    }
 }

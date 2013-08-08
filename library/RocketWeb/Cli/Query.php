@@ -116,7 +116,7 @@ class RocketWeb_Cli_Query
     /**
      * clears query string
      */
-    final public function clear()
+    public function clear()
     {
         $this->_query = '';
         return $this;
@@ -126,23 +126,30 @@ class RocketWeb_Cli_Query
      * Binds value to the given name already after method call,<br />
      * so if name does not exist in current query string,<br />
      * value will not be binded in the future
-     * @param string $name - name to be find
+     * @param string|array $name - name to be find or array of names => values
      * @param mixed $value - value to pass in place of name
      * @param boolean $escape - whether escapeshellarg or not
      * @return RocketWeb_Cli_Query
      */
-    final public function bindAssoc($name, $value, $escape = true)
+    final public function bindAssoc($name, $value = '', $escape = true)
     {
-        if(!is_string($name)) {
-            throw new RocketWeb_Cli_Exception('Argument name has to be string.');
+        if(!is_string($name) && !is_array($name)) {
+            throw new RocketWeb_Cli_Exception('Wrong argument name.');
         }
 
-        $this->_query =
-            str_replace(
-                $name,
-                ($escape ? $this->escape($value) : $value),
-                $this->_query
-            );
+        $arguments = $name;
+        if(is_string($name)) {
+            $arguments = array($name => $value);
+        }
+
+        foreach($arguments as $key => $val) {
+            $this->_query =
+                str_replace(
+                    $key,
+                    ($escape ? $this->escape($val) : $val),
+                    $this->_query
+                );
+        }
         return $this;
     }
 
