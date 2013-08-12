@@ -24,6 +24,3 @@ date_default_timezone_set('Europe/Warsaw');
 error_reporting(E_ALL|E_STRICT);
 require_once 'Zend/Application.php';
 require_once 'ControllerTestCase.php';
-
-
-
