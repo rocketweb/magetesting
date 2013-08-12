@@ -103,13 +103,13 @@ class Application_Model_TaskMysql
             $fname, $lname, $email, $login, $password, 'CURRENT_TIMESTAMP', 1
         );
         $this->_insertOrUpdate(
-            $this->_table('admin_user'),
+            'admin_user',
             'firstname,lastname,email,username,password,created,is_active',
             $user,
             'password = VALUES(password), email = VALUES(email)'
         );
 
-        $table = $this->_db->quoteIdentifier($this->_tablePrefix.'.admin_role');
+        $table = $this->_table('admin_role');
         $this->_db->insert($table, $bind);
         return $this;
     }
@@ -117,7 +117,7 @@ class Application_Model_TaskMysql
     public function disableAdminNotification()
     {
         $this->_insertOrUpdate(
-            $this->_table('core_config_data'),
+            'core_config_data',
             'scope, scope_id, path, value',
             array('default', 0, 'advanced/modules_disable_output/Mage_AdminNotification', 1),
             'value = 1'
@@ -151,7 +151,7 @@ class Application_Model_TaskMysql
             array('default', 0, 'dev/log/exception_file', 'exception.log')
         );
         $this->_insertOrUpdate(
-            $this->_table('core_config_data'),
+            'core_config_data',
             'scope, scope_id, path, value',
             $data,
             'value = 1'
@@ -162,7 +162,7 @@ class Application_Model_TaskMysql
     public function activateDemoNotice()
     {
         $this->_insertOrUpdate(
-            $this->_table('core_config_data'),
+            'core_config_data',
             'scope, scope_id, path, value',
             array('default', 0, 'design/head/demonotice', 1),
             'value = 1'
@@ -181,7 +181,7 @@ class Application_Model_TaskMysql
             array('default', 0, 'contacts/email/recipient_email', $email)
         );
         $this->_insertOrUpdate(
-            $this->_table('core_config_data'),
+            'core_config_data',
             'scope, scope_id, path, value',
             $data,
             'value = VALUES(value)'
@@ -192,6 +192,9 @@ class Application_Model_TaskMysql
     protected function _insertOrUpdate($table, $columns, $values, $update)
     {
         $setSize = $this->_prepareColumns($columns);
+        echo '<pre>INSERT INTO '.$this->_table($table).' ('.$columns.')'.
+            ' VALUES '.$this->_prepareBindingString($values, $setSize).
+            ' ON DUPLICATE KEY UPDATE '.$update.PHP_EOL;var_dump($values);die;
         $this->_db->query(
             'INSERT INTO '.$this->_table($table).' ('.$columns.')'.
             ' VALUES '.$this->_prepareBindingString($values, $setSize).
@@ -221,7 +224,11 @@ class Application_Model_TaskMysql
 
     protected function _getDefaultAdapter()
     {
-        return Zend_Db_Table::getDefaultAdapter();
+        $adapter = Zend_Db_Table::getDefaultAdapter();
+        if(!$adapter) {
+            $adapter = $this->_db;
+        }
+        return $adapter;
     }
 
     protected function _table($table)
