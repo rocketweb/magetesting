@@ -35,7 +35,8 @@ class RocketWeg_Cli_Kit_SshTest extends PHPUnit_Framework_TestCase
 
     public function _asSuperUser(RocketWeb_Cli_Kit_Ssh $connection)
     {
-        $this->assertEquals('sudo', explode(' ', $connection->toString())[0]);
+        $command = explode(' ', $connection->toString());
+        $this->assertEquals('sudo', $command[0]);
     }
 
     
