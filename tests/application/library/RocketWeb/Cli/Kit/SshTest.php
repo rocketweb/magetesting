@@ -2,42 +2,31 @@
 
 class RocketWeg_Cli_Kit_SshTest extends PHPUnit_Framework_TestCase
 {
-    public function _sshConnectionData()
-    {
-        return array(
-            array('user', 'pass', 'http://somewhere.com', 80),
-            array('user1', 'pa\'ss', 'http://somewhere.com', 29722)
-        );
-    }
-    /**
-     * @dataProvider _sshConnectionData
-     * @expectException PHPUnit_Framework_Error
-     */
-    public function testSshConnection($user, $pass, $host, $port)
+    public function testSshConnection()
     {
         $cli = new RocketWeb_Cli();
         $ssh = $cli->kit('ssh');
-        $ssh->connect($user, $pass, $host, $port);
+        $ssh->connect('user', 'pass', 'http://somewhere.com', 80);
         $ssh->asSuperUser(true);
 
         $this->assertInstanceOf('RocketWeb_Cli_Kit_Ssh', $ssh);
-        $this->assertRegExp('/ssh(pass)?.*?(\''.$user.'\')@.*/i', $ssh->toString());
-
-        $this->_SshRemoteCall($ssh);
-        $this->_asSuperUser($ssh);
+        $this->assertEquals(
+            "sudo sshpass -p 'pass' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'user'@'http://somewhere.com' -p '80' 2>&1",
+            $ssh->toString()
+        );
     }
 
-    public function _SshRemoteCall(RocketWeb_Cli_Kit_Ssh $connection)
+    public function testSshRemoteCall()
     {
-        $call = $connection->cloneObject()->remoteCall('something');
-        $this->assertRegExp('/something/i', $call->toString());
+        $cli = new RocketWeb_Cli();
+        $ssh = $cli->kit('ssh');
+
+        $this->assertEquals(
+            "'echo '\''test'\'' 2>&1' 2>&1",
+            $ssh->remoteCall($cli->createQuery('echo ?', 'test'))->toString()
+        );
     }
 
-    public function _asSuperUser(RocketWeb_Cli_Kit_Ssh $connection)
-    {
-        $command = explode(' ', $connection->toString());
-        $this->assertEquals('sudo', $command[0]);
-    }
 
     
     /* expectOutputRegex('regex') */
