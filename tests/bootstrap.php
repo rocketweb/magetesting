@@ -21,6 +21,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
 date_default_timezone_set('Europe/Warsaw');
 
 // We wanna catch all errors en strict warnings
-error_reporting(E_ALL|E_STRICT);
+error_reporting(E_ALL^E_STRICT);
 require_once 'Zend/Application.php';
 require_once 'ControllerTestCase.php';
