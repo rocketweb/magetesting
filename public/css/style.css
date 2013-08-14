@@ -1724,6 +1724,9 @@ div.in-all-plans ul li {
     margin: 20px 0 0 73px;
     text-align: left;
 }
+div.in-all-plans ul li.supported-magento-versions {
+    width: initial;
+}
 /** Stores Border Radious **/
 div.accordion div.accordion-group:last-child{
     border-bottom-left-radius: 6px;
@@ -3409,6 +3412,10 @@ label.error {
     display: block;
     font-size: 12px;
     margin-top: 3px;
+}
+.supported-magento-releases {
+    margin-top: 30px;
+}
 
 /* cancel subscription modal */
 #cancel-subscription form {

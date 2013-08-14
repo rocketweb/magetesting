@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="span12">
+        <div class="form-box">
+            <div class="box">
+                <form class="form-stacked" id="payment-form" method="POST" action="<?php echo $this->url(array('controller' => 'payment', 'action' => 'payment'), 'default', true); ?>">
+                    <input type="hidden" name="pay-for" value="additional-stores" />
+                    <input type="hidden" name="source" value="additional-stores" />
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Note</legend>
+                        <p>
+                            Purchasing additional stores will add the additional amount to your billing period.
+                            You may cancel the store(s) at any time and be able to use them for the remainder of your billing period.
+                            Extension Discovery accounts do not renew automatically.
+                            Sandbox Exploration accounts renew automatically each month unless canceled before the end of the monthly billing period.
+                        </p>
+                    </fieldset>
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Payment Details</legend>
+                        <p>One additional store price: $<span class="price"><?php echo $this->price; ?></span></p>
+                        <p>Stores to buy: <input class="span1" type="number" name="additional-stores-quantity" min="1" max="<?php echo $this->left_stores; ?>" value="1" /></p>
+                    </fieldset>
+                    <div class="tab-stripe tab-stripe-red"></div>
+                    <fieldset>
+                        <legend>Summary</legend>
+                        <p>You will purchase <b>1</b> additional store(s) for $<b class="summary"><?php echo $this->price; ?></b></p>
+                    </fieldset>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-inverse pull-right">
+                            <i class="icon-white icon-ok"></i>&nbsp;Pay
+                        </button>
+                        <p class="pull-right braintree-vault-note">
+                            Your Credit Card saved in the secure Braintree Payment Gateway Vault will be used for payment.
+                        </p>
+
+                        <a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'dashboard'), 'default', true)
+                        ?>" class="btn">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

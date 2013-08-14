@@ -57,7 +57,9 @@ class IndexController extends Integration_Controller_Action
             return $this->_helper->redirector->gotoRoute(array('controller' => 'my-account', 'action' => 'compare'), 'default', true);
         }
         $plans = new Application_Model_Plan();
+        $versions = new Application_Model_Version();
         $this->view->plans = $plans->fetchAll();
+        $this->view->versions = $versions->fetchAll();
         $this->renderScript('my-account/compare.phtml');
     }
 

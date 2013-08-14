@@ -32,6 +32,10 @@ class Application_Model_Plan {
     
     protected $_can_do_db_revert;
 
+    protected $_max_stores;
+
+    protected $_store_price;
+
     protected $_mapper;
 
     public function __construct(array $options = null)
@@ -197,6 +201,28 @@ class Application_Model_Plan {
     {
     	return $this->_can_do_db_revert;
     }
+
+    public function setMaxStores($value)
+    {
+        $this->_max_stores = $value;
+        return $this;
+    }
+    
+    public function getMaxStores()
+    {
+        return $this->_max_stores;
+    }
+
+    public function setStorePrice($value)
+    {
+        $this->_store_price = $value;
+        return $this;
+    }
+    
+    public function getStorePrice()
+    {
+        return $this->_store_price;
+    }
     
     public function setMapper($mapper)
     {
@@ -254,7 +280,9 @@ class Application_Model_Plan {
             'price_description'     => $this->getPriceDescription(),
             'is_hidden' => $this->getIsHidden(),
             'auto_renew' => $this->getAutoRenew(),
-        	'can_do_db_revert' => $this->getCanDoDbRevert() 	
+        	'can_do_db_revert' => $this->getCanDoDbRevert(),
+            'max_stores' => $this->getMaxStores(),
+            'store_price' => $this->getStorePrice()
         );
     }
     

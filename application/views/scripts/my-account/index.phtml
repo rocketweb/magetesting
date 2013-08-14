@@ -35,11 +35,11 @@
                                 ?>
                             </div>
                             <div class="span3 offset1">
-                            <?php if((int)$this->user->getPlanId() AND $this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
+                            <?php if((int)$this->user->getPlanId() AND $this->user->hasPlanActive() AND (!(int)$this->user->getBraintreeTransactionConfirmed()) || $this->not_settled_stores): ?>
                                 <button
                                     type="button"
                                     <?php if($this->user->getBraintreeTransactionId()): ?>
-                                    title="Your payment for plan is being processed now. You will be able to change plan just after payment is settled."
+                                    title="Your payment for <?php echo $this->not_settled_stores ? 'store(s)' : 'plan'; ?> is being processed now. You will be able to change plan just after payment is settled."
                                     <?php endif; ?>
                                     class="btn btn-large btn-block btn-inverse change-plan disabled"
                                 >
@@ -75,6 +75,7 @@
                                     <?php if(-1 == (int)$this->user->getBraintreeTransactionConfirmed()): ?>
                                     You have cancelled you subscription, but you can still use your plan till <?php echo date("F j, Y", strtotime($this->user->getPlanActiveTo())); ?>
                                     <?php else: ?>
+                                    <?php $next_price = (float)$this->plan->getPrice()+((int)$this->user->getAdditionalStores()-(int)$this->user->getAdditionalStoresRemoved())*(float)$this->plan->getStorePrice(); ?>
                                     Your next charge is $<?php echo $this->plan->getPrice();?> on <?php echo date("F j, Y", strtotime($this->user->getPlanActiveTo())) ?>
                                 </div>
                                 <div>
@@ -151,6 +152,17 @@
                     </div>
                     <hr />
                     */ ?>
+                    <?php if((int)$this->user->getAdditionalStores()): ?>
+                    <p>You have <?php echo $this->user->getAdditionalStores(); ?> additional store(s)
+                    <?php if((int)$this->user->getAdditionalStoresRemoved()): ?>
+                    and <?php echo $this->user->getAdditionalStoresRemoved(); ?> of them will be removed on next billing period
+                    - you will be prompted to choose which one
+                    <?php endif; ?>
+                    </p>
+                    <?php if((int)$this->user->getAdditionalStores() > (int)$this->user->getAdditionalStoresRemoved()): ?>
+                    <a class="btn" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'remove-additional-stores')); ?>">Remove additional stores</a>
+                    <?php endif; ?>
+                    <?php endif; ?>
                 </fieldset>
                 
                 <div class="tab-stripe"></div>

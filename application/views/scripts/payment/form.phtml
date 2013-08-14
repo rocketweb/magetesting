@@ -228,6 +228,9 @@
                             case 'deployment-request':
                                 echo $this->url(array('controller' => 'user', 'action' => 'dashboard'), 'default', true);
                                 break;
+                            case 'additional-stores':
+                                echo $this->url(array('controller' => 'payment', 'action' => 'additional-stores'), 'default', true);
+                                break;
                             case 'plan':
                             default:
                                 echo $this->url(array('controller' => 'my-account', 'action' => 'compare'), 'default', true); 

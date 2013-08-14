@@ -51,6 +51,9 @@ adminNotification.boughtExtension.template = "bought-extension.phtml"
 
 adminNotification.changedPlan.subject = "User changed a plan"
 adminNotification.changedPlan.template = "changed-plan.phtml"
+
+adminNotification.additionalStores.subject = "User purchased additional stores"
+adminNotification.additionalStores.template = "additional-stores.phtml"
 ; END
 
 user.activationEmail.subject = "Activate your account for magetesting.com"
