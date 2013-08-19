@@ -895,6 +895,8 @@ class PaymentController extends Integration_Controller_Action
         $data = array(
             'plan_end' => is_string($plan_end) ? strtotime($plan_end) : $plan_end,
         );
+        // extract only date from timestamp, it will unify results
+        $data['plan_end'] = strtotime(date('Y-m-d', $data['plan_end']));
         $data['plan_start'] = strtotime('-'.$plan_period, $data['plan_end']);
         $data['plan_range'] = (($data['plan_end']-$data['plan_start'])/3600/24)+1;
         $data['plan_left_days'] = ceil(($data['plan_end']-strtotime(date('Y-m-d')))/3600/24)+1;
