@@ -495,19 +495,21 @@ class PaymentController extends Integration_Controller_Action
                 $this->view->show_billing_and_card = true;
                 if($user->getBraintreeVaultId()) {
                     $transaction['customerId'] = $user->getBraintreeVaultId();
-                    if($pay_for === 'extension') {
-                        $order_type = '-ext-';
-                    } elseif($pay_for === 'plan') {
-                        $order_type = '-plan-';
-                    } else {
-                        $order_type = '-additional_store-'.$user->getId().'-'.time().'-';
-                        $id = $additional_stores;
-                    }
-                    $transaction['orderId'] = $domain.$order_type.$id;
                     $transaction['options']['storeInVaultOnSuccess'] = false;
                     $transaction['options']['addBillingAddressToPaymentMethod'] = false;
                     $this->view->show_billing_and_card = false;
                 }
+
+                if($pay_for === 'extension') {
+                    $order_type = '-ext-';
+                } elseif($pay_for === 'plan') {
+                    $order_type = '-plan-';
+                } else {
+                    $order_type = '-additional_store-'.$user->getId().'-'.time().'-';
+                    $id = $additional_stores;
+                }
+                $transaction['orderId'] = $domain.$order_type.$id;
+
                 $url_segments = array(
                         'controller' => 'payment',
                         'action' => 'payment',
@@ -519,6 +521,7 @@ class PaymentController extends Integration_Controller_Action
                 if($pay_for == 'extension') {
                     $url_segments['domain'] = $domain;
                 }
+
                 $this->view->tr_data = Braintree_TransparentRedirect::transactionData(array(
                         'redirectUrl' => $this->view->serverUrl() . $this->view->url($url_segments)
                         ,
