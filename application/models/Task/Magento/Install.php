@@ -53,8 +53,7 @@ implements Application_Model_Task_Interface {
         $this->_applyXmlRpcPatch();
 
         $this->_updateStoreConfigurationEmails();
-        
-        $this->_disableAdminNotifications();
+
         $this->_enableLogging();
       
         chdir($startCwd);
@@ -282,12 +281,6 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         // end
         
         $this->_updateConnectFiles();
-    }
-
-    protected function _disableAdminNotifications() {
-        $this->logger->log('Disabling admin notifications.', Zend_Log::INFO);
-
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e \'INSERT INTO core_config_data (`scope`,`scope_id`,`path`,`value`) VALUES ("default",0,"advanced/modules_disable_output/Mage_AdminNotification",1) ON DUPLICATE KEY UPDATE `value` = 1\'');
     }
 
     protected function _runInstaller() {
