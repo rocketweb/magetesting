@@ -25,7 +25,7 @@ class RocketWeb_Cli_Kit_Mysql
      * <br />RocketWeb_Cli_Kit_Mysql::EXPORT_DATA_AND_SCHEMA
      * @param array $tables
      */
-    public function export($type, $tables = array())
+    public function export($file = '', $type = self::EXPORT_DATA_AND_SCHEMA, $tables = array())
     {
         $this->_export = true;
 
@@ -50,13 +50,18 @@ class RocketWeb_Cli_Kit_Mysql
                 // no need to append anything
             break;
         }
+
+        if($file) {
+            $this->append('> ?', $file);
+        }
+
         return $this;
     }
 
     public function import($path = '')
     {
         if($path) {
-            $this->append('> ?', $path);
+            $this->append('< ?', $path);
         }
         return $this;
     }

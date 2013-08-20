@@ -18,7 +18,7 @@ class RocketWeb_Cli_Kit_File
             $mv_type = 'rsync -a';
         }
 
-        $this->arg($mv_type . ' ? ?', array($from, $to));
+        $this->append($mv_type . ' ? ?', array($from, $to));
 
         return $this;
     }
@@ -95,9 +95,12 @@ class RocketWeb_Cli_Kit_File
      */
     public function find($name, $type, $path = '')
     {
+        if($path) {
+            $path .= ' ';
+        }
         return
             $this
-                ->append('find :path -type :type -name :name', $name)
+                ->append('find :path-type :type -name :name', $name)
                 ->bindAssoc(':path', $path, ($path ? true : false))
                 ->bindAssoc(':type', (($type === self::TYPE_DIR) ? 'd' : 'f'), false)
                 ->bindAssoc(':name', $name);

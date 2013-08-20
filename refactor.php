@@ -262,11 +262,11 @@ $git = $cli->kit('git');
 $query = $git->addAll();
 $queries[] = $query->toString();
 # 68
-$query = $git->commit('commit message');
+$query = $git->clear()->commit('commit message');
 $queries[] = $query->toString();
 # 211
 $query = $mysql->clear()->connect('user', 'login', 'database')
-               ->export($mysql::EXPORT_DATA_AND_SCHEMA, array('a','b','c'));
+               ->export('file', $mysql::EXPORT_DATA_AND_SCHEMA, array('a','b','c'));
 $queries[] = $query->toString();
 
 # -------- application/models/Task/Revision/Deploy.php
@@ -274,7 +274,7 @@ $queries[] = $query->toString();
 $query = $file->clear()->fileMode('var/deployment');
 $queries[] = $query->toString();
 # 61
-$query = $git->clear()->deploy('revision_hash', 'var/deployement/revision_hash.zip');
+$query = $git->clear()->deploy('revision_hash', 'var/deployment/revision_hash.zip');
 $queries[] = $query->toString();
 
 # -------- application/models/Task/Revision/Rollback.php
