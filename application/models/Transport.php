@@ -13,9 +13,23 @@ class Application_Model_Transport {
     protected $_user = '';
     protected $_pass = '';
     protected $_errorMessage = '';
-    
+    protected $_cli;
+
     protected $logger = NULL;
-    
+
+    public function __construct()
+    {
+        $this->_cli = new RocketWeb_Cli();
+    }
+
+    public function cli($kit = '')
+    {
+        if($kit) {
+            return $this->_cli->kit($kit);
+        }
+        return $this->_cli;
+    }
+
     public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
         $this->setConnection($store);
 
