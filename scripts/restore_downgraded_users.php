@@ -11,6 +11,9 @@ $sql = $select
     ->where('TIMESTAMPDIFF(SECOND, \''.date("Y-m-d H:i:s").'\', user.plan_active_to) > ?', 0)
     ->where('user.downgraded = ?', 1);
 
+$apache = new RocketWeb_Cli_Kit_Apache();
+$service = new RocketWeb_Cli_Kit_Service();
+
 $result = $db->fetchAll($sql);
 if($result) {
     $restore_by_id = array();
@@ -18,9 +21,9 @@ if($result) {
         if(!isset($restore_by_id[$store['id']])) {
             $restore_by_id[$store['id']] = null;
         }
-            
+
         /* enable user vhost */
-        exec('sudo a2ensite '.$store['login'].'.'.$store['server_domain']);
+        $apache->clear()->enableSite($store['login'].'.'.$store['server_domain'])->call();
     }
     
     if($restore_by_id) {
@@ -28,14 +31,14 @@ if($result) {
                 'group' => 'commercial-user',
                 'downgraded' => 0
         );
-        
+
         $user_ids = array_keys($restore_by_id);
-        
+
         $where = array('id IN (?)' => $user_ids);
         $result = $db->update('user', $set, $where);
         //echo 'Update: '.$result.PHP_EOL;
         $log->log('Restored '.count($restore_by_id).' users', Zend_Log::INFO);
-        
+
         foreach($user_ids as $user_id){
             //get users plan id
             $modelUser = new Application_Model_User();
@@ -49,13 +52,13 @@ if($result) {
             if ($modelPlan->getFtpAccess()){
                $modelUser->enableFtp(); 
             }
-            
+
             if ($modelPlan->getPhpmyadminAccess()){
                 $modelUser->enablePhpmyadmin();
             }
-        }       
-        
-        exec('sudo /etc/init.d/apache2 reload');
+        }
+
+        $service->clear()->restart('apache2')->call();
     }
 } else {
     //$log->log('There is no downgraded user to restore.', Zend_Log::INFO);

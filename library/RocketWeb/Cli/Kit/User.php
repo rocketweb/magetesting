@@ -7,7 +7,7 @@ class RocketWeb_Cli_Kit_User
     protected function _getScriptsDir()
     {
         if(!$this->_scripts_dir) {
-            $this->_scripts_dir = APPLICATION_PATH . '/scripts/worker/';
+            $this->_scripts_dir = APPLICATION_PATH . '/../scripts/worker/';
         }
         return $this->_scripts_dir;
     }

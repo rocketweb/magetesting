@@ -9,6 +9,11 @@ $sql = $select
 
 $result = $db->fetchAll($sql);
 
+$cli = new RocketWeb_Cli();
+$fileKit = $cli->kit('file');
+$apacheKit = $cli->kit('apache');
+$serviceKit = $cli->kit('service');
+
 if($result) {
     foreach($result as $row) {
 
@@ -22,7 +27,8 @@ if($result) {
             /* we have stores waiting to remove, discard this user */
             continue;
         }
-        
+
+        $username = $username;
         //--------------PAPERTRAIL PART START-------------
         if ($user->getHasPapertrailAccount()){
             $id = $config->papertrail->prefix . (string) $user->getId();
@@ -70,37 +76,31 @@ if($result) {
         //rebuild phpmyadmin blacklist
         $user->disablePhpmyadmin();
 
-
-
         //remove system user
         if ($user->getHasSystemAccount()){
-            $workerfolder = APPLICATION_PATH.'/../scripts/worker';
-            chdir($workerfolder);
-            $command = 'cd '.APPLICATION_PATH.'/../scripts/worker';
-            exec($command,$output);
-            unset($output);
-            $command = 'sudo ./remove_user.sh ' . $config->magento->userprefix . $user->getLogin();
-            exec($command, $output);
+            $delete = $cli->kit('user')->delete($username);
+            $output = $delete->call()->getLastOutput();
             if (empty($output)){
                 echo 'sh user removal script failed';
             } elseif(isset($output[0]) && $output[0]=='error'){ 
                 echo 'sh script was run without arguments';
             }
 
-            //just in case remove_user.sh didn't work
-            exec('sudo userdel -f ' . $config->magento->userprefix . $user->getLogin());
-    
-            if (file_exists('/home/' . $config->magento->userprefix . $user->getLogin())){
-                exec('sudo rm -R /home/' . $config->magento->userprefix . $user->getLogin());
+            // just in case remove_user.sh didn't work
+            $cli->createQuery(
+                'userdel -f ?',
+                $username
+            )->asSuperUser(true)->call();
+
+            $homeDir = '/home/' . $username;
+            if(file_exists($homeDir)){
+                $fileKit->clear()->delete($homeDir)->call();
             }
-            
-            unset($output);
-            chdir($startcwd);
         }
 
 
         //remove mysql user
-         $DbManager = new Application_Model_DbTable_Privilege($db,$config);
+        $DbManager = new Application_Model_DbTable_Privilege($db,$config);
         if ($DbManager->checkIfUserExists($user->getLogin())){
             try {
                 $log->log('Dropping ' . $user->getLogin() . ' user.', Zend_Log::INFO);
@@ -118,26 +118,29 @@ if($result) {
         //--------------SYSTEM/MYSQL PART END--------------
 
         //--------------RSYSLOG FILES PART START-----------
-        exec('sudo rm '.$config->magento->userprefix.$user->getLogin().'_*');
+        $cli->createQuery(
+            'rm ?_*',
+            $username
+        )->asSuperUser(true)->call();
         //--------------RSYSLOG FILES PART END ------------
         
         //--------------SUEXEC PART START------------------
-        exec('sudo rm -R /home/www-data/'.$config->magento->userprefix.$user->getLogin().'');
+        $fileKit->clear()->delete('/home/www-data/'.$username)->call();
         //--------------SUEXEC PART END------------------
         
         
         //--------------VIRTUALHOST PART START-------------
         $serverModel = new Application_Model_Server();
         $serverModel->find($user->getServerId());
-            
-        exec('sudo a2dissite '.$user->getLogin().'.'.$serverModel->getDomain());
-        
+
+        $apacheKit->clear()->disableSite($user->getLogin().'.'.$serverModel->getDomain())->call();
+
         $vhostfile = '/etc/apache2/sites-available/'.$user->getLogin().'.'.$serverModel->getDomain();
         if(file_exists($vhostfile)){
             unlink($vhostfile);
         }
-        
-        exec('sudo /etc/init.d/apache2 reload');
+
+        $serviceKit->clear()->restart('apache2');
         //--------------VIRTUALHOST PART END-------------
 
         //--------------MAGETESTING PART START-------------

@@ -14,8 +14,10 @@ $sql = $select
     ->orwhere('braintree_transaction_confirmed = 0 AND date(CURRENT_TIMESTAMP)-date(payment.date) > 3')
     ->orwhere('user.downgraded = ?', 2);
 
-$result = $db->fetchAll($sql);
+$apache = new RocketWeb_Cli_Kit_Apache();
+$service = new RocketWeb_Cli_Kit_Service();
 
+$result = $db->fetchAll($sql);
 if($result) {
     $downgrade_by_id = array();
     foreach($result as $store) {
@@ -24,7 +26,7 @@ if($result) {
         }
                
         /* disable user vhost */
-        exec('sudo a2dissite '.$store['login'].'.'.$store['server_domain']);
+        $apache->clear()->disableSite($store['login'].'.'.$store['server_domain'])->call();
     }
     
     if($downgrade_by_id) {
@@ -46,7 +48,7 @@ if($result) {
             $modelUser->disableFtp();
             $modelUser->disablePhpmyadmin();
         }
-        exec('sudo /etc/init.d/apache2 reload');
+        $service->clear()->restart('apache2')->call();
     }
     #$log->log('Downgraded '.count($downgrade_by_id).' users', Zend_Log::INFO);
 } else {

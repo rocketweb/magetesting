@@ -176,7 +176,7 @@ class RocketWeb_Cli_Query
     /**
      * @return RocketWeb_Cli_Query
      */
-    final public function asSuperUser($value)
+    final public function asSuperUser($value = true)
     {
         $this->_super_user = ((int)$value ? true : false);
         return $this;

@@ -16,7 +16,7 @@ class RocketWeg_Cli_Kit_UserTest extends PHPUnit_Framework_TestCase
 
     protected function _scriptPath()
     {
-        return APPLICATION_PATH."/scripts/worker";
+        return APPLICATION_PATH."/../scripts/worker";
     }
 
     public function testInit()
