@@ -53,7 +53,11 @@ class RocketWeb_Cli_Query
      */
     public function newQuery($string = '', $values = null)
     {
-        return $this->cloneObject()->clear()->append($string, $values);
+        $query = $this->cloneObject()->clear();
+        if($string) {
+            $query->append($string, $values);
+        }
+        return $query;
     }
     public function cloneObject()
     {

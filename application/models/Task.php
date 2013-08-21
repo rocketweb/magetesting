@@ -35,7 +35,8 @@ class Application_Model_Task {
     protected $config;
     protected $db;
     protected $filePrefix;
-    
+
+    protected $_cli;
     /**
      *
      * @var Zend_Log
@@ -53,7 +54,14 @@ class Application_Model_Task {
             'PE' => 'professional',
         );
     }
-     
+
+    public function cli($kit = '')
+    {
+        if($kit) {
+            return $this->_cli->kit($kit);
+        }
+        return $this->_cli;
+    }
     /**
      * Sets class's objects we'll be working on
      */
