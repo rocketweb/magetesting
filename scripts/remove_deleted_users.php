@@ -118,10 +118,8 @@ if($result) {
         //--------------SYSTEM/MYSQL PART END--------------
 
         //--------------RSYSLOG FILES PART START-----------
-        $cli->createQuery(
-            'rm ?_*',
-            $username
-        )->asSuperUser(true)->call();
+        $fileKit->delete($username)->append('_*', null, false) // 'file'_*
+            ->asSuperUser(true)->call();
         //--------------RSYSLOG FILES PART END ------------
         
         //--------------SUEXEC PART START------------------
