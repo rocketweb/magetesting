@@ -9,11 +9,6 @@ class UserController extends Integration_Controller_Action
         $this->_helper->sslSwitch();
     }
 
-    public function indexAction()
-    {
-        // action body
-    }
-
     public function dashboardAction()
     {
         $storeModel = new Application_Model_Store();
@@ -230,19 +225,20 @@ class UserController extends Integration_Controller_Action
                     } else {
                         $user = new Application_Model_User();
                         $user->find($userData->id);
-
-                        $auth->getStorage()->write(
-                                $userData
-                        );
-
                         // if user has subscription or waiting for confirmation
-                        if(in_array($userData->group, array('awaiting-user', 'commercial-user'))) {
-                            $timeAfterLastPayment = time()-strtotime($userData->plan_active_to);
-                            // if between active to date and active to date+3days
-                            // notify user about payment
-                            if( $timeAfterLastPayment < 3*60*60*24 AND $timeAfterLastPayment > 0) {
+                        if(
+                            in_array($userData->group, array('awaiting-user', 'commercial-user')) &&
+                            is_numeric($user->getBraintreeTransactionConfirmed()) &&
+                            0 === (int)$user->getBraintreeTransactionConfirmed() &&
+                            (int)$user->getPlanId()
+                        ) {
+                            $plan = new Application_Model_Plan();
+                            $plan->find($user->getPlanId());
+                            $boughtDate = strtotime('-'.$plan->getBillingPeriod(), strtotime($user->getPlanActiveTo()));
+                            $timeAfterLastPayment = time()-$boughtDate;
+                            if($timeAfterLastPayment < 3*60*60*24 && $timeAfterLastPayment >= 60*60*24) {
                                 $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'We have not received payment for your subscription yet.'));
-                            } elseif($timeAfterLastPayment > 3*60*60*24) {
+                            } elseif($timeAfterLastPayment >= 3*60*60*24) {
                                 // if date is farther than 3 days
                                 // inform that we downgraded user account
                                 $user->setGroup('free-user')
@@ -250,8 +246,13 @@ class UserController extends Integration_Controller_Action
                                      ->save();
                                 $this->_helper->FlashMessenger(array('type'=> 'error', 'message' => 'We downgraded your account to free user.'));
                                 $userData->group = 'free-user';
+                                $userData->downgraded = 2;
                             }
                         }
+
+                        $auth->getStorage()->write(
+                            $userData
+                        );
 
                         $this->_helper->FlashMessenger('You have been logged in successfully');
 

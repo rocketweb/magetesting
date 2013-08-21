@@ -5,11 +5,11 @@ include 'init.console.php';
 Zend_Auth::getInstance()->getStorage()->write((object)array('group' => 'admin'));
 try {
     include_once APPLICATION_PATH . '/views/helpers/ImagePath.php';
-    $mt_extensions = new Application_Model_ExtensionVersionSynchronizer();
-    $mt_extensions = $mt_extensions->getExtensionList();
+    $mc_extensions = new Application_Model_ExtensionVersionSynchronizer();
+    $mc_extensions = $mc_extensions->getExtensionList();
 
-    $mc_extensions = new Application_Model_Extension();
-    $mc_extensions = $mc_extensions->getMapper()->fetchFullListOfExtensions(array('edition' => 'CE'),array(),array(),array());
+    $mt_extensions = new Application_Model_Extension();
+    $mt_extensions = $mt_extensions->getMapper()->fetchFullListOfExtensions(array('price' => 'free'),array(),0,0);
 
     $new_extension = 0;
     $new_release = 0;
@@ -28,18 +28,18 @@ try {
         throw new Exception('There is no "other" extension category.');
     }
 
-    foreach($mt_extensions as $mt_extension => $mt_extension_v) {
-        $existing_extension = false;
-        foreach($mc_extensions as $mc_extension) {
-            if($mt_extension == $mc_extension->extension_key) {
-                $existing_extension = $mc_extension;
+    foreach($mc_extensions as $mc_extension_key => $mc_extension_v) {
+        $existing_extensions = array();
+        foreach($mt_extensions as $mt_extension) {
+            if($mc_extension_key == $mt_extension->extension_key) {
+                $existing_extensions[] = $mt_extension;
             }
         }
         $last_without_change = $without_change;
-        if(!$existing_extension) {
-            if(isset($mt_extension_v['s'])) {
+        if(!$existing_extensions) {
+            if(isset($mc_extension_v['s'])) {
                 $new_extension++;
-                $extension_url = 'http://connect20.magentocommerce.com/community/' . $mt_extension . '/' . $mt_extension_v['s'] . '/';
+                $extension_url = 'http://connect20.magentocommerce.com/community/' . $mc_extension_key . '/' . $mc_extension_v['s'] . '/';
                 $extensionModel = new Application_Model_Extension();
                 // download extension info
                 $http = new Zend_Http_Client($extension_url . 'package.xml');
@@ -47,21 +47,21 @@ try {
                 if(!$response->isError()) {
                     sleep(mt_rand(2, 3));
                     $xml = new SimpleXMLElement($response->getBody());
-                    $extensionModel->setName(ucwords(str_replace('_', ' ', $mt_extension)));
-                    $extensionModel->setExtensionKey($mt_extension);
-                    $extensionModel->setDescription((string)$xml->summary[0]);
+                    $extensionModel->setName(ucwords(str_replace('_', ' ', $mc_extension_key)));
+                    $extensionModel->setExtensionKey($mc_extension_key);
+                    $extensionModel->setDescription(preg_replace('/\&lt\;[^\&]*\&gt\;/i', '', (string)$xml->summary[0]));
                     $extensionModel->setAuthor((string)$xml->authors->author->name[0]);
                     $extensionModel->setEdition('CE');
                     $extensionModel->setFromVersion('1.4.0.0');
                     $extensionModel->setToVersion('1.8.0.0');
-                    $extensionModel->setVersion($mt_extension_v['s']);
+                    $extensionModel->setVersion($mc_extension_v['s']);
                     $extensionModel->setPrice(0);
                     $extensionModel->setIsVisible(0);
                     $extensionModel->setSort(0);
                     $extensionModel->setCategoryId($category_id);
 
                     // download extension file
-                    $extension_file = $mt_extension . '-' . $mt_extension_v['s'] . '.tgz';
+                    $extension_file = $mc_extension_key . '-' . $mc_extension_v['s'] . '.tgz';
                     $http = new Zend_Http_Client($extension_url . $extension_file);
                     $response = $http->request();
                     if(!$response->isError()) {
@@ -77,16 +77,18 @@ try {
                 $without_change++;
             }
         } else {
-            $compare = array($existing_extension->version, array_pop($mt_extension_v));
-            natsort($compare);
-            $new_version = array_pop($compare);
-            if($existing_extension->version != $new_version) {
-                sleep(mt_rand(2, 3));
-                $new_release++;
-                $extensionModel = new Application_Model_Extension();
-                $extensionModel->addVersionToExtension($existing_extension->id, $new_version);
-            } else {
-                $without_change++;
+            foreach($existing_extensions as $update_extension) {
+                $compare = array($update_extension->version, array_pop($mc_extension_v));
+                natsort($compare);
+                $new_version = array_pop($compare);
+                if($update_extension->version != $new_version) {
+                    sleep(mt_rand(2, 3));
+                    $new_release++;
+                    $extensionModel = new Application_Model_Extension();
+                    $extensionModel->addVersionToExtension($update_extension->id, $new_version);
+                } else {
+                    $without_change++;
+                }
             }
         }
 
@@ -157,4 +159,26 @@ if($result) {
 }
 
 $log->log('Fixing "auto-converted" author in extensions', Zend_Log::INFO, var_export($update_info, true));
+*/
+
+/* script which was used to remove html tags from description
+
+include 'init.console.php';
+
+$select = new Zend_Db_Select($db);
+$sql =
+    $select
+        ->from('extension', array('id', 'description'))
+        ->where('description REGEXP ?', '\&[a-z0-9A-Z]+\;');
+
+$result = $db->fetchAll($sql);
+if($result) {
+    foreach($result as $row) {
+        $db->update(
+            'extension',
+            array('description' => preg_replace('/\&lt\;[^\&]*\&gt\;/i', '', $row['description'])),
+            array('id = ?' => $row['id'])
+        );
+    }
+}
 */

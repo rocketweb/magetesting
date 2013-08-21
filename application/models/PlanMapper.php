@@ -62,7 +62,9 @@ class Application_Model_PlanMapper {
               ->setBillingDescription($row->billing_description)
               ->setIsHidden($row->is_hidden)
               ->setAutoRenew($row->auto_renew)
-        	  ->setCanDoDbRevert($row->can_do_db_revert);
+        	  ->setCanDoDbRevert($row->can_do_db_revert)
+              ->setMaxStores($row->max_stores)
+              ->setStorePrice($row->store_price);
         
         return $plan;
     }
@@ -94,7 +96,9 @@ class Application_Model_PlanMapper {
                   ->setBillingDescription($row->billing_description)
                   ->setIsHidden($row->is_hidden)
                   ->setAutoRenew($row->auto_renew)
-            	  ->setCanDoDbRevert($row->can_do_db_revert);
+            	  ->setCanDoDbRevert($row->can_do_db_revert)
+                  ->setMaxStores($row->max_stores)
+                  ->setStorePrice($row->store_price);
             $entries[] = $entry;
         }
         return $entries;
@@ -118,7 +122,9 @@ class Application_Model_PlanMapper {
                   ->setBillingDescription($row->billing_description)
                   ->setIsHidden($row->is_hidden)
                   ->setAutoRenew($row->auto_renew)
-            	  ->setCanDoDbRevert($row->can_do_db_revert);
+            	  ->setCanDoDbRevert($row->can_do_db_revert)
+                  ->setMaxStores($row->max_stores)
+                  ->setStorePrice($row->store_price);
             $entries[] = $entry;
         }
         return $entries;
@@ -145,7 +151,9 @@ class Application_Model_PlanMapper {
               ->setBillingDescription($row->billing_description)
               ->setIsHidden($row->is_hidden)
               ->setAutoRenew($row->auto_renew)
-        	  ->setCanDoDbRevert($row->can_do_db_revert);
+        	  ->setCanDoDbRevert($row->can_do_db_revert)
+              ->setMaxStores($row->max_stores)
+              ->setStorePrice($row->store_price);
         return $entry;
 
     }

@@ -56,6 +56,8 @@ class Application_Model_UserMapper {
             if(!is_numeric($data['server_id'])) {
                 $data['server_id'] = $server->fetchMostEmptyServerId();
             }
+            unset($data['additional_stores']);
+            unset($data['additional_stores_removed']);
             $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
@@ -106,7 +108,10 @@ class Application_Model_UserMapper {
              ->setPreselectedPlanId($row->preselected_plan_id)
              ->setApikey($row->apikey)
              ->setActiveFrom($row->active_from)
-             ->setActiveFromReminded($row->active_from_reminded);
+             ->setActiveFromReminded($row->active_from_reminded)
+             ->setAdditionalStores($row->additional_stores)
+             ->setAdditionalStoresRemoved($row->additional_stores_removed)
+        ;
 
         if($returnPassword) {
             $user->setPassword($row->password);
@@ -154,7 +159,10 @@ class Application_Model_UserMapper {
                   ->setPreselectedPlanId($row->preselected_plan_id)
                   ->setApikey($row->apikey)
                   ->setActiveFrom($row->active_from)
-                  ->setActiveFromReminded($row->active_from_reminded);
+                  ->setActiveFromReminded($row->active_from_reminded)
+                  ->setAdditionalStores($row->additional_stores)
+                  ->setAdditionalStoresRemoved($row->additional_stores_removed)
+            ;
 
             $entries[] = $entry;
         }
@@ -333,7 +341,10 @@ class Application_Model_UserMapper {
                       ->setPreselectedPlanId($row->preselected_plan_id)
                       ->setApikey($row->apikey)
                       ->setActiveFrom($row->active_from)
-                      ->setActiveFromReminded($row->active_from_reminded);
+                      ->setActiveFromReminded($row->active_from_reminded)
+                      ->setAdditionalStores($row->additional_stores)
+                      ->setAdditionalStoresRemoved($row->additional_stores_removed)
+                ;
 
                 $entries[] = $entry;
             }

@@ -37,54 +37,6 @@ extends Application_Model_Task {
     }
     
     /**
-     * Sends email about successful install to store owner
-     * used by MagentoInstall and MagentoDownload Tasks
-     */
-    protected function _sendStoreReadyEmail(){
-        
-        $html = new Zend_View();
-        $html->setScriptPath(APPLICATION_PATH . '/views/scripts/');
-    
-        // assign values
-        $html->assign('domain', $this->_storeObject->getDomain());
-        
-        $serverModel = new Application_Model_Server();
-        $serverModel->find($this->_storeObject->getServerId());
-        
-        //our store url
-        $html->assign('installedUrl', 'http://'.$this->_userObject->getLogin().'.'.$serverModel->getDomain());
-        
-        //storeUrl variable from local.ini
-        $html->assign('storeUrl', $this->config->magento->storeUrl);
-        
-        $html->assign('backend_name', $this->_storeObject->getBackendName());
-        $html->assign('admin_login', $this->_adminuser);
-        $html->assign('admin_password', $this->_adminpass);
-
-        // render view
-        try{
-            $bodyText = $html->render('_emails/queue-item-ready.phtml');
-        } catch(Zend_View_Exception $e) {
-            $this->logger->log('Store ready mail could not be rendered.', Zend_Log::CRIT, $e->getTraceAsString());
-        }
-
-        // create mail object
-        $mail = new Zend_Mail('utf-8');
-        // configure base stuff
-        $mail->addTo($this->_userObject->getEmail());
-        $mail->setSubject($this->config->cron->queueItemReady->subject);
-        $mail->setFrom($this->config->cron->queueItemReady->from->email, $this->config->cron->queueItemReady->from->desc);
-        $mail->setBodyHtml($bodyText);
-        
-        try {
-          $mail->send();
-        } catch (Zend_Mail_Transport_Exception $e){
-          $this->logger->log('Store ready mail could not be sent.', Zend_Log::CRIT, $e->getTraceAsString());
-        }
-        
-    }
-       
-    /**
      * Creates system account for user during store installation (in worker.php)
      */
     protected function _createSystemAccount() {

@@ -1,8 +1,3 @@
-/* @override 
-    http://dev.magetesting.com/public/css/style.css
-    http://magetesting:8888/public/css/style.css
-	http://magetesting.com/public/css/style.css */
-
 /* FONTS
 
 -- PRAGMATICA WEB --
@@ -904,7 +899,6 @@ footer .links a {
 }
 .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
     display: block;
-    width: 100%;
 }
 .accordion-group .accordion-heading .accordion-toggle .arrow {
     margin-right: 4px;
@@ -936,7 +930,6 @@ footer .links a {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
     padding-top: 4px;
 }
 .accordion-group.mt_shadow .accordion-heading .accordion-toggle .pending {
@@ -1730,6 +1723,9 @@ div.in-all-plans ul li {
     width: 210px;
     margin: 20px 0 0 73px;
     text-align: left;
+}
+div.in-all-plans ul li.supported-magento-versions {
+    width: initial;
 }
 /** Stores Border Radious **/
 div.accordion div.accordion-group:last-child{
@@ -2755,10 +2751,7 @@ form#extension-filter-form {
         float: right;
     }
     .accordion-group .accordion-heading .accordion-toggle .right-content.inactive {
-    }
-    
-    .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
-        display: none;
+        margin-bottom: 20px;
     }
     .accordion-group.mt_shadow .accordion-heading .accordion-toggle .right-content .in-use span.span3.pull-right{
         display: block;
@@ -2910,7 +2903,7 @@ form#extension-filter-form {
     
     /* fix for close button when error during installation occured */
     .accordion-group .accordion-heading .accordion-toggle .right-content .in-use span.span3 {
-        width: 300px;
+        width: 260px;
     }
     
     /* Add custom store - radio input fix */
@@ -3419,6 +3412,10 @@ label.error {
     display: block;
     font-size: 12px;
     margin-top: 3px;
+}
+.supported-magento-releases {
+    margin-top: 30px;
+}
 
 /* cancel subscription modal */
 #cancel-subscription form {

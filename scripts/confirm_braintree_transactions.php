@@ -39,8 +39,33 @@ if($result) {
     }
     $log->log('All plan payments processed.', Zend_Log::INFO);
 } else {
-    $log->log('There is no plan payment to process.', Zend_Log::INFO);
+    #$log->log('There is no plan payment to process.', Zend_Log::INFO);
 }
+
+$payment = new Application_Model_PaymentAdditionalStore();
+$result = $payment->fetchWaitingForConfirmation();
+
+if($result) {
+    foreach($result as $row) {
+        try {
+            $transaction = Braintree_Transaction::find($row->getBraintreeTransactionId());
+
+            if(isset($transaction->status) AND $transaction->status == 'settled') {
+                $log->log('Store purchase confirmed for user: ' . $row->getUserId(), Zend_Log::INFO);
+                $row->setBraintreeTransactionConfirmed(1)->save();
+            } else {
+                $log->log('Store purchase not confirmed for user: ' . $row->getUserId(), Zend_Log::INFO);
+            }
+        } catch(Braintree_Exception $e) {
+            $log->log('Braintree service is unavailable - exiting...', Zend_Log::ALERT);
+            exit;
+        }
+    }
+    $log->log('All store purchases processed.', Zend_Log::INFO);
+} else {
+    #$log->log('There is no store purchase to process.', Zend_Log::INFO);
+}
+
 /*
 $select = new Zend_Db_Select($db);
 $sql = $select

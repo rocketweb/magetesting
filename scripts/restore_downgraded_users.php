@@ -33,13 +33,14 @@ if($result) {
         
         $where = array('id IN (?)' => $user_ids);
         $result = $db->update('user', $set, $where);
-        echo 'Update: '.$result.PHP_EOL;
+        //echo 'Update: '.$result.PHP_EOL;
         $log->log('Restored '.count($restore_by_id).' users', Zend_Log::INFO);
         
         foreach($user_ids as $user_id){
             //get users plan id
             $modelUser = new Application_Model_User();
             $modelUser->find($user_id);
+            $this->log('Restored '.json_encode($modelUser->__toArray()), Zend_Log::INFO);
             
             $modelPlan = new Application_Model_Plan();
             $modelPlan->find($modelUser->getPlanId());
