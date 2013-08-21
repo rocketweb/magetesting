@@ -6,7 +6,7 @@ class RocketWeg_Cli_Kit_Compression_GzipTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $cli = new RocketWeb_Cli();
-        $this->_kit = $cli->kit('git');
+        $this->_kit = $cli->kit('gzip');
     }
 
     public function tearDown()
@@ -14,44 +14,28 @@ class RocketWeg_Cli_Kit_Compression_GzipTest extends PHPUnit_Framework_TestCase
         unset($this->_kit);
     }
 
-    public function testInit()
+    public function testUnpack()
     {
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Git', $this->_kit);
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Compression_gzip', $this->_kit);
         $this->assertEquals(
-            "git init 2>&1",
-            $this->_kit->init()->toString()
+            "gunzip 'file.gz' 2>&1",
+            $this->_kit->unpack('file.gz')->toString()
         );
     }
 
-    public function testAddAll()
+    public function testGetPackedFilename()
     {
         $this->assertEquals(
-                "git add -A 2>&1",
-                $this->_kit->addAll()->toString()
+                "gunzip -l 'file.gz' | awk '{ if($3 ~ /%$/) {print $4} }' 2>&1",
+                $this->_kit->getPackedFilename('file.gz')->toString()
         );
     }
 
-    public function testCommit()
+    public function testGzipedTest()
     {
         $this->assertEquals(
-                "git commit -m 'test message' 2>&1",
-                $this->_kit->commit('test message')->toString()
-        );
-    }
-
-    public function testDeploy()
-    {
-        $this->assertEquals(
-                "git archive --format zip --output 'var/deployment/revision_hash.zip' 'revision_hash' `git diff 'revision_hash' 'revision_hash'~1 --name-only 2>&1` 2>&1",
-                $this->_kit->deploy('revision_hash', 'var/deployment/revision_hash.zip')->toString()
-        );
-    }
-
-    public function testRollback()
-    {
-        $this->assertEquals(
-                "git revert 'revision_hash' --no-edit 2>&1",
-                $this->_kit->rollback('revision_hash')->toString()
+                "gunzip -tv 'file.gz' | awk '{ if($1 == 'file.gz:') {print $2} }' 2>&1",
+                $this->_kit->test('file.gz')->toString()
         );
     }
 }
