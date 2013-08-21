@@ -55,7 +55,7 @@ class RocketWeg_Cli_Kit_UserTest extends PHPUnit_Framework_TestCase
     public function testRebuildPhpMyAdmin()
     {
         $this->assertEquals(
-                "sudo '".$this->_scriptPath()."/phpmyadmin-user-rebuild.sh' 'whole denied list of users' 2>&1",
+                "sudo '".$this->_scriptPath()."/phpmyadmin-user-rebuild.sh' \"whole denied list of users\" 2>&1",
                 $this->_kit->rebuildPhpMyAdmin('whole denied list of users')->toString()
         );
     }

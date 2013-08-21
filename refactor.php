@@ -342,7 +342,7 @@ $queries[] = $query->toString();
 $query = $user->clear()->removeFtp('userlogin');
 $queries[] = $query->toString();
 # 686
-$query = $user->clear()->rebuildPhpMyAdmin('list');
+$query = $user->clear()->rebuildPhpMyAdmin("'user','other user'");
 $queries[] = $query->toString();
 
 echo '<pre>';

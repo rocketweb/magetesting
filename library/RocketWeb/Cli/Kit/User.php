@@ -39,7 +39,9 @@ class RocketWeb_Cli_Kit_User
     public function rebuildPhpMyAdmin($denyList)
     {
         $this->_runScript('phpmyadmin-user-rebuild.sh');
-        return $this->append('?', $denyList);
+        $this->append('":denylist"');
+        $this->bindAssoc(':denylist', $denyList, false);
+        return $this;
     }
     protected function _runScript($script)
     {
