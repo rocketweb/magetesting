@@ -315,7 +315,7 @@ $wget->addLimits(30, 2);
 $query = $wget->cloneObject()->checkOnly(true);
 $queries[] = $query->toString();
 # 108
-$query = $wget->cloneObject()->downloadFile('public_html/index.php');
+$query = $wget->cloneObject()->setRootPath('public_html/index.php');
 $query->getFileSize();
 $queries[] = $query->toString();
 # 143

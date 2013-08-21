@@ -2,35 +2,56 @@
 
 class RocketWeg_Cli_Kit_Compression_GzipTest extends PHPUnit_Framework_TestCase
 {
-    public function testSshConnection()
+    protected $_kit;
+    public function setUp()
     {
         $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-        $ssh->connect('user', 'pass', 'http://somewhere.com', 80);
-        $ssh->asSuperUser(true);
+        $this->_kit = $cli->kit('git');
+    }
 
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Ssh', $ssh);
+    public function tearDown()
+    {
+        unset($this->_kit);
+    }
+
+    public function testInit()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Git', $this->_kit);
         $this->assertEquals(
-            "sudo sshpass -p 'pass' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'user'@'http://somewhere.com' -p '80' 2>&1",
-            $ssh->toString()
+            "git init 2>&1",
+            $this->_kit->init()->toString()
         );
     }
 
-    public function testSshRemoteCall()
+    public function testAddAll()
     {
-        $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-
         $this->assertEquals(
-            "'echo '\''test'\'' 2>&1' 2>&1",
-            $ssh->remoteCall($cli->createQuery('echo ?', 'test'))->toString()
+                "git add -A 2>&1",
+                $this->_kit->addAll()->toString()
         );
     }
 
+    public function testCommit()
+    {
+        $this->assertEquals(
+                "git commit -m 'test message' 2>&1",
+                $this->_kit->commit('test message')->toString()
+        );
+    }
 
-    
-    /* expectOutputRegex('regex') */
-    /* assertContainsOnlyInstancesOf(string $classname, Traversable|array $haystack[, string $message = '']) */
-    /* assertInstanceOf($expected, $actual[, $message = '']) */
-    /* assertRegExp(string $pattern, string $string[, string $message = '']) */
+    public function testDeploy()
+    {
+        $this->assertEquals(
+                "git archive --format zip --output 'var/deployment/revision_hash.zip' 'revision_hash' `git diff 'revision_hash' 'revision_hash'~1 --name-only 2>&1` 2>&1",
+                $this->_kit->deploy('revision_hash', 'var/deployment/revision_hash.zip')->toString()
+        );
+    }
+
+    public function testRollback()
+    {
+        $this->assertEquals(
+                "git revert 'revision_hash' --no-edit 2>&1",
+                $this->_kit->rollback('revision_hash')->toString()
+        );
+    }
 }

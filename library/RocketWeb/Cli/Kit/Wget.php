@@ -6,10 +6,12 @@ class RocketWeb_Cli_Kit_Wget
     protected $_asSpider = true;
     public function ftpConnect($user, $password, $host, $port)
     {
-        $this->append('wget :$spider--passive-ftp :host::port:$ftp-path');
+        $this->append(
+            'wget --passive-ftp :host::port:$ftp-path --user=? --password=?:$spider',
+            array($user, $password)
+        );
         $this->bindAssoc(':host', $host);
         $this->bindAssoc(':port', $port);
-        $this->append('--user=? --password=?', array($user, $password));
 
         return $this;
     }
@@ -59,6 +61,8 @@ class RocketWeb_Cli_Kit_Wget
         $this->append('-N');
         $this->setRootPath($path);
 
+        $this->checkOnly(false);
+
         return $this;
     }
     /**
@@ -87,9 +91,8 @@ class RocketWeb_Cli_Kit_Wget
 
     public function toString()
     {
-        $this->bindAssoc(':$spider', ((bool)$this->_asSpider ? '--spider ' : ''), false);
+        $this->bindAssoc(':$spider', ((bool)$this->_asSpider ? ' --spider' : ''), false);
         $this->_clearPathifNotSet();
-
         return parent::toString();
     }
 }

@@ -2,35 +2,48 @@
 
 class RocketWeg_Cli_Kit_Compression_TarTest extends PHPUnit_Framework_TestCase
 {
-    public function testSshConnection()
+    protected $_kit;
+    public function setUp()
     {
         $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-        $ssh->connect('user', 'pass', 'http://somewhere.com', 80);
-        $ssh->asSuperUser(true);
+        $this->_kit = $cli->kit('tar');
+    }
 
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Ssh', $ssh);
+    public function tearDown()
+    {
+        unset($this->_kit);
+    }
+
+    public function testPack()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Compression_Tar', $this->_kit);
         $this->assertEquals(
-            "sudo sshpass -p 'pass' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'user'@'http://somewhere.com' -p '80' 2>&1",
-            $ssh->toString()
+            "tar zcvf 'file.tar.gz' 'dir/to/pack' 2>&1",
+            $this->_kit->pack('file.tar.gz', 'dir/to/pack')->isCompressed(true)->toString()
         );
     }
 
-    public function testSshRemoteCall()
+    public function testUnpack()
     {
-        $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-
         $this->assertEquals(
-            "'echo '\''test'\'' 2>&1' 2>&1",
-            $ssh->remoteCall($cli->createQuery('echo ?', 'test'))->toString()
+                "tar xvf 'file.tar.gz' -C 'dir/to/unpack' 2>&1",
+                $this->_kit->unpack('file.tar.gz', 'dir/to/unpack')->toString()
         );
     }
 
+    public function testStripComponents()
+    {
+        $this->assertEquals(
+                "--strip-components='5' 2>&1",
+                $this->_kit->clear()->strip(5)->toString()
+        );
+    }
 
-    
-    /* expectOutputRegex('regex') */
-    /* assertContainsOnlyInstancesOf(string $classname, Traversable|array $haystack[, string $message = '']) */
-    /* assertInstanceOf($expected, $actual[, $message = '']) */
-    /* assertRegExp(string $pattern, string $string[, string $message = '']) */
+    public function testCompressionTest()
+    {
+        $this->assertEquals(
+                "tar tf 'file.tar.gz' 2>&1",
+                $this->_kit->clear()->test('file.tar.gz')->toString()
+        );
+    }
 }
