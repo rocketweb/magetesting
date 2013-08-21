@@ -2,35 +2,24 @@
 
 class RocketWeg_Cli_Kit_ServiceTest extends PHPUnit_Framework_TestCase
 {
-    public function testSshConnection()
+    protected $_kit;
+    public function setUp()
     {
         $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-        $ssh->connect('user', 'pass', 'http://somewhere.com', 80);
-        $ssh->asSuperUser(true);
-
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Ssh', $ssh);
-        $this->assertEquals(
-            "sudo sshpass -p 'pass' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'user'@'http://somewhere.com' -p '80' 2>&1",
-            $ssh->toString()
-        );
+        $this->_kit = $cli->kit('service');
     }
 
-    public function testSshRemoteCall()
+    public function tearDown()
     {
-        $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-
-        $this->assertEquals(
-            "'echo '\''test'\'' 2>&1' 2>&1",
-            $ssh->remoteCall($cli->createQuery('echo ?', 'test'))->toString()
-        );
+        unset($this->_kit);
     }
 
-
-    
-    /* expectOutputRegex('regex') */
-    /* assertContainsOnlyInstancesOf(string $classname, Traversable|array $haystack[, string $message = '']) */
-    /* assertInstanceOf($expected, $actual[, $message = '']) */
-    /* assertRegExp(string $pattern, string $string[, string $message = '']) */
+    public function testRestart()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Service', $this->_kit);
+        $this->assertEquals(
+            "sudo /etc/init.d/'mysqld' restart 2>&1",
+            $this->_kit->restart('mysqld')->toString()
+        );
+    }
 }

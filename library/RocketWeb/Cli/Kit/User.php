@@ -33,7 +33,7 @@ class RocketWeb_Cli_Kit_User
     }
     public function removeFtp($login)
     {
-        $this->_runScript('ftp-user-remmove.sh');
+        $this->_runScript('ftp-user-remove.sh');
         return $this->append('?', $login);
     }
     public function rebuildPhpMyAdmin($denyList)

@@ -2,35 +2,61 @@
 
 class RocketWeg_Cli_Kit_UserTest extends PHPUnit_Framework_TestCase
 {
-    public function testSshConnection()
+    protected $_kit;
+    public function setUp()
     {
         $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-        $ssh->connect('user', 'pass', 'http://somewhere.com', 80);
-        $ssh->asSuperUser(true);
+        $this->_kit = $cli->kit('user');
+    }
 
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Ssh', $ssh);
+    public function tearDown()
+    {
+        unset($this->_kit);
+    }
+
+    protected function _scriptPath()
+    {
+        return APPLICATION_PATH."/scripts/worker";
+    }
+
+    public function testInit()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_User', $this->_kit);
         $this->assertEquals(
-            "sudo sshpass -p 'pass' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'user'@'http://somewhere.com' -p '80' 2>&1",
-            $ssh->toString()
+            "sudo '".$this->_scriptPath()."/create_user.sh' 'login' 'pass' 'salt_hash' '/home/login_dir' 2>&1",
+            $this->_kit->create('login', 'pass', 'salt_hash', '/home/login_dir')->toString()
         );
     }
 
-    public function testSshRemoteCall()
+    public function testDelete()
     {
-        $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-
         $this->assertEquals(
-            "'echo '\''test'\'' 2>&1' 2>&1",
-            $ssh->remoteCall($cli->createQuery('echo ?', 'test'))->toString()
+                "sudo '".$this->_scriptPath()."/remove_user.sh' 'login' 2>&1",
+                $this->_kit->delete('login')->toString()
         );
     }
 
+    public function testAddFtp()
+    {
+        $this->assertEquals(
+                "sudo '".$this->_scriptPath()."/ftp-user-add.sh' 'login' 2>&1",
+                $this->_kit->addFtp('login')->toString()
+        );
+    }
 
-    
-    /* expectOutputRegex('regex') */
-    /* assertContainsOnlyInstancesOf(string $classname, Traversable|array $haystack[, string $message = '']) */
-    /* assertInstanceOf($expected, $actual[, $message = '']) */
-    /* assertRegExp(string $pattern, string $string[, string $message = '']) */
+    public function testDeleteFtp()
+    {
+        $this->assertEquals(
+                "sudo '".$this->_scriptPath()."/ftp-user-remove.sh' 'login' 2>&1",
+                $this->_kit->removeFtp('login')->toString()
+        );
+    }
+
+    public function testRebuildPhpMyAdmin()
+    {
+        $this->assertEquals(
+                "sudo '".$this->_scriptPath()."/phpmyadmin-user-rebuild.sh' 'whole denied list of users' 2>&1",
+                $this->_kit->rebuildPhpMyAdmin('whole denied list of users')->toString()
+        );
+    }
 }
