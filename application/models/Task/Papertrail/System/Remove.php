@@ -46,10 +46,10 @@ implements Application_Model_Task_Interface {
         $this->_domain = $this->_storeObject->getDomain();
         $filename = '/etc/rsyslog.d/'.$systemUser.'_'.$this->_domain.'.conf';
         if (file_exists($filename)){
-            exec('sudo rm '.$filename);
+            $this->cli('file')->remove($filename)->asSuperUser()->call();
         }
         
-        exec('sudo /etc/init.d/rsyslog restart');
+        $this->cli('service')->restart('rsyslog')->asSuperUser()->call();
     }
 
 }
