@@ -30,34 +30,33 @@ implements Application_Model_Task_Interface {
         $params = $this->_queueObject->getTaskParams();
        
         //revert files using rollback_files_to param, prevent opening commit message
-        $command = 'git revert '.$params['rollback_files_to'].' --no-edit';
-        exec($command,$output);
+        $output = $this->cli('git')->revert($params['rollback_files_to'])->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
 
         $params['commit_comment'] = 'Manual Commit';
-	if ($extensionId = $this->_queueObject->getExtensionId()){
-	  $extensionObject = new Application_Model_Extension();
-	  $extensionObject->find($extensionId);
-	  $params['commit_comment'] = $extensionObject->getName();
-	}
-	
+        if ($extensionId = $this->_queueObject->getExtensionId()){
+            $extensionObject = new Application_Model_Extension();
+            $extensionObject->find($extensionId);
+            $params['commit_comment'] = $extensionObject->getName();
+        }
+
         $linesToLog = array();
         $linesToLog[] = date("Y-m-d H:i:s").' - Reverting files from: '.$params['commit_comment'];
         $candumpnow=0;
         foreach ($output as $line){
-	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author')){
-	      $candumpnow=1;
-	      continue;
-	    }
-	    if (!$candumpnow || trim($line)==''){
-	      continue;
-	    }
-	    
-	    $linesToLog[] = $line;
+        if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author')){
+            $candumpnow=1;
+            continue;
+        }
+        if (!$candumpnow || trim($line)==''){
+            continue;
         }
         
-	/** 
+        $linesToLog[] = $line;
+        }
+        
+        /** 
          * Split logger into parts and let it rest for a while 
          * with each iteration. This lets rsyslog send all lines to papertrail 
          */
@@ -75,8 +74,7 @@ implements Application_Model_Task_Interface {
         $startCwd = getcwd();
         $params = $this->_queueObject->getTaskParams();
         chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/var/db');
-        
-        exec('sudo tar -zxf '.$params['rollback_db_to'].'');
+        $this->cli('tar')->asSuperUser()->unpack($params['rollback_db_to'])->call();
 
         $unpackedName = str_replace('.tgz','',$params['rollback_db_to']);
 
@@ -85,13 +83,16 @@ implements Application_Model_Task_Interface {
         $privilegeModel->createDatabase($this->_userObject->getLogin().'_'.$this->_storeObject->getDomain());
 
         $this->logger->log('Reverting database from backup file. ',Zend_Log::INFO);
-        $command = 'sudo mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().' < '.$unpackedName;
-        exec($command,$output);
+        $output = $this->cli('mysql')->connect(
+            $this->config->resources->db->params->username,
+            $this->config->resources->db->params->password,
+            $this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain()
+        )->import($unpackedName)->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
        
         //finish process
-        chdir($startCwd);       
+        chdir($startCwd);
     }
     
     protected function _cleanup(){
