@@ -15,7 +15,9 @@ $sql = $select
     ->orwhere('user.downgraded = ?', 2);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
+$apache->asSuperUser();
 $service = new RocketWeb_Cli_Kit_Service();
+$service->asSuperUser();
 
 $result = $db->fetchAll($sql);
 if($result) {
