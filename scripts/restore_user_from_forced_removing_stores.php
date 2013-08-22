@@ -16,8 +16,10 @@ $sql = $select
     ->where('store.status = ?', 'ready')
     ->where('user.downgraded = ?', 5);
 
-$result = $db->fetchAll($sql);
+$apache = new RocketWeb_Cli_Kit_Apache();
+$service = new RocketWeb_Cli_Kit_Service();
 
+$result = $db->fetchAll($sql);
 if($result) {
     $downgrade_by_id = array();
     foreach($result as $store) {
@@ -26,9 +28,9 @@ if($result) {
         }
                
         /* disable user vhost */
-        exec('sudo a2ensite '.$store['login'].'.'.$store['server_domain']);
+        $apache->clear()->enableSite($store['login'].'.'.$store['server_domain'])->call();
     }
-    exec('sudo /etc/init.d/apache2 reload');
+    $service->clear()->restart('apache2')->call();
 
     if($downgrade_by_id) {
         $set = array(
