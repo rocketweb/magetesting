@@ -93,17 +93,23 @@ class RocketWeb_Cli_Kit_File
      * @param string $path - start path
      * @return RocketWeb_Cli_Kit_File
      */
-    public function find($name, $type, $path = '')
+    public function find($name = '', $type, $path = '')
     {
         if($path) {
             $path .= ' ';
         }
-        return
-            $this
-                ->append('find :path-type :type -name :name', $name)
-                ->bindAssoc(':path', $path, ($path ? true : false))
-                ->bindAssoc(':type', (($type === self::TYPE_DIR) ? 'd' : 'f'), false)
-                ->bindAssoc(':name', $name);
+
+        $this
+            ->append('find :path-type :type', $name)
+            ->bindAssoc(':path', $path, ($path ? true : false))
+            ->bindAssoc(':type', (($type === self::TYPE_DIR) ? 'd' : 'f'), false)
+            ->bindAssoc(':name', $name);
+
+        if($name) {
+            $this->append('-name ?', $name);
+        }
+
+        return $this;
     }
     public function printPaths($absolute = false)
     {
