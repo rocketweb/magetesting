@@ -66,6 +66,12 @@ class RocketWeb_Cli_Kit_Mysql
         return $this;
     }
 
+    public function removeDefiners()
+    {
+        $this->pipe('sed -e ?', 's/DEFINER[ ]*=[ ]*[^*]*\*/\*/\\');
+        return $this;
+    }
+
     public function toString()
     {
         $this->bindAssoc(':$mysql', ($this->_export ? 'mysqldump' : 'mysql'), false);
