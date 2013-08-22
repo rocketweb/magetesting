@@ -157,7 +157,10 @@ extends Application_Model_Transport {
             $this->logger->log("\n" . var_export($output, true) . "\n", Zend_Log::DEBUG);
         }
 
-        $sqlSizeInfo = $output[0];
+        $sqlSizeInfo = '';
+        if(isset($output[0])) {
+            $sqlSizeInfo = $output[0];
+        }
 
         //limit is in bytes!
         if(!is_numerc($sqlSizeInfo)) {
@@ -224,8 +227,10 @@ extends Application_Model_Transport {
             $this->cli('file')->getSize($this->_customFile)
         )->call()->getLastOutput();
 
-        $packageSizeInfo = $output[0];
-        $duParts = explode(' ',$content);
+        $packageSizeInfo = '';
+        if(isset($output[0])) {
+            $packageSizeInfo = $output[0];
+        }
 
         if ($this->logger instanceof Zend_Log) {
             $this->logger->log('Checking package file size.', Zend_Log::INFO);
