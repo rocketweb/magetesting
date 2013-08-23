@@ -15,8 +15,9 @@ implements Application_Model_Task_Interface {
         //create mainteance flag
         $lockfile = $this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/maintenance.flag';
         $command = 'touch '.$lockfile;
- 		exec($command);
-        
+        $file = $this->cli('file');
+        $file->create($lockfile, $file::TYPE_FILE)->call();
+
         //drop database
         $dbName = $this->_userObject->getLogin().'_'.$this->_storeObject->getDomain();      
         $privilegeModel = new Application_Model_DbTable_Privilege($this->db,$this->config);
@@ -31,11 +32,18 @@ implements Application_Model_Task_Interface {
         $revisionModel = new Application_Model_Revision();
         $revision = $revisionModel->getLastForStore($this->_storeObject->getId());
 
-    	//insert db dump from tar.gz one-liner
-        exec('tar xfzO '.$this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision->getDbBeforeRevision().' | mysql -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$dbName.'');
-        
+        $mysql = $this->cli('mysql')->connect(
+            $this->config->resources->db->params->username,
+            $this->config->resources->db->params->password,
+            $this->config->magento->storeprefix.$dbName
+        );
+        //insert db dump from tar.gz one-liner
+        $this->cli('tar')->unpack(
+                $this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision->getDbBeforeRevision()
+        )->redirectToOutput()
+         ->pipe($mysql)->call();
+
         //remove mainteance flag
-        $command = 'rm '.$lockfile;
-        exec($command);
-    }   
+        $file->clear()->remove($lockfile)->call();
+    }
 }
