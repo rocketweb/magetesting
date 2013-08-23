@@ -45,7 +45,10 @@ implements Application_Model_Task_Interface {
          */
         $dirname = $this->_storeFolder . '/' . $this->_domain.'/var/locks/';
         if (file_exists($dirname) && is_dir($dirname)){
-            exec('chmod 666 -R '.$dirname.'*');
+            $this->cli('file')->fileMode(':dir', '666')->bindAssoc(
+                "':dir'",
+                $this->cli()->escape($dirname).'*'
+            )->call();
         }
 
         $this->_setupMagentoConnect();
@@ -72,6 +75,7 @@ implements Application_Model_Task_Interface {
 
     protected function _prepareFileSystem() {
 
+        $fileKit = $this->cli('file')->asSuperUser();
         $this->_magentoVersion = $this->_versionObject->getVersion();
         $this->_magentoEdition = $this->_storeObject->getEdition();       
         $this->_sampleDataVersion = $this->_versionObject->getSampleDataVersion();
@@ -86,7 +90,10 @@ implements Application_Model_Task_Interface {
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain)){
             $this->logger->log('Preparing store directory.', Zend_Log::INFO);
-            exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
+            $output = $fileKit->clear()->create(
+                $this->_storeFolder . '/' . $this->_domain,
+                $fileKit::TYPE_DIR
+            )->call()->getLastOutput();
             $message = var_export($output, true);
 
             $this->logger->log($message, Zend_Log::DEBUG);
@@ -100,7 +107,10 @@ implements Application_Model_Task_Interface {
         }
 
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
-        exec('sudo chmod +x ' . $this->_storeFolder . '/' . $this->_domain, $output);
+        $output = $fileKit->clear()->fileMode(
+            $this->_storeFolder . '/' . $this->_domain,
+            '+x'
+        )->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
@@ -114,20 +124,29 @@ implements Application_Model_Task_Interface {
         }
 
         $this->logger->log('Copying Magento package to store directory.', Zend_Log::INFO);
-        $command = 'sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz ' . $this->_storeFolder . '/' . $this->_domain . '/';
-        exec($command, $output);
+        $command = $fileKit->clear()->copy(
+            APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz',
+            $this->_storeFolder . '/' . $this->_domain . '/'
+        );
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/keyset0.sql ' . $this->_storeFolder . '/' . $this->_domain . '/');
-        
-        exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/keyset1.sql ' . $this->_storeFolder . '/' . $this->_domain . '/');
+        $keyset = $fileKit->clear()->copy(
+            APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/keyset:number.sql',
+            $this->_storeFolder . '/' . $this->_domain . '/'
+        );
+        $keyset->cloneObject()->bindAssoc(':number', '0', false)->call();
+        $keyset->cloneObject()->bindAssoc(':number', '1', false)->call();
 
         if ($this->_storeObject->getSampleData()) {
             $this->logger->log('Copying sample data package to target directory.', Zend_Log::INFO);
-            $command = 'sudo cp ' . APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz ' . $this->_storeFolder . '/' . $this->_domain . '/';
-            exec($command, $output);
+            $command = $fileKit->clear()->copy(
+                APPLICATION_PATH . '/../data/pkg/' . $this->_magentoEdition . '/magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz',
+                $this->_storeFolder . '/' . $this->_domain . '/'
+            );
+            $output = $command->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             unset($output);
@@ -140,8 +159,10 @@ implements Application_Model_Task_Interface {
          * straight to our store root
          */
         $this->logger->log('Unpacking magento files.', Zend_Log::INFO);
-        $command  = 'sudo tar -zxvf ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz --strip-components=1';
-        exec($command, $output);
+        $command = $this->cli('tar')->asSuperUser()->unpack(
+            $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz'
+        )->strip(1);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
 
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
@@ -149,22 +170,31 @@ implements Application_Model_Task_Interface {
 
         if ($this->_storeObject->getSampleData()) {
             $this->logger->log('Extracting sample data.', Zend_Log::INFO);
-            $command = 'sudo tar -zxvf magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz';
-            exec($command, $output);
+            $command = $this->cli('tar')->asSuperUser()->unpack(
+                'magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz'
+            );
+            $output = $command->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             unset($output);
 
             /* Note: we cannot move (mv) here, because media already exists */
             $this->logger->log('Copying sample data files to root.', Zend_Log::INFO);
-            $command = 'sudo cp -R magento-sample-data-' . $this->_sampleDataVersion . '/* .';
-            exec($command, $output);
+            $command = $this->cli('file')->copy(
+                ':from',
+                '.'
+            )->bindAssoc(
+                "':from'",
+                $this->cli()->escape('magento-sample-data-' . $this->_sampleDataVersion).'/*',
+                false
+            );
+            $output = $command->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-            
+
             $this->logger->log('removing sample data files.', Zend_Log::INFO);
-            $command = 'rm -R magento-sample-data-' . $this->_sampleDataVersion . '';
-            exec($command, $output);
+            $command = $this->cli('file')->remove('magento-sample-data-' . $this->_sampleDataVersion);
+            $output = $command->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             
@@ -175,60 +205,76 @@ implements Application_Model_Task_Interface {
     protected function _installSampleData() {
         $this->logger->log('Inserting sample data.', Zend_Log::INFO);
 
-        exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < magento_sample_data_for_' . $this->_sampleDataVersion . '.sql');
+        $this->cli('mysql')->connect(
+            $this->config->magento->userprefix . $this->_dbuser,
+            $this->_dbpass,
+            $this->config->magento->storeprefix . $this->_dbname
+        )->import('magento_sample_data_for_' . $this->_sampleDataVersion . '.sql')
+         ->call();
     }
 
     protected function _setFilesystemPermissions() {
+        $fileKit = $this->cli('file')->asSuperUser();
         $this->logger->log('Setting store directory permissions.', Zend_Log::INFO);
-        $command = 'sudo chmod 777 var/.htaccess app/etc';
-        exec($command, $output);
+        $command = $fileKit->fileMode(':files', '777', false)
+            ->bindAssoc("':files'", 'app/etc downloader', false);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        $command = 'sudo chmod 777 var -R';
-        exec($command, $output);
-        $message = var_export($output, true);
-        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-        unset($output);
-
-        $command = 'sudo chmod 777 downloader';
-        exec($command, $output);
-        $message = var_export($output, true);
-        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-        unset($output);
-
-        $command = 'sudo chmod 777 media -R';
-        exec($command, $output);
+        $command = $fileKit->fileMode(':files', '777')
+            ->bindAssoc("':files'", 'var media', false);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
     }
 
     protected function _cleanupFilesystem() {
+        $fileKit = $this->cli('file')->asSuperUser();
         $this->logger->log('Cleaning up files.', Zend_Log::INFO);
-        $command ='sudo rm -rf downloader/pearlib/cache/* downloader/pearlib/download/*';
-        exec($command, $output);
+        $command = $fileKit->remove(':files')->force()
+            ->bindAssoc(
+                "':files'",
+                'downloader/pearlib/cache/* downloader/pearlib/download/*',
+                false
+            );
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        $command = 'sudo rm -rf magento/ ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz';
-        exec($command, $output);
+        $command = $fileKit->clear()->remove('magento/ ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz')->force();
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        $command = 'sudo rm -rf index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt';
-        exec($command, $output);
+        $command = $fileKit->clear()->remove(':files')->force()
+        ->bindAssoc(
+            "':files'",
+            'index.php.sample .htaccess.sample php.ini.sample LICENSE.txt STATUS.txt',
+            false
+        );
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         if ($this->_storeObject->getSampleData()) {
             $sampleDataVersion = $this->_versionObject->getSampleDataVersion();
-            $command = 'sudo rm -rf magento-sample-data-' . $sampleDataVersion . '/ magento-sample-data-' . $sampleDataVersion . '.tar.gz magento_sample_data_for_' . $sampleDataVersion . '.sql';
-            exec($command, $output);
+            $command = $fileKit->clear()->remove(':files')->force();
+            $files =
+                $fileKit->escape('magento-sample-data-' . $sampleDataVersion . '/ magento-sample-data-' . $sampleDataVersion . '.tar.gz')
+                . ' ' .
+                'magento_sample_data_for_' . $sampleDataVersion . '.sql';
+            $command->bindAssoc(
+                "':files'",
+                $files,
+                false
+            );
+            $output = $command->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             unset($output);
@@ -292,43 +338,70 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
 
     protected function _runInstaller() {
         $this->logger->log('Installing Magento.', Zend_Log::INFO);
-        exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < keyset0.sql');
-        
-        
+        $this->cli('mysql')->connect(
+            $this->config->magento->userprefix . $this->_dbuser,
+            $this->_dbpass,
+            $this->config->magento->storeprefix . $this->_dbname
+        )->asSuperUser()->import('keyset0.sql')->call();
+
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
         
         $storeurl = 'http://'.$this->_dbuser.'.'.$serverModel->getDomain() . '/' . $this->_storeObject->getDomain(); //fetch from zend config
-        
-        $command = 'cd ' . $this->_storeFolder . '/' . $this->_domain . ';sudo  /usr/bin/php -f install.php --' .
-                ' --license_agreement_accepted "yes"' .
-                ' --locale "en_US"' .
-                ' --timezone "America/Los_Angeles"' .
-                ' --default_currency "USD"' .
-                ' --db_host "' . $this->_dbhost . '"' .
-                ' --db_name "' . $this->config->magento->storeprefix . $this->_dbname . '"' .
-                ' --db_user "' . $this->config->magento->userprefix . $this->_dbuser . '"' .
-                ' --db_pass "' . $this->_dbpass . '"' .              
-                ' --url "' . $storeurl . '"' .
-                ' --use_rewrites "yes"' .
-                ' --use_secure "no"' .
-                ' --secure_base_url ""' .
-                ' --use_secure_admin "no"' .
-                ' --admin_firstname "' . $this->_adminfname . '"' .
-                ' --admin_lastname "' . $this->_adminlname . '"' .
-                ' --admin_email "' . $this->_adminemail . '"' .
-                ' --admin_username "' . $this->_adminuser . '"' .
-                ' --admin_password "' . $this->_adminpass . '"' .
-                ' --skip_url_validation "yes"';
-        exec($command, $output);
+
+        $command = $this->cli()->createQuery('cd ?', $this->_storeFolder . '/' . $this->_domain);
+        $install = $this->cli()->createQuery(
+            '/usr/bin/php -f install.php --'.
+            ' --license_agreement_accepted "yes"' .
+            ' --locale "en_US"' .
+            ' --timezone "America/Los_Angeles"' .
+            ' --default_currency "USD"' .
+            ' --db_host :dbhost' .
+            ' --db_name :dbname' .
+            ' --db_user :dbuser' .
+            ' --db_pass :dbpass' .
+            ' --url :storeurl' .
+            ' --use_rewrites "yes"' .
+            ' --use_secure "no"' .
+            ' --secure_base_url ""' .
+            ' --use_secure_admin "no"' .
+            ' --admin_firstname :admin_fname' .
+             ' --admin_lastname :admin_lname' .
+            ' --admin_email :admin_email' .
+            ' --admin_username :admin_username' .
+            ' --admin_password :admin_password' .
+            ' --skip_url_validation "yes"'
+        )->bindAssoc(
+            array(
+                ':dbhost' => $this->_dbhost,
+                ':dbname' => $this->config->magento->storeprefix . $this->_dbname,
+                ':dbuser' => $this->config->magento->userprefix . $this->_dbuser,
+                ':dbpass' => $this->_dbpass,
+                ':storeurl' => $storeurl,
+                ':admin_fname' => $this->_adminfname,
+                ':admin_lname' => $this->_adminfname,
+                ':admin_email' => $this->_adminemail,
+                ':admin_username' => $this->_adminuser,
+                ':admin_password' => $this->_adminpass
+            )
+        )->asSuperUser();
+        $command->pipe($install);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n" . $command. "\n" . $message, Zend_Log::DEBUG);
-        exec('sudo mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' < keyset1.sql');
+        $this->cli('mysql')->connect(
+            $this->config->magento->userprefix . $this->_dbuser,
+            $this->_dbpass,
+            $this->config->magento->storeprefix . $this->_dbname
+        )->asSuperUser()->import('keyset1.sql')->call();
         unset($output);
 
         $this->logger->log('Changing owner of store directory.', Zend_Log::INFO);
-        $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain;
-        exec($command, $output);
+        $command = $this->cli('file')->fileOwner(
+            $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain,
+            $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser
+        )->asSuperUser();
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n" .$command. "\n" . $message, Zend_Log::DEBUG);
         unset($output);
@@ -338,8 +411,9 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         $this->_storeObject->setBackendPassword($this->_adminpass)->save();
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
         // end
-        
-        exec('sudo rm keyset0.sql keyset1.sql');
+        $this->cli('file')->delete(':files')
+            ->bindAssoc("':files'", 'keyset0.sql keyset1.sql', false)
+            ->asSuperUser()->call();
     }
     
     /**
@@ -397,7 +471,10 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
          * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
          * when vsftpd is set to use chroot list
          */
-        exec('sudo chmod a-w '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin().'');
+        $this->cli('file')->fileMode(
+            $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin(),
+            'a-w'
+        )->asSuperUser()->call();
     }
     
 }
