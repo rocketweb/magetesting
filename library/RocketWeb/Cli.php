@@ -2,6 +2,8 @@
 
 class RocketWeb_Cli
 {
+    protected $_logger;
+    protected $_log_enabled = false;
     protected $_last_status = NULL;
     protected $_last_output = array();
 
@@ -51,6 +53,14 @@ class RocketWeb_Cli
         return new $kit();
     }
 
+    public function setLogger(Zend_Log $log)
+    {
+        $this->_logger = $log;
+    }
+    public function enableLogging($val)
+    {
+        $this->_log_enabled = (bool) $val;
+    }
     /**
      * Executes passed string and returns it's value, if RocketWeb_Cli_Query was passed
      * <br /> method will cast object to string
@@ -66,8 +76,23 @@ class RocketWeb_Cli
         $this->_last_output = array();
         $this->_last_exec_status = NULL;
 
+        if($this->_log_enabled && $this->_logger instanceof Zend_Log) {
+            $this->_logger->log('Exec Wrapper - query', Zend_Log::DEBUG, $query);
+        }
         try {
-            exec($query, $this->_last_output, $this->_last_exec_status);
+            exec($query, $this->_last_output, $this->_last_status);
+            if($this->_log_enabled && $this->_logger instanceof Zend_Log) {
+                $message =
+                    'Status: '.$this->_last_status
+                    ."\n".
+                    var_export($this->_last_output, false);
+
+                $this->_logger->log(
+                    'Exec Wrapper - result',
+                    Zend_Log::DEBUG,
+                    $message
+                );
+            }
         } catch(Exception $e) {
             throw new RocketWeb_Cli_Exception($e->getMessage(), $query, $e->getCode(), $e);
         }

@@ -54,6 +54,9 @@ class Application_Model_Task {
             'EE' => 'enterprise',
             'PE' => 'professional',
         );
+
+        $this->_cli = new RocketWeb_Cli();
+
         $this->_fileKit = $this->cli('file');
     }
 
@@ -152,6 +155,12 @@ class Application_Model_Task {
 
         $this->logger = $logger;
         $fileKit = $this->_fileKit;
+
+        $this->_cli->setLogger($logger);
+        $this->_cli->enableLogging(
+            (bool) $this->config->execWrapper->logEnabled
+        );
+
         try{
             $revisionLogPath = '/home/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . 
                 '/public_html/'.$this->_storeObject->getDomain().'/var/log/';

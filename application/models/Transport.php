@@ -30,7 +30,7 @@ class Application_Model_Transport {
         return $this->_cli;
     }
 
-    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
+    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL, $cli = NULL){
         $this->setConnection($store);
 
         $this->_sqlFileLimit = $config->magento->sqlDumpByteLimit;
@@ -46,6 +46,10 @@ class Application_Model_Transport {
         if ($logger instanceof Zend_Log) {
             $this->logger = $logger;
         }
+        if(!$cli instanceof RocketWeb_Cli) {
+            $cli = new RocketWeb_Cli();
+        }
+        $this->_cli = $cli;
     } 
     
     /**
