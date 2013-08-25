@@ -26,7 +26,7 @@ class RocketWeg_Cli_Kit_Compression_GzipTest extends PHPUnit_Framework_TestCase
     public function testGetPackedFilename()
     {
         $this->assertEquals(
-                "gunzip -l 'file.gz' | awk '{ if($3 ~ /%$/) {print $4} }' 2>&1",
+                "gunzip -l 'file.gz' 2>&1 | awk '{ if($3 ~ /%$/) {print $4} }' 2>&1",
                 $this->_kit->getPackedFilename('file.gz')->toString()
         );
     }
@@ -34,7 +34,7 @@ class RocketWeg_Cli_Kit_Compression_GzipTest extends PHPUnit_Framework_TestCase
     public function testGzipedTest()
     {
         $this->assertEquals(
-                "gunzip -tv 'file.gz' | awk '{ if($1 == 'file.gz:') {print $2} }' 2>&1",
+                "gunzip -tv 'file.gz' 2>&1 | awk '{ if($1 == \"file.gz:\") {print $2} }' 2>&1",
                 $this->_kit->test('file.gz')->toString()
         );
     }

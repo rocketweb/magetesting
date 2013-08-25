@@ -82,9 +82,12 @@ class RocketWeb_Cli_Kit_File
      * @param string $path
      * @return RocketWeb_Cli_Kit_File
      */
-    public function delete($path)
+    public function delete($path = '')
     {
-        return $this->append('rm -R ?', $path);
+        if($path) {
+            $path = ' '.$this->escape($path);
+        }
+        return $this->append('rm -R:path')->bindAssoc(':path', $path, false);
     }
     /**
      * 
@@ -96,12 +99,12 @@ class RocketWeb_Cli_Kit_File
     public function find($name = '', $type, $path = '')
     {
         if($path) {
-            $path .= ' ';
+            $path = $this->escape($path).' ';
         }
 
         $this
             ->append('find :path-type :type', $name)
-            ->bindAssoc(':path', $path, ($path ? true : false))
+            ->bindAssoc(':path', $path, false)
             ->bindAssoc(':type', (($type === self::TYPE_DIR) ? 'd' : 'f'), false)
             ->bindAssoc(':name', $name);
 

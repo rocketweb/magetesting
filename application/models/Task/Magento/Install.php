@@ -223,7 +223,7 @@ implements Application_Model_Task_Interface {
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        $command = $fileKit->fileMode(':files', '777')
+        $command = $fileKit->clear()->fileMode(':files', '777')
             ->bindAssoc("':files'", 'var media', false);
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);

@@ -16,7 +16,7 @@ class RocketWeb_Cli_Kit_Compression_Gzip
     public function getPackedFilename($path)
     {
         return $this->append(
-            'gunzip -l ? | awk \'{ if($3 ~ /%$/) {print $4} }\'',
+            'gunzip -l ? 2>&1 | awk \'{ if($3 ~ /%$/) {print $4} }\'',
             /*
             gunzip -l index.php.gz
                compressed        uncompressed  ratio uncompressed_name
@@ -41,7 +41,7 @@ class RocketWeb_Cli_Kit_Compression_Gzip
     public function test($path)
     {
         return $this->append(
-            'gunzip -tv ? | awk \'{ if($1 == ?) {print $2} }\'',
+            'gunzip -tv ? 2>&1 | awk \'{ if($1 == ":path") {print $2} }\'',
             // gunzip -tv test.gz
             // test.gz:     Ok
             /*
@@ -54,7 +54,7 @@ class RocketWeb_Cli_Kit_Compression_Gzip
                     }
                 }
              */
-            array($path, $path.':')
-        );
+            $path
+        )->bindAssoc(':path', $path.':', false);
     }
 }
