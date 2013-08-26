@@ -29,7 +29,18 @@ extends Application_Model_Transport {
     }
 
     public function checkProtocolCredentials(){
-        return true;
+        $output =
+            $this
+                ->_ssh
+                ->cloneObject()
+                ->remoteCall('echo 2>&1')
+                ->append('&& echo "connected"')
+                ->call()
+                ->getLastOutput();
+        if(isset($output[0]) && 'connected' === $output[0]) {
+            return true;
+        }
+        return false;
     }
 
     /* TODO: move to parent and rewrite if necessary ? */
