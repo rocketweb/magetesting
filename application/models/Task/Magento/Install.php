@@ -411,7 +411,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         $this->_storeObject->setBackendPassword($this->_adminpass)->save();
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
         // end
-        $this->cli('file')->delete(':files')
+        $this->cli('file')->remove(':files')
             ->bindAssoc("':files'", 'keyset0.sql keyset1.sql', false)
             ->asSuperUser()->call();
     }

@@ -63,11 +63,11 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testDelete()
+    public function testRemove()
     {
         $this->assertEquals(
                 "rm -R 'path' 2>&1",
-                $this->_kit->delete('path')->toString()
+                $this->_kit->remove('path')->toString()
         );
     }
 

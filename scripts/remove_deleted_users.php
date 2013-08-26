@@ -94,7 +94,7 @@ if($result) {
 
             $homeDir = '/home/' . $username;
             if(file_exists($homeDir)){
-                $fileKit->clear()->delete($homeDir)->call();
+                $fileKit->clear()->remove($homeDir)->call();
             }
         }
 
@@ -118,12 +118,12 @@ if($result) {
         //--------------SYSTEM/MYSQL PART END--------------
 
         //--------------RSYSLOG FILES PART START-----------
-        $fileKit->delete($username)->append('_*', null, false) // 'file'_*
+        $fileKit->remove($username)->append('_*', null, false) // 'file'_*
             ->asSuperUser(true)->call();
         //--------------RSYSLOG FILES PART END ------------
         
         //--------------SUEXEC PART START------------------
-        $fileKit->clear()->delete('/home/www-data/'.$username)->call();
+        $fileKit->clear()->remove('/home/www-data/'.$username)->call();
         //--------------SUEXEC PART END------------------
         
         

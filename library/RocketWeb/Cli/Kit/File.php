@@ -82,7 +82,7 @@ class RocketWeb_Cli_Kit_File
      * @param string $path
      * @return RocketWeb_Cli_Kit_File
      */
-    public function delete($path = '')
+    public function remove($path = '')
     {
         if($path) {
             $path = ' '.$this->escape($path);

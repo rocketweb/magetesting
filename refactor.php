@@ -120,7 +120,7 @@ $queries[] = $find->toString();
 $copy = $file->clear()->copy('a', 'b', true);
 $queries[] = $copy->toString();
 # 148
-$rm = $file->clear()->delete('path to remove')->asSuperUser(true);
+$rm = $file->clear()->remove('path to remove')->asSuperUser(true);
 $queries[] = $rm->toString();
 
 # -------- application/models/Task/Extension/Opensource.php
@@ -178,10 +178,10 @@ $queries[] = $query->toString();
 $query = $file->clear()->fileMode('media', '0777', true)->append('? ? ?', array('downloader', 'var', 'app/etc'));
 $queries[] = $query->toString();
 # 333
-$query = $file->clear()->delete('.git/');
+$query = $file->clear()->remove('.git/');
 $queries[] = $query->toString();
 # 337
-$query = $file->clear()->delete('.gitignore');
+$query = $file->clear()->remove('.gitignore');
 $queries[] = $query->toString();
 # 341
 $query = $cli->createQuery('rm -rf `:subquery`')->asSuperUser(true)->bindAssoc(
@@ -226,7 +226,7 @@ $query = $tar->clear()->redirectToOutput()->unpack('asd')->pipe(
 );
 $queries[] = $query->toString();
 # 39
-$query = $file->clear()->delete('somefile');
+$query = $file->clear()->remove('somefile');
 $queries[] = $query->toString();
 
 # -------- application/models/Task/Magento/Install.php

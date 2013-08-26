@@ -200,7 +200,7 @@ class Application_Model_Task {
 
         $cacheFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/var/cache';
         if(file_exists($cacheFolder) && is_dir($cacheFolder)){
-            $this->_fileKit->clear()->delete($cacheFolder)->append('/*', null, false)->asSuperUser();
+            $this->_fileKit->clear()->remove($cacheFolder)->append('/*', null, false)->asSuperUser();
             $message = var_export($this->_fileKit->call()->getLastOutput(), true);
             $this->logger->log("\n".$this->_fileKit->toString()."\n" . $message, Zend_Log::DEBUG);
         }
