@@ -45,7 +45,8 @@ implements Application_Model_Task_Interface {
         'var/deployment/';
         
         if (!file_exists($deployPath) || !is_dir($deployPath)){
-            exec('mkdir -p var/deployment/');
+            $file = $this->cli('file');
+            $file->create('var/deployment', $file::TYPE_DIR)->call();
         }
         /* create archive */
         
@@ -57,9 +58,8 @@ implements Application_Model_Task_Interface {
          * - packs files listed with the command above into zip 
          *  within store /var/data/deploys folder
          */
-        
-        exec('git archive --format zip --output var/deployment/'.$hash.'.zip '.$hash.' `git diff '.$hash.' '.$hash.'~1 --name-only`');
-        
+        $this->cli('git')->deploy($hash, 'var/deployment/'.$hash.'.zip')->call();
+
         chdir($startdir);
     }
       

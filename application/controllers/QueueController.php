@@ -1469,71 +1469,67 @@ class QueueController extends Integration_Controller_Action {
         if (trim($customPort) == ''){
             $customPort = 22;
         }
-         
-        $appPaths = $skinPaths = $libPaths = $jsPaths = array(); 
-        /* app folder */
-        $findapp = 'find . -type d -name "app" -printf "%h\n" | sort -u';
-        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
-                .' -p'.$customPort." '".$findapp."'";
-              // echo $command;
-        exec($command,$appPaths);
-        //var_dump($appPaths);
-        
+
+        $ssh = new RocketWeb_Cli();
+        $ssh = $ssh->kit('ssh');
+        /* @var $ssh RocketWeb_Cli_Kit_Ssh */
+        $ssh->connect(
+            $request->getParam('custom_login'),
+            $request->getParam('custom_pass'),
+            trim($this->_customHost,'/'),
+            $customPort
+        );
+
+        /* @var $find RocketWeb_Cli_Kit_File */
+        $find = $ssh->kit('file');
+        $find->find('app', $find::TYPE_DIR, '.')->printPaths()->sortNatural();
+        $remoteFind = $ssh->cloneObject()->remoteCall($find);
+
+        $appPaths = $skinPaths = $libPaths = $jsPaths = array();
+
+        // app folder
+        $appPaths = $remoteFind->call()->getLastOutput();
+
         // skin folder 
-        $findskin = 'find . -type d -name "skin" -printf "%h\n" | sort -u';
-        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
-                .' -p'.$customPort." '".$findskin."'";
-               
-        exec($command,$skinPaths);
+        $skinPaths = $remoteFind->bindAssoc("'app'", 'skin');
         
-	// lib folder 
-        $findlib = 'find . -type d -name "lib" -printf "%h\n" | sort -u';
-        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
-                .' -p'.$customPort." '".$findlib."'";
-               
-        exec($command,$libPaths);
-      
-	// js folder 
-	$findjs = 'find . -type d -name "js" -printf "%h\n" | sort -u';
-        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
-                .' -p'.$customPort." '".$findjs."'";
-               
-        exec($command,$jsPaths);
-	
-	/* get rid of paths that does not have all mentioned folders */
-	$possibleOptions = array_values(array_intersect($appPaths,$skinPaths,$libPaths,$jsPaths));
-	
-	if (count($possibleOptions)==0){
-	  return false;
-	}
-	
-	/* additional check - check remaining paths for these that contain app/Mage.php file */
-	foreach ($possibleOptions as $path){
-	  $findmageapp = 'find '.str_replace('./','',$path).' -type f -name "Mage.php" -printf "`pwd`/%h\n" | sort -u';
-	  //return $findmageapp;
-	  $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
-                .' -p'.$customPort." '".$findmageapp."'";
-               
-	  exec($command,$validPaths);
-	  
-	  if (isset($validPaths[0])){
-	    $path = str_replace('/app','',$validPaths[0]);
-	    $this->_sshWebrootPath = $path;
-	    return $path;
-	  } else {
-	    return false;
-	  }
-	}             
+        // lib folder
+        $skinPaths = $remoteFind->bindAssoc("'skin'", 'lib');
+
+        // js folder
+        $skinPaths = $remoteFind->bindAssoc("'lib'", 'js');
+
+        /* get rid of paths that does not have all mentioned folders */
+        $possibleOptions = array_values(array_intersect($appPaths,$skinPaths,$libPaths,$jsPaths));
+
+        if (count($possibleOptions)==0){
+          return false;
+        }
+
+        /* additional check - check remaining paths for these that contain app/Mage.php file */
+        foreach ($possibleOptions as $path){
+          $findmageapp =
+              $find
+                  ->clear()
+                  ->find('Mage.php', $find::TYPE_FILE, str_replace('./','',$path))
+                  ->printPaths(true)
+                  ->sortNatural();
+
+          $validPaths =
+              $ssh
+                  ->cloneObject()
+                  ->remoteCall($findmageapp)
+                  ->call()
+                  ->getLastOutput();
+
+          if (isset($validPaths[0])){
+            $path = str_replace('/app','',$validPaths[0]);
+            $this->_sshWebrootPath = $path;
+            return $path;
+          } else {
+            return false;
+          }
+        }
     }
     
     protected function _checkForMagentoFoldersOnFtp(){
@@ -1650,9 +1646,9 @@ class QueueController extends Integration_Controller_Action {
     protected function _findSqlDumpOnSsh(){
         
         if ($this->_sshWebrootPath==''){
-	  $this->_sshWebrootPath = $this->_findWebrootOnSsh();
+            $this->_sshWebrootPath = $this->_findWebrootOnSsh();
         }
-        
+
         $request = $this->getRequest();
         $customPort = (int)$request->getParam('custom_port',22);
         if (trim($customPort) == ''){
@@ -1660,22 +1656,27 @@ class QueueController extends Integration_Controller_Action {
         }
         
         $backupPath = $this->_sshWebrootPath.'/var/backups/';
+
+        $ssh = new RocketWeb_Cli();
+        $ssh = $ssh->kit('ssh');
+        /* @var $ssh RocketWeb_Cli_Kit_Ssh */
+        $ssh->connect(
+                $request->getParam('custom_login'),
+                $request->getParam('custom_pass'),
+                trim($this->_customHost,'/'),
+                $customPort
+        );
         
-        $findbackups = 'ls -al '.$backupPath.'';
-        $command = 'sshpass -p'.escapeshellarg($request->getParam('custom_pass'))
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .$request->getParam('custom_login').'@'.trim($this->_customHost,'/')
-                .' -p'.$customPort." '".$findbackups."'";
-               
-	  exec($command,$raw);
-        
-        
+        /* @var $file RocketWeb_Cli_Kit_File */
+        $file = $ssh->kit('file');
+        $list = $ssh->cloneObject()->remoteCall($file->listAll($backupPath));
+        $raw = $list->call()->getLastOutput();
+
         $filetimes = array();
         if ($raw){
             foreach ($raw as $file){
-                
                 /* number of spaces is inconsistent among server, hence preg_replace */
-		$file = preg_replace('!\s\s+!', ' ', $file);
+                $file = preg_replace('!\s\s+!', ' ', $file);
                 $parts = explode(" ",$file);
                 
                 if (isset($parts[8]) && $parts[8]!='.' && $parts[8]!='..'){

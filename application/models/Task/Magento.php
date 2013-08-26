@@ -63,17 +63,18 @@ extends Application_Model_Task {
             
             $workerfolder = APPLICATION_PATH.'/../scripts/worker';
             chdir($workerfolder);
-            $command = 'cd '.APPLICATION_PATH.'/../scripts/worker';
-            exec($command,$output);
-            unset($output);
-            $command = 'sudo ./create_user.sh ' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_systempass . ' ' . $this->config->magento->usersalt . ' ' . $this->config->magento->systemHomeFolder.'';
-            
-            exec($command, $output);
-            chdir($startDir);
+
+            $output = $this->cli('user')->create(
+                $this->config->magento->userprefix . $this->_dbuser,
+                $this->_systempass,
+                $this->config->magento->usersalt,
+                $this->config->magento->systemHomeFolder
+            )->call()->getLastOutput();
+
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
-            unset($output);
 
+            chdir($startDir);
 
             if ('free-user' != $this->_userObject->getGroup()) {
                 /* send email with account details start */
@@ -219,18 +220,33 @@ extends Application_Model_Task {
     }
     
     protected function _createVirtualHost(){
-       
-        exec('sudo touch /etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain());
-        exec('sudo mkdir /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser);
-        
+        $file = $this->cli('file');
+        $file->create(
+            '/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(),
+            $file::TYPE_FILE
+        )->asSuperUser()->call();
+        $file->clear()->create(
+            '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser,
+            $file::TYPE_DIR
+        )->asSuperUser()->call();
+
         $this->_createFcgiWrapper();
-        
+
         $this->_preparePhpIni();
-        
-        exec('sudo chown -R '.$this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser.' /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'');
-        exec('sudo chown root:root /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini');
-        exec('sudo chmod 644 /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini');
-        
+
+        $file->clear()->fileOwner(
+            $this->_dbuser.' /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser,
+            $this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser
+        )->asSuperUser()->call();
+        $file->clear()->fileOwner(
+            '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini',
+            'root:root'
+        )->asSuperUser()->call();
+        $file->clear()->fileMode(
+            '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini',
+            '644'
+        )->asSuperUser()->call();
+
         $content = "<VirtualHost *:80>
             SetEnv TMPDIR /home/".$this->config->magento->userprefix . $this->_dbuser."/tmp/
             ServerAdmin support@magetesting.com
@@ -253,39 +269,59 @@ extends Application_Model_Task {
         </VirtualHost>";
         
         file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
-        
-        exec('sudo a2ensite '.$this->_dbuser.'.'.$this->_serverObject->getDomain());
-        exec('sudo /etc/init.d/apache2 reload');
-        
+
+        $this->cli('apache')->enableSite(
+            $this->_dbuser.'.'.$this->_serverObject->getDomain()
+        )->asSuperUser()->call();
+        $this->cli('service')->restar('apache2')->asSuperUser()->call();
+
         $redirector = '<?php '.
         PHP_EOL.'header("Location: ' . $this->config->magento->storeUrl . '/user/dashboard");';
         $fileLocation = '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/index.php';
         file_put_contents($fileLocation, $redirector);
-        exec('sudo chmod a+x '.$fileLocation);
-        exec('sudo chown '.$this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser.' '.$fileLocation);
+        $file->clear()->fileMode($fileLocation, 'a+x')->asSuperUser()->call();
+        $file->clear()->fileOwner(
+            $fileLocation,
+            $this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser
+        )->asSuperUser()->call();
     }
     
     protected function _createUserTmpDir(){
-         exec('sudo mkdir /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp');
-         exec('sudo chmod 777 /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp');
+        $file = $this->cli('file');
+        $file->create(
+            '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp',
+            $file::TYPE_DIR
+        )->asSuperUser()->call();
+        $file->clear()->fileMode(
+            '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp',
+            '777'
+        )->asSuperUser()->call();
     }
     
     protected function _createFcgiWrapper(){
-        exec('sudo touch /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
+        $file = $this->cli('file');
+        $file->create(
+            '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi',
+            $file::TYPE_FILE
+        )->asSuperUser()->call();
         $php5fcgi = '#!/bin/sh'.
         PHP_EOL.'exec /usr/bin/php5-cgi -c /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini \\'.
         PHP_EOL.'-d open_basedir=/home/'.$this->config->magento->userprefix . $this->_dbuser.' \\'.
         PHP_EOL.'$1';
         file_put_contents('/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi', $php5fcgi);
-        exec('sudo chmod 755 /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi');
+        $file->clear()->fileMode(
+            '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi',
+            '755'
+        )->asSuperUser()->call();
     }
     
     protected function _preparePhpIni(){
-        
         $userPhpIni = '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini';
-        
-        exec('sudo cp /etc/php5/apache2/php.ini '.$userPhpIni);
-        
+
+        $this->cli('file')->copy(
+            '/etc/php5/apache2/php.ini',
+            $userPhpIni
+        )->asSuperUser()->call();
         //regex to replace disable_functions
         $functionsToBlock = array('exec','system','shell_exec','passthru');
         $text = file_get_contents($userPhpIni);
@@ -306,20 +342,34 @@ extends Application_Model_Task {
 
     /* Running this prevents store from reindex requirement in admin */
     protected function _reindexStore(){
-        exec('sudo -u '.$this->config->magento->userprefix . $this->_dbuser.' -s php /home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php --reindex all');
+        $this->cli()->createQuery(
+            '-u ? -s php ? --reindex all',
+            array(
+                $this->config->magento->userprefix . $this->_dbuser,
+                '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php'
+            )
+        )->asSuperUser()->call();
     }
     
     protected function _setUserQuota(){
         //4GB soft limit
         //5GB hard limit
-        exec("sudo quotatool".
-        " -u ".$this->config->magento->userprefix . $this->_dbuser.
-        " -bq 4000M". //soft limit
-        " -l '5000 Mb'". //hard limit 
-        " /");
-        
+        $this->cli()->createQuery(
+            'quotatool -u :user -b -q :softLimit -l :hardLimit /'
+        )->bindAssoc(array(
+            ':user' => $this->config->magento->userprefix . $this->_dbuser,
+            ':softLimit' => '4000M',
+            ':hardLimit' => '5000M'
+        ))->asSuperUser()->call();
+
         //set grace time (0seconds mean instant)
-        exec("sudo quotatool -u ".$this->config->magento->userprefix . $this->_dbuser." -b -t '0 seconds' /");
+        $this->cli()->createQuery(
+            'quotatool -u ? -b -t ? /',
+            array(
+                $this->config->magento->userprefix . $this->_dbuser,
+                '0 seconds'
+            )
+        )->asSuperUser()->call();
     }
     
     /**

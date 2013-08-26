@@ -13,11 +13,25 @@ class Application_Model_Transport {
     protected $_user = '';
     protected $_pass = '';
     protected $_errorMessage = '';
-    
+    protected $_cli;
+
     protected $_storeObject ='';
     protected $logger = NULL;
-    
-    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
+
+    public function __construct()
+    {
+        $this->_cli = new RocketWeb_Cli();
+    }
+
+    public function cli($kit = '')
+    {
+        if($kit) {
+            return $this->_cli->kit($kit);
+        }
+        return $this->_cli;
+    }
+
+    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL, $cli = NULL){
         $this->setConnection($store);
 
         $this->_sqlFileLimit = $config->magento->sqlDumpByteLimit;
@@ -33,6 +47,10 @@ class Application_Model_Transport {
         if ($logger instanceof Zend_Log) {
             $this->logger = $logger;
         }
+        if(!$cli instanceof RocketWeb_Cli) {
+            $cli = new RocketWeb_Cli();
+        }
+        $this->_cli = $cli;
     } 
     
     /**

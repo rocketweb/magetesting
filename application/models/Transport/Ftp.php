@@ -6,27 +6,33 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     protected $_customPort = '';
     protected $_customRemotePath = '';
     protected $_customFile = '';
-    protected $_customSql = ''; 
-    
+    protected $_customSql = '';
+
+    protected $_wget;
+
     public function setup(Application_Model_Store &$store, $logger = NULL, $config = NULL){
         
         $this->_storeObject = $store;
         
         parent::setup($store, $logger, $config);
         $this->_prepareCustomVars($store);
+
+        $this->_wget = $this->cli('wget');
+        $this->_wget->connect(
+            $this->_storeObject->getCustomLogin(),
+            $this->_storeObject->getCustomPass(),
+            $this->_customHost,
+            $this->_customPort
+        );
+        $this->_wget->addLimits($this->_wgetTimeout, $this->_wgetTries);
     }
     
     public function checkProtocolCredentials(){
-        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' --spider '.$this->_customHost.":".$this->_customPort." ".
-             "--passive-ftp ".
-             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
-             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
-             "".$this->_customHost.":".$this->_customPort." 2>&1 | grep 'Logged in!'";
-        
-        exec($command, $output);
-        
+        $command = $this->_wget->cloneObject()->checkOnly(true)->pipe('grep ?', 'Logged in!');
+        $output = $check->call()->getLastOutput();
+
         $message = var_export($output, true);
-        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
+        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         if (!isset($output[0])){
@@ -100,49 +106,39 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     /* todo: make this protected */
     protected function _downloadStoreFiles(){
         //do a sample connection, and check for index.php, if it works, start fetching
-        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' --spider '.$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."app/Mage.php 2>&1 ".
-            "--passive-ftp ".
-            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
-            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
-            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
-        exec($command, $output);
+        $command = $this->_wget->cloneObject()->setRootPath($this->_customRemotePath.'app/Mage.php')->getFileSize();
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
-        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
+        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
-        $sqlSizeInfo = explode(' ... ',$output[0]);
+        $sqlSizeInfo = '';
+        if(isset($output[0])) {
+            $sqlSizeInfo = $output[0];
+        }
 
-       //limit is in bytes!
-        if ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0){
+        //limit is in bytes!
+        if(!is_numeric($sqlSizeInfo) || $sqlSizeInfo == 0){
             throw new Application_Model_Transport_Exception('/app/Mage has not been found');
         }
         unset($output);
 
-        $command = "wget ".
-             "--timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.
-             " --passive-ftp ".
-             "-nH ".
-             "-Q300m ".
-             "-m ".
-             "-np ".
-             "-R 'sql,tar,gz,zip,rar' ".
-             "-X '.htaccess' " .
-             "-N ".   
-             "-I '".$this->_customRemotePath."app,".
-                    $this->_customRemotePath."downloader,".
-                    $this->_customRemotePath."errors,".
-                    $this->_customRemotePath."includes,".
-                    $this->_customRemotePath."js,".
-                    $this->_customRemotePath."lib,".
-                    $this->_customRemotePath."pkginfo,".
-                    $this->_customRemotePath."shell,".
-                    $this->_customRemotePath."skin' " .
-             "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
-             "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
-             "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath."";
-        exec($command, $output);
+        $command = $this->_wget->cloneObject();
+        $include = array(
+            $this->_customRemotePath.'app',
+            $this->_customRemotePath.'downloader',
+            $this->_customRemotePath.'errors',
+            $this->_customRemotePath.'includes',
+            $this->_customRemotePath.'js',
+            $this->_customRemotePath.'lib',
+            $this->_customRemotePath.'pkginfo',
+            $this->_customRemotePath.'shell',
+            $this->_customRemotePath.'skin'
+        );
+        $command->downloadRecursive($include);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
-        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
+        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
         unset($output);
@@ -156,30 +152,21 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
 
     public function checkDatabaseDump(){
-        
-        $sqlSizeInfo = '';
-        
-        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' --spider '.$this->_customHost.":".$this->_customPort."".$this->_customSql." 2>&1 ".
-            "--passive-ftp ".
-            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
-            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
-            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
-        exec($command,$output);
+        $command = $this->_wget->cloneObject()->setRootPath($this->_customSql)->getFileSize();
+        $output = $command->call()->getLastOutput();
 
-        foreach ($output as $out) {
-            if (substr($out, 0, 8) == '==> SIZE') {
-                $sqlSizeInfo = explode(' ... ', $out);
-            }
+        $sqlSizeInfo = '';
+        if(isset($output[0])) {
+            $sqlSizeInfo = $output[0];
         }
 
-       //limit is in bytes!
-        if (isset($sqlSizeInfo[1]) && ($sqlSizeInfo[1] == 'done' || $sqlSizeInfo[1] == 0)) {
+        //limit is in bytes!
+        if(!is_numeric($sqlSizeInfo) || $sqlSizeInfo == 0){
             $this->_errorMessage = 'Couldn\'t find sql data file.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
-        unset($output);
 
-        if (isset($sqlSizeInfo[1]) && $sqlSizeInfo[1] > $this->_sqlFileLimit){
+        if((int) $sqlSizeInfo > $this->_sqlFileLimit){
             $this->_errorMessage = 'Sql file is too big.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
@@ -188,30 +175,20 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     protected function _checkStoreDump(){
-        
+        $command = $this->_wget->cloneObject()->setRootPath($this->_customFile)->getFileSize();
+        $output = $command->call()->getLastOutput();
         $packageSizeInfo = '';
-        
-        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' --spider '.$this->_customHost.":".$this->_customPort."".$this->_customFile." 2>&1 ".
-            "--passive-ftp ".
-            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
-            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
-            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." | grep 'SIZE'";
-        exec($command,$output);
-
-        foreach ($output as $out) {
-            if (substr($out, 0, 8) == '==> SIZE') {
-                $packageSizeInfo = explode(' ... ', $out);
-            }
+        if(isset($output[0])) {
+            $packageSizeInfo = $output[0];
         }
 
-       //limit is in bytes!
-        if (isset($packageSizeInfo[1]) && ($packageSizeInfo[1] == 'done' || $packageSizeInfo[1] == 0)) {
+        //limit is in bytes!
+        if(!is_numeric($packageSizeInfo) || $packageSizeInfo == 0){
             $this->_errorMessage = 'Couldn\'t find store package file.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
-        unset($output);
 
-        if (isset($packageSizeInfo[1]) && $packageSizeInfo[1] > $this->_storeFileLimit){
+        if($packageSizeInfo > $this->_storeFileLimit){
             $this->_errorMessage = 'Store file is too big.';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
@@ -220,17 +197,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     public function downloadDatabase(){
-        
-        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' '.$this->_customHost.":".$this->_customPort."".$this->_customSql." ".
-            "--passive-ftp ".
-            "-N ".  
-            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
-            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
-            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
-        exec($command,$output);
-        
-        unset($output);
-        
+        $this->_wget->cloneObject()->downloadFile($this->_customSql)->call();
         /* TODO: validate if local and reomte size are correct */
     }
     
@@ -251,19 +218,13 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     protected function _downloadAndUnpack(){
-        
         $this->_checkStoreDump();
-        
+
         //download file
-        $command = "wget --timeout=".$this->_wgetTimeout.' -t '.$this->_wgetTries.' '.$this->_customHost.":".$this->_customPort."".$this->_customFile." ".
-            "--passive-ftp ".
-            "-N ".  
-            "--user=".escapeshellarg($this->_storeObject->getCustomLogin())." ".
-            "--password=".escapeshellarg($this->_storeObject->getCustomPass())." ".
-            "".$this->_customHost.":".$this->_customPort."".$this->_customRemotePath." ";
-        exec($command,$output);
+        $command = $this->_wget->cloneObject()->downloadFile($this->_customFile);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
-        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
+        $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
         unset($output);
         
@@ -271,9 +232,9 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         
         
         //unpack to temp location
-        exec('mkdir -p temporarystoredir/');
-        
-        
+        $file = $this->cli('file');
+        $file->create('temporarystoredir/', $file::TYPE_DIR)->call();
+
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
         
         /**
@@ -281,8 +242,10 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
          * becasue we have only downloaded file without filepath 
          */
         $pathinfo  = pathinfo($this->_customFile);
-        $output = array();
-        exec('tar -zxvf '.$pathinfo['basename'].' -C temporarystoredir/ 2>&1', $output);
+        $output = $this->cli('tar')->unpack(
+            $pathinfo['basename'],
+            'temporarystoredir/'
+        )->call()->getLastOutput();
         foreach($output as $line) {
             if(
                 stristr($line, 'not in gzip format')
@@ -302,8 +265,12 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         //locate mage file 
         $output = array();
         $mageroot = '';
-        exec('find -L -name Mage.php',$output);      
-        
+        $file = $this->cli('file');
+        $output = $file->find(
+            'Mage.php',
+            $file::TYPE_FILE
+        )->followySymlinks()->call()->getLastOutput();
+
         /* no matchees found */
         if ( count($output) == 0 ){
             throw new Application_Model_Transport_Exception('/app/Mage has not been found');
@@ -324,22 +291,19 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         /* move files from unpacked dir into our store location */
         $output = array();
         #$command = 'sudo mv -f '.$mageroot.'/* '.$mageroot.'/.??* .';
-        $command = 'sudo rsync -a '.$mageroot.'/ .';
-        exec($command,$output);
-        unset($output);
-        exec('rm -r '.$mageroot);
-        
+        $file->clear()->move($mageroot.'/', '.', true)->asSuperUser()->call();
+        $file->clear()->remove($mageroot)->asSuperUser()->call();
+
         /**
         * Remove main fetched folder 
         * Note: since we use absolute paths: /home/main/something
         * we need to use 1st array element noth 0th
         */
-        echo $this->_customRemotePath;
+        #echo $this->_customRemotePath;
         $parts = explode('/', $this->_customRemotePath);
         if (isset($parts[1]) && trim($parts[1]) != '') {
-            exec('sudo rm ' . $parts[1] . ' -R', $output);
+            $file->clear()->remove($parts[1])->asSuperUser()->call();
         }
-        unset($parts);
     }
     
     /*TODO: maybe methods validateFileExist and validateFileSize ? */

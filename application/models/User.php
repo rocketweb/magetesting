@@ -614,19 +614,10 @@ class Application_Model_User {
      */
     public function enableFtp(){
         $config = Zend_Registry::get('config');
-        $startcwd = getcwd();
-        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
-        
-        chdir($workerfolder);
-        
-        $command = 'cd '.$workerfolder;
-        exec($command,$output);
 
-        exec('sudo ./ftp-user-add.sh ' . $config->magento->userprefix . $this->getLogin() . ' ;');
-        
-        exec('cd '.$startcwd);
-        chdir($startcwd);
-        
+        $userKit = new RocketWeb_Cli_Kit_User();
+        $userKit->asSuperUser();
+        $userKit->addFtp($config->magento->userprefix . $this->getLogin())->call();
     }
     
     /**
@@ -635,19 +626,10 @@ class Application_Model_User {
      */
     public function disableFtp(){
         $config = Zend_Registry::get('config');
-        
-        $startcwd = getcwd();
-        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
-        
-        chdir($workerfolder);
-        
-        $command = 'cd '.$workerfolder;
-        exec($command,$output);
-        
-        exec('sudo ./ftp-user-remove.sh ' . $config->magento->userprefix . $this->getLogin() . '');
-        
-        exec('cd '.$startcwd);
-        chdir($startcwd);
+
+        $userKit = new RocketWeb_Cli_Kit_User();
+        $userKit->asSuperUser();
+        $userKit->removeFtp($config->magento->userprefix . $this->getLogin())->call();
     }
     
     /**
@@ -701,22 +683,13 @@ class Application_Model_User {
         }
         
         $deniedList = implode(',',$disableArray);
-        
-        $startcwd = getcwd();
-        $workerfolder = APPLICATION_PATH.'/../scripts/worker';
-        
-        chdir($workerfolder);
-        
-        $command = 'cd '.$workerfolder;
-        exec($command,$output);
-        
+
         if(file_exists('/etc/phpmyadmin') && is_dir('/etc/phpmyadmin')){
-            exec('sudo ./phpmyadmin-user-rebuild.sh "'.$deniedList.'";',$output);
+            $userKit = new RocketWeb_Cli_Kit_User();
+            $userKit->asSuperUser();
+            $userKit->rebuildPhpMyAdmin($deniedList)->call();
         } else {
             echo 'phpmyadmin config not found in /etc/phpmyadmin, please fix paths accordingly';
         }
-        
-        exec('cd '.$startcwd);
-        chdir($startcwd);
     }
 }

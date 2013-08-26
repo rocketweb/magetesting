@@ -130,6 +130,9 @@ queueRetry.global.retries = 5
 
 queueRetry.ExtensionInstall.retries = 3
 
+; Exec wrapper
+execWrapper.logEnabled = 1;
+
 [staging : production]
 
 [testing : production]

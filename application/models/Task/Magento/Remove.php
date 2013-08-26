@@ -33,7 +33,8 @@ implements Application_Model_Task_Interface {
         chdir(STORE_PATH);
 
         $this->logger->log('Removing store directory recursively.', Zend_Log::INFO);
-        exec('sudo rm -R '.$this->_storeFolder.'/'.$this->_storeObject->getDomain());
+        $file = $this->cli('file')->asSuperUser();
+        $file->remove($this->_storeFolder.'/'.$this->_storeObject->getDomain())->call();
         chdir($this->_storeFolder);
 
         $this->logger->log('Removing store entries from Mage Testing database.', Zend_Log::INFO);
@@ -59,7 +60,7 @@ implements Application_Model_Task_Interface {
         //remove store rsyslog config
         $conffile = $this->config->magento->userprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.conf';
         if (file_exists($conffile)){
-            exec('sudo rm '.$conffile);
+            $file->clear()->remove($conffile)->call();
         }
         
     }

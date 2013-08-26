@@ -55,14 +55,15 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Unpacking and installing extension.', Zend_Log::INFO);
 
         /* Regardless of price, install decoded version */
-        exec('tar -zxvf '.
-            $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension().
-            ' -C '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain()
-        ,$output);
+        $command = $this->cli('tar')->unpack(
+            $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension(),
+            $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain()
+        )->call();
+        $output = $command->getLastOutput();
 
         //output contains unpacked files list, so it should never be empty if unpacking suceed
         $this->logger->log(var_export($output,true),Zend_Log::DEBUG);
-        if (count($output)==0){
+        if (count($output)==0 && !(int)$command->getLastStatus()){
             
             $message = 'There was an error while opening source of extension '.$this->_extensionObject->getName();
             $this->logger->log($message, Zend_Log::EMERG);
