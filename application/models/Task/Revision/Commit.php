@@ -212,7 +212,7 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Creating database backup.', Zend_Log::INFO);
         $dbDir = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/var/db/';
         $file = $this->cli('file');
-        $file->create($dbDir, $file::TYPE_DIR)->call();
+        $file->create($dbDir, $file::TYPE_DIR)->asSuperUser()->call();
         chdir($dbDir);
         $dbFileName = 'db_backup_'.date("Y_m_d_H_i_s");
         $this->cli('mysql')->connect(

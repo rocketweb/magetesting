@@ -187,7 +187,7 @@ implements Application_Model_Task_Interface {
                 "':from'",
                 $this->cli()->escape('magento-sample-data-' . $this->_sampleDataVersion).'/*',
                 false
-            );
+            )->asSuperUser();
             $output = $command->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
@@ -210,6 +210,7 @@ implements Application_Model_Task_Interface {
             $this->_dbpass,
             $this->config->magento->storeprefix . $this->_dbname
         )->import('magento_sample_data_for_' . $this->_sampleDataVersion . '.sql')
+         ->asSuperUser()
          ->call();
     }
 

@@ -113,7 +113,7 @@ implements Application_Model_Task_Interface {
             $this->_storeFolder . '/' . $this->_domain,
             $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser
         )->asSuperUser();
-        $output = $command->call->getLastOutput();
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         unset($output);
@@ -147,7 +147,7 @@ implements Application_Model_Task_Interface {
             $output = $file->create(
                 $this->_storeFolder . '/' . $this->_domain,
                     $file::TYPE_DIR
-            )->call()->getLastOutput();
+            )->asSuperUser()->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
             unset($output);
@@ -164,7 +164,7 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
         $output = $file->clear()->fileMode(
             $this->_storeFolder . '/' . $this->_domain, '+x'
-        )->call()->getLastOutput();
+        )->asSuperUser()->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
@@ -173,7 +173,6 @@ implements Application_Model_Task_Interface {
     protected function _importDatabaseDump() {
         $this->logger->log('Importing custom db dump.', Zend_Log::INFO);
         $path_parts = pathinfo($this->_customSql);
-        $command = 'sudo cat ' . $path_parts['basename'] . ' | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname .' 2>&1';
         $command = $this->cli('mysql')->append('cat ?', $path_parts['basename']);
         $command->removeDefiners()->pipe(
             $command->newQuery()->connect(
@@ -707,7 +706,7 @@ implements Application_Model_Task_Interface {
         $command = $this->_fileKit->clear()->fileOwner(
             $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/',
             $user.':'.$user
-        );
+        )->asSuperUser();
         $output = $command->call()->getLastOutput();
 
         $this->logger->log($command, Zend_Log::DEBUG);

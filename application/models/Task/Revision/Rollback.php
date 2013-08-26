@@ -87,7 +87,7 @@ implements Application_Model_Task_Interface {
             $this->config->resources->db->params->username,
             $this->config->resources->db->params->password,
             $this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain()
-        )->import($unpackedName)->call()->getLastOutput();
+        )->import($unpackedName)->asSuperUser()->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
        

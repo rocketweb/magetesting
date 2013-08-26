@@ -10,9 +10,9 @@ $sql = $select
 $result = $db->fetchAll($sql);
 
 $cli = new RocketWeb_Cli();
-$fileKit = $cli->kit('file');
-$apacheKit = $cli->kit('apache');
-$serviceKit = $cli->kit('service');
+$fileKit = $cli->kit('file')->asSuperUser();
+$apacheKit = $cli->kit('apache')->asSuperUser();
+$serviceKit = $cli->kit('service')->asSuperUser();
 
 if($result) {
     foreach($result as $row) {

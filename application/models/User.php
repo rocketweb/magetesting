@@ -616,6 +616,7 @@ class Application_Model_User {
         $config = Zend_Registry::get('config');
 
         $userKit = new RocketWeb_Cli_Kit_User();
+        $userKit->asSuperUser();
         $userKit->addFtp($config->magento->userprefix . $this->getLogin())->call();
     }
     
@@ -627,6 +628,7 @@ class Application_Model_User {
         $config = Zend_Registry::get('config');
 
         $userKit = new RocketWeb_Cli_Kit_User();
+        $userKit->asSuperUser();
         $userKit->removeFtp($config->magento->userprefix . $this->getLogin())->call();
     }
     
@@ -684,6 +686,7 @@ class Application_Model_User {
 
         if(file_exists('/etc/phpmyadmin') && is_dir('/etc/phpmyadmin')){
             $userKit = new RocketWeb_Cli_Kit_User();
+            $userKit->asSuperUser();
             $userKit->rebuildPhpMyAdmin($deniedList)->call();
         } else {
             echo 'phpmyadmin config not found in /etc/phpmyadmin, please fix paths accordingly';
