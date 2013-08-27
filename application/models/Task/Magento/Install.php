@@ -185,7 +185,7 @@ implements Application_Model_Task_Interface {
                 '.'
             )->bindAssoc(
                 "':from'",
-                $this->cli()->escape('magento-sample-data-' . $this->_sampleDataVersion).'/*',
+                $this->_fileKit->escape('magento-sample-data-' . $this->_sampleDataVersion).'/*',
                 false
             )->asSuperUser();
             $output = $command->call()->getLastOutput();
