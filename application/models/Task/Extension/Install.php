@@ -93,10 +93,12 @@ implements Application_Model_Task_Interface {
             mkdir($tmpExtensionDir, 0777, true);
         }
         $extensionType = 'open';
+        $extensionFileName = $this->_extensionObject->getExtension();
         if ($this->_extensionObject->getPrice() > 0 ){
             $extensionType = 'encoded';
+            $extensionFileName = $this->_extensionObject->getExtensionEncoded();
         }
-        $extensionPath = $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$extensionType.'/'.$this->_extensionObject->getExtensionEncoded();
+        $extensionPath = $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$extensionType.'/'.$extensionFileName;
         $command = $this->cli('tar')->unpack($extensionPath, $tmpExtensionDir);
 
         $output = $command->call()->getLastOutput();
