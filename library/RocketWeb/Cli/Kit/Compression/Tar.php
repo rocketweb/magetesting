@@ -33,7 +33,7 @@ class RocketWeb_Cli_Kit_Compression_Tar
     {
         return $this->append('--strip-components=?', (int)$number);
     }
-    public function isCompressed($value)
+    public function isCompressed($value = true)
     {
         $this->_is_compressed = (bool) $value;
         return $this;

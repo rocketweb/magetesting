@@ -123,7 +123,7 @@ implements Application_Model_Task_Interface {
         unset($output);
         
         //set permission on dirs 
-        $command = $file->clear()->find('', $file->TYPE_DIR, $tmpExtensionDir)->printFiles();
+        $command = $file->clear()->find('', $file::TYPE_DIR, $tmpExtensionDir)->printFiles();
         $command->pipe(
             $file->newQuery('xargs')->fileMode('', '755', false)
         );
@@ -133,7 +133,7 @@ implements Application_Model_Task_Interface {
         unset($output);
         
         //set permission on files
-        $command = $file->clear()->find('', $file->TYPE_FILE, $tmpExtensionDir)->printFiles();
+        $command = $file->clear()->find('', $file::TYPE_FILE, $tmpExtensionDir)->printFiles();
         $command->pipe(
                 $file->newQuery('xargs')->fileMode('', '644', false)
         );

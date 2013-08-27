@@ -158,7 +158,7 @@ class Application_Model_Task {
 
         $this->_cli->setLogger($logger);
         $this->_cli->enableLogging(
-            (bool) $this->config->execWrapper->logEnabled
+            (bool) $this->_config->execWrapper->logEnabled
         );
 
         try{
