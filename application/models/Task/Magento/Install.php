@@ -399,7 +399,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
 
         $this->logger->log('Changing owner of store directory.', Zend_Log::INFO);
         $command = $this->cli('file')->fileOwner(
-            $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain,
+            $this->_storeFolder . '/' . $this->_domain,
             $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser
         )->asSuperUser();
         $output = $command->call()->getLastOutput();
