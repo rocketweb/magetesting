@@ -27,7 +27,7 @@ class RocketWeb_Cli
      */
     public function createQuery($string = '', $values = null)
     {
-        return new RocketWeb_Cli_Query($string, $values);
+        return new RocketWeb_Cli_Query($string, $values, $this);
     }
 
     /**
@@ -50,7 +50,7 @@ class RocketWeb_Cli
             throw new RocketWeb_Cli_Exception($type . ' kit does not exist.');
         }
 
-        return new $kit();
+        return new $kit('', null, $this);
     }
 
     public function setLogger(Zend_Log $log)
