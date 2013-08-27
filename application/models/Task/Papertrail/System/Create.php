@@ -100,7 +100,7 @@ implements Application_Model_Task_Interface {
             
         }
 
-        $this->cli('service')->restart('rsysog')->asSuperUser()->call();
+        $this->cli('service')->restart('rsyslog')->asSuperUser()->call();
         
     }
     
