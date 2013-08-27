@@ -33,7 +33,7 @@ implements Application_Model_Task_Interface {
         $gitignore = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/.gitignore';
         if (!file_exists($gitignore)){
             $file = $this->cli('file');
-            $file->create($gitignore, $file::TYPE_FILE)->cal();
+            $file->create($gitignore, $file::TYPE_FILE)->call();
         }
         
         file_put_contents($gitignore, $data);
