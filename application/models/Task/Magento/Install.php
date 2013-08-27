@@ -45,10 +45,10 @@ implements Application_Model_Task_Interface {
          */
         $dirname = $this->_storeFolder . '/' . $this->_domain.'/var/locks/';
         if (file_exists($dirname) && is_dir($dirname)){
-            $this->_fileKit->fileMode(':dir', '666')->bindAssoc(
+            $this->_fileKit->clear()->fileMode(':dir', '666')->bindAssoc(
                 "':dir'",
                 $this->_fileKit->escape($dirname).'*'
-            )->asSupeUser(false)->call();
+            )->asSuperUser(false)->call();
         }
 
         $this->_setupMagentoConnect();
