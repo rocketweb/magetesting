@@ -6,23 +6,25 @@ class RocketWeb_Cli_Kit_Compression_Tar
     protected $_is_compressed = false;
     protected $_redirect_to_output = false;
 
-    public function pack($path, $files)
+    public function pack($path, $files, $verbose = true)
     {
         return
             $this
-                ->append('tar :$gzipcvf :path ?', $files)
+                ->append('tar :$gzipc:verbosef :path ?', $files)
+                ->bindAssoc(':verbose', ($verbose ? 'v' : ''), false)
                 ->bindAssoc(':path', $path, ('-' === $path) ? false : true); // whether wrote to stdout instead of file
     }
-    public function unpack($path, $move = '')
+    public function unpack($path, $move = '', $verbose = true)
     {
         return
             $this
-                ->append('tar :$gzipxvf :$path:$move:$output')
+                ->append('tar :$gzipx:verbosef :$path:$move:$output')
                 ->bindAssoc(
                     ':$move',
                     ($move ? ' -C '.$this->escape($move) : ''),
                     false
                 )
+                ->bindAssoc(':verbose', ($verbose ? 'v' : ''), false)
                 ->bindAssoc(
                     ':$path',
                     $path,
