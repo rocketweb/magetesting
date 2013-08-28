@@ -1451,13 +1451,13 @@ class QueueController extends Integration_Controller_Action {
         $appPaths = $remoteFind->call()->getLastOutput();
 
         // skin folder 
-        $skinPaths = $remoteFind->bindAssoc("'app'", 'skin');
+        $skinPaths = $remoteFind->bindAssoc("'app'", 'skin')->call()->getLastOutput();
         
         // lib folder
-        $skinPaths = $remoteFind->bindAssoc("'skin'", 'lib');
+        $skinPaths = $remoteFind->bindAssoc("'skin'", 'lib')->call()->getLastOutput();
 
         // js folder
-        $skinPaths = $remoteFind->bindAssoc("'lib'", 'js');
+        $skinPaths = $remoteFind->bindAssoc("'lib'", 'js')->call()->getLastOutput();
 
         /* get rid of paths that does not have all mentioned folders */
         $possibleOptions = array_values(array_intersect($appPaths,$skinPaths,$libPaths,$jsPaths));
