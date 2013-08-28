@@ -261,7 +261,7 @@ extends Application_Model_Transport {
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
         $readFile = $this->cli()->createQuery('cat ?', $this->_customFile);
 
-        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->asSuperUser();
 
         $command = $this->_ssh->cloneObject()->remoteCall($readFile)->pipe($unpack);
 
