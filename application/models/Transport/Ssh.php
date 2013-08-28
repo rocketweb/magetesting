@@ -128,7 +128,7 @@ extends Application_Model_Transport {
         //locate mage file
         $mageroot = '';
         $file = $this->cli('file');
-        $output = $file->find('Mage.php', $file::TYPE_FILE)->followSymlinks()->call()->getLastOutput();
+        $output = $file->find('Mage.php', $file::TYPE_FILE, '', true)->call()->getLastOutput();
         $this->logger->log($file->toString(). "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
 
         /* no matchees found */
@@ -278,7 +278,7 @@ extends Application_Model_Transport {
         //locate mage file 
         $output = array();
         $file = $this->cli('file');
-        $output = $file->find('Mage.php', $file::TYPE_FILE)->followSymlinks()->call()->getLastOutput();
+        $output = $file->find('Mage.php', $file::TYPE_FILE, '', true)->call()->getLastOutput();
         $this->logger->log($file->toString(). "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
 
 

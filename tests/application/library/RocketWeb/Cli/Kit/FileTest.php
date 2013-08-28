@@ -80,15 +80,6 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testFollowSymlink()
-    {
-        $class = $this->_kit;
-        $this->assertEquals(
-                "find -type d -name 'some_dir' -L 2>&1",
-                $this->_kit->find('some_dir', $class::TYPE_DIR)->followSymlinks()->toString()
-        );
-    }
-
     public function testGetSize()
     {
         $this->assertEquals(
