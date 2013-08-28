@@ -98,7 +98,7 @@ class RocketWeb_Cli
      */
     public function getLastStatus()
     {
-        return $this->_last_exec_status;
+        return $this->_last_status;
     }
     public function getLastOutput()
     {
