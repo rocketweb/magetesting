@@ -28,7 +28,7 @@ if($result) {
             continue;
         }
 
-        $username = $username;
+        $username = $config->magento->userprefix.$user->getLogin();
         //--------------PAPERTRAIL PART START-------------
         if ($user->getHasPapertrailAccount()){
             $id = $config->papertrail->prefix . (string) $user->getId();
