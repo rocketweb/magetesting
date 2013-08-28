@@ -106,7 +106,7 @@ extends Application_Model_Transport {
          * tar: Removing leading `/' from member names
          */
         $pack = $this->cli('tar')->newQuery('cd /;');
-        $pack->pack('-', ltrim($this->_customRemotePath,'/'))->isCompressed(true);
+        $pack->pack('-', ltrim($this->_customRemotePath,'/'), false)->isCompressed(true);
         $pack->exclude(array($this->_customRemotePath.'var', $this->_customRemotePath.'media'));
 
         $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
@@ -190,7 +190,7 @@ extends Application_Model_Transport {
          * tar: Removing leading `/' from member names
          */
         $pack = $this->cli('tar')->newQuery('cd /;');
-        $pack->pack('-', ltrim($this->_customSql,'/'))->isCompressed(true);
+        $pack->pack('-', ltrim($this->_customSql,'/'), false)->isCompressed(true);
 
         $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
 
