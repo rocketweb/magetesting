@@ -109,7 +109,7 @@ extends Application_Model_Transport {
         $pack->pack('-', ltrim($this->_customRemotePath,'/'))->isCompressed(true);
         $pack->exclude(array($this->_customRemotePath.'var', $this->_customRemotePath.'media'));
 
-        $unpack = $this->cli('tar')->unpack('-', '.')->strip($components)->asSuperUser();
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
 
         $command = $this->_ssh->cloneObject()->remoteCall($pack)->pipe($unpack);
 
@@ -192,7 +192,7 @@ extends Application_Model_Transport {
         $pack = $this->cli('tar')->newQuery('cd /;');
         $pack->pack('-', ltrim($this->_customSql,'/'))->isCompressed(true);
 
-        $unpack = $this->cli('tar')->unpack('-', '.')->strip($components)->asSuperUser();
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
 
         $command = $this->_ssh->cloneObject()->remoteCall($pack)->pipe($unpack);
 
@@ -256,7 +256,7 @@ extends Application_Model_Transport {
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
         $readFile = $this->cli()->createQuery('cat ?', $this->_customFile);
 
-        $unpack = $this->cli('tar')->unpack('-', '.')->strip($components)->asSuperUser();
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
 
         $command = $this->_ssh->cloneObject()->remoteCall($readFile)->pipe($unpack);
 
