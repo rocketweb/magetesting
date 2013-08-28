@@ -169,7 +169,7 @@ extends Application_Model_Transport {
         }
 
         //limit is in bytes!
-        if(!is_numerc($sqlSizeInfo)) {
+        if(!is_numeric($sqlSizeInfo)) {
             $this->_errorMessage = 'Couldn\'t find sql data file, will not install queue element';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
