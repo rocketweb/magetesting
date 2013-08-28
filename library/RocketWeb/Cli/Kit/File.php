@@ -96,14 +96,15 @@ class RocketWeb_Cli_Kit_File
      * @param string $path - start path
      * @return RocketWeb_Cli_Kit_File
      */
-    public function find($name = '', $type, $path = '')
+    public function find($name = '', $type, $path = '', $followSymlinks = false)
     {
         if($path) {
             $path = $this->escape($path).' ';
         }
 
         $this
-            ->append('find :path-type :type', $name)
+            ->append('find :symlinks:path-type :type', $name)
+            ->bindAssoc(':symlinks', ($followSymlinks ? '-L ': ''), false)
             ->bindAssoc(':path', $path, false)
             ->bindAssoc(':type', (($type === self::TYPE_DIR) ? 'd' : 'f'), false)
             ->bindAssoc(':name', $name);
@@ -127,10 +128,6 @@ class RocketWeb_Cli_Kit_File
             $this
                 ->append('-print:safe')
                 ->bindAssoc(':safe', ($safeEscape ? '0' : ''), false);
-    }
-    public function followSymlinks()
-    {
-        return $this->append('-L');
     }
     public function getSize($path)
     {
