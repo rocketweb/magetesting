@@ -74,7 +74,7 @@ class RocketWeb_Cli
         }
 
         $this->_last_output = array();
-        $this->_last_exec_status = NULL;
+        $this->_last_status = NULL;
 
         if($this->_log_enabled && $this->_logger instanceof Zend_Log) {
             $this->_logger->log('Exec Wrapper Query:'.$query, Zend_Log::DEBUG);
@@ -83,7 +83,7 @@ class RocketWeb_Cli
             exec($query, $this->_last_output, $this->_last_status);
             if($this->_log_enabled && $this->_logger instanceof Zend_Log) {
                 $this->_logger->log('Exec Wrapper Status:'.$this->_last_status, Zend_Log::DEBUG);
-                $output = var_export($this->_last_output, false);
+                $output = var_export($this->_last_output, true);
                 $this->_logger->log('Exec Wrapper Output:'.$output, Zend_Log::DEBUG);
             }
         } catch(Exception $e) {
