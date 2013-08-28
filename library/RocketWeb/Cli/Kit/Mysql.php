@@ -68,7 +68,7 @@ class RocketWeb_Cli_Kit_Mysql
 
     public function removeDefiners()
     {
-        $this->pipe('sed -e ?', 's/DEFINER[ ]*=[ ]*[^*]*\*/\*/\\');
+        $this->pipe('sed -e ?', 's/DEFINER[ ]*=[ ]*[^*]*\*/\*/');
         return $this;
     }
 
