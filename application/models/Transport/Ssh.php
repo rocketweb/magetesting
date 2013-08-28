@@ -32,8 +32,8 @@ extends Application_Model_Transport {
             $this
                 ->_ssh
                 ->cloneObject()
-                ->remoteCall('echo 2>&1')
-                ->append('&& echo "connected"')
+                ->remoteCall('echo "connected" 2>&1')
+                ->pipe('grep "connected"')
                 ->call()
                 ->getLastOutput();
         if(isset($output[0]) && 'connected' === $output[0]) {
