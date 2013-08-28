@@ -589,7 +589,7 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log($sqlname, Zend_Log::DEBUG);
 
-        $not_gzipped = $this->cli('git')->test($sqlname)->call()->getLastStatus();
+        $not_gzipped = $this->cli('gzip')->test($sqlname)->call()->getLastStatus();
         if ((int)$not_gzipped
         ) {
             $sqlfound = true;
