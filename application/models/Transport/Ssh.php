@@ -11,11 +11,10 @@ extends Application_Model_Transport {
 
     private $_ssh;
 
-    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
-
+    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL, $cli = NULL){
         $this->_storeObject = $store;
 
-        parent::setup($store, $logger, $config);
+        parent::setup($store, $logger, $config, $cli);
         
         $this->_prepareCustomVars($store);
 

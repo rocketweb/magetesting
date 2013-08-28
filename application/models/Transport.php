@@ -140,15 +140,14 @@ class Application_Model_Transport {
     }
     
     /* return transport model for specified protocol */
-    public static function factory(Application_Model_Store &$store, $logger = NULL,$config = NULL){
-        
+    public static function factory(Application_Model_Store &$store, $logger = NULL,$config = NULL, $cli = NULL){
         $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
         $classSuffix = $filter->filter($store->getCustomProtocol());
         $className = 'Application_Model_Transport_' . $classSuffix;
         
         if (class_exists($className)){
             $customTransportModel = new $className();
-            $customTransportModel->setup($store, $logger, $config);
+            $customTransportModel->setup($store, $logger, $config, $cli);
             return $customTransportModel;
         }      
         throw new Application_Model_Transport_Exception('model transport '.$className.' doesnt exist');
