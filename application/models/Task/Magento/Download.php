@@ -697,7 +697,7 @@ implements Application_Model_Task_Interface {
             ->getLastOutput();
         $this->_db_table_prefix = '';
         if(isset($output[0])) {
-            $this->_db_table_prefix = $output;
+            $this->_db_table_prefix = $output[0];
         }
     }
 
