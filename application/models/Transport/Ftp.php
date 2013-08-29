@@ -28,7 +28,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     
     public function checkProtocolCredentials(){
         $command = $this->_wget->cloneObject()->checkOnly(true)->pipe('grep ?', 'Logged in!');
-        $output = $check->call()->getLastOutput();
+        $output = $command->call()->getLastOutput();
 
         $message = var_export($output, true);
         $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
