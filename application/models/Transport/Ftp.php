@@ -268,6 +268,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $output = $file->find(
             'Mage.php',
             $file::TYPE_FILE,
+            '',
             true
         )->call()->getLastOutput();
 
