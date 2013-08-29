@@ -68,7 +68,9 @@ implements Application_Model_Task_Interface {
         if ($this->_storeObject->getEdition()=='EE'){
             $this->_updateAdminAccount();
         }
-        
+
+        $this->_setFilesystemPermissions();
+
         $this->_fixUserHomeChmod();
         
         $this->_activateDemoNotice();
@@ -110,7 +112,8 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
         $output = $fileKit->clear()->fileMode(
             $this->_storeFolder . '/' . $this->_domain,
-            '+x'
+            '+x',
+            false
         )->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
