@@ -267,8 +267,9 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $file = $this->cli('file');
         $output = $file->find(
             'Mage.php',
-            $file::TYPE_FILE
-        )->followySymlinks()->call()->getLastOutput();
+            $file::TYPE_FILE,
+            true
+        )->call()->getLastOutput();
 
         /* no matchees found */
         if ( count($output) == 0 ){
