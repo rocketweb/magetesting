@@ -246,7 +246,10 @@ implements Application_Model_Task_Interface {
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        $command = $fileKit->clear()->remove('magento/ ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz')->force();
+        $command = $fileKit->clear()
+            ->remove('magento/')
+            ->append('?', $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz')
+            ->force();
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
@@ -267,7 +270,9 @@ implements Application_Model_Task_Interface {
             $sampleDataVersion = $this->_versionObject->getSampleDataVersion();
             $command = $fileKit->clear()->remove(':files')->force();
             $files =
-                $fileKit->escape('magento-sample-data-' . $sampleDataVersion . '/ magento-sample-data-' . $sampleDataVersion . '.tar.gz')
+                $fileKit->escape('magento-sample-data-' . $sampleDataVersion . '/')
+                . ' ' .
+                $fileKit->escape('magento-sample-data-' . $sampleDataVersion . '.tar.gz')
                 . ' ' .
                 'magento_sample_data_for_' . $sampleDataVersion . '.sql';
             $command->bindAssoc(
