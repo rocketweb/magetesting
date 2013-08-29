@@ -73,6 +73,56 @@ class Integration_Controller_Action extends Zend_Controller_Action
             $this->view->loggedUser = $user;
             $auth->getStorage()->write((object)$user->__toArray());
 
+            /*
+             * if user was downgraded because of additional stores to reduce
+             */
+            if(in_array((int)$user->getDowngraded(), array(3,4))) {
+                foreach($this->view->messages as $key => $message) {
+                    if(is_string($message)) {
+                        $message = array('message' => $message);
+                    }
+                    if(stristr($message['message'], 'Your account is allowed to have')) {
+                        unset($this->view->message[$key]);
+                    }
+                }
+                $plan = new Application_Model_Plan();
+                $plan->find($user->getPlanId());
+
+                $accountStores = (int)$plan->getStores();
+                $accountStores += (int)$user->getAdditionalStores();
+                $accountStores -= (int)$user->getAdditionalStoresRemoved();
+
+                $userStores = new Application_Model_Store();
+                $userStores = $userStores->countUserStores($user->getId());
+
+                $this->view->messages[] = array(
+                    'type' => 'error',
+                    'message' =>
+                        str_replace(
+                            array(':x',':y',':z'),
+                            array($accountStores, $userStores, (int)$userStores-(int)$accountStores),
+                            'Your account is allowed to have :x store(s), You now have :y store(s).'
+                            .' Please remove :z store(s) to restore access to your remaining stores.'
+                        )
+                );
+                if(
+                    ($controller != 'user' || !in_array($action, array('dashboard', 'logout', 'login')))
+                 && ($controller != 'payment' || $action == 'index')
+                 && ($controller != 'queue' || $action != 'close')
+                 && ($controller != 'my-account' || !in_array($action, array('index', 'remove-additional-stores')))
+                ) {
+                    // keep flash messages
+                    foreach($this->view->messages as $flash_message) {
+                        $this->_helper->FlashMessenger($flash_message);
+                    }
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard',
+                    ), 'default', true);
+                }
+            }
+
             /* if user:
              * - haven't choose plan yet or
              * - his 7 days plan expired

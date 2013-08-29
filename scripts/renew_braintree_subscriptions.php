@@ -24,6 +24,12 @@ if($result) {
     foreach($result as $row) {
         if($row['braintree_vault_id'] AND $row['price']) {
             try {
+                $plan = new Application_Model_Plan();
+                $plan->find($row['plan_id']);
+                $extra_stores = (int)$row['additional_stores']-(int)$row['additional_stores_removed'];
+                if($extra_stores) {
+                    $row['price'] = number_format((float)$row['price']+($extra_stores*(float)$plan->getStorePrice()), 2);
+                }
                 $braintree = Braintree_Transaction::sale(array(
                     'amount' => $row['price'],
                     'customerId' => $row['braintree_vault_id'],
@@ -64,6 +70,24 @@ if($result) {
                     $adminNotification = new Integration_Mail_AdminNotification();
                     $user = new Application_Model_User();
                     $user->find($row['id']);
+                    if((int)$user->getAdditionalStoresRemoved()) {
+                        $plan = new Application_Model_Plan();
+                        $plan->find($user->getPlanId());
+                        $stores = new Application_Model_Store();
+                        $stores = $stores->getAllForUser($user->getId())->getCurrentItemCount();
+                        if($stores > $extra_stores+(int)$plan->getStores()) {
+                            // downgraded because of too many stores installed
+                            $user->setDowngraded(3);
+                        } else {
+                            $user->setAdditionalStores($extra_stores);
+                            if($user->getAdditionalStores() < 0) {
+                                $user->setAdditionalStores(0);
+                            }
+                            $user->setAdditionalStoresRemoved(0);
+                        }
+                        $user->save();
+                        include APPLICATION_PATH . '/../scripts/force_user_to_remove_stores.php';
+                    }
                     $adminNotificationData = array('user' => $user, 'plan' => $plan);
                     $adminNotification->setup('renewedPlan', $adminNotificationData);
                     try {
@@ -84,5 +108,5 @@ if($result) {
     }
     $log->log('All plan renewals has been processed.', Zend_Log::INFO);
 } else {
-    $log->log('There is no plan to renewal.', Zend_Log::INFO);
+    #$log->log('There is no plan to renewal.', Zend_Log::INFO);
 }
