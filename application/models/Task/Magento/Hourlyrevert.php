@@ -39,7 +39,9 @@ implements Application_Model_Task_Interface {
         );
         //insert db dump from tar.gz one-liner
         $this->cli('tar')->unpack(
-                $this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision->getDbBeforeRevision()
+            $this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision->getDbBeforeRevision(),
+            '',
+            false
         )->redirectToOutput()
          ->pipe($mysql)->call();
 
