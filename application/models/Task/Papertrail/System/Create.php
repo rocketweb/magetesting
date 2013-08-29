@@ -55,7 +55,9 @@ implements Application_Model_Task_Interface {
         $this->_domain = $this->_storeObject->getDomain();
         $filename = '/etc/rsyslog.d/'.$systemUser.'_'.$this->_domain.'.conf';
         if (!file_exists($filename)){
-            exec('sudo touch '.$filename);
+            $fileKit = $this->cli('file');
+            $fileKit->create($filename, $fileKit::TYPE_FILE)->asSuperUser()->call();
+            unset($fileKit);
 
             $lines = '$ModLoad imfile'.
             PHP_EOL.'$InputFileName /home/'.$systemUser.'/public_html/'.$this->_domain.'/var/log/system.log'.
@@ -97,8 +99,8 @@ implements Application_Model_Task_Interface {
             file_put_contents($filename, $lines);
             
         }
-        
-        exec('sudo /etc/init.d/rsyslog restart');
+
+        $this->cli('service')->restart('rsyslog')->asSuperUser()->call();
         
     }
     

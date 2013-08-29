@@ -26,7 +26,7 @@ implements Application_Model_Task_Interface {
         /* Instantiate Transport Model */
         try {
             $transportModel = new Application_Model_Transport();
-            $transportModel = $transportModel->factory($this->_storeObject, $this->logger, $this->config);
+            $transportModel = $transportModel->factory($this->_storeObject, $this->logger, $this->config, $this->_cli);
         } catch (Application_Model_Transport_Exception $e) {
             $this->logger->log($e->getMessage(),Zend_Log::ERR);
             throw new Application_Model_Task_Exception($e->getMessage());
@@ -100,15 +100,20 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Store backend password changed to : ' . $this->_adminpass, Zend_Log::DEBUG);
 
         //copy new htaccess over
-        exec('sudo cp ' . APPLICATION_PATH . '/../data/pkg/Custom/.htaccess ' . $this->_storeFolder . '/' . $this->_domain . '/.htaccess');
+        $this->_fileKit->clear()->copy(
+            APPLICATION_PATH . '/../data/pkg/Custom/.htaccess',
+            $this->_storeFolder . '/' . $this->_domain . '/.htaccess'
+        )->asSuperUser()->call();
 
         //applying patches for xml-rpc issue
         $this->_applyXmlRpcPatch();
 
         $this->logger->log('Changed owner of store directory tree.', Zend_Log::INFO);
-        $output=array();
-        $command = 'sudo chown -R ' . $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser . ' ' . $this->_storeFolder . '/' . $this->_domain;
-        exec($command, $output);
+        $command = $this->_fileKit->clear()->fileOwner(
+            $this->_storeFolder . '/' . $this->_domain,
+            $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser
+        )->asSuperUser();
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         unset($output);
@@ -137,8 +142,12 @@ implements Application_Model_Task_Interface {
     protected function _setupFilesystem() {
 
         $this->logger->log('Preparing store directory.', Zend_Log::INFO);
+        $file = $this->_fileKit->clear()->asSuperUser();
         if (!file_exists($this->_storeFolder . '/' . $this->_domain)) {
-            exec('sudo mkdir ' . $this->_storeFolder . '/' . $this->_domain, $output);
+            $output = $file->create(
+                $this->_storeFolder . '/' . $this->_domain,
+                    $file::TYPE_DIR
+            )->asSuperUser()->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
             unset($output);
@@ -153,7 +162,9 @@ implements Application_Model_Task_Interface {
         }
 
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
-        exec('sudo chmod +x ' . $this->_storeFolder . '/' . $this->_domain, $output);
+        $output = $file->clear()->fileMode(
+            $this->_storeFolder . '/' . $this->_domain, '+x'
+        )->asSuperUser()->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
@@ -162,9 +173,15 @@ implements Application_Model_Task_Interface {
     protected function _importDatabaseDump() {
         $this->logger->log('Importing custom db dump.', Zend_Log::INFO);
         $path_parts = pathinfo($this->_customSql);
-        $command = 'sudo cat ' . $path_parts['basename'] . ' | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname .' 2>&1';
-        $output = array();
-        exec($command, $output);
+        $command = $this->cli('mysql')->append('cat ?', $path_parts['basename']);
+        $command->removeDefiners()->pipe(
+            $command->newQuery()->connect(
+                $this->config->magento->userprefix . $this->_dbuser,
+                $this->_dbpass,
+                $this->config->magento->storeprefix . $this->_dbname
+            )
+        )->asSuperUser();
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         if($output) {
@@ -244,25 +261,38 @@ implements Application_Model_Task_Interface {
         
         $this->logger->log('Setting store directory permissions.', Zend_Log::INFO);
 
+        $file = $this->_fileKit->asSuperUser();
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/var/')) {
-            exec('sudo mkdir var');
-            exec('sudo touch '.$this->_storeFolder . '/' . $this->_domain . '/var/.htaccess');
+            $file->clear()->create('var', $file::TYPE_DIR)->call();
+            $file->clear()->create(
+                $this->_storeFolder . '/' . $this->_domain . '/var/.htaccess',
+                $file::TYPE_FILE
+            )->call();
             //create htaccess 
             $lines = array('Order deny,allow',
                 PHP_EOL.'Deny from all');
             foreach ($lines as $line){
-                exec('sudo echo \''.$line.'\' >> '.$this->_storeFolder . '/' . $this->_domain . '/var/.htaccess');
+                $file->newQuery(
+                    'echo ? >> ?',
+                    array(
+                        $line,
+                        $this->_storeFolder . '/' . $this->_domain . '/var/.htaccess'
+                    )
+                )->call();
             }
         }
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/downloader/')) {
-            exec('sudo mkdir downloader');
+            $file->clear()->create('downloader', $file::TYPE_DIR)->call();
         }
 
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/media/')) {
-            exec('sudo mkdir media');
-            exec('sudo touch '.$this->_storeFolder . '/' . $this->_domain . '/media/.htaccess');
-            
+            $file->clear()->create('media', $file::TYPE_DIR)->call();
+            $file->clear()->create(
+                $this->_storeFolder . '/' . $this->_domain . '/media/.htaccess',
+                $file::TYPE_FILE
+            )->call();
+
             $lines = array('Options All -Indexes',
             PHP_EOL.'<IfModule mod_php5.c>',
             PHP_EOL.'php_flag engine 0',
@@ -288,7 +318,13 @@ implements Application_Model_Task_Interface {
             PHP_EOL.'</IfModule>');
             
             foreach ($lines as $line){
-                exec('sudo echo \''.$line.'\' >> '.$this->_storeFolder . '/' . $this->_domain . '/media/.htaccess');
+                $file->newQuery(
+                    'echo ? >> ?',
+                    array(
+                        $line,
+                        $this->_storeFolder . '/' . $this->_domain . '/var/.htaccess'
+                    )
+                )->call();
             }
             
             /**
@@ -296,49 +332,37 @@ implements Application_Model_Task_Interface {
             * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
             * when vsftpd is set to use chroot list
             */
-            exec('sudo chmod a-w '.$this->_storeFolder.'');
-            
+            $file->clear()->fileMode($this->_storeFolder, 'a-w')->call();
         }
-        
-        
-        //add var/.htaccess if not exist       
-        $command = 'sudo chmod 777 var/.htaccess app/etc';
-        exec($command, $output);
+
+        $this->logger->log('Setting store directory permissions.', Zend_Log::INFO);
+        $command = $file->clear()->fileMode(':files', '777', false)
+            ->bindAssoc("':files'", 'app/etc downloader', false);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        $command = 'sudo chmod 777 var -R';
-        exec($command, $output);
-        $message = var_export($output, true);
-        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-        unset($output);
-
-
-        $command = 'sudo chmod 777 downloader';
-        exec($command, $output);
-        $message = var_export($output, true);
-        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-        unset($output);
-
-        //add media if not exist
-        $command = 'sudo chmod 777 media -R';
-        exec($command, $output);
+        $command = $file->clear()->fileMode(':files', '777')
+            ->bindAssoc("':files'", 'var media', false);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         /* remove git files */
         if (file_exists($this->_storeFolder . '/' . $this->_domain . '/.git/')) {
-            exec('rm .git/ -R');
+            $file->clear()->remove('.git/')->call();
         }
 
         if (file_exists($this->_storeFolder . '/' . $this->_domain . '/.gitignore')) {
-            exec('rm .gitignore');
+            $file->clear()->remove('.gitignore')->call();
         }
 
         /* remove svn files/folders */
-        exec('rm -rf `find . -type d -name .svn`');
+        $file->clear()->find('.svn', $file::TYPE_DIR, '.')->pipe(
+            $file->newQuery('xargs')->remove()->force()
+        )->call();
     }
 
     protected function _setupMagentoConnect() {
@@ -564,26 +588,21 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log($sqlname, Zend_Log::DEBUG);
 
-        $command = 'gunzip -t ' . $sqlname . ' 2>&1';
-        exec($command, $output);
-
-        $this->logger->log($command, Zend_Log::DEBUG);
-        $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
-
-        if (isset($output[1]) && $output[1] == 'gzip: ' . $sqlname . ': not in gzip format'
+        $not_gzipped = $this->cli('gzip')->test($sqlname)->call()->getLastStatus();
+        if ((int)$not_gzipped
         ) {
             $sqlfound = true;
             $unpacked = 1;
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
-            $command = 'tar -ztvf ' . $sqlname . ' 2>&1';
-            exec($command, $output, $return_var);
+            $command = $this->cli('tar')->test($sqlname);
+            $result = $command->call();
             $this->logger->log($command, Zend_Log::DEBUG);
-            $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
-            $this->logger->log($return_var, Zend_Log::DEBUG);
+            $this->logger->log(var_export($result->getLastOutput(),true), Zend_Log::DEBUG);
+            $this->logger->log($result->getLastStatus(), Zend_Log::DEBUG);
 
-            if ($return_var == 2) {
+            if ((int)$result->getLastStatus()) {
                 /* is gz */
 
                 $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
@@ -592,32 +611,21 @@ implements Application_Model_Task_Interface {
                  * get filename from output - gz only packs one filename 
                  * this needs to be done BEFORE unpacking otherise we lose file
                  */
-                $output = array();
-                $command = 'gzip -l ' . $sqlname . ' 2>&1';
-                exec($command, $output);
+                $command = $this->cli('gzip')->getPackedFilename($sqlname);
+                $result = $command->call();
+                $output = $result->getLastOutput();
 
                 $this->logger->log($command, Zend_Log::DEBUG);
                 $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
 
-                foreach ($output as $line) {
-
-                    /**
-                     * Example output of gzip -l to understand the explode
-                     * '         compressed        uncompressed  ratio uncompressed_name'
-                     * '                989                3995  76.0% somefile.sql'
-                     */
-                    $parts = explode("% ", $line);
-                    if (isset($parts[1])) {
-                        $this->_customSql = $parts[1];
-                        $sqlfound = true;
-                    }
+                if(!(int)$result->getLastStatus() && $output) {
+                    $this->_customSql = $output[0];
+                    $sqlfound = true;
                 }
-                
-                $output = array();
 
                 /* is gz */
-                $command = 'gunzip ' . $sqlname . ' 2>&1';
-                exec($command, $output);
+                $command = $this->cli('gzip')->unpack($sqlname);
+                $output = $command->call()->getLastOutput();
 
                 $this->logger->log($command, Zend_Log::DEBUG);
                 $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
@@ -626,8 +634,8 @@ implements Application_Model_Task_Interface {
                 /* is tar.gz */
                 $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
 
-                $command = 'tar -zxvf ' . $sqlname . ' 2>&1';
-                exec($command, $output);
+                $command = $this->cli('tar')->unpack($sqlname);
+                $output = $command->call()->getLastOutput();
 
                 $this->logger->log($command, Zend_Log::DEBUG);
                 $this->logger->log(var_export($output,true), Zend_Log::DEBUG);
@@ -643,14 +651,17 @@ implements Application_Model_Task_Interface {
                 foreach ($output as $path) {
                     $output2 = array();
                     if (is_file($path)) {
-                        $command = "sudo grep -lir 'CREATE TABLE `" . $this->_db_table_prefix . "admin_role`' " . $path;
-                        exec($command, $output2);
+                        $command = $this->cli()->createQuery(
+                            'grep -lir ? ?',
+                            array('CREATE TABLE `'.$this->_db_table_prefix . 'admin_role`', $path)
+                        )->asSuperUser();
+                        $result = $command->call()->getLastOutput();
                         $this->logger->log($command, Zend_Log::DEBUG);
-                        $this->logger->log(var_export($output2,true), Zend_Log::DEBUG);
+                        $this->logger->log(var_export($result,true), Zend_Log::DEBUG);
 
-                        if (!empty($output2)) {
+                        if (!empty($result)) {
                             $sqlfound = true;
-                            $this->_customSql = $output2[0];
+                            $this->_customSql = $result[0];
                         }
                     }
                 }
@@ -677,19 +688,27 @@ implements Application_Model_Task_Interface {
     protected function _detectTablePrefix(){
         $output = array();
         $path_parts = pathinfo($this->_customSql);
-        $command = 'grep core_config_data '.$this->_storeFolder.'/'.$this->_storeObject->getDomain().'/'.$path_parts['basename'];
-        exec($command,$output);
-        if (!empty($output)){
-            preg_match_all('#(.*?)`(.*?)(core\_config\_data|)`#',$output[0],$matches);
-            $this->_db_table_prefix = $matches[2][0];
+        $output = $this->cli()
+            ->createQuery('grep -i -e \'[a-z0-9$_]*core_config_data\' ? -o', $path_parts['basename'])
+            ->pipe('head -n 1')
+            ->pipe('sed s/core_config_data//')
+            ->call()
+            ->getLastOutput();
+        $this->_db_table_prefix = '';
+        if(isset($output[0])) {
+            $this->_db_table_prefix = $output[0];
         }
     }
-    
+
     protected function _fixOwnership(){
         $output = array();
         $user  = $this->config->magento->userprefix . $this->_dbuser;
-        $command = 'sudo chown -R '.$user.':'.$user.' '.$this->_storeFolder.'/'.$this->_storeObject->getDomain().'/';
-        exec($command,$output);
+        $command = $this->_fileKit->clear()->fileOwner(
+            $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/',
+            $user.':'.$user
+        )->asSuperUser();
+        $output = $command->call()->getLastOutput();
+
         $this->logger->log($command, Zend_Log::DEBUG);
         $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
     }

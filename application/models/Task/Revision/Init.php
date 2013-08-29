@@ -20,8 +20,8 @@ implements Application_Model_Task_Interface {
         $startCwd = getcwd();
         
         chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain());
-        exec('git init');
-        
+        $this->cli('git')->init()->call();
+
         chdir($startCwd);
     }
     
@@ -30,12 +30,13 @@ implements Application_Model_Task_Interface {
         "var/".PHP_EOL.
         "media/".PHP_EOL.
         "";
-        
-        if (!file_exists($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/.gitignore')){
-            exec('touch '.$this->_storeFolder.'/'.$this->_storeObject->getDomain().'/.gitignore');
+        $gitignore = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/.gitignore';
+        if (!file_exists($gitignore)){
+            $file = $this->cli('file');
+            $file->create($gitignore, $file::TYPE_FILE)->call();
         }
         
-        file_put_contents($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/.gitignore', $data);
+        file_put_contents($gitignore, $data);
     }
     
     protected function _createDeploymentDir(){
@@ -49,8 +50,9 @@ implements Application_Model_Task_Interface {
             
             $startCwd = getcwd();
         
-            exec('mkdir -p '.$deploymentPath);
-            
+            $file = $this->cli('file');
+            $file->create($deploymentPath, $file::TYPE_DIR)->call();
+
             $rules = "Order allow,deny\n".
             "Allow from all";
         

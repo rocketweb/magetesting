@@ -13,10 +13,24 @@ class Application_Model_Transport {
     protected $_user = '';
     protected $_pass = '';
     protected $_errorMessage = '';
-    
+    protected $_cli;
+
     protected $logger = NULL;
-    
-    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
+
+    public function __construct()
+    {
+        $this->_cli = new RocketWeb_Cli();
+    }
+
+    public function cli($kit = '')
+    {
+        if($kit) {
+            return $this->_cli->kit($kit);
+        }
+        return $this->_cli;
+    }
+
+    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL, $cli = NULL){
         $this->setConnection($store);
 
         $this->_sqlFileLimit = $config->magento->sqlDumpByteLimit;
@@ -32,6 +46,10 @@ class Application_Model_Transport {
         if ($logger instanceof Zend_Log) {
             $this->logger = $logger;
         }
+        if(!$cli instanceof RocketWeb_Cli) {
+            $cli = new RocketWeb_Cli();
+        }
+        $this->_cli = $cli;
     } 
     
     /**
@@ -121,15 +139,14 @@ class Application_Model_Transport {
     }
     
     /* return transport model for specified protocol */
-    public static function factory(Application_Model_Store &$store, $logger = NULL,$config = NULL){
-        
+    public static function factory(Application_Model_Store &$store, $logger = NULL,$config = NULL, $cli = NULL){
         $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
         $classSuffix = $filter->filter($store->getCustomProtocol());
         $className = 'Application_Model_Transport_' . $classSuffix;
         
         if (class_exists($className)){
             $customTransportModel = new $className();
-            $customTransportModel->setup($store, $logger, $config);
+            $customTransportModel->setup($store, $logger, $config, $cli);
             return $customTransportModel;
         }      
         throw new Application_Model_Transport_Exception('model transport '.$className.' doesnt exist');

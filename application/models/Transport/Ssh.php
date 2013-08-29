@@ -9,36 +9,37 @@ extends Application_Model_Transport {
     protected $_customFile = '';
     protected $_customSql = ''; 
 
-    private $_connection;
+    private $_ssh;
 
-    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL){
-
+    public function setup(Application_Model_Store &$store, $logger = NULL,$config = NULL, $cli = NULL){
         $this->_storeObject = $store;
 
-        parent::setup($store, $logger, $config);
+        parent::setup($store, $logger, $config, $cli);
         
         $this->_prepareCustomVars($store);
 
-        // error suppression added here intentionally as this function
-        // throws warning if it can't connect using given host and port (wojtek)
-        $this->_connection = @ssh2_connect($store->getCustomHost(), $store->getCustomPort());
-
-        if ($this->_connection === FALSE) {
-            throw new Application_Model_Transport_Exception('Can not connect with ssh server.');
-        }
-
-        ssh2_auth_password($this->_connection, $store->getCustomLogin(), $store->getCustomPass());
-        
-        /*TODO: execute this somewhere, closeConnection() function? */
-        //fclose($stream);
+        $this->_ssh = $this->cli('ssh');
+        $this->_ssh->connect(
+            $this->_storeObject->getCustomLogin(),
+            $this->_storeObject->getCustomPass(),
+            trim($this->_customHost,'/'),
+            $this->_customPort
+        );
     }
 
     public function checkProtocolCredentials(){
-
-        if (!$this->_connection){
-            throw new Application_Model_Transport_Exception('Couldn\'t log in with given ssh credentials. Please change them to try again.');
+        $output =
+            $this
+                ->_ssh
+                ->cloneObject()
+                ->remoteCall('echo "connected" 2>&1')
+                ->pipe('grep "connected"')
+                ->call()
+                ->getLastOutput();
+        if(isset($output[0]) && 'connected' === $output[0]) {
+            return true;
         }
-        else return true;
+        return false;
     }
 
     /* TODO: move to parent and rewrite if necessary ? */
@@ -89,7 +90,7 @@ extends Application_Model_Transport {
 
     public function downloadFilesystem(){
 
-        if ($this->_storeObject->getCustomFile()!=''){          
+        if ($this->_storeObject->getCustomFile()!=''){
             return $this->_downloadAndUnpack();
         } else {
             return $this->_downloadInstanceFiles();
@@ -104,22 +105,25 @@ extends Application_Model_Transport {
         /**
          * the switch is used to not ask for /yes/no about adding host to known hosts
          */
-        exec('set -xv');
+        $this->cli()->exec('set -xv');
         /**
          * First we change to root then use ltrim on abolute path to prevent:
          * tar: Removing leading `/' from member names
          */
-        $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .escapeshellarg($this->_storeObject->getCustomLogin()).'@'.trim($this->_customHost,'/')
-                .' -p'.$this->_customPort.' "cd /;tar -zcf - '.ltrim($this->_customRemotePath,'/').' --exclude='.$this->_customRemotePath.'var --exclude='.$this->_customRemotePath.'media"'
-                .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
-        exec($command,$output);
+        $pack = $this->cli('tar')->newQuery('cd /;');
+        $pack->pack('-', ltrim($this->_customRemotePath,'/'), false)->isCompressed(true);
+        $pack->exclude(array($this->_customRemotePath.'var', $this->_customRemotePath.'media'));
+
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
+
+        $command = $this->_ssh->cloneObject()->remoteCall($pack)->pipe($unpack);
+
+        $output = $command->call()->getLastOutput();
 
         if ($this->logger instanceof Zend_Log) {
             $message = var_export($output, true);
             $this->logger->log('Downloading store files.', Zend_Log::INFO);
-            $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
+            $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
             $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         }
         /**
@@ -127,13 +131,11 @@ extends Application_Model_Transport {
          */
 
         //locate mage file
-        $output = array();
         $mageroot = '';
-        $command = 'find -L -name Mage.php';
-        exec($command,$output);
-        $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
-        
-        
+        $file = $this->cli('file');
+        $output = $file->find('Mage.php', $file::TYPE_FILE, '', true)->call()->getLastOutput();
+        $this->logger->log($file->toString(). "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
+
         /* no matchees found */
         if ( count($output) == 0 ){
             throw new Application_Model_Transport_Exception('/app/Mage has not been found');
@@ -156,53 +158,55 @@ extends Application_Model_Transport {
 
     public function checkDatabaseDump(){
 
-        if($output = ssh2_exec($this->_connection, 'du -b '.$this->_customSql.'')) {
-            stream_set_blocking($output, true);
-            $content = stream_get_contents($output);
-        }
+        $output = $this->_ssh->cloneObject()->remoteCall(
+            $this->cli('file')->getSize($this->_customSql)
+        )->call()->getLastOutput();
 
         if ($this->logger instanceof Zend_Log) {
             $this->logger->log('Checking database file size.', Zend_Log::INFO);
-            $this->logger->log("\n" . $content . "\n", Zend_Log::DEBUG);
+            $this->logger->log("\n" . var_export($output, true) . "\n", Zend_Log::DEBUG);
         }
 
-        // Since du should return something like '12345   filename.ext'
-        $duParts = explode("\t",$content);
-        $sqlSizeInfo = $duParts[0];
+        $sqlSizeInfo = '';
+        if(isset($output[0])) {
+            $sqlSizeInfo = $output[0];
+        }
 
-       //limit is in bytes!
-        if ($duParts[0] == 'du:' && $duParts[1] == 'cannot' && $duParts[1]=='access'){                       
+        //limit is in bytes!
+        if(!is_numeric($sqlSizeInfo)) {
             $this->_errorMessage = 'Couldn\'t find sql data file, will not install queue element';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
 
-        if ($sqlSizeInfo > $this->_sqlFileLimit){
+        if((int) $sqlSizeInfo > $this->_sqlFileLimit) {
             $this->_errorMessage = 'Sql file is too big';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
-        
+
         return true;
     }
 
     public function downloadDatabase(){
         $components = count(explode('/',trim($this->_customSql, '/')))-1;
 
-        exec('set -xv');
+        $this->cli()->exec('set -xv');
         /**
          * First we change to root then use ltrim on abolute path to prevent:
          * tar: Removing leading `/' from member names
          */
-        $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .escapeshellarg($this->_storeObject->getCustomLogin()).'@'.trim($this->_customHost,'/')
-                .' -p'.$this->_customPort.' "cd /;tar -zcf - '.ltrim($this->_customSql,'/').'"'
-                .' | sudo tar -xzvf - --strip-components='.$components.' -C .';
-        exec($command,$output);
+        $pack = $this->cli('tar')->newQuery('cd /;');
+        $pack->pack('-', ltrim($this->_customSql,'/'), false)->isCompressed(true);
+
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
+
+        $command = $this->_ssh->cloneObject()->remoteCall($pack)->pipe($unpack);
+
+        $output = $command->call()->getLastOutput();
 
         if ($this->logger instanceof Zend_Log) {
             $message = var_export($output, true);
             $this->logger->log('Downloading store database.', Zend_Log::INFO);
-            $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
+            $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
             $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         }
 
@@ -229,54 +233,40 @@ extends Application_Model_Transport {
     }
 
     protected function _downloadAndUnpack(){
-        /*TODO: validate that custom file really exists */
-        if($output = ssh2_exec($this->_connection, 'du -b '.$this->_customFile.'')) {
-            stream_set_blocking($output, true);
-            $content = stream_get_contents($output);
-        }
+        $output = $this->_ssh->cloneObject()->remoteCall(
+            $this->cli('file')->getSize($this->_customFile)
+        )->call()->getLastOutput();
 
-        $duParts = explode(' ',$content);
-
-        if ($duParts[0] == 'du:' && $duParts[1] == 'cannot' && $duParts[2]=='access'){                       
-            $this->_errorMessage = 'Couldn\'t find data file, will not install queue element';
-            throw new Application_Model_Transport_Exception($this->_errorMessage);     
-        }
-        
-
-        /*check downloaded package filesize */
-        if($output = ssh2_exec($this->_connection, 'du -b '.$this->_customFile.'')) {
-            stream_set_blocking($output, true);
-            $content = stream_get_contents($output);
+        $packageSizeInfo = '';
+        if(isset($output[0])) {
+            $packageSizeInfo = $output[0];
         }
 
         if ($this->logger instanceof Zend_Log) {
             $this->logger->log('Checking package file size.', Zend_Log::INFO);
-            $this->logger->log("\n" . $content . "\n", Zend_Log::DEBUG);
+            $this->logger->log("\n" . var_export($output, true) . "\n", Zend_Log::DEBUG);
         }
 
-        // Since du should return something like '12345   filename.ext'
-        $duParts = explode("\t",$content);
-        $packageSizeInfo = $duParts[0];
-
-       //limit is in bytes!
-        if ($duParts[0] == 'du:' && $duParts[1] == 'cannot' && $duParts[1]=='access'){                       
-            $this->_errorMessage = 'Couldn\'t find store package file, will not install';
+        if(!is_numeric($packageSizeInfo)) {
+            $this->_errorMessage = 'Couldn\'t find data file, will not install queue element';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
 
-        if ($packageSizeInfo > $this->_storeFileLimit){
+        if ((int) $packageSizeInfo > $this->_storeFileLimit) {
             $this->_errorMessage = 'Store file is too big';
             throw new Application_Model_Transport_Exception($this->_errorMessage);
         }
-        
+
         /* Download file*/
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
-        $command = 'sshpass -p'.escapeshellarg($this->_storeObject->getCustomPass())
-                .' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no '
-                .escapeshellarg($this->_storeObject->getCustomLogin()).'@'.trim($this->_customHost,'/')
-                .' -p'.$this->_customPort.' "cat '.$this->_customFile.'"'
-                .' | sudo tar -xzvf - -C . 2>&1';
-        exec($command,$output);
+        $readFile = $this->cli()->createQuery('cat ?', $this->_customFile);
+
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->asSuperUser();
+
+        $command = $this->_ssh->cloneObject()->remoteCall($readFile)->pipe($unpack);
+
+        $output = $command->call()->getLastOutput();
+
         $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command);
         $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
 
@@ -292,10 +282,9 @@ extends Application_Model_Transport {
 
         //locate mage file 
         $output = array();
-        $mageroot = '';
-        $command = 'find -L -name Mage.php';
-        exec($command,$output);      
-        $this->logger->log($command. "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
+        $file = $this->cli('file');
+        $output = $file->find('Mage.php', $file::TYPE_FILE, '', true)->call()->getLastOutput();
+        $this->logger->log($file->toString(). "\n" . var_export($output,true) . "\n", Zend_Log::DEBUG);
 
 
         /* no matchees found */
@@ -317,15 +306,9 @@ extends Application_Model_Transport {
 
         /* move files from unpacked dir into our instance location */
         //echo 'mageroot:'.$mageroot;
-        $output = array();
-        $command = 'sudo mv '.$mageroot.'/.??* .';
-        exec($command,$output);
-        unset($output);
-        
-        $output = array();
-        $command = 'sudo mv '.$mageroot.'/* .';
-        exec($command,$output);
-        unset($output);
+        $this->cli()->createQuery('mv ?/.??* .', $mageroot)->asSuperUser()->call();
+
+        $this->cli()->createQuery('mv ?/* .', $mageroot)->asSuperUser()->call();
         //echo 'post-mageroot';
 
         return true;

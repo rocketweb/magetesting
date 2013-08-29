@@ -113,7 +113,7 @@ class RocketWeb_SqlUpdater
                 
                 // if version does not exist, find install sql
                 if($file->getFilename() == $this->_prefix.'-install.php') {
-                    include_once $file->getPathname();
+                    include $file->getPathname();
 
                     if(!isset($version) OR !$version) {
                         throw new Exception('File '.$file->getFilename().' should contain variable $version.');

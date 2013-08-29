@@ -7,6 +7,7 @@ extends Application_Model_Task_Revision
 implements Application_Model_Task_Interface {
    
     protected $_dbBackupPath = '';
+    protected $_git;
 
     public function setup(Application_Model_Queue $queueElement){
         parent::setup($queueElement);
@@ -21,8 +22,15 @@ implements Application_Model_Task_Interface {
             $this->_sendStoreReadyEmail();
         }
         /* send email to store owner stop */
+
+        $this->_git = $this->cli('git');
     }
-    
+
+    protected function _git()
+    {
+        return $this->_git->clear();
+    }
+
     public function process(Application_Model_Queue $queueElement = null) {
         $this->_updateStoreStatus('commiting-revision');
               
@@ -56,8 +64,8 @@ implements Application_Model_Task_Interface {
     protected function _commitManual(){
         $this->logger->log('Making manual GIT commit.', Zend_Log::INFO);
 
-        exec('git add -A');
-        
+        $this->_git()->addAll()->call();
+
         $output = '';
         $params = $this->_queueObject->getTaskParams(); 
         
@@ -65,8 +73,8 @@ implements Application_Model_Task_Interface {
             $params['commit_comment']='No comment given for this commit';
         }
 
-        exec('git commit -m "'.$params['commit_comment'].'"',$output);
-        
+        $output = $this->_git()->commit($params['commit_comment'])->call()->getLastOutput();
+
         if (!count($output)){
             $message = 'No changes have been made, manual commit aborted';
             $this->logger->log($message, Zend_Log::NOTICE);
@@ -123,39 +131,38 @@ implements Application_Model_Task_Interface {
     
     protected function _commitAutomatic(){
         $this->logger->log('Making automatic GIT commit.', Zend_Log::INFO);
-        $command = 'git add -A';
-        exec($command, $output);
+        $command = $this->_git()->addAll();
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
-        $this->logger->log($command, Zend_Log::DEBUG);
+        $this->logger->log($command->toString(), Zend_Log::DEBUG);
         $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
 
-        $output = '';
         $params = $this->_queueObject->getTaskParams(); 
         
         if (trim($params['commit_comment'])==''){
             $params['commit_comment']='No comment given for this commit';
         }
-        
-        $command = 'git commit -m "'.$params['commit_comment'].'"';
-        exec($command,$output);
+
+        $command = $this->_git()->commit($params['commit_comment']);
+        $output = $command->call()->getLastOutput();
 
         $message = var_export($output, true);
-        $this->logger->log($command, Zend_Log::DEBUG);
+        $this->logger->log($command->toString(), Zend_Log::DEBUG);
         $this->logger->log($message, Zend_Log::DEBUG);
 
-	/* log lines to revision log */
+        /* log lines to revision log */
         if($params['commit_comment'] != 'Initial Magento Commit'){
             $linesToLog = array();
             $linesToLog[] = date("Y-m-d H:i:s").' - '.$params['commit_comment'];
             $candumpnow=0;
             foreach ($output as $line){
-	    if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author')){
-                  $candumpnow=1;
-                  continue;
+                if(strstr($line,'git commit --amend --author=') || strstr($line,'git commit --amend --reset-author')){
+                    $candumpnow=1;
+                    continue;
                 }
                 if (!$candumpnow || trim($line)==''){
-                  continue;
+                    continue;
                 }
 
                 $linesToLog[] = $line;
@@ -204,24 +211,28 @@ implements Application_Model_Task_Interface {
         //export backup
         $this->logger->log('Creating database backup.', Zend_Log::INFO);
         $dbDir = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/var/db/';
-        exec('sudo mkdir -p '.$dbDir);
+        $file = $this->cli('file');
+        $file->create($dbDir, $file::TYPE_DIR)->asSuperUser()->call();
         chdir($dbDir);
         $dbFileName = 'db_backup_'.date("Y_m_d_H_i_s");
-        $command = 'sudo mysqldump -u'.$this->config->resources->db->params->username.' -p'.$this->config->resources->db->params->password.' '.$this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().' | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' > '.$dbFileName;
-        exec($command);
-        
+        $this->cli('mysql')->connect(
+            $this->config->resources->db->params->username,
+            $this->config->resources->db->params->password,
+            $this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain()
+        )->export()->removeDefiners()->append('> ?', $dbFileName)->asSuperUser()->call();
+
         //pack it up
         $pathinfo = pathinfo($dbFileName);
         /* tar backup file */
         $this->logger->log('Packing database backup.', Zend_Log::INFO);
-        exec('sudo tar -zcf '.$pathinfo['filename'].'.tgz '.$dbFileName);
-        
+        $this->cli('tar')->asSuperUser()->pack($pathinfo['filename'].'.tgz', $dbFileName)->isCompressed()->call();
+
         /* copy packed sql file to target dir */
         //exec('sudo mv '.$pathinfo['filename'].'.tgz '.$dbDir.$pathinfo['filename'].'.tgz');
         
         $this->logger->log('Removing not packed database backup.', Zend_Log::INFO);
-        exec('sudo rm '.$dbFileName);
-        
+        $file->clear()->remove($dbFileName)->asSuperUser()->call();
+
         chdir($startCwd);
         $this->_dbBackupPath = $dbFileName.'.tgz';
     }

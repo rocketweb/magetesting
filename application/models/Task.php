@@ -35,7 +35,9 @@ class Application_Model_Task {
     protected $config;
     protected $db;
     protected $filePrefix;
-    
+
+    protected $_cli;
+    protected $_fileKit;
     /**
      *
      * @var Zend_Log
@@ -52,8 +54,19 @@ class Application_Model_Task {
             'EE' => 'enterprise',
             'PE' => 'professional',
         );
+
+        $this->_cli = new RocketWeb_Cli();
+
+        $this->_fileKit = $this->cli('file');
     }
-     
+
+    public function cli($kit = '')
+    {
+        if($kit) {
+            return $this->_cli->kit($kit);
+        }
+        return $this->_cli;
+    }
     /**
      * Sets class's objects we'll be working on
      */
@@ -141,36 +154,40 @@ class Application_Model_Task {
         $logger->addWriter($writerDb);
 
         $this->logger = $logger;
-        
-        try{
-        
-        $revisionLogPath = '/home/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . 
-			      '/public_html/'.$this->_storeObject->getDomain().'/var/log/';
-        
-        if (!file_exists($revisionLogPath)){
-	  exec('sudo mkdir -p '.$revisionLogPath);
-        }
-        
-        $revisionLogFile = 'revision.log';
-        
-        if (!file_exists($revisionLogPath.$revisionLogFile)){
-	  exec('sudo touch '.$revisionLogPath.$revisionLogFile);
-	  exec('sudo chmod 777 '.$revisionLogPath.$revisionLogFile);
-	}
-        
-        
-          $formatter = new Zend_Log_Formatter_Simple('%message%' . PHP_EOL);
+        $fileKit = $this->_fileKit;
 
-	  $writerFile = new Zend_Log_Writer_Stream($revisionLogPath.$revisionLogFile);
-	  $writerFile->setFormatter($formatter);
-	  $revisionLogger = new Zend_Log($writerFile);
-	  $this->revisionLogger = $revisionLogger;
+        $this->_cli->setLogger($logger);
+        $this->_cli->enableLogging(
+            (bool) $this->config->execWrapper->logEnabled
+        );
+
+        try{
+            $revisionLogPath = '/home/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . 
+                '/public_html/'.$this->_storeObject->getDomain().'/var/log/';
+
+            if (!file_exists($revisionLogPath)){
+                $fileKit->clear()->create($revisionLogPath, $fileKit::TYPE_DIR)->asSuperUser()->call();
+            }
+
+            $revisionLogFilePath = $revisionLogPath.'revision.log';
+
+            if (!file_exists($revisionLogFilePath)){
+                $fileKit->clear()->create($revisionLogFilePath, $fileKit::TYPE_FILE)->asSuperUser()->call();
+                $fileKit->clear()->fileMode($revisionLogFilePath, 777)->call();
+            }
+
+            $formatter = new Zend_Log_Formatter_Simple('%message%' . PHP_EOL);
+
+            $writerFile = new Zend_Log_Writer_Stream($revisionLogFilePath);
+            $writerFile->setFormatter($formatter);
+            $revisionLogger = new Zend_Log($writerFile);
+            $this->revisionLogger = $revisionLogger;
         } catch (Zend_Log_Exception $e){
-	  $this->logger->log('Creating writed for revisions failed : ' . $e->getMessage(), Zend_Log::EMERG);
+            $this->logger->log('Creating writed for revisions failed : ' . $e->getMessage(), Zend_Log::EMERG);
         }
 
     }
-      
+    
     /**
      * 
      */
@@ -183,11 +200,9 @@ class Application_Model_Task {
 
         $cacheFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/var/cache';
         if(file_exists($cacheFolder) && is_dir($cacheFolder)){
-            $command = 'sudo rm -rf ' . $cacheFolder . '/*';
-            exec($command, $output);
-            $message = var_export($output, true);
-            $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-            unset($output);
+            $this->_fileKit->clear()->remove($cacheFolder)->append('/*', null, false)->asSuperUser();
+            $message = var_export($this->_fileKit->call()->getLastOutput(), true);
+            $this->logger->log("\n".$this->_fileKit->toString()."\n" . $message, Zend_Log::DEBUG);
         }
     }
     
@@ -196,22 +211,33 @@ class Application_Model_Task {
     protected function _applyXmlRpcPatch(){
         $this->logger->log('Applying XML RPC patch.', Zend_Log::INFO);
 
+        $file = $this->_fileKit;
+        $file->asSuperUser();
         if ($this->_versionObject->getVersion() > '1.3.2.3' AND $this->_versionObject->getVersion() < '1.4.1.2'){
             //we're somewhere between 1.3.2.4 and 1.4.1.1
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1400_1411/Request.php ' . $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Request.php');
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1400_1411/Response.php ' . $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Response.php');
+            $file->clear()->copy(
+                APPLICATION_PATH . '/../data/fixes/1400_1411/Request.php',
+                $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Request.php'
+            )->call();
+            $file->clear()->copy(
+                APPLICATION_PATH . '/../data/fixes/1400_1411/Response.php',
+                $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Request.php'
+            )->call();
             
-        } elseif ($this->_versionObject->getVersion() == '1.4.2.0'){
-            //1.4.2.0 - thank you captain obvious
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Request.php ' . $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Request.php');
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Response.php ' . $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Response.php');
-            
-        } elseif ($this->_versionObject->getVersion() > '1.4.9.9' AND $this->_versionObject->getVersion() < '1.7.0.2') {
-            //we're somewhere between 1.5.0.0 and 1.7.0.1
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Request.php ' . $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Request.php');
-            exec('sudo cp ' . APPLICATION_PATH . '/../data/fixes/1500_1701/Response.php ' . $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Response.php');
+        } elseif(
+            $this->_versionObject->getVersion() == '1.4.2.0'
+            || ($this->_versionObject->getVersion() > '1.4.9.9' AND $this->_versionObject->getVersion() < '1.7.0.2')
+        ){
+            $file->clear()->copy(
+                APPLICATION_PATH . '/../data/fixes/1500_1701/Request.php',
+                $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Request.php'
+            )->call();
+            $file->clear()->copy(
+                APPLICATION_PATH . '/../data/fixes/1500_1701/Response.php',
+                $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Request.php'
+            )->call();
         }
-        
+        $file->asSuperUser(false);
     }
        
     protected function _updateStoreStatus($status){

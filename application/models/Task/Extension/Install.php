@@ -78,7 +78,8 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _install() {
-        $output='';
+        $file = $this->cli('file');
+        $output = '';
 
         $this->logger->log('Unpacking and installing extension.', Zend_Log::INFO);
 
@@ -91,61 +92,72 @@ implements Application_Model_Task_Interface {
         if (!file_exists($tmpExtensionDir)){
             mkdir($tmpExtensionDir, 0777, true);
         }
-        
+        $extensionType = 'open';
+        $extensionFileName = $this->_extensionObject->getExtension();
         if ($this->_extensionObject->getPrice() > 0 ){
-            $command = 'tar -zxvf '.$this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/encoded/'.$this->_extensionObject->getExtensionEncoded().
-            ' -C '. $tmpExtensionDir;
-            
-        } else {
-            $command = 'tar -zxvf '.
-            $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/open/'.$this->_extensionObject->getExtension().
-            ' -C '.$tmpExtensionDir;
-
+            $extensionType = 'encoded';
+            $extensionFileName = $this->_extensionObject->getExtensionEncoded();
         }
-        
-        exec($command, $output);
+        $extensionPath = $this->config->extension->directoryPath.'/'.$this->_versionObject->getEdition().'/'.$extensionType.'/'.$extensionFileName;
+        $command = $this->cli('tar')->unpack($extensionPath, $tmpExtensionDir);
+
+        $output = $command->call()->getLastOutput();
+
         //output contains unpacked files list, so it should never be empty if unpacking suceed
         $message = var_export($output,true);
-        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        $this->logger->log("\n".$command->toString()."\n" . $message, Zend_Log::DEBUG);
         if (count($output)==0){
-            
             $message = 'There was an error while installing extension '.$this->_extensionObject->getName();
             $this->logger->log($message, Zend_Log::EMERG);
             throw new Application_Model_Task_Exception($message);
         }  
-        
+
         unset($output);
-        
+
         //set permissions on files in tmp directory
-        $command = 'chown -R '.$this->config->magento->userprefix . $this->_userObject->getLogin().':'.$this->config->magento->userprefix . $this->_userObject->getLogin().' '.$tmpExtensionDir.'';
-        exec($command,$output);
+        $command = $file->clear()->fileOwner(
+            $tmpExtensionDir,
+            $this->config->magento->userprefix . $this->_userObject->getLogin().':'.$this->config->magento->userprefix . $this->_userObject->getLogin()
+        );
+        $output = $command->call()->getLastOutput();
         $message = var_export($output,true);
         $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
         unset($output);
         
         //set permission on dirs 
-        $command = 'find '.$tmpExtensionDir.' -type d -print | xargs chmod 755';
-        exec($command,$output);
+        $command = $file->clear()->find('', $file::TYPE_DIR, $tmpExtensionDir)->printFiles();
+        $command->pipe(
+            $file->newQuery('xargs')->fileMode('', '755', false)
+        );
+        $output = $command->call()->getLastOutput();
         $message = var_export($output,true);
         $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
         unset($output);
         
         //set permission on files
-        $command = 'find '.$tmpExtensionDir.' -type f -print | xargs chmod 644';
-        exec($command,$output);
+        $command = $file->clear()->find('', $file::TYPE_FILE, $tmpExtensionDir)->printFiles();
+        $command->pipe(
+                $file->newQuery('xargs')->fileMode('', '644', false)
+        );
+        $output = $command->call()->getLastOutput();
         $message = var_export($output,true);
         $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
         unset($output);
         
         //move files from $tmpExtensionDir to store folder
-        $command = 'cp -rp '.$tmpExtensionDir.'/* '.$this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/ ';
-        exec($command,$output);
+        $command = $file->clear()->copy(
+            ':tmpAll',
+            $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/',
+            true,
+            true
+        )->bindAssoc("':tmpAll'", $file->escape($tmpExtensionDir).'/*', false);
+        $output = $command->call()->getLastOutput();
         $message = var_export($output,true);
         $this->logger->log($command."\n".$message,Zend_Log::DEBUG);
         unset($output);
         
         //remove tmpextensiondir
-        exec('sudo rm -R '.$tmp);
-    }    
+        $file->clear()->remove($tmp)->asSuperUser()->call();
+    }
 
 }
