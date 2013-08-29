@@ -69,7 +69,9 @@ implements Application_Model_Task_Interface {
         if ($this->_storeObject->getEdition()=='EE'){
             $this->_updateAdminAccount();
         }
-        
+
+        $this->_setFilesystemPermissions();
+
         $this->_fixUserHomeChmod();
     }
 
@@ -109,7 +111,8 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
         $output = $fileKit->clear()->fileMode(
             $this->_storeFolder . '/' . $this->_domain,
-            '+x'
+            '+x',
+            false
         )->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
@@ -246,7 +249,10 @@ implements Application_Model_Task_Interface {
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        $command = $fileKit->clear()->remove('magento/ ' . $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz')->force();
+        $command = $fileKit->clear()
+            ->remove('magento/')
+            ->append('?', $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz')
+            ->force();
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
@@ -267,7 +273,9 @@ implements Application_Model_Task_Interface {
             $sampleDataVersion = $this->_versionObject->getSampleDataVersion();
             $command = $fileKit->clear()->remove(':files')->force();
             $files =
-                $fileKit->escape('magento-sample-data-' . $sampleDataVersion . '/ magento-sample-data-' . $sampleDataVersion . '.tar.gz')
+                $fileKit->escape('magento-sample-data-' . $sampleDataVersion . '/')
+                . ' ' .
+                $fileKit->escape('magento-sample-data-' . $sampleDataVersion . '.tar.gz')
                 . ' ' .
                 'magento_sample_data_for_' . $sampleDataVersion . '.sql';
             $command->bindAssoc(
