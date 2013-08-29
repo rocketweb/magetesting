@@ -689,7 +689,7 @@ implements Application_Model_Task_Interface {
         $output = array();
         $path_parts = pathinfo($this->_customSql);
         $output = $this->cli()
-            ->createQuery('grep -i -e \'[a-z0-9$_]*core_config_data\' ? -o', 'file')
+            ->createQuery('grep -i -e \'[a-z0-9$_]*core_config_data\' ? -o', $path_parts['basename'])
             ->pipe('head -n 1')
             ->pipe('sed s/core_config_data//')
             ->call()

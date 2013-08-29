@@ -17,7 +17,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         $this->_prepareCustomVars($store);
 
         $this->_wget = $this->cli('wget');
-        $this->_wget->connect(
+        $this->_wget->ftpConnect(
             $this->_storeObject->getCustomLogin(),
             $this->_storeObject->getCustomPass(),
             $this->_customHost,
