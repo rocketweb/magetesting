@@ -18,7 +18,7 @@ class RocketWeb_Cli_Kit_Compression_Tar
     {
         return
             $this
-                ->append('tar :$gzipx:verbosef :$path:$move:$output')
+                ->append('tar :$gzipx:verboseof :$path:$move:$output')
                 ->bindAssoc(
                     ':$move',
                     ($move ? ' -C '.$this->escape($move) : ''),
