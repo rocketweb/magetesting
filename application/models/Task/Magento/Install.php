@@ -70,8 +70,6 @@ implements Application_Model_Task_Interface {
             $this->_updateAdminAccount();
         }
 
-        $this->_setFilesystemPermissions();
-
         $this->_fixUserHomeChmod();
     }
 
@@ -482,7 +480,8 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
          */
         $this->cli('file')->fileMode(
             $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin(),
-            'a-w'
+            'a-w',
+            false
         )->asSuperUser()->call();
     }
     
