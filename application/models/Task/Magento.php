@@ -235,7 +235,7 @@ extends Application_Model_Task {
         $this->_preparePhpIni();
 
         $file->clear()->fileOwner(
-            $this->_dbuser.' /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser,
+            '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser,
             $this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser
         )->asSuperUser()->call();
         $file->clear()->fileOwner(
