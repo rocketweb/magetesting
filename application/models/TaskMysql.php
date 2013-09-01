@@ -16,6 +16,10 @@ class Application_Model_TaskMysql
         $this->_db = $db;
         return $this;
     }
+    public function getDbAdapter()
+    {
+        return $this->_db;
+    }
     public function setTablePrefix($prefix)
     {
         $this->_tablePrefix = $prefix;
@@ -27,11 +31,10 @@ class Application_Model_TaskMysql
         if(is_string($tables)) {
             $tables = array($tables);
         }
-        $db = $this->_getDefaultAdapter();
+        $db = $this->getDbAdapter();
         foreach($tables as $table) {
             $db->query(
-                'TRUNCATE TABLE '.$this->_getDefaultAdapter()
-                                       ->quoteIdentifier($table)
+                'TRUNCATE TABLE '.$this->_table($table, true)
             );
         }
     }
@@ -99,6 +102,16 @@ class Application_Model_TaskMysql
 
     public function createAdminUser($fname, $lname, $email, $login, $password)
     {
+        /* Update all current users with @example.com emails 
+         * this way, we wont duplicate emails 
+         * eg. when imported store has same email as MT user email
+         */
+        $this->_db->update(
+            $this->_table('admin_user'),
+            array('email = ?' => new Zend_Db_Expr("CONCAT('user',user_id,'@example.com')"))
+        );
+
+        /* add user */
         $user = array(
             $fname, $lname, $email, $login, $password, 'CURRENT_TIMESTAMP', 1
         );
@@ -109,8 +122,24 @@ class Application_Model_TaskMysql
             'password = VALUES(password), email = VALUES(email)'
         );
 
+        /* add role for that user */
+        $subselect = new Zend_Db_Select($this->getDbAdapter());
+        $subselect->from($this->_table('admin_user'), array('user_id'));
+        $subselect->where(
+            array(
+                'username = ?' => $login
+            )
+        );
         $table = $this->_table('admin_role');
-        $this->_db->insert($table, $bind);
+        $data = array(
+            'parent_id' => 1,
+            'tree_level' => 2,
+            'sort_order' => 0,
+            'role_type' => 'U',
+            'user_id' => new Zend_Db_Expr($subselect->__toString()),
+            'role_name' => $this->_userObject->getFirstName()
+        );
+        $this->_db->insert($table, $data);
         return $this;
     }
 
@@ -170,6 +199,21 @@ class Application_Model_TaskMysql
         return $this;
     }
 
+    public function updateDemoNotice()
+    {
+        $data = array(
+            'string' => 'This is a demo store. Any orders placed through this store will not be honored or fulfilled.',
+            'store_id' => 0,
+            'translate' => 'This is a development store imported into Mage Testing. Please review our documentation to find out what was changed in the store in order to import that',
+            'locale' => 'en_US'
+        );
+        $this->getDbAdapter()->insert(
+            $this->_table('core_translate'),
+            $data
+        );
+        return $this;
+    }
+
     public function updateStoreConfigurationEmails($email)
     {
         $data = array_merge(
@@ -192,11 +236,8 @@ class Application_Model_TaskMysql
     protected function _insertOrUpdate($table, $columns, $values, $update)
     {
         $setSize = $this->_prepareColumns($columns);
-        echo '<pre>INSERT INTO '.$this->_table($table).' ('.$columns.')'.
-            ' VALUES '.$this->_prepareBindingString($values, $setSize).
-            ' ON DUPLICATE KEY UPDATE '.$update.PHP_EOL;var_dump($values);die;
         $this->_db->query(
-            'INSERT INTO '.$this->_table($table).' ('.$columns.')'.
+            'INSERT INTO '.$this->_table($table, true).' ('.$columns.')'.
             ' VALUES '.$this->_prepareBindingString($values, $setSize).
             ' ON DUPLICATE KEY UPDATE '.$update,
             $values
@@ -222,18 +263,11 @@ class Application_Model_TaskMysql
         return trim(str_repeat($set_str, (int)(count($array)/$set)), ', ');
     }
 
-    protected function _getDefaultAdapter()
+    protected function _table($table, $escape = false)
     {
-        $adapter = Zend_Db_Table::getDefaultAdapter();
-        if(!$adapter) {
-            $adapter = $this->_db;
+        if($escape) {
+            $table = $this->getDbAdapter()->quoteIdentifier($table);
         }
-        return $adapter;
-    }
-
-    protected function _table($table)
-    {
-        $table = $this->_getDefaultAdapter()->quoteIdentifier($table);
         return ($this->_tablePrefix ? $this->_tablePrefix.'.'.$table : $table);
     }
 }

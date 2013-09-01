@@ -287,7 +287,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
     protected function _disableAdminNotifications() {
         $this->logger->log('Disabling admin notifications.', Zend_Log::INFO);
 
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e \'INSERT INTO core_config_data (`scope`,`scope_id`,`path`,`value`) VALUES ("default",0,"advanced/modules_disable_output/Mage_AdminNotification",1) ON DUPLICATE KEY UPDATE `value` = 1\'');
+        $this->_taskMysql->disableAdminNotification();
     }
 
     protected function _runInstaller() {
@@ -385,10 +385,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
     }
     
     protected function _updateAdminAccount() {
-        $timestamp = strtotime('+1 year');
-        
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname 
-                . ' -e \'UPDATE enterprise_admin_passwords SET expires = \''.$timestamp.'\' \'');
+        $this->_taskMysql->updateAdminAccount();
     }
     
     protected function _fixUserHomeChmod(){
