@@ -143,17 +143,6 @@ class Application_Model_TaskMysql
         return $this;
     }
 
-    public function disableAdminNotification()
-    {
-        $this->_insertOrUpdate(
-            'core_config_data',
-            'scope, scope_id, path, value',
-            array('default', 0, 'advanced/modules_disable_output/Mage_AdminNotification', 1),
-            'value = 1'
-        );
-        return $this;
-    }
-
     public function updateAdminAccount()
     {
         $this->_db->update(
