@@ -5,7 +5,7 @@ class RocketWeb_Cli_Kit_Ssh
 {
     public function connect($user, $password, $host, $port)
     {
-        $this->append('sshpass -p :password ssh -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no');
+        $this->append('sshpass -p :password ssh -o LogLevel=FATAL -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no');
         $this->append(':user@:host -p :port');
         $this->bindAssoc(':user', $user)
              ->bindAssoc(':password', $password)

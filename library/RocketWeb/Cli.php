@@ -56,10 +56,12 @@ class RocketWeb_Cli
     public function setLogger(Zend_Log $log)
     {
         $this->_logger = $log;
+        return $this;
     }
     public function enableLogging($val)
     {
         $this->_log_enabled = (bool) $val;
+        return $this;
     }
     /**
      * Executes passed string and returns it's value, if RocketWeb_Cli_Query was passed
