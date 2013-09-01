@@ -421,26 +421,9 @@ implements Application_Model_Task_Interface {
         
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
-                
-        //update core_config_data with new url
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`'.$this->_db_table_prefix.'core_config_data\` SET \`value\` = \''.'http://'.$this->_dbuser.'.'.$serverModel->getDomain().'/'.$this->_domain.'/\' WHERE \`path\`=\'web/unsecure/base_url\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`'.$this->_db_table_prefix.'core_config_data\` SET \`value\` = \''.'http://'.$this->_dbuser.'.'.$serverModel->getDomain().'/'.$this->_domain.'/\' WHERE \`path\`=\'web/secure/base_url\'"');
 
-        // reset cookie settings
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`'.$this->_db_table_prefix.'core_config_data\` SET \`value\` = \'\' WHERE \`path\`=\'web/cookie/cookie_path\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`'.$this->_db_table_prefix.'core_config_data\` SET \`value\` = \'\' WHERE \`path\`=\'web/cookie/cookie_domain\'"');
+        $this->_taskMysql->updateCoreConfig($serverModel->getDomain(), $this->_userObject->getEmail());
 
-        //update contact emails
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`'.$this->_db_table_prefix.'core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'contacts/email/recipient_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`'.$this->_db_table_prefix.'core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'catalog/productalert_cron/error_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`'.$this->_db_table_prefix.'core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sitemap/generate/error_email\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`'.$this->_db_table_prefix.'core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sales_email/order/copy_to\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`'.$this->_db_table_prefix.'core_config_data\` SET  \`value\` =  \''.$this->_userObject->getEmail().'\' WHERE  \`path\` = \'sales_email/shipment/copy_to\';"');
-        
-        /* Disable Google Analytics */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`'.$this->_db_table_prefix.'core_config_data\` SET  \`value\` =  \'0\' WHERE  \`path\` = \'google/analytics/active\';"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE  \`'.$this->_db_table_prefix.'core_config_data\` SET  \`value\` =  \'\' WHERE  \`path\` = \'google/analytics/account\';"');
-        
         /* clear cache to apply new cache settings  */
         $this->_clearStoreCache();
         
@@ -448,39 +431,13 @@ implements Application_Model_Task_Interface {
     }
     
     protected function _createAdminUser(){
-             
-        /* Update all current users with @example.com emails 
-         * this way, we wont duplicate emails 
-         * eg. when imported store has same email as MT user email
-         */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
-                ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . 
-                ' -e "UPDATE '.$this->_db_table_prefix.'admin_user SET email = CONCAT(\'user\',user_id,\'@example.com\');"');
-        
-        /* add user */
-        $password = $this->getHash($this->_adminpass,2);
-        $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
-        ' -p' . $this->_dbpass . 
-        ' ' . $this->config->magento->storeprefix . $this->_dbname . 
-        ' -e "INSERT INTO '.$this->_db_table_prefix.'admin_user'.
-        ' (firstname,lastname,email,username,password,created,is_active) VALUES'.
-        ' (\''.$this->_userObject->getFirstName().'\',\''.$this->_userObject->getLastName().'\',\''.$this->_userObject->getEmail().'\',\''.$this->_userObject->getLogin().'\',\''.$password.'\',\''.date("Y-m-d H:i:s").'\',1)'.
-        ' ON DUPLICATE KEY UPDATE password = \''.$password.'\', email = \''.$this->_userObject->getEmail().'\' "';
-        exec($command, $output);
-        unset($output);
-        
-        /* add role for that user */
-        $command = 'mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
-        ' -p' . $this->_dbpass . 
-        ' ' . $this->config->magento->storeprefix . $this->_dbname . 
-        ' -e "INSERT INTO '.$this->_db_table_prefix.'admin_role'. 
-' (parent_id,tree_level,sort_order,role_type,user_id,role_name)'. 
-' VALUES'.
-' (1,2,0,\'U\',(SELECT user_id FROM '.$this->_db_table_prefix.'admin_user WHERE username=\''.$this->_userObject->getLogin().'\'),\''.$this->_userObject->getFirstName().'\')"';
-        exec($command, $output);
-        unset($output);
-        
-        
+        $this->_taskMysql->createAdminUser(
+            $this->_userObject->getFirstName(),
+            $this->_userObject->getLastName(),
+            $this->_userObject->getEmail(),
+            $this->_userObject->getLogin(),
+            $this->getHash($this->_adminpass,2)
+        );
     }
     
     /* taken from Mage_Core_Helper_Data */
@@ -565,12 +522,8 @@ implements Application_Model_Task_Interface {
             'log_visitor_online',
             'sendfriend_log'
         );
-        
-        foreach ($tablesToClean as $tableName){
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
-                ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . 
-                ' -e "TRUNCATE TABLE \`'.$this->_db_table_prefix.''.$tableName.'\`"');
-        }
+
+        $this->_taskMysql->truncate($tablesToClean);
     }
 
     /**
@@ -679,11 +632,7 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _updateDemoNotice(){
-        
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . 
-                ' -p' . $this->_dbpass . 
-                ' ' . $this->config->magento->storeprefix . $this->_dbname . 
-                ' -e "INSERT INTO '.$this->_db_table_prefix.'core_translate (string, store_id, translate, locale) VALUES (\'This is a demo store. Any orders placed through this store will not be honored or fulfilled.\', \'0\', \'This is a development store imported into Mage Testing. Please review our documentation to find out what was changed in the store in order to import that\', \'en_US\');"');
+        $this->_taskMysql->updateDemoNotice();
     }
 
     protected function _detectTablePrefix(){

@@ -9,11 +9,13 @@ extends Application_Model_Task {
     protected $_dbname = '';
     protected $_systempass = '';
     protected $_db_table_prefix = '';
-    
+
+    protected $_taskMysql;
+
     public function setup(Application_Model_Queue $queueElement){
         
         parent::setup($queueElement);
-                
+
         if(in_array($queueElement->getTask(),array('MagentoInstall','MagentoDownload'))){
                        
             $this->_dbhost = $this->config->resources->db->params->host; //fetch from zend config
@@ -32,8 +34,17 @@ extends Application_Model_Task {
         }
         
         $this->_dbname = $this->_userObject->getLogin() . '_' . $this->_storeObject->getDomain();
-        
-        
+
+        $db = Zend_Db::factory('PDO_MYSQL',
+            array(
+                'charset' => 'UTF8',
+                'host' => 'localhost',
+                'username' => $this->config->magento->userprefix . $this->_dbuser,
+                'password' => $this->_dbpass,
+                'dbname' => $this->config->magento->storeprefix . $this->_dbname
+            )
+        );
+        $this->_taskMysql = new Application_Model_TaskMysql($db, $this->_db_table_prefix);
     }
     
     /**
@@ -210,13 +221,11 @@ extends Application_Model_Task {
     
     protected function _disableStoreCache(){
         /* update cache setting - disable all */
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "UPDATE \`'.$this->_db_table_prefix.'core_cache_option\` SET \`value\`=\'0\'"');
+        $this->_taskMysql->disableStoreCache();
     }
     
     protected function _enableLogging(){
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/active\',\'1\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/file\',\'system.log\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'dev/log/exception_file\',\'exception.log\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
+        $this->_taskMysql->enableLogging();
     }
     
     protected function _createVirtualHost(){
@@ -412,18 +421,11 @@ extends Application_Model_Task {
      * Sets Design -> Head -> Demo Notice to 'Yes'
      */
     protected function _activateDemoNotice(){
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'design/head/demonotice\',\'1\') ON DUPLICATE KEY UPDATE \`value\`=\'1\'"');
+        $this->_taskMysql->activateDemoNotice();
     }    
 
     protected function _updateStoreConfigurationEmails(){
-    	$userEmail = $this->_userObject->getEmail();
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_general/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_sales/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_support/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom1/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'trans_email/ident_custom2/email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname . ' -e "INSERT INTO \`'.$this->_db_table_prefix.'core_config_data\` (scope,scope_id,path,value) VALUES (\'default\',\'0\',\'contacts/email/recipient_email\',\''.$userEmail.'\') ON DUPLICATE KEY UPDATE \`value\`=\''.$userEmail.'\'"');
-    	unset($userEmail);
+        $userEmail = $this->_userObject->getEmail();
+        $this->_taskMysql->updateStoreConfigurationEmails($userEmail);
     }
 }
-        
