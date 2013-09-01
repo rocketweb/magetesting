@@ -53,8 +53,7 @@ implements Application_Model_Task_Interface {
         $this->_applyXmlRpcPatch();
 
         $this->_updateStoreConfigurationEmails();
-        
-        $this->_disableAdminNotifications();
+
         $this->_enableLogging();
       
         chdir($startCwd);
@@ -282,12 +281,6 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         // end
         
         $this->_updateConnectFiles();
-    }
-
-    protected function _disableAdminNotifications() {
-        $this->logger->log('Disabling admin notifications.', Zend_Log::INFO);
-
-        $this->_taskMysql->disableAdminNotification();
     }
 
     protected function _runInstaller() {
