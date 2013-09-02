@@ -66,7 +66,7 @@ class Application_Model_VersionMapper {
 
     public function fetchAll()
     {
-        $resultSet = $this->getDbTable()->fetchAll(null, 'version');
+        $resultSet = $this->getDbTable()->fetchAll(null, array('edition', 'version'));
         $entries   = array();
         foreach ($resultSet as $row) {
             $entry = new Application_Model_Version();
@@ -93,10 +93,8 @@ class Application_Model_VersionMapper {
         $temp = array();
         $authGroup = Zend_Auth::getInstance()->getIdentity()->group;
         foreach ($this->fetchAll() as $r) {
-            if($r->getEdition() == 'CE' OR $authGroup == 'admin') {
                 $edition = $with_edition ? $r->getEdition() : '';
                 $temp[] = $edition.$r->getId();
-            }
         }
         return $temp;
 

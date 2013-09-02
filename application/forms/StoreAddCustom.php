@@ -69,9 +69,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         $versions = array();
         $authGroup = Zend_Auth::getInstance()->getIdentity()->group;
         foreach($versionModel->fetchAll() as $row) {
-            if($row->getEdition() == 'CE' OR $authGroup == 'admin') {
                 $versions[$row->getEdition().$row->getId()] = $row->getVersion();
-            }
         }
         $this->version->addMultiOptions($versions);
         

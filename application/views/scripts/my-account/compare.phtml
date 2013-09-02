@@ -319,11 +319,9 @@
             <ul>
                 <?php
                     foreach($this->versions as $version) {
-                        if('CE' === strtoupper($version->getEdition())) {
                 ?>
-                <li><i class="icon icon-blue icon-ok"></i> <?php echo $version->getVersion(); ?></li>
+                <li><i class="icon icon-blue icon-ok"></i> <?php echo $version->getEdition().' '.$version->getVersion(); ?></li>
                 <?php
-                        }
                     }
                 ?>
             </ul>
