@@ -459,10 +459,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
     }
     
     protected function _updateAdminAccount() {
-        $timestamp = strtotime('+1 year');
-        
-        exec('mysql -u' . $this->config->magento->userprefix . $this->_dbuser . ' -p' . $this->_dbpass . ' ' . $this->config->magento->storeprefix . $this->_dbname 
-                . ' -e \'UPDATE enterprise_admin_passwords SET expires = \''.$timestamp.'\' \'');
+        $this->_taskMysql->updateAdminAccount();
     }
     
     protected function _fixUserHomeChmod(){
