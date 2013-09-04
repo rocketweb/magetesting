@@ -273,7 +273,7 @@ extends Application_Model_Task {
         $this->cli('apache')->enableSite(
             $this->_dbuser.'.'.$this->_serverObject->getDomain()
         )->asSuperUser()->call();
-        $this->cli('service')->restart('apache2')->asSuperUser()->call();
+        $this->cli('service')->reload('apache2')->asSuperUser()->call();
 
         $redirector = '<?php '.
         PHP_EOL.'header("Location: ' . $this->config->magento->storeUrl . '/user/dashboard");';

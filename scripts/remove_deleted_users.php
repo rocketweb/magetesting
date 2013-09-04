@@ -138,7 +138,7 @@ if($result) {
             unlink($vhostfile);
         }
 
-        $serviceKit->clear()->restart('apache2');
+        $serviceKit->clear()->reload('apache2')->call();
         //--------------VIRTUALHOST PART END-------------
 
         //--------------MAGETESTING PART START-------------
