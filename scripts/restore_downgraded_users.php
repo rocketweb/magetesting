@@ -60,7 +60,7 @@ if($result) {
             }
         }
 
-        $service->clear()->restart('apache2')->call();
+        $service->clear()->reload('apache2')->call();
     }
 } else {
     //$log->log('There is no downgraded user to restore.', Zend_Log::INFO);

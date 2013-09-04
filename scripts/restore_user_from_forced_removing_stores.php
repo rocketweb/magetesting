@@ -32,7 +32,7 @@ if($result) {
         /* disable user vhost */
         $apache->clear()->enableSite($store['login'].'.'.$store['server_domain'])->call();
     }
-    $service->clear()->restart('apache2')->call();
+    $service->clear()->reload('apache2')->call();
 
     if($downgrade_by_id) {
         $set = array(

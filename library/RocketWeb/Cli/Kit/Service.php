@@ -5,6 +5,17 @@ class RocketWeb_Cli_Kit_Service
 {
     public function restart($name)
     {
-        return $this->asSuperUser(true)->append('/etc/init.d/? restart', $name);
+        return $this->_service()->append('? restart', $name);
+    }
+
+    public function reload($name)
+    {
+        return $this->_service()->append('? reload', $name);
+    }
+
+    protected function _service()
+    {
+        # '/etc/init.d/'
+        return $this->append('service')->asSuperUser();
     }
 }

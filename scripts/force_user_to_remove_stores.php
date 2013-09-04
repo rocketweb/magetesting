@@ -50,7 +50,7 @@ if($result) {
             $modelUser->disableFtp();
             $modelUser->disablePhpmyadmin();
         }
-        $service->clear()->restart('apache2')->call();
+        $service->clear()->reload('apache2')->call();
     }
     $log->log('Downgraded '.count($downgrade_by_id).' users', Zend_Log::INFO);
 } else {
