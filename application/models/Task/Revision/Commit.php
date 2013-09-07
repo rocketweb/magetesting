@@ -16,13 +16,6 @@ implements Application_Model_Task_Interface {
         $extensionModel->find($queueElement->getExtensionId());
         $this->_extensionObject = $extensionModel;
 
-        /* send email to store owner start */
-        $taskParams = $this->_queueObject->getTaskParams();
-        if(isset($taskParams['send_store_ready_email'])) {
-            $this->_sendStoreReadyEmail();
-        }
-        /* send email to store owner stop */
-
         $this->_git = $this->cli('git');
     }
 
@@ -41,23 +34,32 @@ implements Application_Model_Task_Interface {
                 $this->_insertRevisionInfo();
                 $this->_updateRevisionCount('+1');
             }
+
+            /* send email to store owner start */
+            $taskParams = $this->_queueObject->getTaskParams();
+            if(isset($taskParams['send_store_ready_email'])) {
+                $this->_sendStoreReadyEmail();
+            }
+            /* send email to store owner stop */
         }
     }
 
     protected function _commit() {
-        
-        $params = $this->_queueObject->getTaskParams();      
-        
+        $params = $this->_queueObject->getTaskParams();
+
         $startCwd = getcwd();
+
         chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain());
+        $result =  null;
         if ($params['commit_type']=='manual'){
-            return $this->_commitManual(); 
+            $result = $this->_commitManual(); 
         } else {
-            return $this->_commitAutomatic();
+            $result = $this->_commitAutomatic();
         }
-       
+
         chdir($startCwd);
-         
+
+        return $result;
     }
     
     /* For now just an alias */
