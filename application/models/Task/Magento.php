@@ -114,7 +114,11 @@ extends Application_Model_Task {
             
             $this->_createUserTmpDir();
             $this->_createVirtualHost();
-            $this->_setUserQuota();
+            /*
+             * quota disabled because rackspace does not support it
+             * in the way we want it to
+             */
+            //$this->_setUserQuota();
         }
     }
     
