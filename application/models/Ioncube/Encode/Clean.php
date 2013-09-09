@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Ioncube_Encode
+class Application_Model_Ioncube_Encode_Clean
 {
     protected $_config;
     protected $_storeDir;
@@ -34,10 +34,10 @@ class Application_Model_Ioncube_Encode
         return $this->_cli;
     }
 
-    public function process()
+    public function process($packSettings)
     {
         $this->_packDecodedEnterprise();
-        $this->_encodeEnterprise();
+        $this->_encodeEnterprise($packSettings);
         $this->_unpackEncodedEnterprise();
 
         $this->cli()->call();
@@ -49,7 +49,7 @@ class Application_Model_Ioncube_Encode
             $this->cli('tar')->pack('-', $this->_storeDir.'/app/code/core/Enterprise')->isCompressed()
         );
     }
-    protected function _encodeEnterprise()
+    protected function _encodeEnterprise(array $packSettings)
     {
         $ssh = $this->cli('ssh');
         $ioncube = $this->_config->ioncubeEncoder;
