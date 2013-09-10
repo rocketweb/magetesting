@@ -1,7 +1,7 @@
 <?php
 include 'init.console.php';
 
-$current_server_id = 1;
+$current_server_id = $config->magento->currentServerId;
 
 $lockDir = APPLICATION_PATH . '/../data/locks/';
 if (!file_exists($lockDir) || !is_dir($lockDir)){
