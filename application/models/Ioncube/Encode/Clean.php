@@ -1,76 +1,111 @@
 <?php
 
 class Application_Model_Ioncube_Encode_Clean
+    extends Application_Model_Ioncube_Encode
 {
-    protected $_config;
-    protected $_storeDir;
-    protected $_cli;
-    protected $_log;
-
-    public function setup($storeDir, $config, $log = null)
+    public function process()
     {
-        $this->_storeDir = trim($storeDir, '/');
-        $this->_config = $config;
-
-        if($log instanceof Zend_Log) {
-            $this->_log = $log;
-        }
-        return $this;
+        $this->_packLocalDecodedEnterprise();
+        $this->_uploadEnterprise();
+        $this->_createRemoteTmpDir();
+        $this->_unpackRemoteDecodedEnterprise();
+        $this->_encodeEnterprise();
+        $this->_pakcRemoteEncodedEnterprise();
+        $this->_downloadEnterpise();
+        $this->_unpackLocalEncodedEnterprise();
+        $this->_cleanFileSystem();
     }
 
-    protected function cli($kit = '')
+    protected function _packLocalDecodedEnterprise()
     {
-        if(!$this->_cli) {
-            $this->_cli = new RocketWeb_Cli();
-
-            if($this->_log) {
-                $this->_cli->setLogger($log);
-                $this->_cli->enableLogging(true);
-            }
-        }
-        if($kit) {
-            return $this->_cli->kit($kit);
-        }
-        return $this->_cli;
+        $this->cli('tar')->pack(
+            $this->_getStoreDir().'/decoded-enterprsie.tar.gz',
+            $this->_getStoreDir().'/app/code/core/Enterprise'
+        )->isCompressed()->call();
     }
 
-    public function process($packSettings)
+    protected function _uploadEnterpise()
     {
-        $this->_packDecodedEnterprise();
-        $this->_encodeEnterprise($packSettings);
-        $this->_unpackEncodedEnterprise();
-
-        $this->cli()->call();
+        $this->_scp->cloneObject()->upload(
+            $this->_getStoreDir().'/decoded-enterprsie.tar.gz',
+            $this->_remoteCodingTmpPath . '/..'
+        )->call();
     }
 
-    protected function _packDecodedEnterprise()
+    protected function _createRemoteTmpDir()
     {
-        $this->cli()->append(
-            $this->cli('tar')->pack('-', $this->_storeDir.'/app/code/core/Enterprise')->isCompressed()
+        $file = $this->cli('file');
+        $query = $file->create(
+            $this->_remoteCodingTmpPath,
+            $file::TYPE_DIR
         );
+        $this->_ssh->cloneObject()->remoteCall($query)->call();
     }
-    protected function _encodeEnterprise(array $packSettings)
+
+    protected function _unpackRemoteDecodedEnterprise()
     {
-        $ssh = $this->cli('ssh');
-        $ioncube = $this->_config->ioncubeEncoder;
-
-        $ssh->connect(
-            $ioncube->user,
-            $ioncube->pass,
-            $ioncube->host,
-            $ioncube->port
-        );
-
-        $ssh->remoteCall('put here proper code or create new kit');
-
-        $this->cli()->pipe(
-            $ssh
-        );
+        $query = $this
+            ->cli('tar')
+            ->unpack(
+                $this->_remoteCodingTmpPath . '/encoded-enterprise.tar.gz',
+                $this->_getStoreDir() . '/app/code/core'
+            )
+            ->strip(3);
+        $this->_ssh->cloneObject()->remoteCall($query)->call();
     }
-    protected function _unpackEncodedEnterprise()
+
+    protected function _encodeEnterprise()
     {
-        $this->cli()->pipe(
-            $this->cli('tar')->unpack('-', $this->_storeDir.'/app/code/core/Enterprise')
-        );
+        $query = $this->cli()->createQuery('ioncube');
+        $query
+            ->append('--allowed-server ?', $servers)
+            ->append('--obfuscate all')
+            ->append('--obfuscation-key ?', $key)
+            ->append('--ignore .svn/')
+            ->append('--encode ?', '*.php')
+            ->append('--encode ?', '*.phtml')
+            ->append(':decodedPath')
+            ->append(':encodedPath');
+        $query->bindAssoc(array(
+            ':decodedPath' => $this->_remoteCodingTmpPath . '/decoded',
+            ':encodedPath' => $this->_remoteCodingTmpPath . '/encoded'
+        ));
+
+        $this->_ssh->cloneObject()->remoteCall($query)->call();
+    }
+
+    protected function _packRemoteEncodedEnterprise()
+    {
+        $query = $this
+            ->cli('tar')
+            ->unpack($this->_remoteCodingTmpPath.'/encoded-enterprise.tar.gz', $this->_getStoreDir().'/app/code/core')
+            ->strip(3);
+        $this->_ssh->cloneObject()->remoteCall($query)->call();
+    }
+
+    protected function _downloadEnterpise()
+    {
+        $this->_scp->cloneObject()->download(
+            $this->_remoteCodingTmpPath.'/enterprise.tar.gz',
+            $this->_getStoreDir().'/encoded-enterprsie.tar.gz'
+        )->call();
+    }
+
+    protected function _unpackLocalEncodedEnterprise()
+    {
+        $this
+            ->cli('tar')
+            ->unpack($this->_getStoreDir().'/encoded-enterprise.tar.gz', $this->_getStoreDir().'/app/code/core')
+            ->strip(3)
+            ->call();
+    }
+
+    protected function _cleanFileSystem()
+    {
+        $this->cli('file')->remove($this->_getStoreDir().'/encoded-enterprise.tar.gz')->call();
+        $this->cli('file')->remove($this->_getStoreDir().'/decoded-enterprise.tar.gz')->call();
+        $this->_ssh->cloneObject()->remoteCall(
+            $this->cli('file')->remove($this->_remoteCodingTmpPath)
+        )->call();
     }
 }
