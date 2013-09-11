@@ -12,7 +12,7 @@ implements Application_Model_Task_Interface {
         
         $this->_updateStoreStatus('removing-magento');
         
-        $DbManager = new Application_Model_DbTable_Privilege($this->db,$this->config);
+        $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged,$this->config);
         if ($DbManager->checkIfDatabaseExists($this->_dbname)){
             try {
                 $this->logger->log('Dropping ' . $this->_dbname . ' database.', Zend_Log::INFO);

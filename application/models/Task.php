@@ -55,6 +55,10 @@ class Application_Model_Task {
             'PE' => 'professional',
         );
 
+        $this->dbPrivileged = Zend_Db::factory('PDO_MYSQL',
+            $config->dbPrivileged->params
+        );
+
         $this->_cli = new RocketWeb_Cli();
 
         $this->_fileKit = $this->cli('file');

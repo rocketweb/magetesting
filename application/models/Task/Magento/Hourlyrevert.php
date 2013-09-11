@@ -20,7 +20,7 @@ implements Application_Model_Task_Interface {
 
         //drop database
         $dbName = $this->_userObject->getLogin().'_'.$this->_storeObject->getDomain();      
-        $privilegeModel = new Application_Model_DbTable_Privilege($this->db,$this->config);
+        $privilegeModel = new Application_Model_DbTable_Privilege($this->dbPrivileged,$this->config);
         if($privilegeModel->checkIfDatabaseExists($dbName)){
             $privilegeModel->dropDatabase($dbName);
         }
