@@ -115,6 +115,14 @@ papertrail.distributorName = "Mage Testing";
 papertrail.url = "https://papertrailapp.com/api/v1/";
 papertrail.prefix = "dev-";
 
+
+;Privileged db (required on store servers)
+dbPrivileged.params.charset = UTF8
+dbPrivileged.params.host = localhost
+dbPrivileged.params.username =
+dbPrivileged.params.password =
+dbPrivileged.params.dbname = mysql
+
 ;SSL
 ssl.active = 0
 

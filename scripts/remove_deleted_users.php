@@ -100,7 +100,11 @@ if($result) {
 
 
         //remove mysql user
-        $DbManager = new Application_Model_DbTable_Privilege($db,$config);
+        $dbPrivileged = Zend_Db::factory('PDO_MYSQL',
+            $config->dbPrivileged->params
+        );
+
+        $DbManager = new Application_Model_DbTable_Privilege($dbPrivileged,$config);
         if ($DbManager->checkIfUserExists($user->getLogin())){
             try {
                 $log->log('Dropping ' . $user->getLogin() . ' user.', Zend_Log::INFO);

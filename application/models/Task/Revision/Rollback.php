@@ -78,7 +78,7 @@ implements Application_Model_Task_Interface {
 
         $unpackedName = str_replace('.tgz','',$params['rollback_db_to']);
 
-        $privilegeModel = new Application_Model_DbTable_Privilege($this->db,$this->config);
+        $privilegeModel = new Application_Model_DbTable_Privilege($this->dbPrivileged,$this->config);
         $privilegeModel->dropDatabase($this->_userObject->getLogin().'_'.$this->_storeObject->getDomain());
         $privilegeModel->createDatabase($this->_userObject->getLogin().'_'.$this->_storeObject->getDomain());
 

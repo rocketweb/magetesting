@@ -18,7 +18,7 @@ extends Application_Model_Task {
 
         if(in_array($queueElement->getTask(),array('MagentoInstall','MagentoDownload'))){
                        
-            $this->_dbhost = $this->config->resources->db->params->host; //fetch from zend config
+            $this->_dbhost = 'localhost';
             $this->_dbuser = $this->_userObject->getLogin(); //fetch from zend config
      
             $this->_dbpass = substr(sha1($this->config->magento->usersalt . $this->config->magento->userprefix . $this->_userObject->getLogin()), 0, 10); //fetch from zend config
@@ -207,8 +207,7 @@ extends Application_Model_Task {
     
     protected function _prepareDatabase(){
         try {
-            
-            $DbManager = new Application_Model_DbTable_Privilege($this->db, $this->config);
+            $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
             if (!$DbManager->checkIfDatabaseExists($this->_userObject->getLogin() . '_' . $this->_storeObject->getDomain())){
                 $DbManager->createDatabase($this->_userObject->getLogin() . '_' . $this->_storeObject->getDomain());
             }
