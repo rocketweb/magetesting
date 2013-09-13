@@ -6,7 +6,7 @@ $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('store')
     ->where('do_hourly_db_revert = ?', '1')
-    ->where('user.server_id = ?', $config->magento->currentServerId)
+    ->where('store.server_id = ?', $config->magento->currentServerId)
     ->where('status = ?','ready');
 
 $result = $db->fetchAll($sql);
