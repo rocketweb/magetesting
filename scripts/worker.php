@@ -1,8 +1,6 @@
 <?php
 include 'init.console.php';
 
-$current_server_id = $config->magento->currentServerId;
-
 $lockDir = APPLICATION_PATH . '/../data/locks/';
 if (!file_exists($lockDir) || !is_dir($lockDir)){
     mkdir($lockDir);    
@@ -47,7 +45,7 @@ if (flock($fp, LOCK_EX | LOCK_NB)) {
     $queueModel = new Application_Model_Queue();
 
     $worker = new Application_Model_Worker($config,$db,$log);
-    while ($queueElement = $queueModel->getForServer($current_server_id,$mode)){
+    while ($queueElement = $queueModel->getForServer($config->magento->currentServerId,$mode)){
         $worker->work($queueElement);
     }
 }

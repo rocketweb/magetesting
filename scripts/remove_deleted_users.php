@@ -5,7 +5,8 @@ include 'init.console.php';
 $select = new Zend_Db_Select($db);
 $sql = $select
     ->from('user')
-    ->where('status = ?', 'deleted');
+    ->where('status = ?', 'deleted')
+    ->where('user.server_id = ?', $config->magento->currentServerId);
 
 $result = $db->fetchAll($sql);
 
