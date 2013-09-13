@@ -1011,7 +1011,7 @@ class QueueController extends Integration_Controller_Action {
 
             $parent_id = 0;
             $is_paid_encoded_extension = false;
-            if(isset($extension)) {
+            if(isset($extension) && (int)$extension->getBraintreeTransactionId()) {
                 if(!preg_match('/\(Open Source\)\s*$/', $revisionModel->getComment())) {
                     $found_open_source = false;
                     foreach($revisionModel->getAllForStore($store->id) as $store_revision) {
