@@ -6,6 +6,7 @@ if(!defined('APPLICATION_PATH')) {
     $db = new Application_Model_DbTable_User();
     $db = $db->getAdapter();
     $log = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('Log');
+    $config = Zend_Registry::get('config');
 }
 
 $select = new Zend_Db_Select($db);
