@@ -9,7 +9,8 @@ $sql = $select
     ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->where('store.status = ?', 'ready')
     ->where('TIMESTAMPDIFF(SECOND, \''.date("Y-m-d H:i:s").'\', user.plan_active_to) > ?', 0)
-    ->where('user.downgraded = ?', 1);
+    ->where('user.downgraded = ?', 1)
+    ->where('user.server_id = ?', $config->magento->currentServerId);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
 $apache->asSuperUser();
