@@ -4,6 +4,7 @@ abstract class Application_Model_Ioncube_Encode
 {
     protected $_config;
     protected $_store;
+    protected $_user;
     protected $_storeDir;
     protected $_cli;
     protected $_log;
@@ -19,28 +20,34 @@ abstract class Application_Model_Ioncube_Encode
         $this->_store = $store;
         $this->_config = $config;
 
+        $this->_user = new Application_Model_User();
+        $this->_user->find($this->_store->getUserId());
+
         if($log instanceof Zend_Log) {
             $this->_log = $log;
         }
 
 
         $ioncube = $this->_config->ioncubeEncoder;
-        $this->_remoteCodingTmpPath= $ioncube->codingTmpPath . '/' . $this->_store->getDomain();
-        $this->_remoteEnterpisePackagePath= $ioncube->EnterprisePackagesPath . '/' . $this->_store->getVersion() . '.tar.gz';
+        $server = $ioncube->server;
+        $this->_remoteCodingTmpPath =
+            $ioncube->codingTmpPath . '/' . $this->_store->getDomain();
+        $this->_remoteEnterpisePackagePath =
+            $ioncube->enterprisePackagesPath . '/' . $this->_store->getVersion() . '.tar.gz';
 
         $this->_scp = $this->cli('scp');
         $this->_scp->connect(
-            $ioncube->user,
-            $ioncube->pass,
-            $ioncube->host,
-            $ioncube->port
+            $server->user,
+            $server->pass,
+            $server->host,
+            $server->port
         );
         $this->_ssh = $this->cli('ssh');
         $this->_ssh->connect(
-            $ioncube->user,
-            $ioncube->pass,
-            $ioncube->host,
-            $ioncube->port
+            $server->user,
+            $server->pass,
+            $server->host,
+            $server->port
         );
 
         return $this;
@@ -50,11 +57,10 @@ abstract class Application_Model_Ioncube_Encode
     {
         if(!$this->_storeDir) {
             $config = $this->_config->magento;
-            $user = new Application_Model_User();
-            $user->find($this->_store->getUserId());
+
             $pathParts = array(
                 $config->systemHomeFolder,
-                $config->userprefix . $user->getLogin(),
+                $config->userprefix . $this->_user->getLogin(),
                 'public_html',
                 $this->_store->getDomain()
             );
@@ -108,10 +114,28 @@ abstract class Application_Model_Ioncube_Encode
     protected function _encodeEnterprise()
     {
         $query = $this->cli()->createQuery('ioncube');
+
+        $ioncube = $this->config->ioncube->encode;
+
+        $server = str_ireplace(
+            array('#{username}', '#{serverNumber}'),
+            array($this->_user->getLogin(), $this->_user->getServerId()),
+            $ioncube->allowedServer
+        );
+
+        $additionalComment = $server = str_ireplace(
+            array('#{username}', '#{serverNumber}'),
+            array($this->_user->getLogin(), $this->_user->getServerId()),
+            $ioncube->additionalComment
+        );
+
+        $key = $ioncube->obfuscationKey;
+
         $query
-            ->append('--allowed-server ?', $servers)
+            ->append('--allowed-server ?', $server)
             ->append('--obfuscate all')
             ->append('--obfuscation-key ?', $key)
+            ->append('--add-comment ?', $additionalComment)
             ->append('--ignore .svn/')
             ->append('--encode ?', '*.php')
             ->append('--encode ?', '*.phtml')
