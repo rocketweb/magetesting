@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Ioncube_Encode_Clean
+class Application_Model_Ioncube_Encode_Custom
     extends Application_Model_Ioncube_Encode
 {
     public function process()

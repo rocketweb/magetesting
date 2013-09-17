@@ -58,6 +58,10 @@ class RocketWeb_Cli
         $this->_logger = $log;
         return $this;
     }
+    public function getLogger()
+    {
+        return $this->_logger;
+    }
     public function enableLogging($val)
     {
         $this->_log_enabled = (bool) $val;
