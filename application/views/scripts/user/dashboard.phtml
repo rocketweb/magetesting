@@ -109,11 +109,16 @@
                             <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
                             <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
                             <?php if($item['status'] == 'ready'): ?>
+                                <?php if(in_array($this->user->downgraded, array(3, 4))): ?>
+                                <a class="btn btn-faded btn-mini view-store disabled"><i class="icon icon-white icon-home"></i> View Store</a>
+                                <a class="btn btn-mini btn-faded admin-panel disabled"><i class="icon icon-white icon-wrench"></i> Access Admin</a>
+                                <?php else: ?>
                                 <a
                                     class="btn btn-mini admin-panel pull-right"
                                     href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'login-to-store-backend', 'store' => $item['domain']), 'default', true); ?>"
                                 ><i class="icon icon-wrench"></i> Access Admin</a>
                                 <a target="_blank" href="<?php echo $this->getScheme().$this->user->login.'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-mini view-store pull-right"><i class="icon icon-home"></i> View Store</a>
+                                <?php endif; ?>
                             <?php endif; ?>
                             </div>
                             <div class="in-use <?php echo ($item['status'] == 'ready' ? 'hidden' : ''), ($item['status'] == 'error' ? ' error-bar' : ''), ($item['status'] == 'downloading-magento' ? ' download-bar' : ''); ?>">
