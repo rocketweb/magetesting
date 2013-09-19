@@ -439,6 +439,7 @@ class QueueController extends Integration_Controller_Action {
                         ->setStatus('pending')
                         ->save();
 
+                $additionalMessage = '';
                 $user = new Application_Model_User();
                 $user->find($storeModel->getUserId());
                 if(in_array((int)$user->getDowngraded(), array(3, 4))) {
@@ -458,11 +459,11 @@ class QueueController extends Integration_Controller_Action {
 
                     if($user_stores->getAllForUser($user->getId())->count() <= $user_max_stores) {
                         $user->setDowngraded(5);
+                        $additionalMessage = ' Other stores should be available in a minute.';
                     }
                     $user->save();
-                    include APPLICATION_PATH . '/../scripts/restore_user_from_forced_removing_stores.php';
                 }
-                $this->_helper->FlashMessenger('Store has been removed.');
+                $this->_helper->FlashMessenger('Store has been removed.' . $additionalMessage);
             }
         }
         $redirect_to = array(
