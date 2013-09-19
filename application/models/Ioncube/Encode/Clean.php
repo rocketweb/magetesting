@@ -7,12 +7,19 @@ class Application_Model_Ioncube_Encode_Clean
     {
         $this->_createRemoteTmpDir();
         $this->_moveEnterprisePackage();
-        $this->_unpackRemoteDecodedEnterprise(1);
+        $this->_unpackRemoteDecodedEnterprise(5);
         $this->_encodeEnterprise();
         $this->_packRemoteEncodedEnterprise();
         $this->_downloadEnterpise();
         $this->_unpackLocalEncodedEnterprise();
         $this->_cleanFileSystem();
+    }
+
+    protected function _unpackRemoteDecodedEnterpriseBeforeCall($query)
+    {
+        // extract only Enterprise from store package
+        // it requires also strip(5) to not create useless folders
+        $query->append('--wildcards ?', 'magento/app/code/core/Enterprise/*');
     }
 
     protected function _moveEnterprisePackage()

@@ -93,9 +93,11 @@ abstract class Application_Model_Ioncube_Encode
     {
         $file = $this->cli('file');
         $query = $file->create(
-            $this->_remoteCodingTmpPath,
+            $this->_remoteCodingTmpPath.'/decoded',
             $file::TYPE_DIR
         );
+        $secondPath = $query->cloneObject()->bindAssoc('/decoded', '/encoded', false);
+        $query->append('; '.$secondPath->toString());
         $this->_ssh->cloneObject()->remoteCall($query)->call();
     }
 
@@ -108,8 +110,11 @@ abstract class Application_Model_Ioncube_Encode
                 $this->_remoteCodingTmpPath . '/decoded'
             )
             ->strip($strip);
+        $this->_unpackRemoteDecodedEnterpriseBeforeCall($query);
         $this->_ssh->cloneObject()->remoteCall($query)->call();
     }
+
+    protected function _unpackRemoteDecodedEnterpriseBeforeCall($query) {}
 
     protected function _encodeEnterprise()
     {
