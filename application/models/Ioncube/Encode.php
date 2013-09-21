@@ -118,7 +118,9 @@ abstract class Application_Model_Ioncube_Encode
 
     protected function _encodeEnterprise()
     {
-        $query = $this->cli()->createQuery('ioncube');
+        $query = $this->cli()->createQuery(
+            $this->_config->ionCube->executablePath
+        );
 
         $ioncube = $this->config->ioncube->encode;
 
@@ -141,11 +143,12 @@ abstract class Application_Model_Ioncube_Encode
             ->append('--obfuscate all')
             ->append('--obfuscation-key ?', $key)
             ->append('--add-comment ?', $additionalComment)
-            ->append('--ignore .svn/')
+            ->append('--ignore ?', '.svn/')
             ->append('--encode ?', '*.php')
             ->append('--encode ?', '*.phtml')
             ->append(':decodedPath')
-            ->append(':encodedPath');
+            ->append('--replace-target')
+            ->append('-o :encodedPath');
         $query->bindAssoc(array(
             ':decodedPath' => $this->_remoteCodingTmpPath . '/decoded',
             ':encodedPath' => $this->_remoteCodingTmpPath . '/encoded'
