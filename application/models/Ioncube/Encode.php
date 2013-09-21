@@ -31,9 +31,9 @@ abstract class Application_Model_Ioncube_Encode
         $ioncube = $this->_config->ioncubeEncoder;
         $server = $ioncube->server;
         $this->_remoteCodingTmpPath =
-            $ioncube->codingTmpPath . '/' . $this->_store->getDomain();
+            rtrim($ioncube->codingTmpPath, '/') . '/' . $this->_store->getDomain();
         $this->_remoteEnterpisePackagePath =
-            $ioncube->enterprisePackagesPath . '/' . $this->_store->getVersion() . '.tar.gz';
+            rtrim($ioncube->enterprisePackagesPath, '/') . '/enterprise-' . $this->_store->getVersion() . '.tar.gz';
 
         $this->_scp = $this->cli('scp');
         $this->_scp->connect(
@@ -119,7 +119,7 @@ abstract class Application_Model_Ioncube_Encode
     protected function _encodeEnterprise()
     {
         $query = $this->cli()->createQuery(
-            $this->_config->ionCube->executablePath
+            rtrim($this->_config->ionCube->executablePath, '/')
         );
 
         $ioncube = $this->config->ioncube->encode;
