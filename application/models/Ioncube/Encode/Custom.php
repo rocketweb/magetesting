@@ -6,10 +6,10 @@ class Application_Model_Ioncube_Encode_Custom
     public function process()
     {
         $this->_createRemoteTmpDir();
-        $this->_packLocalDecodedEnterprise();
+        $strip = $this->_packLocalDecodedEnterprise();
         $this->_removeEnterpriseDirContent();
         $this->_uploadEnterprise();
-        $this->_unpackRemoteDecodedEnterprise(3);
+        $this->_unpackRemoteDecodedEnterprise($strip);
         $this->_encodeEnterprise();
         $this->_packRemoteEncodedEnterprise();
         $this->_downloadEnterpise();
@@ -20,18 +20,13 @@ class Application_Model_Ioncube_Encode_Custom
 
     protected function _packLocalDecodedEnterprise()
     {
+        $enterprisePath = $this->_getStoreDir().'/app/code/core/Enterprise';
         $this->cli('tar')->pack(
             $this->_getStoreDir().'/'.$this->_decodedEntepriseFilename,
-            $this->_getStoreDir().'/app/code/core/Enterprise'
+            $enterprisePath
         )->isCompressed()->call();
-    }
 
-    protected function _removeEnterpriseDirContent()
-    {
-        $startCwd = getcwd();
-        setcwd($this->_getStoreDir() . '/app/code/core/Enterprise');
-        $this->cli('file')->remove('')->append('*')->call();
-        setcwd($startCwd);
+        return count(explode('/', $enterprisePath));
     }
 
     protected function _uploadEnterprise()

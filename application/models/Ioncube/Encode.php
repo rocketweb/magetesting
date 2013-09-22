@@ -114,6 +114,14 @@ abstract class Application_Model_Ioncube_Encode
         $this->_ssh->cloneObject()->remoteCall($query)->call();
     }
 
+    protected function _removeEnterpriseDirContent()
+    {
+        $startCwd = getcwd();
+        setcwd($this->_getStoreDir() . '/app/code/core/Enterprise');
+        $this->cli('file')->remove('')->append('*')->call();
+        setcwd($startCwd);
+    }
+
     protected function _unpackRemoteDecodedEnterprise($strip)
     {
         $query = $this
@@ -177,8 +185,7 @@ abstract class Application_Model_Ioncube_Encode
             ->pack(
                 $this->_remoteCodingTmpPath . '/' . $this->_encodedEntepriseFilename,
                 $this->_remoteCodingTmpPath . '/encoded'
-            )
-            ->strip(3);
+            );
         $this->_ssh->cloneObject()->remoteCall($query)->call();
     }
 
@@ -195,7 +202,7 @@ abstract class Application_Model_Ioncube_Encode
         $this
             ->cli('tar')
             ->unpack($this->_getStoreDir().'/'.$this->_encodedEntepriseFilename, $this->_getStoreDir().'/app/code/core')
-            ->strip(1)
+            ->strip(count(explode('/', $this->_remoteCodingTmpPath . '/encoded')))
             ->call();
     }
 
