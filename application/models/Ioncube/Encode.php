@@ -12,6 +12,9 @@ abstract class Application_Model_Ioncube_Encode
     protected $_remoteCodingTmpPath;
     protected $_remoteEnterpisePackagePath;
 
+    protected $_encodedEntepriseFilename = 'encoded-enterprise.tar.gz';
+    protected $_decodedEntepriseFilename = 'decoded-enterprise.tar.gz';
+
     protected $_ssh;
     protected $_scp;
 
@@ -116,7 +119,7 @@ abstract class Application_Model_Ioncube_Encode
         $query = $this
             ->cli('tar')
             ->unpack(
-                $this->_remoteCodingTmpPath . '/decoded-enterprise.tar.gz',
+                $this->_remoteCodingTmpPath . '/' . $this->_decodedEntepriseFilename,
                 $this->_remoteCodingTmpPath . '/decoded'
             )
             ->strip($strip);
@@ -172,7 +175,7 @@ abstract class Application_Model_Ioncube_Encode
         $query = $this
             ->cli('tar')
             ->pack(
-                $this->_remoteCodingTmpPath . '/encoded-enterprise.tar.gz',
+                $this->_remoteCodingTmpPath . '/' . $this->_encodedEntepriseFilename,
                 $this->_remoteCodingTmpPath . '/encoded'
             )
             ->strip(3);
@@ -182,8 +185,8 @@ abstract class Application_Model_Ioncube_Encode
     protected function _downloadEnterpise()
     {
         $this->_scp->cloneObject()->download(
-            $this->_remoteCodingTmpPath.'/encoded-enterprise.tar.gz',
-            $this->_getStoreDir().'/encoded-enterprsie.tar.gz'
+            $this->_remoteCodingTmpPath.'/'.$this->_encodedEntepriseFilename,
+            $this->_getStoreDir().'/'.$this->_encodedEntepriseFilename
         )->call();
     }
 
@@ -191,15 +194,15 @@ abstract class Application_Model_Ioncube_Encode
     {
         $this
             ->cli('tar')
-            ->unpack($this->_getStoreDir().'/encoded-enterprise.tar.gz', $this->_getStoreDir().'/app/code/core')
+            ->unpack($this->_getStoreDir().'/'.$this->_encodedEntepriseFilename, $this->_getStoreDir().'/app/code/core')
             ->strip(1)
             ->call();
     }
 
     protected function _cleanFileSystem()
     {
-        $this->cli('file')->remove($this->_getStoreDir().'/decoded-enterprise.tar.gz')->call();
-        $this->cli('file')->remove($this->_getStoreDir().'/encoded-enterprise.tar.gz')->call();
+        $this->cli('file')->remove($this->_getStoreDir().'/'.$this->_decodedEntepriseFilename)->call();
+        $this->cli('file')->remove($this->_getStoreDir().'/'.$this->_encodedEntepriseFilename)->call();
         $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->remove($this->_remoteCodingTmpPath)
         )->call();

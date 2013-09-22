@@ -21,7 +21,7 @@ class Application_Model_Ioncube_Encode_Custom
     protected function _packLocalDecodedEnterprise()
     {
         $this->cli('tar')->pack(
-            $this->_getStoreDir().'/decoded-enterprsie.tar.gz',
+            $this->_getStoreDir().'/'.$this->_decodedEntepriseFilename,
             $this->_getStoreDir().'/app/code/core/Enterprise'
         )->isCompressed()->call();
     }
@@ -37,7 +37,7 @@ class Application_Model_Ioncube_Encode_Custom
     protected function _uploadEnterprise()
     {
         $this->_scp->cloneObject()->upload(
-            $this->_getStoreDir().'/decoded-enterprsie.tar.gz',
+            $this->_getStoreDir().'/'.$this->_decodedEntepriseFilename,
             $this->_remoteCodingTmpPath
         )->call();
     }
