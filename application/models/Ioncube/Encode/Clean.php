@@ -6,7 +6,7 @@ class Application_Model_Ioncube_Encode_Clean
     public function process()
     {
         $this->_createRemoteTmpDir();
-        $this->_moveEnterprisePackage();
+        $this->_copyEnterprisePackage();
         $this->_unpackRemoteDecodedEnterprise(5);
         $this->_encodeEnterprise();
         $this->_packRemoteEncodedEnterprise();
@@ -22,10 +22,10 @@ class Application_Model_Ioncube_Encode_Clean
         $query->append('--wildcards ?', 'magento/app/code/core/Enterprise/*');
     }
 
-    protected function _moveEnterprisePackage()
+    protected function _copyEnterprisePackage()
     {
         $file = $this->cli('file');
-        $query = $file->clear()->move(
+        $query = $file->clear()->copy(
             $this->_remoteEnterpisePackagePath,
             $this->_remoteCodingTmpPath . '/decoded-enterprise.tar.gz'
         );
