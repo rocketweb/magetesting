@@ -167,6 +167,10 @@ implements Application_Model_Task_Interface {
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
 
+        if('ee' === strtolower($this->_magentoEdition)) {
+            $this->_encodeEnterprise();
+        }
+
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
@@ -201,6 +205,23 @@ implements Application_Model_Task_Interface {
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
             
             unset($output);
+        }
+    }
+
+    protected function _encodeEnterprise()
+    {
+        $ioncube = new Application_Model_Ioncube_Encode_Clean();
+
+        try {
+            $ioncube->setup(
+                $this->_storeObject,
+                $this->config,
+                $this->cli()->getLogger()
+            );
+
+            $ioncube->process();
+        } catch(Application_Model_Ioncube_Exception $e) {
+            throw new Application_Model_Task_Exception($e->getMessage(), $e->getCode(), $e);
         }
     }
 
