@@ -140,7 +140,7 @@ abstract class Application_Model_Ioncube_Encode
             $encode->allowedServer
         );
 
-        $additionalComment = $server = str_ireplace(
+        $additionalComment = str_ireplace(
             array('#{username}', '#{serverNumber}'),
             array($this->_user->getLogin(), $this->_user->getServerId()),
             $encode->additionalComment
