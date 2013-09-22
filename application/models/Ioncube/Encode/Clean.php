@@ -27,7 +27,7 @@ class Application_Model_Ioncube_Encode_Clean
         $file = $this->cli('file');
         $query = $file->clear()->copy(
             $this->_remoteEnterpisePackagePath,
-            $this->_remoteCodingTmpPath . '/decoded-enterprise.tar.gz'
+            $this->_remoteCodingTmpPath . '/' . $this->_decodedEntepriseFilename
         );
         $this->_ssh->cloneObject()->remoteCall($query)->call();
     }
