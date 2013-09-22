@@ -128,25 +128,25 @@ abstract class Application_Model_Ioncube_Encode
 
     protected function _encodeEnterprise()
     {
+        $ioncube = $this->_config->ioncubeEncoder;
+        $encode = $ioncube->encode;
         $query = $this->cli()->createQuery(
-            rtrim($this->_config->ionCube->executablePath, '/')
+            rtrim($ioncube->executablePath, '/')
         );
-
-        $ioncube = $this->config->ioncube->encode;
 
         $server = str_ireplace(
             array('#{username}', '#{serverNumber}'),
             array($this->_user->getLogin(), $this->_user->getServerId()),
-            $ioncube->allowedServer
+            $encode->allowedServer
         );
 
         $additionalComment = $server = str_ireplace(
             array('#{username}', '#{serverNumber}'),
             array($this->_user->getLogin(), $this->_user->getServerId()),
-            $ioncube->additionalComment
+            $encode->additionalComment
         );
 
-        $key = $ioncube->obfuscationKey;
+        $key = $encode->obfuscationKey;
 
         $query
             ->append('--allowed-server ?', $server)
