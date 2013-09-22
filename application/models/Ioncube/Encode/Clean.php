@@ -6,6 +6,7 @@ class Application_Model_Ioncube_Encode_Clean
     public function process()
     {
         $this->_createRemoteTmpDir();
+        $this->_removeEnterpriseDirContent();
         $this->_copyEnterprisePackage();
         $this->_unpackRemoteDecodedEnterprise(5);
         $this->_encodeEnterprise();
