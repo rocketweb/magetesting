@@ -12,7 +12,7 @@ class RocketWeb_Cli_Kit_Scp
     public function connect($user, $password, $host, $port)
     {
         $this->append('sshpass -p :password scp -o LogLevel=FATAL -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no');
-        $this->append('-p :port :$upload :user@:host:$remotePath :$download');
+        $this->append('-P :port :$upload :user@:host:$remotePath :$download');
         $this->bindAssoc(':user', $user)
              ->bindAssoc(':password', $password)
              ->bindAssoc(':host', $host)
