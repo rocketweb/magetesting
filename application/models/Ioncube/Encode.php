@@ -32,8 +32,11 @@ abstract class Application_Model_Ioncube_Encode
         $server = $ioncube->server;
         $this->_remoteCodingTmpPath =
             rtrim($ioncube->codingTmpPath, '/') . '/' . $this->_store->getDomain();
+
+        $version = $this->_getStoreVersion();
+
         $this->_remoteEnterpisePackagePath =
-            rtrim($ioncube->enterprisePackagesPath, '/') . '/enterprise-' . $this->_store->getVersion() . '.tar.gz';
+            rtrim($ioncube->enterprisePackagesPath, '/') . '/enterprise-' . $version . '.tar.gz';
 
         $this->_scp = $this->cli('scp');
         $this->_scp->connect(
@@ -51,6 +54,13 @@ abstract class Application_Model_Ioncube_Encode
         );
 
         return $this;
+    }
+
+    protected function _getStoreVersion()
+    {
+        $version = new Application_Model_Version();
+        $version = $version->find($this->_store->getVersionId());
+        return $version->getVersion();
     }
 
     protected function _getStoreDir()
@@ -87,7 +97,7 @@ abstract class Application_Model_Ioncube_Encode
         return $this->_cli;
     }
 
-    abstract public function process() {}
+    abstract public function process();
 
     protected function _createRemoteTmpDir()
     {
