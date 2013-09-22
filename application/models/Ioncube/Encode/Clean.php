@@ -24,6 +24,7 @@ class Application_Model_Ioncube_Encode_Clean
 
     protected function _moveEnterprisePackage()
     {
+        $file = $this->cli('file');
         $query = $file->clear()->move(
             $this->_remoteEnterpisePackagePath,
             $this->_remoteCodingTmpPath . '/decoded-enterprise.tar.gz'
