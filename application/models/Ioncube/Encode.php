@@ -87,7 +87,7 @@ abstract class Application_Model_Ioncube_Encode
             $this->_cli = new RocketWeb_Cli();
 
             if($this->_log) {
-                $this->_cli->setLogger($log);
+                $this->_cli->setLogger($this->_log);
                 $this->_cli->enableLogging(true);
             }
         }
