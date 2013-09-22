@@ -182,7 +182,7 @@ abstract class Application_Model_Ioncube_Encode
     protected function _downloadEnterpise()
     {
         $this->_scp->cloneObject()->download(
-            $this->_remoteCodingTmpPath.'/enterprise.tar.gz',
+            $this->_remoteCodingTmpPath.'/encoded-enterprise.tar.gz',
             $this->_getStoreDir().'/encoded-enterprsie.tar.gz'
         )->call();
     }
