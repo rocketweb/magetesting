@@ -60,7 +60,7 @@ extends Application_Model_Task {
 
             $ioncube->process();
         } catch(Application_Model_Ioncube_Exception $e) {
-            $this->logger('Encoding enterprise error:' . $e->getMessage(), Zend_Log::CRIT);
+            $this->logger->log('Encoding enterprise error:' . $e->getMessage(), Zend_Log::CRIT);
             throw new Application_Model_Task_Exception('Encoding enterprise failed.', 0, $e);
         }
     }
