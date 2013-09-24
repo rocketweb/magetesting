@@ -117,9 +117,9 @@ abstract class Application_Model_Ioncube_Encode
     protected function _removeEnterpriseDirContent()
     {
         $startCwd = getcwd();
-        setcwd($this->_getStoreDir() . '/app/code/core/Enterprise');
+        chdir($this->_getStoreDir() . '/app/code/core/Enterprise');
         $this->cli('file')->remove('')->append('*')->call();
-        setcwd($startCwd);
+        chdir($startCwd);
     }
 
     protected function _unpackRemoteDecodedEnterprise($strip)
