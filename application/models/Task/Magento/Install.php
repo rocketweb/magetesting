@@ -47,7 +47,8 @@ implements Application_Model_Task_Interface {
         if (file_exists($dirname) && is_dir($dirname)){
             $this->_fileKit->clear()->fileMode(':dir', '666')->bindAssoc(
                 "':dir'",
-                $this->_fileKit->escape($dirname).'*'
+                $this->_fileKit->escape($dirname).'*',
+                false
             )->asSuperUser(false)->call();
         }
 
