@@ -46,7 +46,25 @@ extends Application_Model_Task {
         );
         $this->_taskMysql = new Application_Model_TaskMysql($db, $this->_db_table_prefix);
     }
-    
+
+    protected function _encodeEnterprise()
+    {
+        $ioncube = new Application_Model_Ioncube_Encode_Clean();
+
+        try {
+            $ioncube->setup(
+                $this->_storeObject,
+                $this->config,
+                $this->cli()->getLogger()
+            );
+
+            $ioncube->process();
+        } catch(Application_Model_Ioncube_Exception $e) {
+            $this->logger('Encoding enterprise error:' . $e->getMessage(), Zend_Log::CRIT);
+            throw new Application_Model_Task_Exception('Encoding enterprise failed.', 0, $e);
+        }
+    }
+
     /**
      * Creates system account for user during store installation (in worker.php)
      */

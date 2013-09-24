@@ -30,6 +30,9 @@ class Application_Model_Ioncube_Encode_Clean
             $this->_remoteEnterpisePackagePath,
             $this->_remoteCodingTmpPath . '/' . $this->_decodedEntepriseFilename
         );
-        $this->_ssh->cloneObject()->remoteCall($query)->call();
+        $this->_call(
+            $this->_ssh->cloneObject()->remoteCall($query),
+            'Copying enterpise to tmp dir on remote server failed.'
+        );
     }
 }

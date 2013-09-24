@@ -206,23 +206,6 @@ implements Application_Model_Task_Interface {
         }
     }
 
-    protected function _encodeEnterprise()
-    {
-        $ioncube = new Application_Model_Ioncube_Encode_Clean();
-
-        try {
-            $ioncube->setup(
-                $this->_storeObject,
-                $this->config,
-                $this->cli()->getLogger()
-            );
-
-            $ioncube->process();
-        } catch(Application_Model_Ioncube_Exception $e) {
-            throw new Application_Model_Task_Exception($e->getMessage(), $e->getCode(), $e);
-        }
-    }
-
     protected function _installSampleData() {
         $this->logger->log('Inserting sample data.', Zend_Log::INFO);
 
