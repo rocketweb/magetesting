@@ -21,19 +21,28 @@ class Application_Model_Ioncube_Encode_Custom
     protected function _packLocalDecodedEnterprise()
     {
         $enterprisePath = $this->_getStoreDir().'/app/code/core/Enterprise';
-        $this->cli('tar')->pack(
+        $query = $this->cli('tar')->pack(
             $this->_getStoreDir().'/'.$this->_decodedEntepriseFilename,
             $enterprisePath
-        )->isCompressed()->call();
+        )->isCompressed();
+
+        $this->_call(
+            $query,
+            'Packing /app/code/core/Enterprise on local server failed.'
+        );
 
         return count(explode('/', $enterprisePath));
     }
 
     protected function _uploadEnterprise()
     {
-        $this->_scp->cloneObject()->upload(
+        $query = $this->_scp->cloneObject()->upload(
             $this->_getStoreDir().'/'.$this->_decodedEntepriseFilename,
             $this->_remoteCodingTmpPath
-        )->call();
+        );
+        $this->_call(
+            $query,
+            'Uploading decoded enterprise package from local server failed.'
+        );
     }
 }

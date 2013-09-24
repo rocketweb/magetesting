@@ -111,15 +111,22 @@ abstract class Application_Model_Ioncube_Encode
         );
         $secondPath = $query->cloneObject()->bindAssoc('/decoded', '/encoded', false);
         $query->append('; '.$secondPath->toString());
-        $this->_ssh->cloneObject()->remoteCall($query)->call();
+
+        $this->_call(
+            $this->_ssh->cloneObject()->remoteCall($query),
+            'Creating tmp encoding dir on remote server failed.'
+        );
     }
 
     protected function _removeEnterpriseDirContent()
     {
         $startCwd = getcwd();
-        setcwd($this->_getStoreDir() . '/app/code/core/Enterprise');
-        $this->cli('file')->remove('')->append('*')->call();
-        setcwd($startCwd);
+        chdir($this->_getStoreDir() . '/app/code/core/Enterprise');
+        $this->_call(
+            $this->cli('file')->remove('')->append('*'),
+            'Removing content of /app/code/core/Enterprise on local server failed.'
+        );
+        chdir($startCwd);
     }
 
     protected function _unpackRemoteDecodedEnterprise($strip)
@@ -132,7 +139,10 @@ abstract class Application_Model_Ioncube_Encode
             )
             ->strip($strip);
         $this->_unpackRemoteDecodedEnterpriseBeforeCall($query);
-        $this->_ssh->cloneObject()->remoteCall($query)->call();
+        $this->_call(
+            $this->_ssh->cloneObject()->remoteCall($query),
+            'Unpacking decoded enterprise package on remote server failed.'
+        );
     }
 
     protected function _unpackRemoteDecodedEnterpriseBeforeCall($query) {}
@@ -175,7 +185,10 @@ abstract class Application_Model_Ioncube_Encode
             ':encodedPath' => $this->_remoteCodingTmpPath . '/encoded'
         ));
 
-        $this->_ssh->cloneObject()->remoteCall($query)->call();
+        $this->_call(
+            $this->_ssh->cloneObject()->remoteCall($query),
+            'Encoding enterprise by ioncube failed.'
+        );
     }
 
     protected function _packRemoteEncodedEnterprise()
@@ -186,32 +199,53 @@ abstract class Application_Model_Ioncube_Encode
                 $this->_remoteCodingTmpPath . '/' . $this->_encodedEntepriseFilename,
                 $this->_remoteCodingTmpPath . '/encoded'
             );
-        $this->_ssh->cloneObject()->remoteCall($query)->call();
+        $this->_call(
+            $this->_ssh->cloneObject()->remoteCall($query),
+            'Packing encoded enterprise on remote server failed.'
+        );
     }
 
     protected function _downloadEnterpise()
     {
-        $this->_scp->cloneObject()->download(
+        $query = $this->_scp->cloneObject()->download(
             $this->_remoteCodingTmpPath.'/'.$this->_encodedEntepriseFilename,
             $this->_getStoreDir().'/'.$this->_encodedEntepriseFilename
-        )->call();
+        );
+        $this->_call(
+            $query,
+            'Downloading encoded package from remote server failed.'
+        );
     }
 
     protected function _unpackLocalEncodedEnterprise()
     {
-        $this
+        $query = $this
             ->cli('tar')
             ->unpack($this->_getStoreDir().'/'.$this->_encodedEntepriseFilename, $this->_getStoreDir().'/app/code/core')
-            ->strip(count(explode('/', $this->_remoteCodingTmpPath . '/encoded')))
-            ->call();
+            ->strip(count(explode('/', $this->_remoteCodingTmpPath . '/encoded')));
+        $this->_call(
+            $query,
+            'Unpacking encoded enterprise on local server failed.'
+        );
     }
 
     protected function _cleanFileSystem()
     {
         $this->cli('file')->remove($this->_getStoreDir().'/'.$this->_decodedEntepriseFilename)->call();
         $this->cli('file')->remove($this->_getStoreDir().'/'.$this->_encodedEntepriseFilename)->call();
-        $this->_ssh->cloneObject()->remoteCall(
+        $query = $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->remove($this->_remoteCodingTmpPath)
-        )->call();
+        );
+        $this->_call(
+            $query,
+            'Cleaning file system on local server failed.'
+        );
+    }
+
+    protected function _call(RocketWeb_Cli_Query $query, string $exceptionMessage)
+    {
+        if(0 !== (int) $query->call()->getLastStatus()) {
+            throw new Application_Model_Ioncube_Exception($exceptionMessage);
+        }
     }
 }
