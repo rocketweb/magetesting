@@ -242,10 +242,10 @@ abstract class Application_Model_Ioncube_Encode
         );
     }
 
-    protected function _call(RocketWeb_Cli_Query $query, string $exceptionMessage)
+    protected function _call(RocketWeb_Cli_Query $query, $exceptionMessage = '')
     {
         if(0 !== (int) $query->call()->getLastStatus()) {
-            throw new Application_Model_Ioncube_Exception($exceptionMessage);
+            throw new Application_Model_Ioncube_Exception((string) $exceptionMessage);
         }
     }
 }
