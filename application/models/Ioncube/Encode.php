@@ -221,8 +221,8 @@ abstract class Application_Model_Ioncube_Encode
     {
         $query = $this
             ->cli('tar')
-            ->unpack($this->_getStoreDir().'/'.$this->_encodedEntepriseFilename, $this->_getStoreDir().'/app/code/core')
-            ->strip(count(explode('/', $this->_remoteCodingTmpPath . '/encoded')));
+            ->unpack($this->_getStoreDir().'/'.$this->_encodedEntepriseFilename, $this->_getStoreDir().'/app/code/core/Enterprise')
+            ->strip(count(explode('/', trim($this->_remoteCodingTmpPath . '/encoded', '/'))));
         $this->_call(
             $query,
             'Unpacking encoded enterprise on local server failed.'

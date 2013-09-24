@@ -165,12 +165,12 @@ implements Application_Model_Task_Interface {
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
 
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        unset($output);
+
         if('ee' === strtolower($this->_magentoEdition)) {
             $this->_encodeEnterprise();
         }
-
-        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-        unset($output);
 
         if ($this->_storeObject->getSampleData()) {
             $this->logger->log('Extracting sample data.', Zend_Log::INFO);
