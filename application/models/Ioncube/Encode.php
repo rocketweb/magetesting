@@ -171,7 +171,6 @@ abstract class Application_Model_Ioncube_Encode
 
         $query
             ->append('--allowed-server ?', $server)
-            ->append('--trust-unnamed-servers')
             ->append('--obfuscate all')
             ->append('--obfuscation-key ?', $key)
             ->append('--add-comment ?', $additionalComment)

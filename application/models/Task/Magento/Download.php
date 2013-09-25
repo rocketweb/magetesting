@@ -15,6 +15,8 @@ implements Application_Model_Task_Interface {
     public function process(Application_Model_Queue $queueElement = null) {
         $startCwd = getcwd();
 
+        $this->_disableFtpAccount();
+
         $this->_updateStoreStatus('downloading-magento');
         $this->_prepareDatabase();
         $this->_createSystemAccount();
@@ -59,10 +61,6 @@ implements Application_Model_Task_Interface {
         } catch (Application_Model_Transport_Exception $e) {
             $this->logger->log($e->getMessage(),Zend_Log::ERR);
             throw new Application_Model_Task_Exception($e->getMessage());
-        }
-
-        if('ee' === strtolower($this->_storeObject->getEdition())) {
-            $this->_encodeEnterprise();
         }
 
         $this->_fixOwnership();
@@ -138,7 +136,12 @@ implements Application_Model_Task_Interface {
         /* update revision count */
         $this->db->update('store', array('revision_count' => '0'), 'id=' . $this->_storeObject->getId());
         $this->_storeObject->setRevisionCount(0);
-        
+
+        if('ee' === strtolower($this->_magentoEdition)) {
+            $this->_encodeEnterprise();
+        }
+
+        $this->_enableFtpAccount();
     }
 
         /* move to transport class */
