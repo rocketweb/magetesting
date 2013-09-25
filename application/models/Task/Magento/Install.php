@@ -15,6 +15,8 @@ implements Application_Model_Task_Interface {
     
     public function process(Application_Model_Queue $queueElement = null) {
         
+        $this->_disableFtpAccount();
+        
         $startCwd = getcwd();
         
         $this->_updateStoreStatus('installing-magento');
@@ -73,6 +75,12 @@ implements Application_Model_Task_Interface {
         $this->_fixUserHomeChmod();
         
         $this->_activateDemoNotice();
+
+        if('ee' === strtolower($this->_magentoEdition)) {
+            $this->_encodeEnterprise();
+        }
+
+        $this->_enableFtpAccount();
     }
 
     protected function _prepareFileSystem() {
@@ -170,10 +178,6 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
-
-        if('ee' === strtolower($this->_magentoEdition)) {
-            $this->_encodeEnterprise();
-        }
 
         if ($this->_storeObject->getSampleData()) {
             $this->logger->log('Extracting sample data.', Zend_Log::INFO);
