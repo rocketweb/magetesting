@@ -137,7 +137,7 @@ implements Application_Model_Task_Interface {
         $this->db->update('store', array('revision_count' => '0'), 'id=' . $this->_storeObject->getId());
         $this->_storeObject->setRevisionCount(0);
 
-        if('ee' === strtolower($this->_magentoEdition)) {
+        if('ee' === strtolower($this->_storeObject->getEdition())) {
             $this->_encodeEnterprise();
         }
 
