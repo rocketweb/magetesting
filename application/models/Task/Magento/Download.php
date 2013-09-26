@@ -429,7 +429,10 @@ implements Application_Model_Task_Interface {
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
 
-        $this->_taskMysql->updateCoreConfig($serverModel->getDomain(), $this->_userObject->getEmail());
+        $this->_taskMysql->updateCoreConfig(
+            $this->_userObject->getLogin().$serverModel->getDomain().'/'.$this->_storeObject->getDomain(),
+            $this->_userObject->getEmail()
+        );
 
         /* clear cache to apply new cache settings  */
         $this->_clearStoreCache();
