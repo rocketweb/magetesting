@@ -137,7 +137,7 @@ class Application_Model_TaskMysql
             'sort_order' => 0,
             'role_type' => 'U',
             'user_id' => new Zend_Db_Expr($subselect->__toString()),
-            'role_name' => $this->_userObject->getFirstName()
+            'role_name' => $fname
         );
         $this->_db->insert($table, $data);
         return $this;
