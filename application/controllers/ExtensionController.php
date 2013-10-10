@@ -93,7 +93,9 @@ class ExtensionController extends Integration_Controller_Action {
             'category_id'     => $this->_getParam('category_id', ''),
             'is_visible'      => $this->_getParam('is_visible', ''),
             'author'          => $this->_getParam('author', ''),
-            'sort'            => $this->_getParam('sort', '')
+            'sort'            => $this->_getParam('sort', ''),
+            'extension_detail'        => $this->_getParam('extension_detail', ''),
+            'extension_documentation' => $this->_getParam('extension_documentation', ''),
         );
         $name = 'Application_Form_Extension'.$action;
         $form = new $name;
@@ -172,7 +174,9 @@ class ExtensionController extends Integration_Controller_Action {
                     'author'          => $extension->getAuthor(),
                     'is_visible'      => $extension->getIsVisible(),
                     'category_id'     => $extension->getCategoryId(),
-                    'sort'            => $extension->getSort()
+                    'sort'            => $extension->getSort(),
+                    'extension_detail'        => $extension->getExtensionDetail(),
+                    'extension_documentation' => $extension->getExtensionDocumentation(),
                 );
                 $success_message = 'Extension has been changed properly.';
             } else {
