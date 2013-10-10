@@ -56,6 +56,14 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                         </div>
                         <div class="row">
                             <div class="span4">
+                                <?php echo $this->form->extension_detail; ?>
+                            </div>
+                            <div class="span4">
+                                <?php echo $this->form->extension_documentation; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span4">
                                 <?php echo $this->form->extension_file; ?>
                                 <label class="file-name"><?php echo $this->extension_file ? $this->extension_file : ''; ?></label>
                             </div>
