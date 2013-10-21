@@ -2,6 +2,9 @@
 
 class Application_Model_PaymentAdditionalStore {
 
+    const DOWNGRADED = 1;
+    const NOT_DOWNGRADED = 0;
+
     protected $_id;
 
     protected $_user_id;

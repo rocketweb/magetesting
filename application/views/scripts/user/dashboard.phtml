@@ -109,7 +109,9 @@
                             <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
                             <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
                             <?php if($item['status'] == 'ready'): ?>
-                                <?php if(in_array($this->user->downgraded, array(3, 4))): ?>
+                                <?php if(in_array($this->user->downgraded, array(
+                                    Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED,
+                                    Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_DELETED))): ?>
                                 <a class="btn btn-faded btn-mini view-store disabled"><i class="icon icon-white icon-home"></i> View Store</a>
                                 <a class="btn btn-mini btn-faded admin-panel disabled"><i class="icon icon-white icon-wrench"></i> Access Admin</a>
                                 <?php else: ?>

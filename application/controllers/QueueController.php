@@ -442,7 +442,9 @@ class QueueController extends Integration_Controller_Action {
                 $additionalMessage = '';
                 $user = new Application_Model_User();
                 $user->find($storeModel->getUserId());
-                if(in_array((int)$user->getDowngraded(), array(3, 4))) {
+                if(in_array((int)$user->getDowngraded(), array(
+                    Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED,
+                    Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_DELETED))) {
                     $plan = new Application_Model_Plan();
                     $plan->find($user->getPlanId());
                     $user_max_stores = (int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved()+(int)$plan->getStores();
@@ -458,7 +460,7 @@ class QueueController extends Integration_Controller_Action {
                     }
 
                     if($user_stores->getAllForUser($user->getId())->count() <= $user_max_stores) {
-                        $user->setDowngraded(5);
+                        $user->setDowngraded(Application_Model_User::TO_BE_RESTORED);
                         $additionalMessage = ' Other stores should be available in a minute.';
                     }
                     $user->save();

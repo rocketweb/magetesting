@@ -9,7 +9,7 @@ $sql = $select
     ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->where('store.status = ?', 'ready')
     ->where('TIMESTAMPDIFF(SECOND, \''.date("Y-m-d H:i:s").'\', user.plan_active_to) > ?', 0)
-    ->where('user.downgraded = ?', 1);
+    ->where('user.downgraded = ?', Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_DELETED);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
 $apache->asSuperUser();
@@ -31,7 +31,7 @@ if($result) {
     if($restore_by_id) {
         $set = array(
                 'group' => 'commercial-user',
-                'downgraded' => 0
+                'downgraded' => Application_Model_User::NOT_DOWNGRADED
         );
 
         $user_ids = array_keys($restore_by_id);
