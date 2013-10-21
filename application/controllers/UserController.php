@@ -242,11 +242,11 @@ class UserController extends Integration_Controller_Action
                                 // if date is farther than 3 days
                                 // inform that we downgraded user account
                                 $user->setGroup('free-user')
-                                     ->setDowngraded(2)
+                                     ->setDowngraded(Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_NOT_DELETED)
                                      ->save();
                                 $this->_helper->FlashMessenger(array('type'=> 'error', 'message' => 'We downgraded your account to free user.'));
                                 $userData->group = 'free-user';
-                                $userData->downgraded = 2;
+                                $userData->downgraded = Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_NOT_DELETED;
                             }
                         }
 

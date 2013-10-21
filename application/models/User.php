@@ -1,6 +1,13 @@
 <?php
 
 class Application_Model_User {
+    
+    const NOT_DOWNGRADED                                  = 0;
+    const DOWNGRADED_EXPIRED_SYMLINKS_DELETED             = 1;
+    const DOWNGRADED_EXPIRED_SYMLINKS_NOT_DELETED         = 2;
+    const DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED = 3;
+    const DOWNGRADED_TOO_MANY_STORES_SYMLINKS_DELETED     = 4;
+    const TO_BE_RESTORED                                  = 5;
 
     protected $_id;
 
@@ -340,13 +347,6 @@ class Application_Model_User {
         return $this;
     }
 
-    /**
-     * is user downgraded
-     * 0 - is not downgraded
-     * 1 - downgraded with deleted symlinks
-     * 2 - downgraded in fronted but symlinks exists
-     * @return int 0|1|2
-     */
     public function getDowngraded()
     {
         return $this->_downgraded;

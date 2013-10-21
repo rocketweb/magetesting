@@ -115,7 +115,7 @@ class PaymentController extends Integration_Controller_Action
                         $store_payment
                             ->setBraintreeTransactionConfirmed(0)
                             ->setBraintreeTransactionId($transaction_data->id)
-                            ->setDowngraded(0)
+                            ->setDowngraded(Application_Model_PaymentAdditionalStore::NOT_DOWNGRADED)
                             ->setUserId($user->getId())
                             ->setPurchasedDate(date('Y-m-d'))
                             ->setStores($additional_stores)
