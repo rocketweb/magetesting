@@ -196,8 +196,8 @@ class Application_Model_Coupon {
         if ($this->getUserId()){
             return false;
         }
-        
-        if ($this->getUsedDate()){
+
+        if ($this->getUsedDate() > 0){
             return false;
         }
     }
