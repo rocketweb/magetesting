@@ -125,18 +125,14 @@ class Application_Model_TaskMysql
         /* add role for that user */
         $subselect = new Zend_Db_Select($this->getDbAdapter());
         $subselect->from($this->_table('admin_user'), array('user_id'));
-        $subselect->where(
-            array(
-                'username = ?' => $login
-            )
-        );
+        $subselect->where('username = ?', $login);
         $table = $this->_table('admin_role');
         $data = array(
             'parent_id' => 1,
             'tree_level' => 2,
             'sort_order' => 0,
             'role_type' => 'U',
-            'user_id' => new Zend_Db_Expr($subselect->__toString()),
+            'user_id' => new Zend_Db_Expr('('.$subselect->__toString().')'),
             'role_name' => $this->_userObject->getFirstName()
         );
         $this->_db->insert($table, $data);
