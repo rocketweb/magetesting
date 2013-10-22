@@ -105,9 +105,9 @@ class Application_Model_PaymentAdditionalStoreMapper {
         return $entries;
     }
 
-    public function fetchStoresToReduce()
+    public function fetchStoresToReduce($serverId)
     {
-        $resultSet = $this->getDbTable()->fetchStoresToReduce();
+        $resultSet = $this->getDbTable()->fetchStoresToReduce($serverId);
     
         $entries   = array();
         foreach ($resultSet as $row) {

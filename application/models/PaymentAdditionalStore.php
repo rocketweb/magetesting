@@ -158,9 +158,9 @@ class Application_Model_PaymentAdditionalStore {
         return $this->getMapper()->fetchWaitingForConfirmation();
     }
 
-    public function fetchStoresToReduce()
+    public function fetchStoresToReduce($serverId)
     {
-        return $this->getMapper()->fetchStoresToReduce();
+        return $this->getMapper()->fetchStoresToReduce($serverId);
     }
 
     public function __toArray()

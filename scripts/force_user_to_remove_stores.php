@@ -6,6 +6,7 @@ if(!defined('APPLICATION_PATH')) {
     $db = new Application_Model_DbTable_User();
     $db = $db->getAdapter();
     $log = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('Log');
+    $config = Zend_Registry::get('config');
 }
 
 $select = new Zend_Db_Select($db);
@@ -13,6 +14,7 @@ $sql = $select
     ->from('user')
     ->joinLeft('store','user.id = store.user_id', 'domain')
     ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
+    ->where('user.server_id = ?', $config->magento->currentServerId)
     ->where('store.status = ?', 'ready')
     ->where('user.downgraded = ?', 3);
 

@@ -9,6 +9,7 @@ $sql = $select
     ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->joinLeft('payment', 'user.braintree_transaction_id = payment.braintree_transaction_id AND user.id = payment.user_id', '')
     ->where('(store.status = ?', 'ready')
+    ->where('user.server_id = ?', $config->magento->currentServerId)
     ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, \''.date("Y-m-d H:i:s").'\') > ?', 3*60*60*24)
     ->where('user.group IN (?))', array('awaiting-user', 'commercial-user'))
     ->orwhere('braintree_transaction_confirmed = 0 AND date(CURRENT_TIMESTAMP)-date(payment.date) > 3')

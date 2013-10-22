@@ -3,7 +3,7 @@
 include 'init.console.php';
 
 $payment = new Application_Model_PaymentAdditionalStore();
-$result = $payment->fetchStoresToReduce();
+$result = $payment->fetchStoresToReduce($config->magento->currentServerId);
 
 if($result) {
     foreach($result as $row) {
