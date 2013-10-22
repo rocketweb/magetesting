@@ -132,7 +132,7 @@ class Application_Model_TaskMysql
             'tree_level' => 2,
             'sort_order' => 0,
             'role_type' => 'U',
-            'user_id' => new Zend_Db_Expr($subselect->__toString()),
+            'user_id' => new Zend_Db_Expr('('.$subselect->__toString().')'),
             'role_name' => $fname
         );
         $this->_db->insert($table, $data);
