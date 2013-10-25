@@ -37,7 +37,6 @@ class Application_Model_DbTable_Privilege {
         } catch (PDOException $e){
             return false;
         }
-        $this->adapter->getConnection()->exec("use `".$this->config->resources->db->params->dbname."`");
         return true;
     }
     
