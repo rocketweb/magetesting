@@ -15,6 +15,8 @@ implements Application_Model_Task_Interface {
     
     public function process(Application_Model_Queue $queueElement = null) {
         
+        $this->_disableFtpAccount();
+        
         $startCwd = getcwd();
         
         $this->_updateStoreStatus('installing-magento');
@@ -71,6 +73,12 @@ implements Application_Model_Task_Interface {
         }
 
         $this->_fixUserHomeChmod();
+
+        if('ee' === strtolower($this->_magentoEdition)) {
+            $this->_encodeEnterprise();
+        }
+
+        $this->_enableFtpAccount();
     }
 
     protected function _prepareFileSystem() {
