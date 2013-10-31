@@ -38,7 +38,8 @@ if($result) {
     sendEmail($mailData, $config, $log);
     $log->log('All email with reminder buying extension sent.', Zend_Log::INFO);
 } else {
-    $log->log('There is no email with reminder buying extension to send.', Zend_Log::INFO);
+    // it's being logged each minute, commenting out (wojtek)
+    //$log->log('There is no email with reminder buying extension to send.', Zend_Log::INFO);
 }
 
 
