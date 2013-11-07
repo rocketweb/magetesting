@@ -15,7 +15,8 @@ implements Application_Model_Task_Interface {
     public function process(Application_Model_Queue $queueElement = null) {
         $startCwd = getcwd();
 
-        $this->_disableFtpAccount();
+        $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
+        $DbManager->disableFtp($this->_dbuser);
 
         $this->_updateStoreStatus('downloading-magento');
         $this->_prepareDatabase();
@@ -141,7 +142,7 @@ implements Application_Model_Task_Interface {
             $this->_encodeEnterprise();
         }
 
-        $this->_enableFtpAccount();
+        $DbManager->enableFtp($this->_dbuser);
     }
 
         /* move to transport class */
