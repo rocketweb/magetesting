@@ -468,6 +468,8 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
          * This line is here to prevent:
          * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
          * when vsftpd is set to use chroot list
+         * 
+         * We don't vsftp now, but will leave that here for now. (wojtek)
          */
         $this->cli('file')->fileMode(
             $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin(),
