@@ -72,7 +72,10 @@ if($result) {
         //--------------SYSTEM/MYSQL PART START-------------
         $startcwd = getcwd();
         //remove ftp account
-        $user->disableFtp();
+
+        $dbPrivileged = Zend_Db::factory('PDO_MYSQL', $config->dbPrivileged->params);
+        $DbManager = new Application_Model_DbTable_Privilege($dbPrivileged,$config);
+        $DbManager->deleteFtp($user->getLogin());
 
         //rebuild phpmyadmin blacklist
         $user->disablePhpmyadmin();
@@ -101,11 +104,7 @@ if($result) {
 
 
         //remove mysql user
-        $dbPrivileged = Zend_Db::factory('PDO_MYSQL',
-            $config->dbPrivileged->params
-        );
 
-        $DbManager = new Application_Model_DbTable_Privilege($dbPrivileged,$config);
         if ($DbManager->checkIfUserExists($user->getLogin())){
             try {
                 $log->log('Dropping ' . $user->getLogin() . ' user.', Zend_Log::INFO);

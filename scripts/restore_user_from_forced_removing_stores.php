@@ -46,11 +46,15 @@ if($result) {
         $where = array('id IN (?)' => $user_ids);
         $db->update('user', $set, $where);
 
+        $dbPrivileged = Zend_Db::factory('PDO_MYSQL', $config->dbPrivileged->params);
+        $DbManager = new Application_Model_DbTable_Privilege($dbPrivileged,$config);
+
         foreach ($user_ids as $user_id){
             $modelUser = new Application_Model_User();
             $modelUser->find($user_id);
-            
-            $modelUser->disableFtp();
+
+            $DbManager->disableFtp($modelUser->getLogin());
+
             $modelUser->disablePhpmyadmin();
         }
         

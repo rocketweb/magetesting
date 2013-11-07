@@ -122,6 +122,10 @@ extends Application_Model_Task {
                 $this->config->magento->systemHomeFolder
             )->call()->getLastOutput();
 
+            $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
+            $DbManager->addFtp($this->_dbuser, $this->_systempass,
+                $this->config->magento->systemHomeFolder . '/' . $this->_dbuser);
+
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
 
@@ -140,7 +144,7 @@ extends Application_Model_Task {
                 $planModel->find($this->_userObject->getPlanId());
                 
                 if ($planModel->getFtpAccess()){
-                    $this->_userObject->enableFtp();
+                    $DbManager->enableFtp($this->_dbuser);
                     $this->_sendFtpEmail($user_details);
                 }
                 

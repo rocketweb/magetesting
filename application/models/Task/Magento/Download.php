@@ -335,10 +335,12 @@ implements Application_Model_Task_Interface {
             }
             
             /**
-            * This line is here to prevent:
-            * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
-            * when vsftpd is set to use chroot list
-            */
+             * This line was here to prevent:
+             * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
+             * when vsftpd is set to use chroot list
+             * 
+             * We don't vsftp now, but will leave that here for now. (wojtek)
+             */
             $file->clear()->fileMode($this->_storeFolder, 'a-w')->call();
         }
 
