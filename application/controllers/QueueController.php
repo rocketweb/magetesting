@@ -52,7 +52,6 @@ class QueueController extends Integration_Controller_Action {
         $version = new Application_Model_Version();
         $versions = $version->fetchAll();
         $this->view->versions = $versions;
-        
         $form = new Application_Form_StoreAddClean();
         $form->populate($this->getRequest()->getParams());
 
@@ -64,24 +63,6 @@ class QueueController extends Integration_Controller_Action {
         $plan = $modelPlan->find($user->getPlanId());
         
         if ($request->isPost()) {
-
-            $userGroup = $this->auth->getIdentity()->group;
-
-            if ($this->auth->getIdentity()->group != 'admin') {
-
-                $versionModel = new Application_Model_Version();
-                $version = $versionModel->find((int) $request->getParam('version', 0));
-
-                if ($version->getEdition() != 'CE') {
-                    $this->_helper->FlashMessenger('Please select magento editon.');
-                    return $this->_helper->redirector->gotoRoute(
-                                    array(), 'default', false
-                    );
-                }
-            }
-
-
-            
             if ($form->isValid($this->getRequest()->getParams())) {
                 //needs validation!
                 $storeModel = new Application_Model_Store();
