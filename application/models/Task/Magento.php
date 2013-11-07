@@ -47,17 +47,6 @@ extends Application_Model_Task {
         $this->_taskMysql = new Application_Model_TaskMysql($db, $this->_db_table_prefix);
     }
 
-    protected function _disableFtpAccount()
-    {
-        $call = $this->cli('user')->removeFtp(
-            $this->config->magento->userprefix . $this->_userObject->getLogin()
-        )->call();
-        if(0 !== (int)$call->getLastStatus()) {
-            $this->logger->log('Could not disable ftp account before installation.', Zend_Log::CRIT);
-            throw new Application_Model_Task_Exception('Could not safely install store.');
-        }
-    }
-
     protected function _encodeEnterprise()
     {
         $ioncube = new Application_Model_Ioncube_Encode_Clean();
@@ -73,17 +62,6 @@ extends Application_Model_Task {
         } catch(Application_Model_Ioncube_Exception $e) {
             $this->logger->log('Encoding enterprise error:' . $e->getMessage(), Zend_Log::CRIT);
             throw new Application_Model_Task_Exception('Encoding enterprise failed.', 0, $e);
-        }
-    }
-
-    protected function _enableFtpAccount()
-    {
-        $call = $this->cli('user')->addFtp(
-            $this->config->magento->userprefix . $this->_userObject->getLogin()
-        )->call();
-        if(0 !== (int)$call->getLastStatus()) {
-            $this->logger->log('Could not enable ftp account after installation.', Zend_Log::CRIT);
-            throw new Application_Model_Task_Exception('Could not safely install store.');
         }
     }
 
