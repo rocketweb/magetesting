@@ -102,7 +102,7 @@ extends Application_Model_Task {
 
             $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
             $DbManager->addFtp($this->_dbuser, $this->_systempass,
-                $this->config->magento->systemHomeFolder . '/' . $this->_dbuser);
+                $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_dbuser);
 
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
