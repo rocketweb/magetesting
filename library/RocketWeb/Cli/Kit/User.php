@@ -37,7 +37,7 @@ class RocketWeb_Cli_Kit_User
     protected function _runScript($script)
     {
         $this->asSuperUser(true)
-             ->append(':script')
+             ->append('sh :script')
              ->bindAssoc(':script', $this->_getScriptsDir() . $script);
         return $this;
     }

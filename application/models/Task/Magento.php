@@ -289,8 +289,7 @@ extends Application_Model_Task {
             ErrorLog /home/".$this->config->magento->userprefix . $this->_dbuser."/error.log
             CustomLog /home/".$this->config->magento->userprefix . $this->_dbuser."/access.log combined
 
-            Alias /fcgi-bin/ /home/www-data/".$this->config->magento->userprefix . $this->_dbuser."/
-            SuexecUserGroup ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
+            AssignUserID ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
 
             DocumentRoot /home/".$this->config->magento->userprefix . $this->_dbuser."/public_html/
             <Directory /home/".$this->config->magento->userprefix . $this->_dbuser."/public_html/>
