@@ -9,7 +9,7 @@
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application/'));
 define('APPLICATION_ENV', 'development');
-define('STORE_PATH',APPLICATION_PATH . '/../store/');
+
 /**
  * Setup for includes
  */
