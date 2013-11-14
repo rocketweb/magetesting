@@ -608,30 +608,7 @@ class Application_Model_User {
     public function findByBraintreeTransactionId($transaction_id){
         return $this->getMapper()->findByBraintreeTransactionId($transaction_id,$this);
     }
-    
-    /**
-     * Adds user to authorized ftp users
-     */
-    public function enableFtp(){
-        $config = Zend_Registry::get('config');
 
-        $userKit = new RocketWeb_Cli_Kit_User();
-        $userKit->asSuperUser();
-        $userKit->addFtp($config->magento->userprefix . $this->getLogin())->call();
-    }
-    
-    /**
-     * Removes user from authorized ftp users
-     * used in downgrade_expired_users.php
-     */
-    public function disableFtp(){
-        $config = Zend_Registry::get('config');
-
-        $userKit = new RocketWeb_Cli_Kit_User();
-        $userKit->asSuperUser();
-        $userKit->removeFtp($config->magento->userprefix . $this->getLogin())->call();
-    }
-    
     /**
      * Adds user to authorized phpmyadmin users
      * but currently, it just rebuilds denied user list

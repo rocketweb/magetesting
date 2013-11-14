@@ -47,17 +47,6 @@ extends Application_Model_Task {
         $this->_taskMysql = new Application_Model_TaskMysql($db, $this->_db_table_prefix);
     }
 
-    protected function _disableFtpAccount()
-    {
-        $call = $this->cli('user')->removeFtp(
-            $this->config->magento->userprefix . $this->_userObject->getLogin()
-        )->call();
-        if(0 !== (int)$call->getLastStatus()) {
-            $this->logger->log('Could not disable ftp account before installation.', Zend_Log::CRIT);
-            throw new Application_Model_Task_Exception('Could not safely install store.');
-        }
-    }
-
     protected function _encodeEnterprise()
     {
         $ioncube = new Application_Model_Ioncube_Encode_Clean();
@@ -73,17 +62,6 @@ extends Application_Model_Task {
         } catch(Application_Model_Ioncube_Exception $e) {
             $this->logger->log('Encoding enterprise error:' . $e->getMessage(), Zend_Log::CRIT);
             throw new Application_Model_Task_Exception('Encoding enterprise failed.', 0, $e);
-        }
-    }
-
-    protected function _enableFtpAccount()
-    {
-        $call = $this->cli('user')->addFtp(
-            $this->config->magento->userprefix . $this->_userObject->getLogin()
-        )->call();
-        if(0 !== (int)$call->getLastStatus()) {
-            $this->logger->log('Could not enable ftp account after installation.', Zend_Log::CRIT);
-            throw new Application_Model_Task_Exception('Could not safely install store.');
         }
     }
 
@@ -122,6 +100,10 @@ extends Application_Model_Task {
                 $this->config->magento->systemHomeFolder
             )->call()->getLastOutput();
 
+            $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
+            $DbManager->addFtp($this->_dbuser, $this->_systempass,
+                $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_dbuser);
+
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
 
@@ -140,7 +122,7 @@ extends Application_Model_Task {
                 $planModel->find($this->_userObject->getPlanId());
                 
                 if ($planModel->getFtpAccess()){
-                    $this->_userObject->enableFtp();
+                    $DbManager->enableFtp($this->_dbuser);
                     $this->_sendFtpEmail($user_details);
                 }
                 
@@ -307,8 +289,7 @@ extends Application_Model_Task {
             ErrorLog /home/".$this->config->magento->userprefix . $this->_dbuser."/error.log
             CustomLog /home/".$this->config->magento->userprefix . $this->_dbuser."/access.log combined
 
-            Alias /fcgi-bin/ /home/www-data/".$this->config->magento->userprefix . $this->_dbuser."/
-            SuexecUserGroup ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
+            AssignUserID ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
 
             DocumentRoot /home/".$this->config->magento->userprefix . $this->_dbuser."/public_html/
             <Directory /home/".$this->config->magento->userprefix . $this->_dbuser."/public_html/>

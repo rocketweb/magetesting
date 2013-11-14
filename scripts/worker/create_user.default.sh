@@ -1,7 +1,6 @@
 #!/bin/bash
 # Shell script to create:
 # - system user
-# - ftp account(not yet implemented)
 # - ssh access(should work as long as ssh uses PAM)
 # All arguments need to be passed. And they are:
 # - user login

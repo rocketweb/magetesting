@@ -36,22 +36,6 @@ class RocketWeg_Cli_Kit_UserTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAddFtp()
-    {
-        $this->assertEquals(
-                "sudo '".$this->_scriptPath()."/ftp-user-add.sh' 'login' 2>&1",
-                $this->_kit->addFtp('login')->toString()
-        );
-    }
-
-    public function testDeleteFtp()
-    {
-        $this->assertEquals(
-                "sudo '".$this->_scriptPath()."/ftp-user-remove.sh' 'login' 2>&1",
-                $this->_kit->removeFtp('login')->toString()
-        );
-    }
-
     public function testRebuildPhpMyAdmin()
     {
         $this->assertEquals(

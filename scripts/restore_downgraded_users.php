@@ -42,6 +42,9 @@ if($result) {
         //echo 'Update: '.$result.PHP_EOL;
         $log->log('Restored '.count($restore_by_id).' users', Zend_Log::INFO);
 
+        $dbPrivileged = Zend_Db::factory('PDO_MYSQL', $config->dbPrivileged->params);
+        $DbManager = new Application_Model_DbTable_Privilege($dbPrivileged,$config);
+
         foreach($user_ids as $user_id){
             //get users plan id
             $modelUser = new Application_Model_User();
@@ -50,10 +53,10 @@ if($result) {
             
             $modelPlan = new Application_Model_Plan();
             $modelPlan->find($modelUser->getPlanId());
-            
+
             //apply ftp and phpmyadmin access
             if ($modelPlan->getFtpAccess()){
-               $modelUser->enableFtp(); 
+                $DbManager->enableFtp($modelUser->getLogin()); 
             }
 
             if ($modelPlan->getPhpmyadminAccess()){
