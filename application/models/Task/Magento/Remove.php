@@ -29,9 +29,6 @@ implements Application_Model_Task_Interface {
         }
 
         //remove folder recursively
-        $startCwd =  getcwd();
-        chdir(STORE_PATH);
-
         $this->logger->log('Removing store directory recursively.', Zend_Log::INFO);
         $file = $this->cli('file')->asSuperUser();
         $file->remove($this->_storeFolder.'/'.$this->_storeObject->getDomain())->call();
