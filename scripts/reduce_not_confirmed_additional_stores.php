@@ -17,7 +17,7 @@ if($result) {
             $stores_to_remove = (int)$row->getStores();
             if($stores > ((int)$user->getAdditionalStores()-$stores_to_remove)+(int)$plan->getStores()) {
                 // downgraded because of too many stores installed
-                $user->setDowngraded(3);
+                $user->setDowngraded(Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED);
                 // remove as many additional stores as possible
                 $not_removed = $stores_to_remove;
                 while(
@@ -35,7 +35,7 @@ if($result) {
                 }
             }
             $user->save();
-            $row->setDowngraded(1)->save();
+            $row->setDowngraded(Application_Model_PaymentAdditionalStore::DOWNGRADED)->save();
         }
     }
     include APPLICATION_PATH . '/../scripts/force_user_to_remove_stores.php';

@@ -13,7 +13,7 @@ $sql = $select
     ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, \''.date("Y-m-d H:i:s").'\') > ?', 3*60*60*24)
     ->where('user.group IN (?))', array('awaiting-user', 'commercial-user'))
     ->orwhere('braintree_transaction_confirmed = 0 AND date(CURRENT_TIMESTAMP)-date(payment.date) > 3')
-    ->orwhere('user.downgraded = ?', 2);
+    ->orwhere('user.downgraded = ?', Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_NOT_DELETED);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
 $apache->asSuperUser();
@@ -35,7 +35,7 @@ if($result) {
     if($downgrade_by_id) {
         $set = array(
             'group' => 'free-user',
-            'downgraded' => 1
+            'downgraded' => Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_DELETED
         );
         
         $user_ids = array_keys($downgrade_by_id);
