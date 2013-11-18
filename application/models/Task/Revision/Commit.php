@@ -218,8 +218,8 @@ implements Application_Model_Task_Interface {
         chdir($dbDir);
         $dbFileName = 'db_backup_'.date("Y_m_d_H_i_s");
         $this->cli('mysql')->connect(
-            $this->config->resources->db->params->username,
-            $this->config->resources->db->params->password,
+            $this->config->dbPrivileged->params->username,
+            $this->config->dbPrivileged->params->password,
             $this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain()
         )->export()->removeDefiners()->append('> ?', $dbFileName)->asSuperUser()->call();
 
