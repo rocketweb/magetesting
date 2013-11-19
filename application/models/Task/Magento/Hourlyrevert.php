@@ -37,13 +37,17 @@ implements Application_Model_Task_Interface {
             $this->config->dbPrivileged->params->password,
             $this->config->magento->storeprefix.$dbName
         );
+
         //insert db dump from tar.gz one-liner
+        $this->logger->log('Unpacking database backup and reverting database for hourly revert. ',Zend_Log::INFO);
         $this->cli('tar')->unpack(
             $this->config->magento->systemHomeFolder.'/'.$this->config->magento->userprefix.$this->_userObject->getLogin().'/public_html/'.$this->_storeObject->getDomain().'/var/db/'.$revision->getDbBeforeRevision(),
             '',
             false
         )->redirectToOutput()
          ->pipe($mysql)->call();
+
+        $this->_clearStoreCache();
 
         //remove mainteance flag
         $file->clear()->remove($lockfile)->call();
