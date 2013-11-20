@@ -61,6 +61,12 @@ extends Application_Model_Task {
             $ioncube->process();
         } catch(Application_Model_Ioncube_Exception $e) {
             $this->logger->log('Encoding enterprise error:' . $e->getMessage(), Zend_Log::CRIT);
+
+            //remove EE folder recursively then
+            $this->logger->log('Removing app/code/core/Enterprise directory recursively.', Zend_Log::INFO);
+            $file = $this->cli('file')->asSuperUser();
+            $file->remove($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/code/core/Enterprise')->call();
+
             throw new Application_Model_Task_Exception('Encoding enterprise failed.', 0, $e);
         }
     }
