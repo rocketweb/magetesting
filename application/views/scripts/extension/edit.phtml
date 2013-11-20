@@ -112,16 +112,19 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                 <div class="control-group"><label for="to_version" class="control-label optional">Supported to </label>
                                     <div class="controls">
                                         <select name="to_version" id="to_version" class="CE span4">
+                                            <option value="" label="Latest"></option>
                                         <?php foreach ($this->versionCe as $value): ?>
                                             <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion() OR $value['version'] == $this->form->to_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
                                         <select name="to_version" id="to_version" class="PE span4" style="display: none;">
+                                            <option value="" label="Latest"></option>
                                         <?php foreach ($this->versionPe as $value): ?>
                                             <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion() OR $value['version'] == $this->form->to_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
                                         <select name="to_version" id="to_version" class="EE span4" style="display: none;">
+                                            <option value="" label="Latest"></option>
                                         <?php foreach ($this->versionEe as $value): ?>
                                             <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion() OR $value['version'] == $this->form->to_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>

@@ -23,7 +23,9 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $select = $this->select()
                 ->from($this->_name)
                 ->where('edition = ?', $store['edition'])
-                ->where(' ? BETWEEN REPLACE(from_version,\'.\',\'\') AND REPLACE(to_version,\'.\',\'\')',(int)str_replace('.','',$store['version']));
+                ->where('REPLACE(from_version,\'.\',\'\') <= ?', (int)str_replace('.','',$store['version']))
+                ->where('REPLACE(to_version,\'.\',\'\') >= ? OR REPLACE(to_version,\'.\',\'\') IS NULL', (int)str_replace('.','',$store['version']));
+//                ->where(' ? BETWEEN REPLACE(from_version,\'.\',\'\') AND REPLACE(to_version,\'.\',\'\')',(int)str_replace('.','',$store['version']));
                 
                 if (count($exclude)>0){
                     $select->where('id NOT IN (?) ',$exclude);
@@ -54,11 +56,13 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  ->from($this->_name, array('*', 'braintree_transaction_id' => new Zend_Db_Expr('NULL'), 'braintree_transaction_confirmed'  => new Zend_Db_Expr('NULL'), 'status'  => new Zend_Db_Expr('NULL'), 'store_extension_id' => new Zend_Db_Expr('NULL'), 'installed' => new Zend_Db_Expr('0')))
                  ->setIntegrityCheck(false)
                  ->where('extension > ""')
-                 ->where(' ?
-                     BETWEEN REPLACE(from_version,\'.\',\'\')
-                     AND REPLACE(to_version,\'.\',\'\')',
-                     (int)str_replace('.','',$store['version'])
-                 )
+                 ->where('REPLACE(from_version,\'.\',\'\') <= ?', (int)str_replace('.','',$store['version']))
+                 ->where('REPLACE(to_version,\'.\',\'\') >= ? OR REPLACE(to_version,\'.\',\'\') IS NULL', (int)str_replace('.','',$store['version']))
+//                 ->where(' ?
+//                     BETWEEN REPLACE(from_version,\'.\',\'\')
+//                     AND REPLACE(to_version,\'.\',\'\')',
+//                     (int)str_replace('.','',$store['version'])
+//                 )
                  ->order(array('sort DESC', 'id DESC'));
         if(isset($filter['query'])) {
             $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*', '%'), '', $filter['query']);
