@@ -77,14 +77,14 @@ class ExtensionController extends Integration_Controller_Action {
                 'action'     => 'index',
             ), 'default', true);
         }
-
+        
         $extension_data = array(
             'title'           => $this->_getParam('title', ''),
             'extension_key'   => $this->_getParam('extension_key', ''),
             'version'         => $this->_getParam('version', ''),
             'edition'         => $this->_getParam('edition', ''),
             'from_version'    => $this->_getParam('from_version', ''),
-            'to_version'      => $this->_getParam('to_version', ''),
+            'to_version'      => $this->_getParam('to_version') == '' ? null : $this->_getParam('to_version', ''),
             'description'     => $this->_getParam('description', ''),
             'price'           => $this->_getParam('price', ''),
             'logo'            => $this->_getParam('logo', ''),
@@ -95,10 +95,11 @@ class ExtensionController extends Integration_Controller_Action {
             'author'          => $this->_getParam('author', ''),
             'sort'            => $this->_getParam('sort', '')
         );
+
         $name = 'Application_Form_Extension'.$action;
         $form = new $name;
         $success_message = 'Extension has been added properly.';
-
+        
         $extension = new Application_Model_Extension();
         $extension_entity_data = array();
         $screenshots = array();
@@ -130,11 +131,13 @@ class ExtensionController extends Integration_Controller_Action {
         $form->from_version->addValidator(
             new Zend_Validate_InArray(array_keys($versions))
         );
-        $form->to_version->addMultiOptions($versions);
-        $form->to_version->addValidator(
-            new Zend_Validate_InArray(array_keys($versions))
-        );
-
+        
+        if ($extension_data['to_version'] !== null) {
+            $form->to_version->addMultiOptions($versions);
+            $form->to_version->addValidator(
+                new Zend_Validate_InArray(array_keys($versions))
+            );
+        }
         $editionModel = new Application_Model_Edition();
         $editions = array();
         foreach($editionModel->fetchAll() as $edition) {
@@ -203,6 +206,7 @@ class ExtensionController extends Integration_Controller_Action {
             $this->view->logo = $this->_getParam('logo', '');
 
             $formData = $this->_request->getPost();
+            $formData['to_version'] = $this->_getParam('to_version') == '' ? null : $this->_getParam('to_version', '');
             if($form->isValid($formData)) {
                 $old_logo = $extension->getLogo();
                 $new_logo = $this->_getParam('logo', '');
@@ -247,7 +251,7 @@ class ExtensionController extends Integration_Controller_Action {
                     }
                     $extension->setExtension($extension_new_name);
                 }
-                
+
                 if($extension_encoded_new_name) {
                     $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/encoded/';
                     if(!file_exists($dir)) {
