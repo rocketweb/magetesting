@@ -6,8 +6,8 @@ Zend_Auth::getInstance()->getStorage()->write((object)array('group' => 'admin'))
 try {
     include_once APPLICATION_PATH . '/views/helpers/ImagePath.php';
     $editions = array(
-        'CE' => array('from' => '1.4.0.0', 'to' => '1.8.0.0'),
-        'EE' => array('from' => '1.9.1.1', 'to' => '1.13.0.2'),
+        'CE' => array('from' => '1.4.0.0', 'to' => null),
+        'EE' => array('from' => '1.9.1.1', 'to' => null),
     );
     foreach ($editions as $edition => $range) {
         $mc_extensions = new Application_Model_ExtensionVersionSynchronizer();
