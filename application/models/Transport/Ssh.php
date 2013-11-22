@@ -54,8 +54,8 @@ extends Application_Model_Transport {
         $this->_customHost = $customHost;
         
         //PORT
-        $customPort = $this->_storeObject->getCustomPort();
-        if (trim($customPort)==''){
+        $customPort = (int) $this->_storeObject->getCustomPort();
+        if ($customPort == 0){
             $customPort = 22;
         }
         
