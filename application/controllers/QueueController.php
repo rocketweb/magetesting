@@ -1334,7 +1334,7 @@ class QueueController extends Integration_Controller_Action {
         $this->_customHost = trim($this->_customHost,'/');
         
         $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
         
@@ -1407,7 +1407,7 @@ class QueueController extends Integration_Controller_Action {
     protected function _findWebrootOnSsh() {
          $request = $this->getRequest();
          $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
 
@@ -1592,7 +1592,7 @@ class QueueController extends Integration_Controller_Action {
 
         $request = $this->getRequest();
         $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
         
