@@ -201,7 +201,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
         
         $this->addElement('text', 'extension_detail', array(
                 'label'      => 'Extension Detail',
-                'required'   => true,
+                'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 255))
@@ -212,7 +212,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
         
         $this->addElement('text', 'extension_documentation', array(
                 'label'      => 'Extension Documentation',
-                'required'   => true,
+                'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 255))
