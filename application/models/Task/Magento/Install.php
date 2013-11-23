@@ -14,6 +14,9 @@ implements Application_Model_Task_Interface {
     }
     
     public function process(Application_Model_Queue $queueElement = null) {
+
+        $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
+        $DbManager->disableFtp($this->_dbuser);
         
         $startCwd = getcwd();
         
@@ -71,6 +74,12 @@ implements Application_Model_Task_Interface {
         }
 
         $this->_fixUserHomeChmod();
+
+        if('ee' === strtolower($this->_magentoEdition)) {
+            $this->_encodeEnterprise();
+        }
+
+        $DbManager->enableFtp($this->_dbuser);
     }
 
     protected function _prepareFileSystem() {
@@ -468,6 +477,8 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
          * This line is here to prevent:
          * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
          * when vsftpd is set to use chroot list
+         * 
+         * We don't vsftp now, but will leave that here for now. (wojtek)
          */
         $this->cli('file')->fileMode(
             $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin(),

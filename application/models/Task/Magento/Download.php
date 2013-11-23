@@ -15,6 +15,9 @@ implements Application_Model_Task_Interface {
     public function process(Application_Model_Queue $queueElement = null) {
         $startCwd = getcwd();
 
+        $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
+        $DbManager->disableFtp($this->_dbuser);
+
         $this->_updateStoreStatus('downloading-magento');
         $this->_prepareDatabase();
         $this->_createSystemAccount();
@@ -60,7 +63,7 @@ implements Application_Model_Task_Interface {
             $this->logger->log($e->getMessage(),Zend_Log::ERR);
             throw new Application_Model_Task_Exception($e->getMessage());
         }
-        
+
         $this->_fixOwnership();
         
         try {
@@ -134,7 +137,12 @@ implements Application_Model_Task_Interface {
         /* update revision count */
         $this->db->update('store', array('revision_count' => '0'), 'id=' . $this->_storeObject->getId());
         $this->_storeObject->setRevisionCount(0);
-        
+
+        if('ee' === strtolower($this->_storeObject->getEdition())) {
+            $this->_encodeEnterprise();
+        }
+
+        $DbManager->enableFtp($this->_dbuser);
     }
 
         /* move to transport class */
@@ -328,10 +336,12 @@ implements Application_Model_Task_Interface {
             }
             
             /**
-            * This line is here to prevent:
-            * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
-            * when vsftpd is set to use chroot list
-            */
+             * This line was here to prevent:
+             * 500 OOPS: vsftpd: refusing to run with writable root inside chroot ()
+             * when vsftpd is set to use chroot list
+             * 
+             * We don't vsftp now, but will leave that here for now. (wojtek)
+             */
             $file->clear()->fileMode($this->_storeFolder, 'a-w')->call();
         }
 
@@ -421,7 +431,10 @@ implements Application_Model_Task_Interface {
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
 
-        $this->_taskMysql->updateCoreConfig($serverModel->getDomain(), $this->_userObject->getEmail());
+        $this->_taskMysql->updateCoreConfig(
+            'http://'.$this->_userObject->getLogin().'.'.$serverModel->getDomain().'/'.$this->_storeObject->getDomain().'/',
+            $this->_userObject->getEmail()
+        );
 
         /* clear cache to apply new cache settings  */
         $this->_clearStoreCache();

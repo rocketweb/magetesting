@@ -15,8 +15,8 @@ $sql = $select
     ->joinLeft('store','user.id = store.user_id', 'domain')
     ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->where('store.status = ?', 'ready')
-    ->where('user.downgraded = ?', 5)
-    ->where('user.server_id = ?', $config->magento->currentServerId);
+    ->where('user.downgraded = ?', Application_Model_User::TO_BE_RESTORED)
+     ->where('user.server_id = ?', $config->magento->currentServerId);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
 $apache->asSuperUser();
@@ -38,7 +38,7 @@ if($result) {
 
     if($downgrade_by_id) {
         $set = array(
-            'downgraded' => 0 // downgraded because of too many stores installed
+            'downgraded' => Application_Model_User::NOT_DOWNGRADED // downgraded because of too many stores installed
         );
 
         $user_ids = array_keys($downgrade_by_id);
@@ -46,11 +46,15 @@ if($result) {
         $where = array('id IN (?)' => $user_ids);
         $db->update('user', $set, $where);
 
+        $dbPrivileged = Zend_Db::factory('PDO_MYSQL', $config->dbPrivileged->params);
+        $DbManager = new Application_Model_DbTable_Privilege($dbPrivileged,$config);
+
         foreach ($user_ids as $user_id){
             $modelUser = new Application_Model_User();
             $modelUser->find($user_id);
-            
-            $modelUser->disableFtp();
+
+            $DbManager->disableFtp($modelUser->getLogin());
+
             $modelUser->disablePhpmyadmin();
         }
         

@@ -96,9 +96,7 @@ class Application_Model_EditionMapper {
         $authGroup = Zend_Auth::getInstance()->getIdentity()->group;
 
         foreach ($this->fetchAll() as $r) {
-            if($r->getKey() == 'CE' OR $authGroup == 'admin') {
                 $temp[$r->getKey()] = $r->getName();
-            }
         }
         return $temp;
 

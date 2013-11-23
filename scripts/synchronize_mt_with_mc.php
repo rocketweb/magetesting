@@ -5,109 +5,116 @@ include 'init.console.php';
 Zend_Auth::getInstance()->getStorage()->write((object)array('group' => 'admin'));
 try {
     include_once APPLICATION_PATH . '/views/helpers/ImagePath.php';
-    $mc_extensions = new Application_Model_ExtensionVersionSynchronizer();
-    $mc_extensions = $mc_extensions->getExtensionList();
+    $editions = array(
+        'CE' => array('from' => '1.4.0.0', 'to' => null),
+        'EE' => array('from' => '1.9.1.1', 'to' => null),
+    );
+    foreach ($editions as $edition => $range) {
+        $mc_extensions = new Application_Model_ExtensionVersionSynchronizer();
+        $mc_extensions = $mc_extensions->getExtensionList();
 
-    $mt_extensions = new Application_Model_Extension();
-    $mt_extensions = $mt_extensions->getMapper()->fetchFullListOfExtensions(array('price' => 'free'),array(),0,0);
+        $mt_extensions = new Application_Model_Extension();
+        $mt_extensions = $mt_extensions->getMapper()->fetchFullListOfExtensions(array('price' => 'free', 'edition' => $edition),array(),0,0);
 
-    $new_extension = 0;
-    $new_release = 0;
-    $without_change = 0;
+        $new_extension = 0;
+        $new_release = 0;
+        $without_change = 0;
 
-    $extension_files_directory = APPLICATION_PATH.'/../data/extensions/CE/open/';
+        $extension_files_directory = APPLICATION_PATH.'/../data/extensions/'.$edition.'/open/';
 
-    $categories = new Application_Model_ExtensionCategory();
-    $category_id = 0;
-    foreach($categories->fetchAll() as $row) {
-        if('Other' == $row->getName()) {
-            $category_id = $row->getId();
-        }
-    }
-    if(!$category_id) {
-        throw new Exception('There is no "other" extension category.');
-    }
-
-    foreach($mc_extensions as $mc_extension_key => $mc_extension_v) {
-        $existing_extensions = array();
-        foreach($mt_extensions as $mt_extension) {
-            if($mc_extension_key == $mt_extension->extension_key) {
-                $existing_extensions[] = $mt_extension;
+        $categories = new Application_Model_ExtensionCategory();
+        $category_id = 0;
+        foreach($categories->fetchAll() as $row) {
+            if('Other' == $row->getName()) {
+                $category_id = $row->getId();
             }
         }
-        $last_without_change = $without_change;
-        if(!$existing_extensions) {
-            if(isset($mc_extension_v['s'])) {
-                $new_extension++;
-                $extension_url = 'http://connect20.magentocommerce.com/community/' . $mc_extension_key . '/' . $mc_extension_v['s'] . '/';
-                $extensionModel = new Application_Model_Extension();
-                // download extension info
-                $http = new Zend_Http_Client($extension_url . 'package.xml');
-                $response = $http->request();
-                if(!$response->isError()) {
-                    sleep(mt_rand(2, 3));
-                    $xml = new SimpleXMLElement($response->getBody());
-                    $extensionModel->setName(ucwords(str_replace('_', ' ', $mc_extension_key)));
-                    $extensionModel->setExtensionKey($mc_extension_key);
-                    $extensionModel->setDescription(preg_replace('/\&lt\;[^\&]*\&gt\;/i', '', (string)$xml->summary[0]));
-                    $extensionModel->setAuthor((string)$xml->authors->author->name[0]);
-                    $extensionModel->setEdition('CE');
-                    $extensionModel->setFromVersion('1.4.0.0');
-                    $extensionModel->setToVersion('1.8.0.0');
-                    $extensionModel->setVersion($mc_extension_v['s']);
-                    $extensionModel->setPrice(0);
-                    $extensionModel->setIsVisible(0);
-                    $extensionModel->setSort(0);
-                    $extensionModel->setCategoryId($category_id);
+        if(!$category_id) {
+            throw new Exception('There is no "other" extension category.');
+        }
 
-                    // download extension file
-                    $extension_file = $mc_extension_key . '-' . $mc_extension_v['s'] . '.tgz';
-                    $http = new Zend_Http_Client($extension_url . $extension_file);
+        foreach($mc_extensions as $mc_extension_key => $mc_extension_v) {
+            $existing_extensions = array();
+            foreach($mt_extensions as $mt_extension) {
+                if($mc_extension_key == $mt_extension->extension_key) {
+                    $existing_extensions[] = $mt_extension;
+                }
+            }
+
+            $last_without_change = $without_change;
+            if(!$existing_extensions) {
+                if(isset($mc_extension_v['s'])) {
+                    $new_extension++;
+                    $extension_url = 'http://connect20.magentocommerce.com/community/' . $mc_extension_key . '/' . $mc_extension_v['s'] . '/';
+                    $extensionModel = new Application_Model_Extension();
+                    // download extension info
+                    $http = new Zend_Http_Client($extension_url . 'package.xml');
                     $response = $http->request();
                     if(!$response->isError()) {
-                        if(!file_exists($extension_files_directory)) {
-                            @mkdir($extension_files_directory, 0777, true);
+                        sleep(mt_rand(2, 3));
+                        $xml = new SimpleXMLElement($response->getBody());
+                        $extensionModel->setName(ucwords(str_replace('_', ' ', $mc_extension_key)));
+                        $extensionModel->setExtensionKey($mc_extension_key);
+                        $extensionModel->setDescription(preg_replace('/\&lt\;[^\&]*\&gt\;/i', '', (string)$xml->summary[0]));
+                        $extensionModel->setAuthor((string)$xml->authors->author->name[0]);
+                        $extensionModel->setEdition($edition);
+                        $extensionModel->setFromVersion($range['from']);
+                        $extensionModel->setToVersion($range['to']);
+                        $extensionModel->setVersion($mc_extension_v['s']);
+                        $extensionModel->setPrice(0);
+                        $extensionModel->setIsVisible(0);
+                        $extensionModel->setSort(0);
+                        $extensionModel->setCategoryId($category_id);
+
+                        // download extension file
+                        $extension_file = $mc_extension_key . '-' . $mc_extension_v['s'] . '.tgz';
+                        $http = new Zend_Http_Client($extension_url . $extension_file);
+                        $response = $http->request();
+                        if(!$response->isError()) {
+                            if(!file_exists($extension_files_directory)) {
+                                @mkdir($extension_files_directory, 0777, true);
+                            }
+                            file_put_contents($extension_files_directory . $extension_file, $response->getBody());
+                            $extensionModel->setExtension($extension_file);
                         }
-                        file_put_contents($extension_files_directory . $extension_file, $response->getBody());
-                        $extensionModel->setExtension($extension_file);
+                        $extensionModel->save();
                     }
-                    $extensionModel->save();
-                }
-            } else {
-                $without_change++;
-            }
-        } else {
-            foreach($existing_extensions as $update_extension) {
-                $compare = array($update_extension->version, array_pop($mc_extension_v));
-                natsort($compare);
-                $new_version = array_pop($compare);
-                if($update_extension->version != $new_version) {
-                    sleep(mt_rand(2, 3));
-                    $new_release++;
-                    $extensionModel = new Application_Model_Extension();
-                    $extensionModel->addVersionToExtension($update_extension->id, $new_version);
                 } else {
                     $without_change++;
                 }
+            } else {
+                foreach($existing_extensions as $update_extension) {
+                    $compare = array($update_extension->version, array_pop($mc_extension_v));
+                    natsort($compare);
+                    $new_version = array_pop($compare);
+                    if($update_extension->version != $new_version) {
+                        sleep(mt_rand(2, 3));
+                        $new_release++;
+                        $extensionModel = new Application_Model_Extension();
+                        $extensionModel->addVersionToExtension($update_extension->id, $new_version);
+                    } else {
+                        $without_change++;
+                    }
+                }
+            }
+
+            // it will skeep sleeping for extension without sleep
+            // thanks to that checking 4k extensions without change will not execute
+            // for 4k seconds
+            if($last_without_change == $without_change) {
+                sleep(1);
             }
         }
 
-        // it will skeep sleeping for extension without sleep
-        // thanks to that checking 4k extensions without change will not execute
-        // for 4k seconds
-        if($last_without_change == $without_change) {
-            sleep(1);
-        }
+        $sync_info = array(
+            'New extensions' => $new_extension,
+            'New releases' => $new_release,
+            'No change' => $without_change,
+            'Checked extensions' => ($new_extension+$new_release+$without_change),
+            'MT extensions' => count($mt_extensions)
+        );
+        $log->log('Syncing MT with MC for ' . $edition . ' edition.', Zend_Log::INFO, var_export($sync_info, true));
     }
-
-    $sync_info = array(
-        'New extensions' => $new_extension,
-        'New releases' => $new_release,
-        'No change' => $without_change,
-        'Checked extensions' => ($new_extension+$new_release+$without_change),
-        'MT extensions' => count($mt_extensions)
-    );
-    $log->log('Syncing MT with MC', Zend_Log::INFO, var_export($sync_info, true));
 } catch(Exception $e) {
     $log->log('Syncing MT with MC', Zend_Log::ERR, $e->getMessage());
 }

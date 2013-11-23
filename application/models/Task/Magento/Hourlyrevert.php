@@ -33,8 +33,8 @@ implements Application_Model_Task_Interface {
         $revision = $revisionModel->getLastForStore($this->_storeObject->getId());
 
         $mysql = $this->cli('mysql')->connect(
-            $this->config->resources->db->params->username,
-            $this->config->resources->db->params->password,
+            $this->config->dbPrivileged->params->username,
+            $this->config->dbPrivileged->params->password,
             $this->config->magento->storeprefix.$dbName
         );
 

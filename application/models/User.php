@@ -1,6 +1,13 @@
 <?php
 
 class Application_Model_User {
+    
+    const NOT_DOWNGRADED                                  = 0;
+    const DOWNGRADED_EXPIRED_SYMLINKS_DELETED             = 1;
+    const DOWNGRADED_EXPIRED_SYMLINKS_NOT_DELETED         = 2;
+    const DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED = 3;
+    const DOWNGRADED_TOO_MANY_STORES_SYMLINKS_DELETED     = 4;
+    const TO_BE_RESTORED                                  = 5;
 
     protected $_id;
 
@@ -340,13 +347,6 @@ class Application_Model_User {
         return $this;
     }
 
-    /**
-     * is user downgraded
-     * 0 - is not downgraded
-     * 1 - downgraded with deleted symlinks
-     * 2 - downgraded in fronted but symlinks exists
-     * @return int 0|1|2
-     */
     public function getDowngraded()
     {
         return $this->_downgraded;
@@ -608,30 +608,7 @@ class Application_Model_User {
     public function findByBraintreeTransactionId($transaction_id){
         return $this->getMapper()->findByBraintreeTransactionId($transaction_id,$this);
     }
-    
-    /**
-     * Adds user to authorized ftp users
-     */
-    public function enableFtp(){
-        $config = Zend_Registry::get('config');
 
-        $userKit = new RocketWeb_Cli_Kit_User();
-        $userKit->asSuperUser();
-        $userKit->addFtp($config->magento->userprefix . $this->getLogin())->call();
-    }
-    
-    /**
-     * Removes user from authorized ftp users
-     * used in downgrade_expired_users.php
-     */
-    public function disableFtp(){
-        $config = Zend_Registry::get('config');
-
-        $userKit = new RocketWeb_Cli_Kit_User();
-        $userKit->asSuperUser();
-        $userKit->removeFtp($config->magento->userprefix . $this->getLogin())->call();
-    }
-    
     /**
      * Adds user to authorized phpmyadmin users
      * but currently, it just rebuilds denied user list

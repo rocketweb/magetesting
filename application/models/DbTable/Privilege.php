@@ -100,5 +100,109 @@ class Application_Model_DbTable_Privilege {
     {
         $this->adapter->getConnection()->exec("DROP DATABASE `".$this->config->magento->storeprefix.$dbname."`");   
     }
-    
+
+    public function addFtp($login, $password, $dir)
+    {
+        $prefixedLogin = $this->config->magento->userprefix.$login;
+
+        $select = $this->adapter->select()
+            ->from('pureftpd.ftpd', array('User', 'status'))
+            ->where('User = ?', $prefixedLogin)
+            ->query();
+
+        $users = $select->fetchAll();
+
+        if(count($users)){
+            return false;
+        } else {
+            $this->adapter->insert(
+                'pureftpd.ftpd',
+                array(
+                    'User'     => $prefixedLogin,
+                    'status'   => '0',
+                    'Password' => md5($password),
+                    'Uid'      => $prefixedLogin,
+                    'Gid'      =>  $prefixedLogin,
+                    'Dir'      => $dir,
+                    'ULBandwidth' => 100,
+                    'DLBandwidth' => 100,
+                    'comment'    => '',
+                    'ipaccess'   => '*',
+                    'QuotaSize'  => 5000,
+                    'QuotaFiles' => 0,
+                )
+            );
+            return true;
+        }
+
+        return false;
+    }
+
+    public function enableFtp($login)
+    {
+        $prefixedLogin = $this->config->magento->userprefix.$login;
+
+        $select = $this->adapter->select()
+            ->from('pureftpd.ftpd', array('User', 'status'))
+            ->where('User = ?', $prefixedLogin)
+            ->query();
+
+        $users = $select->fetchAll();
+
+        if(count($users)){
+            $this->adapter->update(
+                'pureftpd.ftpd', 
+                array('status' => 1), 
+                $this->adapter->quoteInto('User = ?', $prefixedLogin)
+            );
+            return true;
+        }
+
+        return false;
+    }
+
+    public function disableFtp($login)
+    {
+        $prefixedLogin = $this->config->magento->userprefix.$login;
+
+        $select = $this->adapter->select()
+            ->from('pureftpd.ftpd', array('User'))
+            ->where('User = ?', $prefixedLogin)
+            ->query();
+
+        $users = $select->fetchAll();
+
+        if(count($users)){
+            $this->adapter->update(
+                'pureftpd.ftpd',
+                array('status' => 0),
+                $this->adapter->quoteInto('User = ?', $prefixedLogin)
+            );
+            return true;
+        }
+
+        return false;
+    }
+
+    public function deleteFtp($login)
+    {
+        $prefixedLogin = $this->config->magento->userprefix.$login;
+
+        $select = $this->adapter->select()
+            ->from('pureftpd.ftpd', array('User'))
+            ->where('User = ?', $prefixedLogin)
+            ->query();
+
+        $users = $select->fetchAll();
+
+        if(count($users)){
+            $this->adapter->delete(
+                'pureftpd.ftpd',
+                $this->adapter->quoteInto('User = ?', $prefixedLogin)
+            );
+            return true;
+        }
+
+        return false;
+    }
 }

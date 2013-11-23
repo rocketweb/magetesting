@@ -76,7 +76,9 @@ class Integration_Controller_Action extends Zend_Controller_Action
             /*
              * if user was downgraded because of additional stores to reduce
              */
-            if(in_array((int)$user->getDowngraded(), array(3,4))) {
+            if(in_array((int)$user->getDowngraded(), array(
+                Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED,
+                Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_DELETED))) {
                 foreach($this->view->messages as $key => $message) {
                     if(is_string($message)) {
                         $message = array('message' => $message);

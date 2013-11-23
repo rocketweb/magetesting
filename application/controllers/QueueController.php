@@ -52,7 +52,6 @@ class QueueController extends Integration_Controller_Action {
         $version = new Application_Model_Version();
         $versions = $version->fetchAll();
         $this->view->versions = $versions;
-        
         $form = new Application_Form_StoreAddClean();
         $form->populate($this->getRequest()->getParams());
 
@@ -64,24 +63,6 @@ class QueueController extends Integration_Controller_Action {
         $plan = $modelPlan->find($user->getPlanId());
         
         if ($request->isPost()) {
-
-            $userGroup = $this->auth->getIdentity()->group;
-
-            if ($this->auth->getIdentity()->group != 'admin') {
-
-                $versionModel = new Application_Model_Version();
-                $version = $versionModel->find((int) $request->getParam('version', 0));
-
-                if ($version->getEdition() != 'CE') {
-                    $this->_helper->FlashMessenger('Please select magento editon.');
-                    return $this->_helper->redirector->gotoRoute(
-                                    array(), 'default', false
-                    );
-                }
-            }
-
-
-            
             if ($form->isValid($this->getRequest()->getParams())) {
                 //needs validation!
                 $storeModel = new Application_Model_Store();
@@ -439,9 +420,12 @@ class QueueController extends Integration_Controller_Action {
                         ->setStatus('pending')
                         ->save();
 
+                $additionalMessage = '';
                 $user = new Application_Model_User();
                 $user->find($storeModel->getUserId());
-                if(in_array((int)$user->getDowngraded(), array(3, 4))) {
+                if(in_array((int)$user->getDowngraded(), array(
+                    Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED,
+                    Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_DELETED))) {
                     $plan = new Application_Model_Plan();
                     $plan->find($user->getPlanId());
                     $user_max_stores = (int)$user->getAdditionalStores()-(int)$user->getAdditionalStoresRemoved()+(int)$plan->getStores();
@@ -457,12 +441,12 @@ class QueueController extends Integration_Controller_Action {
                     }
 
                     if($user_stores->getAllForUser($user->getId())->count() <= $user_max_stores) {
-                        $user->setDowngraded(5);
+                        $user->setDowngraded(Application_Model_User::TO_BE_RESTORED);
+                        $additionalMessage = ' Other stores should be available in a minute.';
                     }
                     $user->save();
-                    include APPLICATION_PATH . '/../scripts/restore_user_from_forced_removing_stores.php';
                 }
-                $this->_helper->FlashMessenger('Store has been removed.');
+                $this->_helper->FlashMessenger('Store has been removed.' . $additionalMessage);
             }
         }
         $redirect_to = array(
@@ -1353,7 +1337,7 @@ class QueueController extends Integration_Controller_Action {
         $this->_customHost = trim($this->_customHost,'/');
         
         $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
         
@@ -1426,7 +1410,7 @@ class QueueController extends Integration_Controller_Action {
     protected function _findWebrootOnSsh() {
          $request = $this->getRequest();
          $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
 
@@ -1611,7 +1595,7 @@ class QueueController extends Integration_Controller_Action {
 
         $request = $this->getRequest();
         $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
         

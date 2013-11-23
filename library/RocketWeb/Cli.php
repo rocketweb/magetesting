@@ -17,7 +17,8 @@ class RocketWeb_Cli
         'tar' => 'Compression_Tar',
         'git' => 'Git',
         'mysql' => 'Mysql',
-        'user' => 'User'
+        'user' => 'User',
+        'scp' => 'Scp'
     );
     /**
      * Returns query object
@@ -57,6 +58,10 @@ class RocketWeb_Cli
     {
         $this->_logger = $log;
         return $this;
+    }
+    public function getLogger()
+    {
+        return $this->_logger;
     }
     public function enableLogging($val)
     {

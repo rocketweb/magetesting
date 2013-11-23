@@ -77,7 +77,7 @@ if($result) {
                         $stores = $stores->getAllForUser($user->getId())->getCurrentItemCount();
                         if($stores > $extra_stores+(int)$plan->getStores()) {
                             // downgraded because of too many stores installed
-                            $user->setDowngraded(3);
+                            $user->setDowngraded(Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED);
                         } else {
                             $user->setAdditionalStores($extra_stores);
                             if($user->getAdditionalStores() < 0) {

@@ -142,6 +142,25 @@ queueRetry.ExtensionInstall.retries = 3
 ; Exec wrapper
 execWrapper.logEnabled = 1;
 
+; IONCUBE CONFIGURATION
+ioncubeEncoder.server.host = ""
+ioncubeEncoder.server.port = ""
+ioncubeEncoder.server.user = ""
+ioncubeEncoder.server.pass = ""
+ioncubeEncoder.encode.allowedServer = "#{username}.sv#{serverNumber}.magetesting.com"
+ioncubeEncoder.encode.obfuscationKey = "random_key!1234#"
+ioncubeEncoder.encode.additionalComment = "Licensed to #{username}.sv#{serverNumber}.magetesting.com user."
+; best way is to add permissions for ssh user,
+; that he can do in below paths everything
+; permissions:
+; read for enterprisePackagesPath
+; read/write for codingTmpPath
+ioncubeEncoder.codingTmpPath = "/path/where/cli/can/do/stuff"
+; filenames should look like '{$version}.tar.gz'
+ioncubeEncoder.enterprisePackagesPath = "/path/to/tars/with/packed/enterprise"
+; for example: /usr/local/ioncube/ioncube_encoder53
+ioncubeEncoder.executablePath = ""
+
 [staging : production]
 
 [testing : production]

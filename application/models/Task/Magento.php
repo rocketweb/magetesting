@@ -46,7 +46,31 @@ extends Application_Model_Task {
         );
         $this->_taskMysql = new Application_Model_TaskMysql($db, $this->_db_table_prefix);
     }
-    
+
+    protected function _encodeEnterprise()
+    {
+        $ioncube = new Application_Model_Ioncube_Encode_Clean();
+
+        try {
+            $ioncube->setup(
+                $this->_storeObject,
+                $this->config,
+                $this->cli()->getLogger()
+            );
+
+            $ioncube->process();
+        } catch(Application_Model_Ioncube_Exception $e) {
+            $this->logger->log('Encoding enterprise error:' . $e->getMessage(), Zend_Log::CRIT);
+
+            //remove EE folder recursively then
+            $this->logger->log('Removing app/code/core/Enterprise directory recursively.', Zend_Log::INFO);
+            $file = $this->cli('file')->asSuperUser();
+            $file->remove($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/code/core/Enterprise')->call();
+
+            throw new Application_Model_Task_Exception('Encoding enterprise failed.', 0, $e);
+        }
+    }
+
     /**
      * Creates system account for user during store installation (in worker.php)
      */
@@ -82,6 +106,10 @@ extends Application_Model_Task {
                 $this->config->magento->systemHomeFolder
             )->call()->getLastOutput();
 
+            $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
+            $DbManager->addFtp($this->_dbuser, $this->_systempass,
+                $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_dbuser);
+
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
 
@@ -100,7 +128,7 @@ extends Application_Model_Task {
                 $planModel->find($this->_userObject->getPlanId());
                 
                 if ($planModel->getFtpAccess()){
-                    $this->_userObject->enableFtp();
+                    $DbManager->enableFtp($this->_dbuser);
                     $this->_sendFtpEmail($user_details);
                 }
                 
@@ -267,8 +295,7 @@ extends Application_Model_Task {
             ErrorLog /home/".$this->config->magento->userprefix . $this->_dbuser."/error.log
             CustomLog /home/".$this->config->magento->userprefix . $this->_dbuser."/access.log combined
 
-            Alias /fcgi-bin/ /home/www-data/".$this->config->magento->userprefix . $this->_dbuser."/
-            SuexecUserGroup ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
+            AssignUserID ".$this->config->magento->userprefix . $this->_dbuser." ".$this->config->magento->userprefix . $this->_dbuser."
 
             DocumentRoot /home/".$this->config->magento->userprefix . $this->_dbuser."/public_html/
             <Directory /home/".$this->config->magento->userprefix . $this->_dbuser."/public_html/>
