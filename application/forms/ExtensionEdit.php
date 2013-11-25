@@ -204,7 +204,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 255))
+                        array('validator' => 'StringLength', 'options' => array(0, 255))
                 ),
                 'allowEmpty' => false,
                 'class'      => 'span4'
@@ -215,7 +215,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
-                        array('validator' => 'StringLength', 'options' => array(3, 255))
+                        array('validator' => 'StringLength', 'options' => array(0, 255))
                 ),
                 'allowEmpty' => false,
                 'class'      => 'span4'
