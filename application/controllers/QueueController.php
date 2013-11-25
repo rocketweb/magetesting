@@ -658,6 +658,7 @@ class QueueController extends Integration_Controller_Action {
         $store = $storeModel->findByDomain($store_name);
         $this->view->store_name = $store->store_name;
         $this->view->store_domain = $store->domain;
+        $this->view->store_version = $store->version;
 
         if($request->isPost() && $request->isXmlHttpRequest()) {
             $this->_helper->layout()->disableLayout();
