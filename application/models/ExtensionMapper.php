@@ -68,7 +68,9 @@ class Application_Model_ExtensionMapper {
         ->setEdition($row->edition)
         ->setIsVisible($row->is_visible)
         ->setPrice($row->price)
-        ->setSort($row->sort);
+        ->setSort($row->sort)
+        ->setExtensionDetail($row->extension_detail)
+        ->setExtensionDocumentation($row->extension_documentation);
         return $extension;
     }
 
@@ -93,7 +95,9 @@ class Application_Model_ExtensionMapper {
                   ->setEdition($row->edition)
                   ->setIsVisible($row->is_visible)
                   ->setPrice($row->price)
-                  ->setSort($row->sort);
+                  ->setSort($row->sort)
+                  ->setExtensionDetail($row->extension_detail)
+                  ->setExtensionDocumentation($row->extension_documentation);
             $entries[] = $entry;
         }
 
@@ -126,7 +130,9 @@ class Application_Model_ExtensionMapper {
             ->setEdition($row->edition)
             ->setIsVisible($row->is_visible)
             ->setPrice($row->price)
-            ->setSort($row->sort);
+            ->setSort($row->sort)
+            ->setExtensionDetail($row->extension_detail)
+            ->setExtensionDocumentation($row->extension_documentation);
             $entries[] = $entry;
         }
         return $entries;
@@ -208,8 +214,10 @@ class Application_Model_ExtensionMapper {
                 ->setEdition($row->edition)
                 ->setIsVisible($row->is_visible)
                 ->setPrice($row->price)
-                ->setSort($row->sort);
-        ;
+                ->setSort($row->sort)
+                ->setExtensionDetail($row->extension_detail)
+                ->setExtensionDocumentation($row->extension_documentation);
+
         return $extension;
     }
 

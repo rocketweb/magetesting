@@ -34,6 +34,10 @@ class Application_Model_Extension {
 
     protected $_sort;
     
+    protected $_extension_detail;
+    
+    protected $_extension_documentation;
+    
     /* var Application_Model_ExtensionMapper */
     protected $_mapper;
         
@@ -286,22 +290,24 @@ class Application_Model_Extension {
     public function __toArray()
     {
         return array(
-                'id' => $this->getId(),
-                'name' => $this->getName(),
-                'description' => $this->getDescription(),
-                'category_id' => $this->getCategoryId(),
-                'author' => $this->getAuthor(),
-                'version' => $this->getVersion(),
-                'logo' => $this->getLogo(),
-                'extension' => $this->getExtension(),
-                'extension_encoded' => $this->getExtensionEncoded(),
-                'extension_key' => $this->getExtensionKey(),
-                'from_version' => $this->getFromVersion(),
-                'to_version' => $this->getToVersion(),
-                'edition' => $this->getEdition(),
-                'is_visible' => $this->getIsVisible(),
-                'price' => $this->getPrice(),
-                'sort' => $this->getSort()
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'category_id' => $this->getCategoryId(),
+            'author' => $this->getAuthor(),
+            'version' => $this->getVersion(),
+            'logo' => $this->getLogo(),
+            'extension' => $this->getExtension(),
+            'extension_encoded' => $this->getExtensionEncoded(),
+            'extension_key' => $this->getExtensionKey(),
+            'from_version' => $this->getFromVersion(),
+            'to_version' => $this->getToVersion(),
+            'edition' => $this->getEdition(),
+            'is_visible' => $this->getIsVisible(),
+            'price' => $this->getPrice(),
+            'sort' => $this->getSort(),
+            'extension_detail' => $this->getExtensionDetail(),
+            'extension_documentation' => $this->getExtensionDocumentation(),
         );
     }
 
@@ -469,5 +475,27 @@ class Application_Model_Extension {
      */
     public function fetchDuplicatedFilesCount($open, $encoded) {
         return $this->getMapper()->fetchDuplicatedFilesCount($open, $encoded);
+    }
+    
+    public function setExtensionDetail($value)
+    {
+        $this->_extension_detail = $value;
+        return $this;
+    }
+
+    public function getExtensionDetail()
+    {
+        return $this->_extension_detail;
+    }
+    
+    public function setExtensionDocumentation($value)
+    {
+        $this->_extension_documentation = $value;
+        return $this;
+    }
+
+    public function getExtensionDocumentation()
+    {
+        return $this->_extension_documentation;
     }
 }

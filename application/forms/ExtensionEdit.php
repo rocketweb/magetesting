@@ -198,6 +198,29 @@ class Application_Form_ExtensionEdit extends Integration_Form
             'required'    => true,
             'class'       => 'span4'
         ));
+        
+        $this->addElement('text', 'extension_detail', array(
+                'label'      => 'Extension Detail',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(0, 255))
+                ),
+                'allowEmpty' => false,
+                'class'      => 'span4'
+        ));
+        
+        $this->addElement('text', 'extension_documentation', array(
+                'label'      => 'Extension Documentation',
+                'required'   => false,
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators' => array(
+                        array('validator' => 'StringLength', 'options' => array(0, 255))
+                ),
+                'allowEmpty' => false,
+                'class'      => 'span4'
+        ));
+        
         $this->is_visible->addMultiOptions(array(
             1 => 'Yes',
             0 => 'No',
