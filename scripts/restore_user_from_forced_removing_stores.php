@@ -16,7 +16,7 @@ $sql = $select
     ->joinLeft('server','user.server_id = server.id', array('server_domain' => 'domain'))
     ->where('store.status = ?', 'ready')
     ->where('user.downgraded = ?', Application_Model_User::TO_BE_RESTORED)
-    ->where('user.server_id = ?', $config->magento->currentServerId);
+     ->where('user.server_id = ?', $config->magento->currentServerId);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
 $apache->asSuperUser();

@@ -658,6 +658,7 @@ class QueueController extends Integration_Controller_Action {
         $store = $storeModel->findByDomain($store_name);
         $this->view->store_name = $store->store_name;
         $this->view->store_domain = $store->domain;
+        $this->view->store_version = $store->version;
 
         if($request->isPost() && $request->isXmlHttpRequest()) {
             $this->_helper->layout()->disableLayout();
@@ -1377,7 +1378,7 @@ class QueueController extends Integration_Controller_Action {
         $this->_customHost = trim($this->_customHost,'/');
         
         $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
         
@@ -1450,7 +1451,7 @@ class QueueController extends Integration_Controller_Action {
     protected function _findWebrootOnSsh() {
          $request = $this->getRequest();
          $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
 
@@ -1635,7 +1636,7 @@ class QueueController extends Integration_Controller_Action {
 
         $request = $this->getRequest();
         $customPort = (int)$request->getParam('custom_port',22);
-        if (trim($customPort) == ''){
+        if ($customPort == 0){
             $customPort = 22;
         }
         

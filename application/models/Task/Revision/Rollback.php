@@ -81,11 +81,11 @@ implements Application_Model_Task_Interface {
         $privilegeModel = new Application_Model_DbTable_Privilege($this->dbPrivileged,$this->config);
         $privilegeModel->dropDatabase($this->_userObject->getLogin().'_'.$this->_storeObject->getDomain());
         $privilegeModel->createDatabase($this->_userObject->getLogin().'_'.$this->_storeObject->getDomain());
-
+        
         $this->logger->log('Reverting database from backup file. ',Zend_Log::INFO);
         $output = $this->cli('mysql')->connect(
-            $this->config->resources->db->params->username,
-            $this->config->resources->db->params->password,
+            $this->config->dbPrivileged->params->username,
+            $this->config->dbPrivileged->params->password,
             $this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain()
         )->import($unpackedName)->asSuperUser()->call()->getLastOutput();
         $message = var_export($output, true);

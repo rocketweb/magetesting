@@ -9,7 +9,11 @@
     <div class="span12">
         <h1 class="pull-left">
     <?php if('queue' == $page_type): ?>
-        '<?php echo $this->store_name; ?>' Extensions
+        <?php if (empty($this->store_name)): ?>
+            Your '<?php echo $this->store_version; ?>' store extensions
+        <?php else: ?>
+            Your '<?php echo $this->store_name; ?>' store extensions    
+        <?php endif; ?>
     <?php elseif('frontend' == $page_type): ?>
         All Available Extensions
     <?php else: ?>

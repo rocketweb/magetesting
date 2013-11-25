@@ -10,7 +10,7 @@ $sql = $select
     ->where('store.status = ?', 'ready')
     ->where('TIMESTAMPDIFF(SECOND, \''.date("Y-m-d H:i:s").'\', user.plan_active_to) > ?', 0)
     ->where('user.downgraded = ?', Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_DELETED)
-    ->where('user.server_id = ?', $config->magento->currentServerId);
+     ->where('user.server_id = ?', $config->magento->currentServerId);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
 $apache->asSuperUser();
