@@ -77,7 +77,7 @@
         </div>
 
         <div class="extras hidden">
-            <p class="description"><?php echo $extension['description']; ?></p>
+            <p class="description"><?php echo wordwrap($extension['description'], 45, ' ', true); ?></p>
         <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
             <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View Screenshots</a>
             <!-- START EXTENSION'S SCREENSHOTS -->
