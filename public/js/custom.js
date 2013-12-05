@@ -535,59 +535,7 @@ $(document).ready(function () {
             });
             return false;
         });
-        
-        var _screenshotCarousel = $('#screenshotCarousel');
-        var _screenshotModal = $('#screenshotModal').modal({show: false});
-        
-        // EVENT: On click homepage thumbnail
-        $('a.index-thumbnail').click(function(event){
-            var _this = $(this);
-            var _thumbs = _this.parent().parent();
-            var _carousel = $('#screenshotCarousel div.carousel-inner');
-            
-            _carousel.empty();
-            
-            var active = true;
-            
-            _thumbs.find('li').each(function(index){
-                var _screenshot = $(this);
 
-                var _item = $('<div>').addClass('item');
-                
-                if(active){
-                    _item.addClass('active');
-                    active = false;
-                }
-                
-                _item.append($('<div>')
-                    .addClass('modal-header')
-                    .append($('<button>')
-                        .addClass('close')
-                        .attr('type', 'button')
-                        .attr('data-dismiss', 'modal')
-                        .html('&times;')
-                    )
-                    .append($('<h5>')
-                        .text(_screenshot.find('a').attr('data-title'))
-                    )
-                ).append($('<div>')
-                    .addClass('modal-body')
-                    .css('max-height','100%')
-                    .append($('<img>')
-                        .attr('src', _screenshot.find('a').attr('href'))
-                    )
-                );
-                _carousel.append(_item);
-            });
-            
-            _screenshotModal.modal('show');
-            _screenshotCarousel.carousel({'interval': false});
-            $('.carousel-control').css('top', '56%');
-            
-            event.preventDefault();
-            event.stopPropagation();
-        });
-        
         // EVENT: On click extension's "View screens" button
         $('#container').delegate('a.btn-screenshots', 'click', function(event){
             "use strict";
@@ -595,6 +543,9 @@ $(document).ready(function () {
             var _this = $(this);
             var _extension = _this.parent().parent().parent();
             var _carousel = $('#screenshotCarousel div.carousel-inner');
+
+            var _screenshotCarousel = $('#screenshotCarousel');
+            var _screenshotModal = $('#screenshotModal').modal({show: false});
             
             _carousel.empty();
             
@@ -733,6 +684,58 @@ $(document).ready(function () {
         }
     }
     /* STORE EXTENSIONS ISOTOPE */
+
+    // EVENT: On click homepage thumbnail
+    $('a.index-thumbnail').click(function(event){
+        var _this = $(this);
+        var _thumbs = _this.parent().parent();
+        var _carousel = $('#screenshotCarousel div.carousel-inner');
+
+        var _screenshotCarousel = $('#screenshotCarousel');
+        var _screenshotModal = $('#screenshotModal').modal({show: false});
+
+        _carousel.empty();
+
+        var active = true;
+
+        _thumbs.find('li').each(function(index){
+            var _screenshot = $(this);
+
+            var _item = $('<div>').addClass('item');
+
+            if(active){
+                _item.addClass('active');
+                active = false;
+            }
+
+            _item.append($('<div>')
+                    .addClass('modal-header')
+                    .append($('<button>')
+                        .addClass('close')
+                        .attr('type', 'button')
+                        .attr('data-dismiss', 'modal')
+                        .html('&times;')
+                    )
+                    .append($('<h5>')
+                        .text(_screenshot.find('a').attr('data-title'))
+                    )
+                ).append($('<div>')
+                    .addClass('modal-body')
+                    .css('max-height','100%')
+                    .append($('<img>')
+                        .attr('src', _screenshot.find('a').attr('href'))
+                    )
+                );
+            _carousel.append(_item);
+        });
+
+        _screenshotModal.modal('show');
+        _screenshotCarousel.carousel({'interval': false});
+        $('.carousel-control').css('top', '56%');
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
 
     /* payment form - display dropdown for US and text field for all other countries */
     changeInputSelect();    
