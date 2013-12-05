@@ -131,10 +131,11 @@ extends Application_Model_Task {
                     $DbManager->enableFtp($this->_dbuser);
                     $this->_sendFtpEmail($user_details);
                 }
-                
-                if ($planModel->getPhpmyadminAccess()){
+
+                // comented out as we don't provide phpmyadmin access for now (wojtek)
+                /*if ($planModel->getPhpmyadminAccess()){
                     $this->_sendPhpmyadminEmail($user_details);
-                }
+                }*/
                 /* send email with account details stop */
             }
             
