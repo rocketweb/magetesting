@@ -129,7 +129,9 @@ implements Application_Model_Task_Interface {
         $this->_importAdminFrontname();
         
         $this->_updateDemoNotice();
-        $this->_activateDemoNotice();      
+        $this->_activateDemoNotice();
+
+        $this->_disableLicenseChecking();
 
         $this->_cleanLogTables();
         
