@@ -65,7 +65,7 @@ implements Application_Model_Task_Interface {
       
         chdir($startCwd);
 
-//        $this->_reindexStore();
+        $this->_reindexStore();
         
         $this->_createLocalXml();
         
