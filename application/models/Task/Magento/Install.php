@@ -75,6 +75,8 @@ implements Application_Model_Task_Interface {
 
         $this->_fixUserHomeChmod();
 
+        $this->_disableLicenseChecking();
+
         if('ee' === strtolower($this->_magentoEdition)) {
             $this->_encodeEnterprise();
         }

@@ -459,4 +459,14 @@ extends Application_Model_Task {
         $userEmail = $this->_userObject->getEmail();
         $this->_taskMysql->updateStoreConfigurationEmails($userEmail);
     }
+
+    protected function _disableLicenseChecking() {
+        $file = $this->_storeFolder . '/' . $this->_domain . '/app/etc/modules/Enterprise_License.xml';
+        if(file_exists($file)) {
+            $replaced = preg_replace('/<active>.*<\/active>/is', '<active>false</active>', file_get_contents($file));
+            if($replaced) {
+                file_put_contents($file, $replaced);
+            }
+        }
+    }
 }
