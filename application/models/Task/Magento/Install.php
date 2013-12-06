@@ -39,7 +39,9 @@ implements Application_Model_Task_Interface {
         $this->_cleanupFilesystem();
 
         $this->_runXmlPatch();
-        
+
+        $this->_disableLicenseChecking();
+
         $this->_runInstaller();
         
         /**
@@ -76,8 +78,6 @@ implements Application_Model_Task_Interface {
         $this->_fixUserHomeChmod();
         
         $this->_activateDemoNotice();
-
-        $this->_disableLicenseChecking();
 
         if('ee' === strtolower($this->_magentoEdition)) {
             $this->_encodeEnterprise();

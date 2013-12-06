@@ -97,6 +97,8 @@ implements Application_Model_Task_Interface {
         
         $this->_cleanupFilesystem();
 
+        $this->_disableLicenseChecking();
+
         // update backend admin password
         $this->_storeObject->setBackendPassword($this->_adminpass)->save();
         
@@ -130,8 +132,6 @@ implements Application_Model_Task_Interface {
         
         $this->_updateDemoNotice();
         $this->_activateDemoNotice();
-
-        $this->_disableLicenseChecking();
 
         $this->_cleanLogTables();
         
