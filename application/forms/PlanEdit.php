@@ -76,7 +76,7 @@ class Application_Form_PlanEdit extends Integration_Form
         ));
         // Add billing description element
         $this->addElement('text', 'billing_description', array(
-                'label'      => 'Billing period',
+                'label'      => 'Billing description',
                 'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
@@ -84,6 +84,31 @@ class Application_Form_PlanEdit extends Integration_Form
                 ),
                 'allowEmpty' => false,
                 'class'      => 'span4'
+        ));
+
+        // Add stores element
+        $this->addElement('text', 'max_stores', array(
+            'label'      => 'Max amount of additional stores',
+            'required'   => true,
+            'filters'    => array('StripTags', 'StringTrim'),
+            'validators' => array(
+                array('validator' => 'Int'),
+                array('validator' => 'StringLength', 'options' => array(1, 3)),
+            ),
+            'allowEmpty' => false,
+            'class'      => 'span4'
+        ));
+
+        // Add price element
+        $this->addElement('text', 'store_price', array(
+            'label'      => 'Additional store price',
+            'required'   => true,
+            'filters'    => array('StripTags', 'StringTrim'),
+            'validators' => array(
+                array('validator' => 'Float', 'options' => array('locale' => 'en_US'))
+            ),
+            'allowEmpty' => false,
+            'class'      => 'span4'
         ));
 
         // Add the submit button
