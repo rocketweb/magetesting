@@ -78,17 +78,29 @@
 
         <div class="extras hidden">
             <p class="description"><?php echo wordwrap($extension['description'], 45, ' ', true); ?></p>
-        <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
-            <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View Screenshots</a>
-            <!-- START EXTENSION'S SCREENSHOTS -->
-            <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions -->
-            <ul class="screenshots hidden">
-            <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
-                <li data-id="<?php echo $extension['name'].' #'.++$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
-            <?php endforeach; ?>
-            </ul>
-            <!-- END EXTENSION'S SCREENSHOTS -->
-        <?php endif; ?>
+            <div class="btn-group">
+              <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+                Screenshots &amp; More
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
+                    <a href="#" class="">View Screenshots</a>
+                    <!-- START EXTENSION'S SCREENSHOTS -->
+                    <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions -->
+                    <ul class="screenshots hidden">
+                    <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
+                        <li data-id="<?php echo $extension['name'].' #'.++$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+                    <!-- END EXTENSION'S SCREENSHOTS -->
+                <?php endif; ?>
+                </li>
+                <li><a href="#" class="">View Details</a></li>
+                <li><a href="#" class="">Read Documentation</a></li>
+              </ul>
+            </div>
         <?php if('queue' == $page_type): ?>
             <?php if($extension['status']): ?>
                 <?php if($extension['status'] == 'pending'): ?>
