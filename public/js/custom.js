@@ -481,6 +481,11 @@ $(document).ready(function () {
             }
         });
 
+        // Bootstrap + isotope conflict fix
+        $('.element .dropdown-toggle').bind('click', function(e) {
+            $(this).parent('.btn-group').toggleClass('open');
+            e.stopPropagation();
+        });
 
         $extensions_filter_options.click(function(e) {
             var $this = $(this);
@@ -507,7 +512,7 @@ $(document).ready(function () {
             }
 
             // Bootstrap + isotope conflict fix
-            $('.btn-group.open').removeClass('open');
+            // $('.btn-group.open').removeClass('open');
 
             return false;
         });

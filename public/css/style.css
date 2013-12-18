@@ -3421,3 +3421,11 @@ label.error {
 #cancel-subscription form {
     margin: 0px;
 }
+
+/* extension dropdown button fix */
+.element {
+    overflow: visible;
+}
+.btn-mini .caret {
+    margin-top: 8px;
+}
