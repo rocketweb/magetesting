@@ -615,7 +615,7 @@ class UserController extends Integration_Controller_Action
                     }
                 }
 
-                $this->_helper->FlashMessenger('User data has been changed successfully');
+                $this->_helper->FlashMessenger('User data has been saved successfully');
                 return $this->_helper->redirector->gotoRoute(array(
                         'module'     => 'default',
                         'controller' => 'user',
