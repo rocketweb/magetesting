@@ -151,7 +151,7 @@ class Integration_Controller_Action extends Zend_Controller_Action
                     $this->_helper->FlashMessenger(array(
                             'from_scratch' => true,
                             'type'=> 'notice',
-                            'message' => '<strong>You don\'t have any active plan. </strong> Either your 7 days plan expired or you haven\'t choose plan yet. Please choose plan now.'
+                            'message' => '<strong>You don\'t have any active plan. </strong> Either your plan expired or you haven\'t choose plan yet. Please choose plan now.'
                     ));
                 }
                 return $this->_helper->redirector->gotoRoute(array(
