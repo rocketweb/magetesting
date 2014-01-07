@@ -119,9 +119,7 @@ class MyAccountController extends Integration_Controller_Action
                     $this->_helper->FlashMessenger($flashMessage);
 
                     $redirect['controller'] = 'my-account';
-                    if($informPayPal) {
-                        $redirect['action'] = 'compare';
-                    }
+
                     return $this->_helper->redirector->gotoRoute($redirect, 'default', true);
                 } else {
                     if('United States' != $formData['country']) {
@@ -130,10 +128,6 @@ class MyAccountController extends Integration_Controller_Action
                     $form->login->setValue($user->getLogin());
                     $form->email->setValue($user->getEmail());
                 }
-            }
-
-            if($informPayPal) {
-                $this->view->messages[] = array('type' => 'notice', 'message' => 'Please fill your billing details before you choose plan.');
             }
 
             $this->view->form = $form;
@@ -190,7 +184,6 @@ class MyAccountController extends Integration_Controller_Action
         $user = new Application_Model_User();
         $user->find($this->auth->getIdentity()->id);
 
-        $this->view->renderPayPal = false;
         $this->view->renderBraintree = false;
         
         if($user->getId()) {
@@ -199,10 +192,6 @@ class MyAccountController extends Integration_Controller_Action
 
             $versions = new Application_Model_Version();
             $this->view->versions = $versions->fetchAll();
-
-            if($user->getCity() AND $user->getStreet()) {
-                $this->view->renderPayPal = true;
-            }
             
             if ($user->getCity() && $user->getStreet() && $user->getCountry() && $user->getPostalCode() && $user->getState() && $user->getFirstname() && $user->getLastname()){
                 $this->view->renderBraintree = true;
