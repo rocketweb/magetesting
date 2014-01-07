@@ -150,7 +150,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                         <?php if (isset($this->old_logo) AND $this->old_logo): ?>
                                             <input type="hidden" name="old_logo" value="<?php echo $this->old_logo; ?>" />
                                             <img src="<?php echo $this->ImagePath($this->old_logo, 'extension/logo', false); ?>" />
-                                            <input name="remove_logo" value="1" type="checkbox"/> Remove Logo
+                                            <input name="remove_logo" value="1" type="checkbox"/> Delete Logo
                                         <?php else: ?>
                                             <img src="<?php echo $this->baseUrl('public/assets/img/temp/' . $this->directoryHash . '/' . $this->logo); ?>" />
                                         <?php endif; ?>
@@ -179,7 +179,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                         <div class="screenshot-image thumbnail">
                                             <div class="deletion-container">
                                                 <div class="deletion-curtain"></div>
-                                                <button class="btn btn-danger">Remove</button>
+                                                <button class="btn btn-danger">Delete</button>
                                             </div>
                                             <input form="extension-form" type="hidden" name="screenshots[]" value="<?php echo $screenshot; ?>">
                                         <?php if (isset($this->screenshots_ids[$key]) AND $this->screenshots_ids[$key]): ?>

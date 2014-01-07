@@ -76,15 +76,15 @@
             </td>
             <td class="nowrap">
             <?php if(in_array($item['status'], array('closed','pending','installing'))): ?>
-                <a class="btn btn-success disabled"><i class="icon-white icon-home"></i>&nbsp;View</a>
+                <a class="btn disabled"><i class="icon icon-home"></i>&nbsp;View</a>
                 <a class="btn btn-info disabled"><i class="icon-white icon-wrench"></i> Admin</a>
-                <a class="btn btn-edit disabled"><i class="icon-white icon-pencil"></i> Edit</a>
+                <a class="btn btn-success disabled"><i class="icon-white icon-pencil"></i> Edit</a>
                 <a class="btn btn-danger disabled"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php else: ?>
-                <a href="<?php echo 'http://'.$item['login'].'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn btn-success" target="_blank"><i class="icon-white icon-home"></i>&nbsp;View</a>
+                <a href="<?php echo 'http://'.$item['login'].'.'.$item['server_domain'].'/'.$item['domain']; ?>" class="btn" target="_blank"><i class="icon icon-home"></i>&nbsp;View</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'login-to-store-backend', 'store' => $item['domain']), 'default', true); ?>" class="btn btn-info" target="_blank"><i class="icon-white icon-wrench"></i> Admin</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id'], 'admin-edit' => $this->page), 'default', true); ?>"
-                   class="btn edit-button"><i class="icon icon-pencil"></i> Edit</a>
+                   class="btn btn-success edit-button"><i class="icon-white icon-pencil"></i> Edit</a>
                 <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'close', 'domain' => $item['domain'], 'redirect' => 'admin'), 'default', true); ?>" class="btn btn-danger delete-store admin"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>
             <?php endif;?>
             </td>
