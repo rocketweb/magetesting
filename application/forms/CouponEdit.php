@@ -115,7 +115,7 @@ class Application_Form_CouponEdit extends Integration_Form
         // Add the submit button
         $this->addElement('submit', 'submit', array(
                 'ignore'   => true,
-                'label'    => 'Save changes'
+                'label'    => 'Save'
         ));
 
         // setters for class have to be before setdecorators method call which adds class and not overwrite them

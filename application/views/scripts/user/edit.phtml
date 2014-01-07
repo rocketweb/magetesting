@@ -91,11 +91,8 @@
                         <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-inverse pull-right">
                             <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
                         </button>
-                        <small class="pull-right"><a href="<?php echo $this->url(array('module' => 'default',
-                                'controller'=>'user',
-                                'action'=>'list',
-                                ),'default',true); ?>" class="secondary" style="margin-right: 12px">View list</a>
-                        </small>
+                        <a href="<?php echo $this->url(array('module' => 'default','controller'=>'user','action'=>'list',),'default',true); ?>" class="btn">Cancel</a>
+
                     </div>
 	        	</form>
 	        </div>

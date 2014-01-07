@@ -154,7 +154,7 @@ class CouponController extends Integration_Controller_Action {
             // has post data and sent data is valid
             if($form->isValid($request->getParams())) {
                 // someone agreed deletion 
-                if($request->getParam('submit') == 'Yes') {
+                if($request->getParam('confirm') == 1) {
                     $flash_message = array(
                         'type' => 'success',
                         'message' => 'You have deleted coupon successfully.'

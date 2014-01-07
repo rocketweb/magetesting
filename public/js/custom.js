@@ -806,6 +806,32 @@ $(document).ready(function () {
                 .siblings('input:hidden').val(1);
         });
     }
+    
+    var $coupon_deletion_modal = $('#coupon-deletion'),
+        $coupon_deletion_buttons = $('.coupon-delete');
+    if ($coupon_deletion_buttons.length) {
+        $coupon_deletion_buttons.click(function() {
+            var $this = $(this);
+            $coupon_deletion_modal.find('form :input[name=id]').val($this.data('coupon-id'));
+        });
+    }
+    
+    var $plan_deletion_modal = $('#plan-deletion'),
+        $plan_deletion_buttons = $('.plan-delete');
+    if ($plan_deletion_buttons.length) {
+        $plan_deletion_buttons.click(function() {
+            var $this = $(this);
+            $plan_deletion_modal.find('.modal-body b').text(
+                $this.parents('tr:first').find('td:eq(0)').text()
+            );
+            $plan_deletion_modal.find('form :input[name=id]').val($this.data('plan-id'));
+        });
+    }
+    
+    $(document).delegate('.extension-delete', 'click', function() {
+        var $this = $(this);
+        $('#extension-deletion').find('form :input[name=id]').val($this.data('version-id'));
+    });
 });
 
 function changeInputSelect() {
