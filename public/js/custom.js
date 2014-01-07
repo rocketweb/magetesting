@@ -743,11 +743,11 @@ $(document).ready(function () {
 
     $('.form-stacked.form-input-select button').click(function() {
         if($('.form-stacked.form-input-select input.input-state').css('display') == 'none') {
-            $('.form-stacked.form-input-select input.input-state').remove();
+            $('.form-stacked.form-input-select input.input-state').hide();
         }
 
         if($('.form-stacked.form-input-select select.select-state').css('display') == 'none') {
-            $('.form-stacked.form-input-select select.select-state').remove();
+            $('.form-stacked.form-input-select select.select-state').hide();
         }
     });
     
