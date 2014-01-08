@@ -190,7 +190,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
         $this->addElement('submit', 'submit', array(
                 'form'     => 'extension-form',
                 'ignore'   => true,
-                'label'    => 'Save changes'
+                'label'    => 'Save'
         ));
 
         $this->addElement('select', 'is_visible', array(

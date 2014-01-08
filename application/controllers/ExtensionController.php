@@ -413,7 +413,7 @@ class ExtensionController extends Integration_Controller_Action {
             // has post data and sent data is valid
             if($form->isValid($request->getParams())) {
                 // someone agreed deletion 
-                if($request->getParam('submit') == 'Yes') {
+                if($request->getParam('confirm') == '1') {
                     $flash_message = array(
                         'type' => 'success',
                         'message' => 'You have deleted extension successfully.'
@@ -488,8 +488,8 @@ class ExtensionController extends Integration_Controller_Action {
                 $response->status = 'ok';
                 $versions = $extension->findByExtensionKeyAndEdition($extension->getExtensionKey(), $extension->getEdition());
                 foreach($versions as $version) {
-                    $actions = '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $version->getId()), 'default', true) . '" class="btn btn-primary">Edit</a>';
-                    $actions .= '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'delete', 'id' => $version->getId()), 'default', true) . '" class="btn btn-danger">Delete</a>';
+                    $actions = '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $version->getId()), 'default', true) . '" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>';
+                    $actions .= '<a href="#extension-deletion" data-toggle="modal" class="extension-delete btn btn-danger" data-version-id="' . $version->getId() . '" data-dismiss="modal"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>';
                     $files = '';
                     if($version->getExtension()) {
                         $files .= '<div class="label label-success">' . $version->getExtension() . '</div><br />';
