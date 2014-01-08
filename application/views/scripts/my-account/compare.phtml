@@ -229,7 +229,7 @@
                                 <input type="hidden" name="pay-for" value="<?php echo ($this->user->hasPlanActive() ? 'change-plan' : 'plan'); ?>" />
                                 <input type="hidden" name="source" value="plan" />
                                 <input type="hidden" name="id" value="<?php echo $plan->getId(); ?>" />
-                                <button type="submit" class="btn btn-large btn-success">Get Started</button>
+                                <button type="submit" class="btn btn-large btn-success" <?php if($user->hasPlanActive() AND $plan->getId() == $user->getPlanId()){echo('disabled="disabled"');} ?>>Get Started</button>
                             </form>
                             <?php endif; ?>
                         <?php else: ?>
