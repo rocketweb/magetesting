@@ -670,7 +670,7 @@ class UserController extends Integration_Controller_Action
                 }
                 $user->setStatus('deleted');
                 $user->save();
-                $this->_helper->flashMessenger('User has been successfully removed.');
+                $this->_helper->flashMessenger('User has been successfully deleted.');
             }
             $redirect['action'] = 'list';
         }
