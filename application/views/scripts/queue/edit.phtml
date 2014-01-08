@@ -117,6 +117,7 @@
                         <div class="tab-stripe"></div>
                         <fieldset class="custom-files">
                             <legend>Store extensions</legend>
+                            <?php if (count($this->extensions) > 0): ?>
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -145,6 +146,9 @@
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
+                            <?php else: ?>
+                            <p>There is not any extensions.</p>
+                            <?php endif; ?>
                         </fieldset>
                     <?php endif; ?>
         		    
