@@ -310,12 +310,12 @@ class MyAccountController extends Integration_Controller_Action
 
         if($this->getRequest()->isPost()) {
             $stores = (int)$this->_getParam('additional-stores-quantity', 0);
-            $flashMessage = array('type'=>'error','message' => 'You cannot remove more stores.');
+            $flashMessage = array('type'=>'error','message' => 'You cannot delete more stores.');
             if($stores && (int)$this->view->user->getAdditionalStores() >= (int)$this->view->user->getAdditionalStoresRemoved()+$stores) {
                 $this->view->user->setAdditionalStoresRemoved(
                     (int)$this->view->user->getAdditionalStoresRemoved()+$stores
                 )->save();
-                $flashMessage = array('type'=>'success','message' => 'You removed '.$stores.' additional store from your plan.');
+                $flashMessage = array('type'=>'success','message' => 'You deleted '.$stores.' additional store from your plan.');
             }
             $this->_helper->flashMessenger($flashMessage);
             return $this->_helper->redirector->gotoRoute(array(
