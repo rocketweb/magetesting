@@ -316,6 +316,15 @@ class PaymentController extends Integration_Controller_Action
         $additional_stores = (int)$this->_getParam('additional-stores-quantity', 0);
         $this->view->domain = $domain = $this->_getParam('domain'); 
         try {
+            if ($this->getRequest()->getMethod() == 'GET') {
+                // if user already has given plan, redirect him to compare page
+                if($user->hasPlanActive() AND $id == $user->getPlanId()) {
+                    $redirect = array('controller' => 'my-account', 'action' => 'compare');
+                    $flash_message = array('type' => 'notice', 'message' => 'You already have this plan.');
+                    throw new Braintree_Controller_Exception($flash_message['message']);
+                }
+            }
+        
             // check whether GET params are ok
             if(!in_array($pay_for, array('plan', 'extension', 'change-plan', 'additional-stores'))) {
                 $pay_for = NULL;
