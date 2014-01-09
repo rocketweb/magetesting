@@ -829,11 +829,13 @@ $(document).ready(function () {
 
 function changeInputSelect() {
     if( $('.form-stacked.form-input-select select.select-country').val() == 'United States' ) {
-        $('.form-stacked.form-input-select select.select-state').prependTo('div#region');
+        $('.form-stacked.form-input-select select.select-state').attr('disabled', false);
+        $('.form-stacked.form-input-select input.input-state').attr('disabled', true);
         $('.form-stacked.form-input-select select.select-state').show();
         $('.form-stacked.form-input-select input.input-state').hide();
     } else {
-        $('.form-stacked.form-input-select input.input-state').prependTo('div#region');
+        $('.form-stacked.form-input-select select.select-state').attr('disabled', true);
+        $('.form-stacked.form-input-select input.input-state').attr('disabled', false);
         $('.form-stacked.form-input-select select.select-state').hide();
         $('.form-stacked.form-input-select input.input-state').show();
     }
