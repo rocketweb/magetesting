@@ -44,7 +44,7 @@ class Application_Form_EditAccount extends Integration_Form
         // Add a street element
         $this->addElement('text', 'street', array(
                 'label'      => 'Street',
-                'required'   => true,
+                'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 50)),
@@ -55,7 +55,7 @@ class Application_Form_EditAccount extends Integration_Form
         // Add a postal code element
         $this->addElement('text', 'postal_code', array(
                 'label'      => 'Postal Code',
-                'required'   => true,
+                'required'   => false   ,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 10)),
@@ -80,7 +80,7 @@ class Application_Form_EditAccount extends Integration_Form
         // Add a city element
         $this->addElement('text', 'city', array(
                 'label'      => 'City',
-                'required'   => true,
+                'required'   => false,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators' => array(
                         array('validator' => 'StringLength', 'options' => array(3, 50)),
