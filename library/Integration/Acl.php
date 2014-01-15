@@ -53,7 +53,6 @@ class Integration_Acl extends Zend_Acl
         $this->allow('admin', 'api_coupon');
         $this->allow('guest', 'api_coupon');
         $this->allow('free-user', 'api_coupon');
-        $this->allow('awaiting-user', 'api_coupon');
         $this->allow('commercial-user', 'api_coupon');
 
         $this->allow('admin', 'api_store-status');
