@@ -33,6 +33,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_coupon'));
         $this->add(new Zend_Acl_Resource('default_plan'));
         $this->add(new Zend_Acl_Resource('default_payment'));
+        $this->add(new Zend_Acl_Resource('default_help'));
         /**
          * Deny for all (we use white list)
          */
@@ -48,6 +49,12 @@ class Integration_Acl extends Zend_Acl
         $this->allow('guest', 'api_user');
         $this->allow('free-user', 'api_user');
         $this->allow('commercial-user', 'api_user');
+        
+        $this->allow('admin', 'api_coupon');
+        $this->allow('guest', 'api_coupon');
+        $this->allow('free-user', 'api_coupon');
+        $this->allow('awaiting-user', 'api_coupon');
+        $this->allow('commercial-user', 'api_coupon');
 
         $this->allow('admin', 'api_store-status');
         $this->allow('guest', 'api_store-status');
@@ -76,6 +83,7 @@ class Integration_Acl extends Zend_Acl
         $this->allow('guest', 'default_user', array(
                 'login', 'password-recovery', 'register', 'activate', 'reset-password', 'set-new-password'
         ));
+        $this->allow('guest','default_help',array('index','category','page'));
 
         /**
          * Set up privileges for free-user
@@ -92,7 +100,8 @@ class Integration_Acl extends Zend_Acl
         $this->allow('free-user', 'default_my-account');
 
         $this->allow('free-user', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
-
+        $this->allow('free-user','default_help',array('index','category','page'));
+        
         /**
          * Set up privileges for commercial-user
          */
@@ -110,7 +119,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('commercial-user', 'default_my-account');
         $this->allow('commercial-user', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
-
+        $this->allow('commercial-user','default_help',array('index','category','page'));
     }
 
     /**
