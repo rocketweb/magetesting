@@ -82,7 +82,6 @@ class MyAccountController extends Integration_Controller_Action
             if(!$user->getCountry()) {
                 $form->country->setValue('United States');
             }
-            $informPayPal = (int)$this->getRequest()->getParam('inform', 0);
 
             if ($this->_request->isPost()) {
                 $formData = $this->_request->getPost();
