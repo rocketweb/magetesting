@@ -1,0 +1,26 @@
+# task scripts - store server eg. mtsv1
+* * * * * cd /var/www/rocketweb/dev.magetesting.com/web/scripts/; TERM=xterm php worker.php --disabledownload
+* * * * * cd /var/www/rocketweb/dev.magetesting.com/web/scripts/; TERM=xterm php worker.php --downloadonly
+
+# payment scripts - main server magetesting.com
+1 * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/confirm_braintree_transactions.php
+1 * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/renew_braintree_subscriptions.php
+1 * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/restore_raised_plans.php
+
+# user scripts - store server eg. mtsv1
+* * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/downgrade_expired_users.php
+* * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/restore_downgraded_users.php
+* * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/remove_deleted_users.php
+
+# user scripts - main server magetesting.com
+* * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/reminder_store_extensions.php
+0 * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/revert_store_databases.php
+0 1,2,3 * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/remind_free_trial_requests.php
+
+# additional stores - store server eg. mtsv1
+* * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/force_user_to_remove_stores.php
+* * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/reduce_not_confirmed_additional_stores.php
+* * * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/restore_user_from_forced_removing_stores.php
+
+# sync script - main server magetesting.com
+0 0 * * * php /var/www/rocketweb/dev.magetesting.com/web/scripts/synchronize_mt_with_mc.php
