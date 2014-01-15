@@ -12,7 +12,7 @@ $sql = $select
     ->where('user.server_id = ?', $config->magento->currentServerId)
     ->where('TIMESTAMPDIFF(SECOND,user.plan_active_to, \''.date("Y-m-d H:i:s").'\') > ?', 3*60*60*24)
     ->where('user.downgraded != ?', Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_DELETED)
-    ->where('user.group IN (?))', array('awaiting-user', 'commercial-user'))
+    ->where('user.group = ?)', 'commercial-user')
     ->orwhere('braintree_transaction_confirmed = 0 AND date(CURRENT_TIMESTAMP)-date(payment.date) > 3 AND user.downgraded != ?', Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_DELETED)
     ->orwhere('user.downgraded = ?', Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_NOT_DELETED);
 

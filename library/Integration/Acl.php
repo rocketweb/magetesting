@@ -13,7 +13,6 @@ class Integration_Acl extends Zend_Acl
          */
         $this->addRole(new Zend_Acl_Role('guest'))
         ->addRole(new Zend_Acl_Role('free-user'))
-        ->addRole(new Zend_Acl_Role('awaiting-user'))
         ->addRole(new Zend_Acl_Role('commercial-user'))
         ->addRole(new Zend_Acl_Role('admin'));
 
@@ -43,25 +42,21 @@ class Integration_Acl extends Zend_Acl
         $this->allow('admin', 'api_store');
         $this->allow('guest', 'api_store');
         $this->allow('free-user', 'api_store');
-        $this->allow('awaiting-user', 'api_store');
         $this->allow('commercial-user', 'api_store');
 
         $this->allow('admin', 'api_user');
         $this->allow('guest', 'api_user');
         $this->allow('free-user', 'api_user');
-        $this->allow('awaiting-user', 'api_user');
         $this->allow('commercial-user', 'api_user');
 
         $this->allow('admin', 'api_store-status');
         $this->allow('guest', 'api_store-status');
         $this->allow('free-user', 'api_store-status');
-        $this->allow('awaiting-user', 'api_store-status');
         $this->allow('commercial-user', 'api_store-status');
         
         $this->allow('admin', 'api_coupon');
         $this->allow('guest', 'api_coupon');
         $this->allow('free-user', 'api_coupon');
-        $this->allow('awaiting-user', 'api_coupon');
         $this->allow('commercial-user', 'api_coupon');
         /**
          * Set up privileges for admin
@@ -115,25 +110,7 @@ class Integration_Acl extends Zend_Acl
         ));
         $this->allow('commercial-user', 'default_my-account');
         $this->allow('commercial-user', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
-        
-        /**
-         * Set up privileges for awaiting-user
-         */
-        $this->allow('awaiting-user', 'default_error', array('error'));
-        $this->allow('awaiting-user', 'default_index', array('index', 'about-us', 'contact-us', 'partners', 'privacy', 'terms-of-service','our-plans'));
-        $this->allow('awaiting-user', 'default_extensions', array('index'));
-        $this->allow('awaiting-user', 'default_queue', array(
-                'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
-                'extensions','getstatus', 'fetch-deployment-list', 'rollback', 
-                'commit', 'deploy','gettimeleft', 'request-deployment',
-                'validate-ftp-credentials', 'find-sql-file', 'login-to-store-backend', 'install-extension'
-        ));
-        $this->allow('awaiting-user', 'default_user', array(
-                'index', 'logout', 'dashboard', 'edit'
-        ));
-        $this->allow('awaiting-user', 'default_my-account');
-        $this->allow('awaiting-user', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
-        
+
     }
 
     /**
