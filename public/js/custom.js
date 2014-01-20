@@ -481,11 +481,6 @@ $(document).ready(function () {
             }
         });
 
-        // Bootstrap + isotope conflict fix
-        $('.element .dropdown-toggle').bind('click', function(e) {
-            $(this).parent('.btn-group').toggleClass('open');
-            e.stopPropagation();
-        });
 
         $extensions_filter_options.click(function(e) {
             var $this = $(this);
@@ -510,15 +505,18 @@ $(document).ready(function () {
 
                 $extensions_isotope.isotope('filter_elements');
             }
-
-            // Bootstrap + isotope conflict fix
-            // $('.btn-group.open').removeClass('open');
-
+           
             return false;
         });
+
         /* ============= FILTER ============= */
         /* ================================== */
 
+        // Bootstrap + isotope conflict fix
+        $('#container').delegate('.dropdown-toggle', 'click', function(e) {
+            $(this).parent().toggleClass('open');
+            e.stopPropagation();
+        });
 
         // EVENT: On click "Install" button
         $('#container').delegate('.install', 'click', function(event){
@@ -615,6 +613,7 @@ $(document).ready(function () {
                 }
                 $(this).toggleClass('large').find('div.extras').toggleClass('hidden');
                 $extensions_isotope.isotope('reLayout');
+                e.stopPropagation();
             }
         });
 
