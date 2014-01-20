@@ -1034,6 +1034,7 @@ body {
 }
 #container {
     margin-bottom: 20px;
+    padding-bottom: 30px;
 }
 #extensions {
     border: 1px solid #e5e5e5;
