@@ -103,7 +103,7 @@
                 </li>
                 <?php endif; ?>
 
-                <?php if (strlen($extension['extension_detail'])): ?>
+                <?php if (!strlen($extension['extension_detail'])): ?>
                 <li><a href="<?php echo $extension['extension_detail']; ?>" class="" target="_blank">View Details</a></li>
                 <?php endif; ?>
 
