@@ -78,17 +78,41 @@
 
         <div class="extras hidden">
             <p class="description"><?php echo wordwrap($extension['description'], 45, ' ', true); ?></p>
-        <?php if(isset($extension['screenshots']) AND $extension['screenshots']): ?>
-            <a href="#" class="btn btn-mini pull-left btn-screenshots"><i class="icon icon-picture"></i> View Screenshots</a>
-            <!-- START EXTENSION'S SCREENSHOTS -->
-            <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions -->
-            <ul class="screenshots hidden">
-            <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
-                <li data-id="<?php echo $extension['name'].' #'.++$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
-            <?php endforeach; ?>
-            </ul>
-            <!-- END EXTENSION'S SCREENSHOTS -->
-        <?php endif; ?>
+            <?php if(
+                    (isset($extension['screenshots']) AND count($extension['screenshots'])) ||
+                    (strlen($extension['extension_detail'])) ||
+                    (strlen($extension['extension_documentation']))
+                    ): ?>
+            <div class="btn-group">
+              <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                Screenshots &amp; More
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <?php if(isset($extension['screenshots']) AND count($extension['screenshots'])): ?>
+                <li>
+                    <a href="#" class="btn-screenshots">View Screenshots</a>
+                    <!-- START EXTENSION'S SCREENSHOTS -->
+                    <!-- I've implemented them as a hidden list. This way they can be retrieved for individual extensions -->
+                    <ul class="screenshots hidden">
+                    <?php foreach($extension['screenshots'] as $key => $screenshot): ?>
+                        <li data-id="<?php echo $extension['name'].' #'.++$key; ?>"><?php echo $this->ImagePath($screenshot, 'extension/screenshots', false, true); ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+                    <!-- END EXTENSION'S SCREENSHOTS -->
+                </li>
+                <?php endif; ?>
+
+                <?php if (strlen($extension['extension_detail'])): ?>
+                <li><a href="<?php echo $extension['extension_detail']; ?>" class="" target="_blank">View Details</a></li>
+                <?php endif; ?>
+
+                <?php if (strlen($extension['extension_documentation'])): ?>
+                <li><a href="<?php echo $extension['extension_documentation']; ?>" class="" target="_blank">Read Documentation</a></li>
+                <?php endif; ?>
+              </ul>
+            </div>
+            <?php endif; ?>
         <?php if('queue' == $page_type): ?>
             <?php if($extension['status']): ?>
                 <?php if($extension['status'] == 'pending'): ?>

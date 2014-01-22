@@ -1034,6 +1034,7 @@ body {
 }
 #container {
     margin-bottom: 20px;
+    padding-bottom: 30px;
 }
 #extensions {
     border: 1px solid #e5e5e5;
@@ -3416,4 +3417,12 @@ label.error {
 /* cancel subscription modal */
 #cancel-subscription form {
     margin: 0px;
+}
+
+/* extension dropdown button fix */
+.element {
+    overflow: visible;
+}
+.btn-mini .caret {
+    margin-top: 8px;
 }
