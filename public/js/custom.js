@@ -512,14 +512,16 @@ $(document).ready(function () {
         /* ============= FILTER ============= */
         /* ================================== */
 
+        var $container = $('#container');
+
         // Bootstrap + isotope conflict fix
-        $('#container').delegate('.dropdown-toggle', 'click', function(e) {
+        $container.delegate('.dropdown-toggle', 'click', function(e) {
             $(this).parent().toggleClass('open');
             e.stopPropagation();
         });
 
         // EVENT: On click "Install" button
-        $('#container').delegate('.install', 'click', function(event){
+        $container.delegate('.install', 'click', function(event){
             "use strict";
             var $this = $(this);
 
@@ -539,8 +541,19 @@ $(document).ready(function () {
             return false;
         });
 
+        // EVENT: On click extension's dropdown menu link
+        $container.delegate('.dropdown-menu a:not(".btn-screenshots")', 'click', function(event){
+            $(this).parents('.dropdown-menu').prev('.dropdown-toggle').click();
+            event.stopPropagation();
+        });
+
+        // Toggle dropdown menu on sibling extensions
+        $container.delegate('.element', 'click', function(event) {
+            $(this).siblings().find('.btn-group.open').children('.dropdown-toggle').click();
+        });
+
         // EVENT: On click extension's "View screens" button
-        $('#container').delegate('a.btn-screenshots', 'click', function(event){
+        $container.delegate('a.btn-screenshots', 'click', function(event){
             "use strict";
             
             var _this = $(this);
@@ -605,6 +618,7 @@ $(document).ready(function () {
             event.stopPropagation();
         });
         
+
         // change size of clicked element
         $extensions_isotope.delegate('.element', 'click', function(e) {
             if(!$(e.target).hasClass('version-list')) {
