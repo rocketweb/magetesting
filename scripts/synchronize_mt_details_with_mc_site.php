@@ -21,7 +21,23 @@ class MagentoConnectParser
         'customer-experience' => array(
             'url' => 'http://www.magentocommerce.com/magento-connect/customer-experience.html',
             'id'  => 1
-        )
+        ),
+        'site-management' => array(
+            'url' => 'http://www.magentocommerce.com/magento-connect/site-management.html',
+            'id'  => 2
+        ),
+        'integrations' => array(
+            'url' => 'http://www.magentocommerce.com/magento-connect/integrations.html',
+            'id'  => 5
+        ),
+        'marketing' => array(
+            'url' => 'http://www.magentocommerce.com/magento-connect/marketing.html',
+            'id'  => 3
+        ),
+        'utilities' => array(
+            'url' => 'http://www.magentocommerce.com/magento-connect/utilities.html',
+            'id'  => 6
+        ),
     );
     
     protected $_stats = array(
