@@ -131,8 +131,14 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $select_all_extensions_sorted->limit($limit, $offset);
         } else {
             $select_all_extensions_sorted->reset('columns');
-            $select_all_extensions_sorted->columns(array('count' => 'count(*)', 'installed'));
-            $result = $this->fetchRow($select_all_extensions_sorted);
+            $select_all_extensions_sorted->columns('id');
+            $select_all_extensions_sorted->group('extension_key');
+
+            $countQuery = $this->select()
+                ->setIntegrityCheck(false)
+                ->from(new Zend_Db_Expr('('.$select_all_extensions_sorted.')'), array('count' => 'count(*)'));
+
+            $result = $this->fetchRow($countQuery);
             if(!$result) {
                 return 0;
             }
@@ -182,7 +188,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         $sub_select =
             $this->select()
                  ->setIntegrityCheck(false)
-                 ->from($sub_select_inner, array('extension_key', 'edition', 'version'))
+                 ->from($sub_select_inner, array('extension_key', 'edition', 'version')) 
                  ->group(array('extension_key', 'edition'));
 
         if(!$return_count) {
