@@ -227,7 +227,7 @@ class UserController extends Integration_Controller_Action
                         $user->find($userData->id);
                         // if user has subscription or waiting for confirmation
                         if(
-                            in_array($userData->group, array('awaiting-user', 'commercial-user')) &&
+                            in_array($userData->group, array('commercial-user')) &&
                             is_numeric($user->getBraintreeTransactionConfirmed()) &&
                             0 === (int)$user->getBraintreeTransactionConfirmed() &&
                             (int)$user->getPlanId()
