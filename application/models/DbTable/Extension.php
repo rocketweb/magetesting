@@ -281,15 +281,18 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
 	return $this->fetchRow($select);
     }
 
-    public function findByExtensionKeyAndEdition($extension_key, $edition)
+    public function findByExtensionKeyAndEdition($extension_key, $edition = null)
     {
         $select =
             $this->select()
                  ->setIntegrityCheck(false)
                  ->from($this->_name)
                  ->where('extension_key = ?', $extension_key)
-                 ->where('edition = ?', $edition)
                  ->order(array('sort DESC', 'id DESC'));
+        
+        if ($edition && strlen($edition)) {
+            $select->where('edition = ?', $edition);
+        }
 
         return $this->fetchAll($select);
     }
