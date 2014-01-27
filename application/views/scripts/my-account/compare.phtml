@@ -212,7 +212,12 @@
                     <?php foreach($this->plans as $plan): ?>
                         <td class="compare-table-price-button">
                         <?php if(is_object($this->user)): ?>
-                            <?php if($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
+                            <?php if ($this->user->getGroup() == 'admin'): ?>
+                                <a href="<?php echo $this->url(array('module' => 'default',
+                                    'controller' => 'plan',
+                                    'action' => 'edit',
+                                    'id' => $plan->getId()), 'default', true); ?>" class="btn btn-success btn-large"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>
+                            <?php elseif($this->user->hasPlanActive() AND !(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                             <button
                                 type="button" 
                                 <?php if($this->user->getBraintreeTransactionId()): ?>

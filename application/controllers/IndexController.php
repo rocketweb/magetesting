@@ -53,8 +53,12 @@ class IndexController extends Integration_Controller_Action
     }
 
     public function ourPlansAction() {
-        if($this->auth->hasIdentity() && $this->auth->getIdentity()->id) {
+        if($this->_isLoggedNotAdminUser()) {
             return $this->_helper->redirector->gotoRoute(array('controller' => 'my-account', 'action' => 'compare'), 'default', true);
+        }
+        if ($this->auth->hasIdentity()) {
+            $this->view->user = new Application_Model_User();
+            $this->view->user->find($this->auth->getIdentity()->id);
         }
         $plans = new Application_Model_Plan();
         $versions = new Application_Model_Version();
@@ -73,5 +77,13 @@ class IndexController extends Integration_Controller_Action
     
     public function termsOfServiceAction() {
         // action body
+    }
+
+    /**
+     * @return bool
+     */
+    protected function _isLoggedNotAdminUser()
+    {
+        return $this->auth->hasIdentity() && $this->auth->getIdentity()->id && Zend_Auth::getInstance()->getIdentity()->group != 'admin';
     }
 }
