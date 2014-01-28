@@ -3,10 +3,22 @@
 include 'init.console.php';
 
 try {
+    $opts = new Zend_Console_Getopt(array(
+        'cat|c=i'    => 'Category, required.',
+        'page|p=i' => 'Page, required.',
+    ));
+    $cat = $opts->getOption('c');
+    $page = $opts->getOption('p');
+
+    $cat = ($cat > 0) ? (int) $cat : null;
+    $page = ($page > 0) ? (int) $page : 1;
+
     $parser = new MagentoConnectParser();
     $parser->setDebug(true);
     $parser->setLogger($log);
     $parser->setCache($bootstrap->getResource('cache'));
+    $parser->setCategory($cat);
+    $parser->setPage($page);
     $parser->process();
 
 } catch(Exception $e) {
@@ -16,27 +28,34 @@ try {
 class MagentoConnectParser 
 {
     protected $_cache;
+    protected $_category;
+    protected $_page;
     
     protected $_categories = array(
-        'customer-experience' => array(
+        1 => array(
             'url' => 'http://www.magentocommerce.com/magento-connect/customer-experience.html',
-            'id'  => 1
+            'id'  => 1,
+            'key' => 'customer-experience',
         ),
-        'site-management' => array(
+        2 => array(
             'url' => 'http://www.magentocommerce.com/magento-connect/site-management.html',
-            'id'  => 2
+            'id'  => 2,
+            'key' => 'site-management',
         ),
-        'integrations' => array(
+        5 => array(
             'url' => 'http://www.magentocommerce.com/magento-connect/integrations.html',
-            'id'  => 5
+            'id'  => 5,
+            'key' => 'integrations',
         ),
-        'marketing' => array(
+        3 => array(
             'url' => 'http://www.magentocommerce.com/magento-connect/marketing.html',
-            'id'  => 3
+            'id'  => 3,
+            'key' => 'marketing',
         ),
-        'utilities' => array(
+        6 => array(
             'url' => 'http://www.magentocommerce.com/magento-connect/utilities.html',
-            'id'  => 6
+            'id'  => 6,
+            'key' => 'utilities',
         ),
     );
     
@@ -75,11 +94,36 @@ class MagentoConnectParser
         return $this->_debug;
     }
 
+    public function setCategory($category)
+    {
+        $this->_category = $category;
+    }
+
+    public function getCategory()
+    {
+        return $this->_category;
+    }
+
+    public function setPage($page)
+    {
+        $this->_page = $page;
+    }
+
+    public function getPage()
+    {
+        return $this->_page;
+    }
+
     public function process() 
     {
-        foreach ($this->_categories as $categoryKey => $category) {
-            $this->_stats['processedCategories'][] = $categoryKey; 
-            $this->_processCategory($category);
+        if ($this->getCategory() && isset($this->_categories[$this->getCategory()])) {
+            $this->_stats['processedCategories'][] = $this->_categories[$this->getCategory()]['key'];
+            $this->_processCategory($this->_categories[$this->getCategory()], $this->getPage());
+        } else {
+            foreach ($this->_categories as $category) {
+                $this->_stats['processedCategories'][] = $category['key']; 
+                $this->_processCategory($category);
+            }
         }
 
         $msg = 'Magento Connect Details Sync';
@@ -88,15 +132,14 @@ class MagentoConnectParser
 
         $this->getLogger()->log($msg, Zend_Log::DEBUG, $info);
     }
-    
+
     /**
      * @param $category
      * @throws Exception
      */
-    protected function _processCategory($category)
+    protected function _processCategory($category, $page = 1)
     {
         $extensionLinksFound = 1;
-        $page = 1;
 
         while ($extensionLinksFound == 1) {
 
@@ -122,7 +165,7 @@ class MagentoConnectParser
                     $extensionPage = $this->_fetchUrl($link);
 
                     if ($this->getDebug()) {
-                        echo 'Extension details: ' . $link . ' (Page ' . $page . ')' . "\n";
+                        echo 'Extension details: ' . $link . ' (Category ' . $category['id'] . ', Page ' . $page . ')' . "\n";
                     }
 
                     // parse extension page and extract config json
