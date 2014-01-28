@@ -74,7 +74,7 @@ class Application_Model_ExtensionMapper {
         return $extension;
     }
 
-    public function findByExtensionKeyAndEdition($extension_key, $edition)
+    public function findByExtensionKeyAndEdition($extension_key, $edition = null)
     {
         $resultSet = $this->getDbTable()->findByExtensionKeyAndEdition($extension_key, $edition);
         $entries   = array();

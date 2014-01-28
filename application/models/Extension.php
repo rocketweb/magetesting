@@ -270,7 +270,7 @@ class Application_Model_Extension {
         return $this;
     }
 
-    public function findByExtensionKeyAndEdition($extension_key, $edition)
+    public function findByExtensionKeyAndEdition($extension_key, $edition = null)
     {
         return $this->getMapper()->findByExtensionKeyAndEdition($extension_key, $edition);
     }
