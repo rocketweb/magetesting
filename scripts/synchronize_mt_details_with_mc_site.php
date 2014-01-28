@@ -270,7 +270,7 @@ class MagentoConnectParser
 
         $data = trim($data);
 
-        $pattern = '/var config \=(.*?)\;/s';
+        $pattern = '/var config \=(.*?)\;\r?\n/s';
 
         preg_match($pattern, $data, $config);
         
