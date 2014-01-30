@@ -56,6 +56,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                  ->from($this->_name, array('*', 'braintree_transaction_id' => new Zend_Db_Expr('NULL'), 'braintree_transaction_confirmed'  => new Zend_Db_Expr('NULL'), 'status'  => new Zend_Db_Expr('NULL'), 'store_extension_id' => new Zend_Db_Expr('NULL'), 'installed' => new Zend_Db_Expr('0')))
                  ->setIntegrityCheck(false)
                  ->where('extension > ""')
+                 ->where('edition = ?', $store['edition'])
                  ->where('REPLACE(from_version,\'.\',\'\') <= ?', (int)str_replace('.','',$store['version']))
                  ->where('REPLACE(to_version,\'.\',\'\') >= ? OR REPLACE(to_version,\'.\',\'\') IS NULL', (int)str_replace('.','',$store['version']))
 //                 ->where(' ?
