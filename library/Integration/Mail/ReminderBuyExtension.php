@@ -30,7 +30,16 @@ class Integration_Mail_ReminderBuyExtension extends Integration_Mail
         foreach($this->_data as $ext_row) {
             $extensions_to_buy[] = $ext_row['name'];
         }
-        $this->mail->setSubject(sprintf($this->_config->cron->buyStoreExtension->subject, implode(', ', $extensions_to_buy)));
+        
+        //this prevents too long subjects
+        if (count($extensions_to_buy) > 3) {
+            $extensions_to_buy = array_slice($extensions_to_buy, 0, 3);
+            $this->mail->setSubject(sprintf($this->_config->cron->buyStoreExtension->subject, implode(', ', $extensions_to_buy) . ' and more'));
+        } else {
+            $this->mail->setSubject(sprintf($this->_config->cron->buyStoreExtension->subject, implode(', ', $extensions_to_buy)));
+        }
+        
+        
         $this->mail->setReplyTo( $from->email, $from->desc );
         $this->mail->setReturnPath($from->email);
     }
