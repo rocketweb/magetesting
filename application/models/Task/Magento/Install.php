@@ -81,6 +81,9 @@ implements Application_Model_Task_Interface {
             $this->_encodeEnterprise();
         }
 
+        /* clear cache to make sure db updates are applied on first request (wojtek)  */
+        $this->_clearStoreCache();
+
         $DbManager->enableFtp($this->_dbuser);
     }
 
