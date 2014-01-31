@@ -18,10 +18,15 @@ class ExtensionsController extends Integration_Controller_Action
         $extensionModel = new Application_Model_Extension();
 
         $request = $this->getRequest();
-        $filter = $request->getParam('filter', array('edition' => 'ce'));
+        $filter = $request->getParam('filter', array());
         if(!is_array($filter)) {
             $filter = array();
         }
+        
+        if (!array_key_exists('edition', $filter)) {
+            $filter['edition'] = 'CE';
+        }
+        
         $order = $request->getParam('order', array());
         if(!is_array($order)) {
             $order = array();
