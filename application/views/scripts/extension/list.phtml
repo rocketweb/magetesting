@@ -56,6 +56,15 @@
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
+                            <?php if('frontend' == $page_type): ?>
+                            <div class="btn-group" data-title="Edition">
+                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Edition <span class="caret"></span></a>
+                                <ul class="dropdown-menu option-set" data-option-key="edition">
+                                    <li><a class="btn-all" tabindex="-1" href="#" data-option-value=".ce">CE</a></li>
+                                    <li><a tabindex="-1" href="#" data-option-value=".ee">EE</a></li>
+                                </ul>
+                            </div>
+                            <?php endif; ?>
                             <?php if('queue' == $page_type): ?>
                             <div class="btn-group" data-title="My store">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">My store <span class="caret"></span></a>
