@@ -18,7 +18,7 @@ class ExtensionsController extends Integration_Controller_Action
         $extensionModel = new Application_Model_Extension();
 
         $request = $this->getRequest();
-        $filter = $request->getParam('filter', array());
+        $filter = $request->getParam('filter', array('edition' => 'ce'));
         if(!is_array($filter)) {
             $filter = array();
         }
