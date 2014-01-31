@@ -110,7 +110,9 @@ extends Application_Model_Task {
                 foreach ($output as $notice) {
                     if (strpos($notice, 'create_user.sh') !== false) {
                         $this->logger->log('Some problem with creating user.', Zend_Log::CRIT, $notice);
-                        throw new Application_Model_Task_Exception('Some problem with create_user.sh');
+                        throw new Application_Model_Task_Exception(
+                            'There was a problem adding store, please contact with our support team.'
+                        );
                     }
                 }
             }
