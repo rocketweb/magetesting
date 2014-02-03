@@ -32,8 +32,8 @@ class Integration_Mail_ReminderBuyExtension extends Integration_Mail
         }
         
         //this prevents too long subjects
-        if (count($extensions_to_buy) > 3) {
-            $extensions_to_buy = array_slice($extensions_to_buy, 0, 3);
+        if (count($extensions_to_buy) > 2) {
+            $extensions_to_buy = array_slice($extensions_to_buy, 0, 2);
             $this->mail->setSubject(sprintf($this->_config->cron->buyStoreExtension->subject, implode(', ', $extensions_to_buy) . ' and more'));
         } else {
             $this->mail->setSubject(sprintf($this->_config->cron->buyStoreExtension->subject, implode(', ', $extensions_to_buy)));
