@@ -1475,6 +1475,12 @@ class QueueController extends Integration_Controller_Action {
         // app folder
         $appPaths = $remoteFind->call()->getLastOutput();
 
+        // "find" probably haven't found any directories and we got only
+        // "Connection to x.x.x.x closed." message (wojtek)
+        if (count($appPaths) <= 1) {
+            return false;
+        }
+
         // skin folder 
         $skinPaths = $remoteFind->bindAssoc("'app'", 'skin')->call()->getLastOutput();
         
