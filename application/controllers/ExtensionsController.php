@@ -22,6 +22,11 @@ class ExtensionsController extends Integration_Controller_Action
         if(!is_array($filter)) {
             $filter = array();
         }
+        
+        if (!array_key_exists('edition', $filter)) {
+            $filter['edition'] = 'CE';
+        }
+        
         $order = $request->getParam('order', array());
         if(!is_array($order)) {
             $order = array();
