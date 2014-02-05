@@ -45,7 +45,7 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
 
         //check that the image exists. 
         if (!is_file($this->_filesystem_path . $this->_full_image_path)) {
-            $this->_setPaths('magetesting_placeholder.png', '/public/img/extensions/');
+            $this->_setPaths('magetesting_placeholder.png', '/public/img/extensions/thumbs/');
         }
 
         //check the image is valid
