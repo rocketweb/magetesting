@@ -47,6 +47,7 @@
                                     <div class="controls">
                                         <a href="#" class="btn btn-inverse btn-faded disabled"><i class="icon icon-cog"></i> Extensions</a>
                                         <a href="#" class="btn btn-faded disabled"><i class="icon icon-white icon-pencil"></i> Edit Details</a>
+                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-reindex', 'store' => $item['domain']), 'default', true); ?>" class="btn"><i class="icon icon-refresh"></i> Reindex</a>
                                     </div>
                                 </div>
                             </div>
@@ -189,7 +190,8 @@
                                         <a href="#" class="btn edit-button disabled"><i class="icon icon-pencil"></i> Edit Details</a>
                                     <?php else: ?>
                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
-                                           class="btn edit-button"><i class="icon icon-pencil"></i> Edit Details</a>
+                                           class="btn edit-button"><i class="icon icon-pencil"></i> Edit</a>
+                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-reindex', 'store' => $item['domain']), 'default', true); ?>" class="btn"><i class="icon icon-refresh"></i> Reindex</a>
                                     <?php endif; ?>
                                     </div>
                                 </div>
