@@ -29,10 +29,10 @@ implements Application_Model_Task_Interface {
 
         // run shell/index reindexall
         $command = $this->cli()->createQuery(
-            'cd ?', $this->_storeFolder . '/' . $this->_domain
+            'cd ?', $this->_storeFolder . '/' . $this->_storeObject->getDomain()
         );
         $reindex = $this->cli()->createQuery(
-            '/usr/bin/php -f shell/indexer.php --reindexall'
+            '/usr/bin/php -f shell/indexer.php -- --reindexall'
         )->asSuperUser();
 
         $command->pipe($reindex);
