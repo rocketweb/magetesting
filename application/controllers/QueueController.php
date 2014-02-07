@@ -1120,6 +1120,83 @@ class QueueController extends Integration_Controller_Action {
         ), 'default', true);
     }
 
+    public function requestReindexAction() {
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $request = $this->getRequest();
+
+        $store = new Application_Model_Store();
+        $server = new Application_Model_Server();
+
+        $domain = $request->getParam('store');
+
+        if($domain) {
+            $store = $store->findByDomain($domain);
+            if($store->server_id) {
+                $server = $server->find($store->server_id);
+            }
+        }
+
+        // check if user is allowed to schedule reindex (if owns store)
+        // @todo check also if hasn't reached reindex limit
+        // @todo maybe also add ability to let admin always schedule reindex for any store
+        // without any limitations
+        if($store->id && ($this->auth->getIdentity()->id == $store->user_id || 'admin' == $this->auth->getIdentity()->group) && $server->getDomain()) {
+            $user = new Application_Model_User();
+            $user = $user->find($store->user_id);
+
+            $storeModel = new Application_Model_Store();
+            $storeModel->find($store->id);
+
+            if ($storeModel->getStatus() == 'ready') {
+                $storeModel->setStatus('reindexing-magento');
+                $storeModel->save();
+            }
+
+            // add  task to queue
+            try {
+                // find if we have any other ExtensionInstall tasks, not sure if it's needed
+                $queueItem = new Application_Model_Queue();
+                $extensionParent = $queueItem->getParentIdForExtensionInstall($storeModel->getId());
+
+                $queueItem->setStoreId($storeModel->getId());
+                $queueItem->setStatus('pending');
+                $queueItem->setUserId($storeModel->getUserId());
+                $queueItem->setExtensionId(0);
+                $queueItem->setParentId($extensionParent);
+                $queueItem->setServerId($storeModel->getServerId());
+                $queueItem->setTask('MagentoReindex');
+                $queueItem->save();
+
+            } catch (Exception $e) {
+                if ($log = $this->getLog()) {
+                    $log->log('Error while adding reindex task to queue - ' . $e->getMessage(), LOG_ERR);
+                }
+                $this->_response->setBody('error');
+            }
+
+            $this->_helper->FlashMessenger('Reindex has been scheduled for choosen store.');
+        } else {
+            // set error flash message otherwise
+            $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'You are not allowed to schedule reindex for that store.'));
+        }
+
+        $redirect_to = array(
+            'module' => 'default',
+            'controller' => 'user',
+            'action' => 'dashboard',
+        );
+
+        if($this->_getParam('redirect') == 'admin') {
+            $redirect_to['controller'] = 'queue';
+            $redirect_to['action'] = 'index';
+        }
+
+        return $this->_helper->redirector->gotoRoute($redirect_to, 'default', true);
+    }
+
     public function fetchDeploymentListAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
