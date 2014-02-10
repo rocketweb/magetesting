@@ -27,15 +27,12 @@ implements Application_Model_Task_Interface {
             $this->logger->log('Not truncated *_cl tables properly.', Zend_Log::INFO);
         }
 
-        // run shell/index reindexall
+        chdir($this->_storeFolder . '/' . $this->_storeObject->getDomain());
+
         $command = $this->cli()->createQuery(
-            'cd ?', $this->_storeFolder . '/' . $this->_storeObject->getDomain()
-        );
-        $reindex = $this->cli()->createQuery(
             '/usr/bin/php -f shell/indexer.php -- --reindexall'
         )->asSuperUser();
 
-        $command->pipe($reindex);
         $output = $command->call()->getLastOutput();
 
         $message = var_export($output, true);
