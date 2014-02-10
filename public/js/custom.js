@@ -368,15 +368,16 @@ $(document).ready(function () {
     	RowHeight         = ElementHeight + ElementPad;
     	
     if($extensions_isotope.length) {
-        $extensions_isotope.imagesLoaded(function() {
-            $('.element.premium .wrapper div.icon').css({
-                'margin-top': function(){
-                    var margin = (112 - $(this).find('img').height()) / 2;
-                    if(margin < 0){ margin = 0; }
-                    return margin;
-                }
-            });
-        })
+        // Icon positioning fix
+        // $extensions_isotope.imagesLoaded(function() {
+        //     $('.element.premium .wrapper div.icon').css({
+        //         'margin-top': function(){
+        //             var margin = (112 - $(this).find('img').height()) / 2;
+        //             if(margin < 0){ margin = 0; }
+        //             return margin;
+        //         }
+        //     });
+        // })
         
         // Pre-toggle "All" buttons
         $('li a.btn-all').parent().addClass('active');
