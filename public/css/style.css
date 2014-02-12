@@ -3437,18 +3437,25 @@ label.error {
  }
 
 /* extension big-icon fix */
+.icon.big {
+    font-size: 0;    
+}
 .element.premium .wrapper div.icon.big img,
 .element.large .wrapper div.icon.big img {
      margin: 0;
      max-height: 100%;
      max-width: 100%;
- }
+}
 .element.premium .wrapper div.icon.big, .element.large .wrapper div.icon.big {
    padding: 10px;
    -moz-box-sizing: border-box;
    -webkit-box-sizing: border-box;
    box-sizing: border-box;
- }
+}
+.element.free .wrapper div.icon.big {
+    float: left;
+    width: 100px;
+}
 .element.premium .wrapper .info, .element.large .wrapper .info {
    margin-left: 0;
    width: 182px;
