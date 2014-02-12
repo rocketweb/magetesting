@@ -11,6 +11,7 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
+            <th>ID</th>
             <th>Coupon Code</th>
             <th>Used Date</th>
             <th>User</th>
@@ -23,6 +24,7 @@
     <tbody>
         <?php foreach($this->coupons as $coupon): ?>
         <tr>
+            <td><?php echo $coupon['id']; ?></td>
             <td><?php echo $coupon['code']; ?></td>
             <td><?php echo ('' != $coupon['used_date'] ? date('Y-m-d', strtotime($coupon['used_date'])) : ''); ?></td>
             <td><?php if ($coupon['user_id']):?><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'detail', 'id' => $coupon['user_id'])); ?>"><?php echo $coupon['user']; ?></a><?php endif; ?></td>
