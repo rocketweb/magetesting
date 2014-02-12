@@ -11,6 +11,7 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
+            <th>ID</th>
             <th>Plan name</th>
             <th>Price</th>
             <th>Is hidden</th>
@@ -20,6 +21,7 @@
     <tbody>
         <?php foreach($this->plans as $plan): ?>
         <tr>
+            <td><?php echo $plan['id']; ?></td>
             <td><?php echo $plan['name']; ?></td>
             <td><?php echo $plan['price']; ?></td>
             <td><?php echo ((int)$plan['is_hidden'] ? 'On' : 'Off'); ?></td>
