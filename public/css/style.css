@@ -3527,27 +3527,27 @@ list-style:none;
 
 /* extension buttons fixes */
 .extras > form {
-  float: right;
-  margin: 0;
-}
+   float: right;
+   margin: 0;
+ }
 .extras .update-status {
-  margin-top: 5px;
-}
+   margin-top: 5px;
+ }
 
 /* extension big-icon fix */
 .element.premium .wrapper div.icon.big img,
 .element.large .wrapper div.icon.big img {
-    margin: 0;
-    max-height: 100%;
-    max-width: 100%;
-}
+     margin: 0;
+     max-height: 100%;
+     max-width: 100%;
+ }
 .element.premium .wrapper div.icon.big, .element.large .wrapper div.icon.big {
-  padding: 10px;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
+   padding: 10px;
+   -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
+   box-sizing: border-box;
+ }
 .element.premium .wrapper .info, .element.large .wrapper .info {
-  margin-left: 0;
-  width: 182px;
-}
+   margin-left: 0;
+   width: 182px;
+ }
