@@ -3460,6 +3460,20 @@ label.error {
     z-index: 10;
 }
 
+/* manage extension disabled extension */
+.disabled-extension {
+    background-color: white; 
+    filter:alpha(opacity=50);
+    opacity: 0.5; 
+    -moz-opacity:0.50;
+}
+
+.disabled-extension .disabled-icon {
+    left: 25px;
+    position: absolute;
+    z-index: 10;
+}
+
 /* load more button */
 .load-more {
     text-align: center;
