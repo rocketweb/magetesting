@@ -1122,7 +1122,7 @@ class QueueController extends Integration_Controller_Action {
 
             // check if limit of reindex runs per hour is reached for a store
             $logReindex = new Application_Model_LogReindex();
-            $allowed = 3;
+            $allowed = 2;
 
             if (false === $logReindex->canRun($storeModel->getId(), $allowed)) {
                 $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You reached limit of '.$allowed.' allowed reindex runs per hour for that store. Please try again later.'));
