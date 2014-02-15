@@ -1100,15 +1100,39 @@ class QueueController extends Integration_Controller_Action {
         }
 
         // check if user is allowed to schedule reindex (if owns store)
-        // @todo check also if hasn't reached reindex limit
         // @todo maybe also add ability to let admin always schedule reindex for any store
         // without any limitations
         if($store->id && ($this->auth->getIdentity()->id == $store->user_id || 'admin' == $this->auth->getIdentity()->group) && $server->getDomain()) {
-            $user = new Application_Model_User();
-            $user = $user->find($store->user_id);
 
             $storeModel = new Application_Model_Store();
             $storeModel->find($store->id);
+
+            $queueModel = new Application_Model_Queue();
+
+            // don't allow to add the same task to queue twice
+            if ($queueModel->alreadyExists('MagentoReindex', $storeModel->getId(), 0, $store->server_id)){
+                $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'Reindex is already scheduled for that store.'));
+
+                return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+                ), 'default', true);
+            }
+
+            // check if limit of reindex runs per hour is reached for a store
+            $logReindex = new Application_Model_LogReindex();
+            $allowed = 3;
+
+            if (false === $logReindex->canRun($storeModel->getId(), $allowed)) {
+                $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You reached limit of '.$allowed.' allowed reindex runs per hour for that store. Please try again later.'));
+
+                return $this->_helper->redirector->gotoRoute(array(
+                    'module' => 'default',
+                    'controller' => 'user',
+                    'action' => 'dashboard',
+                ), 'default', true);
+            }
 
             if ($storeModel->getStatus() == 'ready') {
                 $storeModel->setStatus('reindexing-magento');
@@ -1129,6 +1153,11 @@ class QueueController extends Integration_Controller_Action {
                 $queueItem->setServerId($storeModel->getServerId());
                 $queueItem->setTask('MagentoReindex');
                 $queueItem->save();
+
+                $logReindex = new Application_Model_LogReindex();
+                $logReindex->setStoreId($storeModel->getId());
+                $logReindex->setTime(date("Y-m-d H:i:s"));
+                $logReindex->save();
 
             } catch (Exception $e) {
                 if ($log = $this->getLog()) {
