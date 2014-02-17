@@ -49,7 +49,7 @@ if($result) {
             //get users plan id
             $modelUser = new Application_Model_User();
             $modelUser->find($user_id);
-            $this->log('Restored '.json_encode($modelUser->__toArray()), Zend_Log::INFO);
+            $log->log('Restored '.json_encode($modelUser->__toArray()), Zend_Log::INFO);
             
             $modelPlan = new Application_Model_Plan();
             $modelPlan->find($modelUser->getPlanId());
