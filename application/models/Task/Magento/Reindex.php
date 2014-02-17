@@ -30,14 +30,22 @@ implements Application_Model_Task_Interface {
         chdir($this->_storeFolder . '/' . $this->_storeObject->getDomain());
 
         $command = $this->cli()->createQuery(
-            '/usr/bin/php -f shell/indexer.php -- --reindexall'
+            'timeout 10m /usr/bin/php -f shell/indexer.php -- --reindexall'
         )->asSuperUser();
 
         $output = $command->call()->getLastOutput();
 
+        $lastOutput = end($output); 
+
+        if (strpos($lastOutput, 'Product Attributes') === false) {
+            $msg = 'Reached time limit and killed.';
+        } else {
+            $msg = 'Success';
+        }
+
         $message = var_export($output, true);
         $this->logger->log("\n" . $command. "\n" . $message, Zend_Log::DEBUG);
 
-        $this->logger->log('Finished reindexing magento.', Zend_Log::INFO);
+        $this->logger->log('Finished reindexing magento ('.$msg.').', Zend_Log::INFO);
     }
 }
