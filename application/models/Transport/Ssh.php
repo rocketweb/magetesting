@@ -116,7 +116,7 @@ extends Application_Model_Transport {
 
         $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
 
-        $command = $this->_ssh->cloneObject()->remoteCall($pack)->pipe($unpack);
+        $command = $this->_ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($pack)->pipe($unpack);
 
         $output = $command->call()->getLastOutput();
 
@@ -199,7 +199,7 @@ extends Application_Model_Transport {
 
         $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
 
-        $command = $this->_ssh->cloneObject()->remoteCall($pack)->pipe($unpack);
+        $command = $this->_ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($pack)->pipe($unpack);
 
         $output = $command->call()->getLastOutput();
 
@@ -263,7 +263,9 @@ extends Application_Model_Transport {
 
         $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->asSuperUser();
 
-        $command = $this->_ssh->cloneObject()->remoteCall($readFile)->pipe($unpack);
+        $command = $this->_ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($readFile)->pipe($unpack);
+
+        $this->logger->log('Downloading file...', Zend_Log::INFO); 
 
         $output = $command->call()->getLastOutput();
 

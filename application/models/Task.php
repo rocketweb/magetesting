@@ -207,6 +207,8 @@ class Application_Model_Task {
             $this->_fileKit->clear()->remove($cacheFolder)->append('/*', null, false)->asSuperUser();
             $message = var_export($this->_fileKit->call()->getLastOutput(), true);
             $this->logger->log("\n".$this->_fileKit->toString()."\n" . $message, Zend_Log::DEBUG);
+        } else {
+            $this->logger->log('Store cache has not been cleared, cache directory does not exist.', Zend_Log::INFO);
         }
     }
     
