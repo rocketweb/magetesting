@@ -2,6 +2,18 @@
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+    protected function _initConfig()
+    {
+        $config = new Zend_Config_Ini(
+            APPLICATION_PATH . '/configs/local.ini',
+            APPLICATION_ENV
+        );
+
+        Zend_Registry::set('config', $config);
+
+        return $config;
+    }
+
     /**
      * Init logger
      *
@@ -11,6 +23,43 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         // init logger
         $log = new Zend_Log();
+
+        $config = $this->getResource('config');
+
+        /// init admin email writer
+        // setup formatter to add custom field in mail writer
+        $format = '%timestamp% %priorityName%: %message%' . PHP_EOL . PHP_EOL . ' %info%';
+        $formatter = new Zend_Log_Formatter_Simple($format);
+
+        // setup mail writer
+        $mail = new Zend_Mail();
+        $mail->setFrom($config->admin->errorEmail->from->email);
+
+        $email = $config->admin->errorEmail->to->email;
+
+        /* $email is Zend_Config Object */
+        $emails = $email->toArray();
+
+        if (!is_array($emails)){
+            $emails = array($emails);
+        }
+
+        if($emails) {
+            $mail->addTo(array_shift($emails));
+        }
+
+        if($emails) {
+            foreach($emails as $ccEmail) {
+                $mail->addCc($ccEmail);
+            }
+        }
+
+        $writerMail = new Zend_Log_Writer_Mail($mail);
+        $writerMail->setSubjectPrependText($config->admin->errorEmail->subject);
+        $writerMail->addFilter(Zend_Log::CRIT);
+        $writerMail->setFormatter($formatter);
+
+        $log->addWriter($writerMail);
 
         // init db writer
         $db = $this->getPluginResource('db')->getDbAdapter();
@@ -65,18 +114,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     
         $navigation = new Zend_Navigation($config);
         $view->navigation($navigation);
-    }
-
-    protected function _initConfig()
-    {
-        $config = new Zend_Config_Ini(
-                APPLICATION_PATH . '/configs/local.ini',
-                APPLICATION_ENV
-        );
-
-        Zend_Registry::set('config', $config);
-        
-        return $config;
     }
 
     /*
