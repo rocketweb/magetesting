@@ -55,11 +55,11 @@ class Application_Model_TaskMysql
 
         // reset cookie settings
         $updates[] = array(
-            'data'  => array('value' => $email),
+            'data'  => array('value' => ''),
             'where' => array('path = ?' => 'web/cookie/cookie_path')
         );
         $updates[] = array(
-            'data'  => array('value' => $email),
+            'data'  => array('value' => ''),
             'where' => array('path = ?' => 'web/cookie/cookie_domain')
         );
 
