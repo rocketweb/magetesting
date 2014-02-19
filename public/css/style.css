@@ -3378,7 +3378,7 @@ label.error {
 }
 
 /* manage extension disabled extension */
-.disabled-extension {
+.disabled-extension .wrapper {
     background-color: white; 
     filter:alpha(opacity=50);
     opacity: 0.5; 
@@ -3386,7 +3386,7 @@ label.error {
 }
 
 .disabled-extension .disabled-icon {
-    left: 25px;
+    left: 8px;
     position: absolute;
     z-index: 10;
 }
