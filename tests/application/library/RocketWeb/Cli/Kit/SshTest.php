@@ -11,7 +11,7 @@ class RocketWeg_Cli_Kit_SshTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('RocketWeb_Cli_Kit_Ssh', $ssh);
         $this->assertEquals(
-            "sudo sshpass -p 'pass' ssh -o LogLevel=FATAL -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'user'@'http://somewhere.com' -p '80' 2>&1",
+            "sudo sshpass -p 'pass' ssh -t -t -o LogLevel=FATAL -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'user'@'http://somewhere.com' -p '80' 2>&1",
             $ssh->toString()
         );
     }
