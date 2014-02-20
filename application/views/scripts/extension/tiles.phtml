@@ -20,7 +20,7 @@
 <?php if('extension' == $page_type && is_string($sync->checkVersion($extension['extension_key'], $extension['version']))): ?>
     <div class="new-release"><i class="icon-retweet"></i></div>
 <?php endif; ?>
-<?php if ('extension' == $page_type && $extension['is_visible'] != 1): ?>
+<?php if ($extension['is_visible'] != 1): ?>
     <div class="disabled-icon"><i class="icon-warning-sign"></i></div>
 <?php endif; ?>
     <div class="wrapper">
