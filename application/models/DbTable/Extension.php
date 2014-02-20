@@ -5,44 +5,6 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
 
     protected $_name = 'extension';
 
-    /**
-     * 
-     * @param array $store
-     * @return array
-     */
-    public function findMatching($store)
-    {
-	  //get already installed extensions
-	  $installed = $this->findInstalled($store);
-	  
-	  $exclude = array();
-	  foreach($installed as $ins){
-	   $exclude[] = $ins->extension_id;
-	  }
-    
-        $select = $this->select()
-                ->from($this->_name)
-                ->where('edition = ?', $store['edition'])
-                ->where('REPLACE(from_version,\'.\',\'\') <= ?', (int)str_replace('.','',$store['version']))
-                ->where('REPLACE(to_version,\'.\',\'\') >= ? OR REPLACE(to_version,\'.\',\'\') IS NULL', (int)str_replace('.','',$store['version']));
-//                ->where(' ? BETWEEN REPLACE(from_version,\'.\',\'\') AND REPLACE(to_version,\'.\',\'\')',(int)str_replace('.','',$store['version']));
-                
-                if (count($exclude)>0){
-                    $select->where('id NOT IN (?) ',$exclude);
-                }
-                
-                //get also developr extensions for admins
-                if (Zend_Auth::getInstance()->getIdentity()->group == 'admin') {
-                    $select->where('is_dev IN (?)',array(0,1));
-                } else {
-                    $select->where('is_dev  = ? ',0);
-                }
-                
-//                var_dump($select->__toString());
-               
-        return $this->fetchAll($select);
-    }
-    
     public function fetchStoreExtensions($store, $filter, $order, $offset, $limit, $return_count = false) {
         $select_installed_for_store = 
             $this->select()
@@ -161,7 +123,6 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         if(isset($filter['restricted']) && $filter['restricted']) {
             $cache_name .= '_restricted_true';
             $sub_select_inner
-                ->where('edition = ?', 'CE')
                 ->where('extension > ""')
                 ->where('is_visible = ?', 1);
         }
@@ -236,6 +197,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
                 $cache->save($result, $cache_name, array('extension', 'frontend'));
             }
         }
+
         return $result;
     }
 
