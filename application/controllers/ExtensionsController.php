@@ -36,7 +36,7 @@ class ExtensionsController extends Integration_Controller_Action
         $limit = 50;
 
         unset($filter['restricted']);
-        $filter['restricted'] = false;
+        $filter['restricted'] = true;
         $this->view->extensions = $extensionModel->fetchFullListOfExtensions($filter, $order, $offset, $limit);
         $this->view->extensions_counter = $extensionModel->getMapper()->fetchFullListOfExtensions($filter, $order, $offset, $limit, true);
 

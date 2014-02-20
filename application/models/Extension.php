@@ -320,11 +320,7 @@ class Application_Model_Extension {
     {
         return $this->getMapper()->getOptions();
     }
-    
-    public function getAllForStore($store_name){
-        return $this->getMapper()->getAllForStore($store_name);
-    }
-    
+
     /**
      * fetches available and installed extensions for given store
      * @param string $store_name

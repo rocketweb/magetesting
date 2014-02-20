@@ -160,20 +160,7 @@ class Application_Model_ExtensionMapper {
         return $temp;
 
     }
-    
-    public function getAllForStore($store_name){
-        
-        //find store by name 
-        $storeModel = new Application_Model_Store();
-        $store = $storeModel->findByDomain($store_name);
-        
-        //find extensions that match version and edition
-        $matchingExtensions = $this->getDbTable()->findMatching($store);
 
-        return $matchingExtensions;
-        
-    }
-    
     public function getInstalledForStore($store, $price_type = '*'){
         //find extensions that match version and edition
         $installedExtensions = $this->getDbTable()->findInstalled($store, $price_type);
