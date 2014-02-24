@@ -85,7 +85,7 @@ admin.errorEmail.subject = "Errors with Magetesting.com"
 admin.errorEmail.from.email = "support@magetesting.com"
 admin.errorEmail.to.email[] = "wojtek@rocketweb.com"
 
-register.useCoupons = 1; // 0 - dont show coupon field, 1 - show coupon field
+register.useCoupons = 0; // 0 - dont show coupon field, 1 - show coupon field
 register.freeTrialCouponsPerDay = 10;
 
 contact.message.subject = "Message from Contact Form"
@@ -135,9 +135,13 @@ mcrypt.vector = "79t1e2s4"
 ; UNITS: MICROSECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, or YEAR
 queueRetry.global.delay.unit = "MINUTE"
 queueRetry.global.delay.interval = 10
-queueRetry.global.retries = 5
+queueRetry.global.retries = 1
 
-queueRetry.ExtensionInstall.retries = 3
+queueRetry.PapertrailUserCreate.retries = 3
+queueRetry.PapertrailUserRemove.retries = 3
+queueRetry.PapertrailSystemCreate.retries = 3
+queueRetry.PapertrailSystemRemove.retries = 3
+queueRetry.MagentoDownload.retries = 3
 
 ; Exec wrapper
 execWrapper.logEnabled = 1;
