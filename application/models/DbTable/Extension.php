@@ -94,7 +94,7 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $select_all_extensions_sorted->limit($limit, $offset);
         } else {
             $select_all_extensions_sorted->reset('columns');
-            $select_all_extensions_sorted->columns('id');
+            $select_all_extensions_sorted->columns(array('id', 'installed'));
             $select_all_extensions_sorted->group('extension_key');
 
             $countQuery = $this->select()
