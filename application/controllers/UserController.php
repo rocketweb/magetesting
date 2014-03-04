@@ -234,8 +234,16 @@ class UserController extends Integration_Controller_Action
                         ) {
                             $plan = new Application_Model_Plan();
                             $plan->find($user->getPlanId());
-                            $boughtDate = strtotime('-'.$plan->getBillingPeriod(), strtotime($user->getPlanActiveTo()));
+                            // this is incorrect in case of changing plan. (wojtek)
+                            // $boughtDate = strtotime('-'.$plan->getBillingPeriod(), strtotime($user->getPlanActiveTo()));
+
+                            // check real transacton date instead (wojtek)
+                            $payment = new Application_Model_Payment();
+                            $transaction = $payment->findByTransactionId($user->getBraintreeTransactionId());
+                            $boughtDate = strtotime($transaction->getDate());
+
                             $timeAfterLastPayment = time()-$boughtDate;
+
                             if($timeAfterLastPayment < 3*60*60*24 && $timeAfterLastPayment >= 60*60*24) {
                                 $this->_helper->FlashMessenger(array('type'=> 'notice', 'message' => 'We have not received payment for your subscription yet.'));
                             } elseif($timeAfterLastPayment >= 3*60*60*24) {
