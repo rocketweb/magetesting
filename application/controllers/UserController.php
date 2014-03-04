@@ -25,7 +25,6 @@ class UserController extends Integration_Controller_Action
         $planModel = new Application_Model_Plan();
         $planModel->find($this->auth->getIdentity()->plan_id);
 
-
         if ($this->auth->getIdentity()->group != 'admin'){
 
             $dateActive = new DateTime($this->auth->getIdentity()->plan_active_to);
@@ -33,7 +32,7 @@ class UserController extends Integration_Controller_Action
             $interval = $dateToday->diff($dateActive);
             $diff = (int)$interval->format('%R%a');
 
-            if($planModel->getAutoRenew() == 0 AND $diff <= 7) {
+            if($planModel->getAutoRenew() == 0 AND $diff <= (int) $planModel->getBillingPeriod()) {
                 $diff++;
                 $s = $diff > 1 ? 's' : '';
                 $message['type']    = 'notice';
