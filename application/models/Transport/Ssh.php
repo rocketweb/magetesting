@@ -27,7 +27,10 @@ extends Application_Model_Transport {
         );
     }
 
-    public function checkProtocolCredentials(){
+    public function checkProtocolCredentials()
+    {
+        $this->logger->log('Checking protocol credentials.', Zend_Log::INFO);
+
         $output =
             $this
                 ->_ssh
@@ -36,10 +39,14 @@ extends Application_Model_Transport {
                 ->pipe('grep "connected"')
                 ->call()
                 ->getLastOutput();
-        if(isset($output[0]) && 'connected' === $output[0]) {
-            return true;
+
+        $this->logger->log("\n" . var_export($output, true) . "\n", Zend_Log::DEBUG);
+
+        if(!isset($output[0]) || 'connected' !== $output[0]) {
+            throw new Application_Model_Transport_Exception('Couldn\'t log in with given ssh credentials. Please change them to try again.');
         }
-        return false;
+
+        return true;
     }
 
     /* TODO: move to parent and rewrite if necessary ? */
