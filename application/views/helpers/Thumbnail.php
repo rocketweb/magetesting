@@ -39,18 +39,23 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
     public function thumbnail($name, $width = null, $height = null, $attribs = array(), $path = 'extensions') {
         $this->_height = (!is_null($height)) ? (string)$height : '';
         $this->_width = (!is_null($width)) ? (string)$width : '';
-        
+
+        $placeholder = 'magetesting_placeholder.png';
+        $placeholderPath = $this->view->ImagePath($placeholder, 'extension_category', false, false);
+
         //set paths
         $this->_setPaths($name, $path);
 
         //check that the image exists. 
         if (!is_file($this->_filesystem_path . $this->_full_image_path)) {
-            $this->_setPaths('magetesting_placeholder.png', 'extension_category');
+            $this->_setPaths($placeholder, $placeholderPath);
         }
 
         //check the image is valid
-        $this->_checkImage();
-        
+        if (false === $this->_checkImage()) {
+            $this->_setPaths($placeholder, $placeholderPath);
+        }
+
         //set attributes
         $this->_setAttributes ($attribs);
 
@@ -88,7 +93,7 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
         
         if (!file_exists($this->_filesystem_path . $this->_thumb_dir_path)) {
             if (!mkdir($this->_filesystem_path . $this->_thumb_dir_path, 0777, true)) {
-                throw new Exception('Cannot create thumbnail directory!');
+                return false;
             }
         }
 
@@ -111,13 +116,15 @@ class Zend_View_Helper_Thumbnail extends Zend_View_Helper_Abstract {
     
     protected function _checkImage() {
         
-        if (!$img_info = getimagesize($this->_filesystem_path . '/' . $this->_full_image_path)) {
-            throw new Exception('Image is invalid!');
+        if (!$img_info = @getimagesize($this->_filesystem_path . '/' . $this->_full_image_path)) {
+            return false;
         }
 
         if (!in_array($img_info['mime'], $this->_valid_mime)) {
-            throw new Exception('Image has invalid mime type!');
+            return false;
         }
+        
+        return true;
     }
     
     protected function _setAttributes($attribs) {
