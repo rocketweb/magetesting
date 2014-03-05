@@ -553,6 +553,11 @@ $(document).ready(function () {
             $(this).siblings().find('.btn-group.open').children('.dropdown-toggle').click();
         });
 
+        // Force browser to rerender isotope elements to fix Firefox black space issue
+        $('#screenshotModal').on('hide.bs.modal', function(event) {
+            $('.element').fadeTo(50, 0.9).fadeTo(50, 1);
+        });
+
         // EVENT: On click extension's "View screens" button
         $container.delegate('a.btn-screenshots', 'click', function(event){
             "use strict";
@@ -600,18 +605,18 @@ $(document).ready(function () {
                 _carousel.append(_item);
             });
             
-            _screenshotModal.modal('show');
+            _screenshotModal.modal({show: true});
             _screenshotCarousel.carousel({'interval': false});
             
             // Code for resizing and centering modal
-            /*_screenshotCarousel.bind('slid', function() {
-                _screenshotModal.css({
-                    width: 'auto',
-                    'margin-left': function(){
-                        return -($(this).width() / 2);
-                    }
-                });
-            });*/
+            // _screenshotCarousel.bind('slid', function() {
+            //     _screenshotModal.css({
+            //         width: 'auto',
+            //         'margin-left': function(){
+            //             return -($(this).width() / 2);
+            //         }
+            //     });
+            // });
             
             $('.carousel-control').css('top', '56%');
             
