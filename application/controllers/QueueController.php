@@ -649,13 +649,19 @@ class QueueController extends Integration_Controller_Action {
         if('admin' != $group) {
             $filter['restricted'] = true;
         }
-        $this->view->extensions = $extensionModel->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit);
-        $this->view->extensions_counter = $extensionModel->getMapper()->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit, true);
-        $this->view->categories = $extensionCategoryModel->fetchAll();
 
         //fetch store data
         $storeModel = new Application_Model_Store();
         $store = $storeModel->findByDomain($store_name);
+
+        if (!$store) {
+            throw new Zend_Controller_Action_Exception('This store does not exist', 404);
+        }
+
+        $this->view->extensions = $extensionModel->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit);
+        $this->view->extensions_counter = $extensionModel->getMapper()->fetchStoreExtensions($store_name, $filter, $order, $offset, $limit, true);
+        $this->view->categories = $extensionCategoryModel->fetchAll();
+
         $this->view->store_name = $store->store_name;
         $this->view->store_domain = $store->domain;
         $this->view->store_version = $store->version;
