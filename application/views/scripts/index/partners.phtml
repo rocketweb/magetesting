@@ -40,3 +40,10 @@
         </div>
     </div>
 </div>
+
+<?php
+$data = <<<EOT
+
+EOT;
+echo $this->partial('_partials/helpContext.phtml', array('data' => $data));
+?>
