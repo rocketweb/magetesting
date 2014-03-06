@@ -21,7 +21,7 @@ class QueueController extends Integration_Controller_Action {
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/queue-index.js'), 'text/javascript');
         $storeModel = new Application_Model_Store();
 
-        $page = (int) $this->_getParam('page', 0);
+        $page = (int) $this->_getParam('page', 1);
         $this->view->page = $page;
         $paginator = $storeModel->getWholeQueue();
         $paginator->setCurrentPageNumber($page);
@@ -535,6 +535,26 @@ class QueueController extends Integration_Controller_Action {
             $form->removeElement('custom_sql');
         }
 
+        // prepare redirect/cancel url (wojtek) 
+        $queue_pagination_index = $this->_getParam('admin-edit');
+
+        if(NULL !== $queue_pagination_index) {
+            $backUrlParams = array(
+                'module' => 'default',
+                'controller' => 'queue',
+                'action' => 'index',
+                'page' => (int) $queue_pagination_index
+            );
+        } else {
+            $backUrlParams = array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            );
+        }
+
+        $this->view->backUrlParams = $backUrlParams;
+
         if ($this->_request->isPost()) {
 
             if ($form->isValid($this->_request->getPost())) {
@@ -563,21 +583,10 @@ class QueueController extends Integration_Controller_Action {
                 $store->save();
 
                 $this->_helper->FlashMessenger('Store data has been changed successfully');
-                $queue_pagination_index = (int)$this->_getParam('admin-edit', 0);
-                if($queue_pagination_index) {
-                    return $this->_helper->redirector->gotoRoute(array(
-                        'module' => 'default',
-                        'controller' => 'queue',
-                        'action' => 'index',
-                        'page' => $queue_pagination_index
-                    ), 'default', true);
-                } else {
-                    return $this->_helper->redirector->gotoRoute(array(
-                        'module' => 'default',
-                        'controller' => 'user',
-                        'action' => 'dashboard',
-                    ), 'default', true);
-                }
+
+                return $this->_helper->redirector->gotoRoute(
+                    $backUrlParams, 'default', true
+                );
             }
         }
 
