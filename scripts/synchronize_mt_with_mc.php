@@ -62,7 +62,7 @@ try {
                         $extensionModel->setToVersion($range['to']);
                         $extensionModel->setVersion($mc_extension_v['s']);
                         $extensionModel->setPrice(0);
-                        $extensionModel->setIsVisible(0);
+                        $extensionModel->setIsVisible(1);
                         $extensionModel->setSort(0);
                         $extensionModel->setCategoryId($category_id);
 
