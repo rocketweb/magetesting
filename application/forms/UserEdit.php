@@ -10,6 +10,7 @@ class Application_Form_UserEdit extends Application_Form_EditAccount
         $this->setAttrib('label', 'Edit account');
         $this->setAttrib('id', 'user-edit-form');
         $this->removeElement('submit');
+        $this->getElement('email')->setRequired(true);
         $this->getElement('email')->setAttrib('disabled', null);
         $this->getElement('country')->setRequired(false);
         $this->getElement('city')->setRequired(false);

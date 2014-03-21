@@ -578,8 +578,8 @@ class UserController extends Integration_Controller_Action
             
             $formData = $this->_request->getPost();
 
-            if($user->getEmail() == $formData['email']) {
-                $form->removeElement('email');
+            if(strlen($user->getEmail()) && $user->getEmail() == $formData['email']) {
+                $form->email->removeValidator('Db_NoRecordExists');
             }
             if(strlen($this->_request->getParam('password')) || 'add' == $type) {
                 $form->password->setRequired(true);
@@ -589,9 +589,6 @@ class UserController extends Integration_Controller_Action
             }
             
             if($form->isValid($formData)) {
-                if($formData['server_id'] == '0') {
-                    $formData['server_id'] = NULL;
-                }
                 if(strlen($formData['password'])) {
                     unset($formData['password_repeat']);
                 }
@@ -812,9 +809,6 @@ class UserController extends Integration_Controller_Action
                 'stores' => $stores_view
             )
         );
-
-//        Zend_Debug::dump($user);
-//        Zend_Debug::dump($payments);
     }
     
 }
