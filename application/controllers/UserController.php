@@ -229,6 +229,7 @@ class UserController extends Integration_Controller_Action
                             in_array($userData->group, array('commercial-user')) &&
                             is_numeric($user->getBraintreeTransactionConfirmed()) &&
                             0 === (int)$user->getBraintreeTransactionConfirmed() &&
+                            strlen($user->getBraintreeTransactionId()) &&
                             (int)$user->getPlanId()
                         ) {
                             $plan = new Application_Model_Plan();
