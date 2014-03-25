@@ -591,7 +591,6 @@ class Application_Model_User {
             'braintree_vault_id' => $this->getBraintreeVaultId(),
             'braintree_transaction_id' => $this->getBraintreeTransactionId(),
             'braintree_transaction_confirmed' => $this->getBraintreeTransactionConfirmed(),
-            'server_id' => $this->getServerId(),
             'plan_raised_to_date' => $this->getPlanRaisedToDate(),
             'plan_id_before_raising' => $this->getPlanIdBeforeRaising(),
             'has_papertrail_account' =>$this->getHasPapertrailAccount(),

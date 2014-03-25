@@ -7,6 +7,7 @@ class Application_Form_UserAdd extends Application_Form_UserEdit
     {
         parent::init();
 
+        $this->email->setRequired(true);
         $this->login->setRequired(true);
         $this->login->setAttrib('disabled', null);
         $unique = new Zend_Validate_Db_NoRecordExists(array('table' => 'user', 'field' => 'login'));
