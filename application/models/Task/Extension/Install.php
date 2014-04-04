@@ -157,7 +157,7 @@ implements Application_Model_Task_Interface {
         unset($output);
         
         //remove tmpextensiondir
-        $file->clear()->remove($tmp)->asSuperUser()->call();
+        $file->clear()->remove($tmp)->call();
     }
 
 }

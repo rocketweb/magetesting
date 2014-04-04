@@ -19,9 +19,7 @@ $sql = $select
     ->where('user.downgraded = ?', Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
-$apache->asSuperUser();
 $service = new RocketWeb_Cli_Kit_Service();
-$service->asSuperUser();
 
 $result = $db->fetchAll($sql);
 if($result) {

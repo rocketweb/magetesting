@@ -11,9 +11,9 @@ $sql = $select
 $result = $db->fetchAll($sql);
 
 $cli = new RocketWeb_Cli();
-$fileKit = $cli->kit('file')->asSuperUser();
-$apacheKit = $cli->kit('apache')->asSuperUser();
-$serviceKit = $cli->kit('service')->asSuperUser();
+$fileKit = $cli->kit('file');
+$apacheKit = $cli->kit('apache');
+$serviceKit = $cli->kit('service');
 
 if($result) {
     foreach($result as $row) {
@@ -94,7 +94,7 @@ if($result) {
             $cli->createQuery(
                 'userdel -f ?',
                 $username
-            )->asSuperUser(true)->call();
+            )->call();
 
             $homeDir = '/home/' . $username;
             if(file_exists($homeDir)){
@@ -122,8 +122,7 @@ if($result) {
         //--------------SYSTEM/MYSQL PART END--------------
 
         //--------------RSYSLOG FILES PART START-----------
-        $fileKit->remove($username)->append('_*', null, false) // 'file'_*
-            ->asSuperUser(true)->call();
+        $fileKit->remove($username)->append('_*', null, false)->call();
         //--------------RSYSLOG FILES PART END ------------
         
         //--------------SUEXEC PART START------------------

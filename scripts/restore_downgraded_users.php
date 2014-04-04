@@ -13,9 +13,7 @@ $sql = $select
      ->where('user.server_id = ?', $config->magento->currentServerId);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
-$apache->asSuperUser();
 $service = new RocketWeb_Cli_Kit_Service();
-$service->asSuperUser();
 
 $result = $db->fetchAll($sql);
 if($result) {

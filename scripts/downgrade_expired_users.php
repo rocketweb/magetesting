@@ -17,9 +17,7 @@ $sql = $select
     ->orwhere('user.downgraded = ?', Application_Model_User::DOWNGRADED_EXPIRED_SYMLINKS_NOT_DELETED);
 
 $apache = new RocketWeb_Cli_Kit_Apache();
-$apache->asSuperUser();
 $service = new RocketWeb_Cli_Kit_Service();
-$service->asSuperUser();
 
 $result = $db->fetchAll($sql);
 if($result) {

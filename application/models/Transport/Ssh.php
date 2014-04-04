@@ -116,7 +116,7 @@ extends Application_Model_Transport {
         $pack->pack('-', ltrim($this->_customRemotePath,'/'), false)->isCompressed(true);
         $pack->exclude(array($this->_customRemotePath.'var', $this->_customRemotePath.'media'));
 
-        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components);
 
         $command = $this->_ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($pack)->pipe($unpack);
 
@@ -199,7 +199,7 @@ extends Application_Model_Transport {
         $pack = $this->cli('tar')->newQuery('cd /;');
         $pack->pack('-', ltrim($this->_customSql,'/'), false)->isCompressed(true);
 
-        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components)->asSuperUser();
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->strip($components);
 
         $command = $this->_ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($pack)->pipe($unpack);
 
@@ -263,7 +263,7 @@ extends Application_Model_Transport {
         /* TODO: determine filetype and use correct unpacker between gz,zip,tgz */
         $readFile = $this->cli()->createQuery('cat ?', $this->_customFile);
 
-        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed()->asSuperUser();
+        $unpack = $this->cli('tar')->unpack('-', '.')->isCompressed();
 
         $command = $this->_ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($readFile)->pipe($unpack);
 
@@ -310,9 +310,9 @@ extends Application_Model_Transport {
 
         /* move files from unpacked dir into our instance location */
         //echo 'mageroot:'.$mageroot;
-        $this->cli()->createQuery('mv ?/.??* .', $mageroot)->asSuperUser()->call();
+        $this->cli()->createQuery('mv ?/.??* .', $mageroot)->call();
 
-        $this->cli()->createQuery('mv ?/* .', $mageroot)->asSuperUser()->call();
+        $this->cli()->createQuery('mv ?/* .', $mageroot)->call();
         //echo 'post-mageroot';
 
         return true;
