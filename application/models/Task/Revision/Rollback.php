@@ -74,7 +74,7 @@ implements Application_Model_Task_Interface {
         $startCwd = getcwd();
         $params = $this->_queueObject->getTaskParams();
         chdir($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/var/db');
-        $this->cli('tar')->asSuperUser()->unpack($params['rollback_db_to'])->call();
+        $this->cli('tar')->unpack($params['rollback_db_to'])->call();
 
         $unpackedName = str_replace('.tgz','',$params['rollback_db_to']);
 
@@ -87,7 +87,7 @@ implements Application_Model_Task_Interface {
             $this->config->dbPrivileged->params->username,
             $this->config->dbPrivileged->params->password,
             $this->config->magento->storeprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain()
-        )->import($unpackedName)->asSuperUser()->call()->getLastOutput();
+        )->import($unpackedName)->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
        

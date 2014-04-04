@@ -5,11 +5,11 @@ class RocketWeb_Cli_Kit_Apache
 {
     public function enableSite($site)
     {
-        return $this->asSuperUser(true)->append('a2ensite ?', $site);
+        return $this->append('a2ensite ?', $site);
     }
 
     public function disableSite($site)
     {
-        return $this->asSuperUser(true)->append('a2dissite ?', $site);
+        return $this->append('a2dissite ?', $site);
     }
 }

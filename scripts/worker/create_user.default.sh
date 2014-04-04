@@ -20,36 +20,36 @@ if [ $# -eq 4 ]; then
 
     #create group if not exists  
     if [ !`egrep -i "^${args[0]}" /etc/group > /dev/null` ]; then
-        sudo groupadd -f ${args[0]}
+        groupadd -f ${args[0]}
     fi
 
     #create user if not exists
     if [ !`egrep -i "^$username" /etc/passwd > /dev/null` ]; then
-        sudo useradd -p `mkpasswd ${args[1]}` -m ${args[0]} -g ${args[0]}
+        useradd -p `mkpasswd ${args[1]}` -m ${args[0]} -g ${args[0]}
         sqlQuery="UPDATE user SET has_system_account = 1 WHERE system_account_name = '"${args[0]}"';"
         mysql --user=$MyUSER -h $MyHOST --password=$MyPASS $MyDBNAME -e "$sqlQuery"
     fi
 
-    sudo usermod -G ${args[0]} www-data
+    usermod -G ${args[0]} www-data
 
     #create user home dir
     if [ ! -d "${args[3]}/${args[0]}" ]; then
-        sudo mkdir ${args[3]}/${args[0]}
+        mkdir ${args[3]}/${args[0]}
     fi
 
     #create users public_html dir
     if [ ! -d "${args[3]}/${args[0]}/public_html" ]; then
-        sudo mkdir ${args[3]}/${args[0]}/public_html
+        mkdir ${args[3]}/${args[0]}/public_html
     fi
 
-    sudo chmod 774 -R ${args[3]}/${args[0]}
+    chmod 774 -R ${args[3]}/${args[0]}
 
     #others need to have execute in order for symlinks to work
-    sudo chmod a+x ${args[3]}/${args[0]}
-    sudo chmod a+x ${args[3]}/${args[0]}/public_html
+    chmod a+x ${args[3]}/${args[0]}
+    chmod a+x ${args[3]}/${args[0]}/public_html
 
-    sudo chown -R ${args[0]} ${args[3]}/${args[0]}
-    sudo chgrp -R ${args[0]} ${args[3]}/${args[0]}
+    chown -R ${args[0]} ${args[3]}/${args[0]}
+    chgrp -R ${args[0]} ${args[3]}/${args[0]}
     
 else
     echo 'wrong number of arguments'

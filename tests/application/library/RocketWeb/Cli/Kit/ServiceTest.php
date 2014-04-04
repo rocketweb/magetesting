@@ -18,7 +18,7 @@ class RocketWeg_Cli_Kit_ServiceTest extends PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('RocketWeb_Cli_Kit_Service', $this->_kit);
         $this->assertEquals(
-            "sudo service 'mysqld' restart 2>&1",
+            "service 'mysqld' restart 2>&1",
             $this->_kit->restart('mysqld')->toString()
         );
     }
@@ -27,7 +27,7 @@ class RocketWeg_Cli_Kit_ServiceTest extends PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('RocketWeb_Cli_Kit_Service', $this->_kit);
         $this->assertEquals(
-            "sudo service 'mysqld' reload 2>&1",
+            "service 'mysqld' reload 2>&1",
             $this->_kit->reload('mysqld')->toString()
         );
     }
