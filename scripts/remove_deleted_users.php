@@ -22,7 +22,7 @@ if($result) {
         $user->find($row['id']);
         
         $storeModel = new Application_Model_Store();
-        $stores = $storeModel->getAllForUser($row['id']);
+        $stores = $storeModel->getAllForUser($row['id'], false);
         
         if ($stores->getTotalItemCount()){
             /* we have stores waiting to remove, discard this user */
@@ -116,7 +116,7 @@ if($result) {
                 continue;
             }
         } else {
-            $message = 'user does not exist, ignoring.';
+            $message = 'DB user "'.$user->getLogin().'" does not exist, ignoring.';
             $log->log($message, Zend_Log::NOTICE);
         }
         //--------------SYSTEM/MYSQL PART END--------------

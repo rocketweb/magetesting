@@ -144,10 +144,10 @@ class Application_Model_StoreMapper {
         }
     }
 
-    public function getAllForUser($user_id)
+    public function getAllForUser($user_id, $hideRemoved)
     {
         $select = $this->getDbTable()
-                       ->findAllByUser($user_id);
+                       ->findAllByUser($user_id, $hideRemoved);
         $adapter = new Zend_Paginator_Adapter_DbSelect($select);
 
         $paginator = new Zend_Paginator($adapter);
@@ -156,10 +156,10 @@ class Application_Model_StoreMapper {
         return $paginator;
     }
 
-    public function countUserStores( $user_id )
+    public function countUserStores( $user_id, $hideRemoved)
     {
         $data = $this->getDbTable()
-                     ->countUserStores( $user_id )
+                     ->countUserStores( $user_id, $hideRemoved)
                      ->current();
 
         return (int)$data->stores;
