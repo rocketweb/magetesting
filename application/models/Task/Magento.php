@@ -323,20 +323,20 @@ extends Application_Model_Task {
 
         $this->logger->log('Enabling apache site.', Zend_Log::INFO);
 
-        $output = $this->cli('apache')->enableSite(
+        $command = $this->cli('apache')->enableSite(
             $this->_dbuser.'.'.$this->_serverObject->getDomain()
-        )->call()->getLastOutput();
-
+        );
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
-        $this->logger->log($message, Zend_Log::DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         $this->logger->log('Restarting apache.', Zend_Log::INFO);
 
-        $output = $this->cli('service')->reload('apache2')->call()->getLastOutput();
-
+        $command = $this->cli('service')->reload('apache2');
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
-        $this->logger->log($message, Zend_Log::DEBUG);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         $redirector = '<?php '.
