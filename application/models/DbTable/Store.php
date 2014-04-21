@@ -14,7 +14,7 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    public function findAllByUser($user_id)
+    public function findAllByUser($user_id, $hideRemoved)
     {
         $select =
             $this
@@ -36,20 +36,26 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
                 ->joinLeft('queue','queue.server_id = '.$this->_name.'.server_id AND store.id = queue.store_id',array('queue_id'=>'id'))
                 ->joinLeft('user', 'user.id = store.user_id', 'login')
                 ->where('store.user_id = ?', $user_id)
-                ->where('store.status != ?', 'removing-magento')
                 ->group(array('store.id'))
                 ->order(array('queue.id asc'));
                 //->order(array('status asc', 'store.id asc'));
 
+        if ($hideRemoved === true) {
+            $select->where('store.status != ?', 'removing-magento');
+        }
+
         return $select;
     }
 
-    public function countUserStores($user_id)
+    public function countUserStores($user_id, $hideRemoved)
     {
         $select = $this->select()
                        ->from($this->_name, 'count(user_id) as stores')
-                       ->where('user_id = ?', $user_id)
-                       ->where('status != ?', 'removing-magento');
+                       ->where('user_id = ?', $user_id);
+
+        if ($hideRemoved === true) {
+            $select->where('status != ?', 'removing-magento');
+        }
 
         return $this->fetchAll($select);
     }
