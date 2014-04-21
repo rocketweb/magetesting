@@ -155,7 +155,7 @@ class RocketWeb_Service_Papertrail {
              */
             require_once 'Zend/Service/Exception.php';
             throw new Zend_Service_Exception(
-                isset($data->message) ? $data->message : '' . ' (' .$response->getMessage() . '. Status code: ' . $response->getStatus() . ')'
+                isset($data->message) ? $data->message : '' . ' (' .$response->getMessage() . '. Status code: ' . $response->getStatus() . ')', $response->getStatus()
             );
         }
         
@@ -182,7 +182,7 @@ class RocketWeb_Service_Papertrail {
              */
             require_once 'Zend/Service/Exception.php';
             throw new Zend_Service_Exception(
-                isset($data->message) ? $data->message : '' . ' (' .$response->getMessage() . '. Status code: ' . $response->getStatus() . ')'
+                isset($data->message) ? $data->message : '' . ' (' .$response->getMessage() . '. Status code: ' . $response->getStatus() . ')', $response->getStatus()
             );
         }
         
@@ -209,7 +209,7 @@ class RocketWeb_Service_Papertrail {
              */
             require_once 'Zend/Service/Exception.php';
             throw new Zend_Service_Exception(
-                isset($data->message) ? $data->message : '' . ' (' .$response->getMessage() . '. Status code: ' . $response->getStatus() . ')'
+                isset($data->message) ? $data->message : '' . ' (' .$response->getMessage() . '. Status code: ' . $response->getStatus() . ')', $response->getStatus()
             );
         }
         
