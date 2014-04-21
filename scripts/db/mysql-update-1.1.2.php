@@ -2,6 +2,7 @@
 
 $sql[] = '
 ALTER TABLE `payment`
+  CHANGE  `user_id`  `user_id` int(11) NULL,
   DROP FOREIGN KEY `user_has_payments`;
 ';
 
