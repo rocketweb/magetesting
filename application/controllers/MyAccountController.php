@@ -113,7 +113,7 @@ class MyAccountController extends Integration_Controller_Action
                         $auth->$key = $val;
                     }
                     
-                    $flashMessage['message'] = 'You succeffully edited your details.';
+                    $flashMessage['message'] = 'You successfully edited your details.';
                     $flashMessage['type'] = 'success';
                     $this->_helper->FlashMessenger($flashMessage);
 
