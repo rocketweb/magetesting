@@ -44,9 +44,11 @@ if($result) {
                 $responseExists = $service->getAccountUsage($id);
                 $removeUser = true;
             } catch(Zend_Service_Exception $e) {
-                $log->log($e->getMessage(), Zend_Log::CRIT);
-                //retry later if error
-                $removeUser = false;
+                $log->log('PT, User "'.$user->getLogin().'" ' . $e->getMessage(), Zend_Log::CRIT);
+                // retry later if error other than 404
+                if ((int) $e->getCode() !== 404) {
+                    continue;
+                }
             }
             
             //account exist
@@ -57,14 +59,15 @@ if($result) {
                     //if remove failed in papertrail, retry later
                     continue;
                 }
+
+                if(isset($responseRemove->status) && $responseRemove->status == 'ok') {
+                    //success
+                    $user->setPapertrailApiToken(null);
+                    $user->setHasPapertrailAccount(0);
+                    $user->save();
+                }
             }
 
-            if(isset($responseRemove->status) && $responseRemove->status == 'ok') {
-                //success
-                $user->setPapertrailApiToken(null);
-                $user->setHasPapertrailAccount(0);
-                $user->save();
-            }
         }
         //--------------PAPERTRAIL PART END-----------------
 
@@ -157,6 +160,5 @@ if($result) {
         }
 
         //--------------MAGETESTING PART END---------------
-        
     }
 }
