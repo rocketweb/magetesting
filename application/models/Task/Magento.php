@@ -321,10 +321,23 @@ extends Application_Model_Task {
         
         file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
 
-        $this->cli('apache')->enableSite(
+        $this->logger->log('Enabling apache site.', Zend_Log::INFO);
+
+        $output = $this->cli('apache')->enableSite(
             $this->_dbuser.'.'.$this->_serverObject->getDomain()
-        )->call();
-        $this->cli('service')->reload('apache2')->call();
+        )->call()->getLastOutput();
+
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+        unset($output);
+
+        $this->logger->log('Restarting apache.', Zend_Log::INFO);
+
+        $output = $this->cli('service')->reload('apache2')->call()->getLastOutput();
+
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+        unset($output);
 
         $redirector = '<?php '.
         PHP_EOL.'header("Location: ' . $this->config->magento->storeUrl . '/user/dashboard");';
