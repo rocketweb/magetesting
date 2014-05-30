@@ -305,14 +305,14 @@ class Application_Model_Store {
         return $this->getMapper()->getAll();
     }
 
-    public function getAllForUser( $user_id )
+    public function getAllForUser($user_id, $hideRemoved = true)
     {
-        return $this->getMapper()->getAllForUser( $user_id );
+        return $this->getMapper()->getAllForUser($user_id, $hideRemoved);
     }
 
-    public function countUserStores( $user_id )
+    public function countUserStores( $user_id, $hideRemoved = true)
     {
-        return $this->getMapper()->countUserStores( $user_id );
+        return $this->getMapper()->countUserStores( $user_id, $hideRemoved);
     }
 
     public function changeStatusToClose($byAdmin = false)
