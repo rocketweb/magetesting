@@ -407,7 +407,7 @@ extends Application_Model_Task {
     /* Running this prevents store from reindex requirement in admin */
     protected function _reindexStore(){
         $this->cli()->createQuery(
-            '-u ? -s php ? --reindex all',
+            'su ?  -c "timeout 10m /usr/bin/php -f ? -- --reindexall"',
             array(
                 $this->config->magento->userprefix . $this->_dbuser,
                 '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php'
