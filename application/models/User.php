@@ -662,7 +662,6 @@ class Application_Model_User {
 
         if(file_exists('/etc/phpmyadmin') && is_dir('/etc/phpmyadmin')){
             $userKit = new RocketWeb_Cli_Kit_User();
-            $userKit->asSuperUser();
             $userKit->rebuildPhpMyAdmin($deniedList)->call();
         } else {
             echo 'phpmyadmin config not found in /etc/phpmyadmin, please fix paths accordingly';

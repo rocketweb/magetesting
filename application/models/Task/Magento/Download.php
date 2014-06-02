@@ -108,7 +108,7 @@ implements Application_Model_Task_Interface {
         $this->_fileKit->clear()->copy(
             APPLICATION_PATH . '/../data/pkg/Custom/.htaccess',
             $this->_storeFolder . '/' . $this->_domain . '/.htaccess'
-        )->asSuperUser()->call();
+        )->call();
 
         //applying patches for xml-rpc issue
         $this->_applyXmlRpcPatch();
@@ -117,7 +117,7 @@ implements Application_Model_Task_Interface {
         $command = $this->_fileKit->clear()->fileOwner(
             $this->_storeFolder . '/' . $this->_domain,
             $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser
-        )->asSuperUser();
+        );
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
@@ -152,12 +152,12 @@ implements Application_Model_Task_Interface {
     protected function _setupFilesystem() {
 
         $this->logger->log('Preparing store directory.', Zend_Log::INFO);
-        $file = $this->_fileKit->clear()->asSuperUser();
+        $file = $this->_fileKit->clear();
         if (!file_exists($this->_storeFolder . '/' . $this->_domain)) {
             $output = $file->create(
                 $this->_storeFolder . '/' . $this->_domain,
                     $file::TYPE_DIR
-            )->asSuperUser()->call()->getLastOutput();
+            )->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log($message, Zend_Log::DEBUG);
             unset($output);
@@ -174,7 +174,7 @@ implements Application_Model_Task_Interface {
         $this->logger->log('Changing chmod for domain: ' . $this->_domain, Zend_Log::INFO);
         $output = $file->clear()->fileMode(
             $this->_storeFolder . '/' . $this->_domain, '+x'
-        )->asSuperUser()->call()->getLastOutput();
+        )->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log($message, Zend_Log::DEBUG);
         unset($output);
@@ -190,7 +190,7 @@ implements Application_Model_Task_Interface {
                 $this->_dbpass,
                 $this->config->magento->storeprefix . $this->_dbname
             )
-        )->asSuperUser();
+        );
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
@@ -271,7 +271,7 @@ implements Application_Model_Task_Interface {
         
         $this->logger->log('Setting store directory permissions.', Zend_Log::INFO);
 
-        $file = $this->_fileKit->asSuperUser();
+        $file = $this->_fileKit;
         if (!file_exists($this->_storeFolder . '/' . $this->_domain . '/var/')) {
             $file->clear()->create('var', $file::TYPE_DIR)->call();
             $file->clear()->create(
@@ -622,7 +622,7 @@ implements Application_Model_Task_Interface {
                         $command = $this->cli()->createQuery(
                             'grep -lir ? ?',
                             array('CREATE TABLE `'.$this->_db_table_prefix . 'admin_role`', $path)
-                        )->asSuperUser();
+                        );
                         $result = $command->call()->getLastOutput();
                         $this->logger->log($command, Zend_Log::DEBUG);
                         $this->logger->log(var_export($result,true), Zend_Log::DEBUG);
@@ -670,7 +670,7 @@ implements Application_Model_Task_Interface {
         $command = $this->_fileKit->clear()->fileOwner(
             $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/',
             $user.':'.$user
-        )->asSuperUser();
+        );
         $output = $command->call()->getLastOutput();
 
         $this->logger->log($command, Zend_Log::DEBUG);

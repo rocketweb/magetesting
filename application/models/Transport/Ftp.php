@@ -292,8 +292,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         /* move files from unpacked dir into our store location */
         $output = array();
         #$command = 'sudo mv -f '.$mageroot.'/* '.$mageroot.'/.??* .';
-        $file->clear()->move($mageroot.'/', '.', true)->asSuperUser()->call();
-        $file->clear()->remove($mageroot)->asSuperUser()->call();
+        $file->clear()->move($mageroot.'/', '.', true)->call();
+        $file->clear()->remove($mageroot)->call();
 
         /**
         * Remove main fetched folder 
@@ -303,7 +303,7 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         #echo $this->_customRemotePath;
         $parts = explode('/', $this->_customRemotePath);
         if (isset($parts[1]) && trim($parts[1]) != '') {
-            $file->clear()->remove($parts[1])->asSuperUser()->call();
+            $file->clear()->remove($parts[1])->call();
         }
     }
     

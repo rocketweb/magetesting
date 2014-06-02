@@ -54,7 +54,7 @@ implements Application_Model_Task_Interface {
                 "':dir'",
                 $this->_fileKit->escape($dirname).'*',
                 false
-            )->asSuperUser(false)->call();
+            )->call();
         }
 
         $this->_setupMagentoConnect();
@@ -89,7 +89,7 @@ implements Application_Model_Task_Interface {
 
     protected function _prepareFileSystem() {
 
-        $fileKit = $this->cli('file')->asSuperUser();
+        $fileKit = $this->cli('file');
         $this->_magentoVersion = $this->_versionObject->getVersion();
         $this->_magentoEdition = $this->_storeObject->getEdition();       
         $this->_sampleDataVersion = $this->_versionObject->getSampleDataVersion();
@@ -174,7 +174,7 @@ implements Application_Model_Task_Interface {
          * straight to our store root
          */
         $this->logger->log('Unpacking magento files.', Zend_Log::INFO);
-        $command = $this->cli('tar')->asSuperUser()->unpack(
+        $command = $this->cli('tar')->unpack(
             $this->filePrefix[$this->_magentoEdition] . '-' . $this->_magentoVersion . '.tar.gz'
         )->strip(1);
         $output = $command->call()->getLastOutput();
@@ -185,7 +185,7 @@ implements Application_Model_Task_Interface {
 
         if ($this->_storeObject->getSampleData()) {
             $this->logger->log('Extracting sample data.', Zend_Log::INFO);
-            $command = $this->cli('tar')->asSuperUser()->unpack(
+            $command = $this->cli('tar')->unpack(
                 'magento-sample-data-' . $this->_sampleDataVersion . '.tar.gz'
             );
             $output = $command->call()->getLastOutput();
@@ -202,7 +202,7 @@ implements Application_Model_Task_Interface {
                 "':from'",
                 $this->_fileKit->escape('magento-sample-data-' . $this->_sampleDataVersion).'/*',
                 false
-            )->asSuperUser();
+            );
             $output = $command->call()->getLastOutput();
             $message = var_export($output, true);
             $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
@@ -225,12 +225,11 @@ implements Application_Model_Task_Interface {
             $this->_dbpass,
             $this->config->magento->storeprefix . $this->_dbname
         )->import('magento_sample_data_for_' . $this->_sampleDataVersion . '.sql')
-         ->asSuperUser()
          ->call();
     }
 
     protected function _setFilesystemPermissions() {
-        $fileKit = $this->cli('file')->asSuperUser();
+        $fileKit = $this->cli('file');
         $this->logger->log('Setting store directory permissions.', Zend_Log::INFO);
         $command = $fileKit->fileMode(':files', '777', false)
             ->bindAssoc("':files'", 'app/etc downloader', false);
@@ -248,7 +247,7 @@ implements Application_Model_Task_Interface {
     }
 
     protected function _cleanupFilesystem() {
-        $fileKit = $this->cli('file')->asSuperUser();
+        $fileKit = $this->cli('file');
         $this->logger->log('Cleaning up files.', Zend_Log::INFO);
         $command = $fileKit->remove(':files')->force()
             ->bindAssoc(
@@ -357,7 +356,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
             $this->config->magento->userprefix . $this->_dbuser,
             $this->_dbpass,
             $this->config->magento->storeprefix . $this->_dbname
-        )->asSuperUser()->import('keyset0.sql')->call();
+        )->import('keyset0.sql')->call();
 
         $serverModel = new Application_Model_Server();
         $serverModel->find($this->_storeObject->getServerId());
@@ -399,7 +398,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
                 ':admin_username' => $this->_adminuser,
                 ':admin_password' => $this->_adminpass
             )
-        )->asSuperUser();
+        );
         $command->pipe($install);
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
@@ -408,14 +407,14 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
             $this->config->magento->userprefix . $this->_dbuser,
             $this->_dbpass,
             $this->config->magento->storeprefix . $this->_dbname
-        )->asSuperUser()->import('keyset1.sql')->call();
+        )->import('keyset1.sql')->call();
         unset($output);
 
         $this->logger->log('Changing owner of store directory.', Zend_Log::INFO);
         $command = $this->cli('file')->fileOwner(
             $this->_storeFolder . '/' . $this->_domain,
             $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser
-        )->asSuperUser();
+        );
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $this->logger->log("\n" .$command. "\n" . $message, Zend_Log::DEBUG);
@@ -428,7 +427,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
         // end
         $this->cli('file')->remove(':files')
             ->bindAssoc("':files'", 'keyset0.sql keyset1.sql', false)
-            ->asSuperUser()->call();
+            ->call();
     }
     
     /**
@@ -489,7 +488,7 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
             $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin(),
             'a-w',
             false
-        )->asSuperUser()->call();
+        )->call();
     }
     
 }

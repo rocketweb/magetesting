@@ -64,7 +64,7 @@ extends Application_Model_Task {
 
             //remove EE folder recursively then
             $this->logger->log('Removing app/code/core/Enterprise directory recursively.', Zend_Log::INFO);
-            $file = $this->cli('file')->asSuperUser();
+            $file = $this->cli('file');
             $file->remove($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/code/core/Enterprise')->call();
 
             throw new Application_Model_Task_Exception('Encoding enterprise failed.', 0, $e);
@@ -276,11 +276,11 @@ extends Application_Model_Task {
         $file->create(
             '/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(),
             $file::TYPE_FILE
-        )->asSuperUser()->call();
+        )->call();
         $file->clear()->create(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser,
             $file::TYPE_DIR
-        )->asSuperUser()->call();
+        )->call();
 
         $this->_createFcgiWrapper();
 
@@ -289,15 +289,15 @@ extends Application_Model_Task {
         $file->clear()->fileOwner(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser,
             $this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser
-        )->asSuperUser()->call();
+        )->call();
         $file->clear()->fileOwner(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini',
             'root:root'
-        )->asSuperUser()->call();
+        )->call();
         $file->clear()->fileMode(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini',
             '644'
-        )->asSuperUser()->call();
+        )->call();
 
         $content = "<VirtualHost *:80>
             SetEnv TMPDIR /home/".$this->config->magento->userprefix . $this->_dbuser."/tmp/
@@ -321,20 +321,33 @@ extends Application_Model_Task {
         
         file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
 
-        $this->cli('apache')->enableSite(
+        $this->logger->log('Enabling apache site.', Zend_Log::INFO);
+
+        $command = $this->cli('apache')->enableSite(
             $this->_dbuser.'.'.$this->_serverObject->getDomain()
-        )->asSuperUser()->call();
-        $this->cli('service')->reload('apache2')->asSuperUser()->call();
+        );
+        $output = $command->call()->getLastOutput();
+        $message = var_export($output, true);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        unset($output);
+
+        $this->logger->log('Restarting apache.', Zend_Log::INFO);
+
+        $command = $this->cli('service')->reload('apache2');
+        $output = $command->call()->getLastOutput();
+        $message = var_export($output, true);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        unset($output);
 
         $redirector = '<?php '.
         PHP_EOL.'header("Location: ' . $this->config->magento->storeUrl . '/user/dashboard");';
         $fileLocation = '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/index.php';
         file_put_contents($fileLocation, $redirector);
-        $file->clear()->fileMode($fileLocation, 'a+x')->asSuperUser()->call();
+        $file->clear()->fileMode($fileLocation, 'a+x')->call();
         $file->clear()->fileOwner(
             $fileLocation,
             $this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser
-        )->asSuperUser()->call();
+        )->call();
     }
     
     protected function _createUserTmpDir(){
@@ -342,11 +355,11 @@ extends Application_Model_Task {
         $file->create(
             '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp',
             $file::TYPE_DIR
-        )->asSuperUser()->call();
+        )->call();
         $file->clear()->fileMode(
             '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp',
             '777'
-        )->asSuperUser()->call();
+        )->call();
     }
     
     protected function _createFcgiWrapper(){
@@ -354,7 +367,7 @@ extends Application_Model_Task {
         $file->create(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi',
             $file::TYPE_FILE
-        )->asSuperUser()->call();
+        )->call();
         $php5fcgi = '#!/bin/sh'.
         PHP_EOL.'exec /usr/bin/php5-cgi -c /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini \\'.
         PHP_EOL.'-d open_basedir=/home/'.$this->config->magento->userprefix . $this->_dbuser.' \\'.
@@ -363,7 +376,7 @@ extends Application_Model_Task {
         $file->clear()->fileMode(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi',
             '755'
-        )->asSuperUser()->call();
+        )->call();
     }
     
     protected function _preparePhpIni(){
@@ -372,7 +385,7 @@ extends Application_Model_Task {
         $this->cli('file')->copy(
             '/etc/php5/apache2/php.ini',
             $userPhpIni
-        )->asSuperUser()->call();
+        )->call();
         //regex to replace disable_functions
         $functionsToBlock = array('exec','system','shell_exec','passthru');
         $text = file_get_contents($userPhpIni);
@@ -394,12 +407,12 @@ extends Application_Model_Task {
     /* Running this prevents store from reindex requirement in admin */
     protected function _reindexStore(){
         $this->cli()->createQuery(
-            '-u ? -s php ? --reindex all',
+            'su ?  -c "timeout 10m /usr/bin/php -f ? -- --reindexall"',
             array(
                 $this->config->magento->userprefix . $this->_dbuser,
                 '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php'
             )
-        )->asSuperUser()->call();
+        )->call();
     }
     
     protected function _setUserQuota(){
@@ -411,7 +424,7 @@ extends Application_Model_Task {
             ':user' => $this->config->magento->userprefix . $this->_dbuser,
             ':softLimit' => '4000M',
             ':hardLimit' => '5000M'
-        ))->asSuperUser()->call();
+        ))->call();
 
         //set grace time (0seconds mean instant)
         $this->cli()->createQuery(
@@ -420,7 +433,7 @@ extends Application_Model_Task {
                 $this->config->magento->userprefix . $this->_dbuser,
                 '0 seconds'
             )
-        )->asSuperUser()->call();
+        )->call();
     }
     
     /**

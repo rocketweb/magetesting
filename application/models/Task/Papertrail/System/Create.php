@@ -56,7 +56,7 @@ implements Application_Model_Task_Interface {
         $filename = '/etc/rsyslog.d/'.$systemUser.'_'.$this->_domain.'.conf';
         if (!file_exists($filename)){
             $fileKit = $this->cli('file');
-            $fileKit->create($filename, $fileKit::TYPE_FILE)->asSuperUser()->call();
+            $fileKit->create($filename, $fileKit::TYPE_FILE)->call();
             unset($fileKit);
 
             $lines = '$ModLoad imfile'.
@@ -100,7 +100,7 @@ implements Application_Model_Task_Interface {
             
         }
 
-        $this->cli('service')->restart('rsyslog')->asSuperUser()->call();
+        $this->cli('service')->restart('rsyslog')->call();
         
     }
     

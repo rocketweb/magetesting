@@ -170,13 +170,13 @@ class Application_Model_Task {
                 '/public_html/'.$this->_storeObject->getDomain().'/var/log/';
 
             if (!file_exists($revisionLogPath)){
-                $fileKit->clear()->create($revisionLogPath, $fileKit::TYPE_DIR)->asSuperUser()->call();
+                $fileKit->clear()->create($revisionLogPath, $fileKit::TYPE_DIR)->call();
             }
 
             $revisionLogFilePath = $revisionLogPath.'revision.log';
 
             if (!file_exists($revisionLogFilePath)){
-                $fileKit->clear()->create($revisionLogFilePath, $fileKit::TYPE_FILE)->asSuperUser()->call();
+                $fileKit->clear()->create($revisionLogFilePath, $fileKit::TYPE_FILE)->call();
                 $fileKit->clear()->fileMode($revisionLogFilePath, 777)->call();
             }
 
@@ -204,7 +204,7 @@ class Application_Model_Task {
 
         $cacheFolder = $this->config->magento->systemHomeFolder . '/' . $this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/var/cache';
         if(file_exists($cacheFolder) && is_dir($cacheFolder)){
-            $this->_fileKit->clear()->remove($cacheFolder)->append('/*', null, false)->asSuperUser();
+            $this->_fileKit->clear()->remove($cacheFolder)->append('/*', null, false);
             $message = var_export($this->_fileKit->call()->getLastOutput(), true);
             $this->logger->log("\n".$this->_fileKit->toString()."\n" . $message, Zend_Log::DEBUG);
         } else {
@@ -218,7 +218,7 @@ class Application_Model_Task {
         $this->logger->log('Applying XML RPC patch.', Zend_Log::INFO);
 
         $file = $this->_fileKit;
-        $file->asSuperUser();
+
         if ($this->_versionObject->getVersion() > '1.3.2.3' AND $this->_versionObject->getVersion() < '1.4.1.2'){
             //we're somewhere between 1.3.2.4 and 1.4.1.1
             $file->clear()->copy(
@@ -243,7 +243,6 @@ class Application_Model_Task {
                 $this->_storeFolder . '/' . $this->_storeObject->getDomain() . '/lib/Zend/XmlRpc/Request.php'
             )->call();
         }
-        $file->asSuperUser(false);
     }
        
     protected function _updateStoreStatus($status){

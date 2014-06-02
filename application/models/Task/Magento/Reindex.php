@@ -31,7 +31,7 @@ implements Application_Model_Task_Interface {
 
         $command = $this->cli()->createQuery(
             'su '.$this->config->magento->userprefix . $this->_userObject->getLogin().' -c "timeout 10m /usr/bin/php -f shell/indexer.php -- --reindexall"'
-        )->asSuperUser();
+        );
 
         $output = $command->call()->getLastOutput();
 
