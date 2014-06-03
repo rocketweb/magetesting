@@ -141,7 +141,7 @@ implements Application_Model_Task_Interface {
         $this->_storeObject->setRevisionCount(0);
 
         if('ee' === strtolower($this->_storeObject->getEdition())) {
-            $this->_encodeEnterprise();
+            $this->_encodeEnterprise('custom');
         }
 
         $DbManager->enableFtp($this->_dbuser);

@@ -10,7 +10,7 @@ class Application_Model_Ioncube_Encode_Custom
         $this->_removeEnterpriseDirContent();
         $this->_uploadEnterprise();
         $this->_unpackRemoteDecodedEnterprise($strip);
-        $this->_encodeEnterprise();
+        $this->_encodeRemoteEnterprise();
         $this->_packRemoteEncodedEnterprise();
         $this->_downloadEnterpise();
         $this->_unpackLocalEncodedEnterprise();
