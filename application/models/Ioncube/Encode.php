@@ -147,7 +147,7 @@ abstract class Application_Model_Ioncube_Encode
 
     protected function _unpackRemoteDecodedEnterpriseBeforeCall($query) {}
 
-    protected function _encodeEnterprise()
+    protected function _encodeRemoteEnterprise()
     {
         $ioncube = $this->_config->ioncubeEncoder;
         $encode = $ioncube->encode;
@@ -247,5 +247,18 @@ abstract class Application_Model_Ioncube_Encode
         if(0 !== (int) $query->call()->getLastStatus()) {
             throw new Application_Model_Ioncube_Exception((string) $exceptionMessage);
         }
+    }
+
+    public static function factory($type = 'clean')
+    {
+        $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
+        $classSuffix = $filter->filter($type);
+        $className = 'Application_Model_Ioncube_Encode_' . $classSuffix;
+
+        if (class_exists($className)){
+            return new $className();
+        }
+        throw new Application_Model_Ioncube_Exception('ioncube '.$className.' doesnt exist');
+        return false;
     }
 }
