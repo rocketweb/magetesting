@@ -86,7 +86,13 @@
 	        	            </div>
 	        	        </div>
 	        	    </fieldset>
-	        	    
+                   <div class="tab-stripe"></div>
+                   <fieldset>
+                       <legend>API key</legend>
+                       <span class="span5 uneditable-input">
+                           <?php echo $this->form->apikey->getValue(); ?>
+                       </span>
+                   </fieldset>
 	        	    <div class="form-actions">
                         <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-inverse pull-right">
                             <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>

@@ -61,6 +61,10 @@ class Application_Form_UserEdit extends Application_Form_EditAccount
                 'filters'    => array('StripTags', 'StringTrim'),
                 'class'      => 'span4'
         ));
+        $this->addElement('text','apikey',array(
+            'label' => 'API key'
+        ));
+
         $server_model = new Application_Model_Server();
         $servers = array();
         foreach($server_model->fetchAll() as $row) {
