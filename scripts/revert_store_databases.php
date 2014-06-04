@@ -10,8 +10,26 @@ $sql = $select
 
 $result = $db->fetchAll($sql);
 
+
+$stores_in_queue = array();
+
+$qSelect = new Zend_Db_Select($db);
+$qSql = $qSelect
+    ->from('queue')
+    ->where('task = ?','MagentoHourlyrevert');
+$qResult = $db->fetchAll($qSql);
+
+if($qResult){
+    foreach($qResult as $qr){
+        $stores_in_queue[] = $qr['store_id'];
+    }
+}
+
 if($result) {
     foreach($result as $row) {
+        if(in_array($row['id'],$stores_in_queue)){
+            continue;
+        }
 
         $userModel = new Application_Model_User();
         $userObject = $userModel->find($row['user_id']);
