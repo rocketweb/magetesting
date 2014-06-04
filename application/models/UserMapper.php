@@ -61,6 +61,7 @@ class Application_Model_UserMapper {
             $user->setId($this->getDbTable()->insert($data));
         } else {
             unset($data['added_date']);
+            unset($data['apikey']);
             if($savePassword) {
                 $user->setPassword(
                     $data['password'] = sha1($user->getPassword())
@@ -74,7 +75,7 @@ class Application_Model_UserMapper {
 
     public function find($id, Application_Model_User $user, $returnPassword = false)
     {
-        $result = $this->getDbTable()->find($id);
+        $result = $this->getDbTable()->find($id);   
         if (0 == count($result)) {
             return;
         }
