@@ -29,7 +29,7 @@ class RocketWeb_Cli_Kit_Compression_Tar
                     ':$path',
                     $path,
                     ('-' === $path) ? false : true // whether read from stdin instead of file
-                );
+                )->append('--delay-directory-restore');
     }
     public function strip($number)
     {

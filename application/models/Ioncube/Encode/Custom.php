@@ -31,7 +31,7 @@ class Application_Model_Ioncube_Encode_Custom
             'Packing /app/code/core/Enterprise on local server failed.'
         );
 
-        return count(explode('/', $enterprisePath));
+        return count(explode('/', ltrim($enterprisePath, '/')));
     }
 
     protected function _uploadEnterprise()
