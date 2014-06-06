@@ -20,6 +20,12 @@
         
         $class = implode(' ',$class);
 
+        if($subpage->label == 'My data'){
+            $user = Zend_Auth::getInstance()->getIdentity();
+            $label = $user->firstname.' '.$user->lastname;
+            $subpage->label = $label;
+        }
+
         $numberOfDropPages = 0;
         if(count($subpage->pages)){
             $lastDropPage = null;
