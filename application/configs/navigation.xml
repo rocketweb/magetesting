@@ -111,6 +111,7 @@
                 <privilege>index</privilege>
                 <icon>icon-white icon-user</icon>
                 <class>dropdown dropdown-mainmenu</class>
+                <dropdown>1</dropdown>
                 <pages>
                     <userAccount>
                         <label>My Account</label>
