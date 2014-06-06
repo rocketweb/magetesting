@@ -1,8 +1,11 @@
 <?php
     $page_type = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+
     // because we have extensions and extension controller
     // change extensions ( guest access ) to frontend
     $page_type = ('extensions' == $page_type ? 'frontend' : $page_type);
+    $grid_controller = ('my-extensions' == $page_type ? $page_type : 'extension');
+    $page_type = ('my-extensions' == $page_type ? 'extension' : $page_type);
     // new release synchroznicer
     if('extension' == $page_type) {
         $sync = new Application_Model_ExtensionVersionSynchronizer();
@@ -136,7 +139,7 @@
                 </form>
             <?php endif; ?>
         <?php elseif('extension' == $page_type): ?>
-            <a href="<?php echo $this->url(array('controller' => 'extension', 'action' => 'list-versions', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-mini pull-right version-list" data-extension-id="<?php echo $extension['id']; ?>">View releases</a>
+            <a href="<?php echo $this->url(array('controller' => $grid_controller, 'action' => 'list-versions', 'id' => $extension['id']), 'default', true); ?>" class="btn btn-mini pull-right version-list" data-extension-id="<?php echo $extension['id']; ?>">View releases</a>
         <?php endif;?>
         </div>
     </div>

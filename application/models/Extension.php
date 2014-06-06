@@ -21,6 +21,8 @@ class Application_Model_Extension {
     protected $_extension_encoded;
     
     protected $_extension_key;
+
+    protected $_extension_owner_id;
     
     protected $_from_version;
     
@@ -159,6 +161,15 @@ class Application_Model_Extension {
     public function getExtensionKey()
     {
         return $this->_extension_key;
+    }
+
+    public function setExtensionOwner($value){
+        $this->_extension_owner_id = $value;
+        return $this;
+    }
+
+    public function getExtensionOwner(){
+        return $this->_extension_owner_id;
     }
 
     public function setVersion($value)
@@ -300,6 +311,7 @@ class Application_Model_Extension {
             'extension' => $this->getExtension(),
             'extension_encoded' => $this->getExtensionEncoded(),
             'extension_key' => $this->getExtensionKey(),
+            'extension_owner_id' => $this->getExtensionOwner(),
             'from_version' => $this->getFromVersion(),
             'to_version' => $this->getToVersion(),
             'edition' => $this->getEdition(),

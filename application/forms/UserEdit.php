@@ -36,7 +36,8 @@ class Application_Form_UserEdit extends Application_Form_EditAccount
         $group_options = array(
             'admin' => 'admin',
             'free-user' => 'free-user',
-            'commercial-user' => 'commercial-user'
+            'commercial-user' => 'commercial-user',
+            'extension-owner' => 'extension-owner'
         );
         $this->addElement('select', 'group', array(
             'label'       => 'Group',
