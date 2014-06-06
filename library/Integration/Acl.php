@@ -14,7 +14,8 @@ class Integration_Acl extends Zend_Acl
         $this->addRole(new Zend_Acl_Role('guest'))
         ->addRole(new Zend_Acl_Role('free-user'))
         ->addRole(new Zend_Acl_Role('commercial-user'))
-        ->addRole(new Zend_Acl_Role('admin'));
+        ->addRole(new Zend_Acl_Role('admin'))
+        ->addRole(new Zend_acl_role('extension-owner'));
 
         /**
          * Set up resources
@@ -30,6 +31,7 @@ class Integration_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('default_extension'));
         $this->add(new Zend_Acl_Resource('default_extensions'));
         $this->add(new Zend_Acl_Resource('default_my-account'));
+        $this->add(new Zend_Acl_Resource('default_my-extensions'));
         $this->add(new Zend_Acl_Resource('default_coupon'));
         $this->add(new Zend_Acl_Resource('default_plan'));
         $this->add(new Zend_Acl_Resource('default_payment'));
@@ -44,26 +46,33 @@ class Integration_Acl extends Zend_Acl
         $this->allow('guest', 'api_store');
         $this->allow('free-user', 'api_store');
         $this->allow('commercial-user', 'api_store');
+        $this->allow('extension-owner', 'api_store');
 
         $this->allow('admin', 'api_user');
         $this->allow('guest', 'api_user');
         $this->allow('free-user', 'api_user');
         $this->allow('commercial-user', 'api_user');
+        $this->allow('extension-owner', 'api_store');
         
         $this->allow('admin', 'api_coupon');
         $this->allow('guest', 'api_coupon');
         $this->allow('free-user', 'api_coupon');
         $this->allow('commercial-user', 'api_coupon');
+        $this->allow('extension-owner', 'api_coupon');
 
         $this->allow('admin', 'api_store-status');
         $this->allow('guest', 'api_store-status');
         $this->allow('free-user', 'api_store-status');
         $this->allow('commercial-user', 'api_store-status');
+        $this->allow('extension-owner', 'api_store-status');
         
+        /*
         $this->allow('admin', 'api_coupon');
         $this->allow('guest', 'api_coupon');
         $this->allow('free-user', 'api_coupon');
         $this->allow('commercial-user', 'api_coupon');
+        $this->allow('extension-owner', 'api_coupon');
+        */
         /**
          * Set up privileges for admin
          */
@@ -115,9 +124,31 @@ class Integration_Acl extends Zend_Acl
         $this->allow('commercial-user', 'default_user', array(
                 'index', 'logout', 'dashboard', 'edit', 'papertrail'
         ));
+
         $this->allow('commercial-user', 'default_my-account');
         $this->allow('commercial-user', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
         $this->allow('commercial-user','default_help',array('index','category','page'));
+
+        /**
+         * Set up privileges for extension-owner
+         */
+        $this->allow('extension-owner', 'default_error', array('error'));
+        $this->allow('extension-owner', 'default_index', array('index', 'about-us', 'contact-us', 'partners', 'privacy', 'terms-of-service','our-plans'));
+        $this->allow('extension-owner', 'default_extensions', array('index'));
+        $this->allow('extension-owner', 'default_queue', array(
+            'add','add-custom','add-clean', 'close', 'getVersions', 'edit',
+            'extensions','getstatus', 'fetch-deployment-list', 'rollback',
+            'commit', 'deploy','gettimeleft', 'request-deployment',
+            'validate-ftp-credentials', 'find-sql-file', 'login-to-store-backend', 'install-extension', 'request-reindex'
+        ));
+        $this->allow('extension-owner', 'default_user', array(
+            'index', 'logout', 'dashboard', 'edit', 'papertrail'
+        ));
+
+        $this->allow('extension-owner', 'default_my-account');
+        $this->allow('extension-owner', 'default_my-extensions');
+        $this->allow('extension-owner', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
+        $this->allow('extension-owner','default_help',array('index','category','page'));
     }
 
     /**

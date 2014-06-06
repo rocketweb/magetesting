@@ -67,6 +67,7 @@ class Application_Model_ExtensionMapper {
         ->setToVersion($row->to_version)
         ->setEdition($row->edition)
         ->setIsVisible($row->is_visible)
+        ->setExtensionOwner($row->extension_owner_id)
         ->setPrice($row->price)
         ->setSort($row->sort)
         ->setExtensionDetail($row->extension_detail)

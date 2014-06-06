@@ -5,7 +5,7 @@
  * 
  * @access public
  * @author Grzegorz( golaod )
- * @method init - auto called
+ * @method _init - auto called
  * @package Application_Form_ExtensionEdit
  */
 class Application_Form_ExtensionEdit extends Integration_Form
@@ -63,6 +63,16 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'allowEmpty' => false,
                 'class'      => 'span4'
         ));
+
+        //Add extension_owner element
+        $this->addElement('select', 'extension_owner', array(
+            'label'      => 'Extension Owner',
+            'required'   => false,
+            'filters'    => array('StripTags', 'StringTrim'),
+            'allowEmpty' => true,
+            'class'      => 'span4'
+        ));
+        $this->extension_owner->addMultiOptions(array('' => 'Select Extension Owner:'));
 
         // Add category element
         $this->addElement('select', 'category_id', array(

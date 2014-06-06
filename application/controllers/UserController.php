@@ -594,6 +594,8 @@ class UserController extends Integration_Controller_Action
                     unset($formData['password_repeat']);
                 }
                 $user->setOptions($formData);
+
+
                 $user->save((is_null($user->getPassword())) ? false : true);
 
                 $planModel = new Application_Model_Plan();
@@ -621,6 +623,7 @@ class UserController extends Integration_Controller_Action
                 }
 
                 $this->_helper->FlashMessenger('User data has been saved successfully');
+
                 return $this->_helper->redirector->gotoRoute(array(
                         'module'     => 'default',
                         'controller' => 'user',
@@ -631,6 +634,7 @@ class UserController extends Integration_Controller_Action
                     $form->login->setValue($user->getLogin());
                 }
             }
+
         }
         $this->view->form = $form;
         
@@ -799,6 +803,31 @@ class UserController extends Integration_Controller_Action
                     'queue' => $paginator
                 )
             );
+
+        $limit = 10;
+        $offset = (int) $this->_getParam('epage',0);
+        $offset = $offset*$limit;
+        $filter = array('extension_owner' => $id);
+        $extensionModel = new Application_Model_Extension();
+        $extensions = $extensionModel->fetchFullListOfExtensions($filter, array(), $offset, $limit);
+        $extensions_counter = $extensionModel->getMapper()->fetchFullListOfExtensions($filter, array(), $offset, $limit, true);
+        $extensionCategoryModel = new Application_Model_ExtensionCategory();
+        $extensionCategories = $extensionCategoryModel->fetchAll();
+        $extensionCategoriesID = array();
+        foreach($extensionCategories as $ec){
+            $extensionCategoriesID[$ec->getId()] = $ec;
+        }
+        $extension_view =
+            $this->view->partial(
+                'my-extensions/table.phtml',
+                array(
+                    'extensions' => $extensions,
+                    'extensions_counter' => $extensions_counter,
+                    'extensions_categories' => $extensionCategoriesID
+                )
+            );
+
+
         $this->view->assign(
             array(
                 'user'     => $user,
@@ -807,7 +836,8 @@ class UserController extends Integration_Controller_Action
                 'coupon'   => $coupon,
                 'plans'    => $plans,
                 'payments' => $payments,
-                'stores' => $stores_view
+                'stores' => $stores_view,
+                'extensions' => $extension_view
             )
         );
     }

@@ -1,0 +1,41 @@
+<h1>Extensions</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Edition</th>
+        <th>Last version</th>
+        <th>Category</th>
+        <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($this->extensions as $ext): ?>
+        <tr>
+            <td><?php echo $ext['id']; ?></td>
+            <td class="ext-name"><?php echo $ext['name']; ?></td>
+            <td class="ext-price">$<?php printf("%d", $ext['price']); ?></td>
+            <td class="ext-edition"><?php echo $ext['edition']; ?></td>
+            <td class="ext-version"><?php echo $ext['version']; ?></td>
+            <td class="ext-category"><?php
+                $category = isset($this->extensions_categories[$ext['category_id']]) ? $this->extensions_categories[$ext['category_id']] : false;
+                if($category === false){
+                    echo 'Category not set';
+                }else{
+                    echo $category->getName();
+                }
+                ?></td>
+            <td class="nowrap">
+                    <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'my-extensions', 'action' => 'edit', 'id' => $ext['id']), 'default', true); ?>"
+                       class="btn btn-success edit-button"><i class="icon-white icon-pencil"></i>Edit</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<?php echo ''; // echo $this->paginationControl($this->extensions, 'Sliding', '_partials/paginationControl.phtml'); ?>

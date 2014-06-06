@@ -140,6 +140,9 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $cache_name .= '_edition_'.$filter['edition'];
             $sub_select_inner->where('edition = ?', strtoupper($filter['edition']));
         }
+        if(isset($filter['extension_owner'])){
+            $sub_select_inner->where('extension_owner_id = ?',$filter['extension_owner']);
+        }
         if(isset($filter['query'])) {
             $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*', '%'), '', $filter['query']);
             $filter['query'] = str_replace('-', '\-', $filter['query']);
