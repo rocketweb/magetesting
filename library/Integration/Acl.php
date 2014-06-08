@@ -9,7 +9,7 @@ class Integration_Acl extends Zend_Acl
     public function __construct()
     {
         /**
-         * Set up rolesz
+         * Set up roles
          */
         $this->addRole(new Zend_Acl_Role('guest'))
         ->addRole(new Zend_Acl_Role('free-user'))
@@ -80,6 +80,7 @@ class Integration_Acl extends Zend_Acl
         $this->deny('admin', 'default_user', array(
                 'login', 'register'
         ));
+        $this->deny('admin', 'default_index', 'our-plans');
 
         /**
          * Set up privileges for guest
@@ -146,7 +147,7 @@ class Integration_Acl extends Zend_Acl
         ));
 
         $this->allow('extension-owner', 'default_my-account');
-        $this->allow('extension-owner', 'default_my-extensions');
+        $this->allow('extension-owner', 'default_my-extensions',array('index','list','edit','delete','list-versions','add-version-to-extension'));
         $this->allow('extension-owner', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
         $this->allow('extension-owner','default_help',array('index','category','page'));
     }
