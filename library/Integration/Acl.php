@@ -147,7 +147,7 @@ class Integration_Acl extends Zend_Acl
         ));
 
         $this->allow('extension-owner', 'default_my-account');
-        $this->allow('extension-owner', 'default_my-extensions');
+        $this->allow('extension-owner', 'default_my-extensions',array('index','list','edit','delete','list-versions','add-version-to-extension'));
         $this->allow('extension-owner', 'default_payment', array('payment', 'change-plan', 'additional-stores'));
         $this->allow('extension-owner','default_help',array('index','category','page'));
     }
