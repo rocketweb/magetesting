@@ -313,8 +313,8 @@ class ExtensionController extends Integration_Controller_Action {
 
                         if($extension_entity_data['extension_owner'] != $formData['extension_owner']) {
                             $extensionModel = new Application_Model_Extension();
-                            $extensionsWithSameName = $extensionModel->getMapper()->fetchAllWithSameName($formData['name']);
-                            foreach($extensionsWithSameName as $ewsn){
+                            $extensionsWithSameKey = $extensionModel->findByExtensionKeyAndEdition($formData['extension_key'],$formData['edition']);
+                            foreach($extensionsWithSameKey as $ewsn) {
                                 try{
                                     $ewsn->setExtensionOwner($formData['extension_owner']);
                                     $ewsn->save();
