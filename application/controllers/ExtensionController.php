@@ -303,12 +303,26 @@ class ExtensionController extends Integration_Controller_Action {
                     }
                     $extension->setExtensionEncoded($extension_encoded_new_name);
                 }
-                
+                if($formData['extension_owner'] == '') $formData['extension_owner'] = 0;
+
                 if(!$errors) {
                     try {
                         $extension->setOptions($formData);
                         $extension->save();
                         $extension_id = $extension->getId();
+
+                        if($extension_entity_data['extension_owner'] != $formData['extension_owner']) {
+                            $extensionModel = new Application_Model_Extension();
+                            $extensionsWithSameKey = $extensionModel->findByExtensionKeyAndEdition($formData['extension_key'],$formData['edition']);
+                            foreach($extensionsWithSameKey as $ewsn) {
+                                try{
+                                    $ewsn->setExtensionOwner($formData['extension_owner']);
+                                    $ewsn->save();
+                                }catch(Exception $e){
+
+                                }
+                            }
+                        }
                         
                         if($this->_getParam('remove_logo', null)) {
                             @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
