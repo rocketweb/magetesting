@@ -1,11 +1,12 @@
 <?php
 
-class Application_Model_Ioncube_Encode_Clean
-    extends Application_Model_Ioncube_Encode
+class Application_Model_Ioncube_Encode_Store_Clean
+    extends Application_Model_Ioncube_Encode_Store
 {
     public function process()
     {
-        $this->_createRemoteTmpDir();
+        $this->_createRemoteTmpDir('decoded');
+        $this->_createRemoteTmpDir('encoded');
         $this->_removeEnterpriseDirContent();
         $this->_copyEnterprisePackage();
         $this->_unpackRemoteDecodedEnterprise(5);
