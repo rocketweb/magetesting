@@ -132,16 +132,7 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 ),
                 'class'      => 'span4'
         ));
-        // Add extension encoded file element
-        $this->addElement('file', 'extension_encoded_file', array(
-                'label'      => 'Extension Encoded File',
-                'required'   => false,
-                'allowEmpty' => true,
-                'validators' => array(
-                        array('Extension', false, 'tgz,gz')
-                ),
-                'class'      => 'span4'
-        ));
+
         Zend_Validate_Abstract::setDefaultTranslator(new Zend_Translate('array', array(
             Zend_Validate_File_Extension::FALSE_EXTENSION => 'File \'%value%\' has an invalid extension'
         )));
@@ -191,7 +182,6 @@ class Application_Form_ExtensionEdit extends Integration_Form
         $this->addElement('hidden', 'screenshots', array(
                 'label'      => 'Screenshot',
                 'required'   => false,
-                'filters'    => array('StripTags', 'StringTrim'),
                 'allowEmpty' => true,
                 'form'       => 'extension-form',
         ));
@@ -247,7 +237,6 @@ class Application_Form_ExtensionEdit extends Integration_Form
         $this->_setDecorators();
 
         $this->extension_file->setDecorators(array('File', array('ViewScript', array('viewScript' => '_partials/bootstrap_file_input.phtml', 'placement' => false))));
-        $this->extension_encoded_file->setDecorators(array('File', array('ViewScript', array('viewScript' => '_partials/bootstrap_file_input.phtml', 'placement' => false))));
 
         $this->old_logo->removeDecorator('HtmlTag');
         $this->old_logo->removeDecorator('Overall');

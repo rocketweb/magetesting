@@ -1,11 +1,12 @@
 <?php
 
-class Application_Model_Ioncube_Encode_Custom
-    extends Application_Model_Ioncube_Encode
+class Application_Model_Ioncube_Encode_Store_Custom
+    extends Application_Model_Ioncube_Encode_Store
 {
     public function process()
     {
-        $this->_createRemoteTmpDir();
+        $this->_createRemoteTmpDir('decoded');
+        $this->_createRemoteTmpDir('encoded');
         $strip = $this->_packLocalDecodedEnterprise();
         $this->_removeEnterpriseDirContent();
         $this->_uploadEnterprise();
@@ -31,7 +32,7 @@ class Application_Model_Ioncube_Encode_Custom
             'Packing /app/code/core/Enterprise on local server failed.'
         );
 
-        return count(explode('/', $enterprisePath));
+        return count(explode('/', ltrim($enterprisePath, '/')));
     }
 
     protected function _uploadEnterprise()
