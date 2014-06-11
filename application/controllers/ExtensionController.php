@@ -256,6 +256,11 @@ class ExtensionController extends Integration_Controller_Action {
 
                     // encode extension file using ioncube
                     if ($extension->getPrice() > 0) {
+                        $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/encoded/'.$extension->getExtensionEncoded();
+                        if(file_exists($file_to_delete)) {
+                            @unlink($file_to_delete);
+                        }
+
                         try {
                             $config = Zend_Registry::get('config');
 
