@@ -23,10 +23,19 @@ class RocketWeg_Cli_Kit_Compression_TarTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testPackWithChangeDir()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Compression_Tar', $this->_kit);
+        $this->assertEquals(
+            "tar zcvf 'file.tar.gz' -C 'dir/to/pack' '.' 2>&1",
+            $this->_kit->pack('file.tar.gz', 'dir/to/pack', true, true)->isCompressed(true)->toString()
+        );
+    }
+
     public function testUnpack()
     {
         $this->assertEquals(
-                "tar xvof 'file.tar.gz' -C 'dir/to/unpack' 2>&1",
+                "tar xvof 'file.tar.gz' -C 'dir/to/unpack' --delay-directory-restore 2>&1",
                 $this->_kit->unpack('file.tar.gz', 'dir/to/unpack')->toString()
         );
     }

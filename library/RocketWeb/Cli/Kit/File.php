@@ -87,7 +87,7 @@ class RocketWeb_Cli_Kit_File
         if($path) {
             $path = ' '.$this->escape($path);
         }
-        return $this->append('rm -R:path')->bindAssoc(':path', $path, false);
+        return $this->append('rm -rf:path')->bindAssoc(':path', $path, false);
     }
     /**
      * 

@@ -47,9 +47,9 @@ extends Application_Model_Task {
         $this->_taskMysql = new Application_Model_TaskMysql($db, $this->_db_table_prefix);
     }
 
-    protected function _encodeEnterprise()
+    protected function _encodeEnterprise($type = 'clean')
     {
-        $ioncube = new Application_Model_Ioncube_Encode_Clean();
+        $ioncube = Application_Model_Ioncube_Encode_Store::factory($type);
 
         try {
             $ioncube->setup(
