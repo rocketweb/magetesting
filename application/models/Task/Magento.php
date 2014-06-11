@@ -49,7 +49,7 @@ extends Application_Model_Task {
 
     protected function _encodeEnterprise($type = 'clean')
     {
-        $ioncube = Application_Model_Ioncube_Encode::factory($type);
+        $ioncube = Application_Model_Ioncube_Encode_Store::factory($type);
 
         try {
             $ioncube->setup(
