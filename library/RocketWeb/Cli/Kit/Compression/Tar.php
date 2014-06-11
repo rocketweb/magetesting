@@ -9,7 +9,7 @@ class RocketWeb_Cli_Kit_Compression_Tar
     public function pack($path, $files, $verbose = true, $changeDir = false)
     {
         if ($changeDir === true) {
-            $change = '-C '. $files;
+            $change = ' -C '. $this->escape($files);
             $files = '.';
         } else {
             $change = '';

@@ -113,7 +113,7 @@ class Application_Model_Ioncube_Encode_Extension
 
         // no matches found
         if (count($output) == 0) {
-            throw new Application_Model_Ioncube_Exception($error);
+            throw new Application_Model_Ioncube_Encode_Extension_Exception($error);
         }
         
         $found = false;
@@ -128,7 +128,7 @@ class Application_Model_Ioncube_Encode_Extension
         }
 
         if ($found === false) {
-            throw new Application_Model_Ioncube_Exception($error);
+            throw new Application_Model_Ioncube_Encode_Extension_Exception($error);
         }
 
         return true;

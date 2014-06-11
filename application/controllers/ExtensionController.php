@@ -269,12 +269,22 @@ class ExtensionController extends Integration_Controller_Action {
 
                             $extension->setExtensionEncoded($extensionEncodedNewName);
 
-                        } catch (Application_Model_Ioncube_Exception $e) {
+                        } catch (Application_Model_Ioncube_Encode_Extension_Exception $e) {
 
                             $this->_helper->FlashMessenger(
                                 array(
                                     'type' => 'error',
                                     'message' => $e->getMessage()
+                                )
+                            );
+                            $errors = true;
+                        } catch (Exception $e) {
+                            $this->getLog()->log('Encoding extension failed.', Zend_Log::ERR, $e);
+
+                            $this->_helper->FlashMessenger(
+                                array(
+                                    'type' => 'error',
+                                    'message' => 'Encoding extension failed. Please contact with administrator.'
                                 )
                             );
                             $errors = true;
