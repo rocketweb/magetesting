@@ -193,12 +193,23 @@ abstract class Application_Model_Ioncube_Encode_Store
     {
         $this->cli('file')->remove($this->_getStoreDir().'/'.$this->_decodedEntepriseFilename)->call();
         $this->cli('file')->remove($this->_getStoreDir().'/'.$this->_encodedEntepriseFilename)->call();
+
+        $query = $this->_ssh->cloneObject()->remoteCall(
+            $this->cli('file')
+                 ->fileMode(':files', '777')
+                 ->bindAssoc("':files'", $this->_remoteCodingTmpPath, false)
+        );
+        $this->_call(
+            $query,
+            'Changing tmp file system permissions on encoding server failed.'
+        );
+
         $query = $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->remove($this->_remoteCodingTmpPath)
         );
         $this->_call(
             $query,
-            'Cleaning file system on local server failed.'
+            'Cleaning tmp file system on encoding server failed.'
         );
     }
 
