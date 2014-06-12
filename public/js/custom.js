@@ -801,7 +801,7 @@ $(document).ready(function () {
         $('#extension-form select[name$="_version"]:hidden').remove();
     });
     
-    $("#iconmenu-help, #context-help i").click(function () {
+    $("#iconmenu-help, #context-help i, .additional-help").click(function () {
         var $helpBlock = $('#wrap-context-help');
 
         if ($helpBlock.length == 0) {

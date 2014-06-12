@@ -20,7 +20,10 @@ class HelpController extends Integration_Controller_Action
         
         if (file_exists(APPLICATION_PATH . '/views/scripts/help/' . $category . '.phtml')) {
             $this->renderScript('help/' . $category . '.phtml');
+            return;
         }
+
+        throw new Zend_Controller_Action_Exception('This help docs does not exist.', 404);
     }
     
     public function pageAction()
@@ -31,7 +34,10 @@ class HelpController extends Integration_Controller_Action
 
         if (file_exists(APPLICATION_PATH . '/views/scripts/help/' . $category . '/' . $page.'.phtml')) {
             $this->renderScript('help/' . $category . '/' . $page . '.phtml');
-        } 
+            return;
+        }
+
+        throw new Zend_Controller_Action_Exception('This help docs does not exist.', 404);
     }
     
 }

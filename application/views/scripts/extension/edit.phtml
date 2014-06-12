@@ -66,13 +66,11 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                             </div>
                         </div>
                         <div class="row">
-                            <div class="span4">
+                            <div class="span8">
                                 <?php echo $this->form->extension_file; ?>
-                                <label class="file-name"><?php echo $this->extension_file ? $this->extension_file : ''; ?></label>
-                            </div>
-                            <div class="span4">
-                                <label>Extension encoded file</label>
-                                <label class="file-name"><?php echo $this->extension_encoded_file ? $this->extension_encoded_file : ''; ?></label>
+                                <span class="help-block">File should be tar.gz or tgz with content ready to paste into Magento root. <a href="#" class="additional-help">file format tips</a></span>
+                                <span class="label label-success"><?php echo $this->extension_file ? $this->extension_file : ''; ?></span><br />
+                                <span class="label label-important"><?php echo $this->extension_encoded_file ? $this->extension_encoded_file : ''; ?></span>
                             </div>
                         </div>
                     </fieldset>
@@ -233,7 +231,21 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
         </div><!-- /form-box -->
     </div><!-- /span12 -->
 </div><!-- /row -->
+<?php
+$data = <<<EOT
+<h4>Extension file</h4>
 
+<p>File containing extension files should be tar.gz or tgz. Content 
+should be ready to paste into Magento root which means that app/, js/, 
+lib, skin/ directories should be placed in archive root. File shouldn't 
+have documentation or other files inside.</p>
+
+<p>Check help pages to see more details regarding <a href="{$this->url(array('category' => 'extension-owners', 'page' => 'preparing-extension-file'), 'help-page')}">preparing 
+extension file</a>.</p>
+
+EOT;
+echo $this->partial('_partials/helpContext.phtml', array('data' => $data));
+?>
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
     {% for (var i=0, file; file=o.files[i]; i++) { %}
