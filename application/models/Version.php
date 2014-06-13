@@ -134,5 +134,16 @@ class Application_Model_Version {
     {
         return $this->getMapper()->getKeys($with_edition);
     }
+    
+    /**
+     * Finds the close
+     * @param type $versionString eg '1.7.0.2'
+     * @return array
+     */
+    public function findByVersionString($versionString, $edition)
+    {
+        $this->getMapper()->findByVersionString($versionString, $edition, $this);
+        return $this;
+    }
 
 }

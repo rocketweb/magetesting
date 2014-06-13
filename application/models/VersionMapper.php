@@ -99,5 +99,19 @@ class Application_Model_VersionMapper {
         return $temp;
 
     }
+    
+    public function findByVersionString($versionString, $edition, Application_Model_Version $version)
+    {
+        $result = $this->getDbTable()->findByVersionString($versionString, $edition);
+        if (0 == count($result)) {
+            return;
+        }
+        $row = $result->current();
+        $version->setId($row->id)
+            ->setEdition($row->edition)
+            ->setVersion($row->version)
+            ->setSampleDataVersion($row->sample_data_version);
+        return $version;
+    }
 
 }

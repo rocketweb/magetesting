@@ -65,6 +65,7 @@ implements Application_Model_Task_Interface {
         }
 
         $this->_fixOwnership();
+        $this->_updateMagentoVersion();
         
         try {
             $transportModel->downloadDatabase();
@@ -79,7 +80,7 @@ implements Application_Model_Task_Interface {
         $this->_customRemotePath = $transportModel->getCustomRemotePath();
 
         /* end of transport usage */
-
+        
 	$this->_prepareDatabaseDump();
         //let's load sql to mysql database
         $this->_importDatabaseDump();
@@ -676,5 +677,50 @@ implements Application_Model_Task_Interface {
         $this->logger->log($command, Zend_Log::DEBUG);
         $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
     }
-   
+    
+    protected function _updateMagentoVersion()
+    {
+        $this->logger->log('Checking real Magento version.', Zend_Log::INFO);
+
+        $matches=array();
+        $major=array();
+        $minor=array();
+        $revision=array();
+        $patch=array();
+        
+        $mageFile = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/Mage.php';
+        
+        $text = file_get_contents($mageFile);
+
+        preg_match('#function getVersionInfo\(\)(.*?)}#is',$text,$matches);
+
+        preg_match("#'major'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$major);
+        preg_match("#'minor'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$minor);
+        preg_match("#'revision'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$revision);
+        preg_match("#'patch'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$patch);
+       
+        $version = $major[3].'.'.$minor[3].'.'.$revision[3].'.'.$patch[3];
+
+        $edition =
+            (file_exists($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/code/core/Enterprise/')) 
+                ? 'EE' : 'CE';
+
+        $versionModel = new Application_Model_Version();
+        $versionModel->findByVersionString($version, $edition);
+
+        if (!$versionModel->getId()) {
+            $error = sprintf('Magento %s %s is not supported.', $edition, $version);
+            $this->logger->log($error, Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($error);
+        }
+
+        $this->logger->log(sprintf('Magento version successfully found: %s %s',
+            $edition, $version), Zend_Log::INFO);
+
+        $this->_versionObject = $versionModel;
+
+        $this->_storeObject->setEdition($edition);
+        $this->_storeObject->setVersionId($versionModel->getId());
+        $this->_storeObject->save();
+    }
 }
