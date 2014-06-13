@@ -15,23 +15,15 @@ class Application_Model_DbTable_Version extends Zend_Db_Table_Abstract
      * @param string $versionString e.g 1.7.0.2
      */
     
-    public function getClosestVersion($versionString){
-        
-        $versionString = (int) str_replace('.','',$versionString);
-        
+    public function findByVersionString($versionString, $edition = 'CE')
+    {
         $select = $this->select()
-                ->from(
-                    array('v' => $this->_name), 
-                        array(
-                            'id' => 'id',
-                            'version',
-                            'distance' => new Zend_Db_Expr("ABS(REPLACE(version,'.','') - '".$versionString."')"),
-                        )
-                )
-                ->order(array('distance asc'))
+                ->from(array('v' => $this->_name))
+                ->where('version = ?', $versionString)
+                ->where('edition = ?', $edition)
                 ->limit(1);
-        
-        return $this->fetchRow( $select )->toArray();       
+
+        return $this->fetchAll($select);
     }
 
 }
