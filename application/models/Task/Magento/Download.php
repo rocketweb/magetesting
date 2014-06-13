@@ -714,8 +714,11 @@ implements Application_Model_Task_Interface {
             throw new Application_Model_Task_Exception($error);
         }
 
-        $this->logger->log(sprintf('Magento version successfully found: %s %s',
-            $edition, $version), Zend_Log::INFO);
+        $this->logger->log(sprintf('Magento version successfully found: %s %s changed to %s %s',
+            $this->_storeObject->getEdition(),
+            $this->_versionObject->getVersion(),
+            $edition, $version
+        ), Zend_Log::INFO);
 
         $this->_versionObject = $versionModel;
 
