@@ -20,7 +20,7 @@
         
         $class = implode(' ',$class);
 
-        if($subpage->label == 'My data'){
+        if($subpage->label == 'My data' || $subpage->label == 'My account'){
             $user = Zend_Auth::getInstance()->getIdentity();
             $label = $user->firstname.' '.$user->lastname;
             $subpage->label = $label;
