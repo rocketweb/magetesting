@@ -242,7 +242,6 @@ class ExtensionController extends Integration_Controller_Action {
                 }
 
                 $extension_new_name = (isset($_FILES["extension_file"]) && $_FILES["extension_file"]["name"] ? $_FILES["extension_file"]["name"] : '');
-                $extension_encoded_new_name = (isset($_FILES["extension_encoded_file"]) && $_FILES["extension_encoded_file"]["name"] ? $_FILES["extension_encoded_file"]["name"] : '');
 
                 $errors = false;
 
@@ -295,55 +294,50 @@ class ExtensionController extends Integration_Controller_Action {
                         }
                     }
                     $extension->setExtension($extension_new_name);
-                }
 
-                if($extension_encoded_new_name) {
-
-                    if($this->_controllerUser == 'extension-owner'){
-                        $extension_owner_model = new Application_Model_Extension();
-                        $extension_new_name_model = $extension_owner_model->findByExtensionFileName($extension_encoded_new_name, true);
-                        if($extension_new_name_model != null){
-                            if($extension_entity_data['extension_owner'] != $extension_new_name_model->getExtensionOwner()){
-                                $this->_helper->FlashMessenger(
-                                    array(
-                                        'type' => 'error',
-                                        'message' => 'An encoded file with the same name already exists in the system and it is not owned by you!'
-                                    )
-                                );
-                                $this->_redirectDefault();
-                            }
-                        }
-                    }
-
-                    $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/encoded/';
-                    if(!file_exists($dir)) {
-                        @mkdir($dir, 0777, true);
-                    }
-
-                    try {
-                        $adapter->setDestination($dir);
-                    } catch (Zend_File_Transfer_Exception $e) {
-                        $this->_helper->FlashMessenger(
-                            array(
-                                'type' => 'error',
-                                'message' => $e->getMessage() . ' ' . $dir
-                            )
-                        );
-                        $errors = true;
-                    }
-
-                    $adapter->receive('extension_encoded_file');
-
-                    if($extension->getExtensionEncoded() AND $extension->getExtensionEncoded() != $extension_encoded_new_name) {
+                    // encode extension file using ioncube
+                    if ($extension->getPrice() > 0) {
                         $file_to_delete = APPLICATION_PATH.'/../data/extensions/'.$extension->getEdition().'/encoded/'.$extension->getExtensionEncoded();
                         if(file_exists($file_to_delete)) {
                             @unlink($file_to_delete);
                         }
-                    }
-                    $extension->setExtensionEncoded($extension_encoded_new_name);
-                }
-                if($formData['extension_owner'] == '') $formData['extension_owner'] = 0;
 
+                        try {
+                            $config = Zend_Registry::get('config');
+
+                            $ioncube = new Application_Model_Ioncube_Encode_Extension();
+                            $ioncube->setup(
+                                $extension,
+                                $config
+                                /*,$this->cli()->getLogger()*/
+                            );
+                            $extensionEncodedNewName = $ioncube->process();
+
+                            $extension->setExtensionEncoded($extensionEncodedNewName);
+
+                        } catch (Application_Model_Ioncube_Encode_Extension_Exception $e) {
+
+                            $this->_helper->FlashMessenger(
+                                array(
+                                    'type' => 'error',
+                                    'message' => $e->getMessage()
+                                )
+                            );
+                            $errors = true;
+                        } catch (Exception $e) {
+                            $this->getLog()->log('Encoding extension failed.', Zend_Log::ERR, $e);
+
+                            $this->_helper->FlashMessenger(
+                                array(
+                                    'type' => 'error',
+                                    'message' => 'Encoding extension failed. Please contact with administrator.'
+                                )
+                            );
+                            $errors = true;
+                        }
+                    }
+                }
+                
                 if(!$errors) {
                     try {
                         $extension->setOptions($formData);
