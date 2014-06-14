@@ -65,6 +65,7 @@ try {
                         $extensionModel->setIsVisible(1);
                         $extensionModel->setSort(0);
                         $extensionModel->setCategoryId($category_id);
+                        $extensionModel->setExtensionOwner(0);
 
                         // download extension file
                         $extension_file = $mc_extension_key . '-' . $mc_extension_v['s'] . '.tgz';

@@ -247,6 +247,17 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
 	return $this->fetchRow($select);
     }
 
+    public function findByExtensionFileName($extension_name,$encoded)
+    {
+        $select = $this->select();
+        if($encoded === false){
+            $select->where('extension = ?', $extension_name);
+        }else{
+            $select->where('extension_encoded = ?', $extension_name);
+        }
+        return $this->fetchAll($select);
+    }
+
     public function findByExtensionKeyAndEdition($extension_key, $edition = null)
     {
         $select =

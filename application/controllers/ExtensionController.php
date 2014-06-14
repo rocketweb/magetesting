@@ -4,6 +4,7 @@ class ExtensionController extends Integration_Controller_Action {
 
     protected $_tempDir;
     protected $_gridController;
+    protected $_controllerUser;
 
     public function init() {
         $this->_tempDir = rtrim(APPLICATION_PATH, '/').'/../public/assets/img/temp/';
@@ -11,6 +12,7 @@ class ExtensionController extends Integration_Controller_Action {
         $this->_helper->sslSwitch();
         $page_type = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
         $this->_gridController = ('my-extensions' == $page_type ? $page_type : 'extension');
+        $this->_controllerUser = 'admin';
     }
 
     public function indexAction() {
@@ -246,6 +248,26 @@ class ExtensionController extends Integration_Controller_Action {
                 $adapter = new Zend_File_Transfer_Adapter_Http();
                 
                 if($extension_new_name) {
+                    /*
+                     * First we check if an extension with the same name already exists and the extension owner is the same!
+                     * */
+                    if($this->_controllerUser == 'extension-owner'){
+                        $extension_owner_model = new Application_Model_Extension();
+                        $extension_new_name_model = $extension_owner_model->findByExtensionFileName($extension_new_name);
+                        if($extension_new_name_model != null){
+                            if($extension_entity_data['extension_owner'] != $extension_new_name_model->getExtensionOwner()){
+                                $this->_helper->FlashMessenger(
+                                    array(
+                                        'type' => 'error',
+                                        'message' => 'A file with the same name already exists in the system and it is not owned by you!'
+                                    )
+                                );
+                                $this->_redirectDefault();
+                            }
+                        }
+                    }
+
+
                     $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/open/';
                     if(!file_exists($dir)) {
                         @mkdir($dir, 0777, true);
@@ -722,5 +744,15 @@ class ExtensionController extends Integration_Controller_Action {
                 $screenshot->delete();
             }
         }
+    }
+
+    protected function _redirectDefault($redirect_options = array())
+    {
+        $redirect_options = array_merge(array(
+                                            'module'     => 'default',
+                                            'controller' => $this->_gridController,
+                                            'action'     => 'index',
+                                        ),$redirect_options);
+        return $this->_helper->redirector->gotoRoute($redirect_options, 'default', true);
     }
 }

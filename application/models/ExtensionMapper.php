@@ -75,6 +75,35 @@ class Application_Model_ExtensionMapper {
         return $extension;
     }
 
+    public function findByExtensionFileName($extension_name, $encoded, Application_Model_Extension $extension)
+    {
+        $result = $this->getDbTable()->findByExtensionFileName($extension_name, $encoded);
+        if (0 == count($result)) {
+            return;
+        }
+        $row = $result->current();
+        $extension->setId($row->id)
+            ->setName($row->name)
+            ->setDescription($row->description)
+            ->setCategoryId($row->category_id)
+            ->setAuthor($row->author)
+            ->setLogo($row->logo)
+            ->setVersion($row->version)
+            ->setExtension($row->extension)
+            ->setExtensionEncoded($row->extension_encoded)
+            ->setExtensionKey($row->extension_key)
+            ->setFromVersion($row->from_version)
+            ->setToVersion($row->to_version)
+            ->setEdition($row->edition)
+            ->setIsVisible($row->is_visible)
+            ->setExtensionOwner($row->extension_owner_id)
+            ->setPrice($row->price)
+            ->setSort($row->sort)
+            ->setExtensionDetail($row->extension_detail)
+            ->setExtensionDocumentation($row->extension_documentation);
+        return $extension;
+    }
+
     public function findByExtensionKeyAndEdition($extension_key, $edition = null)
     {
         $resultSet = $this->getDbTable()->findByExtensionKeyAndEdition($extension_key, $edition);
