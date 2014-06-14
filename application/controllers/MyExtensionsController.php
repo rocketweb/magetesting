@@ -9,11 +9,12 @@ class MyExtensionsController extends  ExtensionController
     {
         parent::init();
         $this->_user = Zend_Auth::getInstance()->getIdentity();
+        $this->_controllerUser = 'extension-owner';
     }
 
-    private function _checkExtensionOwner()
+    private function _checkExtensionOwner($param = 'id')
     {
-        $id = (int) $this->_getParam('id', 0);
+        $id = (int) $this->_getParam($param, 0);
         $isUserExtensionOwner = false;
         if($id > 0){
             $extensionModel = new Application_Model_Extension();
@@ -86,7 +87,9 @@ class MyExtensionsController extends  ExtensionController
 
     public function syncAction()
     {
-        return;
+        if($this->_checkExtensionOwner('extension_id') === true) {
+            return parent::syncAction();
+        }
     }
 
 }

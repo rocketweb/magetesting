@@ -281,6 +281,11 @@ class Application_Model_Extension {
         return $this;
     }
 
+    public function findByExtensionFileName($extension_name, $encoded = false)
+    {
+        return $this->getMapper()->findByExtensionFileName($extension_name, $encoded, $this);
+    }
+
     public function findByExtensionKeyAndEdition($extension_key, $edition = null)
     {
         return $this->getMapper()->findByExtensionKeyAndEdition($extension_key, $edition);
