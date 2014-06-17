@@ -645,8 +645,9 @@ implements Application_Model_Task_Interface {
         }
     }
 
-    protected function _updateDemoNotice(){
-        $this->_taskMysql->updateDemoNotice();
+    protected function _updateDemoNotice()
+    {
+        $this->_taskMysql->updateDemoNotice($this->config->magento->storeUrl);
     }
 
     protected function _detectTablePrefix(){
