@@ -522,9 +522,9 @@ implements Application_Model_Task_Interface {
         
         $this->_storeObject->setBackendName($frontname)->save();
     }
-    
-    protected function _cleanLogTables(){
-        
+
+    protected function _cleanLogTables()
+    {
         $tablesToClean = array(
             'log_customer',
             'log_quote',
@@ -538,7 +538,14 @@ implements Application_Model_Task_Interface {
             'sendfriend_log'
         );
 
-        $this->_taskMysql->truncate($tablesToClean);
+        foreach ($tablesToClean as $table) {
+            try {
+                $this->_taskMysql->truncate($table);
+                $this->logger->log(sprintf('Table %s truncated successfully.', $table), Zend_Log::DEBUG);
+            } catch (Exception $e) {
+                $this->logger->log(sprintf('Table %s not truncated.', $table), Zend_Log::DEBUG);
+            }
+        }
     }
 
     /**
