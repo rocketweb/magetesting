@@ -190,7 +190,7 @@ class Application_Model_TaskMysql
             'string' => 'This is a demo store. Any orders placed through this store will not be honored or fulfilled.',
             'store_id' => 0,
             'translate' => sprintf(
-                'This is a development store imported into Mage Testing. Please review our <a href="%s%s">documentation</a> to find out what was changed in the store in order to import that',
+                'This is a development store imported into Mage Testing. Please review our <a href="%s%s" style="color: inherit; text-decoration: underline;" target="_blank">documentation</a> to find out what was changed in the store in order to import that',
                 $storeUrl,
                 '/help/importing-store/changes-in-imported-store'
             ),
