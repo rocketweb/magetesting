@@ -541,9 +541,9 @@ implements Application_Model_Task_Interface {
         foreach ($tablesToClean as $table) {
             try {
                 $this->_taskMysql->truncate($table);
-                $this->logger->log(sprintf('Table %s truncated successfully.'), Zend_Log::DEBUG);
+                $this->logger->log(sprintf('Table %s truncated successfully.', $table), Zend_Log::DEBUG);
             } catch (Exception $e) {
-                $this->logger->log(sprintf('Table %s not truncated.'), Zend_Log::DEBUG);
+                $this->logger->log(sprintf('Table %s not truncated.', $table), Zend_Log::DEBUG);
             }
         }
     }
