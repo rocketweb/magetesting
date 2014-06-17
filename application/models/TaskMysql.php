@@ -184,12 +184,16 @@ class Application_Model_TaskMysql
         return $this;
     }
 
-    public function updateDemoNotice()
+    public function updateDemoNotice($storeUrl)
     {
         $data = array(
             'string' => 'This is a demo store. Any orders placed through this store will not be honored or fulfilled.',
             'store_id' => 0,
-            'translate' => 'This is a development store imported into Mage Testing. Please review our documentation to find out what was changed in the store in order to import that',
+            'translate' => sprintf(
+                'This is a development store imported into Mage Testing. Please review our <a href="%s%s">documentation</a> to find out what was changed in the store in order to import that',
+                $storeUrl,
+                '/help/importing-store/changes-in-imported-store'
+            ),
             'locale' => 'en_US'
         );
         $this->getDbAdapter()->insert(
