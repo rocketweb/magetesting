@@ -51,11 +51,11 @@ $(document).ready(function(){
     function updateLabels(){
         if (customProtocolElement.val() == 'ssh') {
             $("#custom_remote_path").parent().find('label').html('Remote absolute path to Magento Root');
-            $("#custom_file").parent().find('label').html('Remote absolute path to .zip or .tar.gz package containing all store files');
+            $("#custom_file").parent().find('label').html('Remote absolute path to .tgz or .tar.gz package containing all store files');
             $("#custom_sql").parent().find('label').html('Remote absolute path to SQL dump');
         } else {
             $("#custom_remote_path").parent().find('label').html('Remote relative path to Magento Root');
-            $("#custom_file").parent().find('label').html('Remote relative path to .zip or .tar.gz package containing all store files');
+            $("#custom_file").parent().find('label').html('Remote relative path to .tgz or .tar.gz package containing all store files');
             $("#custom_sql").parent().find('label').html('Remote relative path to SQL dump');
         }
     }
