@@ -144,7 +144,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         ));
         
         $this->addElement('text', 'custom_file', array(
-                'label'       => 'Remote absolute path to .zip or .tar.gz package containing all store files',
+                'label'       => 'Remote absolute path to .tgz or .tar.gz package containing all store files',
                 'required'    => false,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/store_backup.tar.gz',
