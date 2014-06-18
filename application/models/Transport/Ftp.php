@@ -132,18 +132,12 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
         unset($output);
 
         $command = $this->_wget->cloneObject();
-        $include = array(
-            $this->_customRemotePath.'app',
-            $this->_customRemotePath.'downloader',
-            $this->_customRemotePath.'errors',
-            $this->_customRemotePath.'includes',
-            $this->_customRemotePath.'js',
-            $this->_customRemotePath.'lib',
-            $this->_customRemotePath.'pkginfo',
-            $this->_customRemotePath.'shell',
-            $this->_customRemotePath.'skin'
+        $exclude = array(
+            $this->_customRemotePath.'media',
+            $this->_customRemotePath.'var',
+            $this->_customRemotePath.'.htaccess'
         );
-        $command->downloadRecursive($include);
+        $command->downloadRecursive($this->_customRemotePath, $exclude);
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());

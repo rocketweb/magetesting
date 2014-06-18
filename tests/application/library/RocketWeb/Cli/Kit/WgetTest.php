@@ -37,8 +37,8 @@ class RocketWeg_Cli_Kit_WgetTest extends PHPUnit_Framework_TestCase
     public function testDownloadRecursive()
     {
         $this->assertEquals(
-            $this->_getConnectionQuery().' -nH -Q300m -m -np -R \'sql,tar,gz,zip,rar\' -N -X \'.htaccess\' -I \'one,two\' 2>&1',
-            $this->_connection->_prepareCall($this->_connection->cloneObject()->setRootPath($this->_remote_path)->downloadRecursive(array('one', 'two')))
+            $this->_getConnectionQuery().' -nH -Q300m -m -np -R \'sql,tar,gz,zip,rar\' -N -X \'one,two,.htaccess\' \'/some/path\' 2>&1',
+            $this->_connection->_prepareCall($this->_connection->cloneObject()->setRootPath($this->_remote_path)->downloadRecursive('/some/path', array('one', 'two', '.htaccess')))
         );
     }
 
