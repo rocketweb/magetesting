@@ -669,6 +669,7 @@ implements Application_Model_Task_Interface {
         $this->_db_table_prefix = '';
         if(isset($output[0])) {
             $this->_db_table_prefix = $output[0];
+            $this->_taskMysql->setTablePrefix($this->_db_table_prefix);
         }
     }
 

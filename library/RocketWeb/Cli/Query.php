@@ -21,7 +21,12 @@ class RocketWeb_Cli_Query
      */
     public function call()
     {
-        return $this->_cli_object->exec((string)$this);
+        return $this->_cli_object->exec($this->_prepareCall((string) $this));
+    }
+
+    public function _prepareCall($query)
+    {
+        return $this->_redirectStdErr($query);
     }
     /**
      *
@@ -99,7 +104,9 @@ class RocketWeb_Cli_Query
 
         if($append) {
             if($pipe) {
-                $this->_query = $this->_redirectStdErr($append) . ' | '. $this->_query;
+                // it's to pipe left side stderr to /dev/null without breaking
+                // right side stdout
+                $this->_query = $append . ' 2>/dev/null | '. $this->_query;
             } else {
                 $this->_query = $append . ($prependSpace ? ' ' : ''). $this->_query;
             }
@@ -193,7 +200,7 @@ class RocketWeb_Cli_Query
             $this->_query = 'sudo '.$replaced;
         }
 
-        return $this->_redirectStdErr($this->_query);
+        return $this->_query;
     }
 
     final public function __toString()

@@ -250,9 +250,14 @@ class Application_Model_TaskMysql
 
     protected function _table($table, $escape = false)
     {
+        if (strlen($this->_tablePrefix)) {
+            $table = $this->_tablePrefix.$table;
+        }
+
         if($escape) {
             $table = $this->getDbAdapter()->quoteIdentifier($table);
         }
-        return ($this->_tablePrefix ? $this->_tablePrefix.'.'.$table : $table);
+
+        return $table;
     }
 }
