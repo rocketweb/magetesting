@@ -19,7 +19,7 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('RocketWeb_Cli_Kit_File', $this->_kit);
         $this->assertEquals(
             "mv 'asd.txt' 'test.txt' 2>&1",
-            $this->_kit->move('asd.txt', 'test.txt')->toString()
+            $this->_kit->_prepareCall($this->_kit->move('asd.txt', 'test.txt'))
         );
     }
 
@@ -27,7 +27,7 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             "touch 'file.txt' 2>&1",
-            $this->_kit->create('file.txt', RocketWeb_Cli_Kit_File::TYPE_FILE)->toString()
+            $this->_kit->_prepareCall($this->_kit->create('file.txt', RocketWeb_Cli_Kit_File::TYPE_FILE))
         );
     }
 
@@ -35,7 +35,7 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             "chmod -R '777' 'dir/' 2>&1",
-            $this->_kit->fileMode('dir/', 777, true)->toString()
+            $this->_kit->_prepareCall($this->_kit->fileMode('dir/', 777, true))
         );
     }
 
@@ -43,7 +43,7 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             "chown 'test:test' 'file.txt' 2>&1",
-            $this->_kit->fileOwner('file.txt', 'test:test', false)->toString()
+            $this->_kit->_prepareCall($this->_kit->fileOwner('file.txt', 'test:test', false))
         );
     }
 
@@ -51,7 +51,7 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             "ls -al 'dir/' 2>&1",
-            $this->_kit->listAll('dir/')->toString()
+            $this->_kit->_prepareCall($this->_kit->listAll('dir/'))
         );
     }
 
@@ -59,15 +59,15 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             "cp 'test.txt' 'test 2.txt' 2>&1",
-            $this->_kit->copy('test.txt', 'test 2.txt', false)->toString()
+            $this->_kit->_prepareCall($this->_kit->copy('test.txt', 'test 2.txt', false))
         );
     }
 
     public function testRemove()
     {
         $this->assertEquals(
-                "rm -rf 'path' 2>&1",
-                $this->_kit->remove('path')->toString()
+            "rm -rf 'path' 2>&1",
+            $this->_kit->_prepareCall($this->_kit->remove('path'))
         );
     }
 
@@ -75,16 +75,16 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
     {
         $class = $this->_kit;
         $this->assertEquals(
-                "find -type d -name 'some_dir' -print0 -printf \"`pwd`/%h\\n\" 2>&1",
-                $this->_kit->find('some_dir', $class::TYPE_DIR)->printFiles(true)->printPaths(true)->toString()
+            "find -type d -name 'some_dir' -print0 -printf \"`pwd`/%h\\n\" 2>&1",
+            $this->_kit->_prepareCall($this->_kit->find('some_dir', $class::TYPE_DIR)->printFiles(true)->printPaths(true))
         );
     }
 
     public function testGetSize()
     {
         $this->assertEquals(
-                "du -b 'custom_file' 2>&1 | awk '$1 ~ /[0-9]+/ {print $1}' 2>&1",
-                $this->_kit->getSize('custom_file')->toString()
+            "du -b 'custom_file' 2>/dev/null | awk '$1 ~ /[0-9]+/ {print $1}' 2>&1",
+            $this->_kit->_prepareCall($this->_kit->getSize('custom_file'))
         );
     }
 }

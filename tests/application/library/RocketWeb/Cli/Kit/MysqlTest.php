@@ -20,7 +20,7 @@ class RocketWeg_Cli_Kit_MysqlTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             $this->_getConnectionQuery().' 2>&1',
-            $this->_connection->toString()
+            $this->_connection->_prepareCall($this->_connection)
         );
     }
 
@@ -31,7 +31,7 @@ class RocketWeg_Cli_Kit_MysqlTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             $this->_getConnectionQuery()." < 'file.sql' 2>&1",
-            $this->_connection->cloneObject()->import('file.sql')->toString()
+            $this->_connection->_prepareCall($this->_connection->cloneObject()->import('file.sql'))
         );
     }
 
@@ -49,7 +49,7 @@ class RocketWeg_Cli_Kit_MysqlTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             str_replace('mysql', 'mysqldump', $this->_getConnectionQuery())
                 ." 'table1' > 'file.sql' 2>&1",
-            $query
+            $this->_connection->_prepareCall($query)
         );
     }
 

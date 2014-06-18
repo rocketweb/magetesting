@@ -253,6 +253,6 @@ class Application_Model_TaskMysql
         if($escape) {
             $table = $this->getDbAdapter()->quoteIdentifier($table);
         }
-        return ($this->_tablePrefix ? $this->_tablePrefix.'.'.$table : $table);
+        return ($this->_tablePrefix ? $this->_tablePrefix.$table : $table);
     }
 }

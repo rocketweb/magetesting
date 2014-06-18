@@ -20,7 +20,7 @@ class RocketWeg_Cli_Kit_ApacheTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('RocketWeb_Cli_Kit_Apache', $this->_kit);
         $this->assertEquals(
             "/usr/sbin/a2ensite 'site_name' 2>&1",
-            $this->_kit->enableSite('site_name')->toString()
+            $this->_kit->_prepareCall($this->_kit->enableSite('site_name'))
         );
     }
 
@@ -28,7 +28,7 @@ class RocketWeg_Cli_Kit_ApacheTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             "/usr/sbin/a2dissite 'site_name' 2>&1",
-            $this->_kit->disableSite('site_name')->toString()
+            $this->_kit->_prepareCall($this->_kit->disableSite('site_name'))
         );
     }
 }

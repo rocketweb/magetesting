@@ -22,39 +22,39 @@ class RocketWeg_Cli_Kit_WgetTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             $this->_getConnectionQuery().' --spider 2>&1',
-            $this->_connection->cloneObject()->setRootPath($this->_remote_path)->toString()
+            $this->_connection->_prepareCall($this->_connection->cloneObject()->setRootPath($this->_remote_path))
         );
     }
 
     public function testLimits()
     {
         $this->assertEquals(
-                $this->_getConnectionQuery().' --spider --timeout=\'30\' --tries=\'2\' 2>&1',
-                $this->_connection->cloneObject()->setRootPath($this->_remote_path)->addLimits(30,2)->toString()
+            $this->_getConnectionQuery().' --spider --timeout=\'30\' --tries=\'2\' 2>&1',
+            $this->_connection->_prepareCall($this->_connection->cloneObject()->setRootPath($this->_remote_path)->addLimits(30,2))
         );
     }
 
     public function testDownloadRecursive()
     {
         $this->assertEquals(
-                $this->_getConnectionQuery().' -nH -Q300m -m -np -R \'sql,tar,gz,zip,rar\' -N -X \'.htaccess\' -I \'one,two\' 2>&1',
-                $this->_connection->cloneObject()->setRootPath($this->_remote_path)->downloadRecursive(array('one', 'two'))->toString()
+            $this->_getConnectionQuery().' -nH -Q300m -m -np -R \'sql,tar,gz,zip,rar\' -N -X \'.htaccess\' -I \'one,two\' 2>&1',
+            $this->_connection->_prepareCall($this->_connection->cloneObject()->setRootPath($this->_remote_path)->downloadRecursive(array('one', 'two')))
         );
     }
 
     public function testDownloadFile()
     {
         $this->assertEquals(
-                str_replace('some/dir_with_files', 'some/dir_with_files/test.txt', $this->_getConnectionQuery()).' -N 2>&1',
-                $this->_connection->cloneObject()->downloadFile('some/dir_with_files/test.txt')->toString()
+            str_replace('some/dir_with_files', 'some/dir_with_files/test.txt', $this->_getConnectionQuery()).' -N 2>&1',
+            $this->_connection->_prepareCall($this->_connection->cloneObject()->downloadFile('some/dir_with_files/test.txt'))
         );
     }
 
     public function testFileSize()
     {
         $this->assertEquals(
-                str_replace('some/dir_with_files', 'some/dir_with_files/test.txt', $this->_getConnectionQuery()).' --spider 2>&1 | grep \'SIZE\' 2>&1 | awk \'$5 ~ /[0-9]+/ {print $5}\' 2>&1',
-                $this->_connection->cloneObject()->setRootPath($this->_remote_path.'/test.txt')->getFileSize()->toString()
+            str_replace('some/dir_with_files', 'some/dir_with_files/test.txt', $this->_getConnectionQuery()).' --spider 2>/dev/null | grep \'SIZE\' 2>/dev/null | awk \'$5 ~ /[0-9]+/ {print $5}\' 2>&1',
+            $this->_connection->_prepareCall($this->_connection->cloneObject()->setRootPath($this->_remote_path.'/test.txt')->getFileSize())
         );
     }
 
