@@ -41,7 +41,7 @@ class RocketWeg_Cli_Kit_SshTest extends PHPUnit_Framework_TestCase
 
         $unpack = $tar->unpack('-', '.')->isCompressed()->strip($components);
 
-        $command = $ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($pack, true)->pipe($unpack, null, false);
+        $command = $ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($pack, true)->pipe($unpack);
 //        ->bindAssoc('2>&1', '', false);
 
         $this->assertEquals(

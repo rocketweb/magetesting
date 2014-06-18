@@ -75,9 +75,9 @@ class RocketWeb_Cli_Query
      * @param bool $prependSpace - whether add space before appended string
      * @return RocketWeb_Cli_Query
      */
-    final public function append($string = '', $values = null, $prependSpace = true)
+    final public function append($string = '', $values = null, $prependSpace = true, $suppressErrors = true)
     {
-        $this->_append($string, $values, false, $prependSpace);
+        $this->_append($string, $values, false, $prependSpace, $suppressErrors);
         return $this;
     }
 
@@ -89,7 +89,7 @@ class RocketWeb_Cli_Query
      * @throws RocketWeb_Cli_Exception
      * @return RocketWeb_Cli_Query
      */
-    final protected function _append($query = '', $values = null, $pipe = false, $prependSpace = true)
+    final protected function _append($query = '', $values = null, $pipe = false, $prependSpace = true, $suppressErrors = true)
     {
         $query = (string)$query;
         if(null !== $values && !is_array($values)) {
@@ -106,7 +106,7 @@ class RocketWeb_Cli_Query
             if($pipe) {
                 // it's to pipe left side stderr to /dev/null without breaking
                 // right side stdout
-                $this->_query = $append . ' 2>/dev/null | '. $this->_query;
+                $this->_query = $append . ($suppressErrors ? ' 2>/dev/null | ' : ' 2>&1 | '). $this->_query;
             } else {
                 $this->_query = $append . ($prependSpace ? ' ' : ''). $this->_query;
             }
@@ -119,9 +119,9 @@ class RocketWeb_Cli_Query
      * @param string $values
      * @return RocketWeb_Cli_Query
      */
-    final public function pipe($string = '', $values = null)
+    final public function pipe($string = '', $values = null, $suppressErrors = true)
     {
-        $this->_append($string, $values, true);
+        $this->_append($string, $values, true, false, $suppressErrors);
 
         return $this;
     }
