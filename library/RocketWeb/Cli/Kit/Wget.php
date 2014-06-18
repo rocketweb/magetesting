@@ -84,8 +84,8 @@ class RocketWeb_Cli_Kit_Wget
     public function getFileSize()
     {
         $this->checkOnly(true);
-        $this->pipe('grep ?', 'SIZE');
-        $this->pipe('awk ?', '$5 ~ /[0-9]+/ {print $5}');
+        $this->pipe('grep ?', 'SIZE', false);
+        $this->pipe('awk ?', '$5 ~ /[0-9]+/ {print $5}', false);
         return $this;
     }
 

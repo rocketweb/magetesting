@@ -53,7 +53,7 @@ class RocketWeg_Cli_Kit_WgetTest extends PHPUnit_Framework_TestCase
     public function testFileSize()
     {
         $this->assertEquals(
-            str_replace('some/dir_with_files', 'some/dir_with_files/test.txt', $this->_getConnectionQuery()).' --spider 2>/dev/null | grep \'SIZE\' 2>/dev/null | awk \'$5 ~ /[0-9]+/ {print $5}\' 2>&1',
+            str_replace('some/dir_with_files', 'some/dir_with_files/test.txt', $this->_getConnectionQuery()).' --spider 2>&1 | grep \'SIZE\' 2>&1 | awk \'$5 ~ /[0-9]+/ {print $5}\' 2>&1',
             $this->_connection->_prepareCall($this->_connection->cloneObject()->setRootPath($this->_remote_path.'/test.txt')->getFileSize())
         );
     }

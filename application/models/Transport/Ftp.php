@@ -27,14 +27,23 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     public function checkProtocolCredentials(){
-        $command = $this->_wget->cloneObject()->checkOnly(true)->pipe('grep ?', 'Logged in!');
+        $command = $this->_wget->cloneObject()->checkOnly(true);
         $output = $command->call()->getLastOutput();
+
+        $loggedIn = false;
+
+        foreach ($output as $line){
+            if (strpos($line, 'Logged in!')) {
+                $loggedIn = true;
+                break;
+            }
+        }
 
         $message = var_export($output, true);
         $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
-        if (!isset($output[0])){
+        if (!$loggedIn){
             throw new Application_Model_Transport_Exception('Couldn\'t log in with given ftp credentials. Please change them to try again.');
         }
         return true;
