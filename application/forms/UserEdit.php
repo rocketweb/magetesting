@@ -50,6 +50,38 @@ class Application_Form_UserEdit extends Application_Form_EditAccount
         $this->group->addMultiOptions($group_options);
         $this->group->setValue('free-user');
 
+
+        $plan_model = new Application_Model_Plan();
+        $all_plans = $plan_model->fetchAll(true);
+        $plan_options = array();
+        foreach($all_plans as $plan){
+            $plan = $plan->__toArray();
+            $plan_options[$plan['id']] = $plan['name'];
+        }
+        $this->addElement('select','plan_id', array(
+                'label' => 'User plan',
+                'required' => true,
+                'validators' => array(
+                     new Zend_Validate_InArray(array_keys($plan_options))
+                ),
+            'class' => 'span4'
+        ));
+        $this->plan_id->addMultiOptions($plan_options);
+
+        // Add used date element
+        $this->addElement('text', 'plan_active_to', array(
+            'label'      => 'Plan active to',
+            'required'   => true,
+            'filters'    => array('StripTags', 'StringTrim'),
+            'validators' => array(
+                new Zend_Validate_Date(array('format' => 'Y-m-d H:i:s')),
+                new Zend_Validate_Date(array('format' => 'Y-m-d'))
+            ),
+            'allowEmpty' => false,
+            'class'      => 'span4 datepicker'
+        ));
+
+
         $unique = new Zend_Validate_Db_NoRecordExists(array('table' => 'user', 'field' => 'email'));
         $unique->setMessage('This email is already registered.');
         $this->email->addValidator($unique);

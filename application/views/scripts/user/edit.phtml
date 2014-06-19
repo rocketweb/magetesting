@@ -1,3 +1,6 @@
+<?php $this->headScript()->appendFile($this->baseUrl('public/js/bootstrap-datepicker.js')); ?>
+<?php $this->headScript()->appendFile($this->baseUrl('public/js/coupon-form.js')); ?>
+<?php $this->headScript()->appendFile($this->baseUrl('public/js/plan-form.js')); ?>
 <div class="row">
     <div class="span12">
         <h1><?php echo $this->form->getAttrib('label')?></h1>
@@ -84,7 +87,20 @@
 	        	            <div class="span4">
 	        	                <?php echo $this->form->group; ?>
 	        	            </div>
+                            <div class="span4">
+                                <?php echo $this->form->plan_id; ?>
+                            </div>
 	        	        </div>
+                        <div class="row">
+                            <div class="span4">
+                                <?php echo $this->form->plan_active_to; ?>
+                            </div>
+                            <div class="span4">
+                                <?php
+                                $date = strtotime($this->form->getValue('plan_active_to'));
+                                echo $this->partial('plan/on_off_button.phtml', array('label' => 'Never expires', 'field' => 'never_expires', 'value' => ($date > (10*365*24*3600) + time() ? 1 : 0))); ?>
+                            </div>
+                        </div>
 	        	    </fieldset>
                    <div class="tab-stripe"></div>
                    <fieldset>
