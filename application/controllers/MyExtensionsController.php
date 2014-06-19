@@ -22,6 +22,8 @@ class MyExtensionsController extends  ExtensionController
             if($editingExtension->getExtensionOwner() == $this->_user->id){
                 $isUserExtensionOwner = true;
             }
+        }else{
+            $isUserExtensionOwner = true;
         }
         if(!$isUserExtensionOwner){
             $this->_helper->FlashMessenger(
