@@ -115,10 +115,10 @@ class Application_Form_StoreAddCustom extends Integration_Form{
 //        $this->custom_remote_path->setValue('ie. /website/html');
         
         $this->addElement('text', 'custom_sql', array(
-                'label'       => 'Remote absolute path to SQL dump',
+                'label'       => 'Remote absolute path to .gz or .sql file containing database dump',
                 'required'    => true,
                 'label_class' => 'radio inline',
-                'placeholder' => 'ie. /website/html/dump.sql',
+                'placeholder' => 'ie. /website/html/dump.sql.gz',
                 'class'      => 'span6'
         ));
 //        $this->custom_sql->setValue('ie. /website/html/dump.sql');
