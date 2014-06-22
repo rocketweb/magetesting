@@ -471,6 +471,9 @@ class Application_Model_Extension {
                 if(!file_exists($dir_path)) {
                     mkdir($dir_path, 0777, true);
                 }
+                if(file_exists($dir_path . $extension_file)) {
+                    throw new Exception("File: '" . $dir_path . $extension_file . "' already exists!");
+                }
                 file_put_contents($dir_path . $extension_file, $response->getBody());
                 $this->setExtension($extension_file)->save();
             }
