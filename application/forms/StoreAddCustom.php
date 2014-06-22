@@ -142,15 +142,22 @@ class Application_Form_StoreAddCustom extends Integration_Form{
                 'ignore'   => true,
                 'label'    => 'Install',
         ));
-        
+
+        $regex = new Zend_Validate_Regex('/^.*\.(tar\.gz|tgz)$/i');
+        $regex->setMessage('Package file doesn\'t end in .tar.gz or .tgz!');
+
         $this->addElement('text', 'custom_file', array(
-                'label'       => 'Remote absolute path to .tgz or .tar.gz package containing all store files',
+                'label'       => 'Remote absolute path to .zip or .tar.gz package containing all store files',
                 'required'    => false,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/store_backup.tar.gz',
-                'class'      => 'span7'
+                'class'      => 'span7',
+                'filters'    => array('StripTags', 'StringTrim'),
+                'validators'  => array(
+                   $regex
+                )
         ));
-        
+//        /^.*\.(tar\.gz|tgz)$/i
 //        $this->custom_file->setValue('ie. /website/html/store_backup.tar.gz');
 
         $this->_setDecorators();
