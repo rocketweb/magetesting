@@ -48,8 +48,15 @@ implements Application_Model_Task_Interface {
         if (file_exists($filename)){
             $this->cli('file')->remove($filename)->call();
         }
-        
-        $this->cli('service')->restart('rsyslog')->call();
+
+        $this->logger->log('Restarting rsyslog.', Zend_Log::INFO);
+
+        $command = $this->cli('service')->restart('rsyslog');
+        $output = $command->call()->getLastOutput();
+
+        $message = var_export($output, true);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+        unset($output);
     }
 
 }
