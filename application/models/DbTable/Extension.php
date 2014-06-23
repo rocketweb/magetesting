@@ -36,9 +36,12 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $select_allowed_for_store->where('name LIKE ? OR description LIKE ? OR extension_key LIKE ? OR author LIKE ?', $filter['query']);
         }
 
-        // get only visible extensions for non admin users
+        // get only visible extensions for non admin users and hidden extensions for extension-owners
         if(isset($filter['restricted']) && $filter['restricted']) {
             $select_allowed_for_store->where('is_visible = ?', 1);
+            if(isset($filter['extension_owner_id']) && $filter['extension_owner_id'] > 0) {
+                $select_allowed_for_store->orWhere('extension_owner_id = ?', $filter['extension_owner_id']);
+            }
         }
 
         $select_last_version_ids = 
