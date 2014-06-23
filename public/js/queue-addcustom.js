@@ -52,11 +52,11 @@ $(document).ready(function(){
         if (customProtocolElement.val() == 'ssh') {
             $("#custom_remote_path").parent().find('label').html('Remote absolute path to Magento Root');
             $("#custom_file").parent().find('label').html('Remote absolute path to .tgz or .tar.gz package containing all store files');
-            $("#custom_sql").parent().find('label').html('Remote absolute path to SQL dump');
+            $("#custom_sql").parent().find('label').html('Remote absolute path to .gz or .sql file containing database dump');
         } else {
             $("#custom_remote_path").parent().find('label').html('Remote relative path to Magento Root');
             $("#custom_file").parent().find('label').html('Remote relative path to .tgz or .tar.gz package containing all store files');
-            $("#custom_sql").parent().find('label').html('Remote relative path to SQL dump');
+            $("#custom_sql").parent().find('label').html('Remote relative path to .gz or .sql file containing database dump');
         }
     }
 
