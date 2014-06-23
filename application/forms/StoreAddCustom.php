@@ -113,14 +113,21 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         ));
         
 //        $this->custom_remote_path->setValue('ie. /website/html');
-        
+
+        $regexSql = new Zend_Validate_Regex('/^.*\.(sql|gz)$/i');
+        $regexSql->setMessage('SQL dump doesn\'t end in .sql or .gz!');
+
         $this->addElement('text', 'custom_sql', array(
                 'label'       => 'Remote absolute path to .gz or .sql file containing database dump',
                 'required'    => true,
                 'label_class' => 'radio inline',
-                'placeholder' => 'ie. /website/html/dump.sql.gz',
-                'class'      => 'span6'
-        ));
+                'placeholder' => 'ie. /website/html/dump.sql',
+                'class'      => 'span6',
+                'filters'    => array('StripTags', 'StringTrim'),
+                    'validators'  => array(
+                        $regexSql
+                    )
+            ));
 //        $this->custom_sql->setValue('ie. /website/html/dump.sql');
         
         $this->addElement('text', 'custom_login', array(
@@ -143,8 +150,8 @@ class Application_Form_StoreAddCustom extends Integration_Form{
                 'label'    => 'Install',
         ));
 
-        $regex = new Zend_Validate_Regex('/^.*\.(tar\.gz|tgz)$/i');
-        $regex->setMessage('Package file doesn\'t end in .tar.gz or .tgz!');
+        $regexTar = new Zend_Validate_Regex('/^.*\.(tar\.gz|tgz)$/i');
+        $regexTar->setMessage('Package file doesn\'t end in .tar.gz or .tgz!');
 
         $this->addElement('text', 'custom_file', array(
                 'label'       => 'Remote absolute path to .zip or .tar.gz package containing all store files',
@@ -154,7 +161,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
                 'class'      => 'span7',
                 'filters'    => array('StripTags', 'StringTrim'),
                 'validators'  => array(
-                   $regex
+                   $regexTar
                 )
         ));
 //        /^.*\.(tar\.gz|tgz)$/i
