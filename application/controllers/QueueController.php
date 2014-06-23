@@ -1484,7 +1484,7 @@ class QueueController extends Integration_Controller_Action {
      * finds magento webroot in folders like www, public_html, htdocs, web
      * and look for familiar magento files/folder like 'app' or smth
      */
-    protected function _findWebrootOnFtp() {
+    protected function _findWebrootOnFtp($stripAbsolutePath = true) {
     
         $baseFolders = array('www','public_html','web','htdocs',$this->_customHost);
         // get contents of the current directory
@@ -1502,6 +1502,9 @@ class QueueController extends Integration_Controller_Action {
 
         $res = array_values(array_intersect($baseFolders,$contents));
         if ($res){
+            // save base path to have it stripped if needed 
+            $this->_absolutePath =  ftp_pwd($this->_ftpStream); 
+
             ftp_chdir($this->_ftpStream,$res[0]);
             $contents = ftp_nlist($this->_ftpStream, ".");
             $res = array_values(array_intersect($baseFolders,$contents));
@@ -1513,17 +1516,17 @@ class QueueController extends Integration_Controller_Action {
                 //$res = array_values(array_intersect($baseFolders,$contents));
                
                 //find magento files
-                return $this->_checkForMagentoFoldersOnFtp();
+                return $this->_checkForMagentoFoldersOnFtp($stripAbsolutePath);
                 
             } else {
             /*we are in web dir*/
             
                 //find magento files
-                return $this->_checkForMagentoFoldersOnFtp();
+                return $this->_checkForMagentoFoldersOnFtp($stripAbsolutePath);
             }
             
             //find magento files
-            return $this->_checkForMagentoFoldersOnFtp();
+            return $this->_checkForMagentoFoldersOnFtp($stripAbsolutePath);
         }
         
         return false;
@@ -1604,7 +1607,7 @@ class QueueController extends Integration_Controller_Action {
         }
     }
     
-    protected function _checkForMagentoFoldersOnFtp(){
+    protected function _checkForMagentoFoldersOnFtp($stripAbsolutePath){
         $contents = ftp_nlist($this->_ftpStream, ".");
         
         if (in_array('app',$contents) 
@@ -1612,7 +1615,12 @@ class QueueController extends Integration_Controller_Action {
             && in_array('js',$contents)
             && in_array('skin',$contents)
         ) {
-            return ftp_pwd($this->_ftpStream);
+            $pwd = ftp_pwd($this->_ftpStream);
+            // base dir is found in current pwd, remove that
+            if ($stripAbsolutePath && strlen($this->_absolutePath) && strpos($pwd, $this->_absolutePath) === 0) {
+                $pwd = substr($pwd, strlen($this->_absolutePath));
+            }
+            return $pwd;
         }
         return false;
     }
@@ -1675,7 +1683,7 @@ class QueueController extends Integration_Controller_Action {
     }
 
     protected function _findSqlDumpOnFtp() {
-        $basePath = $this->_findWebrootOnFtp();
+        $basePath = $this->_findWebrootOnFtp(false);
 
         $raw = ftp_rawlist($this->_ftpStream,rtrim($basePath,'/').'/var/backups/');
         if (!$raw){
@@ -1710,8 +1718,15 @@ class QueueController extends Integration_Controller_Action {
         } else {
             return false;
         }
-               
-        return rtrim($basePath,'/').'/var/backups/'.$newestFile;
+
+        $sqlDumpFile = rtrim($basePath,'/').'/var/backups/'.$newestFile;
+
+        // base dir is found in current pwd, remove that
+        if (strlen($this->_absolutePath) && strpos($sqlDumpFile, $this->_absolutePath) === 0) {
+            $sqlDumpFile = substr($sqlDumpFile, strlen($this->_absolutePath));
+        }
+
+        return $sqlDumpFile;
         
     }
     
