@@ -25,9 +25,12 @@ implements Application_Model_Task_Interface {
 
         try { 
             $response = $this->_service->removeSystem((string)$id);
-        } catch(Zend_Service_Exception $e) {
-            $this->logger->log($e->getMessage(), Zend_Log::CRIT);
-            throw new Application_Model_Task_Exception($e->getMessage());
+        } catch(Zend_Exception $e) {
+            // invalid response or connection problem eg. timeout
+            $message = 'Could not remove Paper Trail system.';
+            $this->logger->log($message, Zend_Log::CRIT);
+            $this->logger->log($e->getMessage(), Zend_Log::DEBUG);
+            throw new Application_Model_Task_Exception($message);
         }
 
         if(isset($response->status) && $response->status == 'ok') {
