@@ -67,8 +67,15 @@
                                 <?php if(!$this->user->getBraintreeTransactionId()):
                                     $coupon = new Application_Model_Coupon();
                                     $coupon->findByUser($this->user->getId());
+                                    $activeFrom = strtotime($this->user->getActiveFrom());
+                                    $couponDate = strtotime($coupon->getDuration(),$activeFrom);
+                                    $planActiveTo = strtotime($this->user->getPlanActiveTo());
+
+                                    if($couponDate > time() && ($couponDate+(15*3600)) > $planActiveTo):
                                 ?>
-                                    You have been granted access for <?php echo str_replace('+', '', $coupon->getDuration()); ?> of Mage Testing. Your account will be active until <?php echo date('F j, Y', strtotime($this->user->getPlanActiveTo())); ?>.
+                                        You have been granted access for <?php echo str_replace('+', '', $coupon->getDuration()); ?> of Mage Testing.
+                                    <?php endif; ?>
+                                        Your account will be active until <?php echo date('F j, Y', strtotime($this->user->getPlanActiveTo())); ?>.
                                 <?php elseif(!(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                                     Your account is pending payment. It could take up to 24 hours to confirm your payment. Please enjoy using Mage Testing while we settle your payment details.
                                 <?php elseif((int)$this->user->getPlanId() && $this->plan->getAutoRenew()): ?>
