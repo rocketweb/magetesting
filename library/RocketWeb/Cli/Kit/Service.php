@@ -16,6 +16,6 @@ class RocketWeb_Cli_Kit_Service
     protected function _service()
     {
         # '/etc/init.d/'
-        return $this->append('service');
+        return $this->append('/usr/bin/service');
     }
 }
