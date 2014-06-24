@@ -364,8 +364,8 @@ body {
     -webkit-border-top-right-radius: 0;
     -moz-border-radius-topleft: 0;
     -moz-border-radius-topright: 0;
-    left: -46px;
-    width: 160px;
+    right: 0;
+    min-width: 169px;
     border: 0;
     position: absolute;
     top: 28px;
