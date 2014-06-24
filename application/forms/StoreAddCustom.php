@@ -180,7 +180,6 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         
         $this->custom_sql->removeDecorator('HtmlTag');
         $this->custom_sql->removeDecorator('overall');
-        $this->custom_sql->removeDecorator('Errors');
 
         $this->custom_file->removeDecorator('HtmlTag');
         $this->custom_file->removeDecorator('overall');
