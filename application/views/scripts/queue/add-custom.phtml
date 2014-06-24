@@ -108,6 +108,16 @@
                                     <?php echo $this->form->custom_sql ?>
                                     <span class="add-on tooltip-top find-sql-file btn" data-loading-text="Loading..." data-tooltip-title="Find Latest Magento Admin Database Backup">Find<span class="hidden-phone-portrait"> database</span> backup</span>
                                 </div>
+                                <?php
+                                $errorsMessages =$this->form->getMessages();
+                                if(isset($errorsMessages['custom_sql'])):
+                                    ?>
+                                    <ul class="errors">
+                                        <?php foreach($errorsMessages['custom_sql'] as $errorMsg): ?>
+                                            <li><?php echo $errorMsg; ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php endif; ?>
                             </div>
                         </div>
             	    </fieldset>

@@ -118,7 +118,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         $regexSql->setMessage('SQL dump doesn\'t end in .sql or .gz!');
 
         $this->addElement('text', 'custom_sql', array(
-                'label'       => 'Remote absolute path to SQL dump',
+                'label'       => 'Remote absolute path to .gz or .sql file containing database dump',
                 'required'    => true,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/dump.sql',
@@ -128,6 +128,8 @@ class Application_Form_StoreAddCustom extends Integration_Form{
                         $regexSql
                     )
             ));
+
+
 //        $this->custom_sql->setValue('ie. /website/html/dump.sql');
         
         $this->addElement('text', 'custom_login', array(
@@ -178,6 +180,7 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         
         $this->custom_sql->removeDecorator('HtmlTag');
         $this->custom_sql->removeDecorator('overall');
+        $this->custom_sql->removeDecorator('Errors');
 
         $this->custom_file->removeDecorator('HtmlTag');
         $this->custom_file->removeDecorator('overall');
