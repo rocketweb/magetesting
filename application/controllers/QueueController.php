@@ -597,12 +597,11 @@ class QueueController extends Integration_Controller_Action {
         }
 
         $this->view->render_extension_grid = false;
-        if('admin' == $this->auth->getIdentity()->group) {
+        if('admin' == $this->auth->getIdentity()->group && $this->_getParam('admin-edit') != NULL) {
             $this->view->render_extension_grid = true;
             $extensions = new Application_Model_Extension();
-            $this->view->extensions = $extensions->getInstalledForStore($store->getId(), 'premium');
+            $this->view->extensions = $extensions->getInstalledForStore($store->getId());
         }
-
         $this->view->form = $form;
     }
 

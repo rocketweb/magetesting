@@ -114,6 +114,7 @@
                     if($this->render_extension_grid):
                     $this->headScript()->appendFile($this->baseUrl('public/js/queue-edit-admin.js'));
                     ?>
+
                         <div class="tab-stripe"></div>
                         <fieldset class="custom-files">
                             <legend>Store extensions</legend>
@@ -130,24 +131,30 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach($this->extensions as $item): ?>
+
                                     <tr>
                                         <td><?php echo $item['name']; ?></td>
                                         <td><?php echo $item['edition']; ?></td>
                                         <td><?php echo $item['version']; ?></td>
                                         <td>$<?php echo $item['price']; ?></td>
                                         <td>
-                                            <?php $paid = $item['braintree_transaction_id'] && $item['braintree_transaction_confirmed']; ?>
+                                            <?php $paid = $item['braintree_transaction_id'] && $item['braintree_transaction_confirmed'];
+                                            if((int)$item['price'] > 0):
+                                            ?>
                                             <div class="btn-group" data-toggle="buttons-radio" data-store-extension-id="<?php echo $item['id']; ?>">
                                                 <button type="button" class="btn btn-off<?php echo (!$paid ? ' active' : ''); ?>" data-value="0">No</button>
                                                 <button type="button" class="btn btn-on<?php echo ($paid ? ' active' : ''); ?>" data-value="1">Yes</button>
                                             </div>
+                                            <?php else: ?>
+                                                Free
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
                             <?php else: ?>
-                            <p>There is not any extensions.</p>
+                            <p>No extensions installed.</p>
                             <?php endif; ?>
                         </fieldset>
                     <?php endif; ?>
