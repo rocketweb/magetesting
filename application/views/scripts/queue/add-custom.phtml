@@ -105,9 +105,14 @@
             	        <div class="row row-large">
                             <div class="span8">
                                 <div class="input-append custom-sql-input">
-                                    <?php echo $this->form->custom_sql ?>
+                                    <?php
+                                    echo $this->form->custom_sql->renderLabel() .
+                                         $this->form->custom_sql->renderViewHelper() .
+                                         $this->form->custom_sql->renderDescription();
+                                    ?>
                                     <span class="add-on tooltip-top find-sql-file btn" data-loading-text="Loading..." data-tooltip-title="Find Latest Magento Admin Database Backup">Find<span class="hidden-phone-portrait"> database</span> backup</span>
                                 </div>
+                                <?php echo $this->form->custom_sql->renderErrors(); ?>
                             </div>
                         </div>
             	    </fieldset>
