@@ -19,21 +19,22 @@ class Integration_Acl extends Zend_Acl
         /**
          * Set up resources
          */
-        $this->add(new Zend_Acl_Resource('api_store'));
-        $this->add(new Zend_Acl_Resource('api_user'));
-        $this->add(new Zend_Acl_Resource('api_store-status'));
-        $this->add(new Zend_Acl_Resource('api_coupon'));
-        $this->add(new Zend_Acl_Resource('default_error'));
-        $this->add(new Zend_Acl_Resource('default_index'));
-        $this->add(new Zend_Acl_Resource('default_user'));
-        $this->add(new Zend_Acl_Resource('default_queue'));
-        $this->add(new Zend_Acl_Resource('default_extension'));
-        $this->add(new Zend_Acl_Resource('default_extensions'));
-        $this->add(new Zend_Acl_Resource('default_my-account'));
-        $this->add(new Zend_Acl_Resource('default_coupon'));
-        $this->add(new Zend_Acl_Resource('default_plan'));
-        $this->add(new Zend_Acl_Resource('default_payment'));
-        $this->add(new Zend_Acl_Resource('default_help'));
+        $this->addResource(new Zend_Acl_Resource('api_store'));
+        $this->addResource(new Zend_Acl_Resource('api_user'));
+        $this->addResource(new Zend_Acl_Resource('api_store-status'));
+        $this->addResource(new Zend_Acl_Resource('api_coupon'));
+        $this->addResource(new Zend_Acl_Resource('default_error'));
+        $this->addResource(new Zend_Acl_Resource('default_index'));
+        $this->addResource(new Zend_Acl_Resource('default_user'));
+        $this->addResource(new Zend_Acl_Resource('default_queue'));
+        $this->addResource(new Zend_Acl_Resource('default_extension'));
+        $this->addResource(new Zend_Acl_Resource('default_extensions'));
+        $this->addResource(new Zend_Acl_Resource('default_my-account'));
+        $this->addResource(new Zend_Acl_Resource('default_my-extensions'));
+        $this->addResource(new Zend_Acl_Resource('default_coupon'));
+        $this->addResource(new Zend_Acl_Resource('default_plan'));
+        $this->addResource(new Zend_Acl_Resource('default_payment'));
+        $this->addResource(new Zend_Acl_Resource('default_help'));
         /**
          * Deny for all (we use white list)
          */
