@@ -17,6 +17,8 @@ implements Application_Model_Task_Interface {
 
         $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
         $DbManager->disableFtp($this->_dbuser);
+
+        $this->_pkillFtp($this->_systemname);
         
         $startCwd = getcwd();
         
@@ -80,7 +82,7 @@ implements Application_Model_Task_Interface {
         $this->_activateDemoNotice();
 
         if('ee' === strtolower($this->_magentoEdition)) {
-            $this->_encodeEnterprise('clean');
+            $this->_encodeEnterprise();
         }
 
         /* clear cache to make sure db updates are applied on first request (wojtek)  */

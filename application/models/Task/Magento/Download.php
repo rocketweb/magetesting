@@ -18,6 +18,8 @@ implements Application_Model_Task_Interface {
         $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
         $DbManager->disableFtp($this->_dbuser);
 
+        $this->_pkillFtp($this->_systemname);
+
         $this->_updateStoreStatus('downloading-magento');
         $this->_prepareDatabase();
         $this->_createSystemAccount();
@@ -65,7 +67,6 @@ implements Application_Model_Task_Interface {
         }
 
         $this->_fixOwnership();
-        $this->_updateMagentoVersion();
         
         try {
             $transportModel->downloadDatabase();
@@ -80,7 +81,7 @@ implements Application_Model_Task_Interface {
         $this->_customRemotePath = $transportModel->getCustomRemotePath();
 
         /* end of transport usage */
-        
+
 	$this->_prepareDatabaseDump();
         //let's load sql to mysql database
         $this->_importDatabaseDump();
@@ -142,7 +143,7 @@ implements Application_Model_Task_Interface {
         $this->_storeObject->setRevisionCount(0);
 
         if('ee' === strtolower($this->_storeObject->getEdition())) {
-            $this->_encodeEnterprise('custom');
+            $this->_encodeEnterprise();
         }
 
         $DbManager->enableFtp($this->_dbuser);
@@ -522,9 +523,9 @@ implements Application_Model_Task_Interface {
         
         $this->_storeObject->setBackendName($frontname)->save();
     }
-
-    protected function _cleanLogTables()
-    {
+    
+    protected function _cleanLogTables(){
+        
         $tablesToClean = array(
             'log_customer',
             'log_quote',
@@ -538,14 +539,7 @@ implements Application_Model_Task_Interface {
             'sendfriend_log'
         );
 
-        foreach ($tablesToClean as $table) {
-            try {
-                $this->_taskMysql->truncate($table);
-                $this->logger->log(sprintf('Table %s truncated successfully.', $table), Zend_Log::DEBUG);
-            } catch (Exception $e) {
-                $this->logger->log(sprintf('Table %s not truncated.', $table), Zend_Log::DEBUG);
-            }
-        }
+        $this->_taskMysql->truncate($tablesToClean);
     }
 
     /**
@@ -670,7 +664,6 @@ implements Application_Model_Task_Interface {
         $this->_db_table_prefix = '';
         if(isset($output[0])) {
             $this->_db_table_prefix = $output[0];
-            $this->_taskMysql->setTablePrefix($this->_db_table_prefix);
         }
     }
 
@@ -686,53 +679,5 @@ implements Application_Model_Task_Interface {
         $this->logger->log($command, Zend_Log::DEBUG);
         $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
     }
-    
-    protected function _updateMagentoVersion()
-    {
-        $this->logger->log('Checking real Magento version.', Zend_Log::INFO);
-
-        $matches=array();
-        $major=array();
-        $minor=array();
-        $revision=array();
-        $patch=array();
-        
-        $mageFile = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/Mage.php';
-        
-        $text = file_get_contents($mageFile);
-
-        preg_match('#function getVersionInfo\(\)(.*?)}#is',$text,$matches);
-
-        preg_match("#'major'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$major);
-        preg_match("#'minor'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$minor);
-        preg_match("#'revision'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$revision);
-        preg_match("#'patch'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$patch);
-       
-        $version = $major[3].'.'.$minor[3].'.'.$revision[3].'.'.$patch[3];
-
-        $edition =
-            (file_exists($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/code/core/Enterprise/')) 
-                ? 'EE' : 'CE';
-
-        $versionModel = new Application_Model_Version();
-        $versionModel->findByVersionString($version, $edition);
-
-        if (!$versionModel->getId()) {
-            $error = sprintf('Magento %s %s is not supported.', $edition, $version);
-            $this->logger->log($error, Zend_Log::ERR);
-            throw new Application_Model_Task_Exception($error);
-        }
-
-        $this->logger->log(sprintf('Magento version successfully found: %s %s changed to %s %s',
-            $this->_storeObject->getEdition(),
-            $this->_versionObject->getVersion(),
-            $edition, $version
-        ), Zend_Log::INFO);
-
-        $this->_versionObject = $versionModel;
-
-        $this->_storeObject->setEdition($edition);
-        $this->_storeObject->setVersionId($versionModel->getId());
-        $this->_storeObject->save();
-    }
+   
 }
