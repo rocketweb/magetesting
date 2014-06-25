@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: EmailAddress.php 24828 2012-05-30 12:24:06Z adamlundrigan $
+ * @version    $Id$
  */
 
 /**
@@ -32,7 +32,7 @@ require_once 'Zend/Validate/Hostname.php';
 /**
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
@@ -63,17 +63,26 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
     );
 
     /**
+     * As of RFC5753 (JAN 2010), the following blocks are no logner reserved:
+     *   - 128.0.0.0/16
+     *   - 191.255.0.0/16
+     *   - 223.255.255.0/24
+     * @see http://tools.ietf.org/html/rfc5735#page-6
+     *
+     * As of RFC6598 (APR 2012), the following blocks are now reserved:
+     *   - 100.64.0.0/10
+     * @see http://tools.ietf.org/html/rfc6598#section-7
+     *
      * @see http://en.wikipedia.org/wiki/IPv4
      * @var array
      */
     protected $_invalidIp = array(
         '0'   => '0.0.0.0/8',
         '10'  => '10.0.0.0/8',
+        '100' => '100.64.0.0/10',
         '127' => '127.0.0.0/8',
-        '128' => '128.0.0.0/16',
         '169' => '169.254.0.0/16',
         '172' => '172.16.0.0/12',
-        '191' => '191.255.0.0/16',
         '192' => array(
             '192.0.0.0/24',
             '192.0.2.0/24',
@@ -81,7 +90,6 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
             '192.168.0.0/16'
         ),
         '198' => '198.18.0.0/15',
-        '223' => '223.255.255.0/24',
         '224' => '224.0.0.0/4',
         '240' => '240.0.0.0/4'
     );
@@ -416,15 +424,12 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
         if (preg_match('/^[' . $atext . ']+(\x2e+[' . $atext . ']+)*$/', $this->_localPart)) {
             $result = true;
         } else {
-            // Try quoted string format
+            // Try quoted string format (RFC 5321 Chapter 4.1.2)
 
-            // Quoted-string characters are: DQUOTE *([FWS] qtext/quoted-pair) [FWS] DQUOTE
-            // qtext: Non white space controls, and the rest of the US-ASCII characters not
-            //   including "\" or the quote character
-            $noWsCtl = '\x01-\x08\x0b\x0c\x0e-\x1f\x7f';
-            $qtext   = $noWsCtl . '\x21\x23-\x5b\x5d-\x7e';
-            $ws      = '\x20\x09';
-            if (preg_match('/^\x22([' . $ws . $qtext . '])*[$ws]?\x22$/', $this->_localPart)) {
+            // Quoted-string characters are: DQUOTE *(qtext/quoted-pair) DQUOTE
+            $qtext      = '\x20-\x21\x23-\x5b\x5d-\x7e'; // %d32-33 / %d35-91 / %d93-126
+            $quotedPair = '\x20-\x7e'; // %d92 %d32-126
+            if (preg_match('/^"(['. $qtext .']|\x5c[' . $quotedPair . '])*"$/', $this->localPart)) {
                 $result = true;
             } else {
                 $this->_error(self::DOT_ATOM);

@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Mobile
  * @subpackage Zend_Mobile_Push
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
@@ -32,7 +32,7 @@ require_once 'Zend/Mobile/Push/Message/Apns.php';
  * @category   Zend
  * @package    Zend_Mobile
  * @subpackage Zend_Mobile_Push
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
@@ -55,8 +55,8 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
     protected $_serverUriList = array(
         'ssl://gateway.sandbox.push.apple.com:2195',
         'ssl://gateway.push.apple.com:2195',
-        'ssl://feedback.push.apple.com:2196',
-        'ssl://feedback.sandbox.push.apple.com:2196'
+        'ssl://feedback.sandbox.push.apple.com:2196',
+        'ssl://feedback.push.apple.com:2196'
     );
 
     /**
@@ -302,13 +302,20 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         if (!empty($alert)) {
             $payload['aps']['alert'] = $alert;
         }
-        $payload['aps']['badge'] = $message->getBadge();
+        if (!is_null($message->getBadge())) {
+            $payload['aps']['badge'] = $message->getBadge();
+        }
         $payload['aps']['sound'] = $message->getSound();
 
         foreach($message->getCustomData() as $k => $v) {
             $payload[$k] = $v;
         }
-        $payload = json_encode($payload);
+        
+        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+            $payload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        } else {
+            $payload = json_encode($payload);
+        }
 
         $expire = $message->getExpire();
         if ($expire > 0) {
