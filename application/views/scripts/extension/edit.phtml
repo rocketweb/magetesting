@@ -87,15 +87,10 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                         </div>
                         <div class="row">
                             <div class="span4">
-                                <div class="control-group"><label for="from_version" class="control-label optional">Supported from </label>
+                                <div class="control-group"><label for="from_version" class="control-label required">Supported from</label>
                                     <div class="controls">
                                         <select name="from_version" id="from_version" class="CE span4">
                                         <?php foreach ($this->versionCe as $value): ?>
-                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getFromVersion() OR $value['version'] == $this->form->from_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
-                                        <?php endforeach; ?>
-                                        </select>
-                                        <select name="from_version" id="from_version" class="PE span4" style="display: none;">
-                                        <?php foreach ($this->versionPe as $value): ?>
                                             <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getFromVersion() OR $value['version'] == $this->form->from_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
@@ -115,12 +110,6 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                                         <select name="to_version" id="to_version" class="CE span4">
                                             <option value="" label="Latest"></option>
                                         <?php foreach ($this->versionCe as $value): ?>
-                                            <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion() OR $value['version'] == $this->form->to_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
-                                        <?php endforeach; ?>
-                                        </select>
-                                        <select name="to_version" id="to_version" class="PE span4" style="display: none;">
-                                            <option value="" label="Latest"></option>
-                                        <?php foreach ($this->versionPe as $value): ?>
                                             <option value="<?php echo $value['version']; ?>" label="<?php echo $value['version']; ?>" <?php echo ($value['version'] == $this->extension->getToVersion() OR $value['version'] == $this->form->to_version->getValue()) ? ' selected="selected"': '' ?>><?php echo $value['version']; ?></option>
                                         <?php endforeach; ?>
                                         </select>
@@ -145,7 +134,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                     <div class="row">
                         <div class="span8">
                             <div class="control-group <?php echo $this->form->logo->hasErrors() ? 'error' : ''; ?>">
-                                <label for="logo" class="control-label required">Logo</label>
+                                <label for="logo" class="control-label">Logo</label>
                                 <div class="controls logo-container">
                                     <?php if ($this->logo): ?>
                                         <?php if (isset($this->old_logo) AND $this->old_logo): ?>
@@ -169,7 +158,7 @@ $this->headLink()->appendStylesheet($this->baseUrl('public/js/jquery_uploader/cs
                     <div class="row">
                         <div class="span8">
                             <div class="control-group <?php echo ($this->form->screenshots->hasErrors() ? 'error' : ''); ?>">
-                                <label class="control-label required">Screenshots</label>
+                                <label class="control-label">Screenshots</label>
                                 <div class="controls screenshots thumbnails">
                                     <?php if ($this->form->screenshots->hasErrors()): ?>
                                         <ul class="errors">
