@@ -59,9 +59,9 @@ extends Application_Model_Task {
         }
     }
 
-    protected function _encodeEnterprise()
+    protected function _encodeEnterprise($type = 'clean')
     {
-        $ioncube = new Application_Model_Ioncube_Encode_Clean();
+        $ioncube = Application_Model_Ioncube_Encode_Store::factory($type);
 
         try {
             $ioncube->setup(
