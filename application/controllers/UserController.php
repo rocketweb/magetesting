@@ -797,7 +797,7 @@ class UserController extends Integration_Controller_Action
         $storeModel = new Application_Model_Store();
         $paginator = $storeModel->getAllForUser($id);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setItemCountPerPage(3);
+        $paginator->setItemCountPerPage(10);
         $stores_view =
             $this->view->partial(
                 'queue/index.phtml',
