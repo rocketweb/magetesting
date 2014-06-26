@@ -80,7 +80,7 @@ implements Application_Model_Task_Interface {
         $this->_fixUserHomeChmod();
 
         if('ee' === strtolower($this->_magentoEdition)) {
-            $this->_encodeEnterprise();
+            $this->_encodeEnterprise('clean');
         }
 
         /* clear cache to make sure db updates are applied on first request (wojtek)  */
