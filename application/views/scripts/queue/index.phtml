@@ -110,8 +110,13 @@
     </div>
 </div>
 
-<?php echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml'); ?>
-<?php 
+<?php
+$paginationProperties = array('page_prefix' => '');
+if(isset($this->page_prefix) && $this->page_prefix != ''){
+    $paginationProperties['page_prefix'] = $this->page_prefix;
+}
+echo $this->paginationControl($this->queue, 'Sliding', '_partials/paginationControl.phtml',$paginationProperties); ?>
+<?php
     $data = <<<EOT
 
 EOT;

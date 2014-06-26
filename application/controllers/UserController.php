@@ -563,6 +563,8 @@ class UserController extends Integration_Controller_Action
             }
         }
 
+        $page = (int) $this->_getParam('page', 0);
+
         $form = 'Application_Form_User'.ucfirst($type);
         $form = new $form();
         $formPopulateData = $user->__toArray();
@@ -641,6 +643,7 @@ class UserController extends Integration_Controller_Action
                         'module'     => 'default',
                         'controller' => 'user',
                         'action'     => 'list',
+                        'page' => $page
                 ), 'default', true);
             } else {
                 if('edit' == $type) {
@@ -650,6 +653,7 @@ class UserController extends Integration_Controller_Action
 
         }
         $this->view->form = $form;
+        $this->view->assign(array('page' => $page));
         
     }
     
@@ -659,9 +663,12 @@ class UserController extends Integration_Controller_Action
         $user = new Application_Model_User();
         $user = $user->find($id);
 
+        $page = (int)$this->_getParam('page', 0);
+
         $redirect = array(
             'controller' => 'user',
-            'action' => 'dashboard'
+            'action' => 'dashboard',
+            'page' => $page
         );
 
         if($this->auth->getIdentity()->group == 'admin' AND (int)$user->getId() AND $this->getRequest()->isPost()){
@@ -803,17 +810,18 @@ class UserController extends Integration_Controller_Action
         $payment = new Application_Model_Payment();
         $payments = $payment->fetchUserPayments($user->getId());
 
-        $page = (int) $this->_getParam('page', 0);
+        $page = (int) $this->_getParam('spage', 0);
         $storeModel = new Application_Model_Store();
         $paginator = $storeModel->getAllForUser($id);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setItemCountPerPage(10);
+        $paginator->setItemCountPerPage(3);
         $stores_view =
             $this->view->partial(
                 'queue/index.phtml',
                 array(
                     'user_details' => true,
-                    'queue' => $paginator
+                    'queue' => $paginator,
+                    'page_prefix' => 's'
                 )
             );
 
