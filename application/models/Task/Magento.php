@@ -52,8 +52,12 @@ extends Application_Model_Task {
 
     protected function _pkillFtp($systemName = ''){
         if($systemName != ''){
-            $this->cli('pkill')->pkill($systemName)->call();
-            $this->logger->log('Command executed: pkill -u '.$systemName.' pure-ftpd', Zend_Log::DEBUG);
+            $command = $this->cli('pkill')->pkill($systemName);
+            $output = $command->call()->getLastOutput();
+
+            $message = var_export($output, true);
+            $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+            unset($output);
         }else{
             $this->logger->log('Trying to pkill the ftp connection but no system_account_name was given!', Zend_Log::NOTICE);
         }
