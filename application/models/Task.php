@@ -103,7 +103,7 @@ class Application_Model_Task {
 
         // setup file writer
         $writerFile = new Zend_Log_Writer_Stream(
-            APPLICATION_PATH . '/../data/logs/' . $this->_userObject->getLogin() . '_' . $this->_storeObject->getDomain() . '.log'
+            APPLICATION_PATH . '/../data/logs/' . $this->_userObject->getLogin() . '_' . $this->_storeObject->getId() . '_' . $this->_storeObject->getDomain() . '.log'
         );
         $writerFile->addFilter(Zend_Log::DEBUG);
 
