@@ -786,7 +786,7 @@ class UserController extends Integration_Controller_Action
         $payment = new Application_Model_Payment();
         $payments = $payment->fetchUserPayments($user->getId());
 
-        $page = (int) $this->_getParam('page', 0);
+        $page = (int) $this->_getParam('spage', 0);
         $storeModel = new Application_Model_Store();
         $paginator = $storeModel->getAllForUser($id);
         $paginator->setCurrentPageNumber($page);
@@ -796,7 +796,8 @@ class UserController extends Integration_Controller_Action
                 'queue/index.phtml',
                 array(
                     'user_details' => true,
-                    'queue' => $paginator
+                    'queue' => $paginator,
+                    'page_prefix' => 's'
                 )
             );
         $this->view->assign(

@@ -1,11 +1,14 @@
 <?php if ($this->pageCount): ?>
-<?php if(!isset($this->urlParams)) $this->urlParams = array(); ?>
+<?php
+    if(!isset($this->urlParams)) $this->urlParams = array();
+    $pageVar = $this->page_prefix . 'page';
+?>
 <div class="pagination">
     <ul>
         <!-- Previous page link -->
         <?php if (isset($this->previous)): ?>
         <li class="prev"><a
-            href="<?php echo $this->url((array_merge(array('page' => $this->previous), $this->urlParams))); ?>">
+            href="<?php echo $this->url((array_merge(array($pageVar => $this->previous), $this->urlParams))); ?>">
                 &larr; <?php echo $this->translate('Previous'); ?>
         </a></li>
         <?php else: ?>
@@ -17,7 +20,7 @@
         <?php foreach ($this->pagesInRange as $page): ?>
         <li
         <?php echo ($page == $this->current) ? 'class="active"' : ''; ?>><a
-            href="<?php echo $this->url((array_merge(array('page' => $page), $this->urlParams))); ?>">
+            href="<?php echo $this->url((array_merge(array($pageVar => $page), $this->urlParams))); ?>">
                 <?php echo $page; ?>
         </a></li>
         <?php endforeach; ?>
@@ -25,7 +28,7 @@
         <!-- Next page link -->
         <?php if (isset($this->next)): ?>
         <li class="next"><a
-            href="<?php echo $this->url(array_merge(array('page' => $this->next), $this->urlParams)); ?>">
+            href="<?php echo $this->url(array_merge(array($pageVar => $this->next), $this->urlParams)); ?>">
                 <?php echo $this->translate('Next'); ?> &rarr;
         </a></li>
         <?php else: ?>
