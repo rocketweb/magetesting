@@ -48,12 +48,18 @@ implements Application_Model_Task_Interface {
         
         //remove store
         $this->db->delete('store','id='.$this->_storeObject->getId());
-        
-        $logpath = APPLICATION_PATH . '/../data/logs/'.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.log';
-        if (file_exists($logpath)){
-            unlink($logpath);
+
+        // rotate store log
+        $logpath = APPLICATION_PATH . '/../data/logs/';
+        $logName = $this->_userObject->getLogin().'_'.$this->_storeObject->getId().'_'.$this->_storeObject->getDomain().'.log';
+
+        if (file_exists($logpath . $logName)){
+            if (!file_exists($logpath . date("Y"))) {
+                mkdir($logpath . date("Y") . '/', 0777, true);
+            }
+            rename($logpath . $logName, $logpath . date("Y") . '/' . $logName);
         }
-    
+
         //remove store rsyslog config
         $conffile = $this->config->magento->userprefix.$this->_userObject->getLogin().'_'.$this->_storeObject->getDomain().'.conf';
         if (file_exists($conffile)){

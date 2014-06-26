@@ -122,11 +122,11 @@ class Application_Form_StoreAddCustom extends Integration_Form{
                 'required'    => true,
                 'label_class' => 'radio inline',
                 'placeholder' => 'ie. /website/html/dump.sql',
-                'class'      => 'span6',
-                'filters'    => array('StripTags', 'StringTrim'),
-                    'validators'  => array(
-                        $regexSql
-                    )
+                'class'       => 'span6',
+                'filters'     => array('StripTags', 'StringTrim'),
+                'validators'  => array(
+                    $regexSql
+                )
             ));
 
 
