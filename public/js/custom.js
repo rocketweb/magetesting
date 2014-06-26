@@ -155,7 +155,7 @@ $(document).ready(function () {
         $user_deletion_buttons.click(function() {
             var $this = $(this);
             $user_deletion_modal.find('.modal-body b').text(
-                $this.parents('tr:first').find('td:eq(0)').text()
+                $this.parents('tr:first').find('td:eq(1)').text()
             );
             $user_deletion_modal.find('form :input[name=id]').val($this.data('user-id'));
 
