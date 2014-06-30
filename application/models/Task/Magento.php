@@ -125,7 +125,7 @@ extends Application_Model_Task {
             if (is_array($output)) {
                 foreach ($output as $notice) {
                     if (strpos($notice, 'create_user.sh') !== false) {
-                        $this->logger->log('Some problem with creating user.', Zend_Log::CRIT, $notice);
+                        $this->logger->log(sprintf('User %s could not be created.', $this->config->magento->userprefix . $this->_dbuser), Zend_Log::CRIT, $notice);
                         throw new Application_Model_Task_Exception(
                             'There was a problem adding store, please contact with our support team.'
                         );
