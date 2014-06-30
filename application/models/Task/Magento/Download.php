@@ -18,6 +18,8 @@ implements Application_Model_Task_Interface {
         $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
         $DbManager->disableFtp($this->_dbuser);
 
+        $this->_pkillFtp($this->_systemname);
+
         $this->_updateStoreStatus('downloading-magento');
         $this->_prepareDatabase();
         $this->_createSystemAccount();
@@ -80,8 +82,8 @@ implements Application_Model_Task_Interface {
         $this->_customRemotePath = $transportModel->getCustomRemotePath();
 
         /* end of transport usage */
-        
-	$this->_prepareDatabaseDump();
+
+	    $this->_prepareDatabaseDump();
         //let's load sql to mysql database
         $this->_importDatabaseDump();
 
@@ -522,9 +524,10 @@ implements Application_Model_Task_Interface {
         
         $this->_storeObject->setBackendName($frontname)->save();
     }
-
+    
     protected function _cleanLogTables()
     {
+        
         $tablesToClean = array(
             'log_customer',
             'log_quote',
@@ -685,7 +688,7 @@ implements Application_Model_Task_Interface {
         $this->logger->log($command, Zend_Log::DEBUG);
         $this->logger->log(var_export($output, true), Zend_Log::DEBUG);
     }
-    
+
     protected function _updateMagentoVersion()
     {
         $this->logger->log('Checking real Magento version.', Zend_Log::INFO);
@@ -695,9 +698,9 @@ implements Application_Model_Task_Interface {
         $minor=array();
         $revision=array();
         $patch=array();
-        
+
         $mageFile = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/Mage.php';
-        
+
         $text = file_get_contents($mageFile);
 
         preg_match('#function getVersionInfo\(\)(.*?)}#is',$text,$matches);
@@ -706,11 +709,11 @@ implements Application_Model_Task_Interface {
         preg_match("#'minor'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$minor);
         preg_match("#'revision'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$revision);
         preg_match("#'patch'(.*?)=>(.*?)'([0-9]+)',#is",$matches[0],$patch);
-       
+
         $version = $major[3].'.'.$minor[3].'.'.$revision[3].'.'.$patch[3];
 
         $edition =
-            (file_exists($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/code/core/Enterprise/')) 
+            (file_exists($this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/code/core/Enterprise/'))
                 ? 'EE' : 'CE';
 
         $versionModel = new Application_Model_Version();

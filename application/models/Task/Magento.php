@@ -8,6 +8,7 @@ extends Application_Model_Task {
     protected $_dbhost = '';
     protected $_dbname = '';
     protected $_systempass = '';
+    protected $_systemname = '';
     protected $_db_table_prefix = '';
 
     protected $_taskMysql;
@@ -28,6 +29,8 @@ extends Application_Model_Task {
 
             $this->_adminfname = $this->_userObject->getFirstname();
             $this->_adminlname = $this->_userObject->getLastname();
+
+            $this->_systemname = $this->_userObject->getSystemAccountName();
                         
             $this->_systempass = substr(sha1($this->config->magento->usersalt . $this->config->magento->userprefix . $this->_userObject->getLogin()), 10, 10);
             $this->_domain = $this->_storeObject->getDomain();
@@ -45,6 +48,19 @@ extends Application_Model_Task {
             )
         );
         $this->_taskMysql = new Application_Model_TaskMysql($db, $this->_db_table_prefix);
+    }
+
+    protected function _pkillFtp($systemName = ''){
+        if($systemName != ''){
+            $command = $this->cli('pkill')->pkill($systemName);
+            $output = $command->call()->getLastOutput();
+
+            $message = var_export($output, true);
+            $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+            unset($output);
+        }else{
+            $this->logger->log('Trying to pkill the ftp connection but no system_account_name was given!', Zend_Log::NOTICE);
+        }
     }
 
     protected function _encodeEnterprise($type = 'clean')

@@ -17,6 +17,8 @@ implements Application_Model_Task_Interface {
 
         $DbManager = new Application_Model_DbTable_Privilege($this->dbPrivileged, $this->config);
         $DbManager->disableFtp($this->_dbuser);
+
+        $this->_pkillFtp($this->_systemname);
         
         $startCwd = getcwd();
         
