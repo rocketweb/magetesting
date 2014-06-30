@@ -8,29 +8,21 @@
 # - user salt (to generate passwords with)
 # - system home directory (usually /home)
 
-#Config section
-MyUSER="mysql-username"     # USERNAME
-MyPASS="mysql-pasword"       # PASSWORD
-MyHOST="mysql-host"          # Hostname
-MyDBNAME="mysql-db" #Database Name for magetesting app
-
 #And the script itself, nothing to change here
 args=("$@")
 if [ $# -eq 4 ]; then
 
     #create group if not exists  
     if [ !`egrep -i "^${args[0]}" /etc/group > /dev/null` ]; then
-        groupadd -f ${args[0]}
+        /usr/sbin/groupadd -f ${args[0]}
     fi
 
     #create user if not exists
     if [ !`egrep -i "^$username" /etc/passwd > /dev/null` ]; then
-        useradd -p `mkpasswd ${args[1]}` -m ${args[0]} -g ${args[0]}
-        sqlQuery="UPDATE user SET has_system_account = 1 WHERE system_account_name = '"${args[0]}"';"
-        mysql --user=$MyUSER -h $MyHOST --password=$MyPASS $MyDBNAME -e "$sqlQuery"
+        /usr/sbin/useradd -p `mkpasswd ${args[1]}` -m ${args[0]} -g ${args[0]}
     fi
 
-    usermod -G ${args[0]} www-data
+    /usr/sbin/usermod -G ${args[0]} www-data
 
     #create user home dir
     if [ ! -d "${args[3]}/${args[0]}" ]; then
