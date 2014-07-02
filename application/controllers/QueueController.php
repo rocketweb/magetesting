@@ -364,6 +364,17 @@ class QueueController extends Integration_Controller_Action {
         $response = new stdClass();
         $response->status = 'error';
 
+        $redirect_to = array(
+            'module' => 'default',
+            'controller' => 'user',
+            'action' => 'dashboard',
+        );
+        if($this->_getParam('redirect') == 'admin') {
+            $redirect_to['controller'] = 'queue';
+            $redirect_to['action'] = 'index';
+        }
+
+
         if ($this->getRequest()->isPost()) {
 
             $close = (int) $this->getRequest()->getParam('close');
@@ -379,6 +390,10 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel->changeStatusToClose($byAdmin);
 
                 $currentStore = $storeModel->findByDomain($domain);
+                if($currentStore == null) {
+                    $this->_helper->FlashMessenger('Store '.$domain.' doesn\'t exists anymore!');
+                    return $this->_helper->redirector->gotoRoute($redirect_to, 'default', true);
+                }
 
                 $storeModel->find($currentStore->id);
                 
@@ -449,15 +464,7 @@ class QueueController extends Integration_Controller_Action {
                 $this->_helper->FlashMessenger('Store has been removed.' . $additionalMessage);
             }
         }
-        $redirect_to = array(
-            'module' => 'default',
-            'controller' => 'user',
-            'action' => 'dashboard',
-        );
-        if($this->_getParam('redirect') == 'admin') {
-            $redirect_to['controller'] = 'queue';
-            $redirect_to['action'] = 'index';
-        }
+
         return $this->_helper->redirector->gotoRoute($redirect_to, 'default', true);
     }
 
