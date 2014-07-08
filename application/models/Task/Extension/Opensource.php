@@ -24,9 +24,17 @@ implements Application_Model_Task_Interface {
         
         //first check if we have that file
         $this->_checkPackage();
-        
+
+        $storeExtensionModel = new Application_Model_StoreExtension();
+        $storeExtensionModel->fetchStoreExtension($this->_storeObject->getId(), $this->_extensionObject->getId());
+        // set processing status
+        $storeExtensionModel->setStatus('processing')->save();
+
         //untar opensourced extension to store folder
         $this->_install();
+        
+        // set ready status
+        $storeExtensionModel->setStatus('ready')->save();
         
         //clear store cache
         $this->_clearStoreCache();

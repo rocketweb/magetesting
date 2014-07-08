@@ -16,6 +16,8 @@ class Application_Model_Coupon {
 
     protected $_active_to;
 
+    protected $_extension_key;
+
     protected $_mapper;
     
     protected $_error;
@@ -116,6 +118,17 @@ class Application_Model_Coupon {
         $this->_active_to = $active_to;
         return $this;
     }
+
+    public function getExtensionKey()
+    {
+        return $this->_extension_key;
+    }
+    
+    public function setExtensionKey($value)
+    {
+        $this->_extension_key = $value;
+        return $this;
+    }
     
     /**
      * @return Application_Model_CouponMapper
@@ -183,8 +196,8 @@ class Application_Model_Coupon {
         if ($this->getUserId()){
             return false;
         }
-        
-        if ($this->getUsedDate()){
+
+        if ($this->getUsedDate() > 0){
             return false;
         }
     }
@@ -199,6 +212,7 @@ class Application_Model_Coupon {
             'plan_id'       => $this->getPlanId(),
             'duration'      => $this->getDuration(),
             'active_to' => $this->getActiveTo(),
+            'extension_key' => $this->getExtensionKey()
         );
     }
 

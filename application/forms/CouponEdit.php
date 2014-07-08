@@ -27,6 +27,18 @@ class Application_Form_CouponEdit extends Integration_Form
                 'class'      => 'span4'
         ));
 
+        // Add extension key element
+        $this->addElement('text', 'extension_key', array(
+            'label'      => 'Extension key',
+            'required'   => false,
+            'filters'    => array('StripTags', 'StringTrim'),
+            'validators' => array(
+                array('validator' => 'StringLength', 'options' => array(0, 255)),
+            ),
+            'allowEmpty' => true,
+            'class'      => 'span4'
+        ));
+
         // Add used date element
         $this->addElement('text', 'used_date', array(
                 'label'      => 'Used Date',
