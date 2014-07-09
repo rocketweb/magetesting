@@ -1,9 +1,10 @@
 <!--CSS styling needed -->
 <table class="table table-bordered table-striped">
     <tr>
-        <th>Module</th>
+        <th>Type</th>
         <th>Class</th>
         <th>Rewrites</th>
+        <th>Loaded</th>
         <th style="width:30%">
             <?php if($this->button === true): ?>
             <a href="#" class="btn btn-info" target="_blank"><i class="icon-blue icon-wrench"></i> Re-run extension check</a></th>
@@ -12,13 +13,14 @@
     <?php
     $data = $this->ignored ? $this->conflict['ignore'] : $this->conflict['conflicts'];
     if(sizeOf($data) == 0): ?>
-        <tr><td colspan="4">No extensions conflicts!</td></tr>
+        <tr><td colspan="5">No extensions conflicts!</td></tr>
     <?php else: ?>
         <?php foreach($data as $c): ?>
             <tr>
-                <td><?php echo $c['module']; ?></td>
+                <td><?php echo $c['type']; ?></td>
                 <td><?php echo $c['class']; ?></td>
                 <td><?php echo $c['rewrites']; ?></td>
+                <td><?php echo $c['loaded']; ?></td>
                 <td style="text-align:center">
                     <a href="#<?php echo $c['id']?>" class="btn btn-red <?php echo $this->ignored ? 'un' : ''?>ignore-conflict-button">
                         <i class="icon-white icon-wrench"></i> <?php echo $this->ignored ? 'Unignore' : 'Ignore'?>
