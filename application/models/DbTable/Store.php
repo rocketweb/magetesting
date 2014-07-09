@@ -14,6 +14,14 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
+    public function findRaw($id)
+    {
+        $select = $this->select()
+            ->from($this->_name)
+            ->where('id = ?',$id);
+        return $this->fetchAll($select);
+    }
+
     public function findAllByUser($user_id, $hideRemoved)
     {
         $select =

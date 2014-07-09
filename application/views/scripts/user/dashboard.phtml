@@ -154,6 +154,7 @@
                         <input type="hidden" class="storedomain" value="<?php echo $this->escape($item['domain']) ?>" />
                         <input type="hidden" class="queueval" value="<?php echo $this->escape($item['queue_id']) ?>" />
                         <input type="hidden" class="userval" value="<?php echo $this->escape($item['user_id']) ?>" />
+                        <input type="hidden" class="storeid" value="<?php echo $this->escape($item['id']) ?>" />
                     </div>
                 </div>
                 <?php if($item['status'] != 'closed'): ?>
@@ -224,6 +225,15 @@
                                     <div class="controls">
                                         <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn log-button <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
                                         <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn help-button"><i class="icon icon-question-sign"></i> Get Help</a>
+                                        <?php   $conflict = isset($this->conflicts[$item['id']]) ? $this->conflicts[$item['id']] : false;
+                                                $conflictCount = 0;
+                                                if($conflict !== false && isset($conflict['count']) && $conflict['count'] > 0) {
+                                                    $conflictCount = $conflict['count'];
+                                                }
+
+                                        ?>
+                                        <a href="#" class="btn conflict-button conflict-store-<?php echo $item['id']; ?>">
+                                            Extension Conflicts (<?php echo $conflictCount; ?>)</a>
                                     </div>
                                 </div>
                             </div>
@@ -234,6 +244,20 @@
                 </div>
                 <?php endif; // end div#collapse ?>
             </div>
+                <div id="conflictModal<?php echo $item['id']; ?>" class="modal hide fade" style="width:800px; margin-left:-400px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Extension Conflicts</h3>
+                    </div>
+                    <div class="modal-body" id="store_id_<?php echo $item['id']; ?>">
+                        <?php echo $this->partial('_partials/conflictData.phtml', array(
+                                        'conflict' => $conflict
+                                    )); ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
             <!-- END STORE -->
             <?php endforeach; ?>
             <?php endif; ?>
@@ -243,6 +267,10 @@
     </div>
 </div>
 <!-- START STORES PAGE -->
+
+
+
+
 
 <div id="commitModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">

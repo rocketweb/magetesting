@@ -921,6 +921,50 @@ class QueueController extends Integration_Controller_Action {
         ), 'default', true);
     }
 
+    /*
+     * Need to add ACL entery for this one!!!
+     * */
+    public function conflictAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $conflict_id = $this->getRequest()->getParam('conflict_id');
+        $ignore = $this->getRequest()->getParam('ignore') == 1 ? true : false;
+
+
+        $storeConflictModel = new Application_Model_StoreConflict();
+        $storeConflict = $storeConflictModel->find($conflict_id);
+
+        if($storeConflict != null && $this->getRequest()->isPost()){
+            $storeConflict->setIgnore($ignore);
+            $storeConflict->save();
+
+            $store_id = (int)$storeConflict->getStoreId();
+
+            $conflict = $storeConflictModel->fetchUserStoreConflicts(
+                $this->auth->getIdentity()->id,
+                $store_id
+            );
+            $conflict = $conflict[$store_id];
+
+            $this->getResponse()->setBody(
+                json_encode(
+                    array(
+                        'modalData' => $this->view->partial('_partials/conflictData.phtml', array('conflict' => $conflict)),
+                        'count' => $conflict['count']
+                    )
+                )
+            );
+        }else{
+
+            $this->_helper->FlashMessenger('No valid conflict found!');
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
+    }
+
     public function deployAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

@@ -41,6 +41,11 @@ class Application_Model_StoreMapper {
 
     }
 
+    public function findRaw($id)
+    {
+        return $this->getDbTable()->findRaw($id);
+    }
+
     public function find($id, Application_Model_Store $store)
     {
         $result = $this->getDbTable()->find($id);
