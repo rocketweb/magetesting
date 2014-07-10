@@ -4,12 +4,14 @@ class Application_Model_StoreConflict {
     
     protected $_id;
     protected $_store_id;
-    protected $_module;
+    protected $_type;
     protected $_class;
     protected $_rewrites;
+    protected $_loaded;
     protected $_ignore;
 
     protected $_mapper;
+    protected $_cli;
     
     public function __construct(array $options = null)
     {
@@ -53,35 +55,53 @@ class Application_Model_StoreConflict {
         return $this->_store_id;
     }
     
-    public function setModule($module){
-        $this->_module = $module;
+    public function setType($type)
+    {
+        $this->_type = $type;
         return $this;
     }
-    public function getModule(){
-        return $this->_module;
+    public function getType()
+    {
+        return $this->_type;
     }
 
-    public function setClass($class){
+    public function setLoaded($loaded)
+    {
+        $this->_loaded = $loaded;
+        return $this;
+    }
+    public function getLoaded()
+    {
+        return $this->_loaded;
+    }
+
+    public function setClass($class)
+    {
         $this->_class = $class;
         return $this;
     }
-    public function getClass(){
+    public function getClass()
+    {
         return $this->_class;
     }
 
-    public function setRewrites($rewrites){
+    public function setRewrites($rewrites)
+    {
         $this->_rewrites = $rewrites;
         return $this;
     }
-    public function getRewrites(){
+    public function getRewrites()
+    {
         return $this->_rewrites;
     }
 
-    public function setIgnore($ignore){
+    public function setIgnore($ignore)
+    {
         $this->_ignore = $ignore === true ? true : false;
         return $this;
     }
-    public function getIgnore(){
+    public function getIgnore()
+    {
         return $this->_ignore;
     }
 
@@ -126,15 +146,34 @@ class Application_Model_StoreConflict {
     {
         return $this->getMapper()->fetchUserStoreConflicts($user_id, $store_id);
     }
+
+    public function removeStoreConflicts($store_id)
+    {
+        $this->getMapper()->removeStoreConflicts($store_id);
+    }
+
     public function __toArray()
     {
         return array(
             'id'          => $this->getId(),
             'store_id'   => $this->getStoreId(),
-            'module'    => $this->getModule(),
+            'type'    => $this->getType(),
             'class'       => $this->getClass(),
             'rewrites' => $this->getRewrites(),
+            'loaded' => $this->getLoaded(),
             'ignore' => $this->getIgnore()
         );
+    }
+
+    public function getConflicts($dirPath, $login)
+    {
+        $this->_cli = new RocketWeb_Cli();
+
+        $dirPath = '/sites/gregor.vps/magento.gregor.vps';
+
+        $command = $this->_cli->kit('n98')->conflict($dirPath, $login);
+        $output = $command->call()->getLastOutput();
+        $conflicts = $command->parseConflict($output);
+        return $conflicts;
     }
 }

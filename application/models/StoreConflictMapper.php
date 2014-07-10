@@ -30,9 +30,7 @@ class Application_Model_StoreConflictMapper{
     public function save(Application_Model_StoreConflict $storeConflict)
     {
         $data = $storeConflict->__toArray();
-        
 
-        
         if (null === ($id = $storeConflict->getId())) {
             unset($data['id']);
             $storeConflict->setId($this->getDbTable()->insert($data));
@@ -51,9 +49,10 @@ class Application_Model_StoreConflictMapper{
         $row = $result->current();
         $storeConflict->setId($row->id)
             ->setStoreId($row->store_id)
-            ->setModule($row->module)
+            ->setType($row->type)
             ->setClass($row->class)
             ->setRewrites($row->rewrites)
+            ->setLoaded($row->loaded)
             ->setIgnore($row->ignore);
         return $storeConflict;
     }
@@ -67,9 +66,10 @@ class Application_Model_StoreConflictMapper{
             $entry = new Application_Model_storeConflict();
             $entry->setId($row->id)
                 ->setStoreId($row->store_id)
-                ->setModule($row->module)
+                ->setType($row->type)
                 ->setClass($row->class)
                 ->setRewrites($row->rewrites)
+                ->setLoaded($row->loaded)
                 ->setIgnore($row->ignore);
 
             $entries[] = $entry;
@@ -109,9 +109,10 @@ class Application_Model_StoreConflictMapper{
             $entry = new Application_Model_storeConflict();
             $entry->setId($row->id)
                 ->setStoreId($row->store_id)
-                ->setModule($row->module)
+                ->setType($row->type)
                 ->setClass($row->class)
                 ->setRewrites($row->rewrites)
+                ->setLoaded($row->loaded)
                 ->setIgnore($row->ignore);
             $entries[] = $entry->__toArray();
         }
@@ -125,5 +126,10 @@ class Application_Model_StoreConflictMapper{
         $paginator = new Zend_Paginator($adapter);
 
         return $paginator;*/
+    }
+
+    public function removeStoreConflicts($store_id)
+    {
+        $this->getDbTable()->removeStoreConflicts($store_id);
     }
 }

@@ -177,6 +177,7 @@ $(document).ready(function(){
 });
 
 function setConflictButtons(){
+    var loadingGif = '<div style="text-align:center;margin:40px;"><img src="/public/img/loading_big.gif" class="img-responsive" title="Loading ..." /></div>';
     $('.ignore-conflict-button, .unignore-conflict-button').click(function(event){
         event.preventDefault(); // So it doesn't jump up
         var id = $(this).attr('href').replace('#','');
@@ -185,7 +186,7 @@ function setConflictButtons(){
 
         var linkClass = '.conflict-store-'+parentDiv.attr('id').replace('store_id_','');
         var linkText = $(linkClass).text().split('(')[0];
-        
+
         $.ajax({
             type: "POST",
             url: "/queue/conflict",
@@ -198,6 +199,30 @@ function setConflictButtons(){
             }
 
         });
+    });
+    $('.rerun-button').click(function(event){
+        event.preventDefault();
+        var parentDiv = $(this).closest('.modal-body');
+        var store_id = parentDiv.attr('id').replace('store_id_','');
+
+        var linkClass = '.conflict-store-'+store_id;
+        var linkText = $(linkClass).text().split('(')[0];
+
+        parentDiv.html(loadingGif);
+
+        $.ajax({
+            type: "POST",
+            url: "/queue/runconflict",
+            data: "store_id=" + store_id,
+            dataType: "json",
+            success: function(json){
+                parentDiv.html(json.modalData);
+                $(linkClass).text(linkText+' ('+json.count+')');
+                setConflictButtons();
+            }
+
+        });
+
     });
     $('.show-ignored-button').click(function(){
         $(this).siblings('.hide').removeClass('hide');

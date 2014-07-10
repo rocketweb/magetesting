@@ -22,12 +22,18 @@ class Application_Model_DbTable_StoreConflict extends Zend_Db_Table_Abstract
         $select = $this->select()
             ->from($this->_storeName)
             ->setIntegrityCheck(false);
-        if($store_id === false) {
-            $select->where('`user_id` = ?', $user_id);
-        }else{
+        if($store_id !== false) {
             $select->where('`id` = ?', $store_id);
         }
+        //We make sure we allways show only the user store!
+        $select->where('`user_id` = ?', $user_id);
 
         return $this->fetchAll($select);
+    }
+
+    public function removeStoreConflicts($store_id)
+    {
+        $where = $this->getAdapter()->quoteInto('`store_id` = ?', $store_id);
+        $this->delete($where);
     }
 }

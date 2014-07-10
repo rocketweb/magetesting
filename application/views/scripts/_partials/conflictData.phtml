@@ -3,9 +3,11 @@
     'button' => true,
     'ignored' => false
 )); ?>
-<?php if(sizeOf($this->conflict['ignore']) > 0): ?>
+<?php
+$ignoredSize = sizeOf($this->conflict['ignore']);
+if($ignoredSize > 0): ?>
 <br />
-<a href="#" class="show-ignored-button">Show ignored conflicts ...</a>
+<a href="#" class="show-ignored-button">Show ignored conflicts (<?php echo $ignoredSize; ?>) ...</a>
 <div class="hide">
     <h5>Ignored conflicts</h5>
     <?php echo $this->partial('_partials/conflictTable.phtml', array(

@@ -251,6 +251,7 @@
                         <h3 id="myModalLabel">Extension Conflicts</h3>
                     </div>
                     <div class="modal-body" id="store_id_<?php echo $item['id']; ?>">
+
                         <?php echo $this->partial('_partials/conflictData.phtml', array(
                                         'conflict' => $conflict
                                     )); ?>
@@ -267,6 +268,7 @@
 
     </div>
 </div>
+<img src="/public/img/loading_big.gif" class="hide" title="Loading ..." />
 <!-- START STORES PAGE -->
 
 

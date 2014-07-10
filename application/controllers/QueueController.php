@@ -921,6 +921,62 @@ class QueueController extends Integration_Controller_Action {
         ), 'default', true);
     }
 
+
+    /*
+     * Need to add ACL entery for this one!!!
+     * */
+    public function runconflictAction(){
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $store_id = $this->getRequest()->getParam('store_id');
+
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->find($store_id);
+
+
+        //if($store != null && $this->getRequest()->isPost()){
+        if($store != null){
+            $storeConflictModel = new Application_Model_StoreConflict();
+            $localConfig = new Zend_Config_Ini(APPLICATION_PATH . '/configs/local.ini', APPLICATION_ENV);
+
+            $publicHtmlPath = $localConfig->magento->systemHomeFolder . '/' . $localConfig->magento->userprefix . $this->auth->getIdentity()->login . '/public_html';
+            $storePath = $publicHtmlPath.'/'.$store->getDomain();
+
+            $currentConflicts = $storeConflictModel->fetchUserStoreConflicts(
+                $this->auth->getIdentity()->id,
+                $store_id
+            );
+
+            $ignoreConflicts = array();
+
+            foreach($currentConflicts[$store_id]['ignore'] as $ignore){
+                $ignoreConflicts[] = md5($ignore['type'].$ignore['class'].$ignore['rewrites'].$ignore['loaded']);
+            }
+
+            $storeConflictModel->removeStoreConflicts($store_id);
+
+            $conflicts = $storeConflictModel->getConflicts($storePath, $this->auth->getIdentity()->login);
+
+            foreach($conflicts as $c){
+                $conflict = new Application_Model_StoreConflict();
+                $conflict->setOptions($c);
+                $conflict->setStoreId($store_id);
+                $hash = md5($conflict->getType().$conflict->getClass().$conflict->getRewrites().$conflict->getLoaded());
+                $ignore = in_array($hash,$ignoreConflicts);
+                $conflict->setIgnore($ignore);
+                $conflict->save();
+            }
+
+            $this->conflictTable($store_id);
+        }else{
+            $this->_helper->FlashMessenger('No valid store found!');
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
+    }
     /*
      * Need to add ACL entery for this one!!!
      * */
@@ -939,23 +995,9 @@ class QueueController extends Integration_Controller_Action {
             $storeConflict->save();
 
             $store_id = (int)$storeConflict->getStoreId();
+            $this->conflictTable($store_id);
 
-            $conflict = $storeConflictModel->fetchUserStoreConflicts(
-                $this->auth->getIdentity()->id,
-                $store_id
-            );
-            $conflict = $conflict[$store_id];
-
-            $this->getResponse()->setBody(
-                json_encode(
-                    array(
-                        'modalData' => $this->view->partial('_partials/conflictData.phtml', array('conflict' => $conflict)),
-                        'count' => $conflict['count']
-                    )
-                )
-            );
         }else{
-
             $this->_helper->FlashMessenger('No valid conflict found!');
             return $this->_helper->redirector->gotoRoute(array(
                 'module' => 'default',
@@ -963,6 +1005,24 @@ class QueueController extends Integration_Controller_Action {
                 'action' => 'dashboard',
             ), 'default', true);
         }
+    }
+
+    private function conflictTable($store_id){
+        $storeConflictModel = new Application_Model_StoreConflict();
+        $conflict = $storeConflictModel->fetchUserStoreConflicts(
+            $this->auth->getIdentity()->id,
+            $store_id
+        );
+        $conflict = $conflict[$store_id];
+
+        $this->getResponse()->setBody(
+            json_encode(
+                array(
+                    'modalData' => $this->view->partial('_partials/conflictData.phtml', array('conflict' => $conflict)),
+                    'count' => $conflict['count']
+                )
+            )
+        );
     }
 
     public function deployAction() {
