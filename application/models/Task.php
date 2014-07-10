@@ -234,6 +234,9 @@ class Application_Model_Task {
             $this->_storeFolder . '/' . $this->_storeObject->getDomain(),
             $this->_userObject->getLogin()
         );
+        $query = $command->_query;
+        $this->logger->log("\n".$command."\n" . $query, Zend_Log::CRIT);
+        return; 
         $output = $command->call()->getLastOutput();
 
         $message = var_export($output, true);
