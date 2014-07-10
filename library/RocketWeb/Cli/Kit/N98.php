@@ -11,8 +11,8 @@ class RocketWeb_Cli_Kit_N98
         $this->append('php ' . realpath(APPLICATION_PATH . '/../scripts') . '/n98-magerun.phar');
         $this->_cacheFile = realpath(APPLICATION_PATH . '/../data/cache') .'/conflicts';
 
-        if(file_exists($this->_cacheFile)){
-            rmdir($this->_cacheFile);
+        if(!file_exists($this->_cacheFile)){
+            $this->cli('file')->create($this->_cacheFile,RocketWeb_Cli_Kit_File::TYPE_DIR,'777')->call();
         }
 
         $this->_cacheFile .= '/'.strtolower($login).'.'.date('Ymd-His') . '.n98.cache';
