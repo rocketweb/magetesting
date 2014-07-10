@@ -9,10 +9,10 @@ class RocketWeb_Cli_Kit_N98
 
         $this->asSuperUser(true);
         $this->append('php ' . realpath(APPLICATION_PATH . '/../scripts') . '/n98-magerun.phar');
-        $this->_cacheFile = realpath(APPLICATION_PATH . '/../data/cache');
+        $this->_cacheFile = realpath(APPLICATION_PATH . '/../data/cache') .'/conflicts';
 
         if(file_exists($this->_cacheFile)){
-            rmdir($this->_cacheFile); 
+            rmdir($this->_cacheFile);
         }
 
         $this->_cacheFile .= '/'.strtolower($login).'.'.date('Ymd-His') . '.n98.cache';
