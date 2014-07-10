@@ -135,6 +135,8 @@ implements Application_Model_Task_Interface {
         $this->_updateDemoNotice();
         $this->_activateDemoNotice();
 
+        $this->_checkForConflicts();
+
         $this->_cleanLogTables();
         
         chdir($startCwd);

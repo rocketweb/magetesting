@@ -198,6 +198,23 @@ class Application_Model_Task {
     protected function _generateAdminPass() {
         return Integration_Generator::generateRandomString(7, 5, false);
     }
+
+    protected function _checkForConflicts()
+    {
+        $store_id = $this->_storeObject->getId();
+        $storeConflictModel = new Application_Model_StoreConflict();
+
+        $conflicts = $storeConflictModel->getConflicts($this->_storeFolder . '/' . $this->_storeObject->getDomain(), $this->_userObject->getLogin());
+
+        foreach($conflicts as $c){
+            $conflict = new Application_Model_StoreConflict();
+            $conflict->setOptions($c);
+            $conflict->setStoreId($store_id);
+            $conflict->setIgnore(0);
+            $conflict->save();
+        }
+
+    }
     
     protected function _clearStoreCache(){
         $this->logger->log('Clearing store cache.', Zend_Log::INFO);
