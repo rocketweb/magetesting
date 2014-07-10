@@ -219,6 +219,7 @@ class Application_Model_Task {
 
     protected function _checkForConflicts($getOldIgnoreConflicts = false)
     {
+        $this->logger->log('Getting store conflicts', Zend_Log::INFO);
         $ignoreConflicts = array();
         if($getOldIgnoreConflicts){
             $ignoreConflicts = $this->_getIgnoredConflicts();
@@ -229,7 +230,16 @@ class Application_Model_Task {
 
         $storeConflictModel->removeStoreConflicts($storeId);
 
-        $conflicts = $storeConflictModel->getConflicts($this->_storeFolder . '/' . $this->_storeObject->getDomain(), $this->_userObject->getLogin());
+        $command = $this->cli('n98')->conflict(
+            $this->_storeFolder . '/' . $this->_storeObject->getDomain(),
+            $this->_userObject->getLogin()
+        );
+        $output = $command->call()->getLastOutput();
+
+        $message = var_export($output, true);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+
+        $conflicts = $command->parseConflict();
 
         foreach($conflicts as $c){
             $conflict = new Application_Model_StoreConflict();
