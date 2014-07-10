@@ -169,8 +169,6 @@ class Application_Model_StoreConflict {
     {
         $this->_cli = new RocketWeb_Cli();
 
-        $dirPath = '/sites/gregor.vps/magento.gregor.vps';
-
         $command = $this->_cli->kit('n98')->conflict($dirPath, $login);
         $output = $command->call()->getLastOutput();
         $conflicts = $command->parseConflict($output);
