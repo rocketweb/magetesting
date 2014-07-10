@@ -263,11 +263,6 @@ class Application_Model_Store {
         return $this;
     }
 
-    public function findRaw($id)
-    {
-        $this->getMapper()->findRaw($id);
-    }
-
     public function fetchAll()
     {
         return $this->getMapper()->fetchAll();
