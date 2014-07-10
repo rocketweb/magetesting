@@ -199,21 +199,47 @@ class Application_Model_Task {
         return Integration_Generator::generateRandomString(7, 5, false);
     }
 
-    protected function _checkForConflicts()
+    protected function _getIgnoredConflicts()
     {
-        $store_id = $this->_storeObject->getId();
+        $storeId = $this->_storeObject->getId();
         $storeConflictModel = new Application_Model_StoreConflict();
+
+        $currentConflicts = $storeConflictModel->fetchUserStoreConflicts(
+            $this->_userObject->getId(),
+            $storeId
+        );
+
+        $ignoreConflicts = array();
+
+        foreach($currentConflicts[$storeId]['ignore'] as $ignore){
+            $ignoreConflicts[] = md5($ignore['type'].$ignore['class'].$ignore['rewrites'].$ignore['loaded']);
+        }
+        return $ignoreConflicts;
+    }
+
+    protected function _checkForConflicts($getOldIgnoreConflicts = false)
+    {
+        $ignoreConflicts = array();
+        if($getOldIgnoreConflicts){
+            $ignoreConflicts = $this->_getIgnoredConflicts();
+        }
+
+        $storeId = $this->_storeObject->getId();
+        $storeConflictModel = new Application_Model_StoreConflict();
+
+        $storeConflictModel->removeStoreConflicts($storeId);
 
         $conflicts = $storeConflictModel->getConflicts($this->_storeFolder . '/' . $this->_storeObject->getDomain(), $this->_userObject->getLogin());
 
         foreach($conflicts as $c){
             $conflict = new Application_Model_StoreConflict();
             $conflict->setOptions($c);
-            $conflict->setStoreId($store_id);
-            $conflict->setIgnore(0);
+            $conflict->setStoreId($storeId);
+            $hash = md5($conflict->getType().$conflict->getClass().$conflict->getRewrites().$conflict->getLoaded());
+            $ignore = in_array($hash,$ignoreConflicts);
+            $conflict->setIgnore($ignore);
             $conflict->save();
         }
-
     }
     
     protected function _clearStoreCache(){
@@ -277,7 +303,8 @@ class Application_Model_Task {
             'creating-papertrail-user',
             'creating-papertrail-system',
             'removing-papertrail-user',
-            'removing-papertrail-system'
+            'removing-papertrail-system',
+            'extension-conflict'
         );
         
         if(in_array($status,$storeStatuses) ){

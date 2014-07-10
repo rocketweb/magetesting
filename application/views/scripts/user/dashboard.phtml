@@ -135,12 +135,17 @@
                                     <span class="pending pull-right">
                                         Creating site via FTP/SSH.  This may take 1 hour or more.  You will receive an email when this is complete.
                                     </span>
+
                                     <?php else: ?>
                                     <span class="pending pull-right statusHolder">
                                     <?php /*if($item['status'] == 'pending'): ?>
                                         In Queue - <?php echo (isset($this->queueCounter[$item['id']]) ?$this->queueCounter[$item['id']] : 0); ?> minutes left
                                     <?php else:*/ ?>
-                                        <?php echo $this->niceStatus($item['status']); ?>
+                                        <?php if($item['status'] == 'extension-conflict'){
+                                            echo 'Checking store extensions conflicts';
+                                        }else{
+                                            echo $this->niceStatus($item['status']);
+                                        }?>
                                         <?php if($item['status'] != 'ready' && $item['status'] != 'error'): ?>
                                         - please be patient as your request is being made.
                                         <?php endif; ?>
@@ -268,7 +273,6 @@
 
     </div>
 </div>
-<img src="/public/img/loading_big.gif" class="hide" title="Loading ..." />
 <!-- START STORES PAGE -->
 
 

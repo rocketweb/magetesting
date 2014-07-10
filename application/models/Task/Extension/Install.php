@@ -39,7 +39,7 @@ implements Application_Model_Task_Interface {
         // set ready status
         $storeExtensionModel->setStatus('ready')->save();
 
-        $this->_checkForConflicts();
+        $this->_checkForConflicts(true);
 
         //clear store cache
         $this->_clearStoreCache();

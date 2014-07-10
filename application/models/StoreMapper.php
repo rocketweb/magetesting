@@ -184,6 +184,7 @@ class Application_Model_StoreMapper {
         $possibleStatuses = array(
             'ExtensionInstall' => 'installing-extesion',
             'ExtensionOpensource' => 'installing-extension', /*special case*/
+            'ExtensionConflict' => 'extension-conflict',
             'MagentoDownload' => 'downloading-magento',
             'MagentoInstall' => 'installing-magento',
             'MagentoRemove' => 'removing-magento',

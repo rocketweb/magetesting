@@ -929,46 +929,35 @@ class QueueController extends Integration_Controller_Action {
     public function runconflictAction(){
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        $store_id = $this->getRequest()->getParam('store_id');
+        $storeId = $this->getRequest()->getParam('store_id');
 
         $storeModel = new Application_Model_Store();
-        $store = $storeModel->find($store_id);
+        $store = $storeModel->find($storeId);
 
 
         //if($store != null && $this->getRequest()->isPost()){
         if($store != null){
-            $storeConflictModel = new Application_Model_StoreConflict();
-            $localConfig = new Zend_Config_Ini(APPLICATION_PATH . '/configs/local.ini', APPLICATION_ENV);
+            $queueModel = new Application_Model_Queue();
 
-            $publicHtmlPath = $localConfig->magento->systemHomeFolder . '/' . $localConfig->magento->userprefix . $this->auth->getIdentity()->login . '/public_html';
-            $storePath = $publicHtmlPath.'/'.$store->getDomain();
+            /* add task with RevisionRollback */
+            if(!$queueModel->alreadyExists('ExtensionConflict', $storeId, 0, $store->getServerId())){
+                $queueModel->setStoreId($storeId);
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setParentId(
+                    $queueModel->getParentIdForExtensionInstall($storeId)
+                );
+                $queueModel->setExtensionId(0);
+                $queueModel->setServerId($store->getServerId());
+                $queueModel->setTask('ExtensionConflict');
 
-            $currentConflicts = $storeConflictModel->fetchUserStoreConflicts(
-                $this->auth->getIdentity()->id,
-                $store_id
-            );
+                $queueModel->save();
 
-            $ignoreConflicts = array();
-
-            foreach($currentConflicts[$store_id]['ignore'] as $ignore){
-                $ignoreConflicts[] = md5($ignore['type'].$ignore['class'].$ignore['rewrites'].$ignore['loaded']);
+                $store->setStatus('extension-conflict');
+                $store->save();
             }
 
-            $storeConflictModel->removeStoreConflicts($store_id);
-
-            $conflicts = $storeConflictModel->getConflicts($storePath, $this->auth->getIdentity()->login);
-
-            foreach($conflicts as $c){
-                $conflict = new Application_Model_StoreConflict();
-                $conflict->setOptions($c);
-                $conflict->setStoreId($store_id);
-                $hash = md5($conflict->getType().$conflict->getClass().$conflict->getRewrites().$conflict->getLoaded());
-                $ignore = in_array($hash,$ignoreConflicts);
-                $conflict->setIgnore($ignore);
-                $conflict->save();
-            }
-
-            $this->conflictTable($store_id);
+            $this->conflictTable($storeId);
         }else{
             $this->_helper->FlashMessenger('No valid store found!');
             return $this->_helper->redirector->gotoRoute(array(
@@ -995,8 +984,8 @@ class QueueController extends Integration_Controller_Action {
             $storeConflict->setIgnore($ignore);
             $storeConflict->save();
 
-            $store_id = (int)$storeConflict->getStoreId();
-            $this->conflictTable($store_id);
+            $storeId = (int)$storeConflict->getStoreId();
+            $this->conflictTable($storeId);
 
         }else{
             $this->_helper->FlashMessenger('No valid conflict found!');
@@ -1008,21 +997,24 @@ class QueueController extends Integration_Controller_Action {
         }
     }
 
-    private function conflictTable($store_id){
+    private function conflictTable($storeId){
+        //We check if the store conflicts are in queue
+        $userId = $this->auth->getIdentity()->id;
+        $queueModel = new Application_Model_Queue();
+        $task = $queueModel->findTaskForStore($storeId,'ExtensionConflict');
+
         $storeConflictModel = new Application_Model_StoreConflict();
         $conflict = $storeConflictModel->fetchUserStoreConflicts(
-            $this->auth->getIdentity()->id,
-            $store_id
+            $userId,
+            $storeId
         );
-        $conflict = $conflict[$store_id];
+        $conflict = $conflict[$storeId];
 
         $this->getResponse()->setBody(
-            json_encode(
-                array(
-                    'modalData' => $this->view->partial('_partials/conflictData.phtml', array('conflict' => $conflict)),
-                    'count' => $conflict['count']
-                )
-            )
+            json_encode(array(
+                'modalData' => $this->view->partial('_partials/conflictData.phtml', array('conflict' => $conflict, 'task' => $task != null)),
+                'count' => $task != null ? '~' : $conflict['count']
+            ))
         );
     }
 
