@@ -169,6 +169,9 @@ class Application_Model_StoreConflict {
     {
         $this->_cli = new RocketWeb_Cli();
 
+        echo $dirPath;
+        die(); 
+
         $command = $this->_cli->kit('n98')->conflict($dirPath, $login);
         $output = $command->call()->getLastOutput();
         $conflicts = $command->parseConflict($output);
