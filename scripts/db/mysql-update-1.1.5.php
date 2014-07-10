@@ -11,3 +11,15 @@ CREATE TABLE IF NOT EXISTS `store_conflict` (
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;';
 
+$sql[] = "
+ALTER TABLE `queue` CHANGE `task`
+`task` ENUM('ExtensionInstall','ExtensionOpensource','MagentoDownload','MagentoInstall','MagentoRemove','RevisionCommit','RevisionDeploy','RevisionRollback','RevisionInit','PapertrailUserCreate','PapertrailUserRemove','PapertrailSystemCreate','PapertrailSystemRemove','MagentoHourlyrevert','MagentoReindex','ExtensionConflict')
+CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL;
+";
+
+$sql[] = "
+ALTER TABLE `store` CHANGE `status`
+`status` ENUM('ready','removing-magento','error','installing-extension','installing-magento','downloading-magento','committing-revision','deploying-revision','rolling-back-revision','creating-papertrail-user','creating-papertrail-system','removing-papertrail-user','removing-papertrail-system','hourly-reverting-magento','reindexing-magento','extension-conflict')
+CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'ready';
+";
+
