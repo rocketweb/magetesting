@@ -16,6 +16,8 @@ implements Application_Model_Task_Interface {
         $this->_cleanup();
         
         $this->_updateRevisionCount('-1');
+
+        $this->_checkForConflicts();
         
         $this->_clearStoreCache();        
     }
