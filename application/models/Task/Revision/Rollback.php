@@ -17,7 +17,7 @@ implements Application_Model_Task_Interface {
         
         $this->_updateRevisionCount('-1');
 
-        $this->_checkForConflicts();
+        $this->_checkForConflicts(true);
         
         $this->_clearStoreCache();        
     }

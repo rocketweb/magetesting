@@ -327,4 +327,8 @@ class Application_Model_Queue {
     public function findMagentoTaskForStore($storeId){
         return $this->getMapper()->findMagentoTaskForStore($storeId);
     }
+    public function findTaskForStore($storeId, $task)
+    {
+        return $this->getMapper()->findTaskForStore($storeId, $task);
+    }
 }

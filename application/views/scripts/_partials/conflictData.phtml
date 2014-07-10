@@ -1,4 +1,8 @@
-<?php echo $this->partial('_partials/conflictTable.phtml', array(
+<?php if($this->task === true): ?>
+<div class="alert alert-success">Checking store extensions conflicts - please be patient as your request is being made.</div>
+<?php endif;
+
+echo $this->partial('_partials/conflictTable.phtml', array(
     'conflict' => $this->conflict,
     'button' => true,
     'ignored' => false

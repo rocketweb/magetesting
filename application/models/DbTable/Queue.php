@@ -164,4 +164,17 @@ class Application_Model_DbTable_Queue extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($select);
     }
+
+    public function findTaskForStore($storeId, $task)
+    {
+        $task = is_array($task) ? $task : array($task);
+        $select = $this->select()
+            ->from($this->_name)
+            ->where($this->_name.'.store_id = ?',$storeId)
+            ->where('task IN (?)',$task)
+            ->order(array($this->_name.'.id ASC', 'parent_id asc'))
+            ->limit(1);
+
+        return $this->fetchRow($select);
+    }
 }
