@@ -939,7 +939,7 @@ class QueueController extends Integration_Controller_Action {
         if($store != null){
             $queueModel = new Application_Model_Queue();
 
-            /* add task with RevisionRollback */
+            /* add task with ExtensionConflict */
             if(!$queueModel->alreadyExists('ExtensionConflict', $storeId, 0, $store->getServerId())){
                 $queueModel->setStoreId($storeId);
                 $queueModel->setStatus('pending');
@@ -957,7 +957,9 @@ class QueueController extends Integration_Controller_Action {
                 $store->save();
             }
 
-            $this->conflictTable($storeId);
+            $this->getResponse()->setBody(
+                json_encode( array(  ) )
+            );
         }else{
             $this->_helper->FlashMessenger('No valid store found!');
             return $this->_helper->redirector->gotoRoute(array(
@@ -1000,8 +1002,6 @@ class QueueController extends Integration_Controller_Action {
     private function conflictTable($storeId){
         //We check if the store conflicts are in queue
         $userId = $this->auth->getIdentity()->id;
-        $queueModel = new Application_Model_Queue();
-        $task = $queueModel->findTaskForStore($storeId,'ExtensionConflict');
 
         $storeConflictModel = new Application_Model_StoreConflict();
         $conflict = $storeConflictModel->fetchUserStoreConflicts(
@@ -1012,8 +1012,8 @@ class QueueController extends Integration_Controller_Action {
 
         $this->getResponse()->setBody(
             json_encode(array(
-                'modalData' => $this->view->partial('_partials/conflictData.phtml', array('conflict' => $conflict, 'task' => $task != null)),
-                'count' => $task != null ? '~' : $conflict['count']
+                'modalData' => $this->view->partial('_partials/conflictData.phtml', array('conflict' => $conflict)),
+                'count' => $conflict['task'] ? '~' : $conflict['count']
             ))
         );
     }
