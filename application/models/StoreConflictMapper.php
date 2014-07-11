@@ -86,12 +86,17 @@ class Application_Model_StoreConflictMapper{
 
         $entries   = array();
         foreach ($resultSet as $store) {
+            $queueModel = new Application_Model_Queue();
+            $task = $queueModel->findTaskForStore($store->id,'ExtensionConflict');
+            $task = $task == null ? false : true;
+
             $conflicts = $this->fetchStoreConflicts($store->id, 0);
             $ignoreConflicts = $this->fetchStoreConflicts($store->id, 1);
             $entries[$store->id] = array(
                 'conflicts' => $conflicts,
                 'ignore' => $ignoreConflicts,
-                'count' => sizeOf($conflicts)
+                'count' => sizeOf($conflicts),
+                'task' => $task
             );
         }
         return $entries;
