@@ -165,13 +165,10 @@ extends Application_Model_Transport {
 
     public function checkDatabaseDump(){
 
-        $command = $this->cli('file')->getSize($this->_customSql);
-
         $output = $this->_ssh->cloneObject()->remoteCall(
-            $command->call()->getLastOutput()
-        );
+            $this->cli('file')->getSize($this->_customSql)
+        )->call()->getLastOutput();
         if ($this->logger instanceof Zend_Log) {
-            $this->logger->log("\n".$command."\n", Zend_Log::DEBUG);
             $this->logger->log('Checking database file size.', Zend_Log::INFO);
             $this->logger->log("\n" . var_export($output, true) . "\n", Zend_Log::DEBUG);
         }
