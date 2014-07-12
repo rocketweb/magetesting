@@ -131,7 +131,15 @@ class RocketWeb_Cli_Kit_File
     }
     public function getSize($path)
     {
-        $this->append('du -b ?', $path)->pipe('awk ?', '$1 ~ /[0-9]+/ {print $1}');
+        $this->append('du -b ?', $path);
         return $this;
+    }
+    public function extractSize($output)
+    {
+        if(is_array($output) && sizeOf($output) == 1){
+            $output = preg_replace('!\s\s+!', ' ', $output);
+            $output = explode(' ', $output);
+        }
+        return $output;
     }
 }

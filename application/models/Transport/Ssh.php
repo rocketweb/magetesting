@@ -168,6 +168,7 @@ extends Application_Model_Transport {
         $output = $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->getSize($this->_customSql)
         )->call()->getLastOutput();
+        $output = $this->cli('file')->extractSize($output);
 
         if ($this->logger instanceof Zend_Log) {
             $this->logger->log('Checking database file size.', Zend_Log::INFO);
@@ -243,6 +244,7 @@ extends Application_Model_Transport {
         $output = $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->getSize($this->_customFile)
         )->call()->getLastOutput();
+        $output = $this->cli('file')->extractSize($output);
 
         $packageSizeInfo = '';
         if(isset($output[0])) {
