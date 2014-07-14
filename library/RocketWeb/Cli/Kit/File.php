@@ -138,7 +138,8 @@ class RocketWeb_Cli_Kit_File
     {
         if(is_array($output) && sizeOf($output) >= 1){
             $output = trim(preg_replace('!\s\s+!', ' ', $output[0]),"'");
-            //$output = explode(" ", $output);
+            $output = explode("/", $output);
+            $output[0] = (int)trim($output[0]);
         }
         return $output;
     }
