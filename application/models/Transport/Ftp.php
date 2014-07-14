@@ -113,6 +113,9 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     
     /* todo: make this protected */
     protected function _downloadStoreFiles(){
+        if ($this->logger instanceof Zend_Log) {
+            $this->logger->log('Starting the download of store files ... this can take a while', Zend_Log::INFO);
+        }
         //do a sample connection, and check for index.php, if it works, start fetching
         $command = $this->_wget->cloneObject()->setRootPath($this->_customRemotePath.'app/Mage.php')->getFileSize();
         $output = $command->call()->getLastOutput();
@@ -199,6 +202,9 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
     }
     
     public function downloadDatabase(){
+        if ($this->logger instanceof Zend_Log) {
+            $this->logger->log('Starting the download of database file', Zend_Log::INFO);
+        }
         $this->_wget->cloneObject()->downloadFile($this->_customSql)->call();
         /* TODO: validate if local and reomte size are correct */
     }
