@@ -922,10 +922,6 @@ class QueueController extends Integration_Controller_Action {
         ), 'default', true);
     }
 
-
-    /*
-     * Need to add ACL entery for this one!!!
-     * */
     public function runconflictAction(){
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -936,7 +932,7 @@ class QueueController extends Integration_Controller_Action {
 
 
         //if($store != null && $this->getRequest()->isPost()){
-        if($store != null){
+        if($store != null && $store->getUserId() == $this->auth->getIdentity()->id){
             $queueModel = new Application_Model_Queue();
 
             /* add task with ExtensionConflict */
@@ -969,24 +965,25 @@ class QueueController extends Integration_Controller_Action {
             ), 'default', true);
         }
     }
-    /*
-     * Need to add ACL entery for this one!!!
-     * */
+
     public function conflictAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         $conflict_id = $this->getRequest()->getParam('conflict_id');
         $ignore = $this->getRequest()->getParam('ignore') == 1 ? true : false;
 
-
         $storeConflictModel = new Application_Model_StoreConflict();
         $storeConflict = $storeConflictModel->find($conflict_id);
 
-        if($storeConflict != null && $this->getRequest()->isPost()){
+        $storeId = (int)$storeConflict->getStoreId();
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->find($storeId);
+
+        if($storeConflict != null && $this->getRequest()->isPost() && $store->getUserId() == $this->auth->getIdentity()->id){
             $storeConflict->setIgnore($ignore);
             $storeConflict->save();
 
-            $storeId = (int)$storeConflict->getStoreId();
+
             $this->conflictTable($storeId);
 
         }else{
