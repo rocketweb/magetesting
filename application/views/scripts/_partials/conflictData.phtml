@@ -2,7 +2,7 @@
 <div class="alert alert-success">Checking store extensions conflicts - please be patient as your request is being made.</div>
 <?php endif;
 
-echo $this->partial('_partials/conflictTable.phtml', array(
+echo '<br />'.$this->partial('_partials/conflictTable.phtml', array(
     'conflict' => $this->conflict,
     'button' => true,
     'ignored' => false
@@ -11,7 +11,7 @@ echo $this->partial('_partials/conflictTable.phtml', array(
 $ignoredSize = sizeOf($this->conflict['ignore']);
 if($ignoredSize > 0): ?>
 <br />
-<a href="#" class="show-ignored-button">Show ignored conflicts (<?php echo $ignoredSize; ?>) ...</a>
+<a href="javascript:return false;" class="show-ignored-button">Show ignored conflicts (<?php echo $ignoredSize; ?>) ...</a>
 <div class="hide">
     <h5>Ignored conflicts</h5>
     <?php echo $this->partial('_partials/conflictTable.phtml', array(

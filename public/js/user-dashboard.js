@@ -216,6 +216,8 @@ function setConflictButtons(){
         });
 
     });
+    $('.rerun-button').tooltip();
+
     $('.show-ignored-button').click(function(){
         $(this).siblings('.hide').removeClass('hide');
         $(this).addClass('hide');
