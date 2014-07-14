@@ -134,8 +134,9 @@ class RocketWeb_Cli_Kit_File
         $this->append('du -b ?', $path);
         return $this;
     }
-    public function extractSize($output)
+    public function extractSize()
     {
+        $output = $this->_last_status;
         if(is_array($output) && sizeOf($output) == 1){
             $output = preg_replace('!\s\s+!', ' ', $output);
             $output = explode(' ', $output);
