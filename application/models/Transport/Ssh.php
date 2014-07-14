@@ -53,6 +53,12 @@ extends Application_Model_Transport {
     protected function _prepareCustomVars(Application_Model_Store $storeObject){
         //HOST
         $customHost = $this->_storeObject->getCustomHost();
+
+        //make sure custom host have slash at the end
+        if(substr($customHost,-1)!="/"){
+            $customHost .= '/';
+        }
+        
         $this->_customHost = $customHost;
         
         //PORT
@@ -165,7 +171,9 @@ extends Application_Model_Transport {
 
         $output = $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->getSize($this->_customSql)
-        )->call()->extractSize();
+        )->call()->getLastOutput();
+
+        $output = $this->cli('file')->extractSize($output);
 
         if ($this->logger instanceof Zend_Log) {
             $this->logger->log('Checking database file size.', Zend_Log::INFO);
@@ -243,7 +251,9 @@ extends Application_Model_Transport {
     protected function _downloadAndUnpack(){
         $output = $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->getSize($this->_customFile)
-        )->call()->extractSize();
+        )->call()->getLastOutput();
+
+        $output = $this->cli('file')->extractSize($output);
 
         $packageSizeInfo = '';
         if(isset($output[0])) {
