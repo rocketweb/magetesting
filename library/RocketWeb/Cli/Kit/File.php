@@ -134,11 +134,10 @@ class RocketWeb_Cli_Kit_File
         $this->append('du -b ?', $path);
         return $this;
     }
-    public function extractSize()
+    public function extractSize($output)
     {
-        $output = $this->_last_status;
-        if(is_array($output) && sizeOf($output) == 1){
-            $output = preg_replace('!\s\s+!', ' ', $output);
+        if(is_array($output) && sizeOf($output) >= 1){
+            $output = trim(preg_replace('!\s\s+!', ' ', $output[0]),"'");
             $output = explode(' ', $output);
         }
         return $output;
