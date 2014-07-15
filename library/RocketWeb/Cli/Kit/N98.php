@@ -17,6 +17,10 @@ class RocketWeb_Cli_Kit_N98
 
         $this->_cacheFile .= '/'.strtolower($login).'.'.date('Ymd-His') . '.n98.cache';
 
+        if(!file_exists($this->_cacheFile)){
+            $this->kit('file')->create($this->_cacheFile,RocketWeb_Cli_Kit_File::TYPE_FILE,'666')->call();
+        }
+
         return $this;
     }
     public function conflict($rootDir, $login)
