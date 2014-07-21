@@ -55,7 +55,7 @@
         		            </div>
         		        </div>
         		    </fieldset>
-        		    <?php if('free-trial' !== $this->preselected_plan_id): ?>
+        		    <?php /*if('free-trial' !== $this->preselected_plan_id):*/ ?>
         		    <div class="tab-stripe"></div>
         		    <fieldset>
             		    <legend>Prepaid Extension Bundle Promotions</legend>
@@ -65,7 +65,7 @@
         		            </div>
         		        </div>
         		    </fieldset>
-        		    <?php endif; ?>
+        		    <?php /*endif;*/ ?>
         		    <div class="form-actions">
         		        <button type="submit" name="<?php echo $this->form->submit->getName(); ?>" id="<?php echo $this->form->submit->getId() ?>" class="btn btn-inverse pull-right">
         		            <i class="icon-white icon-ok"></i>&nbsp;<?php echo $this->form->submit->getLabel(); ?>
