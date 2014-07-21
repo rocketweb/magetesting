@@ -55,6 +55,7 @@ class Application_Model_UserMapper {
             $server = new Application_Model_Server();
             if(!is_numeric($data['server_id'])) {
                 $data['server_id'] = $server->fetchMostEmptyServerId();
+                $user->setServerId($data['server_id']);
             }
             unset($data['additional_stores']);
             unset($data['additional_stores_removed']);
