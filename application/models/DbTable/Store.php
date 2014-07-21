@@ -79,7 +79,7 @@ class Application_Model_DbTable_Store extends Zend_Db_Table_Abstract
                     ->joinLeft('server','server.id = '.$this->_name.'.server_id',array('server_domain'=>'domain'))
                     ->join('user', 'user.id = store.user_id', 'login')
                     ->join('version', 'store.version_id = version.id', 'version')
-                    ->order(array('status asc', 'store.id asc'));
+                    ->order(array('status desc', 'store.id desc'));
     }
        
     public function findByDomain($domain){
