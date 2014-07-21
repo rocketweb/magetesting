@@ -567,7 +567,9 @@ class UserController extends Integration_Controller_Action
 
         $form = 'Application_Form_User'.ucfirst($type);
         $form = new $form();
-        $form->populate($user->__toArray());
+        $formPopulateData = $user->__toArray();
+        $formPopulateData['plan_active_to'] = date('Y-m-d',strtotime($formPopulateData['plan_active_to']));
+        $form->populate($formPopulateData);
         
         if(!$user->getState()) {
             $form->state->setValue('Select State');
@@ -578,7 +580,7 @@ class UserController extends Integration_Controller_Action
         }
         
         if ($this->_request->isPost()) {
-            
+
             $formData = $this->_request->getPost();
 
             if(strlen($user->getEmail()) && $user->getEmail() == $formData['email']) {
@@ -590,12 +592,25 @@ class UserController extends Integration_Controller_Action
             } else {
                 unset($formData['password'], $formData['password_repeat']);
             }
+            if(isset($formData['never_expires']) && $formData['never_expires']) {
+                //We add 100 years to plan_active_to date every time we save the user, so it will be updated on every change
+                $formData['plan_active_to'] = date('Y-m-d H:i:s',time() + 50*365*24*3600);
+            } else if(isset($formData['never_expires'])) {
+                //We check if 100 years are added and we remove them
+                $time = strtotime($formData['plan_active_to']);
+                if($time > time()+(10*365*24*3600)) {
+                    $time = $time - (50*365*24*3600);
+                    $formData['plan_active_to'] = date('Y-m-d H:i:s',$time);
+                }
+            }
             
             if($form->isValid($formData)) {
-                if(strlen($formData['password'])) {
+                if(isset($formData['password']) && strlen($formData['password']) > 0) {
                     unset($formData['password_repeat']);
                 }
                 $user->setOptions($formData);
+
+
                 $user->save((is_null($user->getPassword())) ? false : true);
 
                 $planModel = new Application_Model_Plan();
@@ -613,7 +628,7 @@ class UserController extends Integration_Controller_Action
                     }
                 }
                 // remove admin plan for users other than admin
-                if('admin' !== $user->getGroup()) {
+                if('admin' !== $user->getGroup() && 'extension-owner' !== $user->getGroup()) {
                     if((int)$user->getPlanId()) {
                         $planModel = $planModel->find($user->getPlanId());
                         if((int)$planModel->getId() && (int)$planModel->getIsHidden()) {
@@ -623,6 +638,7 @@ class UserController extends Integration_Controller_Action
                 }
 
                 $this->_helper->FlashMessenger('User data has been saved successfully');
+
                 return $this->_helper->redirector->gotoRoute(array(
                         'module'     => 'default',
                         'controller' => 'user',
@@ -634,6 +650,7 @@ class UserController extends Integration_Controller_Action
                     $form->login->setValue($user->getLogin());
                 }
             }
+
         }
         $this->view->form = $form;
         $this->view->assign(array('page' => $page));
@@ -807,6 +824,31 @@ class UserController extends Integration_Controller_Action
                     'page_prefix' => 's'
                 )
             );
+
+        $limit = 10;
+        $offset = (int) $this->_getParam('epage',0);
+        $offset = $offset*$limit;
+        $filter = array('extension_owner' => $id);
+        $extensionModel = new Application_Model_Extension();
+        $extensions = $extensionModel->fetchFullListOfExtensions($filter, array(), $offset, $limit);
+        $extensions_counter = $extensionModel->getMapper()->fetchFullListOfExtensions($filter, array(), $offset, $limit, true);
+        $extensionCategoryModel = new Application_Model_ExtensionCategory();
+        $extensionCategories = $extensionCategoryModel->fetchAll();
+        $extensionCategoriesID = array();
+        foreach($extensionCategories as $ec){
+            $extensionCategoriesID[$ec->getId()] = $ec;
+        }
+        $extension_view =
+            $this->view->partial(
+                'my-extensions/table.phtml',
+                array(
+                    'extensions' => $extensions,
+                    'extensions_counter' => $extensions_counter,
+                    'extensions_categories' => $extensionCategoriesID
+                )
+            );
+
+
         $this->view->assign(
             array(
                 'user'     => $user,
@@ -815,7 +857,7 @@ class UserController extends Integration_Controller_Action
                 'coupon'   => $coupon,
                 'plans'    => $plans,
                 'payments' => $payments,
-                'stores' => $stores_view,
+                'stores' => $stores_view
             )
         );
     }

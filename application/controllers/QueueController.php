@@ -663,6 +663,7 @@ class QueueController extends Integration_Controller_Action {
         $group = is_object($group) ? $group->group : '';
         if('admin' != $group) {
             $filter['restricted'] = true;
+            $filter['extension_owner_id'] = Zend_Auth::getInstance()->getIdentity()->id;
         }
 
         //fetch store data

@@ -87,7 +87,7 @@ $(document).ready(function() {
         if(!$version_list_modal_sync.hasClass('disabled')) {
             $version_list_modal_sync.addClass('disabled');
             $.ajax({
-                url : siteRoot + '/extension/sync',
+                url : siteRoot + window.location.pathname + '/sync',
                 type : 'POST',
                 data : {
                     extension_id : $version_list_modal_extension_field.val()

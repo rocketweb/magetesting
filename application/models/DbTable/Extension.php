@@ -36,9 +36,12 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             $select_allowed_for_store->where('name LIKE ? OR description LIKE ? OR extension_key LIKE ? OR author LIKE ?', $filter['query']);
         }
 
-        // get only visible extensions for non admin users
+        // get only visible extensions for non admin users and hidden extensions for extension-owners
         if(isset($filter['restricted']) && $filter['restricted']) {
             $select_allowed_for_store->where('is_visible = ?', 1);
+            if(isset($filter['extension_owner_id']) && $filter['extension_owner_id'] > 0) {
+                $select_allowed_for_store->orWhere('extension_owner_id = ?', $filter['extension_owner_id']);
+            }
         }
 
         $select_last_version_ids = 
@@ -139,6 +142,9 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
         if(isset($filter['edition'])) {
             $cache_name .= '_edition_'.$filter['edition'];
             $sub_select_inner->where('edition = ?', strtoupper($filter['edition']));
+        }
+        if(isset($filter['extension_owner'])){
+            $sub_select_inner->where('extension_owner_id = ?',$filter['extension_owner']);
         }
         if(isset($filter['query'])) {
             $filter['query'] = str_replace(array('+', ',', '~', '<', '>', '(', ')', '"', '*', '%'), '', $filter['query']);
@@ -242,6 +248,17 @@ class Application_Model_DbTable_Extension extends Zend_Db_Table_Abstract
             }
                 
 	return $this->fetchRow($select);
+    }
+
+    public function findByExtensionFileName($extension_name,$encoded)
+    {
+        $select = $this->select();
+        if($encoded === false){
+            $select->where('extension = ?', $extension_name);
+        }else{
+            $select->where('extension_encoded = ?', $extension_name);
+        }
+        return $this->fetchAll($select);
     }
 
     public function findByExtensionKeyAndEdition($extension_key, $edition = null)

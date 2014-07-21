@@ -3,11 +3,16 @@
 class ExtensionController extends Integration_Controller_Action {
 
     protected $_tempDir;
+    protected $_gridController;
+    protected $_controllerUser;
 
     public function init() {
         $this->_tempDir = rtrim(APPLICATION_PATH, '/').'/../public/assets/img/temp/';
         /* Initialize action controller here */
         $this->_helper->sslSwitch();
+        $page_type = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+        $this->_gridController = ('my-extensions' == $page_type ? $page_type : 'extension');
+        $this->_controllerUser = 'admin';
     }
 
     public function indexAction() {
@@ -70,10 +75,12 @@ class ExtensionController extends Integration_Controller_Action {
     {
         $id = (int) $this->_getParam('id', 0);
 
+
+
         if(($cancel = (int)$this->_getParam('cancel', 0)) AND $cancel) {
             return $this->_helper->redirector->gotoRoute(array(
                 'module'     => 'default',
-                'controller' => 'extension',
+                'controller' => $this->_gridController,
                 'action'     => 'index',
             ), 'default', true);
         }
@@ -92,6 +99,7 @@ class ExtensionController extends Integration_Controller_Action {
             'directory_hash'  => $this->_getParam('directory_hash', time().'-'.uniqid()),
             'category_id'     => $this->_getParam('category_id', ''),
             'is_visible'      => $this->_getParam('is_visible', ''),
+            'extension_owner' => $this->_getParam('extension_owner',0),
             'author'          => $this->_getParam('author', ''),
             'sort'            => $this->_getParam('sort', ''),
             'extension_detail'        => $this->_getParam('extension_detail', ''),
@@ -117,7 +125,18 @@ class ExtensionController extends Integration_Controller_Action {
         );
 
         $form->category_id->addMultiOptions($extension_categories);
-        
+
+        $extension_owners = array();
+        $owners = new Application_Model_User();
+        foreach($owners->fetchAll() as $owner){
+            $extension_owners[$owner->getId()] = $owner->getLogin();
+        }
+        $form->extension_owner->addValidator(
+            new Zend_Validate_InArray(array_keys($extension_owners))
+        );
+        $form->extension_owner->addMultiOptions($extension_owners);
+
+
         $verModel = new Application_Model_Version();
         
         $this->view->versionCe = $verModel->getAllForEdition('CE');
@@ -176,11 +195,13 @@ class ExtensionController extends Integration_Controller_Action {
                     'screenshots'     => $screenshots,
                     'author'          => $extension->getAuthor(),
                     'is_visible'      => $extension->getIsVisible(),
+                    'extension_owner' => $extension->getExtensionOwner(),
                     'category_id'     => $extension->getCategoryId(),
                     'sort'            => $extension->getSort(),
                     'extension_detail'        => $extension->getExtensionDetail(),
                     'extension_documentation' => $extension->getExtensionDocumentation(),
                 );
+
                 $success_message = 'Extension has been changed properly.';
             } else {
                 $noExtension = true;
@@ -197,7 +218,7 @@ class ExtensionController extends Integration_Controller_Action {
             $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Extension with given id, does not exist.'));
             return $this->_helper->redirector->gotoRoute(array(
                     'module'     => 'default',
-                    'controller' => 'extension',
+                    'controller' => $this->_gridController,
                     'action'     => 'index',
             ), 'default', true);
         }
@@ -227,6 +248,26 @@ class ExtensionController extends Integration_Controller_Action {
                 $adapter = new Zend_File_Transfer_Adapter_Http();
                 
                 if($extension_new_name) {
+
+                    /*
+                     * First we check if an extension with the same name already exists and the extension owner is the same!
+                     * */
+                    $extension_owner_model = new Application_Model_Extension();
+                    $extension_new_name_model = $extension_owner_model->findByExtensionFileName($extension_new_name);
+                    if($extension_new_name_model != null){
+                        if($extension_entity_data['id'] != $extension_new_name_model->getId()){
+                            $this->_helper->FlashMessenger(
+                                array(
+                                    'type' => 'error',
+                                    'message' => 'A file with the same name already exists under a different extension!'
+                                )
+                            );
+                            $this->_redirectDefault();
+                        }
+                    }
+
+
+
                     $dir = APPLICATION_PATH.'/../data/extensions/'.$formData['edition'].'/open/';
                     if(!file_exists($dir)) {
                         @mkdir($dir, 0777, true);
@@ -302,6 +343,19 @@ class ExtensionController extends Integration_Controller_Action {
                         $extension->setOptions($formData);
                         $extension->save();
                         $extension_id = $extension->getId();
+
+                        if($extension_entity_data['extension_owner'] != $formData['extension_owner']) {
+                            $extensionModel = new Application_Model_Extension();
+                            $extensionsWithSameKey = $extensionModel->findByExtensionKeyAndEdition($formData['extension_key'],$formData['edition']);
+                            foreach($extensionsWithSameKey as $ewsn) {
+                                try{
+                                    $ewsn->setExtensionOwner($formData['extension_owner']);
+                                    $ewsn->save();
+                                }catch(Exception $e){
+
+                                }
+                            }
+                        }
                         
                         if($this->_getParam('remove_logo', null)) {
                             @unlink($this->view->ImagePath($old_logo, 'extension/logo'));
@@ -351,7 +405,7 @@ class ExtensionController extends Integration_Controller_Action {
                         $this->_helper->FlashMessenger($success_message);
                         return $this->_helper->redirector->gotoRoute(array(
                                 'module'     => 'default',
-                                'controller' => 'extension',
+                                'controller' => $this->_gridController,
                                 'action'     => 'index',
                         ), 'default', true);
                     } catch(Zend_Db_Exception $e) {
@@ -362,7 +416,7 @@ class ExtensionController extends Integration_Controller_Action {
                             $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'Unknown error: '.$e->getMessage()));
                             return $this->_helper->redirector->gotoRoute(array(
                                     'module'     => 'default',
-                                    'controller' => 'extension',
+                                    'controller' => $this->_gridController,
                                     'action'     => 'index',
                             ), 'default', true);
                         }
@@ -370,7 +424,7 @@ class ExtensionController extends Integration_Controller_Action {
                 } else {
                     return $this->_helper->redirector->gotoRoute(array(
                             'module'     => 'default',
-                            'controller' => 'extension',
+                            'controller' => $this->_gridController,
                             'action'     => 'index',
                     ), 'default', true);
                 }
@@ -395,7 +449,7 @@ class ExtensionController extends Integration_Controller_Action {
         // array with redirect to grid page
         $redirect = array(
                 'module'      => 'default',
-                'controller'  => 'extension',
+                'controller' => $this->_gridController,
                 'action'      => 'index'
         );
 
@@ -500,7 +554,7 @@ class ExtensionController extends Integration_Controller_Action {
                 $response->status = 'ok';
                 $versions = $extension->findByExtensionKeyAndEdition($extension->getExtensionKey(), $extension->getEdition());
                 foreach($versions as $version) {
-                    $actions = '<a href="' . $this->view->url(array('controller' => 'extension', 'action' => 'edit', 'id' => $version->getId()), 'default', true) . '" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>';
+                    $actions = '<a href="' . $this->view->url(array('controller' => $this->_gridController, 'action' => 'edit', 'id' => $version->getId()), 'default', true) . '" class="btn btn-success"><i class="icon-white icon-pencil"></i>&nbsp;Edit</a>';
                     $actions .= '<a href="#extension-deletion" data-toggle="modal" class="extension-delete btn btn-danger" data-version-id="' . $version->getId() . '" data-dismiss="modal"><i class="icon-white icon-trash"></i>&nbsp;Delete</a>';
                     $files = '';
                     if($version->getExtension()) {
@@ -527,7 +581,7 @@ class ExtensionController extends Integration_Controller_Action {
 
         $redirect = array(
                 'module'      => 'default',
-                'controller'  => 'extension',
+                'controller' => $this->_gridController,
                 'action'      => 'index'
         );
         $request = $this->getRequest();
@@ -690,5 +744,15 @@ class ExtensionController extends Integration_Controller_Action {
                 $screenshot->delete();
             }
         }
+    }
+
+    protected function _redirectDefault($redirect_options = array())
+    {
+        $redirect_options = array_merge(array(
+                                            'module'     => 'default',
+                                            'controller' => $this->_gridController,
+                                            'action'     => 'index',
+                                        ),$redirect_options);
+        return $this->_helper->redirector->gotoRoute($redirect_options, 'default', true);
     }
 }
