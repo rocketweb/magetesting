@@ -341,7 +341,7 @@ class UserController extends Integration_Controller_Action
 	    $this->view->preselected_plan_id = NULL;
 	    $plan_id = $this->_getParam('preselected_plan_id', 0);
 	    $modelCoupon = new Application_Model_Coupon();
-	    if('free-trial' === $plan_id) {
+	    /*if('free-trial' === $plan_id) {
 	        $config = Zend_Registry::get('config');
 	        $freeTrialsPerDay = $config->register->freeTrialCouponsPerDay;
 	        $nextFreeTrialDate = $modelCoupon->getNextFreeTrialDate($freeTrialsPerDay);
@@ -358,9 +358,9 @@ class UserController extends Integration_Controller_Action
 	            ));
 	        }
 	        $this->view->messages = $flashMessages;
-	    } else {
+	    } else {*/
 	        $plan_id = (int)$plan_id;
-	    }
+	    /*}*/
 	    if($plan_id) {
 	        $this->view->preselected_plan_id = $plan_id;
 	    }
@@ -382,7 +382,7 @@ class UserController extends Integration_Controller_Action
                 $user->setOptions($form->getValues());
                 $apply_coupon_from = 0;
                 $adminNotificationData = array();
-                if('free-trial' === $plan_id) {
+                /*if('free-trial' === $plan_id) {
                     $adminNotificationData['free_trial'] = true;
                     if($modelCoupon->createNewFreeTrial($nextFreeTrialDate)) {
                         $coupon = true;
@@ -399,13 +399,29 @@ class UserController extends Integration_Controller_Action
                 } else {
                     $user->setPreselectedPlanId($plan_id);
                     $user->setActiveFromReminded(1);
+                }*/
+
+                $plan = new Application_Model_Plan();
+                $plan->find($plan_id);
+
+                if ($plan->getPrice() > 0) {
+                    //$user->setBraintreeTransactionId($transaction_data->id);
+                    $user->setPlanId($plan_id);
+                    $user->setGroup('commercial-user');
+                    $user->setAdditionalStores(0);
+                    $user->setAdditionalStoresRemoved(0);
+                    $user->setPlanActiveTo(
+                        date('Y-m-d H:i:s',time() + 50*365*24*3600)
+                    );
+                } else {
+                    $user->setPreselectedPlanId($plan_id);
+                    $user->setActiveFromReminded(1);
                 }
                 $user = $user->save();
 
                 $adminNotification = new Integration_Mail_AdminNotification();
                 $adminNotificationData['user'] = $user;
-                $plan = new Application_Model_Plan();
-                $plan->find($user->getPreselectedPlanId());
+
                 if($plan->getName()) {
                     $adminNotificationData['preselected_plan'] = $plan->getName();
                 }
@@ -432,12 +448,12 @@ class UserController extends Integration_Controller_Action
                 try {
                     $adminNotification->send();
                     $successMessage = 'You have been registered successfully.';
-                    if('free-trial' === $plan_id && $nextFreeTrialDate != date('Y-m-d')) {
+                    /*if('free-trial' === $plan_id && $nextFreeTrialDate != date('Y-m-d')) {
                         $successMessage .= ' We will send you an email when your free trial account will be ready.';
-                    } else {
+                    } else {*/
                         $mail->send();
                         $successMessage .= ' Please check your mail box for instructions to activate account.';
-                    }
+                    /*}*/
                     $this->_helper->FlashMessenger($successMessage);
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');

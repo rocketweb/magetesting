@@ -817,7 +817,7 @@ $(document).ready(function () {
         return false;
     });
 
-    var $free_trial = $('.free-trial');
+    /*var $free_trial = $('.free-trial');
     if($free_trial.length) {
         $free_trial.click(function() {
             $free_trial
@@ -829,7 +829,7 @@ $(document).ready(function () {
             $free_trial
                 .siblings('input:hidden').val(1);
         });
-    }
+    }*/
     
     var $coupon_deletion_modal = $('#coupon-deletion'),
         $coupon_deletion_buttons = $('.coupon-delete');
