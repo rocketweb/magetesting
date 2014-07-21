@@ -399,7 +399,7 @@ class UserController extends Integration_Controller_Action
                 $plan = new Application_Model_Plan();
                 $plan->find($plan_id);
 
-                if ($plan->getPrice() > 0) {
+                if ($plan->getId() && $plan->getPrice() == 0) {
                     //$user->setBraintreeTransactionId($transaction_data->id);
                     $user->setPlanId($plan_id);
                     $user->setGroup('commercial-user');
