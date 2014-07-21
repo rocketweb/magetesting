@@ -401,13 +401,14 @@ class UserController extends Integration_Controller_Action
 
                 if ($plan->getId() && $plan->getPrice() == 0) {
                     //$user->setBraintreeTransactionId($transaction_data->id);
-                    $user->setPlanId($plan_id);
                     $user->setGroup('commercial-user');
                     $user->setAdditionalStores(0);
                     $user->setAdditionalStoresRemoved(0);
                     $user->setPlanActiveTo(
                         date('Y-m-d H:i:s',time() + 50*365*24*3600)
                     );
+                    $user->save(); // to have id set
+                    $user->setPlanId($plan_id);
                 } else {
                     $user->setPreselectedPlanId($plan_id);
                     $user->setActiveFromReminded(1);
