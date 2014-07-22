@@ -7,6 +7,7 @@ class RocketWeg_Cli_Kit_ApacheTest extends PHPUnit_Framework_TestCase
     {
         $cli = new RocketWeb_Cli();
         $this->_kit = $cli->kit('apache');
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Apache', $this->_kit);
     }
 
     public function tearDown()
@@ -17,7 +18,6 @@ class RocketWeg_Cli_Kit_ApacheTest extends PHPUnit_Framework_TestCase
 
     public function testEnableSite()
     {
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Apache', $this->_kit);
         $this->assertEquals(
             "/usr/sbin/a2ensite 'site_name' 2>&1",
             $this->_kit->_prepareCall($this->_kit->enableSite('site_name'))

@@ -11,6 +11,6 @@ class MyAccountControllerTest extends ControllerTestCase
         $this->dispatch('/my-account/index');
 
         $this->assertNotRedirect();
-        $this->assertQueryContentContains('h1', 'Your account details');
+        $this->assertQueryContentContains('h1', 'Your Mage Testing Account Details');
     }
 }

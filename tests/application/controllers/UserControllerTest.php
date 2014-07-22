@@ -60,7 +60,7 @@ class UserControllerTest extends ControllerTestCase
         
         $this->request->setMethod('POST')
               ->setPost(array(
-                  'email' => 'jan@rocketweb.com',
+                  'email' => 'no-replay@rocketweb.com',
               ));
         $this->dispatch('/user/reset-password');
         
@@ -72,6 +72,28 @@ class UserControllerTest extends ControllerTestCase
         
         $this->assertQueryContentContains('strong', 'We sent you link with form to set your new password.');
         
+        $db->rollback();
+    }
+
+    public function testNotValidResetPassword()
+    {
+        $db = $this->bootstrap->getBootstrap()->getResource('db');
+        $db->beginTransaction();
+
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'email' => 'some-non-existing-email@rocketweb.com',
+            ));
+        $this->dispatch('/user/reset-password');
+
+        $this->assertRedirectTo('/user/reset-password');
+
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('GET')->setPost(array());
+        $this->dispatch('/user/reset-password');
+
+        $this->assertQueryContentContains('strong', 'Wrong credentials.');
+
         $db->rollback();
     }
     
@@ -104,7 +126,7 @@ class UserControllerTest extends ControllerTestCase
         $db->beginTransaction();
         
         $data = array(
-            'login'           => 'testlogin',
+            'login'           => 'phpunittest',
             'email'           => 'email@rocketweb.com',
             'firstname'       => 'First',
             'lastname'        => 'Last Name',

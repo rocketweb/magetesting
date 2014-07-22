@@ -7,6 +7,7 @@ class RocketWeg_Cli_Kit_Compression_TarTest extends PHPUnit_Framework_TestCase
     {
         $cli = new RocketWeb_Cli();
         $this->_kit = $cli->kit('tar');
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Compression_Tar', $this->_kit);
     }
 
     public function tearDown()
@@ -16,7 +17,6 @@ class RocketWeg_Cli_Kit_Compression_TarTest extends PHPUnit_Framework_TestCase
 
     public function testPack()
     {
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Compression_Tar', $this->_kit);
         $this->assertEquals(
             "tar zcvf 'file.tar.gz' 'dir/to/pack' 2>&1",
             $this->_kit->_prepareCall($this->_kit->pack('file.tar.gz', 'dir/to/pack')->isCompressed(true))
@@ -25,7 +25,6 @@ class RocketWeg_Cli_Kit_Compression_TarTest extends PHPUnit_Framework_TestCase
 
     public function testPackWithChangeDir()
     {
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Compression_Tar', $this->_kit);
         $this->assertEquals(
             "tar zcvf 'file.tar.gz' -C 'dir/to/pack' '.' 2>&1",
             $this->_kit->_prepareCall($this->_kit->pack('file.tar.gz', 'dir/to/pack', true, true)->isCompressed(true))

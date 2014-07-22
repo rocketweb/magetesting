@@ -10,9 +10,8 @@
     <testsuites>
         <!-- Need to clean that as it doesn't work properly (wojtek) -->
         <testsuite name="Application Controllers">
-            <file>./application/controllers/IndexControllerTest.php</file>
-            <!--<directory>./application/controllers</directory>
-            <directory>./application/models</directory>-->
+            <directory>./application/controllers</directory>
+            <!--<directory>./application/models</directory>-->
         </testsuite>
         <!-- Need to clean that as it doesn't work properly (wojtek) -->
         <!--<testsuite name="Application Models">
