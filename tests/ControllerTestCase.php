@@ -13,6 +13,8 @@ require_once 'Zend/Test/PHPUnit/Db/SimpleTester.php';
 abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 {
     public $bootstrap = null;
+    protected $_disposables = array();
+    protected $_db;
 
     public function setUp()
     {   
@@ -23,6 +25,27 @@ abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         );
 
         parent::setUp();
+        $this->_db = $this->bootstrap->getBootstrap()->getResource('db');
+        $this->_db->beginTransaction();
+    }
+
+
+    public function createFakeUser()
+    {
+        $userData = array(
+            'login' => 'standard-user',
+            'password' => 'standard-user',
+            'email' => 'no-replay@rocketweb.com',
+            'firstname' => 'Standard',
+            'lastname' => 'User',
+            'status' => 'active',
+            'group' => 'admin'
+
+        );
+
+        $user = new Application_Model_User();
+        $user->setOptions($userData);
+        $user->save();
     }
 
     public function loginUser($user, $password)
@@ -35,7 +58,8 @@ abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
             )
         );
         $this->dispatch('/user/login');
-        
+
+
         $this->assertRedirectTo('/user/dashboard');
         
         $this->resetRequest()->resetResponse();
@@ -43,7 +67,13 @@ abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $layout = Zend_Controller_Action_HelperBroker::getStaticHelper('layout');
         $layout->enableLayout();
     }
-    
+
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        if($this->_db != null) $this->_db->rollback();
+    }
 //    public function setupDatabase()
 //    {
 //        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', 'testing');
