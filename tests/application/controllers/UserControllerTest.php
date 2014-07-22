@@ -3,6 +3,11 @@ require_once realpath(dirname(__FILE__) . '/../../ControllerTestCase.php');
 
 class UserControllerTest extends ControllerTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->createFakeUser();
+    }
     
     public function testValidLoginShouldGoToDashboard()
     {
@@ -55,9 +60,6 @@ class UserControllerTest extends ControllerTestCase
     
     public function testValidResetPassword()
     {
-        $db = $this->bootstrap->getBootstrap()->getResource('db');
-        $db->beginTransaction();
-        
         $this->request->setMethod('POST')
               ->setPost(array(
                   'email' => 'no-replay@rocketweb.com',
@@ -71,15 +73,11 @@ class UserControllerTest extends ControllerTestCase
         $this->dispatch('/user/reset-password');
         
         $this->assertQueryContentContains('strong', 'We sent you link with form to set your new password.');
-        
-        $db->rollback();
+
     }
 
     public function testNotValidResetPassword()
     {
-        $db = $this->bootstrap->getBootstrap()->getResource('db');
-        $db->beginTransaction();
-
         $this->request->setMethod('POST')
             ->setPost(array(
                 'email' => 'some-non-existing-email@rocketweb.com',
@@ -94,7 +92,6 @@ class UserControllerTest extends ControllerTestCase
 
         $this->assertQueryContentContains('strong', 'Wrong credentials.');
 
-        $db->rollback();
     }
     
     public function testRegistrationShouldFailWithInvalidData()
@@ -122,9 +119,6 @@ class UserControllerTest extends ControllerTestCase
      */
     public function testValidRegistration()
     {
-        $db = $this->bootstrap->getBootstrap()->getResource('db');
-        $db->beginTransaction();
-        
         $data = array(
             'login'           => 'phpunittest',
             'email'           => 'email@rocketweb.com',
@@ -144,6 +138,5 @@ class UserControllerTest extends ControllerTestCase
         $this->dispatch('/user/login');
         
         $this->assertQueryContentContains('strong', 'You have been registered successfully');
-        $db->rollback();
     }
 }

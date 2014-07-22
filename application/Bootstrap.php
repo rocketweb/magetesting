@@ -24,6 +24,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Session::start();
     }
 
+    /** Setting mail-transport for testing **/
+    protected function _initMailTransport()
+    {
+        //change the mail transport only if dev or test
+        if (APPLICATION_ENV == 'testing') {
+            $callback = function()
+            {
+                return 'ZendMail_' . microtime(true) .'.tmp';
+            };
+            $fileTransport = new Zend_Mail_Transport_File(
+                array('path' => realpath(APPLICATION_PATH . '/../data/cache'),
+                    'callback'=>$callback)
+            );
+            Zend_Mail::setDefaultTransport($fileTransport);
+        }
+    }
 
     /**
      * Init logger
