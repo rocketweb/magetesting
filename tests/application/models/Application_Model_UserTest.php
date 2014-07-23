@@ -12,7 +12,8 @@ class Application_Model_UserTest extends ModelTestCase
         'firstname'         => 'Model',
         'lastname'          => 'User',
         'status'            => 'active',
-        'group'             => 'free-user');
+        'group'             => 'free-user'
+    );
     private $_userExtraData = array(
         'street'            => 'Street',
         'postal_code'       => 'Postal code',

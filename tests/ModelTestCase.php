@@ -50,7 +50,11 @@ abstract class ModelTestCase extends Zend_Test_PHPUnit_ControllerTestCase
                 'Expected: '.$key.''."\n".
                 'Received: NULL'
             );
-            $this->assertEquals($value,$given[$key]);
+            $this->assertEquals($value,$given[$key],
+                'Value missmatch - key: '.$key."\n".
+                'Expected: '.$value."\n".
+                'Received: '.$given[$key]
+            );
             unset($given[$key]);
         }
         $this->assertEquals(0,sizeOf($given),
