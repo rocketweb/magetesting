@@ -13,8 +13,8 @@ require_once 'Zend/Test/PHPUnit/Db/SimpleTester.php';
 abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 {
     public $bootstrap = null;
-    protected $_disposables = array();
     protected $_db;
+    protected $traceError = true;
 
     public function setUp()
     {   
@@ -39,7 +39,9 @@ abstract class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
             'firstname' => 'Standard',
             'lastname' => 'User',
             'status' => 'active',
-            'group' => 'admin'
+            'group' => 'commercial-user',
+            'plan_id' => 1,
+            'plan_active_to' => '2064-07-09 08:12:53'
 
         );
 
