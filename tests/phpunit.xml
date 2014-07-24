@@ -15,8 +15,7 @@
         </testsuite>
         <!-- Need to clean that as it doesn't work properly (wojtek) -->
         <testsuite name="Application Models">
-            <file>./application/models/Application_Model_UserTest.php</file>
-            <!--<directory>./application/models/</directory>-->
+            <directory>./application/models/</directory>
         </testsuite>
         <testsuite name="Library">
             <directory>./application/library/</directory>

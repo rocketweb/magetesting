@@ -42,7 +42,7 @@ class Application_Model_EditionTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testEditionModel() {
-        $this->assertType('Application_Model_Edition', $this->model);
+        $this->assertInstanceOf('Application_Model_Edition', $this->model);
     }
 
     /**
@@ -72,10 +72,14 @@ class Application_Model_EditionTest extends PHPUnit_Framework_TestCase {
         
         $array = $this->model->__toArray();
         
-        $this->assertType('array', $array);
-        $this->assertArrayHasKey('id', $array);
-        $this->assertArrayHasKey('key', $array);
-        $this->assertArrayHasKey('name', $array);
-    }
+        $this->assertEquals(
+            array(
+                'id'   => $this->id,
+                'key'  => $this->key,
+                'name' => $this->name
+            ),
+            $array
+        );
+        }
 
 }

@@ -39,9 +39,10 @@ abstract class ModelTestCase extends Zend_Test_PHPUnit_ControllerTestCase
     protected function assertModelArray($expected = array(), $given = array())
     {
         $this->assertEquals(sizeOf($expected),sizeOf($given),
-            'Model array size missmatched.'."\n".
-            'Expected: '.sizeOf($expected).''."\n".
-            'Received: '.sizeOf($given)
+            'Model array size missmatched.' . "\n" .
+            'Expected: ' . sizeOf($expected) . "\n" .
+            'Received: ' . sizeOf($given) . "\n" .
+            'Diff: ' . array_diff($expected,$given)
         );
 
         $this->assertEquals($expected,$given);
