@@ -26,14 +26,14 @@ class Application_Model_UserTest extends ModelTestCase
         'plan_active_to'    => '2010-01-01 00:00:00',
         'has_system_account' => true,
         'system_account_name' => 'mt_model',
-        'downgraded'        => false,
+        'downgraded'        => 0,
         'server_id'         => 1,
         'braintree_vault_id' => 0,
         'braintree_transaction_id' => 0,
         'braintree_transaction_confirmed' => false,
         'plan_raised_to_date' => 0,
         'plan_id_before_raising' => '2010-01-01 00:00:00',
-        'has_papertrail_account' => false,
+        'has_papertrail_account' => 0,
         'papertrail_api_token' => '',
         'preselected_plan_id' => 0,
         'apikey' => 'apikey',
@@ -42,6 +42,8 @@ class Application_Model_UserTest extends ModelTestCase
         'additional_stores' => 2,
         'additional_stores_removed' => 0
     );
+
+
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -65,7 +67,7 @@ class Application_Model_UserTest extends ModelTestCase
         parent::tearDown();
     }
 
-    public function testSaveAndUpdate()
+    public function testSave()
     {
         $user = new Application_Model_User();
         $user->setOptions($this->_userData);
@@ -76,6 +78,17 @@ class Application_Model_UserTest extends ModelTestCase
         }catch(DatabseException $e){
             $this->markTestIncomplete('Database error when trying to save model Application_Model_User::save(): '.$e->getMessage());
         }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testUpdate()
+    {
+        $user = new Application_Model_User();
+        $user->setOptions($this->_userData);
+        $user->save();
+
         $user->setFirstname('ModelChange');
         try{
             $user->save();
@@ -84,7 +97,33 @@ class Application_Model_UserTest extends ModelTestCase
         }
     }
 
-    public function testSettersAndToArray()
+
+    public function testSetOptions()
+    {
+        $data = array_merge($this->_userData,$this->_userExtraData);
+
+        $user = new Application_Model_User();
+        $user->setOptions($data);
+
+        $filter = new Zend_Filter_Word_UnderscoreToCamelCase();
+        $methods = get_class_methods($user);
+
+        //unset password, because it is removed in backend
+        unset($data['password']);
+
+        foreach($data as $key => $value){
+            $method = 'get' . $filter->filter($key);
+            if (in_array($method, $methods)) {
+                $this->assertEquals($value,$user->$method());
+            }
+        }
+        unset($user);
+    }
+
+    /**
+     * @depends testSetOptions
+     */
+    public function testToArray()
     {
         $data = array_merge($this->_userData,$this->_userExtraData);
 
@@ -92,9 +131,8 @@ class Application_Model_UserTest extends ModelTestCase
         $user->setOptions($data);
 
         $exportData = $user->__toArray();
-        //unset id field, because we are not saving model
+
         unset($exportData['id']);
-        //unset password, because it is removed in backend
         unset($data['password']);
 
         $this->assertModelArray($data,$exportData);
@@ -102,7 +140,7 @@ class Application_Model_UserTest extends ModelTestCase
     }
 
     /**
-     * @depends testSaveAndUpdate
+     * @depends testSave
      */
     public function testDelete()
     {
