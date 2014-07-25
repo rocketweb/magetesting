@@ -52,7 +52,7 @@ class Application_Model_UserTest extends ModelTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->model = new Application_Model_User;
+        $this->model = new Application_Model_User();
         $this->assertInstanceOf('Application_Model_User', $this->model);
 
     }

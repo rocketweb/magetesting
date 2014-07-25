@@ -41,7 +41,7 @@ class Application_Model_StoreTest extends ModelTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->model = new Application_Model_Store;
+        $this->model = new Application_Model_Store();
         $this->assertInstanceOf('Application_Model_Store', $this->model);
 
     }

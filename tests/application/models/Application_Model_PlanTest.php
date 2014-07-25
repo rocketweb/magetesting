@@ -33,7 +33,7 @@ class Application_Model_PlanTest extends ModelTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->model = new Application_Model_Plan;
+        $this->model = new Application_Model_Plan();
         $this->assertInstanceOf('Application_Model_Plan', $this->model);
 
     }
@@ -48,7 +48,18 @@ class Application_Model_PlanTest extends ModelTestCase
         parent::tearDown();
     }
 
-    /*
+    private function savedObject(Application_Model_Plan $plan){
+        $allplans = $plan->fetchAll();
+        $lastplan = null;
+        foreach($allplans as $p){
+            if($lastplan == null) $lastplan = $p;
+            if($p->getId() > $lastplan->getId()) $lastplan = $p;
+        }
+
+        return $lastplan;
+    }
+    
+
     public function testSave()
     {
         $plan = new Application_Model_Plan();
@@ -56,22 +67,23 @@ class Application_Model_PlanTest extends ModelTestCase
 
         try{
             $plan->save();
-            var_dump($plan->__toArray());
+            $plan = $this->savedObject($plan);
             $this->assertGreaterThan(0, (int)$plan->getId(), 'Application_Model_Plan::save() failed. ID not set after trying to save!');
         }catch(DatabseException $e){
             $this->markTestIncomplete('Database error when trying to save model Application_Model_Plan::save(): '.$e->getMessage());
         }
     }
-*/
+
     /**
-     * depends testSave
+     * @depends testSave
      */
-   /*
+
     public function testUpdate()
     {
         $plan = new Application_Model_Plan();
         $plan->setOptions($this->_planData);
         $plan->save();
+        $plan = $this->savedObject($plan);
 
         $plan->setName('NameChange');
         try{
@@ -81,7 +93,7 @@ class Application_Model_PlanTest extends ModelTestCase
         }
     }
 
-*/
+
     public function testSetOptions()
     {
         $data = $this->_planData;
@@ -122,11 +134,12 @@ class Application_Model_PlanTest extends ModelTestCase
     /**
      * @depends testSave
      */
-  /*  public function testDelete()
+    public function testDelete()
     {
         $plan = new Application_Model_Plan();
         $plan->setOptions($this->_planData);
         $plan->save();
+        $plan = $this->savedObject($plan);
 
         $planId = $plan->getId();
 
@@ -136,5 +149,4 @@ class Application_Model_PlanTest extends ModelTestCase
         $find = $find->find($planId);
         $this->assertNull($find->getId(),'Application_Model_Plan::delete(\'`id` = '.$planId.'\') failed.');
     }
-  */
 }

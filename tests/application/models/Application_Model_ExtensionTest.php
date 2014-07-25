@@ -36,7 +36,7 @@ class Application_Model_ExtensionTest extends ModelTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->model = new Application_Model_Extension;
+        $this->model = new Application_Model_Extension();
         $this->assertInstanceOf('Application_Model_Extension', $this->model);
 
     }
