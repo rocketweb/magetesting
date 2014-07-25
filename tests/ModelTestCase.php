@@ -42,9 +42,9 @@ abstract class ModelTestCase extends Zend_Test_PHPUnit_ControllerTestCase
             'Model array size missmatched.' . "\n" .
             'Expected: ' . sizeOf($expected) . "\n" .
             'Received: ' . sizeOf($given) . "\n" .
-            'Diff: ' . array_diff($expected,$given)
+            'Diff: ' . print_r(array_diff($expected,$given),1)
         );
 
-        $this->assertEquals($expected,$given);
+        $this->assertEquals((array)$expected,(array)$given);
     }
 }
