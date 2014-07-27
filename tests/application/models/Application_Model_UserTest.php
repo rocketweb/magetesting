@@ -53,8 +53,6 @@ class Application_Model_UserTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_User();
-        $this->assertInstanceOf('Application_Model_User', $this->model);
-
     }
 
     /**
@@ -65,6 +63,11 @@ class Application_Model_UserTest extends ModelTestCase
     {
         unset($this->model);
         parent::tearDown();
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_User', $this->model);
     }
 
     public function testSave()
@@ -139,6 +142,41 @@ class Application_Model_UserTest extends ModelTestCase
         unset($user);
     }
 
+    public function testFetchAll()
+    {
+        $user = new Application_Model_User();
+        $user->setOptions($this->_userData);
+        $user->save();
+
+        $userModel = new Application_Model_User();
+        $users = $userModel->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($users),'Application_Model_User::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($users as $user){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_User', $user);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $user = new Application_Model_User();
+        $user->setOptions($this->_userData);
+        $user->save();
+
+        $userId = $user->getId();
+
+        $find =  new Application_Model_User();
+        $find = $find->find($userId);
+        $this->assertNotNull($find->getId(),'Application_Model_User::find('.$userId.') failed.');
+    }
     /**
      * @depends testSave
      */

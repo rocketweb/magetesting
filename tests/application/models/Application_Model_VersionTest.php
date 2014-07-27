@@ -21,8 +21,6 @@ class Application_Model_VersionTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_Version();
-        $this->assertInstanceOf('Application_Model_Version', $this->model);
-
     }
 
     /**
@@ -35,6 +33,53 @@ class Application_Model_VersionTest extends ModelTestCase
         parent::tearDown();
     }
 
+    private function savedObject(Application_Model_Version $version){
+        $allVersions = $version->fetchAll();
+        $lastVersion = null;
+        foreach($allVersions as $m){
+            if($lastVersion == null) $lastVersion = $m;
+            if($m->getId() > $lastVersion->getId()) $lastVersion = $m;
+        }
+
+        return $lastVersion;
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_Version', $this->model);
+    }
+    
+    public function testSave()
+    {
+        $version = new Application_Model_Version();
+        $version->setOptions($this->_versionData);
+
+        try{
+            $version->save();
+            $version = $this->savedObject($version);
+            $this->assertGreaterThan(0, (int)$version->getId(), 'Application_Model_Version::save() failed. ID not set after trying to save!');
+        }catch(DatabseException $e){
+            $this->markTestIncomplete('Database error when trying to save model Application_Model_Version::save(): '.$e->getMessage());
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testUpdate()
+    {
+        $version = new Application_Model_Version();
+        $version->setOptions($this->_versionData);
+        $version->save();
+        $version = $this->savedObject($version);
+
+        $version->setVersion('CE');
+        try{
+            $version->save();
+        }catch(DatabseException $e){
+            $this->markTestIncomplete('Database error when trying to update model Application_Model_Version::save(): '.$e->getMessage());
+        }
+    }
     public function testSetOptions()
     {
         $data = $this->_versionData;
@@ -72,4 +117,60 @@ class Application_Model_VersionTest extends ModelTestCase
         unset($version);
     }
 
+    public function testFetchAll()
+    {
+        $version = new Application_Model_Version();
+        $version->setOptions($this->_versionData);
+        $version->save();
+        $version = $this->savedObject($version);
+
+        $versionModel = new Application_Model_Version();
+        $versions = $versionModel->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($versions),'Application_Model_Version::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($versions as $version){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_Version', $version);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $version = new Application_Model_Version();
+        $version->setOptions($this->_versionData);
+        $version->save();
+        $version = $this->savedObject($version);
+
+        $versionId = $version->getId();
+
+        $find =  new Application_Model_Version();
+        $find = $find->find($versionId);
+        $this->assertNotNull($find->getId(),'Application_Model_Version::find('.$versionId.') failed.');
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testDelete()
+    {
+        $version = new Application_Model_Version();
+        $version->setOptions($this->_versionData);
+        $version->save();
+        $version = $this->savedObject($version);
+
+        $versionId = $version->getId();
+
+        $version->delete('`id` = '.$versionId);
+
+        $find =  new Application_Model_Version();
+        $find = $find->find($versionId);
+        $this->assertNull($find->getId(),'Application_Model_Version::delete(\'`id` = '.$versionId.'\') failed.');
+    }
 }

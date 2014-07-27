@@ -3,10 +3,14 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_ExtensionCategoryTest extends ModelTestCase
 {
+    /*
+     * TODO: Application_Model_DbTable_ExtensionCategory::delete() method is missing.
+     */
+
 
     protected $model;
     
-    protected $_ExtensionCategoryData = array(
+    protected $_extensionCategoryData = array(
         'name' =>'PHPUnit extension',
         'class' => 'other',
         'logo' => 'other.jpg'
@@ -22,8 +26,6 @@ class Application_Model_ExtensionCategoryTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_ExtensionCategory();
-        $this->assertInstanceOf('Application_Model_ExtensionCategory', $this->model);
-
     }
 
     /**
@@ -36,10 +38,15 @@ class Application_Model_ExtensionCategoryTest extends ModelTestCase
         parent::tearDown();
     }
 
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_ExtensionCategory', $this->model);
+    }
+
     public function testSave()
     {
         $extension = new Application_Model_ExtensionCategory();
-        $extension->setOptions($this->_ExtensionCategoryData);
+        $extension->setOptions($this->_extensionCategoryData);
 
        try{
             $extension->save();
@@ -55,7 +62,7 @@ class Application_Model_ExtensionCategoryTest extends ModelTestCase
     public function testUpdate()
     {
         $extension = new Application_Model_ExtensionCategory();
-        $extension->setOptions($this->_ExtensionCategoryData);
+        $extension->setOptions($this->_extensionCategoryData);
         $extension->save();
 
         $extension->setLogo('promotion.jpg');
@@ -69,7 +76,7 @@ class Application_Model_ExtensionCategoryTest extends ModelTestCase
 
     public function testSetOptions()
     {
-        $data = $this->_ExtensionCategoryData;
+        $data = $this->_extensionCategoryData;
 
         $extension = new Application_Model_ExtensionCategory();
         $extension->setOptions($data);
@@ -86,12 +93,44 @@ class Application_Model_ExtensionCategoryTest extends ModelTestCase
         unset($extension);
     }
 
+    public function testFetchAll()
+    {
+        $extensionCategoryModel = new Application_Model_ExtensionCategory();
+        $extensionCategories = $extensionCategoryModel->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($extensionCategories),'Application_Model_ExtensionCategory::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($extensionCategories as $extensionCateogry){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_ExtensionCategory', $extensionCateogry);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $extensionCategory = new Application_Model_ExtensionCategory();
+        $extensionCategory->setOptions($this->_extensionCategoryData);
+        $extensionCategory->save();
+
+        $extensionCategoryId = $extensionCategory->getId();
+
+        $find =  new Application_Model_ExtensionCategory();
+        $find = $find->find($extensionCategoryId);
+        $this->assertNotNull($find->getId(),'Application_Model_ExtensionCategory::find('.$extensionCategoryId.') failed.');
+    }
+    
     /**
      * @depends testSetOptions
      */
     public function testToArray()
     {
-        $data = $this->_ExtensionCategoryData;
+        $data = $this->_extensionCategoryData;
 
         $extension = new Application_Model_ExtensionCategory();
         $extension->setOptions($data);

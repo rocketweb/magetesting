@@ -28,8 +28,6 @@ class Application_Model_QueueTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_Queue();
-        $this->assertInstanceOf('Application_Model_Queue', $this->model);
-
     }
 
     /**
@@ -42,23 +40,37 @@ class Application_Model_QueueTest extends ModelTestCase
         parent::tearDown();
     }
 
-    private function setStore()
+    private function setStoreAndExtension()
     {
         $storeModel = new Application_Model_Store();
         $stores = $storeModel->fetchAll();
         if(sizeOf($stores) == 0)
         {
-            $this->markTestIncomplete('No stores found to test Queue model');
+            $this->markTestIncomplete('No stores found to test StoreExtension model');
             return false;
         }
         $store = $stores[array_rand($stores)];
         $this->_queueData['store_id'] = $store->getId();
+
+        $extensionModel = new Application_Model_Extension();
+        $extension = $extensionModel->findByFilters(array('edition' => 'CE'));
+        if($extension == null)
+        {
+            $this->markTestIncomplete('No extensions found to test StoreExtension model');
+            return false;
+        }
+        $this->_queueData['extension_id'] = $extension->getId();
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_Queue', $this->model);
     }
 
     public function testSave()
     {
         $queue = new Application_Model_Queue();
-        $this->setStore();
+        if($this->setStoreAndExtension() === false) return ;
         $queue->setOptions($this->_queueData);
 
         try{
@@ -75,7 +87,7 @@ class Application_Model_QueueTest extends ModelTestCase
     public function testUpdate()
     {
         $queue = new Application_Model_Queue();
-        $this->setStore();
+        if($this->setStoreAndExtension() === false) return ;
         $queue->setOptions($this->_queueData);
         $queue->save();
 
@@ -125,13 +137,49 @@ class Application_Model_QueueTest extends ModelTestCase
         unset($queue);
     }
 
+    public function testFetchAll()
+    {
+        $queue = new Application_Model_Queue();
+        if($this->setStoreAndExtension() === false) return ;
+        $queue->setOptions($this->_queueData);
+        $queue->save();
+        $queues = $queue->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($queues),'Application_Model_Queue::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($queues as $queue){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_Queue', $queue);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $queue = new Application_Model_Queue();
+        if($this->setStoreAndExtension() === false) return ;
+        $queue->setOptions($this->_queueData);
+        $queue->save();
+
+        $queueId = $queue->getId();
+
+        $find =  new Application_Model_Queue();
+        $find = $find->find($queueId);
+        $this->assertNotNull($find->getId(),'Application_Model_Queue::find('.$queueId.') failed.');
+    }
+    
     /**
      * @depends testSave
      */
     public function testDelete()
     {
         $queue = new Application_Model_Queue();
-        $this->setStore();
+        if($this->setStoreAndExtension() === false) return ;
         $queue->setOptions($this->_queueData);
         $queue->save();
 

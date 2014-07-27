@@ -15,6 +15,7 @@ abstract class ModelTestCase extends Zend_Test_PHPUnit_ControllerTestCase
     public $bootstrap = null;
     protected $_db;
     protected $traceError = true;
+    protected $_fetchAllBreaker = 3;
 
     protected function setUp()
     {

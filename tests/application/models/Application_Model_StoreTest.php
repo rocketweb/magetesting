@@ -3,7 +3,9 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_StoreTest extends ModelTestCase
 {
-
+    /*
+     * TODO: Application_Model_Store::save() returns only id instead of object (should be the same on every model)
+     * */
     protected $model;
 
     protected $_storeData = array(
@@ -26,7 +28,7 @@ class Application_Model_StoreTest extends ModelTestCase
         'custom_login' => NULL,
         'custom_sql' => NULL,
         'error_message' => NULL,
-        'revision_count' => 5,
+        'revision_count' => 1,
         'papertrail_syslog_hostname' => 'mage-testing1.papertrailapp.com',
         'papertrail_syslog_port' => '60305',
         'do_hourly_db_revert' => 0
@@ -42,8 +44,6 @@ class Application_Model_StoreTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_Store();
-        $this->assertInstanceOf('Application_Model_Store', $this->model);
-
     }
 
     /**
@@ -56,6 +56,11 @@ class Application_Model_StoreTest extends ModelTestCase
         parent::tearDown();
     }
 
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_Store', $this->model);
+    }
+    
     public function testSave()
     {
         $store = new Application_Model_Store();
@@ -125,6 +130,40 @@ class Application_Model_StoreTest extends ModelTestCase
         unset($store);
     }
 
+    public function testFetchAll()
+    {
+        $store = new Application_Model_Store();
+        $store->setOptions($this->_storeData);
+        $store->save();
+
+        $storeModel = new Application_Model_Store();
+        $stores = $storeModel->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($stores),'Application_Model_Store::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($stores as $store){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_Store', $store);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $store = new Application_Model_Store();
+        $store->setOptions($this->_storeData);
+        $storeId = $store->save();
+
+        $find =  new Application_Model_Store();
+        $find = $find->find($storeId);
+        $this->assertNotNull($find->getId(),'Application_Model_Store::find('.$storeId.') failed.');
+    }
+    
     /**
      * @depends testSave
      */

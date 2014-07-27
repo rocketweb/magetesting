@@ -3,15 +3,15 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_EditionTest extends ModelTestCase
 {
-
+/**
+ * TODO: Application_Model_Edition::save() must return object/id on call.
+ */
     protected $model;
 
     protected $_editionData = array(
         'key' => 'GO',
         'name' => 'PHPUnit test'
     );
-
-
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -21,8 +21,6 @@ class Application_Model_EditionTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_Edition();
-        $this->assertInstanceOf('Application_Model_Edition', $this->model);
-
     }
 
     /**
@@ -44,6 +42,11 @@ class Application_Model_EditionTest extends ModelTestCase
         }
 
         return $lastEdition;
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_Edition', $this->model);
     }
 
     public function testSave()
@@ -98,6 +101,7 @@ class Application_Model_EditionTest extends ModelTestCase
         unset($edition);
     }
 
+
     /**
      * @depends testSetOptions
      */
@@ -114,6 +118,23 @@ class Application_Model_EditionTest extends ModelTestCase
 
         $this->assertModelArray($data,$exportData);
         unset($edition);
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $edition = new Application_Model_Edition();
+        $edition->setOptions($this->_editionData);
+        $edition->save();
+        $edition = $this->savedObject($edition);
+
+        $editionId = $edition->getId();
+
+        $find =  new Application_Model_Edition();
+        $find = $find->find($editionId);
+        $this->assertNotNull($find->getId(),'Application_Model_Edition::find('.$editionId.') failed.');
     }
 
     /**

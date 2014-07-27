@@ -3,6 +3,9 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_LogReindexTest extends ModelTestCase
 {
+    /*
+     * TODO: Application_Model_LogReindex::delete() doesn't exists
+     * */
 
     protected $model;
 
@@ -21,8 +24,6 @@ class Application_Model_LogReindexTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_LogReindex();
-        $this->assertInstanceOf('Application_Model_LogReindex', $this->model);
-
     }
 
     /**
@@ -46,6 +47,11 @@ class Application_Model_LogReindexTest extends ModelTestCase
         }
         $store = $stores[array_rand($stores)];
         $this->_logReindexData['store_id'] = $store->getId();
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_LogReindex', $this->model);
     }
 
     public function testSave()
@@ -118,5 +124,38 @@ class Application_Model_LogReindexTest extends ModelTestCase
 
         $this->assertModelArray($data,$exportData);
         unset($logReindex);
+    }
+
+    public function testFetchAll()
+    {
+        $logReindexModel = new Application_Model_LogReindex();
+        $logReindexs = $logReindexModel->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($logReindexs),'Application_Model_LogReindex::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($logReindexs as $logReindex){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+            $this->assertInstanceOf('Application_Model_LogReindex', $logReindex);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        if($this->setStore() === false) return;
+
+        $logReindex = new Application_Model_LogReindex();
+        $logReindex->setOptions($this->_logReindexData);
+        $logReindex->save();
+
+        $logReindexId = $logReindex->getId();
+
+        $find =  new Application_Model_LogReindex();
+        $find = $find->find($logReindexId);
+        $this->assertNotNull($find->getId(),'Application_Model_LogReindex::find('.$logReindexId.') failed.');
     }
 }

@@ -4,6 +4,9 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 class Application_Model_RevisionTest extends ModelTestCase
 {
 
+    /*
+     * TODO: Application_Model_Revision::fetchAll() has some inconsistencies (Mapper & DbTable classes don't match in params - findHidden & user_id)
+     * */
     protected $model;
 
     protected $_revisionData = array(
@@ -25,8 +28,6 @@ class Application_Model_RevisionTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_Revision();
-        $this->assertInstanceOf('Application_Model_Revision', $this->model);
-
     }
 
     /**
@@ -69,10 +70,15 @@ class Application_Model_RevisionTest extends ModelTestCase
         $this->_revisionData['user_id'] = $user->getId();
     }
 
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_Revision', $this->model);
+    }
+
     public function testSave()
     {
         $revision = new Application_Model_Revision();
-        $this->setStoreAndUser();
+        if($this->setStoreAndUser() === false) return ;
         $revision->setOptions($this->_revisionData);
 
         try{
@@ -89,7 +95,7 @@ class Application_Model_RevisionTest extends ModelTestCase
     public function testUpdate()
     {
         $revision = new Application_Model_Revision();
-        $this->setStoreAndUser();
+        if($this->setStoreAndUser() === false) return ;
         $revision->setOptions($this->_revisionData);
         $revision->save();
 
@@ -139,13 +145,51 @@ class Application_Model_RevisionTest extends ModelTestCase
         unset($revision);
     }
 
+    public function testFetchAll()
+    {
+        $revision = new Application_Model_Revision();
+        if($this->setStoreAndUser() === false) return ;
+        $revision->setOptions($this->_revisionData);
+        $revision->save();
+
+        $revisionModel = new Application_Model_Revision();
+        $revisions = $revisionModel->fetchAll(true);
+
+        $this->assertGreaterThan(0,sizeof($revisions),'Application_Model_Revision::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($revisions as $revision){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_Revision', $revision);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $revision = new Application_Model_Revision();
+        if($this->setStoreAndUser() === false) return ;
+        $revision->setOptions($this->_revisionData);
+        $revision->save();
+
+        $revisionId = $revision->getId();
+
+        $find =  new Application_Model_Revision();
+        $find = $find->find($revisionId);
+        $this->assertNotNull($find->getId(),'Application_Model_Revision::find('.$revisionId.') failed.');
+    }
+
     /**
      * @depends testSave
      */
     public function testDelete()
     {
         $revision = new Application_Model_Revision();
-        $this->setStoreAndUser();
+        if($this->setStoreAndUser() === false) return ;
         $revision->setOptions($this->_revisionData);
         $revision->save();
 

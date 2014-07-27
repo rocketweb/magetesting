@@ -4,6 +4,9 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 class Application_Model_ServerTest extends ModelTestCase
 {
 
+    /*
+     * TODO: Application_Model_Server::save() must return id/object on call
+     * */
     protected $model;
 
     protected $_serverData = array(
@@ -23,7 +26,6 @@ class Application_Model_ServerTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_Server();
-        $this->assertInstanceOf('Application_Model_Server', $this->model);
     }
 
     /**
@@ -45,6 +47,11 @@ class Application_Model_ServerTest extends ModelTestCase
         }
 
         return $lastServer;
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_Server', $this->model);
     }
 
     public function testSave()
@@ -115,6 +122,39 @@ class Application_Model_ServerTest extends ModelTestCase
 
         $this->assertModelArray($data,$exportData);
         unset($server);
+    }
+
+    public function testFetchAll()
+    {
+        $serverModel = new Application_Model_Server();
+        $servers = $serverModel->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($servers),'Application_Model_Server::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($servers as $server){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_Server', $server);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $server = new Application_Model_Server();
+        $server->setOptions($this->_serverData);
+        $server->save();
+        $server = $this->savedObject($server);
+
+        $serverId = $server->getId();
+
+        $find =  new Application_Model_Server();
+        $find = $find->find($serverId);
+        $this->assertNotNull($find->getId(),'Application_Model_Server::find('.$serverId.') failed.');
     }
 
     /**

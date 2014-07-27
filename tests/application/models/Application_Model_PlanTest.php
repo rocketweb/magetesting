@@ -4,6 +4,9 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 class Application_Model_PlanTest extends ModelTestCase
 {
 
+    /*
+     * TODO: Application_Model_Plan::save() must return id/object on call.
+     * */
     protected $model;
 
     protected $_planData = array(
@@ -34,8 +37,6 @@ class Application_Model_PlanTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_Plan();
-        $this->assertInstanceOf('Application_Model_Plan', $this->model);
-
     }
 
     /**
@@ -58,7 +59,11 @@ class Application_Model_PlanTest extends ModelTestCase
 
         return $lastplan;
     }
-    
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_Plan', $this->model);
+    }
 
     public function testSave()
     {
@@ -129,6 +134,39 @@ class Application_Model_PlanTest extends ModelTestCase
 
         $this->assertModelArray($data,$exportData);
         unset($plan);
+    }
+
+    public function testFetchAll()
+    {
+        $planModel = new Application_Model_Plan();
+        $plans = $planModel->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($plans),'Application_Model_Plan::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($plans as $plan){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_Plan', $plan);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $plan = new Application_Model_Plan();
+        $plan->setOptions($this->_planData);
+        $plan->save();
+        $plan = $this->savedObject($plan);
+
+        $planId = $plan->getId();
+
+        $find =  new Application_Model_Plan();
+        $find = $find->find($planId);
+        $this->assertNotNull($find->getId(),'Application_Model_Plan::find('.$planId.') failed.');
     }
 
     /**

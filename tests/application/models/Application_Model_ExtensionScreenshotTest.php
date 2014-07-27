@@ -3,6 +3,10 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_ExtensionScreenshotTest extends ModelTestCase
 {
+    /*
+     * TODO: Application_Model_ExtensionScreenshot::save() must return object/id on call.
+     * TODO: Application_Model_DbTable_ExtensionScreenshot::find() doesn't exists
+     * */
 
     protected $model;
 
@@ -20,8 +24,6 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_ExtensionScreenshot();
-        $this->assertInstanceOf('Application_Model_ExtensionScreenshot', $this->model);
-
     }
 
     /**
@@ -40,7 +42,7 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
         $extension = $extensionModel->findByFilters(array('edition' => 'CE'));
         if($extension == null)
         {
-            $this->markTestIncomplete('No stores found to test LogReindexer model');
+            $this->markTestIncomplete('No extensions found to test ExtensionScreenshot model');
             return false;
         }
         $this->_extensionScreenshotData['extension_id'] = $extension->getId();
@@ -55,6 +57,11 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
         }
 
         return $lastExtensionScreenshot;
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_ExtensionScreenshot', $this->model);
     }
 
     public function testSave()
@@ -131,6 +138,37 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
         unset($extensionScreenshot);
     }
 
+    public function testFetchAll()
+    {
+        $extensionScreenshotModel = new Application_Model_ExtensionScreenshot();
+        $extensionScreenshots = $extensionScreenshotModel->fetchByExtensionId($this->_extensionScreenshotData['extension_id']);
+
+        $this->assertGreaterThan(0,sizeof($extensionScreenshots),'Application_Model_ExtensionScreenshot::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($extensionScreenshots as $extensionCateogry){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+            $this->assertInstanceOf('Application_Model_ExtensionScreenshot', $extensionCateogry);
+        }
+    }
+
+    /**
+     * depends testSave
+     */
+    /*public function testFind()
+    {
+        $extensionScreenshot = new Application_Model_ExtensionScreenshot();
+        $extensionScreenshot->setOptions($this->_extensionScreenshotData);
+        $extensionScreenshot->save();
+
+        $extensionScreenshotId = $extensionScreenshot->getId();
+
+        $find =  new Application_Model_ExtensionScreenshot();
+        $find = $find->find($extensionScreenshotId);
+        $this->assertNotNull($find->getId(),'Application_Model_ExtensionScreenshot::find('.$extensionScreenshotId.') failed.');
+    }*/
+    
     /**
      * @depends testSave
      */

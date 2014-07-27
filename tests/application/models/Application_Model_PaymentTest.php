@@ -3,6 +3,10 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_PaymentTest extends ModelTestCase
 {
+    /*
+     * TODO: Application_Model_Payment::save() must return id/object on call.
+     * TODO: Application_Model_Payment::delete() doesn't exists
+     * */
 
     protected $model;
 
@@ -30,8 +34,6 @@ class Application_Model_PaymentTest extends ModelTestCase
     {
         parent::setUp();
         $this->model = new Application_Model_Payment();
-        $this->assertInstanceOf('Application_Model_Payment', $this->model);
-
     }
 
     /**
@@ -74,6 +76,11 @@ class Application_Model_PaymentTest extends ModelTestCase
         }
 
         return $lastPayment;
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('Application_Model_Payment', $this->model);
     }
     
     public function testSave()
@@ -151,6 +158,40 @@ class Application_Model_PaymentTest extends ModelTestCase
 
         $this->assertModelArray($data,$exportData);
         unset($payment);
+    }
+
+    public function testFetchAll()
+    {
+        $paymentModel = new Application_Model_Payment();
+        $payments = $paymentModel->fetchAll();
+
+        $this->assertGreaterThan(0,sizeof($payments),'Application_Model_Payment::fetchAll() failed. Returned size is 0');
+
+        $counter = 0;
+        foreach($payments as $payment){
+            if($counter > $this->_fetchAllBreaker) break;
+            $counter++;
+
+            $this->assertInstanceOf('Application_Model_Payment', $payment);
+        }
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testFind()
+    {
+        $payment = new Application_Model_Payment();
+        $this->setUser();
+        $payment->setOptions($this->_paymentData);
+        $payment->save();
+        $payment = $this->savedObject($payment);
+
+        $paymentId = $payment->getId();
+
+        $find =  new Application_Model_Payment();
+        $find = $find->find($paymentId);
+        $this->assertNotNull($find->getId(),'Application_Model_Payment::find('.$paymentId.') failed.');
     }
 
     /**
