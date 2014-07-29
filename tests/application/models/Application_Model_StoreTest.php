@@ -56,6 +56,26 @@ class Application_Model_StoreTest extends ModelTestCase
         parent::tearDown();
     }
 
+    private function setUser()
+    {
+        $userData = array(
+            'login' => 'standard-user',
+            'password' => 'standard-user',
+            'email' => 'no-replay@rocketweb.com',
+            'firstname' => 'Standard',
+            'lastname' => 'User',
+            'status' => 'active',
+            'group' => 'commercial-user',
+            'plan_id' => 1,
+            'plan_active_to' => '2064-07-09 08:12:53'
+        );
+
+        $user = new Application_Model_User();
+        $user->setOptions($userData);
+        $user->save();
+        $this->_storeData['user_id'] = $user->getId();
+    }
+
     public function testInstanceOf()
     {
         $this->assertInstanceOf('Application_Model_Store', $this->model);
@@ -64,6 +84,7 @@ class Application_Model_StoreTest extends ModelTestCase
     public function testSave()
     {
         $store = new Application_Model_Store();
+        $this->setUser();
         $store->setOptions($this->_storeData);
 
         try{
@@ -80,6 +101,7 @@ class Application_Model_StoreTest extends ModelTestCase
     public function testUpdate()
     {
         $store = new Application_Model_Store();
+        $this->setUser();
         $store->setOptions($this->_storeData);
         $store->save();
 
@@ -133,6 +155,7 @@ class Application_Model_StoreTest extends ModelTestCase
     public function testFetchAll()
     {
         $store = new Application_Model_Store();
+        $this->setUser();
         $store->setOptions($this->_storeData);
         $store->save();
 
@@ -156,6 +179,7 @@ class Application_Model_StoreTest extends ModelTestCase
     public function testFind()
     {
         $store = new Application_Model_Store();
+        $this->setUser();
         $store->setOptions($this->_storeData);
         $storeId = $store->save();
 
@@ -170,6 +194,7 @@ class Application_Model_StoreTest extends ModelTestCase
     public function testDelete()
     {
         $store = new Application_Model_Store();
+        $this->setUser();
         $store->setOptions($this->_storeData);
         $storeId = $store->save();
 
