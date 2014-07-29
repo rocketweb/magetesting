@@ -142,6 +142,53 @@ class Application_Model_UserTest extends ModelTestCase
         unset($user);
     }
 
+    public function testFetchList()
+    {
+        $user = new Application_Model_User();
+        $user->setOptions($this->_userData);
+        $user->save();
+
+        $_storeData = array(
+            'edition' => 'EE',
+            'status' => 'ready',
+            'version_id' => '20',
+            'user_id' => $user->getId(),
+            'server_id' => '1',
+            'domain' => 'rt34tsrgs',
+            'store_name' => 'PHPUnit user fetchList test',
+            'description' => NULL,
+            'backend_name' => 'phpunit',
+            'type' => 'clean',
+            'custom_protocol' => NULL,
+            'custom_host' => NULL,
+            'custom_port' => NULL,
+            'custom_remote_path' => NULL,
+            'custom_file' => NULL,
+            'sample_data' => 1,
+            'custom_login' => NULL,
+            'custom_sql' => NULL,
+            'error_message' => NULL,
+            'revision_count' => 1,
+            'papertrail_syslog_hostname' => 'mage-testing1.papertrailapp.com',
+            'papertrail_syslog_port' => '60305',
+            'do_hourly_db_revert' => 0
+        );
+
+        $store = new Application_Model_Store();
+        $store->setOptions($_storeData);
+        $store->save();
+
+        $userModel = new Application_Model_User();
+        $userList = $userModel->fetchList();
+
+        $this->assertGreaterThan(0,sizeof($userList),'Application_Model_User::fetchList() returned size 0');
+        $this->assertInstanceOf('Zend_Paginator',$userList,'Application_Model_User::fetchList() is not Zend_Paginator instance.');
+
+    }
+
+    /**
+     * @depends testSave
+     */
     public function testFetchAll()
     {
         $user = new Application_Model_User();
@@ -193,5 +240,24 @@ class Application_Model_UserTest extends ModelTestCase
         $find =  new Application_Model_User();
         $find = $find->find($userId);
         $this->assertNull($find->getId(),'Application_Model_User::delete(\'`id` = '.$userId.'\') failed.');
+    }
+
+    /**
+     * @depends testSave
+     */
+    public function testActivateUser()
+    {
+        $user = new Application_Model_User();
+        $this->_userData['status'] = 'inactive';
+
+        $user->setOptions($this->_userData);
+        $user->save();
+
+        $userId = $user->getId();
+
+        $stringToHash = $user->getLogin().$user->getEmail().$user->getAddedDate();
+        $userHash = substr(sha1($stringToHash),0,20);
+
+        $user->activateUser($userId,$userHash);
     }
 }

@@ -7,7 +7,6 @@ class RocketWeg_Cli_Kit_UserTest extends PHPUnit_Framework_TestCase
     {
         $cli = new RocketWeb_Cli();
         $this->_kit = $cli->kit('user');
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_User', $this->_kit);
     }
 
     public function tearDown()
@@ -18,6 +17,11 @@ class RocketWeg_Cli_Kit_UserTest extends PHPUnit_Framework_TestCase
     protected function _scriptPath()
     {
         return APPLICATION_PATH."/../scripts/worker";
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_User', $this->_kit);
     }
 
     public function testInit()

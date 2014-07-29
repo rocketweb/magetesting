@@ -14,8 +14,12 @@ class RocketWeg_Cli_Kit_WgetTest extends PHPUnit_Framework_TestCase
         $cli = new RocketWeb_Cli();
         $kit = $cli->kit('wget');
         $kit->ftpConnect($this->_user, $this->_pass, $this->_host, $this->_port);
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Wget', $kit);
         $this->_connection = $kit;
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Wget', $this->_connection);
     }
 
     public function testFtpWgetConnection()

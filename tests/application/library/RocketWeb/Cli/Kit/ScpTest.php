@@ -7,6 +7,10 @@ class RocketWeg_Cli_Kit_ScpTest extends PHPUnit_Framework_TestCase
     {
         $cli = new RocketWeb_Cli();
         $this->_kit = $cli->kit('scp');
+    }
+
+    public function testInstanceOf()
+    {
         $this->assertInstanceOf('RocketWeb_Cli_Kit_Scp', $this->_kit);
     }
 
