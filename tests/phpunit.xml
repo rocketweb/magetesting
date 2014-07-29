@@ -14,9 +14,9 @@
             <!--<directory>./application/models</directory>-->
         </testsuite>
         <!-- Need to clean that as it doesn't work properly (wojtek) -->
-        <!--<testsuite name="Application Models">
+        <testsuite name="Application Models">
             <directory>./application/models/</directory>
-        </testsuite>-->
+        </testsuite>
         <testsuite name="Library">
             <directory>./application/library/</directory>
         </testsuite>
@@ -40,7 +40,7 @@
 
     <logging>
         <!-- Uncomment that to generate all cool reports -->
-        <!--<log type="coverage-html" target="./log/report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />-->
+        <!--log type="coverage-html" target="./log/report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" /-->
         <log type="testdox-html" target="./log/testdox.html" />
         <log type="testdox-text" target="./log/testdox.txt"/>
         <log type="graphviz" target="./log/logfile.dot"/>
