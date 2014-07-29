@@ -14,9 +14,13 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
         unset($this->_kit);
     }
 
-    public function testMove()
+    public function testInstanceOf()
     {
         $this->assertInstanceOf('RocketWeb_Cli_Kit_File', $this->_kit);
+    }
+
+    public function testMove()
+    {
         $this->assertEquals(
             "mv 'asd.txt' 'test.txt' 2>&1",
             $this->_kit->_prepareCall($this->_kit->move('asd.txt', 'test.txt'))

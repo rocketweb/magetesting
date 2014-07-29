@@ -14,9 +14,13 @@ class RocketWeg_Cli_Kit_GitTest extends PHPUnit_Framework_TestCase
         unset($this->_kit);
     }
 
-    public function testInit()
+    public function testInstanceOf()
     {
         $this->assertInstanceOf('RocketWeb_Cli_Kit_Git', $this->_kit);
+    }
+
+    public function testInit()
+    {
         $this->assertEquals(
             "git init 2>&1",
             $this->_kit->_prepareCall($this->_kit->init())

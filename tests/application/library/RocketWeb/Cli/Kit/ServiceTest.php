@@ -14,6 +14,11 @@ class RocketWeg_Cli_Kit_ServiceTest extends PHPUnit_Framework_TestCase
         unset($this->_kit);
     }
 
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Service', $this->_kit);
+    }
+
     public function testRestart()
     {
         $this->assertInstanceOf('RocketWeb_Cli_Kit_Service', $this->_kit);

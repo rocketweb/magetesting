@@ -12,8 +12,12 @@ class RocketWeg_Cli_Kit_MysqlTest extends PHPUnit_Framework_TestCase
         $cli = new RocketWeb_Cli();
         $kit = $cli->kit('mysql');
         $kit->connect($this->_user, $this->_pass, $this->_database);
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Mysql', $kit);
         $this->_connection = $kit;
+    }
+
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Mysql', $this->_connection);
     }
 
     public function testMysqlConnection()
