@@ -61,6 +61,34 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertQueryContentContains('h1', 'Contact the Mage Testing Team');
     }
 
+    public function testContactUsPagePost()
+    {
+        $this->request->setMethod('POST')
+            ->setPost(array(
+                'sender_name'    => 'PHPUnit tester',
+                'sender_email' => 'gregor@rocketweb.com',
+                'subject' => 'PHPUnit controller test',
+                'message' => 'PHPUnit controller test main message'
+            ));
+        $this->dispatch('/contact-us');
+
+        $this->assertController('index');
+        $this->assertAction('contact-us');
+        $this->assertRedirectTo('/contact-us');
+        $this->assertResponseCode(302);
+
+        $this->resetRequest()->resetResponse();
+
+        $this->dispatch('/contact-us');
+
+        $this->assertController('index');
+        $this->assertAction('contact-us');
+        $this->assertNotRedirect();
+        $this->assertResponseCode(200);
+
+        $this->assertQueryContentContains('strong', 'You successfully sent your message.');
+    }
+
     public function testOurPlansPage()
     {
         $this->dispatch('/our-plans');
@@ -72,4 +100,29 @@ class IndexControllerTest extends ControllerTestCase
 
         $this->assertQueryContentContains('h1', 'Plan Comparison and Pricing');
     }
+
+    public function testAboutUs()
+    {
+        $this->dispatch('/about-us');
+
+        $this->assertController('index');
+        $this->assertAction('about-us');
+        $this->assertNotRedirect();
+        $this->assertResponseCode(200);
+
+        $this->assertQueryContentContains('h1', 'About Us');
+    }
+
+    public function testPartners()
+    {
+        $this->dispatch('/partners');
+
+        $this->assertController('index');
+        $this->assertAction('partners');
+        $this->assertNotRedirect();
+        $this->assertResponseCode(200);
+
+        $this->assertQueryContentContains('h1', 'Partners');
+    }
+
 }

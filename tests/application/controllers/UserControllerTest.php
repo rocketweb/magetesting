@@ -11,7 +11,7 @@ class UserControllerTest extends ControllerTestCase
     
     public function testValidLoginShouldGoToDashboard()
     {
-        $this->loginUser('standard-user', 'standard-user');
+        $this->loginUser($this->_userData['login'], $this->_userData['password']);
         
         $this->dispatch('/user/dashboard');
 
@@ -47,8 +47,8 @@ class UserControllerTest extends ControllerTestCase
     {
         $this->request->setMethod('POST')
               ->setPost(array(
-                  'login'    => 'standard-user',
-                  'password' => 'standard-user'
+                  'login'    => $this->_userData['login'],
+                  'password' => $this->_userData['password']
               ));
         $this->dispatch('/user/login');
         
