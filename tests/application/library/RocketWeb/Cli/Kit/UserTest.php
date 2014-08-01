@@ -19,9 +19,13 @@ class RocketWeg_Cli_Kit_UserTest extends PHPUnit_Framework_TestCase
         return APPLICATION_PATH."/../scripts/worker";
     }
 
-    public function testInit()
+    public function testInstanceOf()
     {
         $this->assertInstanceOf('RocketWeb_Cli_Kit_User', $this->_kit);
+    }
+
+    public function testInit()
+    {
         $this->assertEquals(
             "sh '".$this->_scriptPath()."/create_user.sh' 'login' 'pass' 'salt_hash' '/home/login_dir' 2>&1",
             $this->_kit->_prepareCall($this->_kit->create('login', 'pass', 'salt_hash', '/home/login_dir'))

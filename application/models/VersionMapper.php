@@ -30,10 +30,10 @@ class Application_Model_VersionMapper {
     public function save(Application_Model_Version $version)
     {
         $data = array(
-            'id'       => $user->getId(),
-            'edition'  => $user->getEdition(),
-            'version'  => $user->getVersion(),
-            'sample_data_version'  => $user->getVersion()
+            'id'       => $version->getId(),
+            'edition'  => $version->getEdition(),
+            'version'  => $version->getVersion(),
+            'sample_data_version'  => $version->getVersion()
         );
 
         if (null === ($id = $version->getId())) {

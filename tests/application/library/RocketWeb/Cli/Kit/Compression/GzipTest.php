@@ -7,6 +7,7 @@ class RocketWeg_Cli_Kit_Compression_GzipTest extends PHPUnit_Framework_TestCase
     {
         $cli = new RocketWeb_Cli();
         $this->_kit = $cli->kit('gzip');
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Compression_gzip', $this->_kit);
     }
 
     public function tearDown()
@@ -16,7 +17,6 @@ class RocketWeg_Cli_Kit_Compression_GzipTest extends PHPUnit_Framework_TestCase
 
     public function testUnpack()
     {
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Compression_gzip', $this->_kit);
         $this->assertEquals(
             "gunzip 'file.gz' 2>&1",
             $this->_kit->_prepareCall($this->_kit->unpack('file.gz'))

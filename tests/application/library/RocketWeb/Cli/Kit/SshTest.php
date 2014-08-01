@@ -2,34 +2,42 @@
 
 class RocketWeg_Cli_Kit_SshTest extends PHPUnit_Framework_TestCase
 {
-    public function testSshConnection()
+    protected $_kit;
+    public function setUp()
     {
         $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
-        $ssh->connect('user', 'pass', 'http://somewhere.com', 80);
+        $this->_kit = $cli->kit('ssh');
+    }
 
-        $this->assertInstanceOf('RocketWeb_Cli_Kit_Ssh', $ssh);
+    public function testInstanceOf()
+    {
+        $this->assertInstanceOf('RocketWeb_Cli_Kit_Ssh', $this->_kit);
+    }
+
+    public function testSshConnection()
+    {
+        $this->_kit->connect('user', 'pass', 'http://somewhere.com', 80);
+
         $this->assertEquals(
             "sshpass -p 'pass' ssh -t -t -o LogLevel=FATAL -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'user'@'http://somewhere.com' -p '80' 2>&1",
-            $ssh->_prepareCall($ssh)
+            $this->_kit->_prepareCall($this->_kit)
         );
     }
 
     public function testSshRemoteCall()
     {
         $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
+        $this->_kit = $cli->kit('ssh');
 
         $this->assertEquals(
             "'echo '\''test'\''' 2>&1",
-            $ssh->_prepareCall($ssh->remoteCall($cli->createQuery('echo ?', 'test')))
+            $this->_kit->_prepareCall($this->_kit->remoteCall($cli->createQuery('echo ?', 'test')))
         );
     }
 
     public function testPipePackUnpack()
     {
         $cli = new RocketWeb_Cli();
-        $ssh = $cli->kit('ssh');
         $tar = $cli->kit('tar');
 
         $components = 3;
@@ -41,12 +49,12 @@ class RocketWeg_Cli_Kit_SshTest extends PHPUnit_Framework_TestCase
 
         $unpack = $tar->unpack('-', '.')->isCompressed()->strip($components);
 
-        $command = $ssh->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($pack, true)->pipe($unpack);
+        $command = $this->_kit->cloneObject()->bindAssoc('-t -t', '', false)->remoteCall($pack, true)->pipe($unpack);
 //        ->bindAssoc('2>&1', '', false);
 
         $this->assertEquals(
             "'cd /; tar zcf - '\''remote/path'\'' --exclude='\''remote/pathvar'\'' --exclude='\''remote/pathmedia'\''' 2>/dev/null | tar zxvof - -C '.' --delay-directory-restore --strip-components='3' 2>&1",
-            $ssh->_prepareCall($command)
+            $this->_kit->_prepareCall($command)
         );
     }
     
