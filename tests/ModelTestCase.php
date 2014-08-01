@@ -32,7 +32,10 @@ abstract class ModelTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
     protected function tearDown()
     {
-        if($this->_db != null) $this->_db->rollback();
+        if($this->_db != null){
+            $this->_db->rollback();
+            $this->_db->closeConnection();
+        }
         parent::tearDown();
     }
 
