@@ -51,7 +51,8 @@ implements Application_Model_Task_Interface {
         //if extension is commercial, check existence of encoded file, 
         if ($this->_extensionObject->getPrice() > 0 ){
             if (trim($this->_extensionObject->getExtensionEncoded())==''){
-                $message = 'Extension price has been set to greater than 0 but no encoded package has been set for selected extension';
+                $message = 'Extension price has been set to greater than 0 but no encoded package has been set for extension "'.
+                    $this->_extensionObject->getName().'", extension_id='.$this->_extensionObject->getId().', extension_key='.$this->_extensionObject->getExtensionKey();
                 $this->logger->log($message, Zend_Log::EMERG);
                 throw new Application_Model_Task_Exception($message);
             }
@@ -64,7 +65,7 @@ implements Application_Model_Task_Interface {
         } else {
             
             if (trim($this->_extensionObject->getExtension())==''){
-                $message = 'No package has been set for selected extension';
+                $message = 'No package has been set for extension"'.$this->_extensionObject->getName().'"';
                 $this->logger->log($message, Zend_Log::EMERG);
                 throw new Application_Model_Task_Exception($message);
             }
