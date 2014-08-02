@@ -304,7 +304,7 @@ class Application_Model_Queue {
     
     /**
      * Used to prevent adding the same task twice.
-     * @param type $taskType - e.g MagentoInstall
+     * @param String $taskType - e.g MagentoInstall
      * @return boolean
      */
     public function alreadyExists($taskType,$storeId,$extensionId=0,$serverId=1){      
