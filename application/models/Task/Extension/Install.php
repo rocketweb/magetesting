@@ -52,7 +52,8 @@ implements Application_Model_Task_Interface {
         if ($this->_extensionObject->getPrice() > 0 ){
             if (trim($this->_extensionObject->getExtensionEncoded())==''){
                 $message = 'Extension price has been set to greater than 0 but no encoded package has been set for extension "'.
-                    $this->_extensionObject->getName().'", extension_id='.$this->_extensionObject->getId().', extension_key='.$this->_extensionObject->getExtensionKey();
+                    $this->_extensionObject->getName().'", extension_id='.$this->_extensionObject->getId().', extension_key='.
+                    $this->_extensionObject->getExtensionKey().', store_id='.$this->_storeObject->getId();
                 $this->logger->log($message, Zend_Log::EMERG);
                 throw new Application_Model_Task_Exception($message);
             }
