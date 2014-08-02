@@ -572,8 +572,8 @@ implements Application_Model_Task_Interface {
         $not_gzippedCall = $this->cli('gzip')->test($sqlname)->call();
         $not_gzipped = $not_gzippedCall->getLastStatus();
 
-        $this->logger->log($not_gzippedCall->getLastOutput(),Zend_Log::DEBUG); 
-        $this->logger->log('Is database file SQL file? '.((int)$not_gzipped? 'YES' : 'NO', Zend_Log::DEBUG);
+        $this->logger->log($not_gzippedCall->getLastOutput(),Zend_Log::DEBUG);
+        $this->logger->log('Is database file SQL file? '.((int)$not_gzipped? 'YES' : 'NO'), Zend_Log::DEBUG);
 
         if ((int)$not_gzipped
         ) {
