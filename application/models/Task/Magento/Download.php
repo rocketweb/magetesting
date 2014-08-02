@@ -567,10 +567,14 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log($sqlname, Zend_Log::DEBUG);
 
-        $not_gzippedCall = $this->cli('gzip')->test($sqlname)->call();
+
+        $command = $this->cli('gzip')->test($sqlname);
+        $not_gzippedCall = $command->call();
         $not_gzipped = $not_gzippedCall->getLastStatus();
 
-        $this->logger->log($not_gzippedCall->getLastOutput(),Zend_Log::DEBUG);
+        $message = var_export($not_gzippedCall->getLastOutput(), true);
+
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
         $this->logger->log('Is database file SQL file? '.((int)$not_gzipped? 'YES' : 'NO'), Zend_Log::DEBUG);
 
         if ((int)$not_gzipped
