@@ -1443,6 +1443,10 @@ class QueueController extends Integration_Controller_Action {
                     if (($response['value'] = $this->_findWebrootOnSsh())) {
                         $response['status'] = 'success';
                         $response['message'] = 'Webroot has been found successfully.';
+                        if(strpos($response['value'],'/') === false || strpos($response['value'],'command not found') !== false){
+                            $response['message'] = 'Connection details valid.';
+                            $response['value'] = '';
+                        }
                     } else {
                         $response['status'] = 'error';
                         $response['message'] = 'Credentials are correct. We haven\'t been able to find magento root path, please fill fields below then';
