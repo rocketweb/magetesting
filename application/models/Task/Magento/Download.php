@@ -561,7 +561,6 @@ implements Application_Model_Task_Interface {
         $sqlfound = false;
         $unpacked = 0;
 
-        /* check for gz */
         $path_parts = pathinfo($this->_customSql);
         $sqlname = $path_parts['basename'];
 
