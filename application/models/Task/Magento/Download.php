@@ -576,8 +576,8 @@ implements Application_Model_Task_Interface {
 
         $message = var_export($not_gzippedCall->getLastOutput(), true);
 
-        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
-        $this->logger->log('Is database file SQL file? '.((int)$not_gzipped? 'YES' : 'NO'), Zend_Log::DEBUG);
+        $this->logger->log("\n".$command."\n". $not_gzipped."\n".$message, Zend_Log::DEBUG);
+        $this->logger->log('Is database file SQL file? '.($not_gzipped != 'OK' ? 'YES' : 'NO'), Zend_Log::DEBUG);
 
         if ((int)$not_gzipped
         ) {
