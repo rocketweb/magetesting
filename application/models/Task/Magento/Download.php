@@ -567,20 +567,10 @@ implements Application_Model_Task_Interface {
 
         $this->logger->log($sqlname, Zend_Log::DEBUG);
 
-
-        $command = $this->cli('gzip')->test($sqlname);
-        $not_gzippedCall = $command->call();
-        $not_gzipped = $not_gzippedCall->getLastStatus();
-
-        $message = var_export($not_gzippedCall->getLastOutput(), true);
-
-        $this->logger->log("\n".$command."\n". $not_gzipped."\n".$message, Zend_Log::DEBUG);
-        $this->logger->log('Is database file SQL file? '.($not_gzipped != 'OK' ? 'YES' : 'NO'), Zend_Log::DEBUG);
-
-        if ((int)$not_gzipped
-        ) {
+        if (strtolower($path_parts['extension']) == 'sql') {
             $sqlfound = true;
             $unpacked = 1;
+            $this->logger->log($sqlname.' is .sql', Zend_Log::DEBUG);
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
