@@ -721,6 +721,20 @@ class QueueController extends Integration_Controller_Action {
                     $not_installed = false;
                 }
             }
+            $queueModel = new Application_Model_Queue();
+
+            if( $queueModel->alreadyExists(
+                    'ExtensionInstall',
+                    $storeRow->getId(),
+                    $request->getParam('extension_id'),
+                    $storeRow->getServerId()
+                )
+            ){
+                $not_installed = false;
+            }
+
+
+
             if($not_installed) {
                 if ((int)$request->getParam('extension_id') > 0) {
                     if ($storeRow->getStatus() == 'ready') {
