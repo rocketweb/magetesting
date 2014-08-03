@@ -229,7 +229,7 @@ class Application_Model_Payment {
 
     public function save()
     {
-        $this->getMapper()->save($this);
+        return $this->getMapper()->save($this);
     }
 
     public function delete($id)
