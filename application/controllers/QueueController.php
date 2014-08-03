@@ -82,8 +82,9 @@ class QueueController extends Integration_Controller_Action {
                 if($plan->getCanDoDbRevert()){
                 	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
                 }
-                                   
-                $storeId = $storeModel->save();
+
+                $storeModel->save();
+                $storeId = $storeModel->getId();
                 
                 unset($queueModel);
                 //Add queue item with MagentoInstall
