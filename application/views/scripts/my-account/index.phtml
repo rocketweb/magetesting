@@ -74,8 +74,13 @@
                                     if($couponDate > time() && ($couponDate+(15*3600)) > $planActiveTo):
                                 ?>
                                         You have been granted access for <?php echo str_replace('+', '', $coupon->getDuration()); ?> of Mage Testing.
-                                    <?php endif; ?>
+                                    <?php endif;
+                                    if(strtotime($this->user->getPlanActiveTo()) > time()+(10*356*24*3600)):
+                                    ?>
+                                        Your account is active.
+                                    <?php else: ?>
                                         Your account will be active until <?php echo date('F j, Y', strtotime($this->user->getPlanActiveTo())); ?>.
+                                    <? endif; ?>
                                 <?php elseif(!(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                                     Your account is pending payment. It could take up to 24 hours to confirm your payment. Please enjoy using Mage Testing while we settle your payment details.
                                 <?php elseif((int)$this->user->getPlanId() && $this->plan->getAutoRenew()): ?>
