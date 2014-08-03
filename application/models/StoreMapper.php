@@ -34,11 +34,11 @@ class Application_Model_StoreMapper {
         if (null === ($id = $store->getId())) {
             unset($data['id']);
             $data['backend_password'] = '';
-            return $this->getDbTable()->insert($data);
+            $store->setId($this->getDbTable()->insert($data));
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }      
-
+        return $store;
     }
 
     public function find($id, Application_Model_Store $store)
