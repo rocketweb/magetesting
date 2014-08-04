@@ -23,8 +23,8 @@ class Application_Model_ExtensionTest extends ModelTestCase
         'price' => '0.00',
         'sort' => '0',
         'extension_detail' => NULL,
-        'extension_documentation' => NULL
-
+        'extension_documentation' => NULL,
+        'extension_owner' => 0
     );
 
 
@@ -115,7 +115,9 @@ class Application_Model_ExtensionTest extends ModelTestCase
 
         $exportData = $extension->__toArray();
 
-        unset($exportData['id']);
+        $exportData['extension_owner'] = $exportData['extension_owner_id'];
+        unset($exportData['id'], $exportData['extension_owner_id']);
+
 
         $this->assertModelArray($data,$exportData);
         unset($extension);
