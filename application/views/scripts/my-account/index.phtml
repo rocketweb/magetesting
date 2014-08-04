@@ -190,12 +190,11 @@
                                         </thead>
                                         <tbody>
                                         <?php foreach($this->orders as $order): ?>
-                                            <?php print_r($order); ?>
                                             <tr>
                                                 <td><?php echo $order['payment_id']; ?></td>
                                                 <td><?php echo $order['name']; ?></td>
                                                 <td><?php echo date('Y-m-d H:i:s', strtotime($order['date'])); ?></td>
-                                                <td>$<?php $order['price']; ?></td>
+                                                <td>$<?php echo $order['price']; ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                         </tbody>
