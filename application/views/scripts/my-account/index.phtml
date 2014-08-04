@@ -80,7 +80,7 @@
                                         Your account is active.
                                     <?php else: ?>
                                         Your account will be active until <?php echo date('F j, Y', strtotime($this->user->getPlanActiveTo())); ?>.
-                                    <? endif; ?>
+                                    <?php endif; ?>
                                 <?php elseif(!(int)$this->user->getBraintreeTransactionConfirmed()): ?>
                                     Your account is pending payment. It could take up to 24 hours to confirm your payment. Please enjoy using Mage Testing while we settle your payment details.
                                 <?php elseif((int)$this->user->getPlanId() && $this->plan->getAutoRenew()): ?>
