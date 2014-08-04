@@ -32,11 +32,24 @@ class Application_Model_ExtensionScreenshotMapper {
         $data = $extension->__toArray();
         if (null === ($id = $extension->getId())) {
             unset($data['id']);
-            $this->getDbTable()->insert($data);
+            $extension->setId($this->getDbTable()->insert($data));
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
+        return $extension;
+    }
 
+    public function find($id, Application_Model_ExtensionScreenshot $extension)
+    {
+        $result = $this->getDbTable()->find($id);
+        if (0 == count($result)) {
+            return;
+        }
+        $row = $result->current();
+        $extension->setId($row->id)
+            ->setExtensionId($row->extension_id)
+            ->setImage($row->image);
+        return $extension;
     }
 
     public function fetchByExtensionId($id)
