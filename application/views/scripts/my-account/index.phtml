@@ -195,6 +195,7 @@
                                         </thead>
                                         <tbody>
                                         <?php foreach($this->orders as $order): ?>
+                                            <?php print_r($order); ?>
                                             <tr>
                                                 <td><?php echo $order['payment_id']; ?></td>
                                                 <td><?php echo $order['name']; ?></td>
