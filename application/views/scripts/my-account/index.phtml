@@ -197,7 +197,8 @@
                                         <?php foreach($this->orders as $order): ?>
                                             <tr>
                                                 <td><?php echo $order['payment_id']; ?></td>
-                                                <td><?php echo $order['name']; ?></td>
+                                                <td><a href="<?php echo $this->url(array('controller' => 'my-extensions', 'action' => 'edit', 'id' => $order['extension_id']), 'default', true); ?>">
+                                                    <?php echo $order['name']; ?></a> </td>
                                                 <td><?php echo date('Y-m-d H:i:s', strtotime($order['date'])); ?></td>
                                                 <td style="text-align:center">$<?php echo $order['price']; ?></td>
                                             </tr>
