@@ -473,9 +473,14 @@ extends Application_Model_Task {
             );
 
             foreach ($files_to_update as $file){
-                $fileContents = file_get_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file);
-                $fileContents = str_replace("sys_get_temp_dir()", "getenv('TMPDIR')", $fileContents);
-                file_put_contents($this->_storeFolder . '/' . $this->_domain.'/'.$file, $fileContents);
+                $filePath = $this->_storeFolder . '/' . $this->_domain.'/'.$file;
+                if(file_exists($filePath)){
+                    $fileContents = file_get_contents($filePath);
+                    $fileContents = str_replace("sys_get_temp_dir()", "getenv('TMPDIR')", $fileContents);
+                    file_put_contents($filePath, $fileContents);
+                }else{
+                    $this->logger->log('_updateConnectFiles(): File doesn\'t exists: '.$file.' (store_id='.$this->_storeObject->getId().')', Zend_Log::ALERT);
+                }
             }
             
             //fix cokie path and followlocation for our hosts, we dont need it here and it causes warnings
