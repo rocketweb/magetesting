@@ -3,9 +3,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_LogReindexTest extends ModelTestCase
 {
-    /*
-     * TODO: Application_Model_LogReindex::delete() doesn't exists
-     * */
 
     protected $model;
 
@@ -158,4 +155,22 @@ class Application_Model_LogReindexTest extends ModelTestCase
         $find = $find->find($logReindexId);
         $this->assertNotNull($find->getId(),'Application_Model_LogReindex::find('.$logReindexId.') failed.');
     }
+
+    /**
+     * depends testSave
+     */
+    /*public function testDelete()
+    {
+        $logReindex = new Application_Model_LogReindex();
+        $logReindex->setOptions($this->_logReindexData);
+        $logReindex->save();
+
+        $logReindexId = $logReindex->getId();
+
+        $logReindex->delete('`id` = '.$logReindexId);
+
+        $find =  new Application_Model_LogReindex();
+        $find = $find->find($logReindexId);
+        $this->assertNull($find->getId(),'Application_Model_LogReindex::delete(\'`id` = '.$logReindexId.'\') failed.');
+    }*/
 }

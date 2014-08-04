@@ -3,10 +3,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_ExtensionScreenshotTest extends ModelTestCase
 {
-    /*
-     * TODO: Application_Model_ExtensionScreenshot::save() must return object/id on call.
-     * TODO: Application_Model_DbTable_ExtensionScreenshot::find() doesn't exists
-     * */
 
     protected $model;
 
@@ -48,17 +44,6 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
         $this->_extensionScreenshotData['extension_id'] = $extension->getId();
     }
 
-    private function savedObject(Application_Model_ExtensionScreenshot $extensionScreenshot){
-        $allExtensionScreenshots = $extensionScreenshot->fetchByExtensionId($this->_extensionScreenshotData['extension_id']);
-        $lastExtensionScreenshot = null;
-        foreach($allExtensionScreenshots as $p){
-            if($lastExtensionScreenshot == null) $lastExtensionScreenshot = $p;
-            if($p->getId() > $lastExtensionScreenshot->getId()) $lastExtensionScreenshot = $p;
-        }
-
-        return $lastExtensionScreenshot;
-    }
-
     public function testInstanceOf()
     {
         $this->assertInstanceOf('Application_Model_ExtensionScreenshot', $this->model);
@@ -73,7 +58,6 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
 
         try{
             $extensionScreenshot->save();
-            $extensionScreenshot = $this->savedObject($extensionScreenshot);
             $this->assertGreaterThan(0, (int)$extensionScreenshot->getId(), 'Application_Model_ExtensionScreenshot::save() failed. ID not set after trying to save!');
         }catch(DatabseException $e){
             $this->markTestIncomplete('Database error when trying to save model Application_Model_ExtensionScreenshot::save(): '.$e->getMessage());
@@ -90,7 +74,6 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
         $extensionScreenshot = new Application_Model_ExtensionScreenshot();
         $extensionScreenshot->setOptions($this->_extensionScreenshotData);
         $extensionScreenshot->save();
-        $extensionScreenshot = $this->savedObject($extensionScreenshot);
 
         $extensionScreenshot->setImage('01_custom_stock_display_new_rule-14.png');
         try{
@@ -154,9 +137,9 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
     }
 
     /**
-     * depends testSave
+     * @depends testSave
      */
-    /*public function testFind()
+    public function testFind()
     {
         $extensionScreenshot = new Application_Model_ExtensionScreenshot();
         $extensionScreenshot->setOptions($this->_extensionScreenshotData);
@@ -167,7 +150,7 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
         $find =  new Application_Model_ExtensionScreenshot();
         $find = $find->find($extensionScreenshotId);
         $this->assertNotNull($find->getId(),'Application_Model_ExtensionScreenshot::find('.$extensionScreenshotId.') failed.');
-    }*/
+    }
     
     /**
      * @depends testSave
@@ -179,7 +162,6 @@ class Application_Model_ExtensionScreenshotTest extends ModelTestCase
         $extensionScreenshot = new Application_Model_ExtensionScreenshot();
         $extensionScreenshot->setOptions($this->_extensionScreenshotData);
         $extensionScreenshot->save();
-        $extensionScreenshot = $this->savedObject($extensionScreenshot);
 
         $extensionScreenshotId = $extensionScreenshot->getId();
 
