@@ -5,7 +5,7 @@
  * 
  * @access public
  * @author Grzegorz( golaod )
- * @method init - auto called
+ * @method _init - auto called
  * @package Application_Form_ExtensionEdit
  */
 class Application_Form_ExtensionEdit extends Integration_Form
@@ -49,7 +49,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                         array('validator' => 'Int')
                 ),
                 'allowEmpty' => false,
-                'class'      => 'span4'
+                'class'      => 'span4',
+                'description'=> 'Order for extension version release'
         ));
 
         // Add description element
@@ -63,6 +64,16 @@ class Application_Form_ExtensionEdit extends Integration_Form
                 'allowEmpty' => false,
                 'class'      => 'span4'
         ));
+
+        //Add extension_owner element
+        $this->addElement('select', 'extension_owner', array(
+            'label'      => 'Extension Owner',
+            'required'   => false,
+            'filters'    => array('StripTags', 'StringTrim'),
+            'allowEmpty' => true,
+            'class'      => 'span4'
+        ));
+        $this->extension_owner->addMultiOptions(array('' => 'Select Extension Owner:'));
 
         // Add category element
         $this->addElement('select', 'category_id', array(
@@ -141,14 +152,14 @@ class Application_Form_ExtensionEdit extends Integration_Form
 
         $this->addElement('text', 'version', array(
                 'label'      => 'Extension Version',
-                'required'   => false,
+                'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'allowEmpty' => true,
                 'class'      => 'span4'
         ));
         $this->addElement('select', 'edition', array(
                 'label'      => 'Edition',
-                'required'   => false,
+                'required'   => true,
                 'filters'    => array('StripTags', 'StringTrim'),
                 'allowEmpty' => true,
                 'class'      => 'span4'
@@ -197,7 +208,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                         array('validator' => 'StringLength', 'options' => array(0, 255))
                 ),
                 'allowEmpty' => false,
-                'class'      => 'span4'
+                'class'      => 'span4',
+                'description'=> 'Link to extension details page'
         ));
         
         $this->addElement('text', 'extension_documentation', array(
@@ -208,7 +220,8 @@ class Application_Form_ExtensionEdit extends Integration_Form
                         array('validator' => 'StringLength', 'options' => array(0, 255))
                 ),
                 'allowEmpty' => false,
-                'class'      => 'span4'
+                'class'      => 'span4',
+                'description'=> 'Link to extension documentation'
         ));
         
         $this->is_visible->addMultiOptions(array(

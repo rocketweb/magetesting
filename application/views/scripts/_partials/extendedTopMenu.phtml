@@ -19,13 +19,35 @@
         if($index === $allPages - 1){ $class[] = 'last'; }
         
         $class = implode(' ',$class);
+
+        if($subpage->label == 'My data' || $subpage->label == 'My account'){
+            $user = Zend_Auth::getInstance()->getIdentity();
+            $label = $user->firstname.' '.$user->lastname;
+            $subpage->label = $label;
+        }
+
+        $numberOfDropPages = 0;
+        if(count($subpage->pages)){
+            $lastDropPage = null;
+            foreach($subpage->pages as $dropPage){
+                if($this->menu()->accept($dropPage)){
+                    $numberOfDropPages++;
+                    $lastDropPage = $dropPage;
+                }
+            }
+            if($numberOfDropPages == 1){
+                $subpage = $lastDropPage;
+            }
+        }
         ?>
-        	<?php if(count($subpage->pages)): ?>
+        	<?php if($numberOfDropPages > 1): ?>
         	<li class="<?php echo $class; ?>">
         		<?php echo $this->iconMenu()->htmlify($subpage); ?>
 				<ul class="dropdown-menu">
 					<?php foreach( $subpage->pages as $dropdownpage ): ?>
-					<li><?php echo $this->iconMenu()->htmlify($dropdownpage); ?></li>
+                        <?php if($this->menu()->accept($dropdownpage)): ?>
+					        <li><?php echo $this->iconMenu()->htmlify($dropdownpage); ?></li>
+                        <?php endif; ?>
 					<?php endforeach; ?>
 				</ul>
 			</li>

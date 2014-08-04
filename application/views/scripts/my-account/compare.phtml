@@ -21,7 +21,13 @@
                     <?php foreach($this->plans as $plan): ?>
                         <th class="compare-table-data-name">
                             <h3><span><?php echo $plan->getName(); ?></span></h3>
-                            <h2><span class="compare-table-dollar">$</span><span><?php echo $plan->getPrice(); ?></span></h2>
+                            <h2>
+                                <?php if ($plan->getPrice() > 0): ?>
+                                <span class="compare-table-dollar">$</span><span><?php echo $plan->getPrice(); ?></span>
+                                <?php else: ?>
+                                <span>N/A</span>
+                                <?php endif; ?>
+                            </h2>
                             <h4><span><?php echo $plan->getPriceDescription(); ?></span></h4>
                         </th>
                         <th class="compare-table-empty-first"><span class="compare-table-empty"></span></th>
@@ -237,9 +243,9 @@
                             <form method="post" action="<?php echo $this->serverUrl($this->url(array('controller' => 'user', 'action' => 'register'), 'default', true)); ?>">
                                 <input type="hidden" name="preselected_plan_id" value="<?php echo $plan->getId(); ?>" />
                                 <button type="submit" class="btn btn-large btn-success">Get Started</button>
-                                <?php if(1 == $plan->getId() && !is_object($this->user)): ?>
+                                <?php /*if(1 == $plan->getId() && !is_object($this->user)): ?>
                                 <a href="#" class="free-trial">Request Free Trial</a>
-                                <?php endif; ?>
+                                <?php endif;*/ ?>
                             </form>
                             <?php $this->getHelper('ServerUrl')->setScheme('http'); ?>
                         <?php endif;?>

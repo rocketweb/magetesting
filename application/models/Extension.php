@@ -21,6 +21,8 @@ class Application_Model_Extension {
     protected $_extension_encoded;
     
     protected $_extension_key;
+
+    protected $_extension_owner_id;
     
     protected $_from_version;
     
@@ -161,6 +163,15 @@ class Application_Model_Extension {
         return $this->_extension_key;
     }
 
+    public function setExtensionOwner($value){
+        $this->_extension_owner_id = $value;
+        return $this;
+    }
+
+    public function getExtensionOwner(){
+        return $this->_extension_owner_id;
+    }
+
     public function setVersion($value)
     {
         $this->_version = $value;
@@ -270,6 +281,11 @@ class Application_Model_Extension {
         return $this;
     }
 
+    public function findByExtensionFileName($extension_name, $encoded = false)
+    {
+        return $this->getMapper()->findByExtensionFileName($extension_name, $encoded, $this);
+    }
+
     public function findByExtensionKeyAndEdition($extension_key, $edition = null)
     {
         return $this->getMapper()->findByExtensionKeyAndEdition($extension_key, $edition);
@@ -300,6 +316,7 @@ class Application_Model_Extension {
             'extension' => $this->getExtension(),
             'extension_encoded' => $this->getExtensionEncoded(),
             'extension_key' => $this->getExtensionKey(),
+            'extension_owner_id' => $this->getExtensionOwner(),
             'from_version' => $this->getFromVersion(),
             'to_version' => $this->getToVersion(),
             'edition' => $this->getEdition(),
@@ -453,6 +470,9 @@ class Application_Model_Extension {
                 $dir_path = APPLICATION_PATH.'/../data/extensions/'.$this->getEdition().'/open/';
                 if(!file_exists($dir_path)) {
                     mkdir($dir_path, 0777, true);
+                }
+                if(file_exists($dir_path . $extension_file)) {
+                    throw new Exception("File: '" . $dir_path . $extension_file . "' already exists!");
                 }
                 file_put_contents($dir_path . $extension_file, $response->getBody());
                 $this->setExtension($extension_file)->save();

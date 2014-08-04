@@ -39,7 +39,7 @@ class Zend_View_Helper_IconMenu extends Zend_View_Helper_Navigation_Menu
 		
 		// is a dropdown?
 		$dropDownCaret = '';
-		if(count($page->pages)){
+		if($page->dropdown){
 			$attribs['data-toggle'] = 'dropdown';
 			$dropDownCaret = ' <b class="caret caret-white"></b>';
 		}
@@ -54,13 +54,12 @@ class Zend_View_Helper_IconMenu extends Zend_View_Helper_Navigation_Menu
         }
         
         // dodanie ikonki
-        if (null !== $page->icon)
-        {
-	    if(strpos($page->icon,'.')){
-	      $icon = '<img src="'.$this->view->baseUrl().$this->_iconPath.'/'.$page->icon.'" alt="" /> ';
-	    } else {
-	      $icon = '<i class="'.$page->icon.'"></i> ';
-	    }
+        if (null !== $page->icon) {
+            if(strpos($page->icon,'.')){
+              $icon = '<img src="'.$this->view->baseUrl().$this->_iconPath.'/'.$page->icon.'" alt="" /> ';
+            } else {
+              $icon = '<i class="'.$page->icon.'"></i> ';
+            }
         } else {
             $icon = '';
         }

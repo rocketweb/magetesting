@@ -336,7 +336,7 @@ class UserController extends Integration_Controller_Action
 	    $this->view->preselected_plan_id = NULL;
 	    $plan_id = $this->_getParam('preselected_plan_id', 0);
 	    $modelCoupon = new Application_Model_Coupon();
-	    if('free-trial' === $plan_id) {
+	    /*if('free-trial' === $plan_id) {
 	        $config = Zend_Registry::get('config');
 	        $freeTrialsPerDay = $config->register->freeTrialCouponsPerDay;
 	        $nextFreeTrialDate = $modelCoupon->getNextFreeTrialDate($freeTrialsPerDay);
@@ -353,9 +353,9 @@ class UserController extends Integration_Controller_Action
 	            ));
 	        }
 	        $this->view->messages = $flashMessages;
-	    } else {
+	    } else {*/
 	        $plan_id = (int)$plan_id;
-	    }
+	    /*}*/
 	    if($plan_id) {
 	        $this->view->preselected_plan_id = $plan_id;
 	    }
@@ -377,7 +377,7 @@ class UserController extends Integration_Controller_Action
                 $user->setOptions($form->getValues());
                 $apply_coupon_from = 0;
                 $adminNotificationData = array();
-                if('free-trial' === $plan_id) {
+                /*if('free-trial' === $plan_id) {
                     $adminNotificationData['free_trial'] = true;
                     if($modelCoupon->createNewFreeTrial($nextFreeTrialDate)) {
                         $coupon = true;
@@ -394,13 +394,30 @@ class UserController extends Integration_Controller_Action
                 } else {
                     $user->setPreselectedPlanId($plan_id);
                     $user->setActiveFromReminded(1);
+                }*/
+
+                $plan = new Application_Model_Plan();
+                $plan->find($plan_id);
+
+                if ($plan->getId() && $plan->getPrice() == 0) {
+                    //$user->setBraintreeTransactionId($transaction_data->id);
+                    $user->setGroup('commercial-user');
+                    $user->setAdditionalStores(0);
+                    $user->setAdditionalStoresRemoved(0);
+                    $user->setPlanActiveTo(
+                        date('Y-m-d H:i:s',time() + 50*365*24*3600)
+                    );
+                    $user->save(); // to have id set
+                    $user->setPlanId($plan_id);
+                } else {
+                    $user->setPreselectedPlanId($plan_id);
+                    $user->setActiveFromReminded(1);
                 }
                 $user = $user->save();
 
                 $adminNotification = new Integration_Mail_AdminNotification();
                 $adminNotificationData['user'] = $user;
-                $plan = new Application_Model_Plan();
-                $plan->find($user->getPreselectedPlanId());
+
                 if($plan->getName()) {
                     $adminNotificationData['preselected_plan'] = $plan->getName();
                 }
@@ -427,12 +444,12 @@ class UserController extends Integration_Controller_Action
                 try {
                     $adminNotification->send();
                     $successMessage = 'You have been registered successfully.';
-                    if('free-trial' === $plan_id && $nextFreeTrialDate != date('Y-m-d')) {
+                    /*if('free-trial' === $plan_id && $nextFreeTrialDate != date('Y-m-d')) {
                         $successMessage .= ' We will send you an email when your free trial account will be ready.';
-                    } else {
+                    } else {*/
                         $mail->send();
                         $successMessage .= ' Please check your mail box for instructions to activate account.';
-                    }
+                    /*}*/
                     $this->_helper->FlashMessenger($successMessage);
                 } catch (Zend_Mail_Transport_Exception $e){
                     $log = $this->getInvokeArg('bootstrap')->getResource('log');
@@ -567,7 +584,9 @@ class UserController extends Integration_Controller_Action
 
         $form = 'Application_Form_User'.ucfirst($type);
         $form = new $form();
-        $form->populate($user->__toArray());
+        $formPopulateData = $user->__toArray();
+        $formPopulateData['plan_active_to'] = date('Y-m-d',strtotime($formPopulateData['plan_active_to']));
+        $form->populate($formPopulateData);
         
         if(!$user->getState()) {
             $form->state->setValue('Select State');
@@ -578,7 +597,7 @@ class UserController extends Integration_Controller_Action
         }
         
         if ($this->_request->isPost()) {
-            
+
             $formData = $this->_request->getPost();
 
             if(strlen($user->getEmail()) && $user->getEmail() == $formData['email']) {
@@ -590,12 +609,25 @@ class UserController extends Integration_Controller_Action
             } else {
                 unset($formData['password'], $formData['password_repeat']);
             }
+            if(isset($formData['never_expires']) && $formData['never_expires']) {
+                //We add 100 years to plan_active_to date every time we save the user, so it will be updated on every change
+                $formData['plan_active_to'] = date('Y-m-d H:i:s',time() + 50*365*24*3600);
+            } else if(isset($formData['never_expires'])) {
+                //We check if 100 years are added and we remove them
+                $time = strtotime($formData['plan_active_to']);
+                if($time > time()+(10*365*24*3600)) {
+                    $time = $time - (50*365*24*3600);
+                    $formData['plan_active_to'] = date('Y-m-d H:i:s',$time);
+                }
+            }
             
             if($form->isValid($formData)) {
-                if(strlen($formData['password'])) {
+                if(isset($formData['password']) && strlen($formData['password']) > 0) {
                     unset($formData['password_repeat']);
                 }
                 $user->setOptions($formData);
+
+
                 $user->save((is_null($user->getPassword())) ? false : true);
 
                 $planModel = new Application_Model_Plan();
@@ -613,7 +645,7 @@ class UserController extends Integration_Controller_Action
                     }
                 }
                 // remove admin plan for users other than admin
-                if('admin' !== $user->getGroup()) {
+                if('admin' !== $user->getGroup() && 'extension-owner' !== $user->getGroup()) {
                     if((int)$user->getPlanId()) {
                         $planModel = $planModel->find($user->getPlanId());
                         if((int)$planModel->getId() && (int)$planModel->getIsHidden()) {
@@ -623,6 +655,7 @@ class UserController extends Integration_Controller_Action
                 }
 
                 $this->_helper->FlashMessenger('User data has been saved successfully');
+
                 return $this->_helper->redirector->gotoRoute(array(
                         'module'     => 'default',
                         'controller' => 'user',
@@ -634,6 +667,7 @@ class UserController extends Integration_Controller_Action
                     $form->login->setValue($user->getLogin());
                 }
             }
+
         }
         $this->view->form = $form;
         $this->view->assign(array('page' => $page));
@@ -807,6 +841,31 @@ class UserController extends Integration_Controller_Action
                     'page_prefix' => 's'
                 )
             );
+
+        $limit = 10;
+        $offset = (int) $this->_getParam('epage',0);
+        $offset = $offset*$limit;
+        $filter = array('extension_owner' => $id);
+        $extensionModel = new Application_Model_Extension();
+        $extensions = $extensionModel->fetchFullListOfExtensions($filter, array(), $offset, $limit);
+        $extensions_counter = $extensionModel->getMapper()->fetchFullListOfExtensions($filter, array(), $offset, $limit, true);
+        $extensionCategoryModel = new Application_Model_ExtensionCategory();
+        $extensionCategories = $extensionCategoryModel->fetchAll();
+        $extensionCategoriesID = array();
+        foreach($extensionCategories as $ec){
+            $extensionCategoriesID[$ec->getId()] = $ec;
+        }
+        $extension_view =
+            $this->view->partial(
+                'my-extensions/table.phtml',
+                array(
+                    'extensions' => $extensions,
+                    'extensions_counter' => $extensions_counter,
+                    'extensions_categories' => $extensionCategoriesID
+                )
+            );
+
+
         $this->view->assign(
             array(
                 'user'     => $user,
@@ -815,7 +874,7 @@ class UserController extends Integration_Controller_Action
                 'coupon'   => $coupon,
                 'plans'    => $plans,
                 'payments' => $payments,
-                'stores' => $stores_view,
+                'stores' => $stores_view
             )
         );
     }

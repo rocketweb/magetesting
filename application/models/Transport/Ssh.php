@@ -53,11 +53,12 @@ extends Application_Model_Transport {
     protected function _prepareCustomVars(Application_Model_Store $storeObject){
         //HOST
         $customHost = $this->_storeObject->getCustomHost();
+
         //make sure custom host have slash at the end
         if(substr($customHost,-1)!="/"){
             $customHost .= '/';
         }
-        
+
         $this->_customHost = $customHost;
         
         //PORT
@@ -107,6 +108,9 @@ extends Application_Model_Transport {
 
     protected function _downloadInstanceFiles(){
 
+        if ($this->logger instanceof Zend_Log) {
+            $this->logger->log('Starting the download of store files ... this can take a while', Zend_Log::INFO);
+        }
         $components = count(explode('/',trim($this->_customRemotePath, '/')));
 
         /**
@@ -129,9 +133,9 @@ extends Application_Model_Transport {
 
         if ($this->logger instanceof Zend_Log) {
             $message = var_export($output, true);
-            $this->logger->log('Downloading store files.', Zend_Log::INFO);
             $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
             $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
+            $this->logger->log('Download of store files completed.', Zend_Log::INFO);
         }
         /**
          * TODO: validate output
@@ -165,14 +169,17 @@ extends Application_Model_Transport {
 
     public function checkDatabaseDump(){
 
-        $output = $this->_ssh->cloneObject()->remoteCall(
+        $output1 = $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->getSize($this->_customSql)
         )->call()->getLastOutput();
 
+        $output = $this->cli('file')->extractSize($output1);
+
         if ($this->logger instanceof Zend_Log) {
             $this->logger->log('Checking database file size.', Zend_Log::INFO);
+            $this->logger->log("\n" . var_export($output1, true) . "\n", Zend_Log::DEBUG);
             $this->logger->log("\n" . var_export($output, true) . "\n", Zend_Log::DEBUG);
-        }
+        } 
 
         $sqlSizeInfo = '';
         if(isset($output[0])) {
@@ -194,6 +201,10 @@ extends Application_Model_Transport {
     }
 
     public function downloadDatabase(){
+
+        if ($this->logger instanceof Zend_Log) {
+            $this->logger->log('Starting the download of database file', Zend_Log::INFO);
+        }
         $components = count(explode('/',trim($this->_customSql, '/')))-1;
 
         $this->cli()->exec('set -xv');
@@ -212,7 +223,6 @@ extends Application_Model_Transport {
 
         if ($this->logger instanceof Zend_Log) {
             $message = var_export($output, true);
-            $this->logger->log('Downloading store database.', Zend_Log::INFO);
             $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
             $this->logger->log("\n" . $command . "\n" . $message, Zend_Log::DEBUG);
         }
@@ -243,6 +253,8 @@ extends Application_Model_Transport {
         $output = $this->_ssh->cloneObject()->remoteCall(
             $this->cli('file')->getSize($this->_customFile)
         )->call()->getLastOutput();
+
+        $output = $this->cli('file')->extractSize($output);
 
         $packageSizeInfo = '';
         if(isset($output[0])) {

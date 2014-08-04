@@ -30,6 +30,7 @@
                 <privilege>dashboard</privilege>
                 <icon>icon-white icon-cog</icon>
                 <class>dropdown dropdown-mainmenu</class>
+                <dropdown>1</dropdown>
                 <pages>
                     <supportedExtensions>
                         <label>Extensions</label>
@@ -99,8 +100,8 @@
                     </userList>
                 </pages>
             </manage>
-            <userAccount>
-                <label>My Account</label>
+            <userMenu>
+                <label>My data</label>
                 <module>default</module>
                 <controller>my-account</controller>
                 <action>index</action>
@@ -109,7 +110,33 @@
                 <resource>default_my-account</resource>
                 <privilege>index</privilege>
                 <icon>icon-white icon-user</icon>
-            </userAccount>
+                <class>dropdown dropdown-mainmenu</class>
+                <dropdown>1</dropdown>
+                <pages>
+                    <userAccount>
+                        <label>My Account</label>
+                        <module>default</module>
+                        <controller>my-account</controller>
+                        <action>index</action>
+                        <route>default</route>
+                        <reset_params>true</reset_params>
+                        <resource>default_my-account</resource>
+                        <privilege>index</privilege>
+                        <icon>icon-white icon-user</icon>
+                    </userAccount>
+                    <userExtensions>
+                        <label>My Extensions</label>
+                        <module>default</module>
+                        <controller>my-extensions</controller>
+                        <action>index</action>
+                        <route>default</route>
+                        <reset_params>true</reset_params>
+                        <resource>default_my-extensions</resource>
+                        <privilege>index</privilege>
+                        <icon>icon-white icon-th-list</icon>
+                    </userExtensions>
+                </pages>
+            </userMenu>
             <signUp>
                 <label>Sign Up</label>
                 <module>default</module>
