@@ -182,7 +182,7 @@
                 <fieldset>
                     <legend>Extension orders</legend>
                             <div class="row">
-                                <div class="span10">
+                                <div class="span12">
                                     <p>This is a list of all orders of your extensions. Order is shown after transaction is confirmed.</p>
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -206,7 +206,7 @@
                                         </tbody>
                                     </table>
 
-                                    <?php echo $this->paginationControl($this->orders, 'Sliding', '_partials/paginationControl.phtml'); ?>
+                                    <?php echo $this->paginationControl($this->orders, 'Sliding', '_partials/paginationControl.phtml', array('page_prefix' => 'u')); ?>
                                 </div>
                             </div>
 
