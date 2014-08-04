@@ -4,9 +4,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 class Application_Model_PlanTest extends ModelTestCase
 {
 
-    /*
-     * TODO: Application_Model_Plan::save() must return id/object on call.
-     * */
     protected $model;
 
     protected $_planData = array(
@@ -49,17 +46,6 @@ class Application_Model_PlanTest extends ModelTestCase
         parent::tearDown();
     }
 
-    private function savedObject(Application_Model_Plan $plan){
-        $allplans = $plan->fetchAll();
-        $lastplan = null;
-        foreach($allplans as $p){
-            if($lastplan == null) $lastplan = $p;
-            if($p->getId() > $lastplan->getId()) $lastplan = $p;
-        }
-
-        return $lastplan;
-    }
-
     public function testInstanceOf()
     {
         $this->assertInstanceOf('Application_Model_Plan', $this->model);
@@ -72,7 +58,6 @@ class Application_Model_PlanTest extends ModelTestCase
 
         try{
             $plan->save();
-            $plan = $this->savedObject($plan);
             $this->assertGreaterThan(0, (int)$plan->getId(), 'Application_Model_Plan::save() failed. ID not set after trying to save!');
         }catch(DatabseException $e){
             $this->markTestIncomplete('Database error when trying to save model Application_Model_Plan::save(): '.$e->getMessage());
@@ -88,7 +73,6 @@ class Application_Model_PlanTest extends ModelTestCase
         $plan = new Application_Model_Plan();
         $plan->setOptions($this->_planData);
         $plan->save();
-        $plan = $this->savedObject($plan);
 
         $plan->setName('NameChange');
         try{
@@ -160,7 +144,6 @@ class Application_Model_PlanTest extends ModelTestCase
         $plan = new Application_Model_Plan();
         $plan->setOptions($this->_planData);
         $plan->save();
-        $plan = $this->savedObject($plan);
 
         $planId = $plan->getId();
 
@@ -177,7 +160,6 @@ class Application_Model_PlanTest extends ModelTestCase
         $plan = new Application_Model_Plan();
         $plan->setOptions($this->_planData);
         $plan->save();
-        $plan = $this->savedObject($plan);
 
         $planId = $plan->getId();
 

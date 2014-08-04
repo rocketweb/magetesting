@@ -87,7 +87,7 @@ class RocketWeg_Cli_Kit_FileTest extends PHPUnit_Framework_TestCase
     public function testGetSize()
     {
         $this->assertEquals(
-            "du -b 'custom_file' 2>/dev/null | awk '$1 ~ /[0-9]+/ {print $1}' 2>&1",
+            "du -b 'custom_file' 2>&1",
             $this->_kit->_prepareCall($this->_kit->getSize('custom_file'))
         );
     }

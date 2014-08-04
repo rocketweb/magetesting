@@ -27,6 +27,11 @@ class Application_Model_StoreExtensionMapper{
         return $this->_dbTable;
     }
 
+    public function delete($id)
+    {
+        $this->getDbTable()->delete(array('`id` = ?' => $id));
+    }
+
     public function save(Application_Model_StoreExtension $storeExtension)
     {
         $data = $storeExtension->__toArray();

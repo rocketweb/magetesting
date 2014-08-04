@@ -3,9 +3,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_StoreTest extends ModelTestCase
 {
-    /*
-     * TODO: Application_Model_Store::save() returns only id instead of object (should be the same on every model)
-     * */
     protected $model;
 
     protected $_storeData = array(
@@ -88,8 +85,8 @@ class Application_Model_StoreTest extends ModelTestCase
         $store->setOptions($this->_storeData);
 
         try{
-            $storeId = $store->save();
-            $this->assertGreaterThan(0, (int)$storeId, 'Application_Model_Store::save() failed. ID not set after trying to save!');
+            $store->save();
+            $this->assertGreaterThan(0, (int)$store->getId(), 'Application_Model_Store::save() failed. ID not set after trying to save!');
         }catch(DatabseException $e){
             $this->markTestIncomplete('Database error when trying to save model Application_Model_Store::save(): '.$e->getMessage());
         }
@@ -181,7 +178,8 @@ class Application_Model_StoreTest extends ModelTestCase
         $store = new Application_Model_Store();
         $this->setUser();
         $store->setOptions($this->_storeData);
-        $storeId = $store->save();
+        $store->save();
+        $storeId = $store->getId();
 
         $find =  new Application_Model_Store();
         $find = $find->find($storeId);
@@ -196,7 +194,8 @@ class Application_Model_StoreTest extends ModelTestCase
         $store = new Application_Model_Store();
         $this->setUser();
         $store->setOptions($this->_storeData);
-        $storeId = $store->save();
+        $store->save();
+        $storeId = $store->getId();
 
         $store->delete('`id` = '.$storeId);
 

@@ -4,9 +4,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 class Application_Model_StoreExtensionTest extends ModelTestCase
 {
 
-    /*
-     * TODO: Application_Model_StoreExtension::delte() doesn't exists
-     * */
     protected $model;
 
     protected $_storeExtensionData = array(
@@ -174,9 +171,8 @@ class Application_Model_StoreExtensionTest extends ModelTestCase
         $this->assertNotNull($find->getId(),'Application_Model_StoreExtension::find('.$storeExtensionId.') failed.');
     }
     /**
-     * depends testSave
+     * @depends testSave
      */
-    /* delete() function doesn't exists in mapper
     public function testDelete()
     {
         $storeExtension = new Application_Model_StoreExtension();
@@ -191,5 +187,5 @@ class Application_Model_StoreExtensionTest extends ModelTestCase
         $find =  new Application_Model_StoreExtension();
         $find = $find->find($storeExtensionId);
         $this->assertNull($find->getId(),'Application_Model_StoreExtension::delete(\'`id` = '.$storeExtensionId.'\') failed.');
-    }*/
+    }
 }

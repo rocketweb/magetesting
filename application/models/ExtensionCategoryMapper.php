@@ -41,6 +41,11 @@ class Application_Model_ExtensionCategoryMapper {
         return $object;
     }
 
+    public function delete($id)
+    {
+        $this->getDbTable()->delete(array('`id` => ?', $id));
+    }
+
     public function find($id, Application_Model_ExtensionCategory $object)
     {
         $result = $this->getDbTable()->find($id);

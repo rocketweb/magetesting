@@ -31,16 +31,22 @@ class Application_Model_PaymentMapper {
         return $this->_dbTable;
     }
 
+    public function delete($id)
+    {
+        $this->getDbTable()->delete(array('`id` = ?' => $id));
+    }
+
     public function save(Application_Model_Payment $payment)
     {
         $data = $payment->__toArray();
 
         if (!(int)$id = $payment->getId()) {
             unset($data['id']);
-            $this->getDbTable()->insert($data);
+            $payment->setId($this->getDbTable()->insert($data));
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
+        return $payment;
     }
 
     public function find($id, Application_Model_Payment $payment)

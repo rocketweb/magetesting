@@ -82,8 +82,9 @@ class QueueController extends Integration_Controller_Action {
                 if($plan->getCanDoDbRevert()){
                 	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
                 }
-                                   
-                $storeId = $storeModel->save();
+
+                $storeModel->save();
+                $storeId = $storeModel->getId();
                 
                 unset($queueModel);
                 //Add queue item with MagentoInstall
@@ -253,8 +254,9 @@ class QueueController extends Integration_Controller_Action {
                 if($plan->getCanDoDbRevert()){
                 	$storeModel->setDoHourlyDbRevert($form->do_hourly_db_revert->getValue());
                 }
-                
-                $storeId = $storeModel->save();
+
+                $storeModel->save();
+                $storeId = $storeModel->getId();
                 
                 $queueModel = new Application_Model_Queue();
                 //TODO: Add queue item with MagentoDownload
@@ -1646,6 +1648,10 @@ class QueueController extends Integration_Controller_Action {
 
           if (isset($validPaths[0])){
             $path = str_replace('/app','',$validPaths[0]);
+            if(strpos($path,'/') === false || strpos($path,'command not found') !== false){
+                return false;
+            }
+
             $this->_sshWebrootPath = $path;
             return $path;
           } else {

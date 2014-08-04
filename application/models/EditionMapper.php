@@ -37,11 +37,11 @@ class Application_Model_EditionMapper {
 
         if (null === ($id = $edition->getId())) {
             unset($data['id']);
-            $this->getDbTable()->insert($data);
+            $edition->setId($this->getDbTable()->insert($data));
         } else {
             $this->getDbTable()->update($data, array('id = ?' => $id));
         }
-
+        return $edition;
     }
 
     public function find($id, Application_Model_Edition $edition)

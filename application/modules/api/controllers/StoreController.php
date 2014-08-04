@@ -141,7 +141,8 @@ class Api_StoreController extends Integration_Controller_Action
                            ->setUserId($userObject->getId())
                            ->setSampleData(1);
 
-                $storeId = $storeModel->save();
+                $storeModel->save();
+                $storeId = $storeModel->getId();
 
                 $queueModel = new Application_Model_Queue();
                 //TODO: Add queue item with MagentoDownload

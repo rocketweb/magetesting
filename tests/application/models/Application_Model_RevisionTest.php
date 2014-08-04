@@ -4,9 +4,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 class Application_Model_RevisionTest extends ModelTestCase
 {
 
-    /*
-     * TODO: Application_Model_Revision::fetchAll() has some inconsistencies (Mapper & DbTable classes don't match in params - findHidden & user_id)
-     * */
     protected $model;
 
     protected $_revisionData = array(

@@ -177,9 +177,9 @@ class Application_Model_Revision {
     /**
      * @param boolean $fetch_hidden - whether fetch also hidden plans
      */
-    public function fetchAll($fetch_hidden = false)
+    public function fetchAll($userId = false)
     {
-        return $this->getMapper()->fetchAll($fetch_hidden);
+        return $this->getMapper()->fetchAll($userId);
     }
 
     public function __toArray()
