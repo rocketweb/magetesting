@@ -45,7 +45,7 @@ class MyAccountController extends Integration_Controller_Action
         $paginator = $payments->fetchExtensionOrders($this->auth->getIdentity()->id);
         $page = (int) $this->_getParam('opage', 0);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setItemCountPerPage(2);
+        $paginator->setItemCountPerPage(10);
 
         $this->view->orders = $paginator;
         $this->view->plan = $planData;
