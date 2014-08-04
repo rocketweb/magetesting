@@ -3,10 +3,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_ExtensionCategoryTest extends ModelTestCase
 {
-    /*
-     * TODO: Application_Model_DbTable_ExtensionCategory::delete() method is missing.
-     */
-
 
     protected $model;
     

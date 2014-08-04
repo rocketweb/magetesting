@@ -3,10 +3,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_PaymentTest extends ModelTestCase
 {
-    /*
-     * TODO: Application_Model_Payment::save() must return id/object on call.
-     * TODO: Application_Model_Payment::delete() doesn't exists
-     * */
 
     protected $model;
 
@@ -66,18 +62,6 @@ class Application_Model_PaymentTest extends ModelTestCase
         $this->_paymentData['user_id'] = $user->getId();
     }
 
-    private function savedObject(Application_Model_Payment $payment)
-    {
-        $allPayments = $payment->fetchAll();
-        $lastPayment = null;
-        foreach($allPayments as $m){
-            if($lastPayment == null) $lastPayment = $m;
-            if($m->getId() > $lastPayment->getId()) $lastPayment = $m;
-        }
-
-        return $lastPayment;
-    }
-
     public function testInstanceOf()
     {
         $this->assertInstanceOf('Application_Model_Payment', $this->model);
@@ -91,7 +75,6 @@ class Application_Model_PaymentTest extends ModelTestCase
 
         try{
             $payment->save();
-            $payment = $this->savedObject($payment);
             $this->assertGreaterThan(0, (int)$payment->getId(), 'Application_Model_Payment::save() failed. ID not set after trying to save!');
         }catch(DatabseException $e){
             $this->markTestIncomplete('Database error when trying to save model Application_Model_Payment::save(): '.$e->getMessage());
@@ -107,7 +90,6 @@ class Application_Model_PaymentTest extends ModelTestCase
         $this->setUser();
         $payment->setOptions($this->_paymentData);
         $payment->save();
-        $payment = $this->savedObject($payment);
 
         $payment->setCity('PHPUnit changed city');
         try{
@@ -185,7 +167,6 @@ class Application_Model_PaymentTest extends ModelTestCase
         $this->setUser();
         $payment->setOptions($this->_paymentData);
         $payment->save();
-        $payment = $this->savedObject($payment);
 
         $paymentId = $payment->getId();
 
@@ -195,17 +176,14 @@ class Application_Model_PaymentTest extends ModelTestCase
     }
 
     /**
-     * depends testSave
+     * @depends testSave
      */
-    /*Function not in use!
-     *
-     * public function testDelete()
+    public function testDelete()
     {
         $payment = new Application_Model_Payment();
         $this->setUser();
         $payment->setOptions($this->_paymentData);
         $payment->save();
-        $payment = $this->savedObject($payment);
 
         $paymentId = $payment->getId();
 
@@ -214,5 +192,5 @@ class Application_Model_PaymentTest extends ModelTestCase
         $find =  new Application_Model_Payment();
         $find = $find->find($paymentId);
         $this->assertNull($find->getId(),'Application_Model_Payment::delete(\'`id` = '.$paymentId.'\') failed.');
-    }*/
+    }
 }

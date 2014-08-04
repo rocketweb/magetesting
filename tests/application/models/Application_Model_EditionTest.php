@@ -3,9 +3,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 
 class Application_Model_EditionTest extends ModelTestCase
 {
-/**
- * TODO: Application_Model_Edition::save() must return object/id on call.
- */
     protected $model;
 
     protected $_editionData = array(
@@ -33,17 +30,6 @@ class Application_Model_EditionTest extends ModelTestCase
         parent::tearDown();
     }
 
-    private function savedObject(Application_Model_Edition $edition){
-        $allEditions = $edition->fetchAll();
-        $lastEdition = null;
-        foreach($allEditions as $m){
-            if($lastEdition == null) $lastEdition = $m;
-            if($m->getId() > $lastEdition->getId()) $lastEdition = $m;
-        }
-
-        return $lastEdition;
-    }
-
     public function testInstanceOf()
     {
         $this->assertInstanceOf('Application_Model_Edition', $this->model);
@@ -56,7 +42,6 @@ class Application_Model_EditionTest extends ModelTestCase
 
         try{
             $edition->save();
-            $edition = $this->savedObject($edition);
             $this->assertGreaterThan(0, (int)$edition->getId(), 'Application_Model_Edition::save() failed. ID not set after trying to save!');
         }catch(DatabseException $e){
             $this->markTestIncomplete('Database error when trying to save model Application_Model_Edition::save(): '.$e->getMessage());
@@ -71,7 +56,6 @@ class Application_Model_EditionTest extends ModelTestCase
         $edition = new Application_Model_Edition();
         $edition->setOptions($this->_editionData);
         $edition->save();
-        $edition = $this->savedObject($edition);
 
         $edition->setName('PHPUnit test change');
         try{
@@ -128,7 +112,6 @@ class Application_Model_EditionTest extends ModelTestCase
         $edition = new Application_Model_Edition();
         $edition->setOptions($this->_editionData);
         $edition->save();
-        $edition = $this->savedObject($edition);
 
         $editionId = $edition->getId();
 
@@ -145,7 +128,6 @@ class Application_Model_EditionTest extends ModelTestCase
         $edition = new Application_Model_Edition();
         $edition->setOptions($this->_editionData);
         $edition->save();
-        $edition = $this->savedObject($edition);
 
         $editionId = $edition->getId();
 

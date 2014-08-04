@@ -4,9 +4,6 @@ require_once realpath(dirname(__FILE__) . '/../../ModelTestCase.php');
 class Application_Model_ServerTest extends ModelTestCase
 {
 
-    /*
-     * TODO: Application_Model_Server::save() must return id/object on call
-     * */
     protected $model;
 
     protected $_serverData = array(
@@ -38,17 +35,6 @@ class Application_Model_ServerTest extends ModelTestCase
         parent::tearDown();
     }
 
-    private function savedObject(Application_Model_Server $server){
-        $allServers = $server->fetchAll();
-        $lastServer = null;
-        foreach($allServers as $s){
-            if($lastServer == null) $lastServer = $s;
-            if($s->getId() > $lastServer->getId()) $lastServer = $s;
-        }
-
-        return $lastServer;
-    }
-
     public function testInstanceOf()
     {
         $this->assertInstanceOf('Application_Model_Server', $this->model);
@@ -61,7 +47,6 @@ class Application_Model_ServerTest extends ModelTestCase
 
         try{
             $server->save();
-            $server = $this->savedObject($server);
             $this->assertGreaterThan(0, (int)$server->getId(), 'Application_Model_Server::save() failed. ID not set after trying to save!');
         }catch(DatabseException $e){
             $this->markTestIncomplete('Database error when trying to save model Application_Model_Server::save(): '.$e->getMessage());
@@ -76,7 +61,6 @@ class Application_Model_ServerTest extends ModelTestCase
         $server = new Application_Model_Server();
         $server->setOptions($this->_serverData);
         $server->save();
-        $server = $this->savedObject($server);
 
         $server->setIp('1.0.0.0');
         try{
@@ -148,7 +132,6 @@ class Application_Model_ServerTest extends ModelTestCase
         $server = new Application_Model_Server();
         $server->setOptions($this->_serverData);
         $server->save();
-        $server = $this->savedObject($server);
 
         $serverId = $server->getId();
 
@@ -165,7 +148,6 @@ class Application_Model_ServerTest extends ModelTestCase
         $server = new Application_Model_Server();
         $server->setOptions($this->_serverData);
         $server->save();
-        $server = $this->savedObject($server);
 
         $serverId = $server->getId();
 
