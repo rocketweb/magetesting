@@ -181,4 +181,10 @@ class Application_Model_PaymentMapper {
         $adapter = new Zend_Paginator_Adapter_Array($this->getDbTable()->fetchList());
         return new Zend_Paginator($adapter);
     }
+
+    public function fetchExtensionOrders($extensionOwnerId)
+    {
+        $adapter = new Zend_Paginator_Adapter_Array($this->getDbTable()->fetchExtensionOrders($extensionOwnerId));
+        return new Zend_Paginator($adapter);
+    }
 }
