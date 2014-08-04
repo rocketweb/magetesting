@@ -184,6 +184,7 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Extension</th>
+                                            <th style="text-align:center">Version and Edition</th>
                                             <th>Payment date</th>
                                             <th style="text-align:center">Price</th>
                                         </tr>
@@ -194,6 +195,7 @@
                                                 <td><?php echo $order['payment_id']; ?></td>
                                                 <td><a href="<?php echo $this->url(array('controller' => 'my-extensions', 'action' => 'edit', 'id' => $order['extension_id']), 'default', true); ?>">
                                                     <?php echo $order['name']; ?></a> </td>
+                                                <td style="text-align:center"><?php echo $order['version'].' ('.$order['edition'].')'; ?></td>
                                                 <td><?php echo date('Y-m-d H:i:s', strtotime($order['date'])); ?></td>
                                                 <td style="text-align:center">$<?php echo $order['price']; ?></td>
                                             </tr>

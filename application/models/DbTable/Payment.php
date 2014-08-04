@@ -48,7 +48,7 @@ class Application_Model_DbTable_Payment extends Zend_Db_Table_Abstract
                 $this->_name.'.braintree_transaction_id = store_extension.braintree_transaction_id',
                 array('extension_id', 'braintree_transaction_id', 'braintree_transaction_confirmed')
             )
-            ->joinLeft('extension','extension.id = store_extension.extension_id',array('name'))
+            ->joinLeft('extension','extension.id = store_extension.extension_id',array('name','edition','version'))
             ->order($this->_name.'.date DESC')
             ->where('extension.extension_owner_id = ?',$extensionOwnerId);
         return $select->query()->fetchAll();
