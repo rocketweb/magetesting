@@ -182,7 +182,7 @@
                         <p class="description"><?php echo $item['description']; ?></p>
                         <div class="row">
                             <!-- START DETAILS BOX -->
-                            <div class="span4 panel details">
+                            <div class="span3 panel details">
                                 <h5>Configuration</h5>
                                 <div class="control-group">
                                     <div class="controls">
@@ -224,12 +224,12 @@
                             <!-- END DEPLOYMENT BOX -->
 
                             <!-- START PROBLEMS BOX -->
-                            <div class="span3 panel">
+                            <div class="span4 panel">
                                 <h5>Troubleshooting</h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn log-button <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
-                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn help-button"><i class="icon icon-question-sign"></i> Get Help</a>
+                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn log-button <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Logs</a>
+                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn help-button"><i class="icon icon-question-sign"></i> Help</a>
                                         <?php   $conflict = isset($this->conflicts[$item['id']]) ? $this->conflicts[$item['id']] : false;
                                                 $conflictCount = 0;
                                                 if($conflict !== false && isset($conflict['count']) && $conflict['count'] > 0) {
@@ -238,7 +238,7 @@
 
                                         ?>
                                         <a href="#" class="btn conflict-button conflict-store-<?php echo $item['id']; ?>">
-                                            Extension Conflicts (<?php echo $conflictCount; ?>)</a>
+                                            Conflicts (<?php echo $conflictCount; ?>)</a>
                                     </div>
                                 </div>
                             </div>

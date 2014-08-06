@@ -2641,7 +2641,8 @@ form#extension-filter-form {
     .accordion-group .accordion-inner .btn.help-button,
     .accordion-group .accordion-inner .btn.rollback-button,
     .accordion-group .accordion-inner .btn.commit-button,
-    .accordion-group .accordion-inner .btn.deploy-button {
+    .accordion-group .accordion-inner .btn.deploy-button,
+    .accordion-group .accordion-inner .btn.conflict-button{
         width: 90%;
         margin-bottom: 6px;
     }
