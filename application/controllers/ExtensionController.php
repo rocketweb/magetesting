@@ -254,7 +254,17 @@ class ExtensionController extends Integration_Controller_Action {
                      * */
                     $extension_owner_model = new Application_Model_Extension();
                     $extension_new_name_model = $extension_owner_model->findByExtensionFileName($extension_new_name);
-                    if($extension_new_name_model != null){
+                    if((
+                            Zend_Auth::getInstance()->getIdentity()->group != 'admin' &&
+                            $extension_new_name_model != null &&
+                            $extension_new_name_model->getExtensionOwner() != Zend_Auth::getInstance()->getIdentity()->id
+                        ) ||
+                        (
+                            Zend_Auth::getInstance()->getIdentity()->group == 'admin' &&
+                            $extension_new_name_model != null &&
+                            $extension_new_name_model->getId() != $id 
+                        )
+                    ){
                         if($extension_entity_data['id'] != $extension_new_name_model->getId()){
                             $this->_helper->FlashMessenger(
                                 array(
