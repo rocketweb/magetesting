@@ -21,6 +21,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $this->bootstrap('db');
         $this->bootstrap('session');
+        $config = $this->_options['resources']['session']['saveHandler']['options'];
+
+        $handler = new Zend_Session_SaveHandler_DbTable($config);
+        Zend_Session::setSaveHandler($handler);
+        $handler->gc(0);
         Zend_Session::start();
     }
 
