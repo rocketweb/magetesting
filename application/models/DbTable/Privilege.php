@@ -213,11 +213,11 @@ class Application_Model_DbTable_Privilege {
         $this->adapter->getConnection()->exec("use `".$this->config->magento->storeprefix.$dbname."`");
 
         $this->adapter->getConnection()->exec("SET FOREIGN_KEY_CHECKS=0");
-        $this->adapter->getConnection()->exec("TRUNCATE index_event");
-        $this->adapter->getConnection()->exec("TRUNCATE index_process_event");
 
         // do EE 1.13 part
         try {
+            $this->adapter->getConnection()->exec("TRUNCATE index_event");
+            $this->adapter->getConnection()->exec("TRUNCATE index_process_event");
             $this->adapter->getConnection()->exec("TRUNCATE catalog_category_flat_cl");
             $this->adapter->getConnection()->exec("TRUNCATE catalog_category_product_cat_cl");
             $this->adapter->getConnection()->exec("TRUNCATE catalog_category_product_index_cl");
