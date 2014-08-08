@@ -182,7 +182,7 @@
                         <p class="description"><?php echo $item['description']; ?></p>
                         <div class="row">
                             <!-- START DETAILS BOX -->
-                            <div class="span4 panel details">
+                            <div class="span3 panel details">
                                 <h5>Configuration</h5>
                                 <div class="control-group">
                                     <div class="controls">
@@ -197,9 +197,7 @@
                                     <?php else: ?>
                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
                                            class="btn edit-button"><i class="icon icon-pencil"></i> Edit</a>
-                                        <?php if(version_compare($item['version'],'1.13') >= 0 && $item['edition'] == 'EE'): ?>
-                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-reindex', 'store' => $item['domain']), 'default', true); ?>" class="btn"><i class="icon icon-refresh"></i> Reindex</a>
-                                        <?php endif; ?>
+                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-reindex', 'store' => $item['domain']), 'default', true); ?>" class="btn"><i class="icon icon-refresh"></i> Reindex</a>
                                     <?php endif; ?>
                                     </div>
                                 </div>
@@ -226,12 +224,12 @@
                             <!-- END DEPLOYMENT BOX -->
 
                             <!-- START PROBLEMS BOX -->
-                            <div class="span3 panel">
+                            <div class="span4 panel">
                                 <h5>Troubleshooting</h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn log-button <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Show Logs</a>
-                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn help-button"><i class="icon icon-question-sign"></i> Get Help</a>
+                                        <a target="_blank" href="<?php echo $item['papertrail_syslog_hostname'] ? $this->url(array('module' => 'default', 'controller' => 'user', 'action' => 'papertrail', 'domain' => $this->escape($item['domain'])), 'default', true) : '#'; ?>" class="btn log-button <?php echo ($item['papertrail_syslog_hostname']) ?: 'disabled'?>"><i class="icon icon-info-sign"></i> Logs</a>
+                                        <a target="_blank" href="https://rocketwebinc.zendesk.com/anonymous_requests/new?ticket[fields][21917916]=<?php echo $this->serverUrl().$this->url(array('module' => 'default', 'controller' => 'store', 'action' => $item['domain']), 'default', true); ?>&email=<?php echo $this->user->email; ?>" class="btn help-button"><i class="icon icon-question-sign"></i> Help</a>
                                         <?php   $conflict = isset($this->conflicts[$item['id']]) ? $this->conflicts[$item['id']] : false;
                                                 $conflictCount = 0;
                                                 if($conflict !== false && isset($conflict['count']) && $conflict['count'] > 0) {
@@ -252,7 +250,7 @@
                 <?php endif; // end div#collapse ?>
             </div>
                 <!-- CSS styling needed -->
-                <div id="conflictModal<?php echo $item['id']; ?>" class="modal hide fade" style="width:1000px; margin-left:-500px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div id="conflictModal<?php echo $item['id']; ?>" class="modal hide fade" style="width:900px; margin-left:-450px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h3 id="myModalLabel">Extension Conflicts</h3>
