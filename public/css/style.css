@@ -90,7 +90,7 @@ font-weight: 300;
 /* Table inside Modal */
 .conflictModal{
     width: 900px;
-    margin-left: 450px;
+    margin-left: -450px;
 }
 .table-bordered{
     table-layout: fixed;
