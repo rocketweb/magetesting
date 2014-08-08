@@ -90,7 +90,7 @@ font-weight: 300;
 /* Table inside Modal */
 .conflictModal{
     width: 900px;
-    margin-left: 450px;
+    margin-left: -450px;
 }
 .table-bordered{
     table-layout: fixed;
@@ -100,7 +100,7 @@ font-weight: 300;
 }
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width: 767px) {
-    .table-bordered{
+    .conflictModal{
         width: 95%;
         margin-left: 0;
         display: block;
