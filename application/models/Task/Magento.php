@@ -331,7 +331,6 @@ extends Application_Model_Task {
             </Directory>
             php_admin_value open_basedir /home/".$this->config->magento->userprefix . $this->_dbuser."
             php_admin_value upload_tmp_dir /home/".$this->config->magento->userprefix . $this->_dbuser."/tmp
-            php_admin_value suhosin.executor.func.blacklist \"exec, system, shell_exec, passthru\"
         </VirtualHost>";
         
         file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
