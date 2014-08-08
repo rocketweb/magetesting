@@ -298,10 +298,6 @@ extends Application_Model_Task {
             $file::TYPE_DIR
         )->call();
 
-        $this->_createFcgiWrapper();
-
-        $this->_preparePhpIni();
-
         $file->clear()->fileOwner(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser,
             $this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser
@@ -315,7 +311,8 @@ extends Application_Model_Task {
             '644'
         )->call();
 
-        $content = "<VirtualHost *:80>
+        $content = "
+        <VirtualHost *:80>
             SetEnv TMPDIR /home/".$this->config->magento->userprefix . $this->_dbuser."/tmp/
             ServerAdmin support@magetesting.com
             ServerName ".$this->_dbuser.".".$this->_serverObject->getDomain()."
@@ -376,48 +373,6 @@ extends Application_Model_Task {
             '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp',
             '777'
         )->call();
-    }
-    
-    protected function _createFcgiWrapper(){
-        $file = $this->cli('file');
-        $file->create(
-            '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi',
-            $file::TYPE_FILE
-        )->call();
-        $php5fcgi = '#!/bin/sh'.
-        PHP_EOL.'exec /usr/bin/php5-cgi -c /home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini \\'.
-        PHP_EOL.'-d open_basedir=/home/'.$this->config->magento->userprefix . $this->_dbuser.' \\'.
-        PHP_EOL.'$1';
-        file_put_contents('/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi', $php5fcgi);
-        $file->clear()->fileMode(
-            '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php5-fcgi',
-            '755'
-        )->call();
-    }
-    
-    protected function _preparePhpIni(){
-        $userPhpIni = '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini';
-
-        $this->cli('file')->copy(
-            '/etc/php5/apache2/php.ini',
-            $userPhpIni
-        )->call();
-        //regex to replace disable_functions
-        $functionsToBlock = array('exec','system','shell_exec','passthru');
-        $text = file_get_contents($userPhpIni);
-
-        $currentSetting;
-        preg_match_all('#disable_functions =(.*)#i',$text,$currentSetting);
-        $currentlyDisabled = explode(',',$currentSetting[1][0]);
-        $finalDisabled = array_filter(array_merge($currentlyDisabled,$functionsToBlock));
-
-        //overwrite disable_functions option
-        $result = preg_replace('#disable_functions =(.*?)([^\r\n]+)#is','disable_functions = '.implode(',',$finalDisabled),$text).PHP_EOL;
-        
-        //overwrite upload_tmp_dir option to users dir
-        $result = preg_replace('#(;)?upload_tmp_dir(.*?)([^\r\n]+)#is','upload_tmp_dir = /home/'.$this->config->magento->userprefix . $this->_dbuser.'/tmp/'.PHP_EOL,$result);
-        
-        file_put_contents($userPhpIni,$result);  
     }
 
     /* Running this prevents store from reindex requirement in admin */
