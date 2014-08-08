@@ -182,11 +182,11 @@
                         <p class="description"><?php echo $item['description']; ?></p>
                         <div class="row">
                             <!-- START DETAILS BOX -->
-                            <div class="span3 panel details">
+                            <div class="span4 panel details">
                                 <h5>Configuration</h5>
                                 <div class="control-group">
                                     <div class="controls">
-                                   	<?php if(in_array($item['status'], array('closed'))): ?>
+                                    <?php if(in_array($item['status'], array('closed'))): ?>
                                         <a href="#" class="btn btn-inverse extensions-button disabled"><i class="icon icon-white icon-cog"></i> Extensions</a>
                                     <?php else: ?>
                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'extensions', 'store' => $item['domain']), 'default', true); ?>"
@@ -224,7 +224,7 @@
                             <!-- END DEPLOYMENT BOX -->
 
                             <!-- START PROBLEMS BOX -->
-                            <div class="span4 panel">
+                            <div class="span4 troubleshooting panel">
                                 <h5>Troubleshooting</h5>
                                 <div class="control-group">
                                     <div class="controls">
@@ -238,7 +238,7 @@
 
                                         ?>
                                         <a href="#" class="btn conflict-button conflict-store-<?php echo $item['id']; ?>">
-                                            Conflicts (<?php echo $conflictCount; ?>)</a>
+                                            Conflicts (<?php echo $conflict['task'] ? '~' : $conflictCount; ?>)</a>
                                     </div>
                                 </div>
                             </div>
