@@ -92,6 +92,9 @@ font-weight: 300;
     width: 900px;
     margin-left: -450px;
 }
+.conflictModal .modal-body{
+    max-height: none;
+}
 .table-bordered{
     table-layout: fixed;
 }
