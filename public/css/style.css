@@ -975,6 +975,9 @@ footer .links a {
 span.progress.progress-info{
     margin-top: 6px;
 }
+.span4.troubleshooting{
+    width: 265px;
+}
 /* Start: Recommended Isotope styles */
 /**** Isotope Filtering ****/
 .isotope-item {
@@ -2284,6 +2287,9 @@ form#extension-filter-form {
     div.form-box.custom-info div.box fieldset.custom-files .input-append.custom-sql-input input.span6 {
        width: 64%;
     }
+    .span4.troubleshooting{
+        width: 194px;
+    }
 }
 @media (max-width: 767px) {
     h1.pull-left {
@@ -2490,6 +2496,9 @@ form#extension-filter-form {
         margin-left: 20%;
         position: inherit;
         top: 0;
+    }
+    .span4.troubleshooting{
+        width: 100%;
     }
     #footer {
         text-align: center;
@@ -2733,7 +2742,9 @@ form#extension-filter-form {
     .accordion-group .accordion-inner .btn.help-button,
     .accordion-group .accordion-inner .btn.rollback-button,
     .accordion-group .accordion-inner .btn.commit-button,
-    .accordion-group .accordion-inner .btn.deploy-button {
+    .accordion-group .accordion-inner .btn.deploy-button,
+    .accordion-group .accordion-inner .btn.conflict-button,
+    .accordion-group .accordion-inner .btn.refresh-button{
         width: 90%;
         margin-bottom: 6px;
     }
