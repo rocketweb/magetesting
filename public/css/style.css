@@ -86,6 +86,33 @@ font-weight: 300;
     overflow-y: auto;
     background: #fff;
 }
+
+/* Table inside Modal */
+.conflictModal{
+    width: 900px;
+    margin-left: -450px;
+}
+.conflictModal .modal-body{
+    max-height: none;
+}
+.table-bordered{
+    table-layout: fixed;
+}
+.table-bordered td, .table-bordered th{
+    word-wrap: break-word;
+}
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width: 767px) {
+    .conflictModal{
+        width: 95%;
+        margin-left: 0;
+        display: block;
+        top: 50px;
+        left:0;
+    }
+
+}
+
 .halfoffset1 {
     margin-left: 50px;
 }
