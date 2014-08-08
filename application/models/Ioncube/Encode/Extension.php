@@ -148,6 +148,7 @@ class Application_Model_Ioncube_Encode_Extension
             ->append('--allowed-server ?', 'magetesting.com,*.magetesting.com')
             ->append('--obfuscate all')
             ->append('--obfuscation-key ?', $key)
+            ->append('--obfuscation-ex /home/ioncube/extensions/ioncube.blist')
             ->append('--ignore ?', '.svn/')
             ->append('--ignore ?', '.DS_Store')
             ->append('--encode ?', '*.php')
