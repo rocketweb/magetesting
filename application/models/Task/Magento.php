@@ -332,7 +332,7 @@ extends Application_Model_Task {
                     Order allow,deny
                     allow from all
             </Directory>
-
+            php_admin_value open_basedir /home/".$this->config->magento->userprefix . $this->_dbuser."
         </VirtualHost>";
         
         file_put_contents('/etc/apache2/sites-available/'.$this->_dbuser.'.'.$this->_serverObject->getDomain(), $content);
