@@ -154,8 +154,8 @@ $(document).ready(function(){
             $.ajax({
 
                 type: "POST",
-                url: "/queue/commit/page/"+$('#page').val(),
-                data: "domain=" + store + "&commit_comment=" + $('#commit_comment').val(),
+                url: "/queue/commit/page/" + $('#page').val(),
+                data: "domain=" + store + "&commit_comment=" + $('#commit_comment').val() + "&page=" +  $('#page').val(),
                 dataType: "json",
                 success: function(json){
                     $('#commitModal').hide();
