@@ -21,6 +21,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $this->bootstrap('db');
         $this->bootstrap('session');
+
         Zend_Session::start();
     }
 
