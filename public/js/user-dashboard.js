@@ -154,7 +154,7 @@ $(document).ready(function(){
             $.ajax({
 
                 type: "POST",
-                url: "/queue/commit",
+                url: "/queue/commit/page/"+$('#page').val(),
                 data: "domain=" + store + "&commit_comment=" + $('#commit_comment').val(),
                 dataType: "json",
                 success: function(json){
@@ -206,7 +206,7 @@ function setConflictButtons(){
 
         $.ajax({
             type: "POST",
-            url: "/queue/runconflict",
+            url: "/queue/runconflict/page/"+$('#page').val(),
             data: "store_id=" + store_id,
             dataType: "json",
             success: function(json){

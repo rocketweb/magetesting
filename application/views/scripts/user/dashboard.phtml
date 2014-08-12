@@ -108,7 +108,7 @@
                         </div>      
                         <div class="right-content pull-right inactive">
                             <div class="for-use <?php echo (in_array($item['status'], array('ready', 'error')) ? '' : 'hidden'); ?>">
-                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'])) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
+                            <a href="<?php echo $this->url(array('controller' => 'queue','action'=> 'close','domain'=>$item['domain'], 'page' => $this->page)) ?>" class="btn btn-danger btn-mini delete-store pull-right"><i class="icon icon-white icon-remove"></i></a>
                             <?php if($item['status'] == 'ready'): ?>
                                 <?php if(in_array($this->user->downgraded, array(
                                     Application_Model_User::DOWNGRADED_TOO_MANY_STORES_SYMLINKS_NOT_DELETED,
@@ -160,6 +160,7 @@
                         <input type="hidden" class="queueval" value="<?php echo $this->escape($item['queue_id']) ?>" />
                         <input type="hidden" class="userval" value="<?php echo $this->escape($item['user_id']) ?>" />
                         <input type="hidden" class="storeid" value="<?php echo $this->escape($item['id']) ?>" />
+                        <input type="hidden" class="page" id="page" value="<?php echo $this->page ?>" />
                     </div>
                 </div>
                 <?php if($item['status'] != 'closed'): ?>

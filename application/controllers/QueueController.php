@@ -375,6 +375,7 @@ class QueueController extends Integration_Controller_Action {
             'module' => 'default',
             'controller' => 'user',
             'action' => 'dashboard',
+            'page' => $this->_getParam('page',1)
         );
         if($this->_getParam('redirect') == 'admin') {
             $redirect_to['controller'] = 'queue';
@@ -916,7 +917,8 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(true);
         $domain = $this->getRequest()->getParam('domain');        
         $storeModel=  new Application_Model_Store();
-        $store = $storeModel->findByDomain($domain);      
+        $store = $storeModel->findByDomain($domain);
+        $page = $this->_getParam('page',1);
                 
         $queueModel = new Application_Model_Queue();
         $queueModel->setTask('RevisionCommit');
@@ -942,6 +944,7 @@ class QueueController extends Integration_Controller_Action {
                 'module' => 'default',
                 'controller' => 'user',
                 'action' => 'dashboard',
+                'page' => $page
         ), 'default', true);
     }
 
@@ -949,6 +952,7 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         $storeId = $this->getRequest()->getParam('store_id');
+        $page = $this->_getParam('page',1);
 
         $storeModel = new Application_Model_Store();
         $store = $storeModel->find($storeId);
@@ -985,6 +989,7 @@ class QueueController extends Integration_Controller_Action {
                 'module' => 'default',
                 'controller' => 'user',
                 'action' => 'dashboard',
+                'page' => $page
             ), 'default', true);
         }
     }
