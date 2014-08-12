@@ -19,12 +19,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     public function _initCoreSession()
     {
-        if(!defined('APPLICATION_CRON')){
-            $this->bootstrap('db');
-            $this->bootstrap('session');
+        $this->bootstrap('db');
+        $this->bootstrap('session');
 
-            Zend_Session::start();
-        }
+        Zend_Session::start();
     }
 
     /** Setting mail-transport for testing **/

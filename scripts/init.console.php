@@ -9,7 +9,6 @@
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application/'));
 define('APPLICATION_ENV', 'development');
-define('APPLICATION_CRON', true);
 
 /**
  * Setup for includes
@@ -52,7 +51,7 @@ $application = new Zend_Application(
         APPLICATION_ENV,
         $config
 );
-$bootstrap = $application->getBootstrap()->bootstrap();
+$bootstrap = $application->getBootstrap()->bootstrap(array('db','log','mail'));
 
 //initialize database
 $db = $bootstrap->getResource('db');
