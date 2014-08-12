@@ -5,7 +5,7 @@
         <input id="base-url" type="hidden" value="<?php echo $this->baseUrl(); ?>" />
 
         <?php if($storeCount > 0 AND $storeCount < (int)$this->planModel->getStores()+(int)$this->user->additional_stores-(int)$this->user->additional_stores_removed): ?>
-        <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add'))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add New Store</a>
+        <a href="<?php echo $this->url(array('controller'=>'queue', 'action' => 'add', 'page' => $this->page))?>" class="btn btn-red pull-right"><i class="icon icon-white icon-plus-sign"></i> Add New Store</a>
         <?php elseif($storeCount > 0 && (int)$storeCount < (int)$this->planModel->getStores()+(int)$this->planModel->getMaxStores() && (int)$this->planModel->getStores()+(int)$this->user->additional_stores < (int)$this->planModel->getStores()+(int)$this->planModel->getMaxStores()): ?>
         <a href="<?php echo $this->url(array('controller'=>'payment', 'action' => 'additional-stores'))?>" class="btn btn-success pull-right"><i class="icon icon-white icon-plus-sign"></i> Purchase Additional Stores</a>
         <?php endif; ?>
@@ -195,10 +195,10 @@
                                     <?php if($item['status']=='closed'): ?>
                                         <a href="#" class="btn edit-button disabled"><i class="icon icon-pencil"></i> Edit Details</a>
                                     <?php else: ?>
-                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
+                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id'], 'page' => $this->page), 'default', true); ?>"
                                            class="btn edit-button"><i class="icon icon-pencil"></i> Edit</a>
                                         <?php if(version_compare($item['version'],'1.13') >= 0 && $item['edition'] == 'EE'):  ?>
-                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-reindex', 'store' => $item['domain']), 'default', true); ?>" class="btn refresh-button"><i class="icon icon-refresh"></i> Reindex</a>
+                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-reindex', 'store' => $item['domain'], 'page' => $this->page), 'default', true); ?>" class="btn refresh-button"><i class="icon icon-refresh"></i> Reindex</a>
                                         <?php endif; ?>
                                     <?php endif; ?>
                                     </div>

@@ -41,7 +41,8 @@ class QueueController extends Integration_Controller_Action {
         
         $planModel = new Application_Model_Plan();
         $planModel->find($userModel->getPlanId());
-        
+
+        $this->view->page = (int)$this->_getParam('page',1);
         $this->view->userGroup = $this->auth->getIdentity()->group;
         $this->view->userPlan = $planModel;
     }
@@ -54,6 +55,9 @@ class QueueController extends Integration_Controller_Action {
         $this->view->versions = $versions;
         $form = new Application_Form_StoreAddClean();
         $form->populate($this->getRequest()->getParams());
+
+        $page = $this->_getParam('page',1);
+        $this->view->page = $page;
 
         $request = Zend_Controller_Front::getInstance()->getRequest();
         
@@ -162,10 +166,11 @@ class QueueController extends Integration_Controller_Action {
                 $this->_helper->FlashMessenger('New installation added to queue');
 
                 return $this->_helper->redirector->gotoRoute(array(
-                    'module' => 'default',
-                    'controller' => 'user',
-                    'action' => 'dashboard',
-                ), 'default', true);
+                                    'module' => 'default',
+                                    'controller' => 'user',
+                                    'action' => 'dashboard',
+                                    'page' => $page
+                                ), 'default', true);
             } else {
                 $this->_helper->FlashMessenger('Form needs verification');
             }
@@ -493,6 +498,7 @@ class QueueController extends Integration_Controller_Action {
 
     public function editAction() {
         $id = (int) $this->_getParam('id', 0);
+        $page = (int) $this->_getParam('page',1);
 
         $storeModel = new Application_Model_Store();
         $this->view->store = $store = $storeModel->find($id);
@@ -559,6 +565,7 @@ class QueueController extends Integration_Controller_Action {
                 'module' => 'default',
                 'controller' => 'user',
                 'action' => 'dashboard',
+                'page' => $page
             );
         }
 
@@ -1262,6 +1269,14 @@ class QueueController extends Integration_Controller_Action {
         $server = new Application_Model_Server();
 
         $domain = $request->getParam('store');
+        $page = (int)$request->getParam('page',1);
+
+        $redirect_to = array(
+            'module' => 'default',
+            'controller' => 'user',
+            'action' => 'dashboard',
+            'page' => $page
+        );
 
         if($domain) {
             $store = $store->findByDomain($domain);
@@ -1284,11 +1299,7 @@ class QueueController extends Integration_Controller_Action {
             if ($queueModel->alreadyExists('MagentoReindex', $storeModel->getId(), 0, $store->server_id)){
                 $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'Reindex is already scheduled for that store.'));
 
-                return $this->_helper->redirector->gotoRoute(array(
-                    'module' => 'default',
-                    'controller' => 'user',
-                    'action' => 'dashboard',
-                ), 'default', true);
+                return $this->_helper->redirector->gotoRoute($redirect_to, 'default', true);
             }
 
             // check if limit of reindex runs per hour is reached for a store
@@ -1298,11 +1309,7 @@ class QueueController extends Integration_Controller_Action {
             if (false === $logReindex->canRun($storeModel->getId(), $allowed)) {
                 $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You reached limit of '.$allowed.' allowed reindex runs per hour for that store. Please try again later.'));
 
-                return $this->_helper->redirector->gotoRoute(array(
-                    'module' => 'default',
-                    'controller' => 'user',
-                    'action' => 'dashboard',
-                ), 'default', true);
+                return $this->_helper->redirector->gotoRoute($redirect_to, 'default', true);
             }
 
             if ($storeModel->getStatus() == 'ready') {
@@ -1342,12 +1349,6 @@ class QueueController extends Integration_Controller_Action {
             // set error flash message otherwise
             $this->_helper->FlashMessenger(array('type' => 'error', 'message' => 'You are not allowed to schedule reindex for that store.'));
         }
-
-        $redirect_to = array(
-            'module' => 'default',
-            'controller' => 'user',
-            'action' => 'dashboard',
-        );
 
         if($this->_getParam('redirect') == 'admin') {
             $redirect_to['controller'] = 'queue';
