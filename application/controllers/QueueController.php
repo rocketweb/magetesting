@@ -166,10 +166,10 @@ class QueueController extends Integration_Controller_Action {
                 $this->_helper->FlashMessenger('New installation added to queue');
 
                 return $this->_helper->redirector->gotoRoute(array(
-                            'module' => 'default',
-                            'controller' => 'user',
-                            'action' => 'dashboard',
-                            'page' => $page 
+                                    'module' => 'default',
+                                    'controller' => 'user',
+                                    'action' => 'dashboard',
+                                    'page' => $page
                                 ), 'default', true);
             } else {
                 $this->_helper->FlashMessenger('Form needs verification');
@@ -375,6 +375,7 @@ class QueueController extends Integration_Controller_Action {
             'module' => 'default',
             'controller' => 'user',
             'action' => 'dashboard',
+            'page' => $this->_getParam('page',1)
         );
         if($this->_getParam('redirect') == 'admin') {
             $redirect_to['controller'] = 'queue';
@@ -730,6 +731,20 @@ class QueueController extends Integration_Controller_Action {
                     $not_installed = false;
                 }
             }
+            $queueModel = new Application_Model_Queue();
+
+            if( $queueModel->alreadyExists(
+                    'ExtensionInstall',
+                    $storeRow->getId(),
+                    $request->getParam('extension_id'),
+                    $storeRow->getServerId()
+                )
+            ){
+                $not_installed = false;
+            }
+
+
+
             if($not_installed) {
                 if ((int)$request->getParam('extension_id') > 0) {
                     if ($storeRow->getStatus() == 'ready') {
@@ -902,7 +917,8 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->viewRenderer->setNoRender(true);
         $domain = $this->getRequest()->getParam('domain');        
         $storeModel=  new Application_Model_Store();
-        $store = $storeModel->findByDomain($domain);      
+        $store = $storeModel->findByDomain($domain);
+        $page = $this->_getParam('page',1);
                 
         $queueModel = new Application_Model_Queue();
         $queueModel->setTask('RevisionCommit');
@@ -928,7 +944,103 @@ class QueueController extends Integration_Controller_Action {
                 'module' => 'default',
                 'controller' => 'user',
                 'action' => 'dashboard',
+                'page' => $page
         ), 'default', true);
+    }
+
+    public function runconflictAction(){
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $storeId = $this->getRequest()->getParam('store_id');
+        $page = $this->_getParam('page',1);
+
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->find($storeId);
+
+
+        //if($store != null && $this->getRequest()->isPost()){
+        if($store != null && $store->getUserId() == $this->auth->getIdentity()->id){
+            $queueModel = new Application_Model_Queue();
+
+            /* add task with ExtensionConflict */
+            if(!$queueModel->alreadyExists('ExtensionConflict', $storeId, 0, $store->getServerId())){
+                $queueModel->setStoreId($storeId);
+                $queueModel->setStatus('pending');
+                $queueModel->setUserId($this->auth->getIdentity()->id);
+                $queueModel->setParentId(
+                    $queueModel->getParentIdForExtensionInstall($storeId)
+                );
+                $queueModel->setExtensionId(0);
+                $queueModel->setServerId($store->getServerId());
+                $queueModel->setTask('ExtensionConflict');
+
+                $queueModel->save();
+
+                $store->setStatus('extension-conflict');
+                $store->save();
+            }
+
+            $this->getResponse()->setBody(
+                json_encode( array(  ) )
+            );
+        }else{
+            $this->_helper->FlashMessenger('No valid store found!');
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+                'page' => $page
+            ), 'default', true);
+        }
+    }
+
+    public function conflictAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $conflict_id = $this->getRequest()->getParam('conflict_id');
+        $ignore = $this->getRequest()->getParam('ignore') == 1 ? true : false;
+
+        $storeConflictModel = new Application_Model_StoreConflict();
+        $storeConflict = $storeConflictModel->find($conflict_id);
+
+        $storeId = (int)$storeConflict->getStoreId();
+        $storeModel = new Application_Model_Store();
+        $store = $storeModel->find($storeId);
+
+        if($storeConflict != null && $this->getRequest()->isPost() && $store->getUserId() == $this->auth->getIdentity()->id){
+            $storeConflict->setIgnore($ignore);
+            $storeConflict->save();
+
+
+            $this->conflictTable($storeId);
+
+        }else{
+            $this->_helper->FlashMessenger('No valid conflict found!');
+            return $this->_helper->redirector->gotoRoute(array(
+                'module' => 'default',
+                'controller' => 'user',
+                'action' => 'dashboard',
+            ), 'default', true);
+        }
+    }
+
+    private function conflictTable($storeId){
+        //We check if the store conflicts are in queue
+        $userId = $this->auth->getIdentity()->id;
+
+        $storeConflictModel = new Application_Model_StoreConflict();
+        $conflict = $storeConflictModel->fetchUserStoreConflicts(
+            $userId,
+            $storeId
+        );
+        $conflict = $conflict[$storeId];
+
+        $this->getResponse()->setBody(
+            json_encode(array(
+                'modalData' => $this->view->partial('_partials/conflictData.phtml', array('conflict' => $conflict)),
+                'count' => $conflict['task'] ? '~' : $conflict['count']
+            ))
+        );
     }
 
     public function deployAction() {
@@ -1335,7 +1447,7 @@ class QueueController extends Integration_Controller_Action {
         $storeModel = new Application_Model_Store();
         $userStores = $storeModel->countUserStores($userId);
 
-        if ('free-user' === $userGroup) {
+        if('free-user' === $userGroup) {
             $maxStores = (int) $this->getInvokeArg('bootstrap')
                             ->getResource('config')
                     ->magento
@@ -1351,7 +1463,7 @@ class QueueController extends Integration_Controller_Action {
             $maxStores = (int)$plan->getStores() + (int)$user->getAdditionalStores();
         }
 
-        if ($userStores >= $maxStores && 'admin' !== $userGroup) {
+        if($userStores >= $maxStores && 'admin' !== $userGroup) {
 
             $this->_helper->FlashMessenger(array('type' => 'notice', 'message' => 'You cannot have more stores.'));
             return $this->_helper->redirector->gotoRoute(array(
