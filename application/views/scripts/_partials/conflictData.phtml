@@ -1,7 +1,11 @@
 <?php if($this->conflict['task'] === true): ?>
 <div class="alert alert-success">Checking store extensions conflicts - please be patient as your request is being made.</div>
-<?php endif;
-
+<?php endif;?>
+    <p>If you see conflicts listed below this means that two or more extensions or customizations are attempting
+        to change the same core Magento functionality. This will result in unexpected behavior. You will need to
+        remove the extension or custom code you do not need or work with your developer to merge the desired functionality
+        into a single location.</p>
+<?php
 echo '<br />'.$this->partial('_partials/conflictTable.phtml', array(
     'conflict' => $this->conflict,
     'button' => true,
