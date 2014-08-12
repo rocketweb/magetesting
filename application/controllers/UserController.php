@@ -43,6 +43,7 @@ class UserController extends Integration_Controller_Action
         }
         /* check expiry date for plan stop */
 
+        $this->view->page = $page;
         $this->view->planModel = $planModel;
         $this->view->user = $this->auth->getIdentity();
         $this->view->userGroup = $this->view->user->group;
