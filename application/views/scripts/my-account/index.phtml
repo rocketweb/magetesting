@@ -120,7 +120,7 @@
                                 <div class="alert alert-success">
                                   <p><strong>Good news!</strong></p>
                                   <p>As you've purchased a Magento extension on our site, we have given you access to "<?php echo $this->raisedPlan->getName(); ?>" plan for 7 days for free.</p>
-                                  <p>You can continue using the new plan until <?php echo date("F j, Y",strtotime($this->user->getPlanRaisedToDate())) ?>. After that your plan will be changed back to "<?php echo $this->escape($this->plan->getName()); ?>".</p> 
+                                  <p>You can continue using the new plan until <?php echo date("F j, Y",strtotime($this->user->getPlanRaisedToDate())) ?>. After that your plan will be changed back to "<?php echo $this->escape($this->plan->getName()); ?>".</p>
                                 </div>
                             </div>
                         </div>
@@ -129,12 +129,12 @@
                         <?php if (!$this->user->hasPlanActive()): ?>
                         <br />
                         <div class="row">
-                          <div class="span4">Have a coupon code?</div> 
+                          <div class="span4">Have a coupon code?</div>
                           <div class="span8"><a class="btn btn-blue" href="<?php echo $this->url(array('controller' => 'my-account', 'action' => 'coupon')); ?>">Redeem your bonus!</a></div>
                         </div>
                         <?php endif; ?>
-                    
-                    
+
+
                     <?php /*
                     <div class="row">
                         <div class="span3">
@@ -171,7 +171,45 @@
                     <?php endif; ?>
                     <?php endif; ?>
                 </fieldset>
-                
+
+                <?php if(in_array($this->user->getGroup(),array('extension-owner','admin')) && $this->orders): ?>
+                <div class="tab-stripe"></div>
+                <fieldset>
+                    <legend>Extension orders</legend>
+                            <div class="row">
+                                <div class="span10">
+                                    <p>This is a list of all orders of your extensions. Order is shown after transaction is confirmed.</p>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Extension</th>
+                                            <th style="text-align:center">Version</th>
+                                            <th>Payment date</th>
+                                            <th style="text-align:center">Price</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($this->orders as $order): ?>
+                                            <tr>
+                                                <td><?php echo $order['payment_id']; ?></td>
+                                                <td><a href="<?php echo $this->url(array('controller' => 'my-extensions', 'action' => 'edit', 'id' => $order['extension_id']), 'default', true); ?>">
+                                                    <?php echo $order['name']; ?></a> </td>
+                                                <td style="text-align:center"><?php echo $order['version'].' ('.$order['edition'].')'; ?></td>
+                                                <td><?php echo date('Y-m-d H:i:s', strtotime($order['date'])); ?></td>
+                                                <td style="text-align:center">$<?php echo $order['price']; ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+
+                                    <?php echo $this->paginationControl($this->orders, 'Sliding', '_partials/paginationControl.phtml', array('page_prefix' => 'o')); ?>
+                                </div>
+                            </div>
+
+                </fieldset>
+                <?php endif; ?>
+
                 <div class="tab-stripe"></div>
                 <fieldset>
                     <legend>Invoices</legend>

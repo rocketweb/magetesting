@@ -287,4 +287,9 @@ class Application_Model_Payment {
     {
         return $this->getMapper()->fetchList();
     }
+
+    public function fetchExtensionOrders($extensionOwnerId)
+    {
+        return $this->getMapper()->fetchExtensionOrders($extensionOwnerId);
+    }
 }
