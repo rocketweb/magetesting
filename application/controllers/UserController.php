@@ -645,7 +645,7 @@ class UserController extends Integration_Controller_Action
                     }
                 }
                 // remove admin plan for users other than admin
-                if('admin' !== $user->getGroup() && 'extension-owner' !== $user->getGroup()) {
+                if('admin' !== $user->getGroup() && 'extension-owner' !== $user->getGroup() && $this->auth->getIdentity()->group != 'admin') {
                     if((int)$user->getPlanId()) {
                         $planModel = $planModel->find($user->getPlanId());
                         if((int)$planModel->getId() && (int)$planModel->getIsHidden()) {
