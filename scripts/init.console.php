@@ -9,6 +9,7 @@
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application/'));
 define('APPLICATION_ENV', 'development');
+define('APPLICATION_CRON', true);
 
 /**
  * Setup for includes
