@@ -51,7 +51,7 @@ $application = new Zend_Application(
         APPLICATION_ENV,
         $config
 );
-$bootstrap = $application->getBootstrap()->bootstrap(array('config','db','mailTransport','log'));
+$bootstrap = $application->getBootstrap()->bootstrap(array('config','db','mailTransport','log','cache'));
 
 //initialize database
 $db = $bootstrap->getResource('db');
