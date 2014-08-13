@@ -1,7 +1,7 @@
 <?php
 require_once 'init.console.php';
 
-$debug = true;
+$debug = !(sizeOf($argv) == 2 && $argv[1] == 'run');
 
 $file = new RocketWeb_Cli_Kit_File();
 $query = new RocketWeb_Cli_Query();
@@ -41,6 +41,10 @@ $stores = $storeModel->fetchAll();
 
 foreach($stores as $model){
     $domain = $model->getDomain();
+    if(!isset($allStoreUsers[$domain])){
+        $log->log('Store ('.$domain.') doesn\'t exists on FS! ('.$baseFolder.'/(user_id:'.$model->getUserId().')/public_html/'.$domain.')', Zend_Log::ALERT);
+        continue;
+    }
     $user = $allStoreUsers[$domain];
     if(($key = array_search($domain, $allFileSystemStores[$user])) !== false) {
         unset($allFileSystemStores[$user][$key]);
@@ -53,7 +57,7 @@ foreach($stores as $model){
 $dbPrivileged = Zend_Db::factory('PDO_MYSQL', $config->dbPrivileged->params);
 $DbManager = new Application_Model_DbTable_Privilege($dbPrivileged,$config);
 if($debug === true){
-    echo 'DEBUG MODE'."\n";
+    echo 'DRYRUN MODE'."\n";
 }
 foreach($allFileSystemStores as $user => $stores){
     foreach($stores as $domain){
