@@ -52,13 +52,17 @@ foreach($stores as $model){
 
 $dbPrivileged = Zend_Db::factory('PDO_MYSQL', $config->dbPrivileged->params);
 $DbManager = new Application_Model_DbTable_Privilege($dbPrivileged,$config);
-
+if($debug === true){
+    echo 'DEBUG MODE'."\n";
+}
 foreach($allFileSystemStores as $user => $stores){
     foreach($stores as $domain){
         $path = $baseFolder.'/'.$user.'/public_html/'.$domain;
         $removeCommand = $file->clear()->remove($path);
         if($debug === false){
             $removeOutput = $removeCommand->call()->getLastOutput();
+            $removeOutput = var_export($removeOutput,true);
+            $log->log("\n" . $removeCommand->toString() . "\n" . $removeOutput, Zend_Log::INFO);
         }else{
             echo $removeCommand->toString()."\n";
         }
@@ -69,6 +73,7 @@ foreach($allFileSystemStores as $user => $stores){
 
         if($debug === false){
             $DbManager->dropDatabase($dbname);
+            $log->log("MYSQL query: DROP DATABASE `".$config->magento->storeprefix.$dbname."`"."\n", Zend_Log::INFO);
         }else{
             echo "DROP DATABASE `".$config->magento->storeprefix.$dbname."`"."\n\n";
         }
