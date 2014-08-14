@@ -64,9 +64,13 @@ foreach($allFileSystemStores as $user => $stores){
         $path = $baseFolder.'/'.$user.'/public_html/'.$domain;
         $removeCommand = $file->clear()->remove($path);
         if($debug === false){
-            $removeOutput = $removeCommand->call()->getLastOutput();
-            $removeOutput = var_export($removeOutput,true);
-            $log->log("\n" . $removeCommand->toString() . "\n" . $removeOutput, Zend_Log::INFO);
+            try{
+                $removeOutput = $removeCommand->call()->getLastOutput();
+                $removeOutput = var_export($removeOutput,true);
+                $log->log("\n" . $removeCommand->toString() . "\n" . $removeOutput, Zend_Log::INFO);
+            }catch(Exception $e){
+                echo 'Catch: '.$e->getMessage()."\n";
+            }
         }else{
             echo $removeCommand->toString()."\n";
         }
@@ -76,8 +80,12 @@ foreach($allFileSystemStores as $user => $stores){
         $dbname = $login.'_'.$domain;
 
         if($debug === false){
-            $DbManager->dropDatabase($dbname);
-            $log->log("MYSQL query: DROP DATABASE `".$config->magento->storeprefix.$dbname."`"."\n", Zend_Log::INFO);
+            try{
+                $DbManager->dropDatabase($dbname);
+                $log->log("MYSQL query: DROP DATABASE `".$config->magento->storeprefix.$dbname."`"."\n", Zend_Log::INFO);
+            }catch(PDOException $e){
+                echo 'Catch: '.$e->getMessage()."\n";
+            }
         }else{
             echo "DROP DATABASE `".$config->magento->storeprefix.$dbname."`"."\n\n";
         }
