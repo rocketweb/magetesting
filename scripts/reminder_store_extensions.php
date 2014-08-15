@@ -27,7 +27,7 @@ if($result) {
         $row['url'] = $storeUrl;
         
         if($userId != $row['user_id']) {
-            sendEmail($mailData, $config, $log);
+            sendEmail($mailData, $config, $log, $view);
             $mailData = array(); 
         } 
         
