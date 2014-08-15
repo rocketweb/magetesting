@@ -13,13 +13,13 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
         parent::__construct();
     }
     
-    public function setup($appConfig, $data){
+    public function setup($appConfig, $data, $view = null){
         $this->_config = $appConfig;
 
         $this->_userObject = $data['user'];
                  
         $this->_setHeaders();
-        $this->_setView();
+        $this->_setView($view);
         $this->_setBody();
     }
     
@@ -35,8 +35,12 @@ class Integration_Mail_UserRegisterActivation extends Integration_Mail
         $this->mail->setReturnPath($from->email);
     }
     
-    protected function _setView(){
-        $this->view = Zend_Layout::getMvcInstance()->getView();
+    protected function _setView($view = null){
+        if ($view instanceof Zend_View_Abstract) {
+            $this->view = $view;
+        } else {
+            $this->view = Zend_Layout::getMvcInstance()->getView();
+        }
 
         $this->view->storeUrl = $this->_config->magento->storeUrl;
 

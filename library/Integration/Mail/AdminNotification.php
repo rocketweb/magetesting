@@ -11,7 +11,7 @@ class Integration_Mail_AdminNotification extends Integration_Mail
         parent::__construct();
     }
     
-    public function setup($mailType, $data){
+    public function setup($mailType, $data, $view = null){
         $config = new Zend_Config_Ini(
                 APPLICATION_PATH . '/configs/local.ini',
                 APPLICATION_ENV
@@ -26,7 +26,7 @@ class Integration_Mail_AdminNotification extends Integration_Mail
             . $this->_config->{$mailType}->template;
         
         $this->_setHeaders();
-        $this->_setView($data);
+        $this->_setView($data, $view);
         $this->_setBody();
     }
     
@@ -61,12 +61,13 @@ class Integration_Mail_AdminNotification extends Integration_Mail
         $this->mail->setReturnPath($from->email);
     }
     
-    protected function _setView($data){
-        /**
-         * TODO: check if it is faster than 
-         * $this->view = Zend_Layout::getMvcInstance()->getView();
-         */
-        $this->view = Zend_Layout::getMvcInstance()->getView();
+    protected function _setView($data, $view = null){
+        if ($view instanceof Zend_View_Abstract) {
+            $this->view = $view;
+        } else {
+            $this->view = Zend_Layout::getMvcInstance()->getView();
+        }
+
         $this->view->serverUrl = $this->_serverUrl;
         if(is_array($data)) {
             foreach($data as $key => $value) {

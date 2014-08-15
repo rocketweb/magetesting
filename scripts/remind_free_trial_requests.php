@@ -8,7 +8,7 @@ try {
     if($result) {
         foreach($result as $user) {
             $mail = new Integration_Mail_UserRegisterActivation();
-            $mail->setup($config, array('user' => $user));
+            $mail->setup($config, array('user' => $user), $view);
             $mail->send();
             $user->setActiveFromReminded(1)->save();
         }
