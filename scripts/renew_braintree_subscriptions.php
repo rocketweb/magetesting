@@ -89,7 +89,7 @@ if($result) {
                         include APPLICATION_PATH . '/../scripts/force_user_to_remove_stores.php';
                     }
                     $adminNotificationData = array('user' => $user, 'plan' => $plan);
-                    $adminNotification->setup('renewedPlan', $adminNotificationData);
+                    $adminNotification->setup('renewedPlan', $adminNotificationData, $view);
                     try {
                         $adminNotification->send();
                     } catch(Exception $e) {

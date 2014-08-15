@@ -27,7 +27,7 @@ if($result) {
         $row['url'] = $storeUrl;
         
         if($userId != $row['user_id']) {
-            sendEmail($mailData, $config, $log);
+            sendEmail($mailData, $config, $log, $view);
             $mailData = array(); 
         } 
         
@@ -35,7 +35,7 @@ if($result) {
         $userId = $row['user_id'];
     }
     
-    sendEmail($mailData, $config, $log);
+    sendEmail($mailData, $config, $log, $view);
     $log->log('All email with reminder buying extension sent.', Zend_Log::INFO);
 } else {
     // it's being logged each minute, commenting out (wojtek)
@@ -43,9 +43,9 @@ if($result) {
 }
 
 
-function sendEmail(array $mailData, $appConfig, $log) {
+function sendEmail(array $mailData, $appConfig, $log, $view = null) {
     $mail = new Integration_Mail_ReminderBuyExtension();
-    $mail->setup($appConfig, $mailData);
+    $mail->setup($appConfig, $mailData, $view);
 
     try {
         $mail->send();
