@@ -66,7 +66,7 @@ if (!$bootstrap->hasResource('Log')) {
 $log = $bootstrap->getResource('Log');
 
 //initialize view
-$db = $bootstrap->getResource('view');
+$view = $bootstrap->getResource('view');
 
 //check wheter the log directory is available
 if (!file_exists(APPLICATION_PATH . '/../data/logs') || !is_dir(APPLICATION_PATH . '/../data/logs')){
