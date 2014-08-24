@@ -191,7 +191,9 @@
                                     <?php else: ?>
                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'edit', 'id' => $item['id']), 'default', true); ?>"
                                            class="btn edit-button"><i class="icon icon-pencil"></i> Edit</a>
-                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-reindex', 'store' => $item['domain']), 'default', true); ?>" class="btn"><i class="icon icon-refresh"></i> Reindex</a>
+                                        <?php if(version_compare($item['version'],'1.13') >= 0 && $item['edition'] == 'EE'):  ?>
+                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'queue', 'action' => 'request-reindex', 'store' => $item['domain']), 'default', true); ?>" class="btn"><i class="icon icon-refresh"></i> Reindex</a>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                     </div>
                                 </div>
