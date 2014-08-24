@@ -154,7 +154,7 @@ $(document).ready(function(){
             $.ajax({
 
                 type: "POST",
-                url: "/queue/commit",
+                url: "/queue/commit/page/" + $('#page').val(),
                 data: "domain=" + store + "&commit_comment=" + $('#commit_comment').val(),
                 dataType: "json",
                 success: function(json){
@@ -164,7 +164,66 @@ $(document).ready(function(){
 
           });
     });
+
+    $('.conflict-button').click(function(event){
+        event.preventDefault();
+        var storeId = $(this).parentsUntil('.accordion-group').parent().find('.storeid').val();
+        $('#conflictModal'+storeId).modal({
+            show: true
+        });
+    });
+
+    setConflictButtons();
 });
+
+function setConflictButtons(){
+    $('.ignore-conflict-button, .unignore-conflict-button').click(function(event){
+        event.preventDefault(); // So it doesn't jump up
+        var id = $(this).attr('href').replace('#','');
+        var ignore = $(this).hasClass('ignore-conflict-button') ? 1 : 0;
+        var parentDiv = $(this).closest('.modal-body');
+
+        var linkClass = '.conflict-store-'+parentDiv.attr('id').replace('store_id_','');
+        var linkText = $(linkClass).text().split('(')[0];
+
+        $.ajax({
+            type: "POST",
+            url: "/queue/conflict",
+            data: "conflict_id=" + id + "&ignore="+ignore,
+            dataType: "json",
+            success: function(json){
+                parentDiv.html(json.modalData);
+                $(linkClass).text(linkText+' ('+json.count+')');
+                setConflictButtons();
+            }
+
+        });
+    });
+    $('.rerun-button').click(function(event){
+        event.preventDefault();
+        var parentDiv = $(this).closest('.modal-body');
+        var store_id = parentDiv.attr('id').replace('store_id_','');
+
+        $.ajax({
+            type: "POST",
+            url: "/queue/runconflict/page/"+$('#page').val(),
+            data: "store_id=" + store_id,
+            dataType: "json",
+            success: function(json){
+                location.reload();
+            }
+
+        });
+
+    });
+    $('.rerun-button').tooltip();
+
+    $('.show-ignored-button').click(function(){
+        $(this).siblings('.hide').removeClass('hide');
+        $(this).addClass('hide');
+    });
+}
+
 /* commit modal handle end */
 
 function niceStatus(status) {
