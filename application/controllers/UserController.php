@@ -20,6 +20,10 @@ class UserController extends Integration_Controller_Action
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage(10);
 
+        $storeConflictModel = new Application_Model_StoreConflict();
+        $storeConflicts = $storeConflictModel->fetchUserStoreConflicts(
+            $this->auth->getIdentity()->id
+        );
 
         /* check expiry date for plan start */
         $planModel = new Application_Model_Plan();
@@ -48,6 +52,7 @@ class UserController extends Integration_Controller_Action
         $this->view->user = $this->auth->getIdentity();
         $this->view->userGroup = $this->view->user->group;
         $this->view->queue = $paginator;
+        $this->view->conflicts = $storeConflicts;
         $this->view->response = $this->getResponse();
         $this->view->headScript()->appendFile($this->view->baseUrl('/public/js/user-dashboard.js'), 'text/javascript');
     }

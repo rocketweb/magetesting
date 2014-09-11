@@ -208,4 +208,9 @@ class Application_Model_QueueMapper {
             return false;
         }
     }
+
+    public function findTaskForStore($storeId, $task)
+    {
+        return $this->getDbTable()->findTaskForStore($storeId, $task);
+    }
 }

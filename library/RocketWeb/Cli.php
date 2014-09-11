@@ -19,7 +19,8 @@ class RocketWeb_Cli
         'mysql' => 'Mysql',
         'user' => 'User',
         'scp' => 'Scp',
-        'pkill' => 'Pkill'
+        'pkill' => 'Pkill',
+        'n98' => 'N98'
     );
     /**
      * Returns query object

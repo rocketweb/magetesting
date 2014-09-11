@@ -198,6 +198,59 @@ class Application_Model_Task {
     protected function _generateAdminPass() {
         return Integration_Generator::generateRandomString(7, 5, false);
     }
+
+    protected function _getIgnoredConflicts()
+    {
+        $storeId = $this->_storeObject->getId();
+        $storeConflictModel = new Application_Model_StoreConflict();
+
+        $currentConflicts = $storeConflictModel->fetchUserStoreConflicts(
+            $this->_userObject->getId(),
+            $storeId
+        );
+
+        $ignoreConflicts = array();
+
+        foreach($currentConflicts[$storeId]['ignore'] as $ignore){
+            $ignoreConflicts[] = md5($ignore['type'].$ignore['class'].$ignore['rewrites'].$ignore['loaded']);
+        }
+        return $ignoreConflicts;
+    }
+
+    protected function _checkForConflicts($getOldIgnoreConflicts = false)
+    {
+        $this->logger->log('Getting store conflicts', Zend_Log::INFO);
+        $ignoreConflicts = array();
+        if($getOldIgnoreConflicts){
+            $ignoreConflicts = $this->_getIgnoredConflicts();
+        }
+
+        $storeId = $this->_storeObject->getId();
+        $storeConflictModel = new Application_Model_StoreConflict();
+
+        $storeConflictModel->removeStoreConflicts($storeId);
+
+        $command = $this->cli('n98')->conflict(
+            $this->_storeFolder . '/' . $this->_storeObject->getDomain(),
+            $this->_userObject->getLogin()
+        );
+        $output = $command->call()->getLastOutput();
+
+        $message = var_export($output, true);
+        $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
+
+        $conflicts = $command->parseConflict();
+
+        foreach($conflicts as $c){
+            $conflict = new Application_Model_StoreConflict();
+            $conflict->setOptions($c);
+            $conflict->setStoreId($storeId);
+            $hash = md5($conflict->getType().$conflict->getClass().$conflict->getRewrites().$conflict->getLoaded());
+            $ignore = in_array($hash,$ignoreConflicts);
+            $conflict->setIgnore($ignore);
+            $conflict->save();
+        }
+    }
     
     protected function _clearStoreCache(){
         $this->logger->log('Clearing store cache.', Zend_Log::INFO);
@@ -260,7 +313,8 @@ class Application_Model_Task {
             'creating-papertrail-user',
             'creating-papertrail-system',
             'removing-papertrail-user',
-            'removing-papertrail-system'
+            'removing-papertrail-system',
+            'extension-conflict'
         );
         
         if(in_array($status,$storeStatuses) ){
