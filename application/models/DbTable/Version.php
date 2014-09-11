@@ -7,7 +7,7 @@ class Application_Model_DbTable_Version extends Zend_Db_Table_Abstract
      
     public function getVersionsByEdition( $edition )
     {
-        $select = $this->select()->where( 'edition = ? ', $edition )->order(array('sorting_order ASC'));
+        $select = $this->select()->where( 'edition = ? ', $edition )->order(array('sorting_order DESC'));
         return $this->fetchAll( $select )->toArray();
     }
     
