@@ -381,8 +381,8 @@ extends Application_Model_Task {
         $command = $this->cli()->createQuery(
             'su ?  -c "timeout 10m /usr/bin/php -c /etc/php5/cli/restricted_cli.ini -f ? -- --reindexall"',
             array(
-                $this->config->magento->userprefix . $this->_dbuser,
-                '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php'
+                $this->config->magento->userprefix . $this->_userObject->getLogin(),
+                '/home/'.$this->config->magento->userprefix . $this->_userObject->getLogin() . '/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php'
             )
         );
         if($return === true) return $command;
