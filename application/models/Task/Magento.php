@@ -377,14 +377,16 @@ extends Application_Model_Task {
     }
 
     /* Running this prevents store from reindex requirement in admin */
-    protected function _reindexStore(){
-        return $this->cli()->createQuery(
+    protected function _reindexStore($return = false){
+        $command = $this->cli()->createQuery(
             'su ?  -c "timeout 10m /usr/bin/php -c /etc/php5/cli/restricted_cli.ini -f ? -- --reindexall"',
             array(
                 $this->config->magento->userprefix . $this->_dbuser,
                 '/home/'.$this->config->magento->userprefix . $this->_dbuser.'/public_html/'.$this->_storeObject->getDomain().'/shell/indexer.php'
             )
-        )->call();
+        );
+        if($return === true) return $command;
+        $command->call();
     }
     
     protected function _setUserQuota(){
