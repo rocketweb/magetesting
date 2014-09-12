@@ -378,7 +378,7 @@ extends Application_Model_Task {
 
     /* Running this prevents store from reindex requirement in admin */
     protected function _reindexStore(){
-        $this->cli()->createQuery(
+        return $this->cli()->createQuery(
             'su ?  -c "timeout 10m /usr/bin/php -c /etc/php5/cli/restricted_cli.ini -f ? -- --reindexall"',
             array(
                 $this->config->magento->userprefix . $this->_dbuser,

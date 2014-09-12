@@ -29,11 +29,8 @@ implements Application_Model_Task_Interface {
 
         chdir($this->_storeFolder . '/' . $this->_storeObject->getDomain());
 
-        $command = $this->cli()->createQuery(
-            'su '.$this->config->magento->userprefix . $this->_userObject->getLogin().' -c "timeout 10m /usr/bin/php -c /etc/php5/cli/restricted_cli.ini -f shell/indexer.php -- --reindexall"'
-        );
-
-        $output = $command->call()->getLastOutput();
+        $command = $this->_reindexStore();
+        $output = $command->getLastOutput();
 
         $lastOutput = end($output); 
 
