@@ -29,8 +29,8 @@ implements Application_Model_Task_Interface {
 
         chdir($this->_storeFolder . '/' . $this->_storeObject->getDomain());
 
-        $command = $this->_reindexStore();
-        $output = $command->getLastOutput();
+        $command = $this->_reindexStore(true);
+        $output = $command->call()->getLastOutput();
 
         $lastOutput = end($output); 
 
