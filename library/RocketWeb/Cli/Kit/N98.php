@@ -35,7 +35,8 @@ class RocketWeb_Cli_Kit_N98
     {
         $conflicts = array();
 
-       $xml=simplexml_load_file($this->_cacheFile);
+
+        $xml=simplexml_load_file($this->_cacheFile);
 
         $child = $xml->testsuite->testcase;
         $failures = (int)$child->attributes()->failures;
@@ -58,6 +59,10 @@ class RocketWeb_Cli_Kit_N98
             $conflicts[] = $conflict;
         }
         return $conflicts;
+    }
+
+    public function getCachePath(){
+        return $this->_cacheFile;
     }
 
     private function stringBetween($string,$partA,$partB = '')

@@ -143,4 +143,8 @@ class RocketWeb_Cli_Kit_File
         }
         return $output;
     }
+    public function getContent($path){
+        $this->append('cat ?',$path);
+        return $this;
+    }
 }
