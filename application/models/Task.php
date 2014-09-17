@@ -239,16 +239,21 @@ class Application_Model_Task {
         $message = var_export($output, true);
         $this->logger->log("\n".$command."\n" . $message, Zend_Log::DEBUG);
 
-        $conflicts = $command->parseConflict();
+        $contentCommand = $this->cli('file')->getContent($command->getCachePath());
+        $output = $contentCommand->call()->getLastOutput();
 
-        foreach($conflicts as $c){
-            $conflict = new Application_Model_StoreConflict();
-            $conflict->setOptions($c);
-            $conflict->setStoreId($storeId);
-            $hash = md5($conflict->getType().$conflict->getClass().$conflict->getRewrites().$conflict->getLoaded());
-            $ignore = in_array($hash,$ignoreConflicts);
-            $conflict->setIgnore($ignore);
-            $conflict->save();
+        if(sizeOf($output) > 0){
+            $conflicts = $command->parseConflict();
+
+            foreach($conflicts as $c){
+                $conflict = new Application_Model_StoreConflict();
+                $conflict->setOptions($c);
+                $conflict->setStoreId($storeId);
+                $hash = md5($conflict->getType().$conflict->getClass().$conflict->getRewrites().$conflict->getLoaded());
+                $ignore = in_array($hash,$ignoreConflicts);
+                $conflict->setIgnore($ignore);
+                $conflict->save();
+            }
         }
     }
     
