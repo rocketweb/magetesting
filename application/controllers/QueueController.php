@@ -72,10 +72,24 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
 
+                if($this->auth->getIdentity()->server_id === null){
+                    if ($log = $this->getLog()) {
+                        $errorMessage = 'ServerId missing:'.
+                            var_export($this->auth->getIdentity(), true).
+                            var_export($user->__toArray(),true);
+                        $log->log($errorMessage, LOG_ERR);
+                    }
+
+                    $server = new Application_Model_Server();
+                    $server_id = $server->fetchMostEmptyServerId();
+                    $user->setServerId($server_id);
+                    $user->save();
+                }
+
                 $storeModel->setVersionId($form->version->getValue())
                         ->setEdition($form->edition->getValue())
                         ->setUserId($userId)
-                        ->setServerId($this->auth->getIdentity()->server_id)
+                        ->setServerId($user->getServerId())
                         ->setSampleData($form->sample_data->getValue())
                         ->setStoreName($form->store_name->getValue())
                         ->setDomain(Integration_Generator::generateRandomString(5, 4))
