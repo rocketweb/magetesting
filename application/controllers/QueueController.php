@@ -111,7 +111,7 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setTask('MagentoInstall');
                 $queueModel->setStatus('pending');
                 $queueModel->setUserId($this->auth->getIdentity()->id);
-                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setServerId($user->getServerId());
                 $queueModel->setExtensionId(0);  
                 $queueModel->setParentId(0);  
                 $queueModel->save();
@@ -125,7 +125,7 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setTask('RevisionInit');
                 $queueModel->setStatus('pending');
                 $queueModel->setUserId($this->auth->getIdentity()->id);
-                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setServerId($user->getServerId());
                 $queueModel->setExtensionId(0);  
                 $queueModel->setParentId($installId);  
                 $queueModel->save();
@@ -144,7 +144,7 @@ class QueueController extends Integration_Controller_Action {
                     );
                 $queueModel->setStatus('pending');
                 $queueModel->setUserId($this->auth->getIdentity()->id);
-                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setServerId($user->getServerId());
                 $queueModel->setExtensionId(0);  
                 $queueModel->setParentId($initId);  
                 $queueModel->save();
@@ -157,7 +157,7 @@ class QueueController extends Integration_Controller_Action {
                     $queueModel->setTask('PapertrailUserCreate');
                     $queueModel->setStatus('pending');
                     $queueModel->setUserId($this->auth->getIdentity()->id);
-                    $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                    $queueModel->setServerId($user->getServerId());
                     $queueModel->setExtensionId(0);  
                     $queueModel->setParentId($installId);  
                     $queueModel->save();
@@ -172,7 +172,7 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setTask('PapertrailSystemCreate');
                 $queueModel->setStatus('pending');
                 $queueModel->setUserId($this->auth->getIdentity()->id);
-                $queueModel->setServerId($this->auth->getIdentity()->server_id); 
+                $queueModel->setServerId($user->getServerId());
                 $queueModel->setExtensionId(0);  
                 $queueModel->setParentId($installId);  
                 $queueModel->save();
