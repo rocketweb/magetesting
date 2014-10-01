@@ -1,0 +1,80 @@
+<?php echo $this->render('_partials/helpBreadcrumbs.phtml'); ?>
+
+<div class="row">
+    <div class="span12 help">
+        
+        <?php echo $this->render('_partials/helpSideMenu.phtml'); ?>
+
+        <div class="span9 help-main">
+            <div class="form-box">
+                <div class="box">
+                    <div class="tab-stripe"></div>
+                    <div class="row">
+                        <div class="span8">
+                            <h3>Changes in imported store.</h3>
+                        </div>
+                        <div class="span8 content">
+                            <p>In order to import Magento store to Mage Testing and run it in our environment, we need to make some changes in store files and configuration at the time of import. These steps ensures that your store will work properly on Mage Testing.</p>
+
+                            <h4>Config files changes</h4>
+
+                            <h5>Main config file</h5>
+                            <p>We altered database connection string in <code>app/etc/local.xml</code> file in order to use database copied from your store to Mage Testing servers.</p>
+
+                            <p>We have also resetted value of <code>&lt;lightspeed&gt;&lt;cache&gt;&lt;type&gt;</code> and <code>&lt;lightspeed&gt;&lt;session&gt;&lt;type&gt;</code> nodes if they exist. They are used by TinyBrick's Lightspeed module and we needed to make sure that there is file type cache backend enabled instead of memcache one.</p>
+
+                            <h5>Magento Connect configuration</h5>
+                            <p>We have altered magento connect configuration located in <code>downloader/connect.cfg</code> in order to let you use Magento Connect in your sandbox store backend.</p>
+
+                            <h4>Magento configuration and database changes</h4>
+
+                            <h5>Demo store notice</h5>
+                            <p>We have enabled demo store notice in imported store, to let you clearly know that site should be used only for development purposes.</p>
+
+                            <h5>Error logging</h5>
+                            <p>We have enabled logging to <code>system.log</code> and <code>exception.log</code> in order to let you browse logs and debug in Paper Trail service integrated with Mage Testing.</p>
+
+                            <h5>Base URL</h5>
+                            <p>We changed base url to fit sandbox URL on Mage Testing servers by changing values of <code>web/unsecure/base_url</code> and <code>web/secure/base_url</code> config directives.</p>
+
+                            <h5>Cookie path</h5>
+                            <p>We changed value of <code>web/cookie/cookie_path</code> and <code>web/cookie/cookie_domain</code> config directives to make sure that sessions work properly on Mage Testing sandbox.</p>
+
+                            <h5>Google Analytics</h5>
+                            <p>We disabled Google Analytics by resetting values of <code>google/analytics/active</code> and <code>google/analytics/account</code> to make sure your views on Sandbox won't have influence on live site analytics.</p>
+
+                            <h5>Backend user changes</h5>
+                            <p>We resetted backend user e-mail addresses to <code>@example.com</code> and added new account with the same username as Mage Testing username. If user with this username already exists, we just updated his password. This will let you use one click backend login in Mage Testing.</p>
+
+                            <h5>Admin security notification</h5>
+                            <p>We disabled admin security notification. It checks if <code>app/etc/local.xml</code> is accessible and logs error message on each request. We disabled that to improve your debug log readability.</p>
+
+                            <h5>Log tables</h5>
+                            <p>We cleaned all log tables to improve performance of sandbox store.</p>
+
+                            <h5>Store contact email addresses</h5>
+                            <p>We have changed store contact email addresses to avoid sending emails to live site addresses.</p>
+
+                            <h4>Patched files and file changes</h4>
+
+                            <h5>Zend XmlRpc library</h5>
+                            <p>We applied security patch to fix Zend Framework critical bug in Zend_XmlRpc module.</p>
+
+                            <h5>GIT</h5>
+                            <p>As we use GIT for sandbox store version control, we removed any existing <code>.git</code> directories and <code>.gitignore</code> file.</p>
+
+                            <h4>Not imported resources</h4>
+                            <p>We dind't imported directories which can contain siginificant amount of data:</p>
+                            <ul>
+                                <li><code>media/</code></li>
+                                <li><code>var/</code></li>
+                            </ul>
+                            <p>As contents of <code>media/</code> is not imported, your product images and other custom uploaded images may not be displayed. Content of <code>var/</code> directory is used for dynamically created content, mainly for cache, export files, logs etc. However, it shouldn't affect your ability to test site in Mage Testing.</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

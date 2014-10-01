@@ -15,6 +15,7 @@ class Application_Model_Transport {
     protected $_errorMessage = '';
     protected $_cli;
 
+    protected $_storeObject ='';
     protected $logger = NULL;
 
     public function __construct()

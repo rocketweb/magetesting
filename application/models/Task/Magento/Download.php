@@ -563,17 +563,15 @@ implements Application_Model_Task_Interface {
         $sqlfound = false;
         $unpacked = 0;
 
-        /* check for gz */
         $path_parts = pathinfo($this->_customSql);
         $sqlname = $path_parts['basename'];
 
         $this->logger->log($sqlname, Zend_Log::DEBUG);
 
-        $not_gzipped = $this->cli('gzip')->test($sqlname)->call()->getLastStatus();
-        if ((int)$not_gzipped
-        ) {
+        if (strtolower($path_parts['extension']) == 'sql') {
             $sqlfound = true;
             $unpacked = 1;
+            $this->logger->log($sqlname.' is .sql', Zend_Log::DEBUG);
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
@@ -658,8 +656,9 @@ implements Application_Model_Task_Interface {
         }
     }
 
-    protected function _updateDemoNotice(){
-        $this->_taskMysql->updateDemoNotice();
+    protected function _updateDemoNotice()
+    {
+        $this->_taskMysql->updateDemoNotice($this->config->magento->storeUrl);
     }
 
     protected function _detectTablePrefix(){
