@@ -991,10 +991,10 @@ class QueueController extends Integration_Controller_Action {
                 $store->setStatus('extension-conflict');
                 $store->save();
             }
-
             $this->getResponse()->setBody(
                 json_encode( array(  ) )
             );
+            $this->_helper->FlashMessenger('Checking for extension conflicts');
         }else{
             $this->_helper->FlashMessenger('No valid store found!');
             return $this->_helper->redirector->gotoRoute(array(
