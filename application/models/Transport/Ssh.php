@@ -58,7 +58,7 @@ extends Application_Model_Transport {
         if(substr($customHost,-1)!="/"){
             $customHost .= '/';
         }
-
+        
         $this->_customHost = $customHost;
         
         //PORT
