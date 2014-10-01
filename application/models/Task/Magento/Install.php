@@ -78,8 +78,6 @@ implements Application_Model_Task_Interface {
         }
 
         $this->_fixUserHomeChmod();
-        
-        $this->_activateDemoNotice();
 
         if('ee' === strtolower($this->_magentoEdition)) {
             $this->_encodeEnterprise('clean');

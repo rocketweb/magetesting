@@ -168,35 +168,6 @@ class Application_Model_ExtensionMapper {
         return $entries;
     }
 
-    public function fetchAllWithSameName($name = '')
-    {
-        $resultSet = $this->getDbTable()->fetchAll("`name` = '".$name."'");
-        $entries   = array();
-        foreach ($resultSet as $row) {
-            $entry = new Application_Model_Extension();
-            $entry->setId($row->id)
-                ->setName($row->name)
-                ->setDescription($row->description)
-                ->setCategoryId($row->category_id)
-                ->setAuthor($row->author)
-                ->setLogo($row->logo)
-                ->setVersion($row->version)
-                ->setExtension($row->extension)
-                ->setExtensionEncoded($row->extension_encoded)
-                ->setExtensionKey($row->extension_key)
-                ->setFromVersion($row->from_version)
-                ->setToVersion($row->to_version)
-                ->setEdition($row->edition)
-                ->setIsVisible($row->is_visible)
-                ->setPrice($row->price)
-                ->setSort($row->sort)
-                ->setExtensionDetail($row->extension_detail)
-                ->setExtensionDocumentation($row->extension_documentation);
-            $entries[] = $entry;
-        }
-        return $entries;
-    }
-
     public function getKeys() {
 
         $temp = array();

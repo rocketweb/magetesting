@@ -128,8 +128,6 @@ class Application_Form_StoreAddCustom extends Integration_Form{
                     $regexSql
                 )
             ));
-
-
 //        $this->custom_sql->setValue('ie. /website/html/dump.sql');
         
         $this->addElement('text', 'custom_login', array(

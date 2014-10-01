@@ -9,7 +9,7 @@
             }
         }
     ?>
-   
+    
     <?php foreach( $page->pages as $subpage ): ?>
         <?php if($this->menu()->accept($subpage)):
         $class = array();
@@ -46,17 +46,17 @@
 				<ul class="dropdown-menu">
 					<?php foreach( $subpage->pages as $dropdownpage ): ?>
                         <?php if($this->menu()->accept($dropdownpage)): ?>
-                            <li><?php echo $this->iconMenu()->htmlify($dropdownpage); ?></li>
+					        <li><?php echo $this->iconMenu()->htmlify($dropdownpage); ?></li>
                         <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
-            </li>
+					<?php endforeach; ?>
+				</ul>
+			</li>
             <?php else: ?>
             <li class="<?php echo $class; ?>">
                 <?php echo $this->iconMenu()->htmlify($subpage); ?>
             </li>
-            <?php endif; ?>
-            <?php $index++; ?>
+			<?php endif; ?>
+        <?php $index++; ?>
         <?php endif; ?>
     <?php endforeach; ?>
 </ul>

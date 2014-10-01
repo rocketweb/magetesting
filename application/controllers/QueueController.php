@@ -966,8 +966,8 @@ class QueueController extends Integration_Controller_Action {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         $storeId = $this->getRequest()->getParam('store_id');
-        $page = $this->_getParam('page',1);
 
+        $page = $this->_getParam('page',1);
         $storeModel = new Application_Model_Store();
         $store = $storeModel->find($storeId);
 

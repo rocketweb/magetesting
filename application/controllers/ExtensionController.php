@@ -347,7 +347,7 @@ class ExtensionController extends Integration_Controller_Action {
                         }
                     }
                 }
-                
+
                 if(!$errors) {
                     try {
                         $extension->setOptions($formData);

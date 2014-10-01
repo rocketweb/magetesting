@@ -368,7 +368,6 @@ $(document).ready(function () {
     	RowHeight         = ElementHeight + ElementPad;
     	
     if($extensions_isotope.length) {
-        // Icon positioning fix
         // $extensions_isotope.imagesLoaded(function() {
         //     $('.element.premium .wrapper div.icon').css({
         //         'margin-top': function(){
@@ -801,20 +800,13 @@ $(document).ready(function () {
         $('#extension-form select[name$="_version"]:hidden').remove();
     });
     
-    $("#iconmenu-help, #context-help i, .additional-help").click(function () {
+    $("#iconmenu-help, #context-help i").click(function () {
         var $helpBlock = $('#wrap-context-help');
-
-        if ($helpBlock.length == 0) {
-            return;
-        }
-
         $helpBlock.animate({
             right: parseInt($helpBlock.css('right'), 10) == 0 ?
                 -$helpBlock.outerWidth() :
                 0
         });
-
-        return false;
     });
 
     /*var $free_trial = $('.free-trial');

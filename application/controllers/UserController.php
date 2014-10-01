@@ -880,8 +880,7 @@ class UserController extends Integration_Controller_Action
                 'coupon'   => $coupon,
                 'plans'    => $plans,
                 'payments' => $payments,
-                'stores' => $stores_view,
-                'extensions' => $extension_view
+                'stores' => $stores_view
             )
         );
     }
