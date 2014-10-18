@@ -329,6 +329,7 @@ class Application_Model_UserMapper {
                       ->setAddedDate($row->added_date)
                       ->setStatus($row->status)
                       ->setPlanId($row->plan_id)
+                      ->setServerId($row->server_id)
                       ->setPlanActiveTo($row->plan_active_to)
                       ->setHasSystemAccount($row->has_system_account)
                       ->setSystemAccountName($row->system_account_name)
