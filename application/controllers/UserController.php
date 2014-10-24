@@ -413,6 +413,7 @@ class UserController extends Integration_Controller_Action
                     $user->setPlanActiveTo(
                         date('Y-m-d H:i:s',time() + 50*365*24*3600)
                     );
+                    $user->setStatus('inactive');
                     $user->save(); // to have id set
                     $user->setPlanId($plan_id);
                 } else {
