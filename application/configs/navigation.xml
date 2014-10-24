@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configdata>
     <nav>
-        <label>Task Manager</label>
+        <label>Mage Testing</label>
         <module>default</module>
         <controller>index</controller>
         <action>index</action>
@@ -162,10 +162,58 @@
             <help>
                 <label>Help</label>
                 <id>help</id>
-                <uri>#</uri>
-                <resource>default_user</resource>
-                <privilege>logout</privilege>
+                <uri>/help</uri>
+                <resource>default_help</resource>
+                <privilege>index</privilege>
                 <icon>icon-white icon-question-sign</icon>
+                <pages>
+                    <helpImportingStore>
+                        <label>Importing store</label>
+                        <route>help-category</route>
+                        <params>
+                            <category>importing-store</category>
+                        </params>
+                        <reset_params>true</reset_params>
+                        <pages>
+                            <helpImportingStore>
+                                <label>Changes in imported store.</label>
+                                <route>help-page</route>
+                                <params>
+                                    <category>importing-store</category>
+                                    <page>changes-in-imported-store</page>
+                                </params>
+                                <reset_params>true</reset_params>
+                            </helpImportingStore>
+                        </pages>
+                    </helpImportingStore>
+                    <helpExtensionOwners>
+                        <label>Extension owners</label>
+                        <route>help-category</route>
+                        <params>
+                            <category>extension-owners</category>
+                        </params>
+                        <reset_params>true</reset_params>
+                        <pages>
+                            <helpPreparingExtensionFile>
+                                <label>Preparing extension file.</label>
+                                <route>help-page</route>
+                                <params>
+                                    <category>extension-owners</category>
+                                    <page>preparing-extension-file</page>
+                                </params>
+                                <reset_params>true</reset_params>
+                            </helpPreparingExtensionFile>
+                        </pages>
+                    </helpExtensionOwners>
+                    <!--<helpDeploymentRollbacks>
+                        <label>Deployment, rollbacks</label>
+                        <route>help-category</route>
+                        <params>
+                            <category>deployment-rollbacks</category>
+                        </params>
+                        <reset_params>true</reset_params>
+                    </helpDeploymentRollbacks>-->
+                </pages>
             </help>
             <userLogout>
                 <label>Logout</label>
