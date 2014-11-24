@@ -418,8 +418,8 @@ extends Application_Model_Task {
      * to handle this correctly
      */
     protected function _updateConnectFiles(){
-       
-        if ($this->_versionObject->getVersion() > '1.4.2.0'){
+        
+        if (version_compare($this->_versionObject->getVersion(), '1.4.2.0') == 1){
             $files_to_update = array(
                 'downloader/Maged/Model/Config/Abstract.php',
                 'downloader/Maged/Model/Connect.php',
