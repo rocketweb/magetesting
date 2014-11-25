@@ -106,7 +106,7 @@ font-weight: 300;
     .conflictModal{
         width: 95%;
         margin-left: 0;
-        display: block;
+        display: none;
         top: 50px;
         left:0;
     }

@@ -18,3 +18,4 @@ tests/log/
 tests/test.log
 public/assets/
 public/img/extensions/thumbs/
+*config.codekit
