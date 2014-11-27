@@ -2805,9 +2805,6 @@ form#extension-filter-form {
     table.compare-table thead tr th.compare-table-data-name, table.compare-table tbody tr td.compare-table-data, table.compare-table tbody tr td.compare-table-price-button {
         width: 110px;
     }
-    table.compare-table thead tr th.compare-table-data-name, th.compare-table-title-row {
-        height: 120px;
-    }
 
     table.compare-table thead tr th.compare-table-empty-first,
     table.compare-table tbody tr td.compare-table-empty {
@@ -3217,9 +3214,8 @@ form#extension-filter-form {
        width: 80px;
    }
    table.compare-table thead tr th.compare-table-data-name, th.compare-table-title-row {
-       height: 120px;
+       height: 140px;
    }
-   
    table.compare-table thead tr th.compare-table-empty-first, table.compare-table tbody tr td.compare-table-empty {
        width: 10px;
        min-width: 0;
@@ -3228,6 +3224,9 @@ form#extension-filter-form {
    span.compare-table-title  {
        font-size: 16px;
        padding: 26px 0 0 10px;
+   }
+   .compare-table-data-name h3 span{
+        font-size: 14px;
    }
    .compare-table th, .compare-table td {
        padding: 0;
