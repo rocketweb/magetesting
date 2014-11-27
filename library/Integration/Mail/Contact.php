@@ -15,12 +15,12 @@ class Integration_Mail_Contact extends Integration_Mail
         $this->_config = $appConfig;
         $this->_formData = $data['formData'];
         
-        $this->_setHeaders();
+        $this->_setHeaders($data['formData']);
         $this->_setView();
         $this->_setBody();
     } 
     
-    protected function _setHeaders(){     
+    protected function _setHeaders($formData){
         $from = $this->_config->contact->message->from;
         $this->mail->setFrom($from->email, $from->desc);
         $emails = $this->_config->contact->message->emails;
@@ -35,7 +35,7 @@ class Integration_Mail_Contact extends Integration_Mail
         }
 
         $this->mail->setSubject($this->_config->contact->message->subject);
-        $this->mail->setReplyTo( $from->email, $from->desc );
+        $this->mail->setReplyTo( $formData->sender_email, $formData->sender_name );
         $this->mail->setReturnPath($from->email);
     }
     
