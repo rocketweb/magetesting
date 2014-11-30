@@ -18,7 +18,7 @@ if [ $# -eq 4 ]; then
     fi
 
     #create user if not exists
-    if [ !`egrep -i "^$username" /etc/passwd > /dev/null` ]; then
+    if [ !`egrep -i "^${args[0]}" /etc/passwd > /dev/null` ]; then
         /usr/sbin/useradd -p `mkpasswd ${args[1]}` -m ${args[0]} -g ${args[0]}
     fi
 
