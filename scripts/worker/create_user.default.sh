@@ -24,7 +24,7 @@ if [ $# -eq 4 ]; then
 
     #create user if not exists
     if [ !`egrep -i "^${args[0]}" /etc/passwd > /dev/null` ]; then
-        /usr/sbin/useradd -p "mkpasswd ${args[1]}" -d ${args[3]}/${args[0]} -g ${args[0]} ${args[0]}
+        /usr/sbin/useradd -p `mkpasswd ${args[1]}` -d ${args[3]}/${args[0]} -g ${args[0]} ${args[0]}
         /bin/cp -r "/etc/skel/." "${args[3]}/${args[0]}"
     fi
 
