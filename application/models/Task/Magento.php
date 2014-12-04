@@ -416,26 +416,27 @@ extends Application_Model_Task {
      */
     protected function _addConnectChannels()
     {
-        chdir($this->_storeFolder);
         $this->_magentoEdition = $this->_storeObject->getEdition();
 
-        $output = $this->cli()->createQuery(
-            'mage channel-add :channel'
+        $command = $this->cli()->createQuery(
+            $this->_storeFolder . '/' . $this->_domain . '/mage channel-add :channel'
         )->bindAssoc(array(
-                'channel' => 'http://connect20.magentocommerce.com/community'
-            ))->call()->getLastOutput();
+                ':channel' => 'http://connect20.magentocommerce.com/community'
+            ));
+        $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
-        $this->logger->log($message, Zend_Log::DEBUG);
+        $this->logger->log($command . "\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
         if ($this->_magentoEdition == 'EE') {
-            $output = $this->cli()->createQuery(
-                'mage channel-add :channel'
+            $command = $this->cli()->createQuery(
+                $this->_storeFolder . '/' . $this->_domain . '/mage channel-add :channel'
             )->bindAssoc(array(
-                    'channel' => 'http://connect20.magentocommerce.com/enterprise'
-                ))->call()->getLastOutput();
+                    ':channel' => 'https://connect20.magentocommerce.com/enterprise'
+                ));
+            $output = $command->call()->getLastOutput();
             $message = var_export($output, true);
-            $this->logger->log($message, Zend_Log::DEBUG);
+            $this->logger->log($command . "\n" . $message, Zend_Log::DEBUG);
             unset($output);
         }
     }
