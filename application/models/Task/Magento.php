@@ -409,7 +409,37 @@ extends Application_Model_Task {
             )
         )->call();
     }
-    
+
+    /**
+     *
+     *
+     */
+    protected function _addConnectChannels()
+    {
+        chdir($this->_storeFolder);
+        $this->_magentoEdition = $this->_storeObject->getEdition();
+
+        $output = $this->cli()->createQuery(
+            './mage channel-add :channel'
+        )->bindAssoc(array(
+                'channel' => 'http://connect20.magentocommerce.com/community'
+            ))->call()->getLastOutput();
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+        unset($output);
+
+        if ($this->_magentoEdition == 'EE') {
+            $output = $this->cli()->createQuery(
+                './mage channel-add :channel'
+            )->bindAssoc(array(
+                    'channel' => 'http://connect20.magentocommerce.com/enterprise'
+                ))->call()->getLastOutput();
+            $message = var_export($output, true);
+            $this->logger->log($message, Zend_Log::DEBUG);
+            unset($output);
+        }
+    }
+
     /**
      * The purpose of this method is to replace calls to sys_get_temp dir()
      * with calls to getenv('TMPDIR')
