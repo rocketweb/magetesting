@@ -420,7 +420,7 @@ extends Application_Model_Task {
         $this->_magentoEdition = $this->_storeObject->getEdition();
 
         $output = $this->cli()->createQuery(
-            './mage channel-add :channel'
+            'mage channel-add :channel'
         )->bindAssoc(array(
                 'channel' => 'http://connect20.magentocommerce.com/community'
             ))->call()->getLastOutput();
@@ -430,7 +430,7 @@ extends Application_Model_Task {
 
         if ($this->_magentoEdition == 'EE') {
             $output = $this->cli()->createQuery(
-                './mage channel-add :channel'
+                'mage channel-add :channel'
             )->bindAssoc(array(
                     'channel' => 'http://connect20.magentocommerce.com/enterprise'
                 ))->call()->getLastOutput();
