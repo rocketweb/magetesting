@@ -20,7 +20,8 @@ class RocketWeb_Cli
         'user' => 'User',
         'scp' => 'Scp',
         'pkill' => 'Pkill',
-        'n98' => 'N98'
+        'n98' => 'N98',
+        'composer' => 'Composer'
     );
     /**
      * Returns query object

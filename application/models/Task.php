@@ -74,7 +74,7 @@ class Application_Model_Task {
     /**
      * Sets class's objects we'll be working on
      */
-    public function setup(Application_Model_Queue &$queueElement) {
+    public function setup(Application_Model_Queue $queueElement) {
         $this->_queueObject = $queueElement;
         
         //setup other model objects (user/version/store)

@@ -17,7 +17,7 @@ extends Application_Model_Task {
         
         parent::setup($queueElement);
 
-        if(in_array($queueElement->getTask(),array('MagentoInstall','MagentoDownload'))){
+        if(in_array($queueElement->getTask(),array('MagentoInstall','MagentoInstall2','MagentoDownload'))){
                        
             $this->_dbhost = 'localhost';
             $this->_dbuser = $this->_userObject->getLogin(); //fetch from zend config
@@ -418,7 +418,7 @@ extends Application_Model_Task {
      * to handle this correctly
      */
     protected function _updateConnectFiles(){
-        
+
         if (version_compare($this->_versionObject->getVersion(), '1.4.2.0') == 1){
             $files_to_update = array(
                 'downloader/Maged/Model/Config/Abstract.php',
