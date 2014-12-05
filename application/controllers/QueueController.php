@@ -115,6 +115,13 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setExtensionId(0);  
                 $queueModel->setParentId(0);  
                 $queueModel->save();
+
+                $versionModel = new Application_Model_Version();
+                $version = $versionModel->find($storeModel->getVersionId());
+                if($version->getEdition() == 'CE' && version_compare($version->getVersion(),'2.0.0.0') == 1){
+                    $queueModel->setTask('MagentoInstall2');
+                    $queueModel->save();
+                }
                 
                 $installId = $queueModel->getId();
                 
@@ -352,7 +359,7 @@ class QueueController extends Integration_Controller_Action {
                         'type' => 'success',
                         'message' => 'You have successfully added your custom store to queue.'
                     )
-                );
+                ); 
                 return $this->_helper->redirector->gotoRoute(array(
                     'module' => 'default',
                     'controller' => 'user',
@@ -991,10 +998,10 @@ class QueueController extends Integration_Controller_Action {
                 $store->setStatus('extension-conflict');
                 $store->save();
             }
+
             $this->getResponse()->setBody(
                 json_encode( array(  ) )
             );
-            $this->_helper->FlashMessenger('Checking for extension conflicts');
         }else{
             $this->_helper->FlashMessenger('No valid store found!');
             return $this->_helper->redirector->gotoRoute(array(
