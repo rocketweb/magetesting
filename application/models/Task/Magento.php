@@ -428,7 +428,8 @@ extends Application_Model_Task {
         $this->logger->log($command . "\n" . $message, Zend_Log::DEBUG);
         unset($output);
 
-        if ($this->_magentoEdition == 'EE') {
+        /* * Currently we only set community channel since enterpirse channel is reporting errors
+         * if ($this->_magentoEdition == 'EE') {
             $command = $this->cli()->createQuery(
                 $this->_storeFolder . '/' . $this->_domain . '/mage channel-add :channel'
             )->bindAssoc(array(
@@ -438,7 +439,7 @@ extends Application_Model_Task {
             $message = var_export($output, true);
             $this->logger->log($command . "\n" . $message, Zend_Log::DEBUG);
             unset($output);
-        }
+        }*/
     }
 
     /**
