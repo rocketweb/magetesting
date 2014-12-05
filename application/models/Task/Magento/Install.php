@@ -346,10 +346,32 @@ if(stristr($_SERVER[\'REQUEST_URI\'], \'setting\')) {
                     $this->_storeFolder . '/' . $this->_domain . '/downloader/template/header.phtml', preg_replace('/<li.*setting.*li>/i', '', $nav_file)
             );
         }
-        file_put_contents($this->_storeFolder . '/' . $this->_domain . '/downloader/connect.cfg', $header . serialize($connect_cfg));
+        $connectCfgFile = $this->_storeFolder . '/' . $this->_domain . '/downloader/connect.cfg';
+        file_put_contents($connectCfgFile, $header . serialize($connect_cfg));
+
+        $this->logger->log('Changing owner of connect.cfg file.', Zend_Log::INFO);
+        $command = $this->cli('file')->fileOwner(
+            $connectCfgFile,
+            $this->config->magento->userprefix . $this->_dbuser . ':' . $this->config->magento->userprefix . $this->_dbuser
+        );
+        $output = $command->call()->getLastOutput();
+        $message = var_export($output, true);
+        $this->logger->log("\n" .$command. "\n" . $message, Zend_Log::DEBUG);
+        unset($output);
         // end
+
+        $this->logger->log('Changing chmod for ./mage file', Zend_Log::INFO);
+        $output = $this->cli('file')->clear()->fileMode(
+            $this->_storeFolder . '/' . $this->_domain . '/' . 'mage',
+            '+x',
+            false
+        )->call()->getLastOutput();
+        $message = var_export($output, true);
+        $this->logger->log($message, Zend_Log::DEBUG);
+        unset($output);
         
         $this->_updateConnectFiles();
+        $this->_addConnectChannels();
     }
 
     protected function _runInstaller() {
