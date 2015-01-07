@@ -140,17 +140,24 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             $this->_customRemotePath.'var',
             $this->_customRemotePath.'.htaccess'
         );
-        $command->downloadRecursive($this->_customRemotePath, $exclude);
+        $storeFileLimitInMB = $this->_storeFileLimit / (1024 * 1024);
+        $command->downloadRecursive($this->_customRemotePath, $exclude, $storeFileLimitInMB);
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
         $this->logger->log($command."\n" . $message, LOG_DEBUG);
 
+        //We check last 50 lines of the output to see if there is any notice about exceeded size
+        $outputSize = sizeOf($output);
+        for ($i = 1; $i <= 50; $i++) {
+            $line = $output[$outputSize - $i];
+            if (strpos($line, 'Download quota') !== false && strpos($line, 'EXCEEDED') !== false) {
+                $this->logger->log('Downloading quota was exceeded, transfer was stopped.', Zend_Log::CRIT);
+                throw new Application_Model_Transport_Exception('Downloading failed, quota exceeded.');
+            }
+        }
         unset($output);
-        
-        /**
-         * TODO: validate output
-         */
+
         $this->_moveFiles();
         
         return true;
