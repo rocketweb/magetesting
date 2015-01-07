@@ -140,8 +140,8 @@ class Application_Model_Transport_Ftp extends Application_Model_Transport {
             $this->_customRemotePath.'var',
             $this->_customRemotePath.'.htaccess'
         );
-        $storeFileLimitInMB = $this->_storeFileLimit / (1024 * 1024);
-        $command->downloadRecursive($this->_customRemotePath, $exclude, $storeFileLimitInMB);
+        $storeFileLimitInMb = $this->_storeFileLimit / (1024 * 1024);
+        $command->downloadRecursive($this->_customRemotePath, $exclude, $storeFileLimitInMb);
         $output = $command->call()->getLastOutput();
         $message = var_export($output, true);
         $command = $this->changePassOnStars(escapeshellarg($this->_storeObject->getCustomPass()), $command->toString());
