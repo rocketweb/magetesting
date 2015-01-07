@@ -34,13 +34,17 @@ class RocketWeb_Cli_Kit_Wget
         return $this;
     }
 
-    public function downloadRecursive($path, $exclude = array('.htaccess'))
+    public function downloadRecursive($path, $exclude = array('.htaccess'), $sizeLimit = 300)
     {
-        if(!is_array($exclude)) {
+        if (!is_array($exclude)) {
             $exclude = array($exclude);
         }
+        if (!is_numeric($sizeLimit)) {
+            $sizeLimit = 300;
+        }
+        $sizeLimit = floor($sizeLimit);
 
-        $this->append('-nH -Q300m -m -np -R \'sql,tar,gz,zip,rar\' -N');
+        $this->append('-nH -Q' . $sizeLimit . 'm -m -np -R \'sql,tar,gz,zip,rar\' -N');
 
         if($exclude) {
             $this->append('-X ?', implode(',', $exclude));
