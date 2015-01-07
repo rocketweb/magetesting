@@ -19,6 +19,7 @@ implements Application_Model_Task_Interface {
                 $DbManager->dropDatabase($this->_dbname);
             } catch(PDOException $e){
                 $message = 'Could not remove database for store.';
+                $this->logger->log($e->getMessage(), Zend_Log::DEBUG);
                 $this->logger->log($message, Zend_Log::CRIT);
                 flock($fp, LOCK_UN); // release the lock
                 throw new Exception($message);
