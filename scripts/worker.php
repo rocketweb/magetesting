@@ -1,5 +1,8 @@
 <?php
+define('WORKER_CYCLE_TIME',50);
+
 include 'init.console.php';
+
 
 $lockDir = APPLICATION_PATH . '/../data/locks/';
 if (!file_exists($lockDir) || !is_dir($lockDir)){
@@ -42,11 +45,17 @@ if(isset($opts->help)) {
 
 /* Lock file and get tasks */
 if (flock($fp, LOCK_EX | LOCK_NB)) {
-    $queueModel = new Application_Model_Queue();
+    $startTime = time();
+    while(true){
+        //We check that the time didn't passed before we start new round of Worker
+        if(time() - WORKER_CYCLE_TIME >= $startTime) break;
 
-    $worker = new Application_Model_Worker($config,$db,$log);
-    while ($queueElement = $queueModel->getForServer($config->magento->currentServerId,$mode)){
-        $worker->work($queueElement);
+        $queueModel = new Application_Model_Queue();
+        $worker = new Application_Model_Worker($config,$db,$log);
+        while ($queueElement = $queueModel->getForServer($config->magento->currentServerId,$mode)){
+            $worker->work($queueElement);
+        }
+        if(time() - WORKER_CYCLE_TIME < $startTime) sleep(5);
     }
 }
     
