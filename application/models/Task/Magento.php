@@ -273,6 +273,7 @@ extends Application_Model_Task {
             }
         } catch (PDOException $e) {
             $message = 'Could not create database for store';
+            $this->logger->log($e->getMessage(), Zend_Log::DEBUG);
             $this->logger->log($message, Zend_Log::CRIT);
             throw new Application_Model_Task_Exception($message);
         }

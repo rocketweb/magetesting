@@ -702,6 +702,11 @@ implements Application_Model_Task_Interface {
 
         $mageFile = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/Mage.php';
 
+        if (!file_exists($mageFile)) {
+            $this->logger->log('/app/Mage.php not found!', Zend_Log::CRIT);
+            throw new Application_Model_Task_Exception('/app/Mage.php not found!');
+        }
+
         $text = file_get_contents($mageFile);
 
         preg_match('#function getVersionInfo\(\)(.*?)}#is',$text,$matches);
