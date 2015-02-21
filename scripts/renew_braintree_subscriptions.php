@@ -88,8 +88,13 @@ if($result) {
                         $user->save();
                         include APPLICATION_PATH . '/../scripts/force_user_to_remove_stores.php';
                     }
-                    $adminNotificationData = array('user' => $user, 'plan' => $plan);
-                    $adminNotification->setup('renewedPlan', $adminNotificationData, $view);
+                    $adminNotificationData = array(
+                        'user' => $user,
+                        'plan' => $plan,
+                        'extra_stores' => $extra_stores,
+                        'price' => $row['price']
+                    );
+                    $adminNotification->setup('renewedPlan', $adminNotificationData);
                     try {
                         $adminNotification->send();
                     } catch(Exception $e) {
