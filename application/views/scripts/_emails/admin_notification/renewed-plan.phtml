@@ -4,4 +4,7 @@ $url = $this->serverUrl . '/user/detail/id/' . $this->user->getId();
 ?>
 '<a href="<?php echo $url; ?>"><?php echo $this->user->getLogin(); ?></a>'
  renewed plan '<?php echo $this->plan->getName(); ?>'
- for $<?php echo $this->plan->getPrice(); ?>.</b></p>
+        <?php if ($this->extra_stores > 0): ?>
+        (<?php echo $this->extra_stores; ?> extra stores included)
+        <?php endif; ?>
+ for $<?php echo $this->price ?>.</b></p>
