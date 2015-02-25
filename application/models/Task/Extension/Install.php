@@ -32,7 +32,7 @@ implements Application_Model_Task_Interface {
         $storeExtensionModel->fetchStoreExtension($this->_storeObject->getId(), $this->_extensionObject->getId());
         // set processing status
         $storeExtensionModel->setStatus('processing')->save();
-        
+
         //untar extension to store folder
         $this->_install();
         
