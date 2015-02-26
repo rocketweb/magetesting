@@ -273,6 +273,7 @@ extends Application_Model_Task {
             }
         } catch (PDOException $e) {
             $message = 'Could not create database for store';
+            $this->logger->log($e->getMessage(), Zend_Log::DEBUG);
             $this->logger->log($message, Zend_Log::CRIT);
             throw new Application_Model_Task_Exception($message);
         }
@@ -409,7 +410,39 @@ extends Application_Model_Task {
             )
         )->call();
     }
-    
+
+    /**
+     *
+     *
+     */
+    protected function _addConnectChannels()
+    {
+        $this->_magentoEdition = $this->_storeObject->getEdition();
+
+        $command = $this->cli()->createQuery(
+            $this->_storeFolder . '/' . $this->_domain . '/mage channel-add :channel'
+        )->bindAssoc(array(
+                ':channel' => 'http://connect20.magentocommerce.com/community'
+            ));
+        $output = $command->call()->getLastOutput();
+        $message = var_export($output, true);
+        $this->logger->log($command . "\n" . $message, Zend_Log::DEBUG);
+        unset($output);
+
+        /* * Currently we only set community channel since enterpirse channel is reporting errors
+         * if ($this->_magentoEdition == 'EE') {
+            $command = $this->cli()->createQuery(
+                $this->_storeFolder . '/' . $this->_domain . '/mage channel-add :channel'
+            )->bindAssoc(array(
+                    ':channel' => 'https://connect20.magentocommerce.com/enterprise'
+                ));
+            $output = $command->call()->getLastOutput();
+            $message = var_export($output, true);
+            $this->logger->log($command . "\n" . $message, Zend_Log::DEBUG);
+            unset($output);
+        }*/
+    }
+
     /**
      * The purpose of this method is to replace calls to sys_get_temp dir()
      * with calls to getenv('TMPDIR')

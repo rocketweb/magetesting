@@ -560,24 +560,23 @@ implements Application_Model_Task_Interface {
     {
 
         $output = array();
-        $sqlfound = false;
+        $sqlFound = false;
         $unpacked = 0;
 
         /* check for gz */
         $path_parts = pathinfo($this->_customSql);
-        $sqlname = $path_parts['basename'];
+        $sqlName = $path_parts['basename'];
 
-        $this->logger->log($sqlname, Zend_Log::DEBUG);
+        $this->logger->log($sqlName, Zend_Log::DEBUG);
 
-        $not_gzipped = $this->cli('gzip')->test($sqlname)->call()->getLastStatus();
-        if ((int)$not_gzipped
-        ) {
-            $sqlfound = true;
+        if (strtolower($path_parts['extension']) == 'sql') {
+            $sqlFound = true;
             $unpacked = 1;
+            $this->logger->log($sqlName.' is .sql', Zend_Log::DEBUG);
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
-            $command = $this->cli('tar')->test($sqlname);
+            $command = $this->cli('tar')->test($sqlName);
             $result = $command->call();
             $this->logger->log($command, Zend_Log::DEBUG);
             $this->logger->log(var_export($result->getLastOutput(),true), Zend_Log::DEBUG);
@@ -586,13 +585,13 @@ implements Application_Model_Task_Interface {
             if ((int)$result->getLastStatus()) {
                 /* is gz */
 
-                $this->logger->log($sqlname . ' is gz', Zend_Log::DEBUG);
+                $this->logger->log($sqlName . ' is gz', Zend_Log::DEBUG);
 
                 /**
                  * get filename from output - gz only packs one filename 
                  * this needs to be done BEFORE unpacking otherise we lose file
                  */
-                $command = $this->cli('gzip')->getPackedFilename($sqlname);
+                $command = $this->cli('gzip')->getPackedFilename($sqlName);
                 $result = $command->call();
                 $output = $result->getLastOutput();
 
@@ -601,11 +600,11 @@ implements Application_Model_Task_Interface {
 
                 if(!(int)$result->getLastStatus() && $output) {
                     $this->_customSql = $output[0];
-                    $sqlfound = true;
+                    $sqlFound = true;
                 }
 
                 /* is gz */
-                $command = $this->cli('gzip')->unpack($sqlname);
+                $command = $this->cli('gzip')->unpack($sqlName);
                 $output = $command->call()->getLastOutput();
 
                 $this->logger->log($command, Zend_Log::DEBUG);
@@ -613,9 +612,9 @@ implements Application_Model_Task_Interface {
                 $unpacked = 1;
             } else {
                 /* is tar.gz */
-                $this->logger->log($sqlname . ' is tar', Zend_Log::DEBUG);
+                $this->logger->log($sqlName . ' is tar', Zend_Log::DEBUG);
 
-                $command = $this->cli('tar')->unpack($sqlname);
+                $command = $this->cli('tar')->unpack($sqlName);
                 $output = $command->call()->getLastOutput();
 
                 $this->logger->log($command, Zend_Log::DEBUG);
@@ -641,21 +640,22 @@ implements Application_Model_Task_Interface {
                         $this->logger->log(var_export($result,true), Zend_Log::DEBUG);
 
                         if (!empty($result)) {
-                            $sqlfound = true;
+                            $sqlFound = true;
                             $this->_customSql = $result[0];
                         }
                     }
                 }
             }
-
-            if ($sqlfound === true && $unpacked == 1) {
-                return true;
-            } else {
-                $message = 'sql file has not been found in given package';
-                $this->logger->log($message, Zend_Log::ERR);
-                throw new Application_Model_Task_Exception($message);
-            }
         }
+
+        if ($sqlFound === true && $unpacked == 1) {
+            return true;
+        } else {
+            $message = 'sql file has not been found in given package';
+            $this->logger->log($message, Zend_Log::ERR);
+            throw new Application_Model_Task_Exception($message);
+        }
+
     }
 
     protected function _updateDemoNotice(){
@@ -702,6 +702,11 @@ implements Application_Model_Task_Interface {
         $patch=array();
 
         $mageFile = $this->_storeFolder.'/'.$this->_storeObject->getDomain().'/app/Mage.php';
+
+        if (!file_exists($mageFile)) {
+            $this->logger->log('/app/Mage.php not found!', Zend_Log::CRIT);
+            throw new Application_Model_Task_Exception('/app/Mage.php not found!');
+        }
 
         $text = file_get_contents($mageFile);
 

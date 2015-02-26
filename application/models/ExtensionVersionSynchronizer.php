@@ -37,11 +37,16 @@ class Application_Model_ExtensionVersionSynchronizer
             if(time()-$file['cached_at'] < $cacheTime && !isset($config['purge'])) {
                 $this->_extensions = $file['extensions'];
             } else {
-                $connect = new Zend_Http_Client();
-                $connect->setAdapter(new Zend_Http_Client_Adapter_Curl());
-                $connect->setUri($serviceUri . 'packages.xml');
-                $response = $connect->request();
-                $xml = new SimpleXMLElement($response->getBody());
+                try {
+                    $connect = new Zend_Http_Client();
+                    $connect->setAdapter(new Zend_Http_Client_Adapter_Curl());
+                    $connect->setUri($serviceUri . 'packages.xml');
+                    $response = $connect->request();
+                    $xml = new SimpleXMLElement($response->getBody());
+                } catch (Exception $e) {
+                    $config['logger']->log('Error in parsing packages.xml', Zend_Log::ERR, $e->getMessage());
+                    return;
+                }
                 foreach($xml->p as $extension) {
                     $versions = array();
                     foreach($extension->r[0] as $release_type => $version) {
