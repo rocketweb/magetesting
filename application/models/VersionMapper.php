@@ -68,13 +68,20 @@ class Application_Model_VersionMapper {
     {
         $resultSet = $this->getDbTable()->fetchAll(null, array('edition ASC', 'sorting_order DESC'));
         $entries   = array();
-        foreach ($resultSet as $row) {
-            $entry = new Application_Model_Version();
-            $entry->setId($row->id)
-                    ->setEdition($row->edition)
-                    ->setVersion($row->version)
-                    ->setSampleDataVersion($row->sample_data_version);
-            $entries[] = $entry;
+
+            $identity = Zend_Auth::getInstance()->getIdentity();
+            $authGroup = is_object($identity) ? $identity->group : '';
+            foreach ($resultSet as $row) {
+                if ($authGroup != 'admin' && $row->edition == 'EE') {
+                    continue;
+                }
+
+                $entry = new Application_Model_Version();
+                $entry->setId($row->id)
+                        ->setEdition($row->edition)
+                        ->setVersion($row->version)
+                        ->setSampleDataVersion($row->sample_data_version);
+                $entries[] = $entry;
         }
         return $entries;
     }

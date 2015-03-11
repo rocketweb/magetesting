@@ -303,14 +303,14 @@ extends Application_Model_Task {
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser,
             $this->config->magento->userprefix . $this->_dbuser.':'.$this->config->magento->userprefix . $this->_dbuser
         )->call();
-        $file->clear()->fileOwner(
+        /*$file->clear()->fileOwner(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini',
             'root:root'
         )->call();
         $file->clear()->fileMode(
             '/home/www-data/'.$this->config->magento->userprefix . $this->_dbuser.'/php.ini',
             '644'
-        )->call();
+        )->call();*/
 
         $content = "
         <VirtualHost *:80>

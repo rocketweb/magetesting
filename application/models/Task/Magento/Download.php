@@ -560,7 +560,7 @@ implements Application_Model_Task_Interface {
     {
 
         $output = array();
-        $sqlfound = false;
+        $sqlFound = false;
         $unpacked = 0;
 
         $path_parts = pathinfo($this->_customSql);
@@ -569,9 +569,9 @@ implements Application_Model_Task_Interface {
         $this->logger->log($sqlName, Zend_Log::DEBUG);
 
         if (strtolower($path_parts['extension']) == 'sql') {
-            $sqlfound = true;
+            $sqlFound = true;
             $unpacked = 1;
-            $this->logger->log($sqlname.' is .sql', Zend_Log::DEBUG);
+            $this->logger->log($sqlName.' is .sql', Zend_Log::DEBUG);
         } else {
             /* file is tar.gz or gz */
             /* note: somehow, tar doesn't put anything in $output variable */
@@ -599,7 +599,7 @@ implements Application_Model_Task_Interface {
 
                 if(!(int)$result->getLastStatus() && $output) {
                     $this->_customSql = $output[0];
-                    $sqlfound = true;
+                    $sqlFound = true;
                 }
 
                 /* is gz */
@@ -639,7 +639,7 @@ implements Application_Model_Task_Interface {
                         $this->logger->log(var_export($result,true), Zend_Log::DEBUG);
 
                         if (!empty($result)) {
-                            $sqlfound = true;
+                            $sqlFound = true;
                             $this->_customSql = $result[0];
                         }
                     }
@@ -647,7 +647,7 @@ implements Application_Model_Task_Interface {
             }
         }
 
-        if ($sqlfound === true && $unpacked == 1) {
+        if ($sqlFound === true && $unpacked == 1) {
             return true;
         } else {
             $message = 'sql file has not been found in given package';
