@@ -72,6 +72,17 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
 
+                if ($this->auth->getIdentity()->group != 'admin' && $form->edition->getValue() == 'EE') {
+                    $this->_helper->FlashMessenger('Installation of Magento EE edition is currently disabled.');
+
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard'
+                    ), 'default', true);
+
+                }
+
                 if($this->auth->getIdentity()->server_id === null){
                     if ($log = $this->getLog()) {
                         $errorMessage = 'ServerId missing:'.
@@ -249,6 +260,17 @@ class QueueController extends Integration_Controller_Action {
                 //needs validation!
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
+
+                if ($this->auth->getIdentity()->group != 'admin' && $form->edition->getValue() == 'EE') {
+                    $this->_helper->FlashMessenger('Installation of Magento EE edition is currently disabled.');
+
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard'
+                    ), 'default', true);
+
+                }
 
                 //start adding store
                 $storeModel->setVersionId($form->version->getValue())
