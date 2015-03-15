@@ -69,19 +69,22 @@ class Application_Model_VersionMapper {
         $resultSet = $this->getDbTable()->fetchAll(null, array('edition ASC', 'sorting_order DESC'));
         $entries   = array();
 
-            $identity = Zend_Auth::getInstance()->getIdentity();
-            $authGroup = is_object($identity) ? $identity->group : '';
-            foreach ($resultSet as $row) {
-                if ($authGroup != 'admin' && $row->edition == 'EE') {
-                    continue;
-                }
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        $authGroup = is_object($identity) ? $identity->group : '';
+        $config = Zend_Registry::get('config');
+        $enterpriseAllowed = $config->magento->enterpriseApproved != null && $config->magento->enterpriseApproved == 1;
 
-                $entry = new Application_Model_Version();
-                $entry->setId($row->id)
-                        ->setEdition($row->edition)
-                        ->setVersion($row->version)
-                        ->setSampleDataVersion($row->sample_data_version);
-                $entries[] = $entry;
+        foreach ($resultSet as $row) {
+            if ($authGroup != 'admin' && $row->edition == 'EE' && !$enterpriseAllowed) {
+                continue;
+            }
+
+            $entry = new Application_Model_Version();
+            $entry->setId($row->id)
+                    ->setEdition($row->edition)
+                    ->setVersion($row->version)
+                    ->setSampleDataVersion($row->sample_data_version);
+            $entries[] = $entry;
         }
         return $entries;
     }

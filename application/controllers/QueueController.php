@@ -2,12 +2,17 @@
 
 class QueueController extends Integration_Controller_Action {
 
+    protected $_enterpriseAllowed = false;
+
     public function init() {
         /* following two variables used during ftp credentials validation */
         $this->_ftpStream = '';
         $this->_sshStream = '';
         $this->_customHost = '';
         $this->_sshWebrootPath='';
+
+        $config = Zend_Registry::get('config');
+        $this->_enterpriseAllowed = $config->magento->enterpriseApproved != null && $config->magento->enterpriseApproved == 1;
 
         $sslSwitch = true;
         if('login-to-store-backend' == $this->getRequest()->getActionName()) {
@@ -72,7 +77,8 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
 
-                if ($this->auth->getIdentity()->group != 'admin' && $form->edition->getValue() == 'EE') {
+
+                if ($this->auth->getIdentity()->group != 'admin' && $form->edition->getValue() == 'EE' && !$this->_enterpriseAllowed) {
                     $this->_helper->FlashMessenger('Installation of Magento EE edition is currently disabled.');
 
                     return $this->_helper->redirector->gotoRoute(array(
@@ -261,7 +267,7 @@ class QueueController extends Integration_Controller_Action {
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
 
-                if ($this->auth->getIdentity()->group != 'admin' && $form->edition->getValue() == 'EE') {
+                if ($this->auth->getIdentity()->group != 'admin' && $form->edition->getValue() == 'EE' && !$this->_enterpriseAllowed) {
                     $this->_helper->FlashMessenger('Installation of Magento EE edition is currently disabled.');
 
                     return $this->_helper->redirector->gotoRoute(array(
