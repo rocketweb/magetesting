@@ -37,7 +37,6 @@ class Application_Model_UserMapper {
             if(!$data['status']) {
                 unset($data['status']);
             }
-            unset($data['plan_id']);
             if(!$data['group']) {
                 unset($data['group']);
             }
