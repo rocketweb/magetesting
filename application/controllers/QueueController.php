@@ -1242,7 +1242,6 @@ class QueueController extends Integration_Controller_Action {
             if($is_paid_encoded_extension) {
                 $extensionModel = new Application_Model_Extension();
                 $extensionModel->find($revisionModel->getExtensionId());
-                $extensionId = is_null($extension->getExtensionId()) ? 0 : $extension->getExtensionId();
 
                 $queueModel = new Application_Model_Queue();
                 $queueModel->setStoreId($store->id);
@@ -1250,7 +1249,7 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setStatus('pending');
                 $queueModel->setUserId($store->user_id);
                 $queueModel->setServerId($store->server_id);
-                $queueModel->setExtensionId($extensionId);
+                $queueModel->setExtensionId($extension->getExtensionId());
                 $queueModel->setParentId(0);
                 $queueModel->save();
                 $parent_id = $queueModel->getId();
@@ -1275,6 +1274,7 @@ class QueueController extends Integration_Controller_Action {
 
             }
 
+            $extensionId = is_null($revisionModel->getExtensionId()) ? 0 : $revisionModel->getExtensionId();
             $queueModel = new Application_Model_Queue();
             $queueModel->setTask('RevisionDeploy');
             $queueModel->setTaskParams(
@@ -1286,7 +1286,7 @@ class QueueController extends Integration_Controller_Action {
             $queueModel->setStoreId($store->id);
             $queueModel->setServerId($store->server_id);
             $queueModel->setParentId($parent_id);
-            $queueModel->setExtensionId($revisionModel->getExtensionId());
+            $queueModel->setExtensionId($extensionId);
             $queueModel->setAddedDate(date("Y-m-d H:i:s"));
             $queueModel->setStatus('pending');
             $queueModel->setUserId($this->auth->getIdentity()->id);
