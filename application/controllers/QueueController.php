@@ -1213,6 +1213,7 @@ class QueueController extends Integration_Controller_Action {
             if($is_paid_encoded_extension) {
                 $extensionModel = new Application_Model_Extension();
                 $extensionModel->find($revisionModel->getExtensionId());
+                $extensionId = is_null($extension->getExtensionId()) ? 0 : $extension->getExtensionId();
 
                 $queueModel = new Application_Model_Queue();
                 $queueModel->setStoreId($store->id);
@@ -1220,7 +1221,7 @@ class QueueController extends Integration_Controller_Action {
                 $queueModel->setStatus('pending');
                 $queueModel->setUserId($store->user_id);
                 $queueModel->setServerId($store->server_id);
-                $queueModel->setExtensionId($extension->getExtensionId());
+                $queueModel->setExtensionId($extensionId);
                 $queueModel->setParentId(0);
                 $queueModel->save();
                 $parent_id = $queueModel->getId();
