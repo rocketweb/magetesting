@@ -1395,7 +1395,6 @@ class QueueController extends Integration_Controller_Action {
             $model = new Application_Model_Revision();
             $deployment_list = $model->getAllForStore($store->id);
             foreach($deployment_list as $revision) {
-                var_dump($revision->toArray());
                 if($revision['type']=='magento-init'){
                     continue;
                 }
@@ -1430,6 +1429,8 @@ class QueueController extends Integration_Controller_Action {
                     } else {
                         $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                     }
+                } else if (!$revision['filename'] && $revision['type'] == 'manual') {
+                    $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                 }
 
                 $row .= (($revision['filename'] AND
