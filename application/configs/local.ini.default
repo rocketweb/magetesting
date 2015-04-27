@@ -2,6 +2,7 @@
 ;Magento installation Stuff
 magento.adminEmail = "jan@rocketweb.com"
 magento.storeUrl = "http://magetesting.dev"
+magento.enterpriseEnabled = 0
 magento.currentServerId = 1
 
 wget.timeout = 300;
