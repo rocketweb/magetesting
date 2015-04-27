@@ -12,7 +12,7 @@ class QueueController extends Integration_Controller_Action {
         $this->_sshWebrootPath='';
 
         $config = Zend_Registry::get('config');
-        $this->_enterpriseAllowed = $config->magento->enterpriseApproved != null && $config->magento->enterpriseApproved == 1;
+        $this->_enterpriseAllowed = $config->magento->enterpriseEnabled != null && $config->magento->enterpriseEnabled == 1;
 
         $sslSwitch = true;
         if('login-to-store-backend' == $this->getRequest()->getActionName()) {

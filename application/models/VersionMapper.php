@@ -72,7 +72,7 @@ class Application_Model_VersionMapper {
         $identity = Zend_Auth::getInstance()->getIdentity();
         $authGroup = is_object($identity) ? $identity->group : '';
         $config = Zend_Registry::get('config');
-        $enterpriseAllowed = $config->magento->enterpriseApproved != null && $config->magento->enterpriseApproved == 1;
+        $enterpriseAllowed = $config->magento->enterpriseEnabled != null && $config->magento->enterpriseEnabled == 1;
 
         foreach ($resultSet as $row) {
             if ($authGroup != 'admin' && $row->edition == 'EE' && !$enterpriseAllowed) {
