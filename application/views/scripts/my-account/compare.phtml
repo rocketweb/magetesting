@@ -133,7 +133,10 @@
                 </tr>
                 <tr class="compare-table-row-title">
                     <td class="compare-table-row-title">
-                        <i class="icon icon-blue icon-info-sign"></i> Custom Store Import
+                        <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Custom Store Import" data-content="Import own store in Magetesting">
+                            <i class="icon icon-blue icon-info-sign"></i> Custom Store Import
+                        </div>
+
                     </td>
                     <?php foreach($this->plans as $plan): ?>
                         <?php if((int)$plan->getCanAddCustomStore()): ?>
