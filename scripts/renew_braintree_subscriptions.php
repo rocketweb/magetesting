@@ -101,7 +101,7 @@ if($result) {
                     $log->log('Plan has not been renewed for user: ' . $row['id'], Zend_Log::INFO);
                 }
             } catch(Braintree_Exception $e) {
-                $log->log('Braintree service is unavailable - exiting...', Zend_Log::ALERT);
+                $log->log('Braintree service is unavailable - exiting: ' . $e->getMessage(), Zend_Log::ALERT, $e->getTraceAsString());
                 exit;
             }
         }
