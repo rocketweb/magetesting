@@ -33,7 +33,7 @@ if($result) {
                 $log->log('Plan payment not confirmed for user: ' . $row['id'], Zend_Log::INFO);
             }
         } catch(Braintree_Exception $e) {
-            $log->log('Braintree service is unavailable - exiting...', Zend_Log::ALERT);
+            $log->log('Braintree service is unavailable - exiting: ' . $e->getMessage(), Zend_Log::ALERT, $e->getTraceAsString());
             exit;
         }
     }
@@ -57,7 +57,7 @@ if($result) {
                 $log->log('Store purchase not confirmed for user: ' . $row->getUserId(), Zend_Log::INFO);
             }
         } catch(Braintree_Exception $e) {
-            $log->log('Braintree service is unavailable - exiting...', Zend_Log::ALERT);
+            $log->log('Braintree service is unavailable - exiting: ' . $e->getMessage(), Zend_Log::ALERT, $e->getTraceAsString());
             exit;
         }
     }
