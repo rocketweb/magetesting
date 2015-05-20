@@ -2,12 +2,17 @@
 
 class QueueController extends Integration_Controller_Action {
 
+    protected $_enterpriseAllowed = false;
+
     public function init() {
         /* following two variables used during ftp credentials validation */
         $this->_ftpStream = '';
         $this->_sshStream = '';
         $this->_customHost = '';
         $this->_sshWebrootPath='';
+
+        $config = Zend_Registry::get('config');
+        $this->_enterpriseAllowed = $config->magento->enterpriseEnabled != null && $config->magento->enterpriseEnabled == 1;
 
         $sslSwitch = true;
         if('login-to-store-backend' == $this->getRequest()->getActionName()) {
@@ -71,6 +76,18 @@ class QueueController extends Integration_Controller_Action {
                 //needs validation!
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
+
+
+                if ($this->auth->getIdentity()->group != 'admin' && $form->edition->getValue() == 'EE' && !$this->_enterpriseAllowed) {
+                    $this->_helper->FlashMessenger('Installation of Magento EE edition is currently disabled.');
+
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard'
+                    ), 'default', true);
+
+                }
 
                 if($this->auth->getIdentity()->server_id === null){
                     if ($log = $this->getLog()) {
@@ -249,6 +266,17 @@ class QueueController extends Integration_Controller_Action {
                 //needs validation!
                 $storeModel = new Application_Model_Store();
                 $userId = $this->auth->getIdentity()->id;
+
+                if ($this->auth->getIdentity()->group != 'admin' && $form->edition->getValue() == 'EE' && !$this->_enterpriseAllowed) {
+                    $this->_helper->FlashMessenger('Installation of Magento EE edition is currently disabled.');
+
+                    return $this->_helper->redirector->gotoRoute(array(
+                        'module' => 'default',
+                        'controller' => 'user',
+                        'action' => 'dashboard'
+                    ), 'default', true);
+
+                }
 
                 //start adding store
                 $storeModel->setVersionId($form->version->getValue())

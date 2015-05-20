@@ -94,8 +94,13 @@ class Application_Model_EditionMapper {
 
         $temp = array();
         $authGroup = Zend_Auth::getInstance()->getIdentity()->group;
+        $config = Zend_Registry::get('config');
+        $enterpriseAllowed = $config->magento->enterpriseEnabled != null && $config->magento->enterpriseEnabled == 1;
 
         foreach ($this->fetchAll() as $r) {
+            if ($authGroup != 'admin' && $r->getKey() == 'EE' && !$enterpriseAllowed) {
+                continue;
+            }
                 $temp[$r->getKey()] = $r->getName();
         }
         return $temp;

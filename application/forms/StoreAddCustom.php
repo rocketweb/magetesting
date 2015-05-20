@@ -68,7 +68,12 @@ class Application_Form_StoreAddCustom extends Integration_Form{
         ));
         $versions = array();
         $authGroup = Zend_Auth::getInstance()->getIdentity()->group;
+        $config = Zend_Registry::get('config');
+        $enterpriseAllowed = $config->magento->enterpriseApproved != null && $config->magento->enterpriseApproved == 1;
         foreach($versionModel->fetchAll() as $row) {
+            if ($authGroup != 'admin' && $row->getEdition() == 'EE' && !$enterpriseAllowed) {
+                continue;
+            }
                 $versions[$row->getEdition().$row->getId()] = $row->getVersion();
         }
         $this->version->addMultiOptions($versions);
