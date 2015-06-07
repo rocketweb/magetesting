@@ -133,6 +133,23 @@
                 </tr>
                 <tr class="compare-table-row-title">
                     <td class="compare-table-row-title">
+                        <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Custom Store Import" data-content="Import own store in Magetesting">
+                            <i class="icon icon-blue icon-info-sign"></i> Custom Store Import
+                        </div>
+
+                    </td>
+                    <?php foreach($this->plans as $plan): ?>
+                        <?php if((int)$plan->getCanAddCustomStore()): ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php else: ?>
+                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
+                            <td class="compare-table-empty"></td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
+                <tr class="compare-table-row-title">
+                    <td class="compare-table-row-title">
                         <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="FTP Access" data-content="You can get an FTP access to your store files to make any manual changes you need.">
                             <i class="icon icon-blue icon-info-sign"></i> FTP Access
                         </div>
@@ -186,21 +203,6 @@
                 </tr>
                  * */ 
                 ?>
-                <?php /*
-                <tr class="compare-table-row-title">
-                    <td class="compare-table-row-title">
-                        <i class="icon icon-blue icon-info-sign"></i> Custom Store Import
-                    </td>
-                    <?php foreach($this->plans as $plan): ?>
-                        <?php if((int)$plan->getCanAddCustomStore()): ?>
-                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/accept.png') ?>" alt="Yes"></td>
-                            <td class="compare-table-empty"></td>
-                        <?php else: ?>
-                            <td class="compare-table-data"><img src="<?php echo $this->baseUrl('public/img/32x32/cancel.png') ?>" alt="No"></td>
-                            <td class="compare-table-empty"></td>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </tr>*/?>
                 <tr class="compare-table-row-title compare-table-row-title-last">
                     <td class="compare-table-row-title  compare-table-row-title-last">
                         <div rel="popover" data-trigger="hover" data-placement="top" data-original-title="Access" data-content="">
