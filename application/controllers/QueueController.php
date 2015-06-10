@@ -1273,6 +1273,7 @@ class QueueController extends Integration_Controller_Action {
 
             }
 
+            $extensionId = is_null($revisionModel->getExtensionId()) ? 0 : $revisionModel->getExtensionId();
             $queueModel = new Application_Model_Queue();
             $queueModel->setTask('RevisionDeploy');
             $queueModel->setTaskParams(
@@ -1284,7 +1285,7 @@ class QueueController extends Integration_Controller_Action {
             $queueModel->setStoreId($store->id);
             $queueModel->setServerId($store->server_id);
             $queueModel->setParentId($parent_id);
-            $queueModel->setExtensionId($revisionModel->getExtensionId());
+            $queueModel->setExtensionId($extensionId);
             $queueModel->setAddedDate(date("Y-m-d H:i:s"));
             $queueModel->setStatus('pending');
             $queueModel->setUserId($this->auth->getIdentity()->id);
@@ -1423,7 +1424,6 @@ class QueueController extends Integration_Controller_Action {
             $model = new Application_Model_Revision();
             $deployment_list = $model->getAllForStore($store->id);
             foreach($deployment_list as $revision) {
-                var_dump($revision->toArray());
                 if($revision['type']=='magento-init'){
                     continue;
                 }
@@ -1458,6 +1458,8 @@ class QueueController extends Integration_Controller_Action {
                     } else {
                         $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                     }
+                } else if (!$revision['filename'] && $revision['type'] == 'manual') {
+                    $request_button = '<button type="submit" class="btn request-deployment" name="revision" value="'.$revision['id'].'">Request Deployment</a>'.PHP_EOL;
                 }
 
                 $row .= (($revision['filename'] AND
