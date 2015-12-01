@@ -131,7 +131,7 @@ abstract class Application_Model_Ioncube_Encode_Store
 
         $query
             ->append('--allowed-server ?', $server)
-            ->append('--obfuscate all')
+            ->append('--obfuscate functions,locals,linenos')
             ->append('--obfuscation-key ?', $key)
             ->append('--add-comment ?', $additionalComment)
             ->append('--ignore ?', '.svn/')
