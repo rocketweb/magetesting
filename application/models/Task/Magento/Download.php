@@ -58,9 +58,13 @@ implements Application_Model_Task_Interface {
             $this->logger->log($e->getMessage(),Zend_Log::ERR);
             throw new Application_Model_Task_Exception($e->getMessage());
         }
-        
+
+        /** @var Zend_Db_Adapter_Abstract $db */
+        $db = Zend_Registry::get('db');
         try {
+            $db->closeConnection();
             $transportModel->downloadFilesystem();
+            $db->getConnection();
         } catch (Application_Model_Transport_Exception $e) {
             $this->logger->log($e->getMessage(),Zend_Log::ERR);
             throw new Application_Model_Task_Exception($e->getMessage());
