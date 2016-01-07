@@ -23,8 +23,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->bootstrap('session');
 
         Zend_Session::start();
-        $db = $this->getPluginResource('db')->getDbAdapter();
-        Zend_Registry::set('db', $db);
     }
 
     /** Setting mail-transport for testing **/
