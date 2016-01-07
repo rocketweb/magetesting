@@ -57,7 +57,7 @@ $bootstrap = $application->getBootstrap()->bootstrap(array(
 
 //initialize database
 $db = $bootstrap->getResource('db');
-
+Zend_Registry::set('db', $db);
 //initialize logger
 if (!$bootstrap->hasResource('Log')) {
     echo 'No logger instance found,aborting';
