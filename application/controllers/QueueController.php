@@ -249,10 +249,12 @@ class QueueController extends Integration_Controller_Action {
         
         if ($request->isPost()) {
 
-            $path_type = $this->_getParam('input-radio');
+            /** Hardcoded file action only, related to MT-90 */
+            $path_type = 'file';
+            /*$path_type = $this->_getParam('input-radio');
             if(!in_array($path_type, array('remote_path', 'file'))) {
                 $path_type = 'remote_path';
-            }
+            }*/
             if($path_type == 'remote_path') {
                 $form->custom_remote_path->setRequired(true);
                 $form->custom_file->setRequired(false);

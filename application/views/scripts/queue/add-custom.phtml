@@ -81,26 +81,12 @@
             	    <fieldset class="custom-files">
             	        <legend>Current Store Files and Database</legend>
             	        <div class="input-radio">
-            	        	<div class="row">
-            	        	    <div class="span1 input-radio-button">
-            	        	        <input type="radio" <?php echo ($this->input_radio == 'remote_path' ? 'checked="checked"' : ''); ?> name="input-radio" value="remote_path" class="span1 pull-right">
-            	        	    </div>
-            	        	    <div class="span7 input-radio-option">
-            	        	        <div class="input-radio-alert alert alert-<?php echo ($this->input_radio == 'remote_path' ? 'info' : 'blank'); ?>">
-            	        	            <?php echo $this->form->custom_remote_path ?>
-            	        	        </div>
-            	        	    </div>
-            	        	</div>
-            	        	<div class="row">
-            	        	    <div class="span1 input-radio-button">
-                                    <input type="radio" <?php echo ($this->input_radio == 'file' ? 'checked="checked"' : ''); ?> name="input-radio" value="file" class="span1 pull-right">
-            	        	    </div>
-            	        	    <div class="span7 input-radio-option">
-            	        	        <div class="input-radio-alert alert alert-<?php echo ($this->input_radio == 'file' ? 'info' : 'blank'); ?>">
-            	        	            <?php echo $this->form->custom_file ?>
-            	        	        </div>
-            	        	    </div>
-            	        	</div>
+							<div class="row row-large">
+								<div class="span8">
+									<input type="hidden" name="input-radio" value="file" />
+									<?php echo $this->form->custom_file ?>
+								</div>
+							</div>
             	        </div>
             	        <div class="row row-large">
                             <div class="span8">
