@@ -2,6 +2,8 @@
 
 this was magetesting.com
 
+some sparse, neglected and likely outdated info is here on the Rocket Web wiki: https://wiki.rocketweb.com/display/MT/Mage+Testing+Walkthrough
+
 # License
 
 Mage Testing is licensed under the "Don't be a Jerk" license.
