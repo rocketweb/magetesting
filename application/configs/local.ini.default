@@ -1,6 +1,6 @@
 [production]
 ;Magento installation Stuff
-magento.adminEmail = "jan@rocketweb.com"
+magento.adminEmail = "someone@email.com"
 magento.storeUrl = "http://magetesting.dev"
 magento.enterpriseEnabled = 0
 magento.currentServerId = 1
@@ -10,8 +10,7 @@ wget.tries = 3;
 
 ;this addresses go to account email notifications
 magento.ftphost = "ftp://magetesting.com"
-magento.dbhost = "http://four.rocketweb.com/phpdb"
-;magento.dbhost = "http://www.magetesting.com/phpdb"
+magento.dbhost = "http://localhost/phpdb"
 
 magento.standardUser.stores = 0
 
@@ -22,7 +21,7 @@ magento.storeprefix = "INST_"
 ;IMPORTANT - check Application_Form_UserRegister::init(); for setting up length
 magento.userprefix = "mi_"
 
-magento.usersalt = "a63hd93u" ;used for mysql user password creation
+magento.usersalt = "something" ;used for mysql user password creation
 magento.systemHomeFolder = "/home" ;where should user store folders land in
 
 ;SQL Limit on imported files in bytes - 536870912 by default (500mb)
@@ -32,15 +31,15 @@ magento.storeDumpByteLimit = 1073741824
 google.analyticsId = ""
 
 ; ADMIN EMAIL NOTIFICATION
-adminNotification.from.email = "support@magetesting.com"
+adminNotification.from.email = "someone@email.com"
 adminNotification.from.desc = "Mage Testing"
-adminNotification.globalEmails[] = "info@rocketweb.com"
-adminNotification.globalEmails[] = "wojtek@rocketweb.com"
+adminNotification.globalEmails[] = "someone@email.com"
+adminNotification.globalEmails[] = "someone@email.com"
 
 adminNotification.userCreated.subject = "New user registered"
 adminNotification.userCreated.template = "user-created.phtml"
-;adminNotification.userCreated.emails[] = "info@rocketweb.com"
-;adminNotification.userCreated.emails[] = "wojtek@rocketweb.com"
+;adminNotification.userCreated.emails[] = "someone@email.com"
+;adminNotification.userCreated.emails[] = "someone@email.com"
 
 adminNotification.boughtPlan.subject = "User bought a plan"
 adminNotification.boughtPlan.template = "bought-plan.phtml"
@@ -59,41 +58,41 @@ adminNotification.additionalStores.template = "additional-stores.phtml"
 ; END
 
 user.activationEmail.subject = "Activate your account for magetesting.com"
-user.activationEmail.from.email = "support@magetesting.com"
+user.activationEmail.from.email = "someone@email.com"
 user.activationEmail.from.desc = "Mage Testing"
 
 user.resetPassword.subject = "Password reset for magetesting.com"
-user.resetPassword.from.email = "support@magetesting.com"
+user.resetPassword.from.email = "someone@email.com"
 user.resetPassword.from.desc = "Mage Testing"
 
 cron.queueItemReady.subject = "Your Magento store is ready at magetesting.com"
-cron.queueItemReady.from.email = "support@magetesting.com"
+cron.queueItemReady.from.email = "someone@email.com"
 cron.queueItemReady.from.desc = "Mage Testing"
 
 cron.ftpAccountCreated.subject = "FTP account created for magetesting.com"
-cron.ftpAccountCreated.from.email = "support@magetesting.com"
+cron.ftpAccountCreated.from.email = "someone@email.com"
 cron.ftpAccountCreated.from.desc = "Mage Testing"
 
 cron.phpmyadminAccountCreated.subject = "Database account created for magetesting.com"
-cron.phpmyadminAccountCreated.from.email = "support@magetesting.com"
+cron.phpmyadminAccountCreated.from.email = "someone@email.com"
 cron.phpmyadminAccountCreated.from.desc = "Mage Testing"
 
 cron.buyStoreExtension.subject = "Buy %s at magetesting.com"
-cron.buyStoreExtension.from.email = "support@magetesting.com"
+cron.buyStoreExtension.from.email = "someone@email.com"
 cron.buyStoreExtension.from.desc = "Mage Testing"
 
 admin.errorEmail.subject = "Errors with Magetesting.com"
-admin.errorEmail.from.email = "support@magetesting.com"
-admin.errorEmail.to.email[] = "wojtek@rocketweb.com"
+admin.errorEmail.from.email = "someone@email.com"
+admin.errorEmail.to.email[] = "someone@email.com"
 
 register.useCoupons = 0; // 0 - dont show coupon field, 1 - show coupon field
 register.freeTrialCouponsPerDay = 10;
 
 contact.message.subject = "Message from Contact Form"
-contact.message.from.email = "support@magetesting.com"
+contact.message.from.email = "someone@email.com"
 contact.message.from.desc = "Mage Testing"
-contact.message.emails[] = "wojtek@rocketweb.com"
-contact.message.emails[] = "matt@rocketweb.com"
+contact.message.emails[] = "someone@email.com"
+contact.message.emails[] = "someone@email.com"
 
 ;SQL Updater
 ; remember that this must be absolute path
@@ -110,9 +109,9 @@ braintree.publicKey =
 braintree.privateKey = 
 
 ;Papertrail
-papertrail.username = "magetesting";
-papertrail.password = "d41d8cFd98f00b2v4e980b998ecf8427e";
-papertrail.ssoSalt = "46431e2e_5131a6e193-5167beb983";
+papertrail.username = "username";
+papertrail.password = "password";
+papertrail.ssoSalt = "salt";
 papertrail.distributorName = "Mage Testing";
 papertrail.url = "https://papertrailapp.com/api/v1/";
 papertrail.prefix = "dev-";
@@ -129,8 +128,8 @@ dbPrivileged.params.dbname = mysql
 ssl.active = 0
 
 ;Mcrypt
-mcrypt.key = "0af717633ca0419bacde2628d81c127c"
-mcrypt.vector = "79t1e2s4" 
+mcrypt.key = "thekey"
+mcrypt.vector = "thevector" 
 
 ; QUEUE RETRY COUNT SYSTEM
 ; UNITS: MICROSECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, or YEAR
